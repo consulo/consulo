@@ -35,7 +35,7 @@ class Alphabet {
         vertical(data, offset);
         vertical(data, offset + 4);
         horizonalTop(data, offset);
-        horizontal(data, 17, offset);
+        horizontal(data, 3, offset);
       }
     });
 
@@ -43,12 +43,12 @@ class Alphabet {
       @Override
       void draw(int offset, int[][] data) {
         vertical(data, offset);
-        data[offset + 1][15] = 1;
-        data[offset + 2][15] = 1;
-        data[offset + 3][15] = 1;
-        data[offset + 3][16] = 1;
-        data[offset + 4][18] = 1;
-        horizontal(data, 17, offset);
+        data[offset + 1][1] = 1;
+        data[offset + 2][1] = 1;
+        data[offset + 3][1] = 1;
+        data[offset + 3][2] = 1;
+        data[offset + 4][4] = 1;
+        horizontal(data, 3, offset);
         horizonalDown(data, offset);
       }
     });
@@ -66,8 +66,8 @@ class Alphabet {
       @Override
       void draw(int offset, int[][] data) {
         vertical(data, offset);
-        vertical(data, offset + 4, 16, 19);
-        horizontal(data, 15, offset, 3);
+        vertical(data, offset + 4, 2, 5);
+        horizontal(data, 1, offset, 3);
         horizonalDown(data, offset);
       }
     });
@@ -77,7 +77,7 @@ class Alphabet {
       void draw(int offset, int[][] data) {
         vertical(data, offset);
         horizonalTop(data, offset);
-        horizontal(data, 17, offset);
+        horizontal(data, 3, offset);
         horizonalDown(data, offset);
       }
     });
@@ -87,7 +87,7 @@ class Alphabet {
       void draw(int offset, int[][] data) {
         vertical(data, offset);
         horizonalTop(data, offset);
-        horizontal(data, 17, offset);
+        horizontal(data, 3, offset);
       }
     });
 
@@ -106,9 +106,9 @@ class Alphabet {
       @Override
       void draw(int offset, int[][] data) {
         vertical(data, offset);
-        data[offset + 1][16] = 1;
-        data[offset + 2][17] = 1;
-        data[offset + 3][18] = 1;
+        data[offset + 1][2] = 1;
+        data[offset + 2][3] = 1;
+        data[offset + 3][4] = 1;
         vertical(data, offset + 4);
       }
     });
@@ -117,11 +117,11 @@ class Alphabet {
       @Override
       void draw(int offset, int[][] data) {
         vertical(data, offset);
-        data[offset + 3][15] = 1;
-        data[offset + 2][16] = 1;
-        data[offset + 1][17] = 1;
-        data[offset + 2][18] = 1;
-        data[offset + 3][19] = 1;
+        data[offset + 3][1] = 1;
+        data[offset + 2][2] = 1;
+        data[offset + 1][3] = 1;
+        data[offset + 2][4] = 1;
+        data[offset + 3][5] = 1;
       }
     });
 
@@ -129,9 +129,9 @@ class Alphabet {
       @Override
       void draw(int offset, int[][] data) {
         vertical(data, offset);
-        data[offset + 1][16] = 1;
-        data[offset + 2][17] = 1;
-        data[offset + 3][16] = 1;
+        data[offset + 1][2] = 1;
+        data[offset + 2][3] = 1;
+        data[offset + 3][2] = 1;
         vertical(data, offset + 4);
       }
     });
@@ -141,8 +141,8 @@ class Alphabet {
       void draw(int offset, int[][] data) {
         vertical(data, offset);
         horizonalTop(data, offset);
-        horizontal(data, 17, offset);
-        data[offset + 4][16] = 1;
+        horizontal(data, 3, offset);
+        data[offset + 4][2] = 1;
       }
     });
 
@@ -152,10 +152,10 @@ class Alphabet {
         vertical(data, offset);
         horizonalTop(data, offset);
         horizontal(data, 17, offset);
-        data[offset + 4][16] = 1;
-        data[offset + 3][18] = 1;
-        data[offset + 3][19] = 1;
-        data[offset + 4][19] = 1;
+        data[offset + 4][2] = 1;
+        data[offset + 3][4] = 1;
+        data[offset + 3][5] = 1;
+        data[offset + 4][5] = 1;
       }
     });
 
@@ -163,7 +163,7 @@ class Alphabet {
       @Override
       void draw(int offset, int[][] data) {
         vertical(data, offset);
-        horizontal(data, 17, offset);
+        horizontal(data, 3, offset);
         vertical(data, offset + 4);
       }
     });
@@ -173,9 +173,9 @@ class Alphabet {
       void draw(int offset, int[][] data) {
         horizonalTop(data, offset);
         horizonalDown(data, offset);
-        horizontal(data, 17, offset);
-        data[offset][16] = 1;
-        data[offset + 4][18] = 1;
+        horizontal(data, 3, offset);
+        data[offset][2] = 1;
+        data[offset + 4][4] = 1;
       }
     });
 
@@ -190,11 +190,11 @@ class Alphabet {
     validCharacters.put('I', new AlphabetDraw() {
       @Override
       void draw(int offset, int[][] data) {
-        data[offset + 1][15] = 1;
-        data[offset + 3][15] = 1;
+        data[offset + 1][1] = 1;
+        data[offset + 3][1] = 1;
         vertical(data, offset + 2);
-        data[offset + 1][19] = 1;
-        data[offset + 3][19] = 1;
+        data[offset + 1][5] = 1;
+        data[offset + 3][5] = 1;
       }
     });
     validCharacters.put('J', new AlphabetDraw() {
@@ -203,11 +203,11 @@ class Alphabet {
         horizonalTop(data, offset);
         vertical(data, offset + 3);
 
-        data[offset][18] = 1;
-        data[offset][19] = 1;
-        data[offset + 1][19] = 1;
-        data[offset + 2][19] = 1;
-        data[offset + 3][19] = 1;
+        data[offset][4] = 1;
+        data[offset][5] = 1;
+        data[offset + 1][5] = 1;
+        data[offset + 2][5] = 1;
+        data[offset + 3][5] = 1;
       }
     });
 
@@ -237,8 +237,8 @@ class Alphabet {
         horizonalTop(data, offset);
         horizonalDown(data, offset);
 
-        data[offset + 3][18] = 1;
-        data[offset + 4][19] = 0;
+        data[offset + 3][4] = 1;
+        data[offset + 4][5] = 0;
       }
     });
 
@@ -251,9 +251,9 @@ class Alphabet {
         horizonalTop(data, offset);
         horizonalDown(data, offset);
 
-        data[offset + 4][16] = 0;
-        data[offset + 2][17] = 1;
-        data[offset + 3][17] = 1;
+        data[offset + 4][2] = 0;
+        data[offset + 2][3] = 1;
+        data[offset + 3][3] = 1;
       }
     });
 
@@ -261,9 +261,9 @@ class Alphabet {
       @Override
       void draw(int offset, int[][] data) {
         horizonalTop(data, offset);
-        data[offset + 3][16] = 1;
-        data[offset + 2][17] = 1;
-        data[offset + 1][18] = 1;
+        data[offset + 3][2] = 1;
+        data[offset + 2][3] = 1;
+        data[offset + 1][4] = 1;
         horizonalDown(data, offset);
       }
     });
@@ -271,28 +271,28 @@ class Alphabet {
     validCharacters.put('Y', new AlphabetDraw() {
       @Override
       void draw(int offset, int[][] data) {
-        data[offset][15] = 1;
-        data[offset][16] = 1;
-        data[offset + 4][15] = 1;
-        data[offset + 4][16] = 1;
-        horizontal(data, 17, offset);
-        data[offset + 2][18] = 1;
-        data[offset + 2][19] = 1;
+        data[offset][1] = 1;
+        data[offset][2] = 1;
+        data[offset + 4][1] = 1;
+        data[offset + 4][2] = 1;
+        horizontal(data, 3, offset);
+        data[offset + 2][4] = 1;
+        data[offset + 2][5] = 1;
       }
     });
 
     validCharacters.put('X', new AlphabetDraw() {
       @Override
       void draw(int offset, int[][] data) {
-        data[offset][15] = 1;
-        data[offset + 1][16] = 1;
-        data[offset + 2][17] = 1;
-        data[offset + 3][16] = 1;
-        data[offset + 4][15] = 1;
-        data[offset][19] = 1;
-        data[offset + 1][18] = 1;
-        data[offset + 3][18] = 1;
-        data[offset + 4][19] = 1;
+        data[offset][1] = 1;
+        data[offset + 1][2] = 1;
+        data[offset + 2][3] = 1;
+        data[offset + 3][2] = 1;
+        data[offset + 4][1] = 1;
+        data[offset][5] = 1;
+        data[offset + 1][4] = 1;
+        data[offset + 3][4] = 1;
+        data[offset + 4][5] = 1;
       }
     });
 
@@ -303,12 +303,12 @@ class Alphabet {
         vertical(data, offset);
         vertical(data, offset + 4);
 
-        data[offset][18] = 0;
-        data[offset + 1][18] = 1;
-        data[offset][19] = 0;
-        data[offset + 3][18] = 1;
-        data[offset + 4][18] = 0;
-        data[offset + 4][19] = 0;
+        data[offset][4] = 0;
+        data[offset + 1][4] = 1;
+        data[offset][5] = 0;
+        data[offset + 3][4] = 1;
+        data[offset + 4][4] = 0;
+        data[offset + 4][5] = 0;
       }
     });
 
@@ -316,9 +316,9 @@ class Alphabet {
       @Override
       void draw(int offset, int[][] data) {
         vertical(data, offset);
-        data[offset + 1][18] = 1;
-        data[offset + 2][17] = 1;
-        data[offset + 3][18] = 1;
+        data[offset + 1][4] = 1;
+        data[offset + 2][3] = 1;
+        data[offset + 3][4] = 1;
         vertical(data, offset + 4);
       }
     });
@@ -333,7 +333,7 @@ class Alphabet {
     validCharacters.put('.', new AlphabetDraw() {
       @Override
       void draw(int offset, int[][] data) {
-        data[offset + 2][19] = 1;
+        data[offset + 2][5] = 1;
       }
     });
 

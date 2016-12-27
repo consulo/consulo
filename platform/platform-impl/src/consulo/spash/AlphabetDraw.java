@@ -21,11 +21,11 @@ package consulo.spash;
  */
 abstract class AlphabetDraw {
   void horizonalTop(int[][] data, int fromY) {
-    horizontal(data, 15, fromY);
+    horizontal(data, 1, fromY);
   }
 
   void horizonalDown(int[][] data, int fromY) {
-    horizontal(data, 19, fromY);
+    horizontal(data, 5, fromY);
   }
 
   void horizontal(int[][] data, int x, int fromY) {
@@ -39,7 +39,7 @@ abstract class AlphabetDraw {
   }
 
   void vertical(int[][] data, int y) {
-    vertical(data, y, 15, 19);
+    vertical(data, y, 1, 5);
   }
 
   void vertical(int[][] data, int y, int fromX, int toX) {

@@ -54,12 +54,13 @@ public class Splash extends JDialog implements StartupProgress {
     }
     setFocusableWindowState(false);
 
-    myLabel = new AnimatedLogoLabel();
-    myLabel.setPreferredSize(JBUI.size(602, 294));
+    myLabel = new AnimatedLogoLabel(14, false); //TODO [VISTALL] restore animation
 
     Container contentPane = getContentPane();
+    contentPane.setBackground(Color.LIGHT_GRAY);
+    contentPane.setPreferredSize(JBUI.size(602, 294));
     contentPane.setLayout(new BorderLayout());
-    contentPane.add(myLabel, BorderLayout.CENTER);
+    contentPane.add(myLabel, BorderLayout.SOUTH);
     Dimension size = getPreferredSize();
     setSize(size);
     pack();

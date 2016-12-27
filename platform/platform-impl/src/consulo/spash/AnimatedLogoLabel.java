@@ -28,11 +28,10 @@ import java.util.Random;
  * @since 11-Dec-16.
  */
 public class AnimatedLogoLabel extends JComponent {
-  private static final boolean ourAnimation = false;
   private static final int[] ourOffsets = new int[]{1, 7, 13, 19, 25, 31, 37};
   private final static String ourName = "CONSULO";
 
-  private int[][] myData = new int[43][21];
+  private int[][] myData = new int[43][7];
 
   private volatile int myLastPosition;
 
@@ -40,13 +39,19 @@ public class AnimatedLogoLabel extends JComponent {
 
   private Thread myThread;
 
-  public AnimatedLogoLabel() {
+  private final int mySize;
+  private final boolean myAnimated;
+
+  public AnimatedLogoLabel(int size, boolean animated) {
+    mySize = size;
+    myAnimated = animated;
+
     Random random = new Random();
     Map<Character, AlphabetDraw> characterDraws = Alphabet.validCharacters;
     Character[] abc = Alphabet.alphabet;
 
     char[] str;
-    if(ourAnimation) {
+    if (myAnimated) {
       str = new char[ourName.length()];
       for (int i = 0; i < str.length; i++) {
         while (true) {
@@ -70,7 +75,7 @@ public class AnimatedLogoLabel extends JComponent {
       characterDraws.get(c).draw(offset, myData);
     }
 
-    if(ourAnimation) {
+    if (myAnimated) {
       myThread = new Thread(() -> {
         while (true) {
           try {
@@ -122,7 +127,7 @@ public class AnimatedLogoLabel extends JComponent {
   }
 
   public void start() {
-    if(ourAnimation) {
+    if (myAnimated) {
       myThread.start();
     }
   }
@@ -144,10 +149,22 @@ public class AnimatedLogoLabel extends JComponent {
   }
 
   @Override
-  public void paint(Graphics g) {
-    g.setColor(Color.LIGHT_GRAY);
-    g.fillRect(0, 0, getWidth(), getHeight());
+  public Dimension getPreferredSize() {
+    return new Dimension(JBUI.scale(myData.length * mySize), JBUI.scale(myData[0].length * mySize));
+  }
 
+  @Override
+  public Dimension getMinimumSize() {
+    return getPreferredSize();
+  }
+
+  @Override
+  public Dimension getMaximumSize() {
+    return getPreferredSize();
+  }
+
+  @Override
+  public void paint(Graphics g) {
     for (int y = 0; y < myData.length; y++) {
       int[] ints = myData[y];
 
@@ -155,8 +172,8 @@ public class AnimatedLogoLabel extends JComponent {
         int a = ints[x];
 
         if (a > 0) {
-          int size = JBUI.scale(14);
-          g.setColor(Color.BLACK);
+          int size = JBUI.scale(mySize);
+          g.setColor(getForeground());
           g.fillRect(y * size, x * size, size, size);
         }
       }
