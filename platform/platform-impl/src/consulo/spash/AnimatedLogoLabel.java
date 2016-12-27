@@ -28,6 +28,7 @@ import java.util.Random;
  * @since 11-Dec-16.
  */
 public class AnimatedLogoLabel extends JComponent {
+  private static final boolean ourAnimation = false;
   private static final int[] ourOffsets = new int[]{1, 7, 13, 19, 25, 31, 37};
   private final static String ourName = "CONSULO";
 
@@ -44,14 +45,20 @@ public class AnimatedLogoLabel extends JComponent {
     Map<Character, AlphabetDraw> characterDraws = Alphabet.validCharacters;
     Character[] abc = Alphabet.alphabet;
 
-    char[] str = new char[ourName.length()];
-    for (int i = 0; i < str.length; i++) {
-      while (true) {
-        str[i] = abc[random.nextInt(abc.length)];
-        if (str[i] != ourName.charAt(i)) {
-          break;
+    char[] str;
+    if(ourAnimation) {
+      str = new char[ourName.length()];
+      for (int i = 0; i < str.length; i++) {
+        while (true) {
+          str[i] = abc[random.nextInt(abc.length)];
+          if (str[i] != ourName.charAt(i)) {
+            break;
+          }
         }
       }
+    }
+    else {
+      str = ourName.toCharArray();
     }
 
     for (int i = 0; i < ourOffsets.length; i++) {
@@ -63,59 +70,61 @@ public class AnimatedLogoLabel extends JComponent {
       characterDraws.get(c).draw(offset, myData);
     }
 
-    myThread = new Thread(() -> {
-      while (true) {
-        try {
-          int per = 100 / ourName.length();
+    if(ourAnimation) {
+      myThread = new Thread(() -> {
+        while (true) {
+          try {
+            int per = 100 / ourName.length();
 
-          int k = myValue / per;
-          System.out.println(k);
+            int k = myValue / per;
 
-          int l = myLastPosition;
+            int l = myLastPosition;
 
-          myLastPosition = k;
+            myLastPosition = k;
 
-          // last pos
-          if (k >= ourName.length()) {
-            fillAtOffset(characterDraws, ourName.charAt(ourName.length() - 1), ourName.length() - 1);
+            // last pos
+            if (k >= ourName.length()) {
+              fillAtOffset(characterDraws, ourName.charAt(ourName.length() - 1), ourName.length() - 1);
 
-            break;
-          }
-          else {
-            int randomIndex = -1;
-            while (true) {
-              randomIndex = random.nextInt(abc.length);
-              if (abc[randomIndex] != ourName.charAt(k)) {
-                break;
+              break;
+            }
+            else {
+              int randomIndex = -1;
+              while (true) {
+                randomIndex = random.nextInt(abc.length);
+                if (abc[randomIndex] != ourName.charAt(k)) {
+                  break;
+                }
+              }
+
+              fillAtOffset(characterDraws, abc[randomIndex], k);
+
+              if (l != myLastPosition) {
+                for (int i = 0; i < k; i++) {
+                  fillAtOffset(characterDraws, ourName.charAt(i), i);
+                }
               }
             }
 
-            System.out.println(ourName.charAt(k));
-            fillAtOffset(characterDraws, abc[randomIndex], k);
-
-            if (l != myLastPosition) {
-              for (int i = 0; i < k; i++) {
-                fillAtOffset(characterDraws, ourName.charAt(i), i);
-              }
-            }
+            repaint();
           }
-
-          repaint();
+          catch (Exception e) {
+            e.printStackTrace();
+          }
+          finally {
+            TimeoutUtil.sleep(50L);
+          }
         }
-        catch (Exception e) {
-          e.printStackTrace();
-        }
-        finally {
-          TimeoutUtil.sleep(50L);
-        }
-      }
-    });
-    myThread.setName("Splash thread");
-    myThread.setPriority(Thread.MAX_PRIORITY);
+      });
+      myThread.setName("Splash thread");
+      myThread.setPriority(Thread.MAX_PRIORITY);
+    }
   }
 
   public void start() {
-    myThread.start();
+    if(ourAnimation) {
+      myThread.start();
+    }
   }
 
   private void fillAtOffset(Map<Character, AlphabetDraw> characterDraws, char c, int pos) {
