@@ -15,9 +15,12 @@
  */
 package consulo.ide.updateSettings;
 
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
 import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 /**
  * @author VISTALL
@@ -31,13 +34,30 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
   static class State {
     public boolean enable = true;
     public long lastTimeCheck = 0;
-    public UpdateChannel channel = UpdateChannel.nightly;   //TODO [VISTALL] we need load it while app start
+    public UpdateChannel channel;
   }
 
   private State myState = new State();
 
+  @NotNull
+  private static UpdateChannel findDefaultChannel() {
+    File file = PathManager.getDistributionDirectory();
+    for (UpdateChannel channel : UpdateChannel.values()) {
+      if (new File(file, "." + channel.name()).exists()) {
+        return channel;
+      }
+    }
+
+    return UpdateChannel.release;
+  }
+
+  @NotNull
   public UpdateChannel getChannel() {
-    return myState.channel;
+    UpdateChannel channel = myState.channel;
+    if (channel == null) {
+      myState.channel = channel = findDefaultChannel();
+    }
+    return channel;
   }
 
   public void setChannel(@NotNull UpdateChannel channel) {
