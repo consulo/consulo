@@ -145,6 +145,8 @@ public class PluginDownloader {
               FileUtil.createDirectory(targetFile);
             }
             else {
+              FileUtil.createParentDirs(targetFile);
+
               try (OutputStream stream = new FileOutputStream(targetFile)) {
                 StreamUtil.copyStreamContent(ais, stream);
               }
