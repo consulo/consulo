@@ -2431,7 +2431,8 @@
              order="after openedInEditor"/>
 
 
-    <iconDescriptorUpdater implementation="consulo.ide.impl.DefaultIconDescriptorUpdater" id="default" order="last"/>
+    <iconDescriptorUpdater implementation="consulo.ide.impl.PsiDirectoryIconDescriptorUpdater" id="directory" />
+    <iconDescriptorUpdater implementation="consulo.ide.impl.PsiFileIconDescriptorUpdater" id="default" order="last"/>
 
     <lang.ast.lazyFactory implementation="consulo.psi.tree.impl.DefaultASTLazyFactory" order="last"/>
     <lang.ast.leafFactory implementation="consulo.psi.tree.impl.DefaultASTLeafFactory" order="last"/>
