@@ -20,6 +20,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.ide.plugins.PluginJsonNode;
@@ -60,13 +61,18 @@ public class RepositoryHelper {
       platformVersion = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
     }
 
-    return WebServiceApi.REPOSITORY_API.buildUrl("download") +
-           "?platformVersion=" +
-           platformVersion +
-           "&channel=" +
-           channel +
-           "&pluginId=" +
-           pluginId;
+    StringBuilder builder = new StringBuilder();
+    builder.append(WebServiceApi.REPOSITORY_API.buildUrl("download"));
+    builder.append("?platformVersion=");
+    builder.append(platformVersion);
+    builder.append("&channel=");
+    builder.append(channel);
+    builder.append("&pluginId=");
+    builder.append(pluginId);
+    if(SystemProperties.getBooleanProperty("consulo.repository.no.tracking", false)) {
+      builder.append("&noTracking=true");
+    }
+    return builder.toString();
   }
 
   /**
