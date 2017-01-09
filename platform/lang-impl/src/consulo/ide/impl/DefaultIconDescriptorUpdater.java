@@ -51,39 +51,40 @@ public class DefaultIconDescriptorUpdater implements IconDescriptorUpdater {
     if (element instanceof PsiDirectory) {
       PsiDirectory psiDirectory = (PsiDirectory)element;
       VirtualFile virtualFile = psiDirectory.getVirtualFile();
-      Project project = psiDirectory.getProject();
+      if(iconDescriptor.getMainIcon() == null) {
+        Project project = psiDirectory.getProject();
 
-      Icon symbolIcon;
-      if (virtualFile.getFileSystem() instanceof ArchiveFileSystem) {
-        if (virtualFile.getParent() == null) {
-          symbolIcon = AllIcons.Nodes.PpJar;
-        }
-        else {
-          PsiPackage psiPackage = PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory);
-          symbolIcon = psiPackage != null ? AllIcons.Nodes.Package : AllIcons.Nodes.TreeClosed;
-        }
-      }
-      else if (ProjectRootsUtil.isModuleContentRoot(virtualFile, project)) {
-        symbolIcon = AllIcons.Nodes.Module;
-      }
-      else {
-        boolean ignored = ProjectRootManager.getInstance(project).getFileIndex().isExcluded(virtualFile);
-        if (ignored) {
-          symbolIcon = AllIcons.Modules.ExcludeRoot;
-        }
-        else {
-          ContentFolder contentFolder = ProjectRootsUtil.getContentFolderIfIs(virtualFile, project);
-          if (contentFolder != null) {
-            symbolIcon = contentFolder.getType().getIcon(contentFolder.getProperties());
+        Icon symbolIcon;
+        if (virtualFile.getFileSystem() instanceof ArchiveFileSystem) {
+          if (virtualFile.getParent() == null) {
+            symbolIcon = AllIcons.Nodes.PpJar;
           }
           else {
-            ContentFolderTypeProvider contentFolderTypeForFile = ProjectFileIndex.SERVICE.getInstance(project).getContentFolderTypeForFile(virtualFile);
-            symbolIcon = contentFolderTypeForFile != null ? contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory) : AllIcons.Nodes.TreeClosed;
+            PsiPackage psiPackage = PsiPackageManager.getInstance(project).findAnyPackage(psiDirectory);
+            symbolIcon = psiPackage != null ? AllIcons.Nodes.Package : AllIcons.Nodes.TreeClosed;
           }
         }
-      }
+        else if (ProjectRootsUtil.isModuleContentRoot(virtualFile, project)) {
+          symbolIcon = AllIcons.Nodes.Module;
+        }
+        else {
+          boolean ignored = ProjectRootManager.getInstance(project).getFileIndex().isExcluded(virtualFile);
+          if (ignored) {
+            symbolIcon = AllIcons.Modules.ExcludeRoot;
+          }
+          else {
+            ContentFolder contentFolder = ProjectRootsUtil.getContentFolderIfIs(virtualFile, project);
+            if (contentFolder != null) {
+              symbolIcon = contentFolder.getType().getIcon(contentFolder.getProperties());
+            }
+            else {
+              ContentFolderTypeProvider contentFolderTypeForFile = ProjectFileIndex.SERVICE.getInstance(project).getContentFolderTypeForFile(virtualFile);
+              symbolIcon = contentFolderTypeForFile != null ? contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory) : AllIcons.Nodes.TreeClosed;
+            }
+          }
+        }
 
-      iconDescriptor.setMainIcon(symbolIcon);
+        iconDescriptor.setMainIcon(symbolIcon);      }
 
       if(virtualFile.is(VFileProperty.SYMLINK)) {
         iconDescriptor.addLayerIcon(AllIcons.Nodes.Symlink);
