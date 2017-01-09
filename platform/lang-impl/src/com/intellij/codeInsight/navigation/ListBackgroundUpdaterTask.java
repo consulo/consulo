@@ -22,6 +22,7 @@ import com.intellij.ui.speedSearch.NameFilteringListModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.List;
 
 /**
@@ -34,7 +35,9 @@ public abstract class ListBackgroundUpdaterTask extends BackgroundUpdaterTask<JB
 
   @Override
   protected void paintBusy(final boolean paintBusy) {
-    myComponent.setPaintBusy(paintBusy);
+    final Runnable runnable = () -> myComponent.setPaintBusy(paintBusy);
+    //ensure start/end order
+    SwingUtilities.invokeLater(runnable);
   }
 
   @Override

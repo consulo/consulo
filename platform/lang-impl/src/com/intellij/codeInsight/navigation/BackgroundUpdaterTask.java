@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@ import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.popup.JBPopupAdapter;
-import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.popup.AbstractPopup;
@@ -33,8 +31,8 @@ import com.intellij.usages.impl.UsageViewImpl;
 import com.intellij.util.Alarm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,12 +45,14 @@ public abstract class BackgroundUpdaterTask<T> extends Task.Backgroundable {
   protected AbstractPopup myPopup;
   protected T myComponent;
   private Ref<UsageView> myUsageView;
-  private final List<PsiElement> myData = new ArrayList<PsiElement>();
+  private final List<PsiElement> myData = new ArrayList<>();
 
   private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
   private final Object lock = new Object();
 
-  private volatile boolean myCanceled = false;
+  private volatile boolean myCanceled;
+  private volatile boolean myFinished;
+  private volatile ProgressIndicator myIndicator;
 
   public BackgroundUpdaterTask(Project project, String title, boolean canBeCancelled) {
     super(project, title, canBeCancelled);
@@ -69,17 +69,11 @@ public abstract class BackgroundUpdaterTask<T> extends Task.Backgroundable {
     super(project, title, canBeCancelled, backgroundOption);
   }
 
-  public void init(@NotNull AbstractPopup popup, T component, Ref<UsageView> usageView) {
+  public void init(@NotNull AbstractPopup popup, @NotNull T component, @NotNull Ref<UsageView> usageView) {
     myPopup = popup;
     myComponent = component;
     myUsageView = usageView;
 
-    myPopup.addPopupListener(new JBPopupAdapter() {
-      @Override
-      public void onClosed(LightweightWindowEvent event) {
-        setCanceled();
-      }
-    });
   }
 
   public abstract String getCaption(int size);
@@ -92,44 +86,41 @@ public abstract class BackgroundUpdaterTask<T> extends Task.Backgroundable {
     return canceled;
   }
 
+  public boolean isCanceled() {
+    return myCanceled;
+  }
+
   public boolean updateComponent(final PsiElement element, @Nullable final Comparator comparator) {
     final UsageView view = myUsageView.get();
     if (view != null && !((UsageViewImpl)view).isDisposed()) {
-      ApplicationManager.getApplication().runReadAction(new Runnable() {
-        @Override
-        public void run() {
-          view.appendUsage(new UsageInfo2UsageAdapter(new UsageInfo(element)));
-        }
-      });
+      ApplicationManager.getApplication().runReadAction(() -> view.appendUsage(new UsageInfo2UsageAdapter(new UsageInfo(element))));
       return true;
     }
 
     if (myCanceled) return false;
-    if (myPopup.isDisposed()) return false;
+    final JComponent content = myPopup.getContent();
+    if (content == null || myPopup.isDisposed()) return false;
 
     synchronized (lock) {
       if (myData.contains(element)) return true;
       myData.add(element);
     }
 
-    myAlarm.addRequest(new Runnable() {
-      @Override
-      public void run() {
-        myAlarm.cancelAllRequests();
-        if (myCanceled) return;
-        if (myPopup.isDisposed()) return;
-        ArrayList<PsiElement> data = new ArrayList<PsiElement>();
-        synchronized (lock) {
-          if (comparator != null) {
-            Collections.sort(myData, comparator);
-          }
-          data.addAll(myData);
+    myAlarm.addRequest(() -> {
+      myAlarm.cancelAllRequests();
+      if (myCanceled) return;
+      if (myPopup.isDisposed()) return;
+      ArrayList<PsiElement> data = new ArrayList<>();
+      synchronized (lock) {
+        if (comparator != null) {
+          Collections.sort(myData, comparator);
         }
-        replaceModel(data);
-        myPopup.setCaption(getCaption(getCurrentSize()));
-        myPopup.pack(true, true);
+        data.addAll(myData);
       }
-    }, 200, ModalityState.stateForComponent(myPopup.getContent()));
+      replaceModel(data);
+      myPopup.setCaption(getCaption(getCurrentSize()));
+      myPopup.pack(true, true);
+    }, 200, ModalityState.stateForComponent(content));
     return true;
   }
 
@@ -142,12 +133,39 @@ public abstract class BackgroundUpdaterTask<T> extends Task.Backgroundable {
   @Override
   public void run(@NotNull ProgressIndicator indicator) {
     paintBusy(true);
+    myIndicator = indicator;
   }
 
-  @RequiredDispatchThread
   @Override
   public void onSuccess() {
     myPopup.setCaption(getCaption(getCurrentSize()));
     paintBusy(false);
+  }
+
+  @Override
+  public void onFinished() {
+    myFinished = true;
+  }
+
+  @Nullable
+  protected PsiElement getTheOnlyOneElement() {
+    synchronized (lock) {
+      if (myData.size() == 1) {
+        return myData.get(0);
+      }
+    }
+    return null;
+  }
+
+  public boolean isFinished() {
+    return myFinished;
+  }
+
+  public boolean cancelTask() {
+    ProgressIndicator indicator = myIndicator;
+    if (indicator != null) {
+      indicator.cancel();
+    }
+    return setCanceled();
   }
 }
