@@ -18,6 +18,7 @@ package consulo.ide.updateSettings.impl;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -34,16 +35,17 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.lombok.annotations.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -73,9 +75,7 @@ public class PluginListDialog extends DialogWrapper {
           }
 
           FileStatus status = FileStatus.MODIFIED;
-          IdeaPluginDescriptor plugin = PluginManager.getPlugin(pluginNode.getPluginId());
-          boolean platform = PlatformOrPluginUpdateChecker.isPlatform(pluginNode.getPluginId());
-          if (plugin == null && !platform) {
+          if (myGreenStrategy.test(pluginNode.getPluginId())) {
             status = FileStatus.ADDED;
           }
 
@@ -119,19 +119,45 @@ public class PluginListDialog extends DialogWrapper {
     }
   }
 
+  @NotNull
   private JComponent myRoot;
+  @NotNull
   private List<Couple<IdeaPluginDescriptor>> myNodes;
   @Nullable
   private Project myProject;
   @Nullable
+  private Consumer<Collection<IdeaPluginDescriptor>> myAfterCallback;
+  @Nullable
   private String myPlatformVersion;
+  @NotNull
+  private Predicate<PluginId> myGreenStrategy;
+  @NotNull
+  private PlatformOrPluginUpdateResult.Type myType;
 
-  public PluginListDialog(@Nullable Project project, PlatformOrPluginUpdateResult updateResult) {
+  public PluginListDialog(@Nullable Project project,
+                          @NotNull PlatformOrPluginUpdateResult updateResult,
+                          @Nullable Predicate<PluginId> greenStrategy,
+                          @Nullable Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
     super(project);
     myProject = project;
-    setTitle(IdeBundle.message("update.available.group"));
+    myAfterCallback = afterCallback;
+    myType = updateResult.getType();
+    setTitle(updateResult.getType() == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL
+             ? IdeBundle.message("plugin.install.dialog.title")
+             : IdeBundle.message("update.available.group"));
 
     myNodes = updateResult.getPlugins();
+
+    if (greenStrategy != null) {
+      myGreenStrategy = greenStrategy;
+    }
+    else {
+      myGreenStrategy = pluginId -> {
+        IdeaPluginDescriptor plugin = PluginManager.getPlugin(pluginId);
+        boolean platform = PlatformOrPluginUpdateChecker.isPlatform(pluginId);
+        return plugin == null && !platform;
+      };
+    }
 
     List<IdeaPluginDescriptor> list = updateResult.getPlugins().stream().map(x -> x.getSecond()).collect(Collectors.toList());
 
@@ -157,8 +183,10 @@ public class PluginListDialog extends DialogWrapper {
   }
 
   @Override
-  protected void doOKAction() {
+  public void doOKAction() {
     Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
+      List<IdeaPluginDescriptor> installed = new ArrayList<>(myNodes.size());
+
       for (Couple<IdeaPluginDescriptor> couple : myNodes) {
         IdeaPluginDescriptor pluginDescriptor = couple.getSecond();
 
@@ -166,6 +194,12 @@ public class PluginListDialog extends DialogWrapper {
           PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor, myPlatformVersion);
           if (downloader.prepareToInstall(indicator)) {
             downloader.install(indicator, true);
+
+            if (pluginDescriptor instanceof PluginNode) {
+              ((PluginNode)pluginDescriptor).setStatus(PluginNode.STATUS_DOWNLOADED);
+            }
+
+            installed.add(pluginDescriptor);
           }
         }
         catch (Exception e) {
@@ -173,11 +207,17 @@ public class PluginListDialog extends DialogWrapper {
         }
       }
 
-      UIUtil.invokeLaterIfNeeded(() -> {
-        if (PluginManagerConfigurable.showRestartIDEADialog() == Messages.YES) {
-          ApplicationManagerEx.getApplicationEx().restart(true);
-        }
-      });
+      if (myAfterCallback != null) {
+        myAfterCallback.accept(installed);
+      }
+
+      if (myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL) {
+        UIUtil.invokeLaterIfNeeded(() -> {
+          if (PluginManagerConfigurable.showRestartIDEADialog() == Messages.YES) {
+            ApplicationManagerEx.getApplicationEx().restart(true);
+          }
+        });
+      }
     });
 
     super.doOKAction();

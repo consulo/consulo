@@ -45,6 +45,29 @@ public class PluginInstaller {
   private PluginInstaller() {
   }
 
+  @NotNull
+  public static Set<PluginNode> getPluginsForInstall(List<PluginNode> pluginsToInstall, List<IdeaPluginDescriptor> allPlugins) {
+    final List<PluginId> pluginIds = new ArrayList<>();
+    for (PluginNode pluginNode : pluginsToInstall) {
+      pluginIds.add(pluginNode.getPluginId());
+    }
+
+    final Set<PluginNode> toInstallAll = new ArrayListSet<>();
+
+    for (final PluginNode toInstall : pluginsToInstall) {
+      Set<PluginNode> depends = new ArrayListSet<>();
+      collectDepends(toInstall, pluginIds, depends, allPlugins);
+
+      toInstallAll.addAll(depends);
+      toInstallAll.add(toInstall);
+    }
+
+    if(toInstallAll.isEmpty()) {
+      throw new IllegalArgumentException("No plugins for install");
+    }
+    return toInstallAll;
+  }
+
   @Nullable("Will return null is download failed")
   public static Set<PluginNode> prepareToInstall(List<PluginNode> pluginsToInstall, List<IdeaPluginDescriptor> allPlugins) {
     final List<PluginId> pluginIds = new ArrayList<>();

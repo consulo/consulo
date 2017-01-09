@@ -22,21 +22,26 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Consumer;
 import com.intellij.util.net.IOExceptionDialog;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
+import consulo.ide.updateSettings.impl.PluginListDialog;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @author lloix
@@ -88,10 +93,11 @@ public class InstallPluginAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    install(null);
+    install(e.getProject(), null);
   }
 
-  public void install(@Nullable final Runnable onSuccess) {
+  @RequiredDispatchThread
+  public void install(@Nullable Project project, @Nullable final Runnable onSuccess) {
     IdeaPluginDescriptor[] selection = getPluginTable().getSelectedObjects();
 
     final ArrayList<PluginNode> list = new ArrayList<>();
@@ -133,7 +139,10 @@ public class InstallPluginAction extends AnAction implements DumbAware {
       }
     }
     try {
-      final Consumer<Set<PluginNode>> onInstallRunnable = pluginNodes -> {
+      final Consumer<Collection<IdeaPluginDescriptor>> afterCallback = pluginNodes -> {
+        if (pluginNodes.isEmpty()) {
+          return;
+        }
         UIUtil.invokeLaterIfNeeded(() -> installedPluginsToModel(pluginNodes));
 
         if (!myInstalledPluginPanel.isDisposed()) {
@@ -144,7 +153,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         }
         else {
           boolean needToRestart = false;
-          for (PluginNode node : pluginNodes) {
+          for (IdeaPluginDescriptor node : pluginNodes) {
             final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(node.getPluginId());
             if (pluginDescriptor == null || pluginDescriptor.isEnabled()) {
               needToRestart = true;
@@ -160,8 +169,10 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         if (onSuccess != null) {
           onSuccess.run();
         }
+
+        ourInstallingNodes.removeAll(pluginNodes);
       };
-      downloadPlugins(list, myAvailablePluginPanel.getPluginsModel().getAllPlugins(), onInstallRunnable, pluginNodes -> ourInstallingNodes.removeAll(list));
+      downloadPlugins(project, list, myAvailablePluginPanel.getPluginsModel().getAllPlugins(), afterCallback);
     }
     catch (final IOException e1) {
       ourInstallingNodes.removeAll(list);
@@ -171,22 +182,32 @@ public class InstallPluginAction extends AnAction implements DumbAware {
     }
   }
 
-  private static void downloadPlugins(@NotNull final List<PluginNode> plugins,
+  private static void downloadPlugins(@Nullable Project project,
+                                      @NotNull final List<PluginNode> toInstall,
                                       @NotNull final List<IdeaPluginDescriptor> allPlugins,
-                                      @NotNull final Consumer<Set<PluginNode>> onSuccess,
-                                      @Nullable final Consumer<Set<PluginNode>> cleanup) throws IOException {
-    Task.Backgroundable.queue(null, IdeBundle.message("progress.download.plugins"), true, indicator -> {
-      Set<PluginNode> set = null;
-      try {
-        set = PluginInstaller.prepareToInstall(plugins, allPlugins);
-        if (set != null) {
-          onSuccess.consume(set);
+                                      @Nullable final Consumer<Collection<IdeaPluginDescriptor>> afterCallback) throws IOException {
+    Set<PluginNode> pluginsForInstallWithDependencies = PluginInstaller.getPluginsForInstall(toInstall, allPlugins);
+
+    PlatformOrPluginUpdateResult result = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL,
+                                                                           pluginsForInstallWithDependencies.stream()
+                                                                                   .map(x -> Couple.<IdeaPluginDescriptor>of(x, x))
+                                                                                   .collect(Collectors.toList()));
+    Predicate<PluginId> greenNodeStrategy = pluginId -> {
+      // do not mark target node as green, only depend
+      for (PluginNode node : toInstall) {
+        if (node.getPluginId().equals(pluginId)) {
+          return false;
         }
       }
-      finally {
-        if (cleanup != null) cleanup.consume(set);
-      }
-    });
+      return true;
+    };
+    PluginListDialog dialog = new PluginListDialog(project, result, greenNodeStrategy, afterCallback);
+    if (pluginsForInstallWithDependencies.size() == toInstall.size()) {
+      dialog.doOKAction();
+    }
+    else {
+      dialog.show();
+    }
   }
 
   private static boolean suggestToEnableInstalledPlugins(final InstalledPluginsTableModel pluginsModel,
@@ -247,8 +268,8 @@ public class InstallPluginAction extends AnAction implements DumbAware {
     return false;
   }
 
-  private void installedPluginsToModel(Collection<PluginNode> list) {
-    for (PluginNode pluginNode : list) {
+  private void installedPluginsToModel(Collection<IdeaPluginDescriptor> list) {
+    for (IdeaPluginDescriptor pluginNode : list) {
       final String idString = pluginNode.getPluginId().getIdString();
       final PluginManagerUISettings pluginManagerUISettings = PluginManagerUISettings.getInstance();
       if (!pluginManagerUISettings.getInstalledPlugins().contains(idString)) {
@@ -258,11 +279,10 @@ public class InstallPluginAction extends AnAction implements DumbAware {
     }
 
     final InstalledPluginsTableModel installedPluginsModel = (InstalledPluginsTableModel)myInstalledPluginPanel.getPluginsModel();
-    for (PluginNode node : list) {
+    for (IdeaPluginDescriptor node : list) {
       installedPluginsModel.appendOrUpdateDescriptor(node);
     }
   }
-
 
   public PluginTable getPluginTable() {
     return myAvailablePluginPanel.getPluginTable();

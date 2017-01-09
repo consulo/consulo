@@ -33,7 +33,9 @@ public class PlatformOrPluginUpdateResult {
     PLATFORM_UPDATE,
     PLUGIN_UPDATE,
     NO_UPDATE,
-    CANCELED
+    CANCELED,
+    // special case when user install plugins
+    PLUGIN_INSTALL
   }
 
   private final Type myType;

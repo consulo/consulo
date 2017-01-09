@@ -126,7 +126,7 @@ public class PlatformOrPluginUpdateChecker {
       case PLUGIN_UPDATE:
       case PLATFORM_UPDATE:
         if (showResults) {
-          showDialog(project, targetsForUpdate);
+          new PluginListDialog(project, targetsForUpdate, null, null).show();
         }
         else {
           Notification notification =
@@ -134,17 +134,13 @@ public class PlatformOrPluginUpdateChecker {
           notification.addAction(new NotificationAction("View updates") {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
-              showDialog(project, targetsForUpdate);
+              new PluginListDialog(project, targetsForUpdate, null, null).show();
             }
           });
           notification.notify(project);
         }
         break;
     }
-  }
-
-  private static void showDialog(@Nullable Project project, PlatformOrPluginUpdateResult targetsForUpdate) {
-    new PluginListDialog(project, targetsForUpdate).show();
   }
 
   public static ActionCallback checkAndNotifyForUpdates(@Nullable Project project, boolean showResults, @Nullable ProgressIndicator indicator) {

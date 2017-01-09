@@ -234,7 +234,7 @@ public class PluginHeaderPanel {
         switch (myActionId) {
           case UPDATE:
           case INSTALL:
-            new InstallPluginAction(myManager.getAvailable(), myManager.getInstalled()).install(new Runnable() {
+            new InstallPluginAction(myManager.getAvailable(), myManager.getInstalled()).install(null, new Runnable() {
               @Override
               public void run() {
                 setPlugin(myPlugin);
