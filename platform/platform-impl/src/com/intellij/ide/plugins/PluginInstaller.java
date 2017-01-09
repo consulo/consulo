@@ -46,15 +46,15 @@ public class PluginInstaller {
   }
 
   @NotNull
-  public static Set<PluginNode> getPluginsForInstall(List<PluginNode> pluginsToInstall, List<IdeaPluginDescriptor> allPlugins) {
+  public static Set<IdeaPluginDescriptor> getPluginsForInstall(List<IdeaPluginDescriptor> pluginsToInstall, List<IdeaPluginDescriptor> allPlugins) {
     final List<PluginId> pluginIds = new ArrayList<>();
-    for (PluginNode pluginNode : pluginsToInstall) {
+    for (IdeaPluginDescriptor pluginNode : pluginsToInstall) {
       pluginIds.add(pluginNode.getPluginId());
     }
 
-    final Set<PluginNode> toInstallAll = new ArrayListSet<>();
+    final Set<IdeaPluginDescriptor> toInstallAll = new ArrayListSet<>();
 
-    for (final PluginNode toInstall : pluginsToInstall) {
+    for (IdeaPluginDescriptor toInstall : pluginsToInstall) {
       Set<PluginNode> depends = new ArrayListSet<>();
       collectDepends(toInstall, pluginIds, depends, allPlugins);
 

@@ -50,7 +50,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
   private static final Key<EditorNotificationPanel> KEY = Key.create("file.type.associations.detected");
   private final Project myProject;
   private final EditorNotifications myNotifications;
-  private final Set<String> myEnabledExtensions = new HashSet<String>();
+  private final Set<String> myEnabledExtensions = new HashSet<>();
 
   public PluginAdvertiserEditorNotificationProvider(Project project, final EditorNotifications notifications) {
     myProject = project;
@@ -108,7 +108,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
         final PluginsAdvertiserDialog advertiserDialog =
                 new PluginsAdvertiserDialog(null, plugins.stream().map(x -> Couple.of(x, x)).collect(Collectors.toList()), allPlugins);
         advertiserDialog.show();
-        if (advertiserDialog.isOK()) {
+        if (advertiserDialog.isUserInstalledPlugins()) {
           myEnabledExtensions.add(extension);
           myNotifications.updateAllNotifications();
         }
@@ -125,7 +125,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
 
   @Nullable
   private static IdeaPluginDescriptor getDisabledPlugin(Set<String> plugins) {
-    final List<String> disabledPlugins = new ArrayList<String>(PluginManagerCore.getDisabledPlugins());
+    final List<String> disabledPlugins = new ArrayList<>(PluginManagerCore.getDisabledPlugins());
     disabledPlugins.retainAll(plugins);
     if (disabledPlugins.size() == 1) {
       return PluginManager.getPlugin(PluginId.getId(disabledPlugins.get(0)));

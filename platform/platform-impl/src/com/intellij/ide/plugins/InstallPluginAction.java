@@ -27,7 +27,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.net.IOExceptionDialog;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.annotations.RequiredDispatchThread;
@@ -36,8 +35,6 @@ import consulo.ide.updateSettings.impl.PluginListDialog;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -100,7 +97,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
   public void install(@Nullable Project project, @Nullable final Runnable onSuccess) {
     IdeaPluginDescriptor[] selection = getPluginTable().getSelectedObjects();
 
-    final ArrayList<PluginNode> list = new ArrayList<>();
+    final List<IdeaPluginDescriptor> list = new ArrayList<>();
     for (IdeaPluginDescriptor descr : selection) {
       PluginNode pluginNode = null;
       if (descr instanceof PluginNode) {
@@ -122,7 +119,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
       final InstalledPluginsTableModel pluginsModel = (InstalledPluginsTableModel)myInstalledPluginPanel.getPluginsModel();
       final Set<IdeaPluginDescriptor> disabled = new HashSet<>();
       final Set<IdeaPluginDescriptor> disabledDependants = new HashSet<>();
-      for (PluginNode node : list) {
+      for (IdeaPluginDescriptor node : list) {
         final PluginId pluginId = node.getPluginId();
         if (pluginsModel.isDisabled(pluginId)) {
           disabled.add(node);
@@ -138,63 +135,54 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         myInstalledPluginPanel.setRequireShutdown(true);
       }
     }
-    try {
-      final Consumer<Collection<IdeaPluginDescriptor>> afterCallback = pluginNodes -> {
-        if (pluginNodes.isEmpty()) {
-          return;
-        }
-        UIUtil.invokeLaterIfNeeded(() -> installedPluginsToModel(pluginNodes));
+    final Consumer<Collection<IdeaPluginDescriptor>> afterCallback = pluginNodes -> {
+      if (pluginNodes.isEmpty()) {
+        return;
+      }
+      UIUtil.invokeLaterIfNeeded(() -> installedPluginsToModel(pluginNodes));
 
-        if (!myInstalledPluginPanel.isDisposed()) {
-          UIUtil.invokeLaterIfNeeded(() -> {
-            getPluginTable().updateUI();
-            myInstalledPluginPanel.setRequireShutdown(true);
-          });
-        }
-        else {
-          boolean needToRestart = false;
-          for (IdeaPluginDescriptor node : pluginNodes) {
-            final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(node.getPluginId());
-            if (pluginDescriptor == null || pluginDescriptor.isEnabled()) {
-              needToRestart = true;
-              break;
-            }
-          }
-
-          if (needToRestart) {
-            PluginManagerMain.notifyPluginsWereInstalled(pluginNodes, null);
+      if (!myInstalledPluginPanel.isDisposed()) {
+        UIUtil.invokeLaterIfNeeded(() -> {
+          getPluginTable().updateUI();
+          myInstalledPluginPanel.setRequireShutdown(true);
+        });
+      }
+      else {
+        boolean needToRestart = false;
+        for (IdeaPluginDescriptor node : pluginNodes) {
+          final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(node.getPluginId());
+          if (pluginDescriptor == null || pluginDescriptor.isEnabled()) {
+            needToRestart = true;
+            break;
           }
         }
 
-        if (onSuccess != null) {
-          onSuccess.run();
+        if (needToRestart) {
+          PluginManagerMain.notifyPluginsWereInstalled(pluginNodes, null);
         }
+      }
 
-        ourInstallingNodes.removeAll(pluginNodes);
-      };
-      downloadPlugins(project, list, myAvailablePluginPanel.getPluginsModel().getAllPlugins(), afterCallback);
-    }
-    catch (final IOException e1) {
-      ourInstallingNodes.removeAll(list);
-      PluginManagerMain.LOG.error(e1);
-      SwingUtilities.invokeLater(() -> IOExceptionDialog
-              .showErrorDialog(IdeBundle.message("action.download.and.install.plugin"), IdeBundle.message("error.plugin.download.failed")));
-    }
+      if (onSuccess != null) {
+        onSuccess.run();
+      }
+
+      ourInstallingNodes.removeAll(pluginNodes);
+    };
+    downloadAndInstallPlugins(project, list, myAvailablePluginPanel.getPluginsModel().getAllPlugins(), afterCallback);
   }
 
-  private static void downloadPlugins(@Nullable Project project,
-                                      @NotNull final List<PluginNode> toInstall,
-                                      @NotNull final List<IdeaPluginDescriptor> allPlugins,
-                                      @Nullable final Consumer<Collection<IdeaPluginDescriptor>> afterCallback) throws IOException {
-    Set<PluginNode> pluginsForInstallWithDependencies = PluginInstaller.getPluginsForInstall(toInstall, allPlugins);
+  public static boolean downloadAndInstallPlugins(@Nullable Project project,
+                                               @NotNull final List<IdeaPluginDescriptor> toInstall,
+                                               @NotNull final List<IdeaPluginDescriptor> allPlugins,
+                                               @Nullable final Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
+    Set<IdeaPluginDescriptor> pluginsForInstallWithDependencies = PluginInstaller.getPluginsForInstall(toInstall, allPlugins);
 
     PlatformOrPluginUpdateResult result = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL,
-                                                                           pluginsForInstallWithDependencies.stream()
-                                                                                   .map(x -> Couple.<IdeaPluginDescriptor>of(x, x))
+                                                                           pluginsForInstallWithDependencies.stream().map(x -> Couple.of(x, x))
                                                                                    .collect(Collectors.toList()));
     Predicate<PluginId> greenNodeStrategy = pluginId -> {
       // do not mark target node as green, only depend
-      for (PluginNode node : toInstall) {
+      for (IdeaPluginDescriptor node : toInstall) {
         if (node.getPluginId().equals(pluginId)) {
           return false;
         }
@@ -204,16 +192,17 @@ public class InstallPluginAction extends AnAction implements DumbAware {
     PluginListDialog dialog = new PluginListDialog(project, result, greenNodeStrategy, afterCallback);
     if (pluginsForInstallWithDependencies.size() == toInstall.size()) {
       dialog.doOKAction();
+      return true;
     }
     else {
-      dialog.show();
+      return dialog.showAndGet();
     }
   }
 
   private static boolean suggestToEnableInstalledPlugins(final InstalledPluginsTableModel pluginsModel,
                                                          final Set<IdeaPluginDescriptor> disabled,
                                                          final Set<IdeaPluginDescriptor> disabledDependants,
-                                                         final ArrayList<PluginNode> list) {
+                                                         final List<IdeaPluginDescriptor> list) {
     if (!disabled.isEmpty() || !disabledDependants.isEmpty()) {
       String message = "";
       if (disabled.size() == 1) {

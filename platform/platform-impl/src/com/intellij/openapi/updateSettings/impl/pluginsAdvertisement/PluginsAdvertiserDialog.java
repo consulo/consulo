@@ -16,34 +16,34 @@
 package com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.InstallPluginAction;
 import com.intellij.ide.plugins.PluginManagerMain;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.updateSettings.impl.DetectedPluginsPanel;
-import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.openapi.util.Couple;
 import com.intellij.ui.TableUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * User: anna
  */
 public class PluginsAdvertiserDialog extends DialogWrapper {
-  private static final Logger LOG = Logger.getInstance(PluginsAdvertiserDialog.class.getName());
-
+  @Nullable
+  private Project myProject;
   private final Collection<Couple<IdeaPluginDescriptor>> myUploadedPlugins;
-  private final HashSet<String> mySkippedPlugins = new HashSet<String>();
+  private final List<IdeaPluginDescriptor> myAllPlugins;
+  private final HashSet<String> mySkippedPlugins = new HashSet<>();
+  private boolean myUserAccepted;
 
   PluginsAdvertiserDialog(@Nullable Project project, Collection<Couple<IdeaPluginDescriptor>> plugins, List<IdeaPluginDescriptor> allPlugins) {
     super(project);
+    myProject = project;
     myUploadedPlugins = plugins;
+    myAllPlugins = allPlugins;
     setTitle("Choose Plugins to Install");
     init();
   }
@@ -67,30 +67,21 @@ public class PluginsAdvertiserDialog extends DialogWrapper {
 
   @Override
   protected void doOKAction() {
-    final List<PluginDownloader> downloaders = new ArrayList<PluginDownloader>();
-    for (Couple<IdeaPluginDescriptor> downloader : myUploadedPlugins) {
-      if (!mySkippedPlugins.contains(downloader.getSecond().getPluginId().toString())) {
-        final PluginDownloader pluginDownloader = PluginDownloader.createDownloader(downloader.getSecond());
-        if (pluginDownloader != null) {
-          downloaders.add(pluginDownloader);
-        }
+    final List<IdeaPluginDescriptor> toDownload = new ArrayList<>();
+    for (Couple<IdeaPluginDescriptor> couple : myUploadedPlugins) {
+      if (!mySkippedPlugins.contains(couple.getSecond().getPluginId().toString())) {
+        toDownload.add(couple.getSecond());
       }
     }
-
-    Task.Backgroundable.queue(null, "Downloading plugins", it -> {
-      try {
-        for (PluginDownloader downloader : downloaders) {
-          if (downloader.prepareToInstall(it)) {
-            downloader.install(it, true);
-          }
-        }
-
-        PluginManagerMain.notifyPluginsWereInstalled(downloaders.stream().map(PluginDownloader::getDescriptor).collect(Collectors.toSet()), null);
-      }
-      catch (IOException e) {
-        LOG.error(e);
+    myUserAccepted = InstallPluginAction.downloadAndInstallPlugins(myProject, toDownload, myAllPlugins, ideaPluginDescriptors -> {
+      if (!ideaPluginDescriptors.isEmpty()) {
+        PluginManagerMain.notifyPluginsWereInstalled(ideaPluginDescriptors, null);
       }
     });
     super.doOKAction();
+  }
+
+  public boolean isUserInstalledPlugins() {
+    return isOK() && myUserAccepted;
   }
 }
