@@ -17,7 +17,6 @@ package com.intellij.ide.plugins;
 
 import com.google.gson.Gson;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -61,16 +60,13 @@ public class RepositoryHelper {
       platformVersion = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
     }
 
-    String id = PermanentInstallationID.get();
     return WebServiceApi.REPOSITORY_API.buildUrl("download") +
            "?platformVersion=" +
            platformVersion +
            "&channel=" +
            channel +
            "&pluginId=" +
-           pluginId +
-           "&id=" +
-           id;
+           pluginId;
   }
 
   /**
