@@ -18,6 +18,8 @@ package com.intellij.formatting;
 import com.intellij.openapi.util.TextRange;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * The spacing setting for a formatting model block. Indicates the number of spaces and/or
  *  line breaks that should be inserted between the specified children of the specified block.
@@ -39,7 +41,7 @@ public abstract class Spacing {
    *                       to which the spacing setting instance is related. Spaces are inserted
    *                       if there are less than this amount of spaces in the document.
    * @param maxSpaces      The maximum number of spaces that should be present between the blocks
-   *                       to which the spacing setting instance is related, or <code>Integer.MAX_VALUE</code>
+   *                       to which the spacing setting instance is related, or {@code Integer.MAX_VALUE}
    *                       if the number of spaces is not limited. Spaces are deleted if there are
    *                       more than this amount of spaces in the document.
    * @param minLineFeeds   The minimum number of line breaks that should be present between the blocks
@@ -63,7 +65,7 @@ public abstract class Spacing {
    *                       to which the spacing setting instance is related. Spaces are inserted
    *                       if there are less than this amount of spaces in the document.
    * @param maxSpaces      The maximum number of spaces that should be present between the blocks
-   *                       to which the spacing setting instance is related, or <code>Integer.MAX_VALUE</code>
+   *                       to which the spacing setting instance is related, or {@code Integer.MAX_VALUE}
    *                       if the number of spaces is not limited. Spaces are deleted if there are
    *                       more than this amount of spaces in the document.
    * @param minLineFeeds   The minimum number of line breaks that should be present between the blocks
@@ -98,7 +100,7 @@ public abstract class Spacing {
    *                       to which the spacing setting instance is related. Spaces are inserted
    *                       if there are less than this amount of spaces in the document.
    * @param maxSpaces      The maximum number of spaces that should be present between the blocks
-   *                       to which the spacing setting instance is related, or <code>Integer.MAX_VALUE</code>
+   *                       to which the spacing setting instance is related, or {@code Integer.MAX_VALUE}
    *                       if the number of spaces is not limited. Spaces are deleted if there are
    *                       more than this amount of spaces in the document.
    * @param dependency     The text range checked for the presence of line breaks.
@@ -115,18 +117,35 @@ public abstract class Spacing {
     return createDependentLFSpacing(minSpaces, maxSpaces, dependency, keepLineBreaks, keepBlankLines, DependentSpacingRule.DEFAULT);
   }
 
+
+  /**
+   * Needed when implementing options like "Next line after '('" or "Place ')' on new line". This options works only if parameters are
+   * wrapped, so previously dependent spacing was created on whole parameter list range, which does not work correctly with multiline
+   * arguments such as lambdas and anonymous classes.
+   *
+   * Using this method we can create dependent spacing on multiple ranges between parameters and solve this problem
+   */
+  public static Spacing createDependentLFSpacing(int minSpaces,
+                                                 int maxSpaces,
+                                                 List<TextRange> dependency,
+                                                 boolean keepLineBreaks,
+                                                 int keepBlankLines)
+  {
+    return myFactory.createDependentLFSpacing(minSpaces, maxSpaces, dependency, keepLineBreaks, keepBlankLines, DependentSpacingRule.DEFAULT);
+  }
+
   /**
    * Creates a spacing setting instance which uses settings from the given dependent spacing rule if the specified text range changes
    * its 'has line feed' status during formatting (new line feed is added and the range hasn't contained them before
    * or it contained line feed(s) and it was removed during formatting).
    * <p/>
    * Used for formatting rules like the "next line if wrapped" brace placement.
-   * 
+   *
    * @param minSpaces        The minimum number of spaces that should be present between the blocks
    *                         to which the spacing setting instance is related. Spaces are inserted
    *                         if there are less than this amount of spaces in the document.
    * @param maxSpaces        The maximum number of spaces that should be present between the blocks
-   *                         to which the spacing setting instance is related, or <code>Integer.MAX_VALUE</code>
+   *                         to which the spacing setting instance is related, or {@code Integer.MAX_VALUE}
    *                         if the number of spaces is not limited. Spaces are deleted if there are
    *                         more than this amount of spaces in the document.
    * @param dependencyRange  The text range checked for the presence of line breaks.
@@ -144,7 +163,7 @@ public abstract class Spacing {
   {
     return myFactory.createDependentLFSpacing(minSpaces, maxSpaces, dependencyRange, keepLineBreaks, keepBlankLines, rule);
   }
-  
+
   /**
    * Creates a spacing setting instance which preserves the presence of spaces between the blocks but,
    * if spaces are present, may insert or delete the spaces. Used, for example, for HTML formatting
@@ -169,7 +188,7 @@ public abstract class Spacing {
    *                       to which the spacing setting instance is related. Spaces are inserted
    *                       if there are less than this amount of spaces in the document.
    * @param maxSpaces      The maximum number of spaces that should be present between the blocks
-   *                       to which the spacing setting instance is related, or <code>Integer.MAX_VALUE</code>
+   *                       to which the spacing setting instance is related, or {@code Integer.MAX_VALUE}
    *                       if the number of spaces is not limited. Spaces are deleted if there are
    *                       more than this amount of spaces in the document.
    * @param keepLineBreaks Whether the existing line breaks between the blocks should be preserved.

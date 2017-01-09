@@ -15,6 +15,8 @@
  */
 package com.intellij.profile.codeInspection;
 
+import com.intellij.codeHighlighting.HighlightDisplayLevel;
+import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
@@ -31,14 +33,15 @@ import org.jetbrains.annotations.NotNull;
  * User: anna
  * Date: 30-Nov-2005
  */
-public abstract class InspectionProjectProfileManager extends DefaultProjectProfileManager implements ProjectComponent, SeverityProvider, PersistentStateComponent<Element> {
+public abstract class InspectionProjectProfileManager extends DefaultProjectProfileManager
+        implements ProjectComponent, SeverityProvider, PersistentStateComponent<Element> {
   public InspectionProjectProfileManager(@NotNull Project project,
                                          @NotNull InspectionProfileManager inspectionProfileManager,
                                          @NotNull DependencyValidationManager holder) {
     super(project, inspectionProfileManager, holder);
   }
 
-  public static InspectionProjectProfileManager getInstance(Project project){
+  public static InspectionProjectProfileManager getInstance(Project project) {
     return project.getComponent(InspectionProjectProfileManager.class);
   }
 
@@ -48,16 +51,16 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
   }
 
   @NotNull
-  public InspectionProfile getInspectionProfile(){
+  public InspectionProfile getInspectionProfile() {
     return (InspectionProfile)getProjectProfileImpl();
   }
 
   /**
-   * @deprecated  use {@link #getInspectionProfile()} instead
+   * @deprecated use {@link #getInspectionProfile()} instead
    */
   @SuppressWarnings({"UnusedDeclaration"})
   @NotNull
-  public InspectionProfile getInspectionProfile(PsiElement element){
+  public InspectionProfile getInspectionProfile(PsiElement element) {
     return getInspectionProfile();
   }
 
@@ -83,5 +86,14 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
   @Override
   public Profile getProfile(@NotNull final String name) {
     return getProfile(name, true);
+  }
+
+  public static boolean isInformationLevel(String shortName, @NotNull PsiElement element) {
+    final HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
+    if (key != null) {
+      final HighlightDisplayLevel errorLevel = getInstance(element.getProject()).getInspectionProfile().getErrorLevel(key, element);
+      return HighlightDisplayLevel.DO_NOT_SHOW.equals(errorLevel);
+    }
+    return false;
   }
 }

@@ -227,7 +227,13 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   //----------------- override -------------------
   public boolean REPEAT_SYNCHRONIZED = true;
 
-//----------------- IMPORTS --------------------
+  //----------------- FUNCTIONAL EXPRESSIONS -----
+
+  public boolean REPLACE_INSTANCEOF = false;
+  public boolean REPLACE_CAST = false;
+  public boolean REPLACE_NULL_CHECK = true;
+
+  //----------------- IMPORTS --------------------
 
   public boolean LAYOUT_STATIC_IMPORTS_SEPARATELY = true;
   public boolean USE_FQ_CLASS_NAMES = false;

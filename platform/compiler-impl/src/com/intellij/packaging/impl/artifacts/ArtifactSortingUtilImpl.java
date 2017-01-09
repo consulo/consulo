@@ -73,7 +73,6 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
   private List<String> doGetSortedArtifacts() {
     GraphGenerator<String> graph = createArtifactsGraph();
     DFSTBuilder<String> builder = new DFSTBuilder<String>(graph);
-    builder.buildDFST();
     List<String> names = new ArrayList<String>();
     names.addAll(graph.getNodes());
     Collections.sort(names, builder.comparator());
@@ -95,7 +94,6 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
     }
 
     final DFSTBuilder<String> builder = new DFSTBuilder<String>(graph);
-    builder.buildDFST();
     if (builder.isAcyclic() && result.isEmpty()) return Collections.emptyMap();
 
     final TIntArrayList sccs = builder.getSCCs();

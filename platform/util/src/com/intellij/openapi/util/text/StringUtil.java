@@ -671,7 +671,7 @@ public class StringUtil extends StringUtilRt {
   }
 
   @Contract(pure = true)
-  private static boolean isPrintableUnicode(char c) {
+  public static boolean isPrintableUnicode(char c) {
     int t = Character.getType(c);
     return t != Character.UNASSIGNED && t != Character.LINE_SEPARATOR && t != Character.PARAGRAPH_SEPARATOR &&
            t != Character.CONTROL && t != Character.FORMAT && t != Character.PRIVATE_USE && t != Character.SURROGATE;

@@ -18,16 +18,8 @@ package com.intellij.util.graph;
 import java.util.Collection;
 import java.util.Iterator;
 
-/**
- * @author dsl
- */
-public interface Graph<Node> extends InboundSemiGraph<Node>, OutboundSemiGraph<Node> {
-  @Override
+public interface OutboundSemiGraph<Node> {
   Collection<Node> getNodes();
 
-  @Override
-  Iterator<Node> getIn(Node n);
-
-  @Override
   Iterator<Node> getOut(Node n);
 }

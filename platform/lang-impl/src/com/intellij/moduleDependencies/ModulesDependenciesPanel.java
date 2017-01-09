@@ -114,7 +114,6 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
     }
     myModulesGraph = buildGraph();
     DFSTBuilder<Module> builder = new DFSTBuilder<Module>(myModulesGraph);
-    builder.buildDFST();
     if (builder.isAcyclic()){
       mySplitter.setProportion(1.f);
     } else {

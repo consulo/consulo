@@ -434,7 +434,7 @@ public class CommonCodeStyleSettings {
   public boolean ALIGN_MULTILINE_PARENTHESIZED_EXPRESSION = false;
   public boolean ALIGN_MULTILINE_ARRAY_INITIALIZER_EXPRESSION = false;
 
-//----------------- Group alignments ---------------
+  //----------------- Group alignments ---------------
 
   /**
    * Specifies if subsequent fields/variables declarations and initialisations should be aligned in columns like below:
@@ -443,6 +443,8 @@ public class CommonCodeStyleSettings {
    */
   public boolean ALIGN_GROUP_FIELD_DECLARATIONS = false;
   public boolean ALIGN_CONSECUTIVE_VARIABLE_DECLARATIONS = false;
+  public boolean ALIGN_SUBSEQUENT_SIMPLE_METHODS = false;
+
 
 //----------------- SPACES --------------------
 
@@ -833,6 +835,7 @@ public class CommonCodeStyleSettings {
   public boolean KEEP_SIMPLE_BLOCKS_IN_ONE_LINE = false;
   public boolean KEEP_SIMPLE_METHODS_IN_ONE_LINE = false;
   public boolean KEEP_SIMPLE_CLASSES_IN_ONE_LINE = false;
+  public boolean KEEP_SIMPLE_LAMBDAS_IN_ONE_LINE = false;
   public boolean KEEP_MULTIPLE_EXPRESSIONS_IN_ONE_LINE = false;
 
   public int FOR_STATEMENT_WRAP = DO_NOT_WRAP;
