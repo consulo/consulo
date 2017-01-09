@@ -948,11 +948,11 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
     if (endY < startY) endY = startY;
     if (startY < 0 || endY < 0) {
-      LOGGER.error("Bad text range startY=" + startY +
-                   ", endY=" +  endY +
-                   ", myEditorSourceHeight=" + myEditorSourceHeight +
-                   ", myEditorTargetHeight=" + myEditorTargetHeight +
-                   ", myEditorScrollbarTop=" + myEditorScrollbarTop);
+      //LOGGER.error("Bad text range startY=" + startY +
+      //             ", endY=" +  endY +
+      //             ", myEditorSourceHeight=" + myEditorSourceHeight +
+      //             ", myEditorTargetHeight=" + myEditorTargetHeight +
+      //             ", myEditorScrollbarTop=" + myEditorScrollbarTop);
       return new ProperTextRange(0, 0);
     }
 
