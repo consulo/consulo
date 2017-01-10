@@ -52,13 +52,14 @@ public class PluginDownloader {
   private static final Logger LOG = Logger.getInstance(PluginDownloader.class);
 
   @NotNull
-  public static PluginDownloader createDownloader(@NotNull IdeaPluginDescriptor descriptor) {
-    return createDownloader(descriptor, null);
+  public static PluginDownloader createDownloader(@NotNull IdeaPluginDescriptor descriptor, boolean viaUpdate) {
+    return createDownloader(descriptor, null, viaUpdate);
   }
 
   @NotNull
-  public static PluginDownloader createDownloader(@NotNull IdeaPluginDescriptor descriptor, @Nullable String platformVersion) {
-    String url = RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString(), platformVersion);
+  public static PluginDownloader createDownloader(@NotNull IdeaPluginDescriptor descriptor, @Nullable String platformVersion, boolean viaUpdate) {
+    String url =
+            RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString(), platformVersion, viaUpdate);
 
     return new PluginDownloader(descriptor, url);
   }

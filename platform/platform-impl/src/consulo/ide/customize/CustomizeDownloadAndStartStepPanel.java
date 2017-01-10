@@ -129,7 +129,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
         public void run() {
           for (IdeaPluginDescriptor ideaPluginDescriptor : pluginsForDownload) {
             try {
-              PluginDownloader downloader = PluginDownloader.createDownloader(ideaPluginDescriptor);
+              PluginDownloader downloader = PluginDownloader.createDownloader(ideaPluginDescriptor, false);
               downloader.prepareToInstall(indicator);
               downloader.install(true);
             }
@@ -139,12 +139,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
           }
 
           myDone = true;
-          UIUtil.invokeLaterIfNeeded(new Runnable() {
-            @Override
-            public void run() {
-              placeStartButton();
-            }
-          });
+          UIUtil.invokeLaterIfNeeded(() -> placeStartButton());
         }
       });
     }

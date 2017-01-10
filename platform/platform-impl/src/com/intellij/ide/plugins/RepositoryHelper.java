@@ -51,12 +51,7 @@ public class RepositoryHelper {
   }
 
   @NotNull
-  public static String buildUrlForDownload(@NotNull UpdateChannel channel, @NotNull String pluginId) {
-    return buildUrlForDownload(channel, pluginId, null);
-  }
-
-  @NotNull
-  public static String buildUrlForDownload(@NotNull UpdateChannel channel, @NotNull String pluginId, @Nullable String platformVersion) {
+  public static String buildUrlForDownload(@NotNull UpdateChannel channel, @NotNull String pluginId, @Nullable String platformVersion, boolean viaUpdate) {
     if (platformVersion == null) {
       platformVersion = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
     }
@@ -71,6 +66,9 @@ public class RepositoryHelper {
     builder.append(pluginId);
     if(SystemProperties.getBooleanProperty("consulo.repository.no.tracking", false)) {
       builder.append("&noTracking=true");
+    }
+    if(viaUpdate) {
+      builder.append("&viaUpdate=true");
     }
     return builder.toString();
   }

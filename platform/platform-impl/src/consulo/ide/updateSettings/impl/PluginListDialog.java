@@ -119,20 +119,13 @@ public class PluginListDialog extends DialogWrapper {
     }
   }
 
-  @NotNull
-  private JComponent myRoot;
-  @NotNull
-  private List<Couple<IdeaPluginDescriptor>> myNodes;
-  @Nullable
-  private Project myProject;
-  @Nullable
-  private Consumer<Collection<IdeaPluginDescriptor>> myAfterCallback;
-  @Nullable
-  private String myPlatformVersion;
-  @NotNull
-  private Predicate<PluginId> myGreenStrategy;
-  @NotNull
-  private PlatformOrPluginUpdateResult.Type myType;
+  @NotNull private JComponent myRoot;
+  @NotNull private List<Couple<IdeaPluginDescriptor>> myNodes;
+  @Nullable private Project myProject;
+  @Nullable private Consumer<Collection<IdeaPluginDescriptor>> myAfterCallback;
+  @Nullable private String myPlatformVersion;
+  @NotNull private Predicate<PluginId> myGreenStrategy;
+  @NotNull private PlatformOrPluginUpdateResult.Type myType;
 
   public PluginListDialog(@Nullable Project project,
                           @NotNull PlatformOrPluginUpdateResult updateResult,
@@ -191,7 +184,8 @@ public class PluginListDialog extends DialogWrapper {
         IdeaPluginDescriptor pluginDescriptor = couple.getSecond();
 
         try {
-          PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor, myPlatformVersion);
+          PluginDownloader downloader =
+                  PluginDownloader.createDownloader(pluginDescriptor, myPlatformVersion, myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL);
           if (downloader.prepareToInstall(indicator)) {
             downloader.install(indicator, true);
 
