@@ -58,8 +58,8 @@ public class PluginDownloader {
 
   @NotNull
   public static PluginDownloader createDownloader(@NotNull IdeaPluginDescriptor descriptor, @Nullable String platformVersion, boolean viaUpdate) {
-    String url =
-            RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString(), platformVersion, viaUpdate);
+    String url = RepositoryHelper
+            .buildUrlForDownload(UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString(), platformVersion, false, viaUpdate);
 
     return new PluginDownloader(descriptor, url);
   }
