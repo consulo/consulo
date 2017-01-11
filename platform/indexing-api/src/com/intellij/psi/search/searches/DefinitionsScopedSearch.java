@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.Query;
 import com.intellij.util.QueryExecutor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The search is used in two IDE navigation functions namely Go To Implementation (Ctrl+Alt+B) and
@@ -32,15 +33,24 @@ import com.intellij.util.QueryExecutor;
  *
  */
 public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, DefinitionsScopedSearch.SearchParameters> {
-  public static ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("com.intellij.definitionsScopedSearch");
-  public static DefinitionsScopedSearch INSTANCE = new DefinitionsScopedSearch();
+  public static final ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("com.intellij.definitionsScopedSearch");
+  public static final DefinitionsScopedSearch INSTANCE = new DefinitionsScopedSearch();
 
   public static Query<PsiElement> search(PsiElement definitionsOf) {
     return INSTANCE.createUniqueResultsQuery(new SearchParameters(definitionsOf));
   }
 
   public static Query<PsiElement> search(PsiElement definitionsOf, SearchScope searchScope) {
-    return INSTANCE.createUniqueResultsQuery(new SearchParameters(definitionsOf, searchScope, true));
+    return search(definitionsOf, searchScope, true);
+  }
+
+  /**
+   * @param checkDeep false for show implementations to present definition only
+   */
+  public static Query<PsiElement> search(PsiElement definitionsOf,
+                                         SearchScope searchScope,
+                                         final boolean checkDeep) {
+    return INSTANCE.createUniqueResultsQuery(new SearchParameters(definitionsOf, searchScope, checkDeep));
   }
 
   public static class SearchParameters {
@@ -48,16 +58,22 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
     private final SearchScope myScope;
     private final boolean myCheckDeep;
 
-    public SearchParameters(PsiElement element) {
-      this(element, element.getUseScope(), true);
+    public SearchParameters(@NotNull final PsiElement element) {
+      this(element, ApplicationManager.getApplication().runReadAction(new Computable<SearchScope>() {
+        @Override
+        public SearchScope compute() {
+          return element.getUseScope();
+        }
+      }), true);
     }
 
-    public SearchParameters(final PsiElement element, SearchScope scope, final boolean checkDeep) {
+    public SearchParameters(@NotNull PsiElement element, @NotNull SearchScope scope, final boolean checkDeep) {
       myElement = element;
       myScope = scope;
       myCheckDeep = checkDeep;
     }
 
+    @NotNull
     public PsiElement getElement() {
       return myElement;
     }
@@ -66,14 +82,14 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
       return myCheckDeep;
     }
 
+    @NotNull
     public SearchScope getScope() {
-      final SearchScope accessScope = ApplicationManager.getApplication().runReadAction(new Computable<SearchScope>() {
+      return ApplicationManager.getApplication().runReadAction(new Computable<SearchScope>() {
         @Override
         public SearchScope compute() {
-          return PsiSearchHelper.SERVICE.getInstance(myElement.getProject()).getUseScope(myElement);
+          return myScope.intersectWith(PsiSearchHelper.SERVICE.getInstance(myElement.getProject()).getUseScope(myElement));
         }
       });
-      return myScope.intersectWith(accessScope);
     }
   }
 

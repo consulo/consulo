@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,10 @@
 package com.intellij.codeInsight.navigation;
 
 import com.intellij.codeInsight.CodeInsightBundle;
-import consulo.codeInsight.TargetElementUtil;
+import com.intellij.codeInsight.ContainerProvider;
 import com.intellij.ide.util.PsiElementListCellRenderer;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
@@ -28,12 +29,11 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.containers.HashMap;
+import consulo.codeInsight.TargetElementUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 public class GotoImplementationHandler extends GotoTargetHandler {
@@ -44,56 +44,72 @@ public class GotoImplementationHandler extends GotoTargetHandler {
 
   @Override
   @Nullable
-  public GotoData getSourceAndTargetElements(Editor editor, PsiFile file) {
+  public GotoData getSourceAndTargetElements(@NotNull Editor editor, PsiFile file) {
     int offset = editor.getCaretModel().getOffset();
     PsiElement source = TargetElementUtil.findTargetElement(editor, ImplementationSearcher.getFlags(), offset);
     if (source == null) return null;
-    final GotoData gotoData;
     final PsiReference reference = TargetElementUtil.findReference(editor, offset);
-    if (!ApplicationManager.getApplication().isUnitTestMode()) {
-      gotoData = new GotoData(source, new ImplementationSearcher.FirstImplementationsSearcher(){
-        @Override
-        protected boolean accept(PsiElement element) {
-          return TargetElementUtil.acceptImplementationForReference(reference, element);
-        }
+    PsiElement[] targets = new ImplementationSearcher.FirstImplementationsSearcher() {
+      @Override
+      protected boolean accept(PsiElement element) {
+        return TargetElementUtil.acceptImplementationForReference(reference, element);
+      }
 
-        @Override
-        protected boolean canShowPopupWithOneItem(PsiElement element) {
-          return false;
+      @Override
+      protected boolean canShowPopupWithOneItem(PsiElement element) {
+        return false;
+      }
+    }.searchImplementations(editor, source, offset);
+    if (targets == null) return null;
+    GotoData gotoData = new GotoData(source, targets, Collections.emptyList());
+    gotoData.listUpdaterTask = new ImplementationsUpdaterTask(gotoData, editor, offset, reference) {
+      @Override
+      public void onFinished() {
+        super.onFinished();
+        PsiElement oneElement = getTheOnlyOneElement();
+        if (oneElement != null && navigateToElement(oneElement)) {
+          myPopup.cancel();
         }
-      }.searchImplementations(editor, source, offset), Collections.<AdditionalAction>emptyList());
-      
-      gotoData.listUpdaterTask = new ImplementationsUpdaterTask(gotoData, editor, offset, reference);
-    } else {
-      gotoData = new GotoData(source, new ImplementationSearcher(){
-        @Override
-        protected PsiElement[] filterElements(PsiElement element, PsiElement[] targetElements, int offset) {
-          final List<PsiElement> result = new ArrayList<PsiElement>();
-          for (PsiElement targetElement : targetElements) {
-            if (TargetElementUtil.acceptImplementationForReference(reference, targetElement)) {
-              result.add(targetElement);
-            }
-          }
-          return result.toArray(new PsiElement[result.size()]);
-        }
-      }.searchImplementations(editor, source, offset),
-                              Collections.<AdditionalAction>emptyList());
-    }
+      }
+    };
     return gotoData;
   }
 
-  @Override
-  protected String getChooserTitle(PsiElement sourceElement, String name, int length) {
-    return CodeInsightBundle.message("goto.implementation.chooserTitle", name, length);
+
+  private static PsiElement getContainer(PsiElement refElement) {
+    for (ContainerProvider provider : ContainerProvider.EP_NAME.getExtensions()) {
+      final PsiElement container = provider.getContainer(refElement);
+      if (container != null) return container;
+    }
+    return refElement.getParent();
   }
 
   @Override
-  protected String getFindUsagesTitle(PsiElement sourceElement, String name, int length) {
+  @NotNull
+  protected String getChooserTitle(@NotNull PsiElement sourceElement, String name, int length, boolean finished) {
+    ItemPresentation presentation = ((NavigationItem)sourceElement).getPresentation();
+    String fullName;
+    if (presentation == null) {
+      fullName = name;
+    }
+    else {
+      PsiElement container = getContainer(sourceElement);
+      ItemPresentation containerPresentation = container == null || container instanceof PsiFile ? null : ((NavigationItem)container).getPresentation();
+      String containerText = containerPresentation == null ? null : containerPresentation.getPresentableText();
+      fullName = (containerText == null ? "" : containerText+".") + presentation.getPresentableText();
+    }
+    return CodeInsightBundle.message("goto.implementation.chooserTitle", fullName, length, finished ? "" : " so far");
+  }
+
+  @NotNull
+  @Override
+  protected String getFindUsagesTitle(@NotNull PsiElement sourceElement, String name, int length) {
     return CodeInsightBundle.message("goto.implementation.findUsages.title", name, length);
   }
 
+  @NotNull
   @Override
-  protected String getNotFoundMessage(Project project, Editor editor, PsiFile file) {
+  protected String getNotFoundMessage(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
     return CodeInsightBundle.message("goto.implementation.notFound");
   }
 
@@ -101,10 +117,10 @@ public class GotoImplementationHandler extends GotoTargetHandler {
     private final Editor myEditor;
     private final int myOffset;
     private final GotoData myGotoData;
-    private final Map<Object, PsiElementListCellRenderer> renderers = new HashMap<Object, PsiElementListCellRenderer>();
+    private final Map<Object, PsiElementListCellRenderer> renderers = new HashMap<>();
     private final PsiReference myReference;
 
-    public ImplementationsUpdaterTask(GotoData gotoData, Editor editor, int offset, final PsiReference reference) {
+    ImplementationsUpdaterTask(@NotNull GotoData gotoData, @NotNull Editor editor, int offset, final PsiReference reference) {
       super(gotoData.source.getProject(), ImplementationSearcher.SEARCHING_FOR_IMPLEMENTATIONS);
       myEditor = editor;
       myOffset = offset;
@@ -136,7 +152,7 @@ public class GotoImplementationHandler extends GotoTargetHandler {
 
     @Override
     public String getCaption(int size) {
-      return getChooserTitle(myGotoData.source, ((PsiNamedElement)myGotoData.source).getName(), size);
+      return getChooserTitle(myGotoData.source, ((PsiNamedElement)myGotoData.source).getName(), size, isFinished());
     }
   }
 }
