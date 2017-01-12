@@ -32,9 +32,10 @@ import com.intellij.util.xmlb.SerializationFilter;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Transient;
+import consulo.annotations.DeprecationInfo;
+import consulo.util.ui.AntialiasingUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.DeprecationInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,15 +44,11 @@ import java.util.Map;
 
 import static com.intellij.util.ui.UIUtil.isValidFont;
 
-@State(
-        name = "UISettings",
-        storages = {
-                @Storage(
-                        file = StoragePathMacros.APP_CONFIG + "/ui.lnf.xml"
-                )}
-)
+@State(name = "UISettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/ui.lnf.xml")})
 public class UISettings extends SimpleModificationTracker implements PersistentStateComponent<UISettings>, ExportableApplicationComponent {
-  /** Not tabbed pane. */
+  /**
+   * Not tabbed pane.
+   */
   public static final int TABS_NONE = 0;
 
   public static UISettings getInstance() {
@@ -60,6 +57,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   /**
    * Use this method if you are not sure whether the application is initialized.
+   *
    * @return persisted UISettings instance or default values.
    */
   public static UISettings getShadowInstance() {
@@ -121,8 +119,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean DND_WITH_PRESSED_ALT_ONLY = false;
   public boolean FILE_COLORS_IN_PROJECT_VIEW = false;
   public boolean DEFAULT_AUTOSCROLL_TO_SOURCE = false;
-  @Transient
-  public boolean PRESENTATION_MODE = false;
+  @Transient public boolean PRESENTATION_MODE = false;
   public int PRESENTATION_MODE_FONT_SIZE = 24;
   public boolean MARK_MODIFIED_TABS_WITH_ASTERISK = false;
   public boolean SHOW_TABS_TOOLTIPS = true;
@@ -168,7 +165,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   }
 
   public static Pair<String, Integer> getSystemFontFaceAndSize() {
-    final Pair<String,Integer> fontData = UIUtil.getSystemFontData();
+    final Pair<String, Integer> fontData = UIUtil.getSystemFontData();
     if (fontData != null) {
       return fontData;
     }
@@ -246,8 +243,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     fireUISettingsChanged();
   }
 
-  public static final boolean FORCE_USE_FRACTIONAL_METRICS =
-          SystemProperties.getBooleanProperty("idea.force.use.fractional.metrics", false);
+  public static final boolean FORCE_USE_FRACTIONAL_METRICS = SystemProperties.getBooleanProperty("idea.force.use.fractional.metrics", false);
 
   public static void setupFractionalMetrics(final Graphics2D g2d) {
     if (FORCE_USE_FRACTIONAL_METRICS) {
@@ -260,7 +256,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public static void setupAntialiasing(final Graphics g) {
 
     Graphics2D g2d = (Graphics2D)g;
-    g2d.setRenderingHint(RenderingHints.KEY_TEXT_LCD_CONTRAST,  UIUtil.getLcdContrastValue());
+    g2d.setRenderingHint(RenderingHints.KEY_TEXT_LCD_CONTRAST, UIUtil.getLcdContrastValue());
 
     Application application = ApplicationManager.getApplication();
     if (application == null) {
@@ -274,7 +270,8 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
     if (uiSettings != null) {
       g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, AntialiasingType.getKeyForCurrentScope(false));
-    } else {
+    }
+    else {
       g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
     }
 
@@ -314,8 +311,21 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   }
 
   @Override
-  public void initComponent() { }
+  public void initComponent() {
+  }
 
   @Override
-  public void disposeComponent() { }
+  public void disposeComponent() {
+  }
+
+  /**
+   * @see #setupComponentAntialiasing(JComponent)
+   */
+  public static void setupComponentAntialiasing(JComponent component) {
+    AntialiasingUtil.setup(component::putClientProperty, AntialiasingType.getAAHintForSwingComponent());
+  }
+
+  public static void setupEditorAntialiasing(JComponent component) {
+    AntialiasingUtil.setup(component::putClientProperty, getInstance().EDITOR_AA_TYPE.getTextInfo());
+  }
 }

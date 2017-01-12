@@ -18,7 +18,8 @@
   <option name="LINE_SPACING" value="1.0" />
   <option name="EDITOR_FONT_SIZE" value="12" />
   <option name="CONSOLE_FONT_NAME" value="Monospaced" />
-  <option name="EDITOR_FONT_NAME" value="Source Code Pro" />
+  <option name="EDITOR_LIGATURES" value="true" />
+  <option name="EDITOR_FONT_NAME" value="Fira Code" />
   <colors>
     <option name="CARET_ROW_COLOR" value="fffaa6" />
   </colors>

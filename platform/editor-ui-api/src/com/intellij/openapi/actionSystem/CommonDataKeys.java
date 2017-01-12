@@ -47,4 +47,9 @@ public class CommonDataKeys {
 
   public static final DataKey<PsiElement> PSI_ELEMENT = DataKey.create("psi.Element");
   public static final DataKey<PsiFile> PSI_FILE = DataKey.create("psi.File");
+  /**
+   * This key can be used to check if the current context relates to a virtual space in editor.
+   * @see com.intellij.openapi.editor.EditorSettings#setVirtualSpace(boolean)
+   */
+  public static final DataKey<Boolean> EDITOR_VIRTUAL_SPACE = DataKey.create("editor.virtual.space");
 }

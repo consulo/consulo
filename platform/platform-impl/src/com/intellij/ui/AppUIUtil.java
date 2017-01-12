@@ -119,6 +119,11 @@ public class AppUIUtil {
       registerFont("/fonts/Inconsolata.ttf");
       registerFont("/fonts/SourceCodePro-Regular.ttf");
       registerFont("/fonts/SourceCodePro-Bold.ttf");
+      registerFont("/fonts/FiraCode-Bold.ttf");
+      registerFont("/fonts/FiraCode-Light.ttf");
+      registerFont("/fonts/FiraCode-Medium.ttf");
+      registerFont("/fonts/FiraCode-Regular.ttf");
+      registerFont("/fonts/FiraCode-Retina.ttf");
     }
   }
 

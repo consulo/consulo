@@ -562,20 +562,15 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     if (configurable != null) {
       if (!myConfigurable2Content.containsKey(configurable) && ConfigurableWrapper.hasOwnContent(configurable)) {
 
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
           @Override
           public void run() {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
+            if (myDisposed) return;
+            initConfigurable(configurable).doWhenDone(new Runnable() {
               @Override
               public void run() {
                 if (myDisposed) return;
-                initConfigurable(configurable).doWhenDone(new Runnable() {
-                  @Override
-                  public void run() {
-                    if (myDisposed) return;
-                    fireModificationInt(configurable);
-                  }
-                });
+                fireModificationInt(configurable);
               }
             });
           }
