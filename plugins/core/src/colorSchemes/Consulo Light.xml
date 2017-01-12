@@ -82,7 +82,6 @@
     <option name="CLASS_NAME_ATTRIBUTES">
       <value>
         <option name="FOREGROUND" value="e08310" />
-        <option name="BACKGROUND" value="ffffff" />
       </value>
     </option>
     <option name="CONSTRUCTOR_CALL_ATTRIBUTES">
@@ -259,7 +258,6 @@
     <option name="JAVA_KEYWORD">
       <value>
         <option name="FOREGROUND" value="80" />
-        <option name="BACKGROUND" value="ffffff" />
       </value>
     </option>
     <option name="JAVA_STRING">

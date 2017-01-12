@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package com.intellij.lang.annotation;
 
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.DefaultJDOMExternalizer;
+import com.intellij.openapi.util.JDOMExternalizerUtil;
+import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -108,12 +110,14 @@ public class HighlightSeverity implements Comparable<HighlightSeverity> {
 
     final HighlightSeverity that = (HighlightSeverity)o;
 
+    if (myVal != that.myVal) return false;
     return myName.equals(that.myName);
   }
 
   @Override
   public int hashCode() {
-    return myName.hashCode();
+    int result = myName != null ? myName.hashCode() : 0;
+    return 31 * result + myVal;
   }
 
   @NotNull

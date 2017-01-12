@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.GutterMark;
@@ -30,6 +29,7 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.lang.annotation.ProblemGroup;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
@@ -106,6 +106,7 @@ public class HighlightInfo implements Segment {
     setFlag(FROM_INJECTION_MASK, fromInjection);
   }
 
+  @Nullable
   public String getToolTip() {
     String toolTip = this.toolTip;
     String description = this.description;
@@ -131,8 +132,7 @@ public class HighlightInfo implements Segment {
     return description;
   }
 
-  @MagicConstant(intValues = {BIJECTIVE_MASK, HAS_HINT_MASK, FROM_INJECTION_MASK, AFTER_END_OF_LINE_MASK, FILE_LEVEL_ANNOTATION_MASK,
-          NEEDS_UPDATE_ON_TYPING_MASK})
+  @MagicConstant(intValues = {BIJECTIVE_MASK, HAS_HINT_MASK, FROM_INJECTION_MASK, AFTER_END_OF_LINE_MASK, FILE_LEVEL_ANNOTATION_MASK, NEEDS_UPDATE_ON_TYPING_MASK})
   private @interface FlagConstant {}
 
   private boolean isFlagSet(@FlagConstant byte mask) {
@@ -245,8 +245,9 @@ public class HighlightInfo implements Segment {
     return unescapedTooltip == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(unescapedTooltip));
   }
 
-  @NotNull
-  private static final HighlightInfoFilter[] FILTERS = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensions();
+  private static class Holder {
+    private static final HighlightInfoFilter[] FILTERS = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensions();
+  }
 
   boolean needUpdateOnTyping() {
     return isFlagSet(NEEDS_UPDATE_ON_TYPING_MASK);
@@ -291,7 +292,10 @@ public class HighlightInfo implements Segment {
   private static boolean calcNeedUpdateOnTyping(@Nullable Boolean needsUpdateOnTyping, HighlightInfoType type) {
     if (needsUpdateOnTyping != null) return needsUpdateOnTyping.booleanValue();
 
-    return type.needUpdateOnTyping();
+    if (type instanceof HighlightInfoType.UpdateOnTypingSuppressible) {
+      return ((HighlightInfoType.UpdateOnTypingSuppressible)type).needsUpdateOnTyping();
+    }
+    return true;
   }
 
   @Override
@@ -331,10 +335,6 @@ public class HighlightInfo implements Segment {
   @Override
   @NonNls
   public String toString() {
-    return getDescription() != null ? getDescription() : "";
-  }
-
-  public String paramString() {
     @NonNls String s = "HighlightInfo(" + startOffset + "," + endOffset+")";
     if (getActualStartOffset() != startOffset || getActualEndOffset() != endOffset) {
       s += "; actual: (" + getActualStartOffset() + "," + getActualEndOffset() + ")";
@@ -400,7 +400,7 @@ public class HighlightInfo implements Segment {
 
   private static boolean isAcceptedByFilters(@NotNull HighlightInfo info, @Nullable PsiElement psiElement) {
     PsiFile file = psiElement == null ? null : psiElement.getContainingFile();
-    for (HighlightInfoFilter filter : FILTERS) {
+    for (HighlightInfoFilter filter : Holder.FILTERS) {
       if (!filter.accept(info, file)) {
         return false;
       }
@@ -616,7 +616,8 @@ public class HighlightInfo implements Segment {
   @NotNull
   static HighlightInfo fromAnnotation(@NotNull Annotation annotation, @Nullable TextRange fixedRange, boolean batchMode) {
     final TextAttributes forcedAttributes = annotation.getEnforcedTextAttributes();
-    final TextAttributesKey forcedAttributesKey = forcedAttributes == null ? annotation.getTextAttributes() : null;
+    TextAttributesKey key = annotation.getTextAttributes();
+    final TextAttributesKey forcedAttributesKey = forcedAttributes == null ? (key == HighlighterColors.NO_HIGHLIGHTING ? null : key) : null;
 
     HighlightInfo info = new HighlightInfo(forcedAttributes, forcedAttributesKey, convertType(annotation),
                                            fixedRange != null? fixedRange.getStartOffset() : annotation.getStartOffset(),
@@ -882,8 +883,11 @@ public class HighlightInfo implements Segment {
 
   @NotNull
   public String getText() {
+    if (isFileLevelAnnotation()) return "";
     RangeHighlighterEx highlighter = this.highlighter;
-    if (highlighter == null) throw new RuntimeException("info not applied yet");
+    if (highlighter == null) {
+      throw new RuntimeException("info not applied yet");
+    }
     if (!highlighter.isValid()) return "";
     return highlighter.getDocument().getText(TextRange.create(highlighter));
   }
