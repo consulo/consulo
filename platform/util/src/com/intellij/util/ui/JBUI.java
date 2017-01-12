@@ -24,6 +24,7 @@ import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.keyFMap.KeyFMap;
 import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.util.ui.components.VerticalLayoutPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sun.awt.image.BufferedImageGraphicsConfig;
@@ -554,6 +555,16 @@ public class JBUI {
   }
 
   public static class Panels {
+    @NotNull
+    public static VerticalLayoutPanel verticalPanel() {
+      return new VerticalLayoutPanel();
+    }
+
+    @NotNull
+    public static VerticalLayoutPanel verticalPanel(int hgap, int vgap) {
+      return new VerticalLayoutPanel(hgap, vgap);
+    }
+
     public static BorderLayoutPanel simplePanel() {
       return new BorderLayoutPanel();
     }
