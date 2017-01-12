@@ -31,7 +31,6 @@ import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import org.jdom.Element;
@@ -151,7 +150,7 @@ public class PsiAwareTextEditorProvider extends TextEditorProvider {
 
     @Override
     public boolean isValid() {
-      return !Registry.is("editor.new.rendering") || !getEditor().isDisposed();
+      return !getEditor().isDisposed();
     }
   }
 }
