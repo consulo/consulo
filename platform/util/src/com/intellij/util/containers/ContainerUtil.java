@@ -297,6 +297,14 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @NotNull
   @Contract(pure=true)
+  public static <T> LinkedHashSet<T> newLinkedHashSet(@NotNull Iterable<? extends T> elements, @NotNull T element) {
+    LinkedHashSet<T> set = ContainerUtilRt.newLinkedHashSet(elements);
+    set.add(element);
+    return set;
+  }
+
+  @NotNull
+  @Contract(pure=true)
   public static <T> THashSet<T> newTroveSet() {
     return new THashSet<T>();
   }
