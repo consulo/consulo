@@ -23,8 +23,8 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredWriteAction;
+import org.jetbrains.annotations.NotNull;
 
 public class EnterHandler extends BaseEnterHandler {
   private final EditorActionHandler myOriginalHandler;

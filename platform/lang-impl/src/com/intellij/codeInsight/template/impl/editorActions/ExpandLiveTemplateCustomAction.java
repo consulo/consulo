@@ -24,7 +24,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +38,6 @@ public class ExpandLiveTemplateCustomAction extends EditorAction {
 
   public static EditorWriteActionHandler createExpandTemplateHandler(final char shortcutChar) {
     return new EditorWriteActionHandler(true) {
-      @RequiredWriteAction
       @Override
       public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         Project project = editor.getProject();
@@ -50,7 +48,8 @@ public class ExpandLiveTemplateCustomAction extends EditorAction {
       @Override
       protected boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
         Project project = editor.getProject();
-        return project != null && ((TemplateManagerImpl)TemplateManager.getInstance(project)).prepareTemplate(editor, shortcutChar, null) != null;
+        return project != null &&
+               ((TemplateManagerImpl)TemplateManager.getInstance(project)).prepareTemplate(editor, shortcutChar, null) != null;
       }
     };
   }
