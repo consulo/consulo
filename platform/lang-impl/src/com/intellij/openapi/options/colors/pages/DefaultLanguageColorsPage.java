@@ -26,6 +26,7 @@ import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.Weighted;
+import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -177,6 +178,10 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Weighted {
     
   };
 
+  private static final AttributesDescriptor INLINE_PARAMETER_HINT_DESCRIPTOR = new AttributesDescriptor(
+          OptionsBundle.message("options.java.attribute.descriptor.inline.parameter.hint"),
+          DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT);
+
   @Nullable
   @Override
   public Icon getIcon() {
@@ -216,7 +221,9 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Weighted {
       "Global <global_var>variable</global_var>\n" +
       "Function <func_decl>declaration</func_decl> (<param>parameter</param>)\n" +
       "    Local <local_var>variable</local_var>\n" +
-      "Function <func_call>call</func_call>()\n" +
+      "Function <func_call>call</func_call>(" +
+      "<parameter_hint p>0, <parameter_hint param> 1, <parameter_hint parameterName> 2" +
+      ")\n" +
       "Interface <interface>Name</interface>\n" +
       "Type-alias <type_alias_name>Name</type_alias_name>\n" +
       "<metadata>@Metadata</metadata>\n" +
@@ -240,7 +247,7 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Weighted {
   @NotNull
   @Override
   public AttributesDescriptor[] getAttributeDescriptors() {
-    return ATTRIBUTES_DESCRIPTORS;
+    return ArrayUtil.append(ATTRIBUTES_DESCRIPTORS, INLINE_PARAMETER_HINT_DESCRIPTOR);
   }
 
   @NotNull

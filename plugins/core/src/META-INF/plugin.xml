@@ -1169,6 +1169,8 @@
                         serviceImplementation="com.intellij.openapi.application.impl.ApplicationInfoImpl"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.editor.ex.EditorSettingsExternalizable"/>
+    <applicationService serviceImplementation="com.intellij.codeInsight.hints.settings.ParameterNameHintsSettings"/>
+    <applicationService serviceImplementation="com.intellij.codeInsight.daemon.impl.ParameterHintsPresentationManager"/>
     <applicationService serviceImplementation="com.intellij.openapi.keymap.KeyboardSettingsExternalizable"/>
 
     <applicationService serviceInterface="com.intellij.ide.util.PropertiesComponent"

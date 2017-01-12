@@ -17,6 +17,8 @@
 package com.intellij.application.options.editor;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
+import com.intellij.codeInsight.hints.InlayParameterHintsProvider;
+import com.intellij.codeInsight.hints.settings.ParameterNameHintsConfigurable;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.options.CompositeConfigurable;
@@ -24,12 +26,12 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
+import com.intellij.ui.components.JBCheckBox;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
@@ -56,18 +58,32 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
   private JCheckBox myCbShowMethodSeparators;
   private JCheckBox myCbShowIconsInGutter;
   private JCheckBox myShowVerticalIndentGuidesCheckBox;
+  private JBCheckBox myShowParameterNameHints;
+  private JButton myConfigureParameterHintsButton;
+  private JPanel myParameterHintsSettingsPanel;
 
   public EditorAppearanceConfigurable() {
-    myCbBlinkCaret.addActionListener(
-    new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        myBlinkIntervalField.setEnabled(myCbBlinkCaret.isSelected());
-      }
-    }
-    );
+    myCbBlinkCaret.addActionListener(event -> myBlinkIntervalField.setEnabled(myCbBlinkCaret.isSelected()));
+    initInlaysPanel();
   }
 
+  private void initInlaysPanel() {
+    boolean isInlayProvidersAvailable = InlayParameterHintsProvider.EP.hasAnyExtensions();
+    myParameterHintsSettingsPanel.setVisible(isInlayProvidersAvailable);
+    if (!isInlayProvidersAvailable) return;
+
+    myConfigureParameterHintsButton.addActionListener(e -> {
+      ParameterNameHintsConfigurable configurable = new ParameterNameHintsConfigurable();
+      configurable.show();
+    });
+  }
+
+  private void applyNameHintsSettings() {
+    EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
+    settings.setShowParameterNameHints(myShowParameterNameHints.isSelected());
+  }
+
+  @RequiredDispatchThread
   @Override
   public void reset() {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
@@ -83,9 +99,12 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     myShowVerticalIndentGuidesCheckBox.setSelected(editorSettings.isIndentGuidesShown());
     myCbShowIconsInGutter.setSelected(DaemonCodeAnalyzerSettings.getInstance().SHOW_SMALL_ICONS_IN_GUTTER);
 
+    myShowParameterNameHints.setSelected(editorSettings.isShowParameterNameHints());
+
     super.reset();
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
@@ -109,9 +128,11 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
 
     EditorOptionsPanel.restartDaemons();
 
+    applyNameHintsSettings();
     super.apply();
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     if (super.isModified()) return true;
@@ -128,6 +149,7 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     isModified |= isModified(myShowVerticalIndentGuidesCheckBox, editorSettings.isIndentGuidesShown());
     isModified |= isModified(myCbShowMethodSeparators, DaemonCodeAnalyzerSettings.getInstance().SHOW_METHOD_SEPARATORS);
     isModified |= isModified(myCbShowIconsInGutter, DaemonCodeAnalyzerSettings.getInstance().SHOW_SMALL_ICONS_IN_GUTTER);
+    isModified |= myShowParameterNameHints.isSelected() != editorSettings.isShowParameterNameHints();
 
     return isModified;
   }
@@ -157,6 +179,7 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     return "reference.settingsdialog.IDE.editor.appearance";
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent createComponent() {
     for (UnnamedConfigurable provider : getConfigurables()) {
@@ -166,6 +189,7 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     return myRootPanel;
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
     myAddonPanel.removeAll();

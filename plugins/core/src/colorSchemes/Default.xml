@@ -1149,5 +1149,13 @@
         <option name="BACKGROUND" value="ededed"/>
       </value>
     </option>
+    <option name="BLINKING_HIGHLIGHTS_ATTRIBUTES">
+      <value>
+        <option name="FOREGROUND"/>
+        <option name="BACKGROUND"/>
+        <option name="EFFECT_COLOR" value="808080"/>
+        <option name="EFFECT_TYPE" value="0"/>
+      </value>
+    </option>
   </attributes>
 </scheme>
