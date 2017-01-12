@@ -21,7 +21,6 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diff.DiffColors;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.ColorKey;
@@ -142,7 +141,7 @@ public class IdeBackgroundUtil {
       painters.addPainter(PaintersHelper.newImagePainter(centerImage, PaintersHelper.Fill.PLAIN, PaintersHelper.Place.TOP_CENTER, 1.0f, JBUI.insets(10, 0, 0, 0)), null);
     }
     painters.addPainter(new AbstractPainter() {
-      EditorEmptyTextPainter p = ServiceManager.getService(EditorEmptyTextPainter.class);
+      EditorEmptyTextPainter p = EditorEmptyTextPainter.ourInstance;
 
       @Override
       public boolean needsRepaint() {

@@ -41,6 +41,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class EditorEmptyTextPainter {
+  public static EditorEmptyTextPainter ourInstance = new EditorEmptyTextPainter();
+
   public void paintEmptyText(@NotNull final JComponent splitters, @NotNull Graphics g) {
     UISettings.setupAntialiasing(g);
     g.setColor(new JBColor(Gray._80, Gray._160));
@@ -74,15 +76,11 @@ public class EditorEmptyTextPainter {
 
   protected void appendSearchEverywhere(@NotNull UIUtil.TextPainter painter) {
     Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
-    appendAction(painter, "Search Everywhere", shortcuts.length == 0 ?
-                                               "Double " + (SystemInfo.isMac ? MacKeymapUtil.SHIFT : "Shift") :
-                                               KeymapUtil.getShortcutsText(shortcuts));
+    appendAction(painter, "Search Everywhere",
+                 shortcuts.length == 0 ? "Double " + (SystemInfo.isMac ? MacKeymapUtil.SHIFT : "Shift") : KeymapUtil.getShortcutsText(shortcuts));
   }
 
-  protected void appendToolWindow(@NotNull UIUtil.TextPainter painter,
-                                  @NotNull String action,
-                                  @NotNull String toolWindowId,
-                                  @NotNull JComponent splitters) {
+  protected void appendToolWindow(@NotNull UIUtil.TextPainter painter, @NotNull String action, @NotNull String toolWindowId, @NotNull JComponent splitters) {
     if (!isToolwindowVisible(splitters, toolWindowId)) {
       String activateActionId = ActivateToolWindowAction.getActionIdForToolWindow(toolWindowId);
       appendAction(painter, action, getActionShortcutText(activateActionId));
