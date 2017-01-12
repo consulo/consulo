@@ -20,6 +20,7 @@ import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPass;
 import com.intellij.codeInsight.documentation.QuickDocOnMouseOverManager;
+import com.intellij.ide.ui.UINumericRange;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.components.ServiceManager;
@@ -46,7 +47,6 @@ import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,6 +54,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class EditorOptionsPanel {
+  private static final UINumericRange RECENT_FILES_RANGE = new UINumericRange(50, 1, 500);
+  private static final UINumericRange CONSOLE_COMMAND_HISTORY_LIMIT_RANGE = new UINumericRange(300, 0, 1000);
+
   private JPanel myBehaviourPanel;
   private JCheckBox myCbHighlightBraces;
   private static final String STRIP_CHANGED = ApplicationBundle.message("combobox.strip.modified.lines");
@@ -283,11 +286,7 @@ public class EditorOptionsPanel {
       ServiceManager.getService(QuickDocOnMouseOverManager.class).setEnabled(enabled);
     }
 
-    Long quickDocDelay = getQuickDocDelayFromGui();
-    if (quickDocDelay != null) {
-      editorSettings.setQuickDocOnMouseOverElementDelayMillis(quickDocDelay);
-    }
-
+    editorSettings.setQuickDocOnMouseOverElementDelayMillis(getQuickDocDelayFromGui());
     editorSettings.setDndEnabled(myCbEnableDnD.isSelected());
 
     editorSettings.setWheelFontChangeEnabled(myCbEnableWheelFontChange.isSelected());
@@ -329,20 +328,12 @@ public class EditorOptionsPanel {
     restartDaemons();
   }
 
-  @Nullable
-  private Long getQuickDocDelayFromGui() {
-    String quickDocDelayAsText = myQuickDocDelayTextField.getText();
-    if (StringUtil.isEmptyOrSpaces(quickDocDelayAsText)) {
-      return null;
-    }
-
+  private int getQuickDocDelayFromGui() {
     try {
-      long delay = Long.parseLong(quickDocDelayAsText);
-      return delay > 0 ? delay : null;
+      return EditorSettingsExternalizable.QUICK_DOC_DELAY_RANGE.fit(Integer.parseInt(myQuickDocDelayTextField.getText().trim()));
     }
     catch (NumberFormatException e) {
-      // Ignore incorrect value.
-      return null;
+      return -1;
     }
   }
 
@@ -423,10 +414,7 @@ public class EditorOptionsPanel {
     isModified |= isModified(myCbEnsureBlankLineBeforeCheckBox, editorSettings.isEnsureNewLineAtEOF());
 
     isModified |= isModified(myCbShowQuickDocOnMouseMove, editorSettings.isShowQuickDocOnMouseOverElement());
-    Long quickDocDelay = getQuickDocDelayFromGui();
-    if (quickDocDelay != null && !quickDocDelay.equals(Long.valueOf(editorSettings.getQuickDocOnMouseOverElementDelayMillis()))) {
-      return true;
-    }
+    isModified |= isModified(myQuickDocDelayTextField, editorSettings.getQuickDocOnMouseOverElementDelayMillis(), EditorSettingsExternalizable.QUICK_DOC_DELAY_RANGE);
 
     // advanced mouse
     isModified |= isModified(myCbEnableDnD, editorSettings.isDndEnabled());
@@ -436,8 +424,8 @@ public class EditorOptionsPanel {
     isModified |= myRbPreferMovingCaret.isSelected() != editorSettings.isRefrainFromScrolling();
 
 
-    isModified |= isModified(myRecentFilesLimitField, UISettings.getInstance().RECENT_FILES_LIMIT);
-    isModified |= isModified(myCommandsHistoryLimitField, UISettings.getInstance().CONSOLE_COMMAND_HISTORY_LIMIT);
+    isModified |= isModified(myRecentFilesLimitField, UISettings.getInstance().RECENT_FILES_LIMIT, RECENT_FILES_RANGE);
+    isModified |= isModified(myCommandsHistoryLimitField, UISettings.getInstance().CONSOLE_COMMAND_HISTORY_LIMIT, CONSOLE_COMMAND_HISTORY_LIMIT_RANGE);
     isModified |= isModified(myCbRenameLocalVariablesInplace, editorSettings.isVariableInplaceRenameEnabled());
     isModified |= isModified(myPreselectCheckBox, editorSettings.isPreselectRename());
 
@@ -452,18 +440,21 @@ public class EditorOptionsPanel {
     return isModified;
   }
 
-  private static boolean isModified(JToggleButton checkBox, boolean value) {
-    return checkBox.isSelected() != value;
+  private static boolean isModified(@NotNull JTextField textField, @NotNull String value) {
+    return !StringUtil.equals(textField.getText().trim(), value);
   }
 
-  private static boolean isModified(JTextField textField, int value) {
+  private static boolean isModified(@NotNull JTextField textField, int value, @NotNull UINumericRange range) {
     try {
-      int fieldValue = Integer.parseInt(textField.getText().trim());
-      return fieldValue != value;
+      return range.fit(Integer.parseInt(textField.getText().trim())) != value;
     }
     catch (NumberFormatException e) {
       return false;
     }
+  }
+
+  private static boolean isModified(@NotNull JToggleButton toggleButton, boolean value) {
+    return toggleButton.isSelected() != value;
   }
 
   private String getStripTrailingSpacesValue() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.impl.softwrap.mapping;
+package com.intellij.openapi.util;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
-* @author Denis Zhdanov
-* @since Sep 9, 2010 9:21:22 AM
-*/
-class TabData implements Cloneable {
+ * @author Konstantin Bulenkov
+ */
+public abstract class IconPathPatcher {
+  /**
+   * Patches the path or returns null if nothing has patched
+   * @param path path to the icon
+   * @return patched path or null
+   */
+  @Nullable
+  public abstract String patchPath(String path);
 
-  public final int widthInColumns;
-  public int offset;
-
-  TabData(int widthInColumns, int offset) {
-    this.widthInColumns = widthInColumns;
-    this.offset = offset;
-  }
-
-  @Override
-  public String toString() {
-    return "[" + offset + ", width: " + widthInColumns + "]";
-  }
-
-  @Override
-  protected TabData clone() {
-    return new TabData(widthInColumns, offset);
+  @Nullable
+  public Class getContextClass(String path) {
+    return null;
   }
 }

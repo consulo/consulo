@@ -29,6 +29,8 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DefaultEditorTextRepresentationHelper;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
+import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
+import com.intellij.openapi.editor.impl.softwrap.SoftWrapPainter;
 import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapApplianceManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
@@ -169,6 +171,30 @@ public class EditorTestUtil {
   public static boolean configureSoftWraps(Editor editor, final int visibleWidth, final int charWidthInPixels) {
     editor.getSettings().setUseSoftWraps(true);
     SoftWrapModelImpl model = (SoftWrapModelImpl)editor.getSoftWrapModel();
+    model.setSoftWrapPainter(new SoftWrapPainter() {
+      @Override
+      public int paint(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+        return charWidthInPixels;
+      }
+
+      @Override
+      public int getDrawingHorizontalOffset(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+        return charWidthInPixels;
+      }
+
+      @Override
+      public int getMinDrawingWidth(@NotNull SoftWrapDrawingType drawingType) {
+        return charWidthInPixels;
+      }
+
+      @Override
+      public boolean canUse() {
+        return true;
+      }
+
+      @Override
+      public void reinit() {}
+    });
     model.reinitSettings();
 
     SoftWrapApplianceManager applianceManager = model.getApplianceManager();
@@ -180,17 +206,34 @@ public class EditorTestUtil {
     });
     model.setEditorTextRepresentationHelper(new DefaultEditorTextRepresentationHelper(editor) {
       @Override
-      public int charWidth(char c, int fontType) {
+      public int charWidth(int c, int fontType) {
         return charWidthInPixels;
       }
     });
+    setEditorVisibleSizeInPixels(editor, visibleWidth, 1000);
     applianceManager.registerSoftWrapIfNecessary();
     return !model.getRegisteredSoftWraps().isEmpty();
   }
 
   public static void setEditorVisibleSize(Editor editor, int widthInChars, int heightInChars) {
-    Dimension size = new Dimension(widthInChars * EditorUtil.getSpaceWidth(Font.PLAIN, editor), heightInChars * editor.getLineHeight());
+    setEditorVisibleSizeInPixels(editor,
+                                 widthInChars * EditorUtil.getSpaceWidth(Font.PLAIN, editor),
+                                 heightInChars * editor.getLineHeight());
+  }
+
+  public static void setEditorVisibleSizeInPixels(Editor editor, int widthInPixels, int heightInPixels) {
+    Dimension size = new Dimension(widthInPixels, heightInPixels);
     ((EditorEx)editor).getScrollPane().getViewport().setExtentSize(size);
+  }
+
+  public static Inlay addInlay(@NotNull Editor editor, int offset) {
+    return editor.getInlayModel().addInlineElement(offset, new EditorCustomElementRenderer() {
+      @Override
+      public int calcWidthInPixels(@NotNull Editor editor) { return 1; }
+
+      @Override
+      public void paint(@NotNull Editor editor, @NotNull Graphics g, @NotNull Rectangle r) {}
+    });
   }
 
   /**

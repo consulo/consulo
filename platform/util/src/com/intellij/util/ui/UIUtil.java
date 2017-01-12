@@ -30,13 +30,14 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.annotations.DeprecationInfo;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
-import consulo.annotations.DeprecationInfo;
+import sun.java2d.SunGraphicsEnvironment;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -341,9 +342,7 @@ public class UIUtil {
     }
   };
 
-  // accessed only from EDT
-  private static final HashMap<Color, BufferedImage> ourAppleDotSamples = new HashMap<Color, BufferedImage>();
-
+  public static final float DEF_SYSTEM_FONT_SIZE = 12f; // TODO: consider 12 * 1.33 to compensate JDK's 72dpi font scale
   private static volatile Pair<String, Integer> ourSystemFontData = null;
 
   @NonNls private static final String ROOT_PANE = "JRootPane.future";
@@ -355,9 +354,68 @@ public class UIUtil {
   }
 
   /**
+   * Returns whether the JDK-managed HiDPI mode is enabled and the default monitor device is HiDPI.
+   * (Equivalent of {@link #isRetina()} on macOS)
+   */
+  public static boolean isJDKManagedHiDPIScreen() {
+    return isJDKManagedHiDPI() && JBUI.sysScale() > 1.0f;
+  }
+
+  /**
+   * Returns whether the JDK-managed HiDPI mode is enabled and the graphics device is HiDPI.
+   * (Equivalent of {@link #isRetina(Graphics2D)} on macOS)
+   */
+  public static boolean isJDKManagedHiDPIScreen(Graphics2D g) {
+    return isJDKManagedHiDPI() && JBUI.sysScale(g) > 1.0f;
+  }
+
+  private static Boolean jdkManagedHiDPI;
+  private static boolean jdkManagedHiDPI_earlierVersion;
+
+  /**
+   * Returns whether the JDK-managed HiDPI mode is enabled.
+   * (True for macOS JDK >= 7.10 versions)
+   *
+   * @see JBUI.ScaleType
+   */
+  public static boolean isJDKManagedHiDPI() {
+    if (jdkManagedHiDPI != null) {
+      return jdkManagedHiDPI;
+    }
+    jdkManagedHiDPI = false;
+    jdkManagedHiDPI_earlierVersion = true;
+    if (SystemInfo.isLinux) {
+      return false; // pending support
+    }
+    try {
+      GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+      if (ge instanceof SunGraphicsEnvironment) {
+        Method m = ReflectionUtil.getDeclaredMethod(SunGraphicsEnvironment.class, "isUIScaleOn");
+        jdkManagedHiDPI = (Boolean)m.invoke(ge);
+        jdkManagedHiDPI_earlierVersion = false;
+      }
+    } catch (Throwable ignore) {
+    }
+    if (SystemInfo.isMac) {
+      return jdkManagedHiDPI = (SystemInfo.isAppleJvm ? false : true);
+    }
+    return jdkManagedHiDPI;
+  }
+
+  /**
+   * Indicates earlier JBSDK version, not containing HiDPI changes.
+   * On macOS that JBSDK supports jdkManagedHiDPI, but it's not capable to provide device scale
+   * via GraphicsDevice transform matrix (the scale should be retrieved via DetectRetinaKit).
+   */
+  static boolean isJDKManagedHiDPI_earlierVersion() {
+    isJDKManagedHiDPI();
+    return jdkManagedHiDPI_earlierVersion;
+  }
+
+  /**
    * Utility class for retina routine
    */
-  private final static class DetectRetinaKit {
+  public final static class DetectRetinaKit {
 
     private final static WeakHashMap<GraphicsDevice, Boolean> devicesToRetinaSupportCacheMap = new WeakHashMap<GraphicsDevice, Boolean>();
 
@@ -367,7 +425,7 @@ public class UIUtil {
      * on the other hand. So let's use a dedicated method. It is rather safe because it caches a
      * value that has been got on AppKit previously.
      */
-    private static boolean isOracleMacRetinaDevice(GraphicsDevice device) {
+    public static boolean isOracleMacRetinaDevice(GraphicsDevice device) {
 
       if (SystemInfo.isAppleJvm) return false;
 
@@ -605,7 +663,7 @@ public class UIUtil {
 
   /**
    * @param component a Swing component that may hold a client property value
-   * @param key       the client property key that specifies a return type
+   * @param type       the client property key that specifies a return type
    * @return the property value from the specified component or {@code null}
    */
   public static <T> T getClientProperty(Object component, @NotNull Class<T> type) {
@@ -1757,81 +1815,8 @@ public class UIUtil {
       drawLine(g, startX, lineY + 2, endX, lineY + 2);
     }
 
-    // Draw apple like dotted line:
-    //
-    // CCC CCC CCC ...
-    // CCC CCC CCC ...
-    // CCC CCC CCC ...
-    //
-    // (where "C" - colored pixel, " " - white pixel)
-
-    final int step = 4;
-    final int startPosCorrection = startX % step < 3 ? 0 : 1;
-
-    // Optimization - lets draw dotted line using dot sample image.
-
-    // draw one dot by pixel:
-
-    // save old settings
-    final Composite oldComposite = g.getComposite();
-    // draw image "over" on top of background
-    g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-
-    // sample
-    final BufferedImage image = getAppleDotStamp(fgColor, oldColor);
-
-    // Now copy our dot several times
-    final int dotX0 = (startX / step + startPosCorrection) * step;
-    for (int dotXi = dotX0; dotXi < endX; dotXi += step) {
-      g.drawImage(image, dotXi, lineY, null);
-    }
-
-    //restore previous settings
-    g.setComposite(oldComposite);
-  }
-
-  private static BufferedImage getAppleDotStamp(final Color fgColor, final Color oldColor) {
-    final Color color = fgColor != null ? fgColor : oldColor;
-
-    // let's avoid of generating tons of GC and store samples for different colors
-    BufferedImage sample = ourAppleDotSamples.get(color);
-    if (sample == null) {
-      sample = createAppleDotStamp(color);
-      ourAppleDotSamples.put(color, sample);
-    }
-    return sample;
-  }
-
-  private static BufferedImage createAppleDotStamp(final Color color) {
-    final BufferedImage image = createImage(3, 3, BufferedImage.TYPE_INT_ARGB);
-    final Graphics2D g = image.createGraphics();
-
-    g.setColor(color);
-
-    // Each dot:
-    // | 20%  | 50%  | 20% |
-    // | 80%  | 80%  | 80% |
-    // | 50%  | 100% | 50% |
-
-    g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, .2f));
-    g.drawLine(0, 0, 0, 0);
-    g.drawLine(2, 0, 2, 0);
-
-    g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, 0.7f));
-    g.drawLine(0, 1, 2, 1);
-
-    g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, 1.0f));
-    g.drawLine(1, 2, 1, 2);
-
-    g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, .5f));
-    g.drawLine(1, 0, 1, 0);
-    g.drawLine(0, 2, 0, 2);
-    g.drawLine(2, 2, 2, 2);
-
-    // dispose graphics
-    g.dispose();
-
-    return image;
+    AppleBoldDottedPainter painter = AppleBoldDottedPainter.forColor(ObjectUtils.notNull(fgColor, oldColor));
+    painter.paint(g, startX, endX, lineY);
   }
 
   public static void applyRenderingHints(final Graphics g) {
@@ -1843,22 +1828,70 @@ public class UIUtil {
     }
   }
 
-
+  /**
+   * Creates a HiDPI-aware BufferedImage in device scale.
+   *
+   * @param width the width in user coordinate space
+   * @param height the height in user coordinate space
+   * @param type the type of the image
+   *
+   * @return a HiDPI-aware BufferedImage in device scale
+   */
   @NotNull
-  public static BufferedImage createImageForGraphics(Graphics2D g, int width, int height, int type) {
-    if (isRetina(g)) {
+  public static BufferedImage createImage(int width, int height, int type) {
+    if (isJDKManagedHiDPIScreen()) {
       return RetinaImage.create(width, height, type);
     }
     //noinspection UndesirableClassUsage
     return new BufferedImage(width, height, type);
   }
 
-  public static BufferedImage createImage(int width, int height, int type) {
-    if (isHiDPIRender()) {
-      return RetinaImage.create(width, height, type);
+  /**
+   * Creates a HiDPI-aware BufferedImage in the graphics device scale.
+   *
+   * @param g the graphics of the target device
+   * @param width the width in user coordinate space
+   * @param height the height in user coordinate space
+   * @param type the type of the image
+   *
+   * @return a HiDPI-aware BufferedImage in the graphics scale
+   */
+  @NotNull
+  public static BufferedImage createImage(Graphics g, int width, int height, int type) {
+    if (g instanceof Graphics2D) {
+      Graphics2D g2d = (Graphics2D)g;
+      if (isJDKManagedHiDPIScreen(g2d)) {
+        return RetinaImage.create(g2d, width, height, type);
+      }
+      //noinspection UndesirableClassUsage
+      return new BufferedImage(width, height, type);
     }
-    //noinspection UndesirableClassUsage
-    return new BufferedImage(width, height, type);
+    return createImage(width, height, type);
+  }
+
+  /**
+   * Creates a HiDPI-aware BufferedImage in the component scale.
+   *
+   * @param comp the component associated with the target graphics device
+   * @param width the width in user coordinate space
+   * @param height the height in user coordinate space
+   * @param type the type of the image
+   *
+   * @return a HiDPI-aware BufferedImage in the component scale
+   */
+  @NotNull
+  public static BufferedImage createImage(Component comp, int width, int height, int type) {
+    return comp != null ?
+           createImage(GraphicsUtil.safelyGetGraphics(comp), width, height, type) :
+           createImage(width, height, type);
+  }
+
+  /**
+   * @deprecated use {@link #createImage(Graphics2D, int, int, int)}
+   */
+  @NotNull
+  public static BufferedImage createImageForGraphics(Graphics2D g, int width, int height, int type) {
+    return createImage(g, width, height, type);
   }
 
   public static void drawImage(Graphics g, Image image, int x, int y, ImageObserver observer) {
@@ -2519,25 +2552,68 @@ public class UIUtil {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-      if (ourSystemFontData == null) {
-        Font font = getLabelFont();
-        if (SystemInfo.isWindows) {
-          //noinspection HardCodedStringLiteral
-          Font winFont = (Font)Toolkit.getDefaultToolkit().getDesktopProperty("win.messagebox.font");
-          if (winFont != null) {
-            font = winFont;
-          }
-        }
-        ourSystemFontData = Pair.create(font.getName(), font.getSize());
-      }
+      initSystemFontData();
     }
     catch (Exception ignored) {
     }
   }
 
+  public static void initSystemFontData() {
+    if (ourSystemFontData != null) return;
+
+    // With JB Linux JDK the label font comes properly scaled based on Xft.dpi settings.
+    Font font = getLabelFont();
+
+    Float forcedScale = null;
+    if (Registry.is("ide.ui.scale.override")) {
+      forcedScale = Float.valueOf((float)Registry.get("ide.ui.scale").asDouble());
+    }
+    else if (SystemInfo.isLinux && !SystemInfo.isJetbrainsJvm) {
+      // With Oracle JDK: derive scale from X server DPI
+      float scale = getScreenScale();
+      if (scale > 1f) {
+        forcedScale = Float.valueOf(scale);
+      }
+      // Or otherwise leave the detected font. It's undetermined if it's scaled or not.
+      // If it is (likely with GTK DE), then the UI scale will be derived from it,
+      // if it's not, then IDEA will start unscaled. This lets the users of GTK DEs
+      // not to bother about X server DPI settings. Users of other DEs (like KDE)
+      // will have to set X server DPI to meet their display.
+    }
+    else if (SystemInfo.isWindows) {
+      //noinspection HardCodedStringLiteral
+      Font winFont = (Font)Toolkit.getDefaultToolkit().getDesktopProperty("win.messagebox.font");
+      if (winFont != null) {
+        font = winFont; // comes scaled
+      }
+    }
+    if (forcedScale != null) {
+      // With forced scale, we derive font from a hard-coded value as we cannot be sure
+      // the system font comes unscaled.
+      font = font.deriveFont(DEF_SYSTEM_FONT_SIZE * forcedScale.floatValue());
+    }
+    ourSystemFontData = Pair.create(font.getName(), font.getSize());
+  }
+
   @Nullable
   public static Pair<String, Integer> getSystemFontData() {
     return ourSystemFontData;
+  }
+
+  private static float getScreenScale() {
+    int dpi = 96;
+    try {
+      dpi = Toolkit.getDefaultToolkit().getScreenResolution();
+    } catch (HeadlessException e) {
+    }
+    float scale = 1f;
+    if (dpi < 120) scale = 1f;
+    else if (dpi < 144) scale = 1.25f;
+    else if (dpi < 168) scale = 1.5f;
+    else if (dpi < 192) scale = 1.75f;
+    else scale = 2f;
+
+    return scale;
   }
 
   public static void addKeyboardShortcut(final JComponent target, final AbstractButton button, final KeyStroke keyStroke) {
@@ -3303,6 +3379,16 @@ public class UIUtil {
    */
   public static Window getWindow(Component component) {
     return component instanceof Window ? (Window)component : SwingUtilities.getWindowAncestor(component);
+  }
+
+  public static boolean isAncestor(@NotNull Component ancestor, @Nullable Component descendant) {
+    while (descendant != null) {
+      if (descendant == ancestor) {
+        return true;
+      }
+      descendant = descendant.getParent();
+    }
+    return false;
   }
 
   public static void resetUndoRedoActions(@NotNull JTextComponent textComponent) {

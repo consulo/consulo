@@ -61,7 +61,7 @@ public class SoftWrapHelper {
       return false;
     }
 
-    if (editor.myUseNewRendering) {
+    if (true) {
       VisualPosition afterWrapPosition = editor.offsetToVisualPosition(offset, false, false);
       VisualPosition caretPosition = caret.getVisualPosition();
       return caretPosition.line == afterWrapPosition.line && caretPosition.column <= afterWrapPosition.column;

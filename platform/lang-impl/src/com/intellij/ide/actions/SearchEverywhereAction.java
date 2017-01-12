@@ -1176,7 +1176,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
           if (!StringUtil.isEmpty(groupName)) {
             setLocationString(groupName);
           }
-          if (icon != null && icon.getIconWidth() <= JBUI.scaleIconSize(16) && icon.getIconHeight() <= JBUI.scaleIconSize(16)) {
+          if (icon != null && icon.getIconWidth() <= JBUI.scale(16) && icon.getIconHeight() <= JBUI.scale(16)) {
             setIcon(IconUtil.toSize(icon, 16, 16));
           }
         }

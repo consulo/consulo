@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,13 @@ import java.awt.*;
 public interface ScrollingModel {
   @NotNull
   Rectangle getVisibleArea();
+  @NotNull
   Rectangle getVisibleAreaOnScrollingFinished();
 
-  void scrollToCaret(ScrollType scrollType);
-  void scrollTo(LogicalPosition pos, ScrollType scrollType);
+  void scrollToCaret(@NotNull ScrollType scrollType);
+  void scrollTo(@NotNull LogicalPosition pos, @NotNull ScrollType scrollType);
 
-  void runActionOnScrollingFinished(Runnable action);
+  void runActionOnScrollingFinished(@NotNull Runnable action);
   void disableAnimation();
   void enableAnimation();
 
@@ -42,7 +43,8 @@ public interface ScrollingModel {
 
   void scrollVertically(int scrollOffset);
   void scrollHorizontally(int scrollOffset);
+  void scroll(int horizontalOffset, int verticalOffset);
 
-  void addVisibleAreaListener(VisibleAreaListener listener);
-  void removeVisibleAreaListener(VisibleAreaListener listener);
+  void addVisibleAreaListener(@NotNull VisibleAreaListener listener);
+  void removeVisibleAreaListener(@NotNull VisibleAreaListener listener);
 }

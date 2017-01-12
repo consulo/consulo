@@ -35,9 +35,9 @@ import com.intellij.openapi.wm.impl.DesktopLayout;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -53,14 +53,12 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
   private static float ourSavedScaleFactor = JBUI.scale(1f);
   private static int ourSavedConsoleFontSize;
 
-  @RequiredDispatchThread
   @Override
   public void update(@NotNull AnActionEvent e) {
     boolean selected = UISettings.getInstance().PRESENTATION_MODE;
     e.getPresentation().setText(selected ? "Exit Presentation Mode" : "Enter Presentation Mode");
   }
 
-  @RequiredDispatchThread
   @Override
   public void actionPerformed(@NotNull AnActionEvent e){
     UISettings settings = UISettings.getInstance();
@@ -84,13 +82,10 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
     tweakUIDefaults(settings, inPresentation);
 
     ActionCallback callback = project == null ? ActionCallback.DONE : tweakFrameFullScreen(project, inPresentation);
-    callback.doWhenProcessed(new Runnable() {
-      @Override
-      public void run() {
-        tweakEditorAndFireUpdateUI(settings, inPresentation);
+    callback.doWhenProcessed(() -> {
+      tweakEditorAndFireUpdateUI(settings, inPresentation);
 
-        restoreToolWindows(project, layoutStored, inPresentation);
-      }
+      restoreToolWindows(project, layoutStored, inPresentation);
     });
   }
 
@@ -150,9 +145,9 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
           }
         }
       }
-      float scaleFactor =  settings.PRESENTATION_MODE_FONT_SIZE / 12f;
+      float scaleFactor = settings.PRESENTATION_MODE_FONT_SIZE / UIUtil.DEF_SYSTEM_FONT_SIZE;
       ourSavedScaleFactor = JBUI.scale(1f);
-      JBUI.setScaleFactor(scaleFactor);
+      JBUI.setUserScaleFactor(scaleFactor);
       for (Object key : ourSavedValues.keySet()) {
         Object v = ourSavedValues.get(key);
         if (v instanceof Font) {
@@ -168,7 +163,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
       for (Object key : ourSavedValues.keySet()) {
         defaults.put(key, ourSavedValues.get(key));
       }
-      JBUI.setScaleFactor(ourSavedScaleFactor);
+      JBUI.setUserScaleFactor(ourSavedScaleFactor);
       ourSavedValues.clear();
     }
   }

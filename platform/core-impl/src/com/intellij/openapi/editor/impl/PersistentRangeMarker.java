@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.util.ObjectUtil;
+import com.intellij.util.ObjectUtils;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +41,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
 
   PersistentRangeMarker(DocumentEx document, int startOffset, int endOffset, boolean register) {
     super(document, startOffset, endOffset, register);
-    myLinesCols = ObjectUtil.assertNotNull(storeLinesAndCols(document, getStartOffset(), getEndOffset()));
+    myLinesCols = ObjectUtils.assertNotNull(storeLinesAndCols(document, getStartOffset(), getEndOffset()));
   }
 
   @Nullable

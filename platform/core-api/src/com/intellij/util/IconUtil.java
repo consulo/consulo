@@ -201,7 +201,7 @@ public class IconUtil {
   }
 
   public static Icon toSize(@NotNull Icon icon, int width, int height) {
-    return new IconSizeWrapper(icon, JBUI.scaleIconSize(width), JBUI.scaleIconSize(height));
+    return new IconSizeWrapper(icon, JBUI.scale(width), JBUI.scale(height));
   }
 
   private static class IconSizeWrapper implements Icon {

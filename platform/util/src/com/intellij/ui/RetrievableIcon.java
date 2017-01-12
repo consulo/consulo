@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.impl.softwrap.mapping;
 
-import org.jetbrains.annotations.NotNull;
+package com.intellij.ui;
 
-import java.util.List;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+
 
 /**
-* @author Denis Zhdanov
-* @since Sep 9, 2010 9:21:34 AM
-*/
-class TabulationDataProvider extends AbstractListBasedDataProvider<SoftWrapDataProviderKeys, TabData> {
-
-  TabulationDataProvider(@NotNull List<TabData> data) {
-    super(SoftWrapDataProviderKeys.TABULATION, data);
-  }
-
-  @Override
-  protected int getSortingKey(@NotNull TabData data) {
-    return data.offset;
-  }
+ * This class is mostly for testing purposes: in case an icon is hidden behind a private or a restricted interface,
+ * marking it as RetrievableIcon will help get the actual icon and perform checks.
+ */
+public interface RetrievableIcon extends Icon {
+  @Nullable
+  Icon retrieveIcon();
 }

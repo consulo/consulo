@@ -1143,5 +1143,11 @@
         <option name="FOREGROUND" value="bc5150" />
       </value>
     </option>
+    <option name="INLINE_PARAMETER_HINT">
+      <value>
+        <option name="FOREGROUND" value="7a7a7a"/>
+        <option name="BACKGROUND" value="ededed"/>
+      </value>
+    </option>
   </attributes>
 </scheme>

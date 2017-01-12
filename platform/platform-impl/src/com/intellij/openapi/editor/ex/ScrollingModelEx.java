@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.ScrollingModel;
 
 /**
  * Extends {@link ScrollingModel} with more implementation-specific functionality.
- * 
+ *
  * @author Denis Zhdanov
  * @since 1/18/11 10:30 AM
  */

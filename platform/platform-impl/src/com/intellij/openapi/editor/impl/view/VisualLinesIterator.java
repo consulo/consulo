@@ -33,7 +33,7 @@ public class VisualLinesIterator {
   @NotNull
   private Location myLocation;
   private Location myNextLocation;
-  
+
   public VisualLinesIterator(@NotNull EditorImpl editor, int startVisualLine) {
     myEditor = editor;
     SoftWrapModelImpl softWrapModel = myEditor.getSoftWrapModel();
@@ -47,7 +47,7 @@ public class VisualLinesIterator {
   public boolean atEnd() {
     return myLocation.atEnd();
   }
-  
+
   public void advance() {
     checkEnd();
     if (myNextLocation == null) {
@@ -68,28 +68,28 @@ public class VisualLinesIterator {
     checkEnd();
     return myLocation.offset;
   }
-  
+
   public int getVisualLineEndOffset() {
     checkEnd();
     if (myNextLocation == null) {
       myNextLocation = myLocation.clone();
       myNextLocation.advance();
     }
-    return myNextLocation.atEnd() ? myDocument.getTextLength() : 
-           myNextLocation.softWrap == myLocation.softWrap ? myDocument.getLineEndOffset(myNextLocation.logicalLine - 2) : 
+    return myNextLocation.atEnd() ? myDocument.getTextLength() :
+           myNextLocation.softWrap == myLocation.softWrap ? myDocument.getLineEndOffset(myNextLocation.logicalLine - 2) :
            myNextLocation.offset;
   }
-  
+
   public int getStartLogicalLine() {
     checkEnd();
     return myLocation.logicalLine - 1;
-  }  
-  
+  }
+
   public int getStartOrPrevWrapIndex() {
     checkEnd();
     return myLocation.softWrap - 1;
   }
-  
+
   public int getStartFoldingIndex() {
     checkEnd();
     return myLocation.foldRegion;
@@ -112,7 +112,7 @@ public class VisualLinesIterator {
     private int foldRegion;       // index of the first folding region on current or following visual lines
     private int softWrap;         // index of the first soft wrap after the start of current visual line
     private int y;                // y coordinate of visual line's top
-    
+
     private Location(int startVisualLine) {
       lineHeight = myEditor.getLineHeight();
       if (startVisualLine < 0 || startVisualLine >= myEditor.getVisibleLineCount()) {
@@ -168,7 +168,7 @@ public class VisualLinesIterator {
       }
       return false;
     }
-    
+
     private boolean atEnd() {
       return offset == -1;
     }

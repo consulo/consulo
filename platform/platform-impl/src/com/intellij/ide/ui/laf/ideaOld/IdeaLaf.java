@@ -27,6 +27,7 @@ import com.sun.java.swing.plaf.windows.WindowsTreeUI;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
 
@@ -43,12 +44,13 @@ public final class IdeaLaf extends MetalLookAndFeel {
     LafManagerImpl.initInputMapDefaults(defaults);
     initIdeaDefaults(defaults);
 
+
     Pair<String, Integer> systemFont = UIUtil.getSystemFontData();
     if (systemFont != null) {
-      LafManagerImpl.initFontDefaults(defaults, systemFont.getFirst(), systemFont.getSecond());
+      LafManagerImpl.initFontDefaults(defaults, systemFont.second, new FontUIResource(systemFont.first, Font.PLAIN, systemFont.second));
     }
     else {
-      LafManagerImpl.initFontDefaults(defaults, "Tahoma", 11);
+      LafManagerImpl.initFontDefaults(defaults, 11, new FontUIResource("Tahoma", Font.PLAIN, 11));
     }
   }
 

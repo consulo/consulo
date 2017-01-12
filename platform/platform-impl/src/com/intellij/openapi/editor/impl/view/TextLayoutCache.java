@@ -34,34 +34,34 @@ import java.util.List;
 /**
  * Editor text layout storage. Layout is stored on a per-logical-line basis, 
  * it's created lazily (when requested) and invalidated on document changes or when explicitly requested.
- * 
+ *
  * @see LineLayout
  */
 class TextLayoutCache implements PrioritizedDocumentListener, Disposable {
   private static final Logger LOG = Logger.getInstance(TextLayoutCache.class);
-  
+
   private static final int MAX_CHUNKS_IN_ACTIVE_EDITOR = 1000;
   private static final int MAX_CHUNKS_IN_INACTIVE_EDITOR = 10;
-  
+
   private final EditorView myView;
   private final Document myDocument;
   private final LineLayout myBidiNotRequiredMarker;
   private ArrayList<LineLayout> myLines = new ArrayList<>();
   private int myDocumentChangeOldEndLine;
-  
-  @SuppressWarnings("MismatchedQueryAndUpdateOfCollection") 
-  private LinkedHashMap<LineLayout.Chunk, Object> myLaidOutChunks = 
-    new LinkedHashMap<LineLayout.Chunk, Object>(MAX_CHUNKS_IN_ACTIVE_EDITOR, 0.75f, true) {
-      @Override
-      protected boolean removeEldestEntry(Map.Entry<LineLayout.Chunk, Object> eldest) {
-        if (size() > getChunkCacheSizeLimit()) {
-          if (LOG.isDebugEnabled()) LOG.debug("Clearing chunk for " + myView.getEditor().getVirtualFile());
-          eldest.getKey().clearCache();
-          return true;
-        }
-        return false;
-      }
-    };
+
+  @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+  private LinkedHashMap<LineLayout.Chunk, Object> myLaidOutChunks =
+          new LinkedHashMap<LineLayout.Chunk, Object>(MAX_CHUNKS_IN_ACTIVE_EDITOR, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<LineLayout.Chunk, Object> eldest) {
+              if (size() > getChunkCacheSizeLimit()) {
+                if (LOG.isDebugEnabled()) LOG.debug("Clearing chunk for " + myView.getEditor().getVirtualFile());
+                eldest.getKey().clearCache();
+                return true;
+              }
+              return false;
+            }
+          };
 
   TextLayoutCache(EditorView view) {
     myView = view;
@@ -90,7 +90,14 @@ class TextLayoutCache implements PrioritizedDocumentListener, Disposable {
   public void documentChanged(DocumentEvent event) {
     int startLine = myDocument.getLineNumber(event.getOffset());
     int newEndLine = getAdjustedLineNumber(event.getOffset() + event.getNewLength());
-    invalidateLines(startLine, myDocumentChangeOldEndLine, newEndLine, true, LineLayout.isBidiLayoutRequired(event.getNewFragment()));
+    invalidateLines(startLine, myDocumentChangeOldEndLine, newEndLine, true,
+                    LineLayout.isBidiLayoutRequired(event.getNewFragment()));
+
+    if (myLines.size() != myDocument.getLineCount()) {
+      LOG.error("Error updating text layout cache after " + event,
+                new Attachment("editorState.txt", myView.getEditor().dumpState()));
+      resetToDocumentSize(true);
+    }
   }
 
   @Override
@@ -107,6 +114,9 @@ class TextLayoutCache implements PrioritizedDocumentListener, Disposable {
     checkDisposed();
     invalidateLines(0, myLines.size() - 1, myDocument.getLineCount() - 1,
                     documentChangedWithoutNotification, documentChangedWithoutNotification);
+    if (myLines.size() != myDocument.getLineCount()) {
+      LOG.error("Error resetting text layout cache", new Attachment("editorState.txt", myView.getEditor().dumpState()));
+    }
   }
 
   void invalidateLines(int startLine, int endLine) {

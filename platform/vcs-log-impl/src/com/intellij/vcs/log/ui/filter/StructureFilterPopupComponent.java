@@ -345,6 +345,12 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
     }
 
     @Override
+    public CheckboxColorIcon withJBUIPreScaled(boolean preScaled) {
+      mySizedIcon = (SizedIcon)mySizedIcon.withJBUIPreScaled(preScaled);
+      return (CheckboxColorIcon)super.withJBUIPreScaled(preScaled);
+    }
+
+    @Override
     public void paintIcon(Component component, Graphics g, int i, int j) {
       super.paintIcon(component, g, i, j);
       if (mySelected) {

@@ -15,13 +15,12 @@
  */
 package com.intellij.util.ui;
 
+import com.intellij.util.ImageLoader;
 import com.intellij.util.JBHiDPIScaledImage;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
+import java.awt.image.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -38,8 +37,8 @@ public class ImageUtil {
       return (BufferedImage)image;
     }
 
-    @SuppressWarnings("UndesirableClassUsage") BufferedImage bufferedImage =
-            new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+    @SuppressWarnings("UndesirableClassUsage")
+    BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
     Graphics2D g = bufferedImage.createGraphics();
     g.drawImage(image, 0, 0, null);
     g.dispose();
@@ -62,8 +61,30 @@ public class ImageUtil {
     return image.getHeight(null);
   }
 
+  public static int getUserWidth(@NotNull Image image) {
+    if (image instanceof JBHiDPIScaledImage) {
+      return ((JBHiDPIScaledImage)image).getUserWidth(null);
+    }
+    return image.getWidth(null);
+  }
+
+  public static int getUserHeight(@NotNull Image image) {
+    if (image instanceof JBHiDPIScaledImage) {
+      return ((JBHiDPIScaledImage)image).getUserHeight(null);
+    }
+    return image.getHeight(null);
+  }
+
   public static Image filter(Image image, ImageFilter filter) {
     if (image == null || filter == null) return image;
-    return Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(toBufferedImage(image).getSource(), filter));
+    return Toolkit.getDefaultToolkit().createImage(
+            new FilteredImageSource(toBufferedImage(image).getSource(), filter));
+  }
+
+  /**
+   * Scales the image taking into account its HiDPI awareness.
+   */
+  public static Image scaleImage(Image image, float scale) {
+    return ImageLoader.scaleImage(image, scale);
   }
 }

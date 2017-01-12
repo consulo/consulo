@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.bookmarks;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.favoritesTreeView.AbstractFavoritesListProvider;
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
@@ -24,7 +23,9 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.CommonActionsPanel;
-import com.intellij.ui.LayeredIcon;
+import com.intellij.ui.RowIcon;
+import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,9 +39,13 @@ import java.util.Set;
  * User: Vassiliy.Kudryashov
  */
 public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider<Bookmark> implements BookmarksListener {
+  private final BookmarkManager myBookmarkManager;
+  private final FavoritesManager myFavoritesManager;
 
-  public BookmarksFavoriteListProvider(Project project) {
+  public BookmarksFavoriteListProvider(Project project, BookmarkManager bookmarkManager, FavoritesManager favoritesManager) {
     super(project, "Bookmarks");
+    myBookmarkManager = bookmarkManager;
+    myFavoritesManager = favoritesManager;
     project.getMessageBus().connect(project).subscribe(BookmarksListener.TOPIC, this);
     updateChildren();
   }
@@ -68,7 +73,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
   private void updateChildren() {
     if (myProject.isDisposed()) return;
     myChildren.clear();
-    List<Bookmark> bookmarks = BookmarkManager.getInstance(myProject).getValidBookmarks();
+    List<Bookmark> bookmarks = myBookmarkManager.getValidBookmarks();
     for (final Bookmark bookmark : bookmarks) {
       AbstractTreeNode<Bookmark> child = new AbstractTreeNode<Bookmark>(myProject, bookmark) {
         @NotNull
@@ -101,7 +106,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
       child.setParent(myNode);
       myChildren.add(child);
     }
-    FavoritesManager.getInstance(myProject).fireListeners(getListName(myProject));
+    myFavoritesManager.fireListeners(getListName(myProject));
   }
 
   @Nullable
@@ -181,12 +186,16 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
                                 int row,
                                 boolean hasFocus) {
     renderer.clear();
-    renderer.setIcon(AllIcons.Actions.Checked);
+    renderer.setIcon(Bookmark.DEFAULT_ICON);
     if (value instanceof Bookmark) {
       Bookmark bookmark = (Bookmark)value;
       BookmarkItem.setupRenderer(renderer, myProject, bookmark, selected);
       if (renderer.getIcon() != null) {
-        renderer.setIcon(LayeredIcon.createHorizontalIcon(bookmark.getIcon(), renderer.getIcon()));
+        RowIcon icon = new RowIcon(3, RowIcon.Alignment.CENTER);
+        icon.setIcon(bookmark.getIcon(), 0);
+        icon.setIcon(JBUI.scale(EmptyIcon.create(1)), 1);
+        icon.setIcon(renderer.getIcon(), 2);
+        renderer.setIcon(icon);
       }
       else {
         renderer.setIcon(bookmark.getIcon());

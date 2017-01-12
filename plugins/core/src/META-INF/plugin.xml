@@ -2551,5 +2551,7 @@
 
     <vcs.ignoredFileProvider implementation="com.intellij.openapi.vcs.changes.ChangeListManagerImpl$DefaultIgnoredFileProvider" order="last"/>
     <vcs.ignoredFileProvider implementation="consulo.configurationStore.vcs.StoreIgnoredFileProvider"/>
+
+    <stripTrailingSpacesFilterFactory implementation="com.intellij.psi.codeStyle.KeepTrailingSpacesOnEmptyLinesFilterFactory"/>
   </extensions>
 </idea-plugin>

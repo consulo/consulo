@@ -86,7 +86,7 @@ public class MultiScopeSeverityIcon implements Icon {
 
   @Override
   public int getIconWidth() {
-    return JBUI.scaleIconSize(12);
+    return JBUI.scale(12);
   }
 
   @Override

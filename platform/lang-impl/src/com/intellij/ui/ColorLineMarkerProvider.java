@@ -50,7 +50,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
     public MyInfo(@NotNull final PsiElement element, final Color color, final ElementColorProvider colorProvider) {
       super(element,
             element.getTextRange(),
-            new ColorIcon(JBUI.scaleIconSize(12), color),
+            new ColorIcon(JBUI.scaleFontSize(12), color),
             Pass.UPDATE_ALL,
             FunctionUtil.<Object, String>nullConstant(),
             new GutterIconNavigationHandler<PsiElement>() {
@@ -85,7 +85,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
     @Override
     public Icon getCommonIcon(@NotNull List<MergeableLineMarkerInfo> infos) {
       if (infos.size() == 2 && infos.get(0) instanceof MyInfo && infos.get(1) instanceof MyInfo) {
-        return new TwoColorsIcon(JBUI.scaleIconSize(12), ((MyInfo)infos.get(1)).myColor, ((MyInfo)infos.get(0)).myColor);
+        return new TwoColorsIcon(JBUI.scale(12), ((MyInfo)infos.get(1)).myColor, ((MyInfo)infos.get(0)).myColor);
       }
       return AllIcons.Gutter.Colors;
     }

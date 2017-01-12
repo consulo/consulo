@@ -18,7 +18,7 @@ package com.intellij.ide.bookmarks;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.impl.AbstractEditorProcessingOnDocumentModificationTest;
+import com.intellij.openapi.editor.impl.AbstractEditorTest;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -34,7 +34,7 @@ import java.util.List;
  * @author Denis Zhdanov
  * @since 12/27/10 1:43 PM
  */
-public class BookmarkManagerTest extends AbstractEditorProcessingOnDocumentModificationTest {
+public class BookmarkManagerTest extends AbstractEditorTest {
   private final List<Bookmark> myBookmarks = new ArrayList<Bookmark>();
   
   @Override

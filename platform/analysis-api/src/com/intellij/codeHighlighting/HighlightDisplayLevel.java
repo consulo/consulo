@@ -119,7 +119,7 @@ public class HighlightDisplayLevel {
   }
 
   public static int getEmptyIconDim() {
-    return JBUI.scaleIconSize(14);
+    return JBUI.scale(14);
   }
 
   public static Icon createBoxIcon(@NotNull TextAttributesKey key) {

@@ -1790,5 +1790,11 @@
         <option name="FOREGROUND" value="9d527c" />
       </value>
     </option>
+    <option name="INLINE_PARAMETER_HINT">
+      <value>
+        <option name="FOREGROUND" value="787878"/>
+        <option name="BACKGROUND" value="3b3b3b"/>
+      </value>
+    </option>
   </attributes>
 </scheme>

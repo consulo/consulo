@@ -211,7 +211,7 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
 
   protected TextEditorState getStateImpl(final Project project, @NotNull Editor editor, @NotNull FileEditorStateLevel level){
     TextEditorState state = new TextEditorState();
-    if (!Registry.is("editor.new.rendering") && editor instanceof EditorImpl && ((EditorImpl)editor).myUseNewRendering) return state;
+    if (!Registry.is("editor.new.rendering") && editor instanceof EditorImpl && true) return state;
     CaretModel caretModel = editor.getCaretModel();
     if (caretModel.supportsMultipleCarets()) {
       List<CaretState> caretsAndSelections = caretModel.getCaretsAndSelections();

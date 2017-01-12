@@ -608,16 +608,27 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   }
 
   private void patchLafFonts(UIDefaults uiDefaults) {
+    //if (JBUI.isHiDPI()) {
+    //  HashMap<Object, Font> newFonts = new HashMap<Object, Font>();
+    //  for (Object key : uiDefaults.keySet().toArray()) {
+    //    Object val = uiDefaults.get(key);
+    //    if (val instanceof Font) {
+    //      newFonts.put(key, JBFont.create((Font)val));
+    //    }
+    //  }
+    //  for (Map.Entry<Object, Font> entry : newFonts.entrySet()) {
+    //    uiDefaults.put(entry.getKey(), entry.getValue());
+    //  }
+    //} else
     UISettings uiSettings = UISettings.getInstance();
     if (uiSettings.OVERRIDE_NONIDEA_LAF_FONTS) {
       storeOriginalFontDefaults(uiDefaults);
-      JBUI.setScaleFactor(uiSettings.FONT_SIZE / 12f);
-      initFontDefaults(uiDefaults, uiSettings.FONT_FACE, uiSettings.FONT_SIZE);
+      JBUI.setUserScaleFactor(uiSettings.FONT_SIZE / UIUtil.DEF_SYSTEM_FONT_SIZE);
+      initFontDefaults(uiDefaults, uiSettings.FONT_SIZE, new FontUIResource(uiSettings.FONT_FACE, Font.PLAIN, uiSettings.FONT_SIZE));
     }
     else {
       restoreOriginalFontDefaults(uiDefaults);
     }
-    JBUI.setScaleFactor(JBUI.Fonts.label().getSize() / 12f);
   }
 
   private void restoreOriginalFontDefaults(UIDefaults defaults) {
@@ -719,9 +730,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
-  public static void initFontDefaults(UIDefaults defaults, String fontFace, int fontSize) {
+  public static void initFontDefaults(UIDefaults defaults, int fontSize, FontUIResource uiFont) {
     defaults.put("Tree.ancestorInputMap", null);
-    FontUIResource uiFont = new FontUIResource(fontFace, Font.PLAIN, fontSize);
     FontUIResource textFont = new FontUIResource("Serif", Font.PLAIN, fontSize);
     FontUIResource monoFont = new FontUIResource("Monospaced", Font.PLAIN, fontSize);
 
@@ -729,7 +739,9 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       defaults.put(fontResource, uiFont);
     }
 
-    defaults.put("PasswordField.font", monoFont);
+    if (!SystemInfo.isMac) {
+      defaults.put("PasswordField.font", monoFont);
+    }
     defaults.put("TextArea.font", monoFont);
     defaults.put("TextPane.font", textFont);
     defaults.put("EditorPane.font", textFont);

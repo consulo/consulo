@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,20 @@
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.codeInsight.folding.CodeFoldingManager;
+import com.intellij.codeInsight.generation.actions.CommentByLineCommentAction;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.impl.AbstractEditorProcessingOnDocumentModificationTest;
-import com.intellij.openapi.editor.impl.DefaultEditorTextRepresentationHelper;
+import com.intellij.openapi.editor.ex.DocumentEx;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.openapi.editor.impl.AbstractEditorTest;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.util.Ref;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import com.intellij.testFramework.EditorTestUtil;
 import com.intellij.testFramework.TestFileType;
 import gnu.trove.TIntHashSet;
-import gnu.trove.TIntProcedure;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,11 +40,10 @@ import java.util.List;
  * @author Denis Zhdanov
  * @since 09/16/2010
  */
-public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorProcessingOnDocumentModificationTest {
+public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorTest {
 
   private boolean mySmartHome;
 
-  @RequiredDispatchThread
   @Override
   protected void setUp() throws Exception {
     super.setUp();
@@ -57,38 +57,42 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
   @Override
   protected void tearDown() throws Exception {
-    if (myEditor != null) {
-      EditorSettings settings = myEditor.getSettings();
-      settings.setUseSoftWraps(false);
-      settings.setSmartHome(mySmartHome);
+    try {
+      if (myEditor != null) {
+        EditorSettings settings = myEditor.getSettings();
+        settings.setUseSoftWraps(false);
+        settings.setSmartHome(mySmartHome);
+      }
     }
-    super.tearDown();
+    finally {
+      super.tearDown();
+    }
   }
 
   public void testSoftWrapAdditionOnTyping() throws Exception {
     String text =
-      "this is a test string that is expected to end just before right margin<caret>";
+            "this is a test string that is expected to end just before right margin<caret>";
     init(100, text);
 
     int offset = myEditor.getDocument().getTextLength() + 1;
     assertTrue(getSoftWrapModel().getRegisteredSoftWraps().isEmpty());
     type(" thisisalongtokenthatisnotexpectedtobebrokenintopartsduringsoftwrapping");
     SoftWrap softWrap = myEditor.getSoftWrapModel().getSoftWrap(offset);
-    
+
     // This test fails randomly at TeamCity. The logging below is intended to help analyzing the problem.
     if (softWrap == null) {
       fail(String.format(
-        "Expected soft wrap to be located on offset %d. Actual: %s. Document text: %s",
-        offset, getSoftWrapModel().getRegisteredSoftWraps(), myEditor.getDocument().getCharsSequence()
+              "Expected soft wrap to be located on offset %d. Actual: %s. Document text: %s",
+              offset, getSoftWrapModel().getRegisteredSoftWraps(), myEditor.getDocument().getCharsSequence()
       ));
     }
   }
 
   public void testLongLineOfIdSymbolsIsNotSoftWrapped() throws Exception {
     String text =
-      "abcdefghijklmnopqrstuvwxyz<caret>\n" +
-      "123\n" +
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            "abcdefghijklmnopqrstuvwxyz<caret>\n" +
+            "123\n" +
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     init(15, text);
     assertTrue(getSoftWrapModel().getRegisteredSoftWraps().isEmpty());
@@ -103,11 +107,11 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
   public void testFoldRegionCollapsing() throws Exception {
     String text =
-      "class Test {\n" +
-      "    public void foo() {\n" +
-      "        System.out.println(\"test\");\n" +
-      "    }\n" +
-      "}";
+            "class Test {\n" +
+            "    public void foo() {\n" +
+            "        System.out.println(\"test\");\n" +
+            "    }\n" +
+            "}";
 
     init(40, text);
     final FoldingModel foldingModel = myEditor.getFoldingModel();
@@ -131,11 +135,11 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
   public void testTypingEnterAtDocumentEnd() throws IOException {
     String text =
-      "class Test {\n" +
-      "    public void foo() {\n" +
-      "        System.out.println(\"test\");\n" +
-      "    }\n" +
-      "}<caret>";
+            "class Test {\n" +
+            "    public void foo() {\n" +
+            "        System.out.println(\"test\");\n" +
+            "    }\n" +
+            "}<caret>";
 
     init(40, text);
     type('\n');
@@ -145,12 +149,12 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
   public void testDeleteDocumentTail() throws IOException {
     String text =
-      "class Test {\n" +
-      "    public void foo() {\n" +
-      "        System.out.println(\"test\");\n" +
-      "    }\n" +
-      "}\n" +
-      "abcde";
+            "class Test {\n" +
+            "    public void foo() {\n" +
+            "        System.out.println(\"test\");\n" +
+            "    }\n" +
+            "}\n" +
+            "abcde";
 
     init(40, text);
     int offset = text.indexOf("abcde");
@@ -161,9 +165,9 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
   public void testTypingTabOnLastEmptyLine() throws IOException {
     String text =
-      "class Test {\n" +
-      "}\n" +
-      "<caret>";
+            "class Test {\n" +
+            "}\n" +
+            "<caret>";
 
     init(40, text);
     type('\t');
@@ -171,15 +175,15 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
   }
 
   public void testTypingThatExceedsRightMarginOnLastSoftWrappedLine() throws IOException {
-    String text = 
-      "line1\n" +
-      "long line<caret>";
-    
-    init(48, text, 7);
+    String text =
+            "line1\n" +
+            "long line<caret>";
+
+    init(69, text, 10);
 
     int softWrapsBefore = getSoftWrapModel().getRegisteredSoftWraps().size();
     assertTrue(softWrapsBefore > 0);
-    
+
     for (int i = 0; i < 10; i++) {
       type(String.valueOf(i));
       assertEquals(softWrapsBefore, getSoftWrapModel().getRegisteredSoftWraps().size());
@@ -189,11 +193,11 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
   public void testTrailingFoldRegionRemoval() throws IOException {
     String text =
-      "public class BrokenAlignment {\n" +
-      "    @SuppressWarnings({ \"SomeInspectionIWantToIgnore\" })\n" +
-      "    public void doSomething(int x, int y) {\n" +
-      "    }\n" +
-      "}";
+            "public class BrokenAlignment {\n" +
+            "    @SuppressWarnings({ \"SomeInspectionIWantToIgnore\" })\n" +
+            "    public void doSomething(int x, int y) {\n" +
+            "    }\n" +
+            "}";
 
     init(100, text);
 
@@ -210,110 +214,107 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
   public void testTypeNewLastLineAndSymbolOnIt() throws IOException {
     // Inspired by IDEA-59439
-    String text = 
-      "This is a test document\n" +
-      "line1\n" +
-      "line2\n" +
-      "line3\n" +
-      "line4\n" +
-      "line5\n" +
-      "line6<caret>";
-    
+    String text =
+            "This is a test document\n" +
+            "line1\n" +
+            "line2\n" +
+            "line3\n" +
+            "line4\n" +
+            "line5\n" +
+            "line6<caret>";
+
     init(100, text);
     type("\nq");
     assertEquals(new VisualPosition(7, 1), myEditor.offsetToVisualPosition(myEditor.getDocument().getTextLength()));
   }
-  
+
   public void testTrailingSoftWrapOffsetShiftOnTyping() throws IOException {
     // The main idea is to type on a logical line before soft wrap in order to ensure that its offset is correctly shifted back.
-    String text = 
-      "line1<caret>\n" +
-      "second line that is long enough to be soft wrapped";
+    String text =
+            "line1<caret>\n" +
+            "second line that is long enough to be soft wrapped";
     init(15, text);
 
     TIntHashSet offsetsBefore = collectSoftWrapStartOffsets(1);
     assertTrue(!offsetsBefore.isEmpty());
-    
+
     type('2');
     final TIntHashSet offsetsAfter = collectSoftWrapStartOffsets(1);
     assertSame(offsetsBefore.size(), offsetsAfter.size());
-    offsetsBefore.forEach(new TIntProcedure() {
-      @Override
-      public boolean execute(int value) {
-        assertTrue(offsetsAfter.contains(value + 1));
-        return true;
-      }
+    offsetsBefore.forEach(value -> {
+      assertTrue(offsetsAfter.contains(value + 1));
+      return true;
     });
   }
-  
+
   public void testSoftWrapAwareMappingAfterLeadingFoldRegionCollapsing() throws IOException {
     String text =
-      "line to fold 1\n" +
-      "line to fold 2\n" +
-      "line to fold 3\n" +
-      "ordinary line 1\n" +
-      "ordinary line 2\n" +
-      "ordinary line 3\n" +
-      "ordinary line 4\n" +
-      "line that is long enough to be soft wrapped\n" +
-      "ordinary line 5\n" +
-      "ordinary line 6\n" +
-      "ordinary line 7\n" +
-      "ordinary line 8\n";
-    
+            "line to fold 1\n" +
+            "line to fold 2\n" +
+            "line to fold 3\n" +
+            "ordinary line 1\n" +
+            "ordinary line 2\n" +
+            "ordinary line 3\n" +
+            "ordinary line 4\n" +
+            "line that is long enough to be soft wrapped\n" +
+            "ordinary line 5\n" +
+            "ordinary line 6\n" +
+            "ordinary line 7\n" +
+            "ordinary line 8\n";
+
     init(30, text);
     LogicalPosition position = myEditor.visualToLogicalPosition(new VisualPosition(8, 0));
     assertSame(7, position.line); // Position from soft-wrapped part of the line
-    
+
     addCollapsedFoldRegion(0, text.indexOf("ordinary line 1") - 1, "...");
     assertSame(7, myEditor.visualToLogicalPosition(new VisualPosition(6, 0)).line); // Check that soft wraps cache is correctly updated
   }
-  
+
   public void testCaretPositionOnFoldRegionExpand() throws IOException {
     // We had a problem that caret preserved its visual position instead of offset. This test checks that.
-    
-    String text = 
-      "/**\n" +
-      " * This is a test comment\n" +
-      " */\n" +
-      "public class Test {\n" +
-      "}";
+
+    String text =
+            "/**\n" +
+            " * This is a test comment\n" +
+            " */\n" +
+            "public class Test {\n" +
+            "}";
     init(100, text);
 
     addCollapsedFoldRegion(0, text.indexOf("public") - 1, "/**...*/");
-    
+
     int offset = text.indexOf("class");
     CaretModel caretModel = myEditor.getCaretModel();
     caretModel.moveToOffset(offset);
     assertEquals(offset, caretModel.getOffset());
     assertEquals(1, caretModel.getVisualPosition().line);
-    
+
     toggleFoldRegionState(getFoldRegion(0), true);
     assertEquals(3, caretModel.getVisualPosition().line);
     assertEquals(offset, caretModel.getOffset());
   }
-  
+
   public void testBackspaceAtTheEndOfSoftWrappedLine() throws IOException {
     // There was a problem that removing text from the last document line that was soft-wrapped removed soft wraps as well.
-    String text = 
-      "This a long string that is expected to be wrapped in more than one visual line<caret>";
+    String text =
+            "This a long string that is expected to be wrapped in more than one visual line<caret>";
     init(20, text);
 
-    List<SoftWrap> softWrapsBeforeModification = new ArrayList<SoftWrap>(getSoftWrapModel().getRegisteredSoftWraps());
+    List<SoftWrap> softWrapsBeforeModification = new ArrayList<>(getSoftWrapModel().getRegisteredSoftWraps());
     assertTrue(softWrapsBeforeModification.size() > 0);
-    
+
     backspace();
     assertEquals(softWrapsBeforeModification, getSoftWrapModel().getRegisteredSoftWraps());
   }
-  
+
   public void testRemoveOfAllSymbolsFromLastLine() throws IOException {
     // There was a problem that removing all text from the last document line corrupted soft wraps cache.
     String text =
-      "Line1\n" +
-      "Long line2 that is expected to be soft-wrapped<caret>";
+            "Line1\n" +
+            "Long line2 that is expected to be soft-wrapped<caret>";
     init(20, text);
 
-    List<SoftWrap> softWrapsBeforeModification = new ArrayList<SoftWrap>(getSoftWrapModel().getRegisteredSoftWraps());
+    List<SoftWrap> softWrapsBeforeModification = new ArrayList<>(getSoftWrapModel().getRegisteredSoftWraps());
     assertTrue(softWrapsBeforeModification.size() > 0);
 
     int offset = myEditor.getCaretModel().getOffset();
@@ -324,38 +325,38 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
     assertEquals(softWrapsBeforeModification, getSoftWrapModel().getRegisteredSoftWraps());
     assertEquals(positionBeforeModification, myEditor.offsetToVisualPosition(offset));
   }
-  
+
   public void testTypingBeforeCollapsedFoldRegion() throws IOException {
     // We had a problem that soft wraps cache entries that lay after the changed region were considered to be affected by the change.
     // This test checks that situation.
     String text =
-      "\n" +
-      "fold line1\n" +
-      "fold line2\n" +
-      "fold line3\n" +
-      "fold line4\n" +
-      "normal line1";
+            "\n" +
+            "fold line1\n" +
+            "fold line2\n" +
+            "fold line3\n" +
+            "fold line4\n" +
+            "normal line1";
     init(20, text);
-    
+
     int afterFoldOffset = text.indexOf("normal line1");
     addCollapsedFoldRegion(text.indexOf("fold line1") + 2, afterFoldOffset - 1, "...");
     VisualPosition beforeModification = myEditor.offsetToVisualPosition(afterFoldOffset);
-    
+
     myEditor.getCaretModel().moveToOffset(0);
     type('a');
-    
+
     assertEquals(beforeModification, myEditor.offsetToVisualPosition(afterFoldOffset + 1));
   }
-  
+
   public void testCollapsedFoldRegionPlaceholderThatExceedsVisibleWidth() throws IOException {
     String text =
-      "line1\n" +
-      "line2\n" +
-      "line3\n" +
-      "line4\n" +
-      "line5\n" +
-      "this is long line that is expected to be soft-wrapped\n" +
-      "line6";
+            "line1\n" +
+            "line2\n" +
+            "line3\n" +
+            "line4\n" +
+            "line5\n" +
+            "this is long line that is expected to be soft-wrapped\n" +
+            "line6";
     init(15, text);
 
     assertTrue(!getSoftWrapModel().getRegisteredSoftWraps().isEmpty());
@@ -368,18 +369,18 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
     int offsetAfterSoftWrap = text.indexOf("line6") - 1;
     VisualPosition beforePositionAfterSoftWrap = myEditor.offsetToVisualPosition(offsetAfterSoftWrap);
-    
+
     // Add single-line fold region which placeholder text is long enough to exceed visual area width.
     addCollapsedFoldRegion(2, offsetAfterSingleLineFoldRegion, "this is a very long placeholder for the single-line fold region");
     assertEquals(lineAfterSingleLineFoldRegion + 1, myEditor.offsetToVisualPosition(offsetAfterSingleLineFoldRegion).line);
     lineAfterSingleLineFoldRegion++;
-    
+
     assertEquals(lineAfterMultiLineFoldRegion + 1, myEditor.offsetToVisualPosition(offsetAfterMultiLineFoldRegion).line);
     lineAfterMultiLineFoldRegion++;
-    
-    beforePositionAfterSoftWrap = new VisualPosition(beforePositionAfterSoftWrap.line + 1, beforePositionAfterSoftWrap.column); 
+
+    beforePositionAfterSoftWrap = new VisualPosition(beforePositionAfterSoftWrap.line + 1, beforePositionAfterSoftWrap.column);
     assertEquals(beforePositionAfterSoftWrap, myEditor.offsetToVisualPosition(offsetAfterSoftWrap));
-    
+
     // Add multi-line fold region which placeholder is also long enough to exceed visual area width.
     addCollapsedFoldRegion(text.indexOf("line2") + 2, offsetAfterMultiLineFoldRegion, "long enough placeholder for multi-line fold region");
     assertEquals(lineAfterSingleLineFoldRegion, myEditor.offsetToVisualPosition(offsetAfterSingleLineFoldRegion).line);
@@ -387,24 +388,24 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
     beforePositionAfterSoftWrap = new VisualPosition(beforePositionAfterSoftWrap.line - 2, beforePositionAfterSoftWrap.column);
     assertEquals(beforePositionAfterSoftWrap, myEditor.offsetToVisualPosition(offsetAfterSoftWrap));
   }
-  
+
   public void testInsertNewStringAndTypeOnItBeforeFoldRegion() throws IOException {
     // There was incorrect processing of fold regions when document change was performed right before them.
     String text =
-      "/**\n" +
-      " * comment\n" +
-      " */\n" +
-      "class Test {\n" +
-      "}";
+            "/**\n" +
+            " * comment\n" +
+            " */\n" +
+            "class Test {\n" +
+            "}";
     init(100, text);
     String placeholder = "/**...*/";
     addCollapsedFoldRegion(0, text.indexOf("class") - 1, placeholder);
-    
+
     myEditor.getCaretModel().moveToOffset(0);
     type("\n");
     myEditor.getCaretModel().moveToOffset(0);
     type("import");
-    
+
     // Check that fold region info is still correct.
     int foldStartOffset = myEditor.getDocument().getText().indexOf("/**");
     int foldEndOffset = myEditor.getDocument().getText().indexOf("class") - 1;
@@ -412,71 +413,71 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
     assertEquals(new VisualPosition(1, 0), myEditor.offsetToVisualPosition((foldStartOffset + foldEndOffset) / 2));
     assertEquals(new VisualPosition(1, placeholder.length()), myEditor.offsetToVisualPosition(foldEndOffset));
   }
-  
+
   public void testUpdateFoldRegionDataOnTextRemoveBeforeIt() throws IOException {
     String text =
-      "1\n" +
-      "/**\n" +
-      " * comment\n" +
-      " */\n" +
-      "class Test {\n" +
-      "}";
+            "1\n" +
+            "/**\n" +
+            " * comment\n" +
+            " */\n" +
+            "class Test {\n" +
+            "}";
     init(100, text);
     String placeholder = "/**...*/";
     addCollapsedFoldRegion(2, text.indexOf("class") - 1, placeholder);
-    
+
     myEditor.getCaretModel().moveToOffset(0);
     delete();
     assertEquals(new VisualPosition(1, placeholder.length()), myEditor.offsetToVisualPosition(text.indexOf("class") - 2));
   }
-  
+
   public void testRemoveCollapsedFoldRegionThatStartsLogicalLine() throws IOException {
     // There was a problem that soft wraps cache updated on document modification didn't contain information about removed
     // fold region but fold model still provided cached information about it.
     String text =
-      "package org;\n" +
-      "\n" +
-      "@SuppressWarnings(\"all\")\n" +
-      "class Test {\n" +
-      "}";
-    
+            "package org;\n" +
+            "\n" +
+            "@SuppressWarnings(\"all\")\n" +
+            "class Test {\n" +
+            "}";
+
     init(100, text);
     int startOffset = text.indexOf("@");
     int endOffset = text.indexOf("class") - 1;
     addCollapsedFoldRegion(startOffset, endOffset, "xxx");
-    
+
     // Delete collapsed fold region that starts logical line.
     myEditor.getSelectionModel().setSelection(startOffset, endOffset);
     delete();
-    
+
     assertEquals(startOffset, myEditor.logicalPositionToOffset(myEditor.visualToLogicalPosition(new VisualPosition(2, 0))));
   }
-  
+
   public void testFoldRegionThatStartsAtLineEnd() throws IOException {
     String text =
-      "line1\n" +
-      "line2\n" +
-      "line3\n" +
-      "line4\n" +
-      "line5";
-    
-    init(30, text, 7);
+            "line1\n" +
+            "line2\n" +
+            "line3\n" +
+            "line4\n" +
+            "line5";
+
+    init(43, text, 10);
     int start = text.indexOf("line3") - 1;
     addCollapsedFoldRegion(start, text.length(), "...");
     assertEquals(1, getSoftWrapModel().getRegisteredSoftWraps().size());
     assertEquals(start, getSoftWrapModel().getRegisteredSoftWraps().get(0).getStart());
   }
-  
+
   public void testHomeProcessing() throws IOException {
-    String text = 
-      "class Test {\n" +
-      "    public String s = \"this is a long string literal that is expected to be soft-wrapped into multiple visual lines\";\n" +
-      "}";
-    
+    String text =
+            "class Test {\n" +
+            "    public String s = \"this is a long string literal that is expected to be soft-wrapped into multiple visual lines\";\n" +
+            "}";
+
     init(30, text);
     myEditor.getCaretModel().moveToOffset(text.indexOf("}") - 1);
 
-    List<? extends SoftWrap> softWraps = new ArrayList<SoftWrap>(getSoftWrapModel().getRegisteredSoftWraps());
+    List<? extends SoftWrap> softWraps = new ArrayList<>(getSoftWrapModel().getRegisteredSoftWraps());
     assertTrue(!softWraps.isEmpty());
 
     CaretModel caretModel = myEditor.getCaretModel();
@@ -484,24 +485,24 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
     while (!softWraps.isEmpty()) {
       SoftWrap softWrap = softWraps.get(softWraps.size() - 1);
       int caretOffsetBefore = caretModel.getOffset();
-      
+
       home();
-      
+
       // Expecting the caret to be moved at the nearest soft wrap start offset.
       int caretOffset = caretModel.getOffset();
       assertTrue(caretOffset < caretOffsetBefore);
       assertEquals(softWrap.getStart(), caretOffset);
       assertEquals(new VisualPosition(expectedVisualLine, softWrap.getIndentInColumns()), caretModel.getVisualPosition());
-      
+
       // Expected that caret is moved to visual line start when it's located on soft wrap start offset at the moment.
       home();
       assertEquals(softWrap.getStart(), caretModel.getOffset());
       assertEquals(new VisualPosition(expectedVisualLine, 0), caretModel.getVisualPosition());
-      
+
       softWraps.remove(softWraps.size() - 1);
       expectedVisualLine--;
     }
-    
+
     // Expecting caret to be located on the first non-white space symbol of non-soft wrapped line.
     home();
     assertEquals(text.indexOf("public"), caretModel.getOffset());
@@ -510,14 +511,14 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
   public void testEndProcessing() throws IOException {
     String text =
-      "class Test {\n" +
-      "    public String s = \"this is a long string literal that is expected to be soft-wrapped into multiple visual lines\";   \n" +
-      "}";
+            "class Test {\n" +
+            "    public String s = \"this is a long string literal that is expected to be soft-wrapped into multiple visual lines\";   \n" +
+            "}";
 
     init(30, text);
     myEditor.getCaretModel().moveToOffset(text.indexOf("\n") + 1);
 
-    List<? extends SoftWrap> softWraps = new ArrayList<SoftWrap>(getSoftWrapModel().getRegisteredSoftWraps());
+    List<? extends SoftWrap> softWraps = new ArrayList<>(getSoftWrapModel().getRegisteredSoftWraps());
     assertTrue(!softWraps.isEmpty());
 
     CaretModel caretModel = myEditor.getCaretModel();
@@ -544,24 +545,24 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
         caretOffset = caretModel.getOffset();
         assertTrue(caretOffset > caretOffsetBefore);
       }
-      
+
       assertEquals(softWrap.getStart(), caretOffset);
       assertEquals(
-        new VisualPosition(expectedVisualLine, myEditor.offsetToVisualPosition(softWrap.getStart() - 1).column + 1),
-        caretModel.getVisualPosition()
+              new VisualPosition(expectedVisualLine, myEditor.offsetToVisualPosition(softWrap.getStart() - 1).column + 1),
+              caretModel.getVisualPosition()
       );
-      
+
       softWraps.remove(0);
       expectedVisualLine++;
     }
-    
+
     // Check that caret is placed on a last non-white space symbol on current logical line.
     end();
     int lastNonWhiteSpaceSymbolOffset = text.indexOf("\";") + 2;
     assertEquals(lastNonWhiteSpaceSymbolOffset, caretModel.getOffset());
     assertEquals(myEditor.offsetToVisualPosition(lastNonWhiteSpaceSymbolOffset), caretModel.getVisualPosition());
     assertEquals(expectedVisualLine, caretModel.getVisualPosition().line);
-    
+
     // Check that caret is place to the very end of the logical line.
     end();
     int lastSymbolOffset = myEditor.getDocument().getLineEndOffset(caretModel.getLogicalPosition().line);
@@ -569,29 +570,29 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
     assertEquals(myEditor.offsetToVisualPosition(lastSymbolOffset), caretModel.getVisualPosition());
     assertEquals(expectedVisualLine, caretModel.getVisualPosition().line);
   }
-  
+
   public void testSoftWrapToHardWrapConversion() throws IOException {
     String text =
-      "this is line 1\n" +
-      "this is line 2\n" +
-      "this is line 3\n" +
-      "this is line 4\n" +
-      "this is line 5";
-    
-    init(50, text, 7);
+            "this is line 1\n" +
+            "this is line 2\n" +
+            "this is line 3\n" +
+            "this is line 4\n" +
+            "this is line 5";
+
+    init(71, text, 10);
     VisualPosition changePosition = new VisualPosition(1, 0);
     myEditor.getCaretModel().moveToVisualPosition(changePosition);
-    
+
     int logicalLinesBefore = myEditor.offsetToLogicalPosition(text.length()).line;
     int offsetBefore = myEditor.getCaretModel().getOffset();
-    
+
     LogicalPosition logicalPositionBefore = myEditor.visualToLogicalPosition(changePosition);
-    assertEquals(1, logicalPositionBefore.softWrapLinesOnCurrentLogicalLine);
+    assertEquals(1, EditorUtil.getSoftWrapCountAfterLineStart(myEditor, logicalPositionBefore));
     assertTrue(logicalPositionBefore.column > 0);
-    
+
     SoftWrap softWrap = getSoftWrapModel().getSoftWrap(offsetBefore);
     assertNotNull(softWrap);
-    
+
     type('a');
 
     LogicalPosition logicalPositionAfter = myEditor.visualToLogicalPosition(changePosition);
@@ -599,53 +600,53 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
     assertEquals(offsetBefore + softWrap.getText().length() + 1, myEditor.getCaretModel().getOffset());
     assertEquals(logicalLinesBefore + 1, myEditor.offsetToLogicalPosition(text.length()).line);
   }
-  
-  //public void testPastingInsideSelection() throws IOException {
-  //  String text = 
-  //    "this is line number 0\n" +
-  //    "this is line number 1\n" +
-  //    "this is line number 2\n" +
-  //    "this is line number 3\n" +
-  //    "this is line number 4\n" +
-  //    "this is line number 5\n" +
-  //    "this is line number 6\n" +
-  //    "this is the last line";
-  //  
-  //  init(100, text);
-  //  int lineToSelect = 4;
-  //  myEditor.getCaretModel().moveToOffset(text.indexOf("number " + lineToSelect));
-  //  Document document = myEditor.getDocument();
-  //
-  //  int startOffset = document.getLineStartOffset(lineToSelect);
-  //  int endOffset = document.getLineEndOffset(lineToSelect);
-  //  myEditor.getSelectionModel().setSelection(startOffset, endOffset);
-  //  
-  //  VisualPosition positionBefore = myEditor.offsetToVisualPosition(document.getLineStartOffset(lineToSelect + 1));
-  //  List<SoftWrap> softWrapsBefore = new ArrayList<SoftWrap>(getSoftWrapModel().getRegisteredSoftWraps());
-  //  
-  //  copy();
-  //  paste();
-  //  
-  //  assertEquals(positionBefore, myEditor.offsetToVisualPosition(document.getLineStartOffset(lineToSelect + 1)));
-  //  assertEquals(softWrapsBefore, getSoftWrapModel().getRegisteredSoftWraps());
-  //}
-  
+
+  public void testPastingInsideSelection() throws IOException {
+    String text =
+            "this is line number 0\n" +
+            "this is line number 1\n" +
+            "this is line number 2\n" +
+            "this is line number 3\n" +
+            "this is line number 4\n" +
+            "this is line number 5\n" +
+            "this is line number 6\n" +
+            "this is the last line";
+
+    init(100, text);
+    int lineToSelect = 4;
+    myEditor.getCaretModel().moveToOffset(text.indexOf("number " + lineToSelect));
+    Document document = myEditor.getDocument();
+
+    int startOffset = document.getLineStartOffset(lineToSelect);
+    int endOffset = document.getLineEndOffset(lineToSelect);
+    myEditor.getSelectionModel().setSelection(startOffset, endOffset);
+
+    VisualPosition positionBefore = myEditor.offsetToVisualPosition(document.getLineStartOffset(lineToSelect + 1));
+    List<SoftWrap> softWrapsBefore = new ArrayList<>(getSoftWrapModel().getRegisteredSoftWraps());
+
+    copy();
+    paste();
+
+    assertEquals(positionBefore, myEditor.offsetToVisualPosition(document.getLineStartOffset(lineToSelect + 1)));
+    assertEquals(softWrapsBefore, getSoftWrapModel().getRegisteredSoftWraps());
+  }
+
   public void testRemoveHugeLogicalLineThatLaysBeforeSoftWrappedLines() throws IOException {
     String text =
-      "short line\n" +
-      "this is a long line that is expected to be soft wrapped into more than one or even two visual lines\n" +
-      "1. just a line that is long enough to be soft wrapped\n" +
-      "2. just a line that is long enough to be soft wrapped\n" +
-      "3. just a line that is long enough to be soft wrapped\n" +
-      "4. just a line that is long enough to be soft wrapped";
-    
+            "short line\n" +
+            "this is a long line that is expected to be soft wrapped into more than one or even two visual lines\n" +
+            "1. just a line that is long enough to be soft wrapped\n" +
+            "2. just a line that is long enough to be soft wrapped\n" +
+            "3. just a line that is long enough to be soft wrapped\n" +
+            "4. just a line that is long enough to be soft wrapped";
+
     init(15, text);
     Document document = myEditor.getDocument();
     int start = document.getLineStartOffset(1);
     int end = document.getLineEndOffset(1) + 1;
     int visualLinesToRemove = getSoftWrapModel().getSoftWrapsForLine(1).size() + 1;
-    
-    List<VisualPosition> positionsBefore = new ArrayList<VisualPosition>();
+
+    List<VisualPosition> positionsBefore = new ArrayList<>();
     for (int i = end; i < text.length(); i++) {
       positionsBefore.add(myEditor.offsetToVisualPosition(i));
     }
@@ -653,29 +654,29 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
     myEditor.getSelectionModel().setSelection(start, end);
     delete();
-    
+
     // Check that all remembered positions are just shifted to expected number of visual lines.
     for (int i = start; i < document.getTextLength(); i++) {
       VisualPosition position = positionsBefore.remove(positionsBefore.size() - 1);
       assertEquals(new VisualPosition(position.line - visualLinesToRemove, position.column), myEditor.offsetToVisualPosition(i));
     }
   }
-  
+
   public void testVerticalCaretShiftOnLineComment() throws IOException {
     String text =
-      "1. just a line that is long enough to be soft wrapped\n" +
-      "2. just a line that is long enough to be soft wrapped\n" +
-      "3. just a line that is long enough to be soft wrapped\n" +
-      "4. just a line that is long enough to be soft wrapped";
+            "1. just a line that is long enough to be soft wrapped\n" +
+            "2. just a line that is long enough to be soft wrapped\n" +
+            "3. just a line that is long enough to be soft wrapped\n" +
+            "4. just a line that is long enough to be soft wrapped";
     init(15, text);
 
     CaretModel caretModel = myEditor.getCaretModel();
     caretModel.moveToOffset(text.indexOf("2.") + 2);
-    lineComment();
-    
+    new CommentByLineCommentAction().actionPerformedImpl(getProject(), getEditor());
+
     assertEquals(myEditor.offsetToLogicalPosition(text.indexOf("3.") + 2), caretModel.getLogicalPosition());
   }
-  
+
   private static TIntHashSet collectSoftWrapStartOffsets(int documentLine) {
     TIntHashSet result = new TIntHashSet();
     for (SoftWrap softWrap : myEditor.getSoftWrapModel().getSoftWrapsForLine(documentLine)) {
@@ -683,14 +684,14 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
     }
     return result;
   }
-  
+
   public void testNonSmartHome() throws IOException {
     String text =
-      "     this is a string that starts with white space and is long enough to be soft-wrapped\n" +
-      " this is a 'prefix' text before collapsed multi-line folding that is long enough to be soft-wrapped first fold line\n" +
-      "second fold line";
+            "     this is a string that starts with white space and is long enough to be soft-wrapped\n" +
+            " this is a 'prefix' text before collapsed multi-line folding that is long enough to be soft-wrapped first fold line\n" +
+            "second fold line";
     init(30, text);
-    
+
     addCollapsedFoldRegion(text.indexOf("first fold line"), text.length(), "...");
 
     List<? extends SoftWrap> softWraps = getSoftWrapModel().getRegisteredSoftWraps();
@@ -698,48 +699,46 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
     CaretModel caretModel = myEditor.getCaretModel();
     SoftWrap softWrap = softWraps.get(0);
-    
+
     // Test non-smart home
     myEditor.getSettings().setSmartHome(false);
     caretModel.moveToOffset(softWrap.getStart() + 1);
     int visLine = caretModel.getVisualPosition().line;
     home();
     assertEquals(new VisualPosition(visLine, 0), caretModel.getVisualPosition());
-    
+
     caretModel.moveToOffset(text.length());
     home();
     visLine = caretModel.getVisualPosition().line;
     assertEquals(new VisualPosition(visLine, 0), caretModel.getVisualPosition());
   }
-  
+
   public void testFoldRegionsUpdate() throws IOException {
-    String text = 
-      "import java.util.List;\n" +
-      "import java.util.ArrayList;\n" +
-      "\n" +
-      "class Test {\n" +
-      "}";
+    String text =
+            "import java.util.List;\n" +
+            "import java.util.ArrayList;\n" +
+            "\n" +
+            "class Test {\n" +
+            "}";
     init(40, text);
-    
+
     final int foldStartOffset = "import".length() + 1;
     int foldEndOffset = text.indexOf("class") - 2;
     addCollapsedFoldRegion(foldStartOffset, foldEndOffset, "...");
-    
+
     // Simulate addition of the new import that modifies existing fold region.
-    myEditor.getDocument().insertString(foldEndOffset, "\nimport java.util.Date;\n");
+    WriteCommandAction.runWriteCommandAction(getProject(), () -> myEditor.getDocument().insertString(foldEndOffset, "\nimport java.util.Date;\n"));
+
     final FoldingModel foldingModel = myEditor.getFoldingModel();
-    foldingModel.runBatchFoldingOperation(new Runnable() {
-      @Override
-      public void run() {
-        FoldRegion oldFoldRegion = getFoldRegion(foldStartOffset);
-        assertNotNull(oldFoldRegion);
-        foldingModel.removeFoldRegion(oldFoldRegion);
-        
-        int newFoldEndOffset = myEditor.getDocument().getText().indexOf("class") - 2;
-        FoldRegion newFoldRegion = foldingModel.addFoldRegion(foldStartOffset, newFoldEndOffset, "...");
-        assertNotNull(newFoldRegion);
-        newFoldRegion.setExpanded(false);
-      }
+    foldingModel.runBatchFoldingOperation(() -> {
+      FoldRegion oldFoldRegion = getFoldRegion(foldStartOffset);
+      assertNotNull(oldFoldRegion);
+      foldingModel.removeFoldRegion(oldFoldRegion);
+
+      int newFoldEndOffset = myEditor.getDocument().getText().indexOf("class") - 2;
+      FoldRegion newFoldRegion = foldingModel.addFoldRegion(foldStartOffset, newFoldEndOffset, "...");
+      assertNotNull(newFoldRegion);
+      newFoldRegion.setExpanded(false);
     });
     CodeFoldingManager.getInstance(getProject()).updateFoldRegions(myEditor);
     assertEquals(new VisualPosition(2, 0), myEditor.logicalToVisualPosition(new LogicalPosition(5, 0)));
@@ -747,12 +746,12 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
   public void testModificationOfSoftWrappedFoldRegion() throws IOException {
     String text =
-      "import java.util.List;import java.util.ArrayList;import java.util.Collection;import java.util.Collections;\n" +
-      "import java.util.LinkedList;\n" +
-      "import java.util.Set;\n" +
-      "\n" +
-      "class Test {\n" +
-      "}";
+            "import java.util.List;import java.util.ArrayList;import java.util.Collection;import java.util.Collections;\n" +
+            "import java.util.LinkedList;\n" +
+            "import java.util.Set;\n" +
+            "\n" +
+            "class Test {\n" +
+            "}";
     init(40, text);
 
     final int foldStartOffset = text.indexOf("java.util.Collections");
@@ -760,31 +759,32 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
     addCollapsedFoldRegion(foldStartOffset, foldEndOffset, "...");
 
     int modificationOffset = text.indexOf("java.util.Set");
-    myEditor.getDocument().insertString(modificationOffset, "import java.util.HashSet;\n");
+    WriteCommandAction.runWriteCommandAction(getProject(), () -> myEditor.getDocument().insertString(modificationOffset, "import java.util.HashSet;\n"));
+
     // Used to get StackOverflowError here, hence, no additional checking is performed.
   }
 
   public void testLongSoftWrappedLineWithNonWrappedEndInTheMiddleOfDocument() throws IOException {
     // Inspired by IDEA-70114
-    
-    String text = 
-      "111\n" +
-      "222\n" +
-      "33333333 33333333333333333333333333333333\n" +
-      "444";
+
+    String text =
+            "111\n" +
+            "222\n" +
+            "33333333 33333333333333333333333333333333\n" +
+            "444";
     init(15, text);
-    
+
     assertEquals(new LogicalPosition(3, 0), myEditor.visualToLogicalPosition(new VisualPosition(4, 0)));
   }
-  
+
   public void testDeleteThatEndsOnLineWithMultiLineFoldRegion() throws IOException {
-    String text = 
-      "111\n" +
-      "222\n" +
-      "333\n" +
-      "444 55\n" +
-      "666 77";
-    
+    String text =
+            "111\n" +
+            "222\n" +
+            "333\n" +
+            "444 55\n" +
+            "666 77";
+
     init(15, text);
 
     int foldStart = text.indexOf("5");
@@ -794,21 +794,20 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
     int selectionStart = text.indexOf("2");
     int selectionEnd = text.indexOf("4");
     getEditor().getSelectionModel().setSelection(selectionStart, selectionEnd);
-    
+
     delete();
     assertEquals(new VisualPosition(1, 8), getEditor().offsetToVisualPosition(getEditor().getDocument().getTextLength() - 1));
   }
 
   public void testNoWrapAtFirstNonWsSymbolWithCustomIndent() throws IOException {
-    String text = 
-      "   1111111111111111111111111111111";
+    String text =
+            "   1111111111111111111111111111111";
     init(10, text);
     getEditor().getSettings().setCustomSoftWrapIndent(0);
     getEditor().getSettings().setUseCustomSoftWrapIndent(true);
-    int textLength = getEditor().getDocument().getTextLength();
     //Trigger soft wraps recalculation.
-    assertEquals(new LogicalPosition(0, textLength), myEditor.offsetToLogicalPosition(textLength));
-    
+    ((SoftWrapModelImpl)myEditor.getSoftWrapModel()).prepareToMapping();
+
     // Don't expect soft wraps to be registered as there is no point in wrapping at the first non-white space symbol position
     // in all cases when soft wrap is located at the left screen edge.
     assertEmpty(getSoftWrapModel().getRegisteredSoftWraps());
@@ -826,25 +825,26 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
   public void testSoftWrapCacheReset() throws IOException {
     // Inspired by IDEA-76537 - the point is to drop cached document info on complete soft wraps recalculation
     String text =
-      "\t first line\n" +
-      "\t second line\n" +
-      "\t third line";
-    
+            "\t first line\n" +
+            "\t second line\n" +
+            "\t third line";
+
     // Make soft wraps to build a document info cache.
     init(40, text);
-    
+
     // Modify document while soft wraps processing is off.
     final EditorSettings settings = getEditor().getSettings();
     settings.setUseSoftWraps(false);
     int startOffset = text.indexOf("\t third") - 1;
-    getEditor().getDocument().deleteString(startOffset, text.length());
-    
+    WriteCommandAction.runWriteCommandAction(getProject(), () -> getEditor().getDocument().deleteString(startOffset, text.length()));
+
+
     // Enable soft wraps and ensure that the cache is correctly re-built.
     settings.setUseSoftWraps(true);
-    
+
     getEditor().getCaretModel().moveToOffset(getEditor().getDocument().getTextLength());
     type("\n test");
-    
+
     final int offset = getEditor().getDocument().getTextLength() - 1;
     final LogicalPosition logicalPosition = getEditor().offsetToLogicalPosition(offset);
     assertEquals(offset, getEditor().logicalPositionToOffset(logicalPosition));
@@ -856,12 +856,12 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
   public void testSoftWrapsRecalculationOnTabWidthChange() throws IOException {
     // Inspired by IDEA-78616 - the point is to recalculate soft wraps when tab width is changed.
-    String text = 
-      "\t<caret> my text";
+    String text =
+            "\t<caret> my text";
 
     // Build soft wraps cache.
     init(40, text);
-    
+
     VisualPosition caretPositionBefore = getEditor().getCaretModel().getVisualPosition();
 
     // Change tab size.
@@ -871,53 +871,53 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
     ((EditorImpl)getEditor()).reinitSettings();
     assertEquals(
-      new VisualPosition(caretPositionBefore.line, caretPositionBefore.column + 1),
-      getEditor().getCaretModel().getVisualPosition()
+            new VisualPosition(caretPositionBefore.line, caretPositionBefore.column + 1),
+            getEditor().getCaretModel().getVisualPosition()
     );
   }
 
   public void testNoPreliminarySoftWrapAtLineEnd() throws IOException {
     // We used to make soft wrap when the string was couple of visual columns before the right screen edge even if it could
     // be completely shown.
-    init(37, "a b c", 7);
+    init(52, "a b c", 10);
     assertEmpty(getSoftWrapModel().getRegisteredSoftWraps());
   }
 
   public void testNoPreliminarySoftWrapBeforeFoldingAtLineEnd() throws IOException {
     final String text = "a b c test";
-    init(50, text, 7);
+    init(71, text, 10);
     addCollapsedFoldRegion(text.indexOf("t"), text.length(), ".");
     assertEmpty(getSoftWrapModel().getRegisteredSoftWraps());
   }
 
   public void testMultiLineFoldRegionBeforeWrapPosition() throws IOException {
-    final String text = 
-      "package org.denis;\n" +
-      "\n" +
-      "\n" +
-      "public class BrokenAlignment {\n" +
-      "\n" +
-      "    void method1(int a) {\n" +
-      "    }\n" +
-      "\n" +
-      "    Object method2(Object ... data) {\n" +
-      "        return new Runnable() {\n" +
-      "            public void run() {\n" +
-      "                System.out.println();\n" +
-      "            }\n" +
-      "        };\n" +
-      "    }\n" +
-      "\n" +
-      "}";
+    final String text =
+            "package org.denis;\n" +
+            "\n" +
+            "\n" +
+            "public class BrokenAlignment {\n" +
+            "\n" +
+            "    void method1(int a) {\n" +
+            "    }\n" +
+            "\n" +
+            "    Object method2(Object ... data) {\n" +
+            "        return new Runnable() {\n" +
+            "            public void run() {\n" +
+            "                System.out.println();\n" +
+            "            }\n" +
+            "        };\n" +
+            "    }\n" +
+            "\n" +
+            "}";
     init(511, text, TestFileType.JAVA, 10);
-    
+
     addCollapsedFoldRegion(text.indexOf("new Runnable"), text.indexOf("System"), "Runnable() { ");
-    
+
     int start = text.indexOf("System");
     start = text.indexOf("\n", start);
     int end = text.indexOf(';', start);
     addCollapsedFoldRegion(start, end, " }");
-    
+
     final List<? extends SoftWrap> wraps = getSoftWrapModel().getRegisteredSoftWraps();
     assertEquals(1, wraps.size());
 
@@ -925,43 +925,43 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
     assertEquals(myEditor.offsetToVisualPosition(start), myEditor.offsetToVisualPosition(start + 1));
     assertEquals(myEditor.offsetToVisualPosition(start).line, myEditor.offsetToVisualPosition(end - 1).line);
   }
-  
+
   public void testEnsureBeforeSoftWrapSignIsVisible() throws IOException {
     final String text = "a.b.c.d";
-    init(43, text, 7);
-    
+    init(61, text, 10);
+
     checkSoftWraps(text.indexOf('c') + 1);
   }
 
   public void testWrapAfterCollapsedFoldRegion() throws IOException {
     final String text =
-      "this is a long text to fold more";
+            "this is a long text to fold more";
     init(12, text);
-    
+
     int start = text.indexOf("long");
     int end = text.indexOf("more");
     addCollapsedFoldRegion(start, end, "placeholder which is long enough to be wrapped");
-    
+
     checkSoftWraps(start, end);
   }
 
   public void testFoldRegionWithLongPlaceholderText() throws IOException {
     final String text =
-      "this is a string with(fold region), end)\n" +
-      "second string";
+            "this is a string with(fold region), end)\n" +
+            "second string";
     init(40, text);
 
     int start = text.indexOf("fold");
     int end = text.indexOf(',');
     addCollapsedFoldRegion(start, end, "this is a really long fold region placeholder");
-    
+
     checkSoftWraps(start, end);
     assertEquals(new VisualPosition(3, 0), myEditor.offsetToVisualPosition(text.indexOf("second")));
   }
 
   public void testDeleteWhenCaretBeforeSoftWrap() throws IOException {
     final String text =
-      "text 1234";
+            "text 1234";
     init(7, text);
 
     final int offset = text.indexOf("123");
@@ -977,21 +977,21 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
 
   public void testSelectionOfLineWithSoftWrapAndFoldRegion() throws IOException {
     final String text =
-      "123\n" +
-      "fold line 1\n" +
-      "fold line 2 456";
+            "123\n" +
+            "fold line 1\n" +
+            "fold line 2 456";
     init(6, text);
     addCollapsedFoldRegion(2, text.indexOf("4"), "...");
     myEditor.getSelectionModel().selectLineAtCaret();
     assertEquals(text, myEditor.getSelectionModel().getSelectedText());
   }
-  
+
   public void testCaretPositionAfterLineRemoval() throws IOException {
     final String text =
-      "123456\n" +
-      "123456\n" +
-      "line towrapbecauseitislong\n" +
-      "923456";
+            "123456\n" +
+            "123456\n" +
+            "line towrapbecauseitislong\n" +
+            "923456";
     init(8, text);
     final CaretModel caretModel = myEditor.getCaretModel();
     caretModel.moveToOffset(text.indexOf("e"));
@@ -1004,26 +1004,10 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
   public void testNoUnnecessaryHorizontalScrollBar() throws IOException {
     // Inspired by IDEA-87184
     final String text = "12345678 abcdefgh";
-    init(15, 7, text);
+    init(15, 10, text);
     myEditor.getCaretModel().moveToOffset(text.length());
-    final Ref<Boolean> fail = new Ref<Boolean>(true);
-    SoftWrapApplianceManager applianceManager = ((SoftWrapModelImpl)myEditor.getSoftWrapModel()).getApplianceManager();
-    SoftWrapAwareDocumentParsingListener listener = new SoftWrapAwareDocumentParsingListenerAdapter() {
-      @Override
-      public void beforeSoftWrapLineFeed(@NotNull EditorPosition position) {
-        if (position.x == text.indexOf("a") * 7) {
-          fail.set(false);
-        }
-      }
-    };
-    applianceManager.addListener(listener);
-    try {
-      backspace();
-    }
-    finally {
-      applianceManager.removeListener(listener);
-    }
-    assertFalse(fail.get());
+    backspace();
+    verifySoftWrapPositions(9);
   }
 
   public void testCaretInsideFoldRegionOnCollapse() throws IOException {
@@ -1036,49 +1020,116 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
     FoldRegion foldRegion = getFoldRegion(foldStart);
     assertNotNull(foldRegion);
     assertTrue(foldRegion.isExpanded());
-    
+
     toggleFoldRegionState(foldRegion, false);
 
     assertFalse(foldRegion.isExpanded());
     assertEquals(foldStart, myEditor.getCaretModel().getOffset());
   }
-  
+
+  public void testFoldRegionEndingAtLineStart() throws IOException {
+    init(100, "aaa\nbbb\nccc\nddd");
+    addCollapsedFoldRegion(4, 8, "...");
+    addCollapsedFoldRegion(13, 15, "...");
+
+    WriteCommandAction.runWriteCommandAction(getProject(), () -> myEditor.getDocument().insertString(10, "C"));
+
+
+    // verify that cached layout data is intact after document change and position recalculation is done correctly
+    assertEquals(new LogicalPosition(0, 0), myEditor.visualToLogicalPosition(new VisualPosition(0, 0)));
+  }
+
+  public void testOnlyMinimalRangeIsRecalculatedOnDocumentChange() throws IOException {
+    init("aa bb cc dd ee<caret> ff gg hh ii jj", TestFileType.TEXT);
+    EditorTestUtil.configureSoftWraps(myEditor, 8);
+    verifySoftWrapPositions(6, 12, 18, 24);
+
+    final IncrementalCacheUpdateEvent[] event = new IncrementalCacheUpdateEvent[1];
+    ((SoftWrapModelImpl)myEditor.getSoftWrapModel()).getApplianceManager().addListener(new SoftWrapAwareDocumentParsingListenerAdapter() {
+      @Override
+      public void onRecalculationEnd(@NotNull IncrementalCacheUpdateEvent e) {
+        assertNull(event[0]);
+        event[0] = e;
+      }
+    });
+
+    type(' ');
+
+    verifySoftWrapPositions(6, 12, 19, 25);
+    assertNotNull(event[0]);
+    assertEquals(6, event[0].getStartOffset());
+    assertEquals(19, event[0].getActualEndOffset());
+  }
+
+  public void testPositionsAreCorrectAfterIncrementalRecalculation() throws IOException {
+    initText("abra<caret> cadabra");
+    configureSoftWraps(10);
+    type(' ');
+
+    assertEquals(new LogicalPosition(0, 6), myEditor.offsetToLogicalPosition(6));
+    assertEquals(new VisualPosition(1, 1), myEditor.offsetToVisualPosition(6));
+  }
+
+  public void testSoftWrappingWithFoldRegionAndTabs() throws IOException {
+    initText("foldA\t\t\t\t");
+    addCollapsedFoldRegion(0, 4, ".");
+    configureSoftWraps(10);
+
+    assertNull(myEditor.getSoftWrapModel().getSoftWrap(4));
+  }
+
+  public void testSoftWrapsAreNotCreatedInsideFoldRegions() throws Exception {
+    initText("\t\t\taaaaa\t");
+    addCollapsedFoldRegion(7, 9, ".");
+    configureSoftWraps(10);
+
+    assertNull(myEditor.getSoftWrapModel().getSoftWrap(8));
+  }
+
+  public void testUnbreakableLinesDontAffectFollowingLines() throws Exception {
+    initText("unbreakableLine\nshort line");
+    configureSoftWraps(10);
+
+    verifySoftWrapPositions();
+  }
+
+  public void testFoldRegionPreventsLaterWrapping() throws Exception {
+    initText("unbreakableText.txt");
+    configureSoftWraps(10);
+    verifySoftWrapPositions(15);
+
+    addCollapsedFoldRegion(12, 13, ".");
+
+    verifySoftWrapPositions(12);
+    assertEquals(1, myEditor.offsetToVisualPosition(19).line);
+  }
+
+  public void testMoveWithFoldRegionInside() throws Exception {
+    initText("abc\ndef\nghi\n");
+    configureSoftWraps(100);
+    addCollapsedFoldRegion(0, 4, "...");
+
+    WriteCommandAction.runWriteCommandAction(getProject(), () -> ((DocumentEx)myEditor.getDocument()).moveText(0, 4, 12));
+
+
+    assertEquals(new LogicalPosition(2, 0), myEditor.visualToLogicalPosition(new VisualPosition(2, 1)));
+  }
+
   private void init(final int visibleWidthInColumns, @NotNull String fileText) throws IOException {
-    init(visibleWidthInColumns, 7, fileText);
+    init(visibleWidthInColumns, 10, fileText);
   }
 
   private void init(final int visibleWidthInColumns, final int symbolWidthInPixels, @NotNull String fileText) throws IOException {
     init(visibleWidthInColumns * symbolWidthInPixels, fileText, symbolWidthInPixels);
   }
-  
+
   private void init(final int visibleWidth, @NotNull String fileText, int symbolWidth) throws IOException {
     init(visibleWidth, fileText, TestFileType.TEXT, symbolWidth);
   }
-  
+
   private void init(final int visibleWidth, @NotNull String fileText, @NotNull TestFileType fileType, final int symbolWidth) throws IOException {
     init(fileText, fileType);
-    myEditor.getSettings().setUseSoftWraps(true);
-    SoftWrapModelImpl model = (SoftWrapModelImpl)myEditor.getSoftWrapModel();
-    model.reinitSettings();
-
-    SoftWrapApplianceManager applianceManager = model.getApplianceManager();
-    applianceManager.setWidthProvider(new SoftWrapApplianceManager.VisibleAreaWidthProvider() {
-      @Override
-      public int getVisibleAreaWidth() {
-        return visibleWidth;
-      }
-    });
-
-    if (symbolWidth > 0) {
-      model.setEditorTextRepresentationHelper(new DefaultEditorTextRepresentationHelper(myEditor) {
-        @Override
-        public int charWidth(char c, int fontType) {
-          return symbolWidth;
-        }
-      });
-    }
-    
-    applianceManager.registerSoftWrapIfNecessary();
+    EditorTestUtil.configureSoftWraps(myEditor, visibleWidth, symbolWidth);
   }
 
   private static void checkSoftWraps(int... startOffsets) {
@@ -1088,7 +1139,7 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorP
       assertEquals(startOffsets[i], softWraps.get(i).getStart());
     }
   }
-  
+
   private static SoftWrapModelImpl getSoftWrapModel() {
     return (SoftWrapModelImpl)myEditor.getSoftWrapModel();
   }

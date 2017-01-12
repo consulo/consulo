@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,14 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class JBDimension extends Dimension {
+  float myJBUIScale = JBUI.scale(1f);
+
   public JBDimension(int width, int height) {
-    super(JBUI.scale(width), JBUI.scale(height));
+    super(scale(width), scale(height));
+  }
+
+  private static int scale(int size) {
+    return size == -1 ? -1 : JBUI.scale(size);
   }
 
   public static JBDimension create(Dimension from) {
@@ -43,5 +49,27 @@ public class JBDimension extends Dimension {
       width = size.width;
       height = size.height;
     }
+  }
+
+  public JBDimension withWidth(int width) {
+    JBDimension size = new JBDimension(0, 0);
+    size.width = scale(width);
+    size.height = height;
+    return size;
+  }
+
+  public JBDimension withHeight(int height) {
+    JBDimension size = new JBDimension(0, 0);
+    size.width = width;
+    size.height = scale(height);
+    return size;
+  }
+
+  // [tav] todo: may lose precision
+  public void update() {
+    float scale = JBUI.scale(1f);
+    width = (int)(width * scale / myJBUIScale);
+    height = (int)(height * scale / myJBUIScale);
+    myJBUIScale = scale;
   }
 }

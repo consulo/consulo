@@ -32,18 +32,14 @@ import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.util.ui.MacUIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
 
 public class TabAction extends EditorAction {
   public TabAction() {
@@ -56,20 +52,14 @@ public class TabAction extends EditorAction {
       super(true);
     }
 
-    @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
-      if(project == null) {
-        return;
-      }
-
       if (caret == null) {
         caret = editor.getCaretModel().getPrimaryCaret();
       }
       CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.EDIT_COMMAND_GROUP);
       CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));
-
+      Project project = CommonDataKeys.PROJECT.getData(dataContext);
       insertTabAtCaret(editor, caret, project);
     }
 
@@ -79,9 +69,8 @@ public class TabAction extends EditorAction {
     }
   }
 
-  @RequiredReadAction
-  private static void insertTabAtCaret(Editor editor, @NotNull Caret caret, @NotNull Project project) {
-    MacUIUtil.hideCursor();
+  private static void insertTabAtCaret(Editor editor, @NotNull Caret caret, @Nullable Project project) {
+    EditorUIUtil.hideCursorInEditor(editor);
     int columnNumber;
     if (caret.hasSelection()) {
       columnNumber = editor.visualToLogicalPosition(caret.getSelectionStartPosition()).column;
@@ -93,8 +82,7 @@ public class TabAction extends EditorAction {
     CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(project);
 
     final Document doc = editor.getDocument();
-    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(doc);
-    CommonCodeStyleSettings.IndentOptions indentOptions = settings.getIndentOptionsByFile(file);
+    CommonCodeStyleSettings.IndentOptions indentOptions = settings.getIndentOptionsByDocument(project, doc);
 
     int tabSize = indentOptions.INDENT_SIZE;
     int spacesToAddCount = tabSize - columnNumber % Math.max(1,tabSize);
@@ -115,12 +103,7 @@ public class TabAction extends EditorAction {
 
     doc.startGuardedBlockChecking();
     try {
-      if(useTab) {
-        EditorModificationUtil.typeInStringAtCaretHonorBlockSelection(editor, "\t", false);
-      }
-      else {
-        EditorModificationUtil.typeInStringAtCaretHonorBlockSelection(editor, StringUtil.repeatSymbol(' ', spacesToAddCount), false);
-      }
+      EditorModificationUtil.insertStringAtCaret(editor, useTab ? "\t" : StringUtil.repeatSymbol(' ', spacesToAddCount), false, true);
     }
     catch (ReadOnlyFragmentModificationException e) {
       EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(doc).handle(e);

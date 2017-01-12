@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.openapi.editor.markup;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
 
 /**
  * Interface which should be implemented to handle drag and drop of gutter icons. An example of
@@ -28,9 +29,11 @@ import java.awt.*;
  * @see GutterIconRenderer#getDraggableObject()
  */
 public interface GutterDraggableObject {
+
+  DataFlavor flavor = new DataFlavor(GutterDraggableObject.class, "Gutter Draggable Object");
+
   /**
    * Called when the icon is dropped over the specified line.
-   *
    *
    * @param line the line over which the icon has been dropped.
    * @param file the DnD target file
@@ -46,4 +49,11 @@ public interface GutterDraggableObject {
    * @return the cursor to show.
    */
   Cursor getCursor(int line);
+
+  default void remove() {
+  }
+
+  static DataFlavor[] getFlavors() {
+    return new DataFlavor[]{flavor};
+  }
 }

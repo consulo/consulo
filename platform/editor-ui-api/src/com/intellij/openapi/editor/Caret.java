@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a specific caret instance in the editor.
  * Provides methods to query and modify caret position and caret's associated selection.
+ * <p>
+ * Instances of this interface are supposed to be obtained from {@link CaretModel} instance, and not created explicitly.
  */
 public interface Caret extends UserDataHolderEx, Disposable {
   /**
@@ -121,9 +123,11 @@ public interface Caret extends UserDataHolderEx, Disposable {
   VisualPosition getVisualPosition();
 
   /**
-   * Returns the offset of the caret in the document.
+   * Returns the offset of the caret in the document. Returns 0 for a disposed (invalid) caret.
    *
    * @return the caret offset.
+   *
+   * @see #isValid()
    */
   int getOffset();
 
@@ -304,11 +308,26 @@ public interface Caret extends UserDataHolderEx, Disposable {
   boolean isAtRtlLocation();
 
   /**
-   * Returns <code>true</code> if caret is located at a boundary between different runs of bidirectional text. 
+   * Returns <code>true</code> if caret is located at a boundary between different runs of bidirectional text.
    * This means that text fragments at different sides of the boundary are non-adjacent in logical order.
-   * Caret can located at any side of the boundary, 
-   * exact location can be determined from directionality flags of caret's logical and visual position 
+   * Caret can located at any side of the boundary,
+   * exact location can be determined from directionality flags of caret's logical and visual position
    * ({@link LogicalPosition#leansForward} and {@link VisualPosition#leansRight}).
    */
   boolean isAtBidiRunBoundary();
+
+  /**
+   * Returns visual attributes currently set for the caret.
+   *
+   * @see #setVisualAttributes(CaretVisualAttributes)
+   */
+  @NotNull
+  CaretVisualAttributes getVisualAttributes();
+
+  /**
+   * Sets caret's current visual attributes. This can have no effect if editor doesn't support changing caret's visual appearance.
+   *
+   * @see #getVisualAttributes()
+   */
+  void setVisualAttributes(@NotNull CaretVisualAttributes attributes);
 }

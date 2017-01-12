@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,13 @@
  */
 package com.intellij.util.ui;
 
+import com.intellij.openapi.util.SystemInfo;
+import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+
+import javax.accessibility.AccessibleContext;
+import javax.accessibility.AccessibleRole;
+import javax.accessibility.AccessibleState;
+import javax.accessibility.AccessibleStateSet;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -26,7 +33,7 @@ public class ThreeStateCheckBox extends JCheckBox {
   private State myState;
   private boolean myThirdStateEnabled = true;
 
-  public static enum State {
+  public enum State {
     SELECTED, NOT_SELECTED, DONT_CARE
   }
 
@@ -56,14 +63,14 @@ public class ThreeStateCheckBox extends JCheckBox {
     setModel(new ToggleButtonModel() {
       @Override
       public void setSelected(boolean selected) {
-        myState = nextState();
+        setState(nextState());
         fireStateChanged();
         fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, this, ItemEvent.SELECTED));
       }
 
       @Override
       public boolean isSelected() {
-        return myState == State.SELECTED;
+        return myState == State.SELECTED || (UIUtil.isUnderAquaLookAndFeel() && myState == State.DONT_CARE);
       }
     });
 
@@ -101,6 +108,10 @@ public class ThreeStateCheckBox extends JCheckBox {
 
   public void setState(State state) {
     myState = state;
+
+    String value = state == State.DONT_CARE ? "indeterminate" : null;
+    putClientProperty("JButton.selectedState", value);
+
     repaint();
   }
 
@@ -112,14 +123,18 @@ public class ThreeStateCheckBox extends JCheckBox {
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
+    if (UIUtil.isUnderAquaLookAndFeel() || (SystemInfo.isMac && UIUtil.isUnderIntelliJLaF())) {
+      return;
+    }
+
     switch (getState()) {
       case DONT_CARE:
         Icon icon = getIcon();
         if (icon == null) {
           icon = UIManager.getIcon("CheckBox.icon");
         }
-        if (UIUtil.isUnderBuildInLaF()) {
-          icon = EmptyIcon.create(JBUI.scaleIconSize(20), JBUI.scaleIconSize(18));
+        if (UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF()) {
+          icon = JBUI.scale(EmptyIcon.create(20, 18));
         }
         if (icon != null) {
           final Insets i = getInsets();
@@ -133,11 +148,11 @@ public class ThreeStateCheckBox extends JCheckBox {
           final Rectangle r2 = new Rectangle();
           final Rectangle r3 = new Rectangle();
           SwingUtilities.layoutCompoundLabel(
-            this, getFontMetrics(getFont()), getText(), icon,
-            getVerticalAlignment(), getHorizontalAlignment(),
-            getVerticalTextPosition(), getHorizontalTextPosition(),
-            r1, r2, r3,
-            getText() == null ? 0 : getIconTextGap());
+                  this, getFontMetrics(getFont()), getText(), icon,
+                  getVerticalAlignment(), getHorizontalAlignment(),
+                  getVerticalTextPosition(), getHorizontalTextPosition(),
+                  r1, r2, r3,
+                  getText() == null ? 0 : getIconTextGap());
 
           // selected table cell: do not paint white on white
           g.setColor(UIUtil.getTreeForeground());
@@ -148,6 +163,65 @@ public class ThreeStateCheckBox extends JCheckBox {
         break;
       default:
         break;
+    }
+  }
+
+  @Override
+  public AccessibleContext getAccessibleContext() {
+    if (accessibleContext == null) {
+      accessibleContext = new AccessibleThreeStateCheckBox();
+    }
+    return accessibleContext;
+  }
+
+  /**
+   * Emulate accessibility behavior of tri-state checkboxes, as tri-state checkboxes
+   * are not part of the JAB specification.
+   */
+  protected class AccessibleThreeStateCheckBox extends AccessibleJCheckBox {
+    @Override
+    public AccessibleRole getAccessibleRole() {
+      if (myThirdStateEnabled) {
+        // Return TOGGLE_BUTTON so that screen readers don't announce the "not checked" state
+        return AccessibleRole.TOGGLE_BUTTON;
+      }
+
+      return super.getAccessibleRole();
+    }
+
+    @Override
+    public AccessibleStateSet getAccessibleStateSet() {
+      if (myThirdStateEnabled) {
+        // Remove CHECKED so that screen readers don't announce the "checked" state
+        AccessibleStateSet set = super.getAccessibleStateSet();
+        set.remove(AccessibleState.CHECKED);
+        return set;
+      }
+
+      return super.getAccessibleStateSet();
+    }
+
+    @Override
+    public String getAccessibleName() {
+      if (myThirdStateEnabled) {
+        // Add a state description suffix to the accessible name, so that screen readers
+        // announce the state as part of the accessible name.
+        return addStateDescription(super.getAccessibleName());
+      }
+      return super.getAccessibleName();
+    }
+
+    private String addStateDescription(String name) {
+      switch(getState()) {
+        case SELECTED:
+          return AccessibleContextUtil.combineAccessibleStrings(name, " ", "checked");
+        case NOT_SELECTED:
+          return AccessibleContextUtil.combineAccessibleStrings(name, " ", "not checked");
+        case DONT_CARE:
+          return AccessibleContextUtil.combineAccessibleStrings(name, " ", "partially checked");
+        default:
+          return name;
+      }
     }
   }
 }
