@@ -20,8 +20,6 @@ import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.refactoring.NamesValidator;
-import com.intellij.openapi.application.Result;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -75,15 +73,10 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
                      @NotNull final PsiElement startElement,
                      @NotNull PsiElement endElement) {
     if (isAvailable(project, null, file)) {
-      new WriteCommandAction(project) {
-        @Override
-        protected void run(@NotNull Result result) throws Throwable {
-          LOG.assertTrue(file == startElement.getContainingFile());
-          if (!FileModificationService.getInstance().prepareFileForWrite(file)) return;
-          RenameProcessor processor = new RenameProcessor(project, startElement, myNewName, false, false);
-          processor.run();
-        }
-      }.execute();
+      LOG.assertTrue(file == startElement.getContainingFile());
+      if (!FileModificationService.getInstance().prepareFileForWrite(file)) return;
+      RenameProcessor processor = new RenameProcessor(project, startElement, myNewName, false, false);
+      processor.run();
     }
   }
 
@@ -102,6 +95,6 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
 
   @Override
   public boolean startInWriteAction() {
-    return true;
+    return false;
   }
 }
