@@ -1504,7 +1504,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
       SwingUtilities.invokeLater(() -> {
         try {
           if (!isDisposed()) {
-            myGutterComponent.updateSize();
+            myGutterComponent.updateSizeOnShowNotify();
           }
         }
         finally {
