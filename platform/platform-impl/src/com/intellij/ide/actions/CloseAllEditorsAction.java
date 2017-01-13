@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2000-2009 JetBrains s.r.o.
  *
@@ -17,7 +16,10 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
@@ -30,29 +32,25 @@ public class CloseAllEditorsAction extends AnAction implements DumbAware {
   public void actionPerformed(final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    commandProcessor.executeCommand(
-      project, new Runnable(){
-        public void run() {
-          final EditorWindow window = e.getData(EditorWindow.DATA_KEY);
-          if (window != null){
-            final VirtualFile[] files = window.getFiles();
-            for (final VirtualFile file : files) {
-              window.closeFile(file);
-            }
-            return;
-          }
-          FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-          VirtualFile selectedFile = fileEditorManager.getSelectedFiles()[0];
-          VirtualFile[] openFiles = fileEditorManager.getSiblings(selectedFile);
-          for (final VirtualFile openFile : openFiles) {
-            fileEditorManager.closeFile(openFile);
-          }
+    commandProcessor.executeCommand(project, () -> {
+      final EditorWindow window = e.getData(EditorWindow.DATA_KEY);
+      if (window != null) {
+        final VirtualFile[] files = window.getFiles();
+        for (final VirtualFile file : files) {
+          window.closeFile(file);
         }
-      }, IdeBundle.message("command.close.all.editors"), null
-    );
+        return;
+      }
+      FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+      VirtualFile selectedFile = fileEditorManager.getSelectedFiles()[0];
+      VirtualFile[] openFiles = fileEditorManager.getSiblings(selectedFile);
+      for (final VirtualFile openFile : openFiles) {
+        fileEditorManager.closeFile(openFile);
+      }
+    }, IdeBundle.message("command.close.all.editors"), null);
   }
 
-  public void update(AnActionEvent event){
+  public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     final EditorWindow editorWindow = event.getData(EditorWindow.DATA_KEY);
     if (editorWindow != null && editorWindow.inSplitter()) {

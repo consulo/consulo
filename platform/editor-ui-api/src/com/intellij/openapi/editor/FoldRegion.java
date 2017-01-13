@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
  * Represents a region of text in the editor which can be folded.
  *
  * @see FoldingModel#addFoldRegion(int, int, String)
- * @see FoldingModel#addFoldRegion(FoldRegion) 
+ * @see FoldingModel#addFoldRegion(FoldRegion)
  * @see FoldingModel#getAllFoldRegions()
  */
 public interface FoldRegion extends RangeMarker {

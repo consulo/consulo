@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ package com.intellij.codeInsight.folding.impl;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
-import com.intellij.openapi.editor.FoldingModel;
-import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -40,8 +38,7 @@ import java.util.Map;
 public class EditorFoldingInfo {
   private static final Key<EditorFoldingInfo> KEY = Key.create("EditorFoldingInfo.KEY");
 
-  private final Map<FoldRegion, SmartPsiElementPointer<?>> myFoldRegionToSmartPointerMap
-    = new THashMap<FoldRegion, SmartPsiElementPointer<?>>();
+  private final Map<FoldRegion, SmartPsiElementPointer<?>> myFoldRegionToSmartPointerMap = new THashMap<>();
 
   @NotNull
   public static EditorFoldingInfo get(@NotNull Editor editor) {
@@ -64,7 +61,7 @@ public class EditorFoldingInfo {
   }
 
   @Nullable
-  public TextRange getPsiElementRange(@NotNull FoldRegion region) {
+  TextRange getPsiElementRange(@NotNull FoldRegion region) {
     PsiElement element = getPsiElement(region);
     if (element == null) return null;
     PsiFile containingFile = element.getContainingFile();
@@ -77,11 +74,11 @@ public class EditorFoldingInfo {
     return range;
   }
 
-  public boolean isLightRegion(@NotNull FoldRegion region) {
+  boolean isLightRegion(@NotNull FoldRegion region) {
     return myFoldRegionToSmartPointerMap.get(region) == null;
   }
 
-  public void addRegion(@NotNull FoldRegion region, @NotNull SmartPsiElementPointer<?> pointer){
+  void addRegion(@NotNull FoldRegion region, @NotNull SmartPsiElementPointer<?> pointer){
     myFoldRegionToSmartPointerMap.put(region, pointer);
   }
 
@@ -90,21 +87,6 @@ public class EditorFoldingInfo {
   }
 
   public void dispose() {
-    for (FoldRegion region : myFoldRegionToSmartPointerMap.keySet()) {
-      region.dispose();
-    }
     myFoldRegionToSmartPointerMap.clear();
-  }
-
-  public static void resetInfo(@NotNull Editor editor) {
-    EditorFoldingInfo info = editor.getUserData(KEY);
-    if (info != null) {
-      info.dispose();
-    }
-    FoldingModel foldingModel = editor.getFoldingModel();
-    if (foldingModel instanceof FoldingModelEx) {
-      ((FoldingModelEx)foldingModel).rebuild();
-    }
-    editor.putUserData(KEY, null);
   }
 }

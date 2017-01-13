@@ -191,7 +191,9 @@ class EditorCoordinateMapper {
 
     FoldRegion outermostCollapsed = myFoldingModel.getCollapsedRegionAtOffset(offset);
     if (outermostCollapsed != null && offset > outermostCollapsed.getStartOffset()) {
-      assert outermostCollapsed.isValid();
+      if(!outermostCollapsed.isValid()) {
+        assert outermostCollapsed.isValid();
+      }
       offset = outermostCollapsed.getStartOffset();
       beforeSoftWrap = false;
     }
