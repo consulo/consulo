@@ -54,14 +54,14 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
+public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
   private FlatWelcomeFrame myFlatWelcomeFrame;
   public ParameterizedRunnable<List<NotificationType>> myEventListener;
   public Computable<Point> myEventLocation;
 
   @RequiredDispatchThread
   public FlatWelcomePanel(FlatWelcomeFrame flatWelcomeFrame) {
-    super(flatWelcomeFrame);
+    super(flatWelcomeFrame, null);
     myFlatWelcomeFrame = flatWelcomeFrame;
 
     final JList projectsList = UIUtil.findComponentOfType(myLeftComponent, JList.class);
@@ -85,14 +85,14 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
 
   @NotNull
   @Override
-  protected JComponent createLeftComponent(Disposable parentDisposable) {
+  protected JComponent createLeftComponent(@NotNull Disposable parentDisposable, Void param) {
     return new NewRecentProjectPanel(parentDisposable);
   }
 
   @RequiredDispatchThread
   @Override
   @NotNull
-  protected JComponent createRightComponent() {
+  protected JComponent createRightComponent(Void param) {
     JPanel panel = new JPanel(new BorderLayout());
     JPanel logoPanel = new JPanel(new BorderLayout());
     logoPanel.setBorder(JBUI.Borders.empty(53, 66, 45, 0));

@@ -45,7 +45,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 14-Sep-16
  */
-public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
+public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile> {
   private JPanel myRightPanel;
   private JTextField myNameField;
   private TextFieldWithBrowseButton myLocationField;
@@ -55,15 +55,13 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
 
   @Nullable
   private Project myProject;
-  @Nullable
-  private VirtualFile myVirtualFile;
 
   private JBList<Object> myList;
 
+  @RequiredDispatchThread
   public NewProjectPanel(@NotNull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
-    super(parentDisposable);
+    super(parentDisposable, virtualFile);
     myProject = project;
-    myVirtualFile = virtualFile;
   }
 
   @NotNull
@@ -85,7 +83,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
   }
 
   public boolean isModuleCreation() {
-    return myVirtualFile != null;
+    return myParam != null;
   }
 
   protected abstract JComponent createSouthPanel();
@@ -94,7 +92,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
 
   @NotNull
   @Override
-  protected JComponent createLeftComponent(Disposable parentDisposable) {
+  protected JComponent createLeftComponent(@NotNull Disposable parentDisposable, VirtualFile param) {
     NewModuleContext context = new NewModuleContext();
 
     NewModuleBuilder.EP_NAME.composite().setupContext(context);
@@ -128,7 +126,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
 
     for (NewModuleContext.Group group : groups) {
       // do not add simple line
-      if(!(groups.length == 1 && group.getId().equals(NewModuleContext.UGROUPED))) {
+      if (!(groups.length == 1 && group.getId().equals(NewModuleContext.UGROUPED))) {
         model.add(group);
       }
 
@@ -142,7 +140,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
   @RequiredDispatchThread
   @NotNull
   @Override
-  protected JComponent createRightComponent() {
+  protected JComponent createRightComponent(VirtualFile param) {
     final JPanel panel = new JPanel(new VerticalFlowLayout());
 
     myNameField = new JTextField();
@@ -150,8 +148,8 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel {
 
     panel.add(LabeledComponent.left(myNameField, "Name"));
 
-    if (myVirtualFile != null) {
-      myNameField.setText(myVirtualFile.getName());
+    if (myParam != null) {
+      myNameField.setText(myParam.getName());
     }
     else {
       panel.add(LabeledComponent.left(myLocationField, "Path"));

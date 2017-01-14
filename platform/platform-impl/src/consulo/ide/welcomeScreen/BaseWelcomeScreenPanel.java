@@ -21,6 +21,7 @@ import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,14 +30,15 @@ import java.awt.*;
  * @author VISTALL
  * @since 14-Sep-16
  */
-public abstract class BaseWelcomeScreenPanel extends JPanel {
+public abstract class BaseWelcomeScreenPanel<E> extends JPanel {
   protected final JComponent myLeftComponent;
+  protected final E myParam;
 
   @RequiredDispatchThread
-  public BaseWelcomeScreenPanel(@NotNull Disposable parentDisposable) {
+  public BaseWelcomeScreenPanel(@NotNull Disposable parentDisposable, @Nullable E param) {
     super(new BorderLayout());
-
-    myLeftComponent = createLeftComponent(parentDisposable);
+    myParam = param;
+    myLeftComponent = createLeftComponent(parentDisposable, param);
 
     JPanel leftPanel = new JPanel(new BorderLayout());
     leftPanel.setBackground(FlatWelcomeFrame.getProjectsBackground());
@@ -46,7 +48,7 @@ public abstract class BaseWelcomeScreenPanel extends JPanel {
 
     add(leftPanel, BorderLayout.WEST);
 
-    JComponent rightComponent = createRightComponent();
+    JComponent rightComponent = createRightComponent(param);
 
     add(rightComponent, BorderLayout.CENTER);
   }
@@ -57,9 +59,9 @@ public abstract class BaseWelcomeScreenPanel extends JPanel {
   }
 
   @NotNull
-  protected abstract JComponent createLeftComponent(Disposable parentDisposable);
+  protected abstract JComponent createLeftComponent(@NotNull Disposable parentDisposable, @Nullable E param);
 
   @NotNull
   @RequiredDispatchThread
-  protected abstract JComponent createRightComponent();
+  protected abstract JComponent createRightComponent(@Nullable E param);
 }
