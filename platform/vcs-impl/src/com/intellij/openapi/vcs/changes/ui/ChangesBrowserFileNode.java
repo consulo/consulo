@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,18 @@
 
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
+
+import static com.intellij.util.FontUtil.spaceAndThinSpace;
 
 /**
  * @author yole
@@ -37,20 +40,18 @@ public class ChangesBrowserFileNode extends ChangesBrowserNode<VirtualFile> impl
     super(userObject);
     myName = StringUtil.toLowerCase(userObject.getName());
     myProject = project;
-    if (userObject.isDirectory()) {
-      myDirectoryCount = 1;
-    }
-    else {
-      myCount = 1;
-    }
+  }
+
+  @Override
+  protected boolean isFile() {
+    return !getUserObject().isDirectory();
   }
 
   @Override
   protected boolean isDirectory() {
     return getUserObject().isDirectory() &&
-           FileStatusManager.getInstance(myProject).getStatus(getUserObject()) != FileStatus.NOT_CHANGED;
+           (isLeaf() || FileStatusManager.getInstance(myProject).getStatus(getUserObject()) != FileStatus.NOT_CHANGED);
   }
-
 
   @Override
   public void render(final ChangesBrowserNodeRenderer renderer, final boolean selected, final boolean expanded, final boolean hasFocus) {
@@ -59,13 +60,13 @@ public class ChangesBrowserFileNode extends ChangesBrowserNode<VirtualFile> impl
     if (renderer.isShowFlatten() && file.isValid()) {
       final VirtualFile parentFile = file.getParent();
       assert parentFile != null;
-      renderer.append(" (" + parentFile.getPresentableUrl() + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
+      renderer.append(spaceAndThinSpace() + FileUtil.getLocationRelativeToUserHome(parentFile.getPresentableUrl()), SimpleTextAttributes.GRAYED_ATTRIBUTES);
     }
-    else if (getCount() != 1 || getDirectoryCount() != 0) {
+    else if (getFileCount() != 1 || getDirectoryCount() != 0) {
       appendCount(renderer);
     }
     if (file.isDirectory()) {
-      renderer.setIcon(AllIcons.Nodes.TreeClosed);
+      renderer.setIcon(PlatformIcons.DIRECTORY_CLOSED_ICON);
     }
     else {
       renderer.setIcon(file.getFileType().getIcon());
@@ -83,7 +84,7 @@ public class ChangesBrowserFileNode extends ChangesBrowserNode<VirtualFile> impl
   }
 
   public int getSortWeight() {
-    return 7;
+    return VIRTUAL_FILE_SORT_WEIGHT;
   }
 
   @Override

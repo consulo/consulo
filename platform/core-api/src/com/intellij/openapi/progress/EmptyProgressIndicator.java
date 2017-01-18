@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,26 @@
 package com.intellij.openapi.progress;
 
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class EmptyProgressIndicator implements ProgressIndicator {
-  private boolean myIsRunning = false;
-  private volatile boolean myIsCanceled = false;
+public class EmptyProgressIndicator implements StandardProgressIndicator {
+
+  private static final Logger LOG = Logger.getInstance(EmptyProgressIndicator.class);
+
+  @NotNull private final ModalityState myModalityState;
+
+  private volatile boolean myIsRunning;
+  private volatile boolean myIsCanceled;
+
+  public EmptyProgressIndicator() {
+    this(ModalityState.defaultModalityState());
+  }
+
+  public EmptyProgressIndicator(@NotNull ModalityState modalityState) {
+    myModalityState = modalityState;
+  }
 
   @Override
   public void start() {
@@ -40,13 +55,21 @@ public class EmptyProgressIndicator implements ProgressIndicator {
   }
 
   @Override
-  public void cancel() {
+  public final void cancel() {
     myIsCanceled = true;
+    ProgressManager.canceled(this);
   }
 
   @Override
-  public boolean isCanceled() {
+  public final boolean isCanceled() {
     return myIsCanceled;
+  }
+
+  @Override
+  public final void checkCanceled() {
+    if (myIsCanceled) {
+      throw new ProcessCanceledException();
+    }
   }
 
   @Override
@@ -100,7 +123,7 @@ public class EmptyProgressIndicator implements ProgressIndicator {
   @Override
   @NotNull
   public ModalityState getModalityState() {
-    return ModalityState.NON_MODAL;
+    return myModalityState;
   }
 
   @Override
@@ -117,13 +140,6 @@ public class EmptyProgressIndicator implements ProgressIndicator {
   }
 
   @Override
-  public void checkCanceled() {
-    if (myIsCanceled) {
-      throw new ProcessCanceledException();
-    }
-  }
-
-  @Override
   public boolean isPopupWasShown() {
     return false;
   }
@@ -131,5 +147,14 @@ public class EmptyProgressIndicator implements ProgressIndicator {
   @Override
   public boolean isShowing() {
     return false;
+  }
+
+  @NotNull
+  public static ProgressIndicator notNullize(@Nullable ProgressIndicator indicator) {
+    if (indicator != null) {
+      return indicator;
+    }
+    LOG.info("No progress indicator");
+    return new EmptyProgressIndicator();
   }
 }

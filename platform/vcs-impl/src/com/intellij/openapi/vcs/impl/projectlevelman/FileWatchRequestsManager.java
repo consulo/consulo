@@ -18,13 +18,13 @@ package com.intellij.openapi.vcs.impl.projectlevelman;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.RequestsMerger;
+import com.intellij.openapi.util.RequestsMerger;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.util.Consumer;
 
 /**
-* @author irengrig
-*/
+ * @author irengrig
+ */
 public class FileWatchRequestsManager {
   private final RequestsMerger myMerger;
   private final Project myProject;
@@ -34,11 +34,12 @@ public class FileWatchRequestsManager {
     myMerger = new RequestsMerger(new FileWatchRequestModifier(project, newMappings, localFileSystem), new Consumer<Runnable>() {
       @Override
       public void consume(Runnable runnable) {
-        if ((! myProject.isInitialized()) || myProject.isDisposed()) return;
+        if ((!myProject.isInitialized()) || myProject.isDisposed()) return;
         final Application application = ApplicationManager.getApplication();
         if (application.isUnitTestMode()) {
           runnable.run();
-        } else {
+        }
+        else {
           application.executeOnPooledThread(runnable);
         }
       }

@@ -25,18 +25,15 @@ import java.util.List;
 
 public class FilePathChangesTreeList extends ChangesTreeList<FilePath> {
 
-  public FilePathChangesTreeList(@NotNull Project project,
-                                 @NotNull List<FilePath> originalFiles,
-                                 boolean showCheckboxes,
-                                 boolean highlightProblems,
-                                 @Nullable Runnable inclusionListener,
-                                 @Nullable ChangeNodeDecorator nodeDecorator) {
+  public FilePathChangesTreeList(@NotNull Project project, @NotNull List<FilePath> originalFiles,
+                                 boolean showCheckboxes, boolean highlightProblems,
+                                 @Nullable Runnable inclusionListener, @Nullable ChangeNodeDecorator nodeDecorator) {
     super(project, originalFiles, showCheckboxes, highlightProblems, inclusionListener, nodeDecorator);
   }
 
   @Override
   protected DefaultTreeModel buildTreeModel(final List<FilePath> changes, ChangeNodeDecorator changeNodeDecorator) {
-    return new TreeModelBuilder(myProject, false).buildModelFromFilePaths(changes);
+    return TreeModelBuilder.buildFromFilePaths(myProject, isShowFlatten(), changes);
   }
 
   @Override

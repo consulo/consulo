@@ -63,7 +63,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
+import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -184,7 +184,7 @@ public class FindUsagesManager {
     for (FindUsagesHandlerFactory factory : Extensions.getExtensions(FindUsagesHandlerFactory.EP_NAME, myProject)) {
       if (factory.canFindUsages(element)) {
         Class<? extends FindUsagesHandlerFactory> aClass = factory.getClass();
-        FindUsagesHandlerFactory copy = (FindUsagesHandlerFactory)new ConstructorInjectionComponentAdapter(aClass.getName(), aClass)
+        FindUsagesHandlerFactory copy = (FindUsagesHandlerFactory)new CachingConstructorInjectionComponentAdapter(aClass.getName(), aClass)
                 .getComponentInstance(myProject.getPicoContainer());
         final FindUsagesHandler handler = copy.createFindUsagesHandler(element, forHighlightUsages);
         if (handler == FindUsagesHandler.NULL_HANDLER) return null;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vcs.changes;
+package com.intellij.openapi.actionSystem;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 8/30/12
- * Time: 8:18 PM
+ * Markup interface to tell Action Manager that disabled actions shouldn't be shown
+ *
+ * @author Konstantin Bulenkov
+ * @see AlwaysVisibleActionGroup
  */
-public interface TransparentlyFailedValueI<T, E extends Exception> {
-  void set(T t);
-
-  void fail(E e);
-
-  T get() throws E;
-
-  void failRuntime(RuntimeException e);
-
-  boolean haveSomething();
+public interface CompactActionGroup {
 }

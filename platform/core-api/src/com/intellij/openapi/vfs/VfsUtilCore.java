@@ -544,7 +544,7 @@ public class VfsUtilCore {
   @Nullable
   public static VirtualFile findRelativeFile(@NotNull String uri, @Nullable VirtualFile base) {
     if (base != null) {
-      if (!base.isValid()) {
+      if (!base.isValid()){
         LOG.error("Invalid file name: " + base.getName() + ", url: " + uri);
       }
     }
@@ -559,9 +559,7 @@ public class VfsUtilCore {
       uri = uri.substring("file:/".length());
       if (!SystemInfo.isWindows) uri = "/" + uri;
     }
-    else {
-      uri = StringUtil.trimStart(uri, "file:");
-    }
+    else uri = StringUtil.trimStart(uri, "file:");
 
     VirtualFile file = null;
 
@@ -575,7 +573,7 @@ public class VfsUtilCore {
       file = StandardFileSystems.local().findFileByPath(uri);
     }
 
-    if (file == null && uri.contains(URLUtil.ARCHIVE_SEPARATOR)) {
+    if (file == null && uri.contains(URLUtil.JAR_SEPARATOR)) {
       file = StandardFileSystems.jar().findFileByPath(uri);
       if (file == null && base == null) {
         file = VirtualFileManager.getInstance().findFileByUrl(uri);

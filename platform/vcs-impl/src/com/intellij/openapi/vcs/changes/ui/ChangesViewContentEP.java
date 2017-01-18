@@ -17,33 +17,32 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.extensions.PluginAware;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.NotNullFunction;
-import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
+import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
+import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
  */
-public class ChangesViewContentEP {
+public class ChangesViewContentEP implements PluginAware {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ui.ChangesViewContentEP");
 
   public static final ExtensionPointName<ChangesViewContentEP> EP_NAME = new ExtensionPointName<ChangesViewContentEP>("com.intellij.changesViewContent");
 
-  @Attribute("tabName")
-  public String tabName;
+  @Attribute("tabName") public String tabName;
 
-  @Attribute("className")
-  public String className;
+  @Attribute("className") public String className;
 
-  @Attribute("predicateClassName")
-  public String predicateClassName;
+  @Attribute("predicateClassName") public String predicateClassName;
 
   private PluginDescriptor myPluginDescriptor;
   private ChangesViewContentProvider myInstance;
 
+  @Override
   public void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
     myPluginDescriptor = pluginDescriptor;
   }
@@ -74,7 +73,7 @@ public class ChangesViewContentEP {
 
   public ChangesViewContentProvider getInstance(Project project) {
     if (myInstance == null) {
-      myInstance = (ChangesViewContentProvider) newClassInstance(project, className); 
+      myInstance = (ChangesViewContentProvider)newClassInstance(project, className);
     }
     return myInstance;
   }
@@ -87,11 +86,11 @@ public class ChangesViewContentEP {
 
   private Object newClassInstance(final Project project, final String className) {
     try {
-      final Class<?> aClass = Class.forName(className, true,
-                                            myPluginDescriptor == null ? getClass().getClassLoader()  : myPluginDescriptor.getPluginClassLoader());
-      return new ConstructorInjectionComponentAdapter(className, aClass).getComponentInstance(project.getPicoContainer());
+      final Class<?> aClass =
+              Class.forName(className, true, myPluginDescriptor == null ? getClass().getClassLoader() : myPluginDescriptor.getPluginClassLoader());
+      return new CachingConstructorInjectionComponentAdapter(className, aClass).getComponentInstance(project.getPicoContainer());
     }
-    catch(Exception e) {
+    catch (Exception e) {
       LOG.error(e);
       return null;
     }

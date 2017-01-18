@@ -20,9 +20,9 @@ import com.intellij.openapi.diff.impl.patch.formove.PatchApplier;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
-import com.intellij.openapi.vcs.changes.TransparentlyFailedValueI;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
@@ -30,9 +30,9 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.MultiMap;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.util.*;
 
@@ -54,7 +54,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
   public void apply(@NotNull List<FilePatch> remaining, @NotNull MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroupsToApply,
                     @Nullable LocalChangeList localList,
                     @Nullable String fileName,
-                    @Nullable TransparentlyFailedValueI<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo) {
+                    @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo) {
     final CommitContext commitContext = new CommitContext();
     applyAdditionalInfoBefore(myProject, additionalInfo, commitContext);
     final Collection<PatchApplier> appliers = getPatchAppliers(patchGroupsToApply, localList, commitContext);
@@ -62,7 +62,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
   }
 
   protected ApplyPatchStatus executeAndApplyAdditionalInfo(@Nullable LocalChangeList localList,
-                                                           @Nullable TransparentlyFailedValueI<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
+                                                           @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
                                                            @NotNull CommitContext commitContext,
                                                            @NotNull Collection<PatchApplier> appliers) {
     final ApplyPatchStatus applyPatchStatus = PatchApplier.executePatchGroup(appliers, localList);
@@ -92,7 +92,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
 
 
   public static void applyAdditionalInfoBefore(final Project project,
-                                               TransparentlyFailedValueI<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
+                                               @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
                                                CommitContext commitContext) {
     applyAdditionalInfoImpl(project, additionalInfo, commitContext, new Consumer<InfoGroup>() {
       @Override
@@ -103,7 +103,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
   }
 
   private static void applyAdditionalInfo(final Project project,
-                                          TransparentlyFailedValueI<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
+                                          @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
                                           CommitContext commitContext) {
     applyAdditionalInfoImpl(project, additionalInfo, commitContext, new Consumer<InfoGroup>() {
       @Override
@@ -114,14 +114,13 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
   }
 
   private static void applyAdditionalInfoImpl(final Project project,
-                                              TransparentlyFailedValueI<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
+                                              @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
                                               CommitContext commitContext, final Consumer<InfoGroup> worker) {
     final PatchEP[] extensions = Extensions.getExtensions(PatchEP.EP_NAME, project);
     if (extensions.length == 0) return;
     if (additionalInfo != null) {
       try {
-        final Map<String, Map<String, CharSequence>> map = additionalInfo.get();
-        for (Map.Entry<String, Map<String, CharSequence>> entry : map.entrySet()) {
+        for (Map.Entry<String, Map<String, CharSequence>> entry : additionalInfo.compute().entrySet()) {
           final String path = entry.getKey();
           final Map<String, CharSequence> innerMap = entry.getValue();
 

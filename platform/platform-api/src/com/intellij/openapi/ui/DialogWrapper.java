@@ -429,6 +429,11 @@ public abstract class DialogWrapper {
     return JBUI.Borders.empty(ourDefaultBorderInsets);
   }
 
+  @Nullable
+  protected JComponent createDoNotAskCheckbox() {
+    return myCheckBoxDoNotShowDialog != null && myCheckBoxDoNotShowDialog.isVisible() ? myCheckBoxDoNotShowDialog : null;
+  }
+
   /**
    * Creates panel located at the south of the content pane. By default that
    * panel contains dialog's buttons. This default implementation uses <code>createActions()</code>
@@ -530,15 +535,18 @@ public abstract class DialogWrapper {
     final DoNotAskOption askOption = myDoNotAsk;
     if (askOption != null) {
       myCheckBoxDoNotShowDialog = new JCheckBox(askOption.getDoNotShowMessage());
+      myCheckBoxDoNotShowDialog.setVisible(askOption.canBeHidden());
+      myCheckBoxDoNotShowDialog.setSelected(!askOption.isToBeShown());
+      DialogUtil.registerMnemonic(myCheckBoxDoNotShowDialog, '&');
+
       JComponent southPanel = panel;
 
       if (!askOption.canBeHidden()) {
         return southPanel;
       }
 
-      final JPanel withCB = addDoNotShowCheckBox(southPanel, myCheckBoxDoNotShowDialog);
-      myCheckBoxDoNotShowDialog.setSelected(!askOption.isToBeShown());
-      DialogUtil.registerMnemonic(myCheckBoxDoNotShowDialog, '&');
+      final JPanel withCB = addDoNotShowCheckBox(southPanel, createDoNotAskCheckbox());
+
 
       panel = withCB;
     }
@@ -569,7 +577,7 @@ public abstract class DialogWrapper {
   }
 
   @NotNull
-  public static JPanel addDoNotShowCheckBox(JComponent southPanel, @NotNull JCheckBox checkBox) {
+  public static JPanel addDoNotShowCheckBox(JComponent southPanel, @NotNull JComponent checkBox) {
     final JPanel panel = new JPanel(new BorderLayout());
 
     JPanel wrapper = new JPanel(new GridBagLayout());

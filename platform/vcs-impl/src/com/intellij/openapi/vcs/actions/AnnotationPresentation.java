@@ -15,13 +15,15 @@
  */
 package com.intellij.openapi.vcs.actions;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.localVcs.UpToDateLineNumberProvider;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.annotate.*;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import com.intellij.util.ObjectUtil;
+import com.intellij.util.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,14 +34,19 @@ class AnnotationPresentation implements TextAnnotationPresentation {
   @NotNull private final FileAnnotation myFileAnnotation;
   @NotNull private final UpToDateLineNumberProvider myUpToDateLineNumberProvider;
   @Nullable private final AnnotationSourceSwitcher mySwitcher;
-  private final ArrayList<AnAction> myActions = new ArrayList<AnAction>();
+  private final ArrayList<AnAction> myActions = new ArrayList<>();
+
+  @NotNull private final Disposable myDisposable;
+  private boolean myDisposed = false;
 
   AnnotationPresentation(@NotNull FileAnnotation fileAnnotation,
                          @NotNull UpToDateLineNumberProvider upToDateLineNumberProvider,
-                         @Nullable final AnnotationSourceSwitcher switcher) {
+                         @Nullable AnnotationSourceSwitcher switcher,
+                         @NotNull Disposable disposable) {
     myUpToDateLineNumberProvider = upToDateLineNumberProvider;
     myFileAnnotation = fileAnnotation;
     mySwitcher = switcher;
+    myDisposable = disposable;
   }
 
   @Override
@@ -59,10 +66,10 @@ class AnnotationPresentation implements TextAnnotationPresentation {
   public List<AnAction> getActions(int line) {
     int correctedNumber = myUpToDateLineNumberProvider.getLineNumber(line);
     for (AnAction action : myActions) {
-      UpToDateLineNumberListener upToDateListener = ObjectUtil.tryCast(action, UpToDateLineNumberListener.class);
+      UpToDateLineNumberListener upToDateListener = ObjectUtils.tryCast(action, UpToDateLineNumberListener.class);
       if (upToDateListener != null) upToDateListener.consume(correctedNumber);
 
-      LineNumberListener listener = ObjectUtil.tryCast(action, LineNumberListener.class);
+      LineNumberListener listener = ObjectUtils.tryCast(action, LineNumberListener.class);
       if (listener != null) listener.consume(line);
     }
 
@@ -80,5 +87,12 @@ class AnnotationPresentation implements TextAnnotationPresentation {
 
   public void addAction(AnAction action, int index) {
     myActions.add(index, action);
+  }
+
+  @Override
+  public void gutterClosed() {
+    if (myDisposed) return;
+    myDisposed = true;
+    Disposer.dispose(myDisposable);
   }
 }

@@ -33,6 +33,7 @@ import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
 import com.intellij.openapi.vcs.changes.actions.RollbackDialogAction;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.EventDispatcher;
@@ -200,7 +201,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
 
     builder.setChanges(findChanges(objects), changeNodeDecorator);
     if (isShowUnversioned()) {
-      builder.setUnversioned(manager.getUnversionedFiles(), manager.getUnversionedFilesSize());
+      builder.setUnversioned(manager.getUnversionedFiles());
     }
 
     return builder.build();
@@ -255,7 +256,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
       ChangesBrowserUnversionedFilesNode node = findUnversionedFilesNode();
 
       if (node != null) {
-        result = node.getFilesSize();
+        result = node.getFileCount();
       }
     }
 
@@ -330,6 +331,18 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     toolBarGroup.add(editSourceAction);
 
     toolBarGroup.add(ActionManager.getInstance().getAction("Vcs.CheckinProjectToolbar"));
+  }
+
+  @Override
+  protected void afterDiffRefresh() {
+    rebuildList();
+    setDataIsDirty(false);
+    ApplicationManager.getApplication().invokeLater(new Runnable() {
+      @Override
+      public void run() {
+        IdeFocusManager.findInstance().requestFocus(myViewer.getPreferredFocusedComponent(), true);
+      }
+    });
   }
 
   @Override

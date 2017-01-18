@@ -16,7 +16,7 @@
 package com.intellij.openapi.extensions;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
+import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.picocontainer.PicoContainer;
@@ -69,10 +69,8 @@ public abstract class AbstractExtensionPointBean implements PluginAware {
   }
 
   @NotNull
-  public static <T> T instantiate(@NotNull final Class<T> aClass,
-                                  @NotNull final PicoContainer container,
-                                  final boolean allowNonPublicClasses) {
-    return (T)new ConstructorInjectionComponentAdapter(aClass.getName(), aClass, null, allowNonPublicClasses).getComponentInstance(container);
+  public static <T> T instantiate(@NotNull final Class<T> aClass, @NotNull final PicoContainer container, final boolean allowNonPublicClasses) {
+    return (T)new CachingConstructorInjectionComponentAdapter(aClass.getName(), aClass, null, allowNonPublicClasses).getComponentInstance(container);
   }
 
 }

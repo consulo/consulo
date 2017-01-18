@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vcs.changes;
-
-import com.intellij.openapi.vcs.VcsException;
+package com.intellij.openapi.actionSystem;
 
 /**
-* Created by IntelliJ IDEA.
-* User: Irina.Chernushina
-* Date: 9/7/11
-* Time: 5:33 PM
-*/
-public abstract class ValueWithVcsException<T> extends TransparentlyFailedValue<T, VcsException> {
-  public ValueWithVcsException() {
-    try {
-      set(computeImpl());
-    }
-    catch (VcsException e) {
-      fail(e);
-    }
-  }
-
-  protected abstract T computeImpl() throws VcsException;
+ * Markup interface to ignore "compact" option in action groups
+ *
+ * @author Konstantin Bulenkov
+ * @see CompactActionGroup
+ */
+public interface AlwaysVisibleActionGroup {
 }

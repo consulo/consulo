@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ class HistoryIdColumn extends AnnotationFieldGutter {
                   final TextAnnotationPresentation presentation,
                   Couple<Map<VcsRevisionNumber, Color>> colorScheme,
                   Map<VcsRevisionNumber, Integer> ids) {
-    super(annotation, null, presentation, colorScheme);
+    super(annotation, presentation, colorScheme);
     myHistoryIds = ids;
   }
 
@@ -55,6 +55,11 @@ class HistoryIdColumn extends AnnotationFieldGutter {
       }
     }
     return "";
+  }
+
+  @Override
+  public boolean isShowByDefault() {
+    return false;
   }
 
   @Override

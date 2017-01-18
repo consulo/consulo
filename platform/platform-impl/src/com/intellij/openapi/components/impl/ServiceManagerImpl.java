@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.pico.AssignableToComponentAdapter;
-import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
+import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -223,7 +223,7 @@ public class ServiceManagerImpl implements BaseComponent {
 
     private synchronized ComponentAdapter getDelegate() {
       if (myDelegate == null) {
-        myDelegate = new ConstructorInjectionComponentAdapter(getComponentKey(), loadClass(myDescriptor.getImplementation()), null, true);
+        myDelegate = new CachingConstructorInjectionComponentAdapter(getComponentKey(), loadClass(myDescriptor.getImplementation()), null, true);
       }
 
       return myDelegate;

@@ -25,15 +25,16 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PausesStat;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -94,6 +95,12 @@ public class ActionUtil {
 
   private static int insidePerformDumbAwareUpdate;
 
+  @Deprecated
+  // Use #performDumbAwareUpdate with isModalContext instead
+  public static boolean performDumbAwareUpdate(@NotNull AnAction action, @NotNull AnActionEvent e, boolean beforeActionPerformed) {
+    return performDumbAwareUpdate(false, action, e, beforeActionPerformed);
+  }
+
   /**
    * @param action                action
    * @param e                     action event
@@ -103,7 +110,7 @@ public class ActionUtil {
    *                              {@link AnAction#update(AnActionEvent)}
    * @return true if update tried to access indices in dumb mode
    */
-  public static boolean performDumbAwareUpdate(@NotNull AnAction action, @NotNull AnActionEvent e, boolean beforeActionPerformed) {
+  public static boolean performDumbAwareUpdate(boolean isInModalContext, @NotNull AnAction action, @NotNull AnActionEvent e, boolean beforeActionPerformed) {
     final Presentation presentation = e.getPresentation();
     final Boolean wasEnabledBefore = (Boolean)presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
     final boolean dumbMode = isDumbMode(e.getProject());
@@ -114,7 +121,7 @@ public class ActionUtil {
     }
     final boolean enabledBeforeUpdate = presentation.isEnabled();
 
-    final boolean notAllowed = dumbMode && !action.isDumbAware();
+    final boolean notAllowed = dumbMode && !action.isDumbAware() || (Registry.is("actionSystem.honor.modal.context") && isInModalContext && !action.isEnabledInModalContext());
 
     if (insidePerformDumbAwareUpdate++ == 0) {
       ActionPauses.STAT.started();

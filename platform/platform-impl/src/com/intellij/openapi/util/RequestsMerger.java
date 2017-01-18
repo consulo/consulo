@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vcs;
+package com.intellij.openapi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.SomeQueue;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
@@ -39,7 +38,7 @@ import java.util.Map;
  */
 @SomeQueue
 public class RequestsMerger {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.RequestsMerger");
+  private static final Logger LOG = Logger.getInstance(RequestsMerger.class);
   private static final int ourDelay = 300;
 
   private final MyWorker myWorker;

@@ -82,10 +82,26 @@ public abstract class Task implements TaskInfo, Progressive {
    * This callback will be invoked on AWT dispatch thread.
    * <p>
    * Callback executed when run() throws an exception (except PCE).
+   *
+   * @deprecated use {@link #onThrowable(Throwable)} instead
    */
-  @RequiredDispatchThread
+  @Deprecated
   public void onError(@NotNull Exception error) {
     LOG.error(error);
+  }
+
+  /**
+   * This callback will be invoked on AWT dispatch thread.
+   * <p>
+   * Callback executed when run() throws an exception (except PCE).
+   */
+  public void onThrowable(@NotNull Throwable error) {
+    if (error instanceof Exception) {
+      onError((Exception)error);
+    }
+    else {
+      LOG.error(error);
+    }
   }
 
   /**

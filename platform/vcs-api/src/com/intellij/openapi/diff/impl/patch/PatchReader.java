@@ -24,12 +24,13 @@ package com.intellij.openapi.diff.impl.patch;
 
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vcs.changes.TransparentlyFailedValue;
-import com.intellij.openapi.vcs.changes.TransparentlyFailedValueI;
 import com.intellij.util.SmartList;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -65,9 +66,16 @@ public class PatchReader {
     myPatchContentParser = new PatchContentParser(saveHunks);
   }
 
+  @Deprecated
   public List<TextFilePatch> readAllPatches() throws PatchSyntaxException {
     parseAllPatches();
     return myPatches;
+  }
+
+  @NotNull
+  public List<TextFilePatch> readTextPatches() throws PatchSyntaxException {
+    parseAllPatches();
+    return getTextPatches();
   }
 
   @Nullable
@@ -107,8 +115,15 @@ public class PatchReader {
     }
   }*/
 
+  @Deprecated
+  @NotNull
   public List<TextFilePatch> getPatches() {
     return myPatches;
+  }
+
+  @NotNull
+  public List<TextFilePatch> getTextPatches() {
+    return ContainerUtil.findAll(myPatches, TextFilePatch.class);
   }
 
   public void parseAllPatches() throws PatchSyntaxException {
@@ -153,25 +168,23 @@ public class PatchReader {
     myPatches = myPatchContentParser.getResult();
   }
 
-  public TransparentlyFailedValueI<Map<String, Map<String, CharSequence>>, PatchSyntaxException> getAdditionalInfo(final Set<String> filterByPaths) {
-    final TransparentlyFailedValue<Map<String, Map<String, CharSequence>>, PatchSyntaxException>
-            value = new TransparentlyFailedValue<>();
+  @NotNull
+  public ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> getAdditionalInfo(@Nullable Set<String> paths) {
+    ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> result;
+    PatchSyntaxException e = myAdditionalInfoParser.getSyntaxException();
 
-    final Map<String, Map<String, CharSequence>> map = myAdditionalInfoParser.getResultMap();
-    final Map<String, Map<String, CharSequence>>newMap = new HashMap<>();
-
-    for (Map.Entry<String, Map<String, CharSequence>> entry : map.entrySet()) {
-      final Map<String, CharSequence> innerMap = entry.getValue();
-      if (filterByPaths == null || filterByPaths.contains(entry.getKey())) {
-        newMap.put(entry.getKey(), innerMap);
-      }
-    }
-    value.set(newMap);
-    final PatchSyntaxException e = myAdditionalInfoParser.getSyntaxException();
     if (e != null) {
-      value.fail(e);
+      result = () -> {
+        throw e;
+      };
     }
-    return value;
+    else {
+      Map<String, Map<String, CharSequence>> additionalInfo = ContainerUtil.filter(myAdditionalInfoParser.getResultMap(), path -> paths == null || paths
+              .contains(path));
+      result = () -> additionalInfo;
+    }
+
+    return result;
   }
 
   private static class AdditionalInfoParser implements Parser {

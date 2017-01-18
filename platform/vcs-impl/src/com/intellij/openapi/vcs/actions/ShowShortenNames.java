@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import com.intellij.openapi.project.DumbAware;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,25 +30,21 @@ import java.util.ArrayList;
  * @author Konstantin Bulenkov
  */
 public class ShowShortenNames extends ActionGroup {
-  public static final String KEY = "annotate.show.short.names";
-
   private final AnAction[] myChildren;
+
   public ShowShortenNames(final EditorGutterComponentEx gutter) {
     super("Names", true);
-    final ArrayList<AnAction> kids = new ArrayList<AnAction>(ShortNameType.values().length);
+    final ArrayList<AnAction> kids = new ArrayList<>(ShortNameType.values().length);
     for (ShortNameType type : ShortNameType.values()) {
       kids.add(new SetShortNameTypeAction(type, gutter));
     }
     myChildren = kids.toArray(new AnAction[kids.size()]);
   }
+
   @NotNull
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     return myChildren;
-  }
-
-  public static boolean isSet() {
-    return getType() != ShortNameType.NONE;
   }
 
   public static ShortNameType getType() {
@@ -60,7 +56,7 @@ public class ShowShortenNames extends ActionGroup {
     return ShortNameType.LASTNAME;
   }
 
-  public static class SetShortNameTypeAction extends ToggleAction {
+  public static class SetShortNameTypeAction extends ToggleAction implements DumbAware {
     private final ShortNameType myType;
     private final EditorGutterComponentEx myGutter;
 
@@ -77,15 +73,8 @@ public class ShowShortenNames extends ActionGroup {
 
     @Override
     public void setSelected(AnActionEvent e, boolean enabled) {
-      PropertiesComponent.getInstance().unsetValue(KEY);
       if (enabled) {
-        myType.set(enabled);
-      } else {
-        if (myType == ShortNameType.NONE) {
-          ShortNameType.LASTNAME.set(true);
-        } else {
-          ShortNameType.NONE.set(true);
-        }
+        myType.set();
       }
       myGutter.revalidateMarkup();
     }

@@ -35,7 +35,7 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
-import com.intellij.util.pico.ConstructorInjectionComponentAdapter;
+import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import com.intellij.util.pico.DefaultPicoContainer;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
@@ -544,7 +544,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       myConfig = config;
 
       final String componentKey = config.getInterfaceClass();
-      myDelegate = new ConstructorInjectionComponentAdapter(componentKey, implementationClass, null, true) {
+      myDelegate = new CachingConstructorInjectionComponentAdapter(componentKey, implementationClass, null, true) {
         @Override
         public Object getComponentInstance(PicoContainer picoContainer) throws PicoInitializationException, PicoIntrospectionException, ProcessCanceledException {
           ProgressIndicator indicator = getProgressIndicator();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
-import com.intellij.util.EnvironmentUtil;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
@@ -48,23 +47,26 @@ public class DateFormatUtil {
   public static final long YEAR = DAY * 365;
   public static final long DAY_FACTOR = 24L * 60 * 60 * 1000;
 
-  public static final SyncDateFormat ISO8601_DATE_FORMAT = new SyncDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
-
   // do not expose this constants - they are very likely to be changed in future
   private static final SyncDateFormat DATE_FORMAT;
   private static final SyncDateFormat TIME_FORMAT;
   private static final SyncDateFormat TIME_WITH_SECONDS_FORMAT;
   private static final SyncDateFormat DATE_TIME_FORMAT;
   private static final SyncDateFormat ABOUT_DATE_FORMAT;
+  private static final SyncDateFormat ISO8601_FORMAT;
+
   static {
     SyncDateFormat[] formats = getDateTimeFormats();
     DATE_FORMAT = formats[0];
     TIME_FORMAT = formats[1];
     TIME_WITH_SECONDS_FORMAT = formats[2];
     DATE_TIME_FORMAT = formats[3];
+
     ABOUT_DATE_FORMAT = new SyncDateFormat(DateFormat.getDateInstance(DateFormat.LONG, Locale.US));
 
-    ISO8601_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+    @SuppressWarnings("SpellCheckingInspection") DateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    iso8601.setTimeZone(TimeZone.getTimeZone("UTC"));
+    ISO8601_FORMAT = new SyncDateFormat(iso8601);
   }
 
   private static final long[] DENOMINATORS = {YEAR, MONTH, WEEK, DAY, HOUR, MINUTE};
@@ -73,7 +75,7 @@ public class DateFormatUtil {
 
   private DateFormatUtil() { }
 
-  public static long getDifferenceInDays(final Date startDate, final Date endDate) {
+  public static long getDifferenceInDays(@NotNull Date startDate, @NotNull Date endDate) {
     return (endDate.getTime() - startDate.getTime() + DAY_FACTOR - 1000) / DAY_FACTOR;
   }
 
@@ -95,6 +97,11 @@ public class DateFormatUtil {
   @NotNull
   public static SyncDateFormat getDateTimeFormat() {
     return DATE_TIME_FORMAT;
+  }
+
+  @NotNull
+  public static SyncDateFormat getIso8601Format() {
+    return ISO8601_FORMAT;
   }
 
   @NotNull
@@ -148,7 +155,7 @@ public class DateFormatUtil {
   }
 
   @NotNull
-  public static String formatPrettyDateTime(Date date) {
+  public static String formatPrettyDateTime(@NotNull Date date) {
     return formatPrettyDateTime(date.getTime());
   }
 
@@ -182,8 +189,7 @@ public class DateFormatUtil {
     boolean isToday = currentYear == year && currentDayOfYear == dayOfYear;
     if (isToday) {
       String result = CommonBundle.message("date.format.today");
-      if (formatTime) result += " " + TIME_FORMAT.format(time);
-      return result;
+      return formatTime ? result + " " + TIME_FORMAT.format(time) : result;
     }
 
     boolean isYesterdayOnPreviousYear =
@@ -192,8 +198,7 @@ public class DateFormatUtil {
 
     if (isYesterday) {
       String result = CommonBundle.message("date.format.yesterday");
-      if (formatTime) result += " " + TIME_FORMAT.format(time);
-      return result;
+      return formatTime ? result + " " + TIME_FORMAT.format(time) : result;
     }
 
     return formatTime ? DATE_TIME_FORMAT.format(time) : DATE_FORMAT.format(time);
@@ -216,6 +221,7 @@ public class DateFormatUtil {
     return buf.toString().trim();
   }
 
+  @SuppressWarnings("Duplicates")
   private static String composeDurationMessage(final Period period, final int n) {
     switch (period) {
       case DAY:
@@ -280,6 +286,7 @@ public class DateFormatUtil {
 
   // helpers
 
+  @SuppressWarnings("Duplicates")
   private static String someTimeAgoMessage(final Period period, final int n) {
     switch (period) {
       case DAY:
@@ -297,6 +304,7 @@ public class DateFormatUtil {
     }
   }
 
+  @SuppressWarnings("Duplicates")
   private static String composeInSomeTimeMessage(final Period period, final int n) {
     switch (period) {
       case DAY:
@@ -330,7 +338,7 @@ public class DateFormatUtil {
       }
     }
     catch (Throwable t) {
-      LOG.error(t);
+      LOG.info(t);
     }
 
     if (!loaded) {
@@ -379,7 +387,7 @@ public class DateFormatUtil {
   }
 
   private static boolean getUnixFormats(DateFormat[] formats) {
-    String localeStr = EnvironmentUtil.getValue("LC_TIME");
+    String localeStr = System.getenv("LC_TIME");
     if (localeStr == null) return false;
 
     localeStr = localeStr.trim();
@@ -424,15 +432,15 @@ public class DateFormatUtil {
 
     rv = kernel32.GetLocaleInfoEx(Kernel32.LOCALE_NAME_USER_DEFAULT, Kernel32.LOCALE_SSHORTDATE, data, dataSize);
     assert rv > 1 : kernel32.GetLastError();
-    String shortDate = new String(data.getCharArray(0, rv - 1));
+    String shortDate = fixWindowsFormat(new String(data.getCharArray(0, rv - 1)));
 
     rv = kernel32.GetLocaleInfoEx(Kernel32.LOCALE_NAME_USER_DEFAULT, Kernel32.LOCALE_SSHORTTIME, data, dataSize);
     assert rv > 1 : kernel32.GetLastError();
-    String shortTime = StringUtil.replace(new String(data.getCharArray(0, rv - 1)), "tt", "a");
+    String shortTime = fixWindowsFormat(new String(data.getCharArray(0, rv - 1)));
 
     rv = kernel32.GetLocaleInfoEx(Kernel32.LOCALE_NAME_USER_DEFAULT, Kernel32.LOCALE_STIMEFORMAT, data, dataSize);
     assert rv > 1 : kernel32.GetLastError();
-    String mediumTime = StringUtil.replace(new String(data.getCharArray(0, rv - 1)), "tt", "a");
+    String mediumTime = fixWindowsFormat(new String(data.getCharArray(0, rv - 1)));
 
     formats[0] = new SimpleDateFormat(shortDate);
     formats[1] = new SimpleDateFormat(shortTime);
@@ -440,5 +448,11 @@ public class DateFormatUtil {
     formats[3] = new SimpleDateFormat(shortDate + " " + shortTime);
 
     return true;
+  }
+
+  private static String fixWindowsFormat(String format) {
+    format = format.replaceAll("g+", "G");
+    format = StringUtil.replace(format, "tt", "a");
+    return format;
   }
 }

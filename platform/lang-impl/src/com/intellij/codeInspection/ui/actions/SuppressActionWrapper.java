@@ -16,6 +16,7 @@ import com.intellij.codeInspection.ui.RefElementNode;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CompactActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
@@ -35,16 +36,14 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.Set;
 
-public class SuppressActionWrapper extends ActionGroup {
+public class SuppressActionWrapper extends ActionGroup implements CompactActionGroup {
   private final Project myProject;
   private final InspectionManagerEx myManager;
   private final Set<InspectionTreeNode> myNodesToSuppress = new HashSet<InspectionTreeNode>();
   private final InspectionToolWrapper myToolWrapper;
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.actions.SuppressActionWrapper");
 
-  public SuppressActionWrapper(@NotNull final Project project,
-                               @NotNull final InspectionToolWrapper toolWrapper,
-                               @NotNull final TreePath[] paths) {
+  public SuppressActionWrapper(@NotNull final Project project, @NotNull final InspectionToolWrapper toolWrapper, @NotNull final TreePath[] paths) {
     super(InspectionsBundle.message("suppress.inspection.problem"), false);
     myProject = project;
     myManager = (InspectionManagerEx)InspectionManager.getInstance(myProject);
@@ -140,7 +139,8 @@ public class SuppressActionWrapper extends ActionGroup {
       refElement = element instanceof RefElement ? (RefElement)element : null;
       descriptor = descriptionNode.getDescriptor();
     }
-    PsiElement element = descriptor instanceof ProblemDescriptor ? ((ProblemDescriptor)descriptor).getPsiElement() : refElement != null ? refElement.getElement() : null;
+    PsiElement element =
+            descriptor instanceof ProblemDescriptor ? ((ProblemDescriptor)descriptor).getPsiElement() : refElement != null ? refElement.getElement() : null;
     return Pair.create(element, descriptor);
   }
 
@@ -167,7 +167,8 @@ public class SuppressActionWrapper extends ActionGroup {
                 RefEntity refEntity = null;
                 if (node instanceof RefElementNode) {
                   refEntity = ((RefElementNode)node).getElement();
-                } else if (node instanceof ProblemDescriptionNode) {
+                }
+                else if (node instanceof ProblemDescriptionNode) {
                   refEntity = ((ProblemDescriptionNode)node).getElement();
                 }
                 if (!suppress(element, content.second, mySuppressAction, refEntity)) break;

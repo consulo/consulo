@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vcs.annotate;
+package com.intellij.ssh;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.editor.colors.ColorKey;
-import com.intellij.openapi.editor.colors.EditorFontType;
+import java.util.regex.Pattern;
 
-import java.util.List;
-
-public interface TextAnnotationPresentation {
-  EditorFontType getFontType(int line);
-  ColorKey getColor(int line);
-  List<AnAction> getActions(int line);
-  void gutterClosed();
+public class SSHUtil {
+  public static final Pattern PASSPHRASE_PROMPT = Pattern.compile("Enter passphrase for key \\'(.*)\\':\\s?");
+  public static final Pattern PASSWORD_PROMPT = Pattern.compile("(.*)\\'s password:\\s?");
+  public static final String PASSWORD_PROMPT_SUFFIX = "password:";
+  public static final String CONFIRM_CONNECTION_PROMPT = "Are you sure you want to continue connecting";
 }

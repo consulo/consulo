@@ -74,9 +74,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@State(
-        name = "ChangesViewManager",
-        storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@State(name = "ChangesViewManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class ChangesViewManager implements ChangesViewI, ProjectComponent, PersistentStateComponent<ChangesViewManager.State> {
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ChangesViewManager");
@@ -214,7 +212,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     visualActionsGroup.add(new ToggleShowIgnoredAction());
     visualActionsGroup.add(new IgnoredSettingsAction());
     visualActionsGroup.add(new ToggleDetailsAction());
-    visualActionsGroup.add(new ContextHelpAction(ChangesListView.ourHelpId));
+    visualActionsGroup.add(new ContextHelpAction(ChangesListView.HELP_ID));
     toolbarPanel.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.CHANGES_VIEW_TOOLBAR, visualActionsGroup, false).getComponent(),
                      BorderLayout.CENTER);
 
@@ -336,13 +334,13 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
 
     ChangeListManagerImpl changeListManager = ChangeListManagerImpl.getInstanceImpl(myProject);
 
-    TreeModelBuilder treeModelBuilder = new TreeModelBuilder(myProject, myView.isShowFlatten())
-            .set(changeListManager.getChangeListsCopy(), changeListManager.getDeletedFiles(), changeListManager.getModifiedWithoutEditing(),
-                 changeListManager.getSwitchedFilesMap(), changeListManager.getSwitchedRoots(), changeListManager.getLockedFolders(),
-                 changeListManager.getLogicallyLockedFolders())
-            .setUnversioned(changeListManager.getUnversionedFiles(), changeListManager.getUnversionedFilesSize());
+    TreeModelBuilder treeModelBuilder = new TreeModelBuilder(myProject, myView.isShowFlatten()).setChangeLists(changeListManager.getChangeListsCopy())
+            .setLocallyDeletedPaths(changeListManager.getDeletedFiles()).setModifiedWithoutEditing(changeListManager.getModifiedWithoutEditing())
+            .setSwitchedFiles(changeListManager.getSwitchedFilesMap()).setSwitchedRoots(changeListManager.getSwitchedRoots())
+            .setLockedFolders(changeListManager.getLockedFolders()).setLogicallyLockedFiles(changeListManager.getLogicallyLockedFolders())
+            .setUnversioned(changeListManager.getUnversionedFiles());
     if (myState.myShowIgnored) {
-      treeModelBuilder.setIgnored(changeListManager.getIgnoredFiles(), changeListManager.getIgnoredFilesSize(), changeListManager.isIgnoredInUpdateMode());
+      treeModelBuilder.setIgnored(changeListManager.getIgnoredFiles(), changeListManager.isIgnoredInUpdateMode());
     }
     myView.updateModel(treeModelBuilder.build());
 
@@ -405,11 +403,9 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
 
   public static class State {
 
-    @Attribute("flattened_view")
-    public boolean myShowFlatten = true;
+    @Attribute("flattened_view") public boolean myShowFlatten = true;
 
-    @Attribute("show_ignored")
-    public boolean myShowIgnored;
+    @Attribute("show_ignored") public boolean myShowIgnored;
   }
 
   private class MyChangeListListener extends ChangeListAdapter {

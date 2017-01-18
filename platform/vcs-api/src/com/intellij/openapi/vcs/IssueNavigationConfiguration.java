@@ -88,7 +88,7 @@ public class IssueNavigationConfiguration implements PersistentStateComponent<Is
     }
   }
 
-  public List<LinkMatch> findIssueLinks(String text) {
+  public List<LinkMatch> findIssueLinks(CharSequence text) {
     final List<LinkMatch> result = new ArrayList<LinkMatch>();
     for (IssueNavigationLink link : myLinks) {
       Pattern issuePattern = link.getIssuePattern();
