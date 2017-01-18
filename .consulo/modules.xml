@@ -778,6 +778,7 @@
           <orderEntry type="library" name="Lombok" level="project" />
           <orderEntry type="library" name="Snappy-Java" level="project" />
           <orderEntry type="library" exploded="" name="imgscalr" level="project" />
+          <orderEntry type="module" module-name="ui-api" />
         </module-layer>
       </module>
       <module name="impl/util-rt" dirurl="file://$PROJECT_DIR$/platform/util-rt" current-layer="Default">

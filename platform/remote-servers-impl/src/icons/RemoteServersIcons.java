@@ -16,19 +16,18 @@
 package icons;
 
 import com.intellij.openapi.util.IconLoader;
-
-import javax.swing.*;
+import consulo.ui.migration.SwingImageRef;
 
 /**
  * NOTE THIS FILE IS AUTO-GENERATED
  * DO NOT EDIT IT BY HAND, run build/scripts/icons.gant instead
  */
 public class RemoteServersIcons {
-  private static Icon load(String path) {
+  private static SwingImageRef load(String path) {
     return IconLoader.getIcon(path, RemoteServersIcons.class);
   }
 
-  public static final Icon ResumeScaled = load("/icons/resumeScaled.png"); // 8x8
-  public static final Icon ServersToolWindow = load("/icons/serversToolWindow.png"); // 13x13
-  public static final Icon SuspendScaled = load("/icons/suspendScaled.png"); // 8x8
+  public static final SwingImageRef ResumeScaled = load("/icons/resumeScaled.png"); // 8x8
+  public static final SwingImageRef ServersToolWindow = load("/icons/serversToolWindow.png"); // 13x13
+  public static final SwingImageRef SuspendScaled = load("/icons/suspendScaled.png"); // 8x8
 }

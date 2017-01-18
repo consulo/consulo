@@ -16,9 +16,6 @@
 package consulo;
 
 import consulo.ui.*;
-import consulo.ui.hack.IconWithURL;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -146,12 +143,5 @@ public class SomeTestUIBuilder {
     splitLayout.setProportion(20);
 
     window.setContent(splitLayout);
-  }
-
-  public static ImageRef fromIcon(Icon icon) {
-    if (icon instanceof IconWithURL) {
-      return ImageRefs.fromURL(((IconWithURL)icon).getURL());
-    }
-    throw new UnsupportedOperationException();
   }
 }

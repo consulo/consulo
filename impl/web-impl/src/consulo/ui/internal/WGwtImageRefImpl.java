@@ -16,28 +16,27 @@
 package consulo.ui.internal;
 
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.util.containers.ConcurrentHashMap;
 import consulo.ui.ImageRef;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.net.URL;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
 public class WGwtImageRefImpl implements ImageRef {
-  public static final ConcurrentMap<Integer, URL> ourURLCache = new ConcurrentHashMap<Integer, URL>();
-
-  private URL myURL;
   private Icon myIcon;
+  private int myHashCode;
 
-  public WGwtImageRefImpl(URL url) {
-    myURL = url;
+  public WGwtImageRefImpl(@NotNull URL url) {
     myIcon = IconLoader.findIcon(url);
+    WGwtImageRefUrls.ourURLCache.putIfAbsent(myHashCode = WGwtImageRefUrls.hashCode(url), url);
+  }
 
-    ourURLCache.putIfAbsent(url.hashCode(), url);
+  public int getHashCode() {
+    return myHashCode;
   }
 
   @Override
@@ -48,9 +47,5 @@ public class WGwtImageRefImpl implements ImageRef {
   @Override
   public int getWidth() {
     return myIcon.getIconWidth();
-  }
-
-  public String getUrlForBrowser() {
-    return "/uiIcon?urlHash=\"" + myURL.hashCode() + "\"";
   }
 }

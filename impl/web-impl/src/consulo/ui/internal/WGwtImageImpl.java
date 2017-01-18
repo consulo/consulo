@@ -36,7 +36,7 @@ public class WGwtImageImpl extends WGwtBaseComponent implements Image {
   @Override
   protected void getState(Map<String, Serializable> map) {
     super.getState(map);
-    map.put("url",  myImageRef.getUrlForBrowser());
+    map.put("url",  WGwtImageRefUrls.getUrlForBrowser(myImageRef));
   }
 
   @NotNull

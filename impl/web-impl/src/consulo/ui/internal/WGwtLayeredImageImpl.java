@@ -41,7 +41,7 @@ public class WGwtLayeredImageImpl extends WGwtBaseComponent {
     for (int i = 0; i < myImageRefs.length; i++) {
       WGwtImageRefImpl imageRef = (WGwtImageRefImpl)myImageRefs[i];
 
-      map.put("url" + i, imageRef.getUrlForBrowser());
+      map.put("url" + i, WGwtImageRefUrls.getUrlForBrowser(imageRef));
     }
   }
 }
