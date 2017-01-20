@@ -24,6 +24,7 @@ import com.intellij.vcs.log.VcsLog;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,6 @@ public abstract class VcsCherryPicker {
 
   @NonNls public static final ExtensionPointName<VcsCherryPicker> EXTENSION_POINT_NAME =
           ExtensionPointName.create("com.intellij.cherryPicker");
-
   /**
    * @return - return vcs for current cherryPicker
    */
@@ -52,11 +52,18 @@ public abstract class VcsCherryPicker {
   public abstract void cherryPick(@NotNull final List<VcsFullCommitDetails> commits);
 
   /**
-   * Return true if all selected commits can be cherry-picked by this cherry-picker
+   * Return true if cherry picker can manage all commits from roots
+   */
+  public abstract boolean canHandleForRoots(@NotNull Collection<VirtualFile> roots);
+
+  /**
+   * Return null if all selected commits can be cherry-picked without problems by this cherry-picker or error description otherwise.
    *
    * @param log     additional log information
    * @param commits commits to cherry-pick, grouped by version control root
    * @return
    */
-  public abstract boolean isEnabled(@NotNull VcsLog log, @NotNull Map<VirtualFile, List<Hash>> commits);
+  public String getInfo(@NotNull VcsLog log, @NotNull Map<VirtualFile, List<Hash>> commits) {
+    return null;
+  }
 }

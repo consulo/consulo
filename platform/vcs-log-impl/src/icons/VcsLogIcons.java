@@ -17,6 +17,7 @@ public class VcsLogIcons {
   public static final SwingImageRef CollapseMerges = load("/icons/CollapseMerges.png"); // 16x16
   public static final SwingImageRef ExpandBranches = load("/icons/ExpandBranches.png"); // 16x16
   public static final SwingImageRef ExpandMerges = load("/icons/ExpandMerges.png"); // 16x16
+  public static final SwingImageRef GearWithDropDown = load("/icons/GearWithDropDown.png"); // 21x21
   public static final SwingImageRef IntelliSort = load("/icons/IntelliSort.png"); // 16x16
 
   public static class Process {

@@ -413,6 +413,14 @@ public class ScrollingUtil {
     }
   }
 
+
+  public static boolean isVisible(JTable table, int row) {
+    Rectangle visibleRect = table.getVisibleRect();
+    int start = getLeadingRow(table, visibleRect);
+    int end = getTrailingRow(table, visibleRect);
+    return row >= start && row <= end;
+  }
+
   public static int getReadableRow(JTable table, int maximumHiddenPart) {
     Rectangle visibleRect = table.getVisibleRect();
     Point leadingPoint = getLeadingPoint(table, visibleRect);

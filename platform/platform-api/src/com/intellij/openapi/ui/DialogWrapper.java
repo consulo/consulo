@@ -26,6 +26,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -35,6 +36,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.ColorUtil;
@@ -89,6 +91,8 @@ public abstract class DialogWrapper {
       return null;
     }
   }
+
+  private static final Logger LOGGER = Logger.getInstance(DialogWrapper.class);
 
   /**
    * The default exit code for "OK" action.
@@ -868,6 +872,29 @@ public abstract class DialogWrapper {
     }
   }
 
+  public static void cleanupRootPane(@Nullable JRootPane rootPane) {
+    if (rootPane == null) return;
+    // Must be preserved:
+    //   Component#appContext, Component#appContext, Container#component
+    //   JRootPane#contentPane due to popup recycling & our border styling
+    // Must be cleared:
+    //   JComponent#clientProperties, contentPane children
+    RepaintManager.currentManager(rootPane).removeInvalidComponent(rootPane);
+    unregisterKeyboardActions(rootPane);
+    Container contentPane = rootPane.getContentPane();
+    if (contentPane != null) contentPane.removeAll();
+    if (rootPane.getGlassPane() instanceof IdeGlassPane && rootPane.getClass() == JRootPane.class) {
+      rootPane.setGlassPane(new JPanel()); // resizeable AbstractPopup but not DialogWrapperPeer
+    }
+    Disposer.clearOwnFields(rootPane, field -> {
+      String clazz = field.getDeclaringClass().getName();
+      // keep AWT and Swing fields intact, except some
+      if (!clazz.startsWith("java.") && !clazz.startsWith("javax.")) return true;
+      String name = field.getName();
+      return "clientProperties".equals(name);
+    });
+  }
+
   public static void unregisterKeyboardActions(final JRootPane rootPane) {
     new AwtVisitor(rootPane) {
       @Override
@@ -897,6 +924,17 @@ public abstract class DialogWrapper {
     };
   }
 
+  public static void cleanupWindowListeners(@Nullable Window window) {
+    if (window == null) return;
+    SwingUtilities.invokeLater(() -> {
+      for (WindowListener listener : window.getWindowListeners()) {
+        if (listener.getClass().getName().startsWith("com.intellij.")) {
+          LOGGER.warn("Stale listener: " + listener);
+          window.removeWindowListener(listener);
+        }
+      }
+    });
+  }
 
   /**
    * This method is invoked by default implementation of "Cancel" action. It just closes dialog

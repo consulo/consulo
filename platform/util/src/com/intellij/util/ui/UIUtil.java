@@ -3155,6 +3155,20 @@ public class UIUtil {
     }
   }
 
+  /**
+   * Adds an empty border with the specified insets to the specified component.
+   * If the component already has a border it will be preserved.
+   *
+   * @param component the component to which border added
+   * @param top       the inset from the top
+   * @param left      the inset from the left
+   * @param bottom    the inset from the bottom
+   * @param right     the inset from the right
+   */
+  public static void addInsets(@NotNull JComponent component, int top, int left, int bottom, int right) {
+    addBorder(component, BorderFactory.createEmptyBorder(top, left, bottom, right));
+  }
+
   public static void addInsets(@NotNull JComponent component, @NotNull Insets insets) {
     if (component.getBorder() != null) {
       component.setBorder(new CompoundBorder(new EmptyBorder(insets), component.getBorder()));

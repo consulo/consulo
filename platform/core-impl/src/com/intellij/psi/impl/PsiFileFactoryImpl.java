@@ -26,6 +26,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.DummyHolder;
 import com.intellij.psi.impl.source.DummyHolderFactory;
@@ -117,8 +118,10 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
                                     @NotNull CharSequence text,
                                     boolean physical,
                                     boolean markAsCopy,
-                                    boolean noSizeLimit) {
+                                    boolean noSizeLimit,
+                                    @Nullable VirtualFile original) {
     LightVirtualFile virtualFile = new LightVirtualFile(name, languageVersion.getLanguage(), text);
+    if (original != null) virtualFile.setOriginalFile(original);
     virtualFile.putUserData(LanguageVersion.KEY, languageVersion);
     if (noSizeLimit) {
       SingleRootFileViewProvider.doNotCheckFileSizeLimit(virtualFile);

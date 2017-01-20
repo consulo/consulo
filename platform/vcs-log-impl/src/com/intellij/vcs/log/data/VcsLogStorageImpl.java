@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,18 @@ package com.intellij.vcs.log.data;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.CommonProcessors;
-import com.intellij.util.Consumer;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.io.PersistentEnumeratorBase;
 import com.intellij.vcs.log.*;
+import com.intellij.vcs.log.impl.FatalErrorHandler;
 import com.intellij.vcs.log.impl.HashImpl;
 import com.intellij.vcs.log.impl.VcsRefImpl;
 import com.intellij.vcs.log.util.PersistentUtil;
@@ -51,19 +52,20 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
   @NotNull private static final String REFS_STORAGE = "refs";
   @NotNull public static final VcsLogStorage EMPTY = new EmptyLogStorage();
 
-  private static final int VERSION = 5;
+  public static final int VERSION = 5;
+  private static final int REFS_VERSION = 1;
   @NotNull private static final String ROOT_STORAGE_KIND = "roots";
-  private static final int ROOTS_STORAGE_VERSION = 0;
 
   public static final int NO_INDEX = -1;
 
   @NotNull private final PersistentEnumeratorBase<CommitId> myCommitIdEnumerator;
   @NotNull private final PersistentEnumeratorBase<VcsRef> myRefsEnumerator;
-  @NotNull private final Consumer<Exception> myExceptionReporter;
+  @NotNull private final FatalErrorHandler myExceptionReporter;
+  private volatile boolean myDisposed = false;
 
   public VcsLogStorageImpl(@NotNull Project project,
                            @NotNull Map<VirtualFile, VcsLogProvider> logProviders,
-                           @NotNull Consumer<Exception> exceptionReporter,
+                           @NotNull FatalErrorHandler exceptionReporter,
                            @NotNull Disposable parent) throws IOException {
     myExceptionReporter = exceptionReporter;
 
@@ -74,11 +76,12 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
     MyCommitIdKeyDescriptor commitIdKeyDescriptor = new MyCommitIdKeyDescriptor(roots);
     myCommitIdEnumerator = PersistentUtil.createPersistentEnumerator(commitIdKeyDescriptor, HASHES_STORAGE, logId, VERSION);
     myRefsEnumerator =
-      PersistentUtil.createPersistentEnumerator(new VcsRefKeyDescriptor(logProviders, commitIdKeyDescriptor), REFS_STORAGE, logId, VERSION);
+            PersistentUtil.createPersistentEnumerator(new VcsRefKeyDescriptor(logProviders, commitIdKeyDescriptor), REFS_STORAGE, logId,
+                                                      VERSION + REFS_VERSION);
 
     // cleanup old root storages, to remove after 2016.3 release
     PersistentUtil
-      .cleanupOldStorageFile(ROOT_STORAGE_KIND, project.getName() + "." + project.getBaseDir().getPath().hashCode(), ROOTS_STORAGE_VERSION);
+            .cleanupOldStorageFile(ROOT_STORAGE_KIND, project.getName() + "." + project.getBaseDir().getPath().hashCode());
 
     Disposer.register(parent, this);
   }
@@ -94,11 +97,12 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
 
   @Override
   public int getCommitIndex(@NotNull Hash hash, @NotNull VirtualFile root) {
+    checkDisposed();
     try {
       return getOrPut(hash, root);
     }
     catch (IOException e) {
-      myExceptionReporter.consume(e);
+      myExceptionReporter.consume(this, e);
     }
     return NO_INDEX;
   }
@@ -106,15 +110,16 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
   @Override
   @Nullable
   public CommitId getCommitId(int commitIndex) {
+    checkDisposed();
     try {
       CommitId commitId = doGetCommitId(commitIndex);
       if (commitId == null) {
-        myExceptionReporter.consume(new RuntimeException("Unknown commit index: " + commitIndex));
+        myExceptionReporter.consume(this, new RuntimeException("Unknown commit index: " + commitIndex));
       }
       return commitId;
     }
     catch (IOException e) {
-      myExceptionReporter.consume(e);
+      myExceptionReporter.consume(this, e);
     }
     return null;
   }
@@ -122,6 +127,7 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
   @Override
   @Nullable
   public CommitId findCommitId(@NotNull final Condition<CommitId> condition) {
+    checkDisposed();
     try {
       final Ref<CommitId> hashRef = Ref.create();
       myCommitIdEnumerator.iterateData(new CommonProcessors.FindProcessor<CommitId>() {
@@ -137,18 +143,19 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
       return hashRef.get();
     }
     catch (IOException e) {
-      myExceptionReporter.consume(e);
+      myExceptionReporter.consume(this, e);
       return null;
     }
   }
 
   @Override
   public int getRefIndex(@NotNull VcsRef ref) {
+    checkDisposed();
     try {
       return myRefsEnumerator.enumerate(ref);
     }
     catch (IOException e) {
-      myExceptionReporter.consume(e);
+      myExceptionReporter.consume(this, e);
     }
     return NO_INDEX;
   }
@@ -156,16 +163,18 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
   @Nullable
   @Override
   public VcsRef getVcsRef(int refIndex) {
+    checkDisposed();
     try {
       return myRefsEnumerator.valueOf(refIndex);
     }
     catch (IOException e) {
-      myExceptionReporter.consume(e);
+      myExceptionReporter.consume(this, e);
       return null;
     }
   }
 
   public void flush() {
+    checkDisposed();
     myCommitIdEnumerator.force();
     myRefsEnumerator.force();
   }
@@ -173,12 +182,17 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
   @Override
   public void dispose() {
     try {
+      myDisposed = true;
       myCommitIdEnumerator.close();
       myRefsEnumerator.close();
     }
     catch (IOException e) {
       LOG.warn(e);
     }
+  }
+
+  private void checkDisposed() {
+    if (myDisposed) throw new ProcessCanceledException();
   }
 
   private static class MyCommitIdKeyDescriptor implements KeyDescriptor<CommitId> {
@@ -265,10 +279,7 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
 
     @Override
     public int getHashCode(@NotNull VcsRef value) {
-      int result = new CommitId(value.getCommitHash(), value.getRoot()).hashCode();
-      result = 31 * result + value.getName().hashCode();
-      result = 31 * result + value.getType().hashCode();
-      return result;
+      return value.hashCode();
     }
 
     @Override

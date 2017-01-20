@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,11 +44,11 @@ import java.net.URL;
  * Created by Denis Fokin
  */
 public class SheetController {
+
+  private static final KeyStroke VK_ESC_KEYSTROKE = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+
   private static final Logger LOG = Logger.getInstance(SheetController.class);
   private static final int SHEET_MINIMUM_HEIGHT = 143;
-  private static final String fontName = "Lucida Grande";
-  private static final Font regularFont = new Font(fontName, Font.PLAIN, 10);
-  private static final Font boldFont = new Font(fontName, Font.BOLD, 12).deriveFont(Font.BOLD);
   private final DialogWrapper.DoNotAskOption myDoNotAskOption;
   private boolean myDoNotAskResult;
 
@@ -184,15 +184,11 @@ public class SheetController {
   }
 
   void requestFocus() {
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(new Runnable() {
-      @Override
-      public void run() {
-        if (myFocusedComponent != null) {
-          myFocusedComponent.requestFocus();
-        }
-        else {
-          LOG.debug("My focused component is null for the next message: " + messageTextPane.getText());
-        }
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+      if (myFocusedComponent != null) {
+        myFocusedComponent.requestFocus();
+      } else {
+        LOG.debug("My focused component is null for the next message: " + messageTextPane.getText());
       }
     });
   }
@@ -212,7 +208,7 @@ public class SheetController {
     };
 
     mySheetPanel.registerKeyboardAction(actionListener,
-                                        KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                                        VK_ESC_KEYSTROKE,
                                         JComponent.WHEN_IN_FOCUSED_WINDOW);
 
     for (JButton button: buttons) {
@@ -266,7 +262,7 @@ public class SheetController {
 
 
     headerLabel.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-    headerLabel.setFont(boldFont);
+    headerLabel.setFont(UIUtil.getLabelFont().deriveFont(Font.BOLD));
     headerLabel.setEditable(false);
 
     headerLabel.setContentType("text/html");
@@ -282,7 +278,8 @@ public class SheetController {
     headerLabel.repaint();
 
     messageTextPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-    messageTextPane.setFont(regularFont);
+    Font font = UIUtil.getLabelFont(UIUtil.FontSize.SMALL);
+    messageTextPane.setFont(font);
     messageTextPane.setEditable(false);
 
     messageTextPane.setContentType("text/html");
@@ -300,10 +297,7 @@ public class SheetController {
                 LOG.warn("URL is null; HyperlinkEvent: " + he.toString());
               }
             }
-            catch (IOException e) {
-              LOG.error(e);
-            }
-            catch (URISyntaxException e) {
+            catch (IOException | URISyntaxException e) {
               LOG.error(e);
             }
           }
@@ -311,7 +305,7 @@ public class SheetController {
       }
     });
 
-    FontMetrics fontMetrics = sheetPanel.getFontMetrics(regularFont);
+    FontMetrics fontMetrics = sheetPanel.getFontMetrics(font);
 
     int widestWordWidth = 250;
 
@@ -480,6 +474,8 @@ public class SheetController {
 
     g.dispose();
 
+    myOffScreenFrame.remove(mySheetPanel);
+
     myOffScreenFrame.dispose();
     return image;
   }
@@ -493,7 +489,7 @@ public class SheetController {
   }
 
   public void dispose() {
-    mySheetPanel.unregisterKeyboardAction(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+    mySheetPanel.unregisterKeyboardAction(VK_ESC_KEYSTROKE);
     mySheetMessage = null;
   }
 }

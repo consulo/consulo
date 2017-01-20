@@ -19,7 +19,6 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.ShutDownTracker;
-import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.io.*;
@@ -39,7 +38,7 @@ public class SharedIndicesData {
   static final boolean ourFileSharedIndicesEnabled = SystemProperties.getBooleanProperty("idea.shared.input.index.enabled", false);
   static final boolean DO_CHECKS = ourFileSharedIndicesEnabled && SystemProperties.getBooleanProperty("idea.shared.input.index.checked", false);
 
-  private static final Logger LOG = Logger.getInstance("#com.intellij.util.indexing.MapReduceIndex");
+  private static final Logger LOG = Logger.getInstance("#com.intellij.util.indexing.impl.MapReduceIndex");
 
   static {
     if (ourFileSharedIndicesEnabled) {
@@ -104,12 +103,8 @@ public class SharedIndicesData {
     }
 
     static IndexedStateMap createMap(final File indexFile) throws IOException {
-      return IOUtil.openCleanOrResetBroken(new ThrowableComputable<IndexedStateMap, IOException>() {
-        @Override
-        public IndexedStateMap compute() throws IOException {
-          return new IndexedStateMap(indexFile);
-        }
-      }, indexFile);
+      return IOUtil.openCleanOrResetBroken(
+              () -> new IndexedStateMap(indexFile), indexFile);
     }
   }
 
@@ -195,9 +190,9 @@ public class SharedIndicesData {
         //noinspection IOResourceOpenedButNotSafelyClosed
         UnsyncByteArrayOutputStream compactedOutputStream = new UnsyncByteArrayOutputStream(values.length);
         //noinspection IOResourceOpenedButNotSafelyClosed
-        final DataOutput compactedOutput = new DataOutputStream(compactedOutputStream);
+        DataOutput compactedOutput = new DataOutputStream(compactedOutputStream);
 
-        final Ref<IOException> ioExceptionRef = new Ref<IOException>();
+        Ref<IOException> ioExceptionRef = new Ref<>();
 
         boolean result = indexId2NewState == null || indexId2NewState.forEachEntry(new TIntObjectProcedure<byte[]>() {
           @Override
@@ -255,7 +250,7 @@ public class SharedIndicesData {
       if (buffer == null) {
         if (indexId2NewState != null) indexId2NewState.remove(indexUniqueId);
       } else {
-        if (indexId2NewState == null) indexId2NewState = new TIntObjectHashMap<byte[]>();
+        if (indexId2NewState == null) indexId2NewState = new TIntObjectHashMap<>();
         indexId2NewState.put(indexUniqueId, Arrays.copyOf(buffer, size));
       }
     }
@@ -370,7 +365,7 @@ public class SharedIndicesData {
       savedKeysData = null;
     }
 
-    final FileAccessorCache.Handle<IndexedState> stateHandle = index.myStateCache.getIfCached(id);
+    FileAccessorCache.Handle<IndexedState> stateHandle = index.myStateCache.getIfCached(id);
 
     try {
       index.appendData(id, new PersistentHashMap.ValueDataAppender() {

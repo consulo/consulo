@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     final Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
     init(project, scrollPane, getPreferredFocusableComponent(), true, true, true, null,
-         false, aStep.getTitle(), null, true, null, false, null, null, null, false, null, true, false, true, null, 0f,
+         isResizable(), aStep.getTitle(), null, true, null, false, null, null, null, false, null, true, false, true, null, 0f,
          null, true, false, new Component[0], null, SwingConstants.LEFT, true, Collections.<Pair<ActionListener, KeyStroke>>emptyList(),
          null, null, false, true, true, true, null);
 
@@ -177,15 +177,19 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
     LOG.assertTrue (!isDisposed());
 
     Rectangle targetBounds = new Rectangle(new Point(aScreenX, aScreenY), getContent().getPreferredSize());
-    ScreenUtil.moveRectangleToFitTheScreen(targetBounds);
 
     if (getParent() != null) {
       final Rectangle parentBounds = getParent().getBounds();
       parentBounds.x += STEP_X_PADDING;
       parentBounds.width -= STEP_X_PADDING * 2;
+      ScreenUtil.moveToFit(targetBounds, ScreenUtil.getScreenRectangle(
+              parentBounds.x + parentBounds.width / 2,
+              parentBounds.y + parentBounds.height / 2), null);
       if (parentBounds.intersects(targetBounds)) {
         targetBounds.x = getParent().getBounds().x - targetBounds.width - STEP_X_PADDING;
       }
+    } else {
+      ScreenUtil.moveToFit(targetBounds, ScreenUtil.getScreenRectangle(aScreenX + 1, aScreenY + 1), null);
     }
 
     if (getParent() == null) {
@@ -287,8 +291,11 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
     return new MyContainer(resizable, border, isToDrawMacCorner);
   }
 
-  private static class MyContainer extends MyContentPanel {
+  protected boolean isResizable() {
+    return false;
+  }
 
+  private class MyContainer extends MyContentPanel {
     private MyContainer(final boolean resizable, final PopupBorder border, final boolean drawMacCorner) {
       super(resizable, border, drawMacCorner);
       setOpaque(true);
@@ -303,16 +310,18 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
         p = focusOwner.getLocationOnScreen();
       }
 
-      return computeNotBiggerDimension(super.getPreferredSize().getSize(), p);
+      Dimension size = WizardPopup.this.getSize();
+      boolean isEmpty = size == null || size.height <= 1 && size.width <= 1;
+      return isEmpty ? computeNotBiggerDimension(super.getPreferredSize().getSize(), p) : size;
     }
 
-    private static Dimension computeNotBiggerDimension(Dimension ofContent, final Point locationOnScreen) {
+    private Dimension computeNotBiggerDimension(Dimension ofContent, final Point locationOnScreen) {
       int resultHeight = ofContent.height > MAX_SIZE.height + 50 ? MAX_SIZE.height : ofContent.height;
       if (locationOnScreen != null) {
         final Rectangle r = ScreenUtil.getScreenRectangle(locationOnScreen);
         resultHeight = ofContent.height > r.height - (r.height / 4) ? r.height - (r.height / 4) : ofContent.height;
       }
-      
+
       int resultWidth = ofContent.width > MAX_SIZE.width ? MAX_SIZE.width : ofContent.width;
 
       if (ofContent.height > MAX_SIZE.height) {
@@ -333,7 +342,9 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
   public final boolean dispatch(KeyEvent event) {
     if (event.getID() != KeyEvent.KEY_PRESSED && event.getID() != KeyEvent.KEY_RELEASED) {
-      return false;
+      // do not dispatch these events to Swing
+      event.consume();
+      return true;
     }
 
     if (event.getID() == KeyEvent.KEY_PRESSED) {

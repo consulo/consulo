@@ -16,15 +16,16 @@
 package com.intellij.psi;
 
 import com.intellij.lang.Language;
-import consulo.lang.LanguageVersion;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.DeprecationInfo;
+import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.DeprecationInfo;
 
 /**
  * @author max
@@ -102,12 +103,23 @@ public abstract class PsiFileFactory {
                                              boolean noSizeLimit);
 
   @Nullable
+  public PsiFile createFileFromText(@NotNull String name,
+                                             @NotNull LanguageVersion languageVersion,
+                                             @NotNull CharSequence text,
+                                             boolean physical,
+                                             boolean markAsCopy,
+                                             boolean noSizeLimit) {
+    return createFileFromText(name, languageVersion, text, physical, markAsCopy, noSizeLimit, null);
+  }
+
+  @Nullable
   public abstract PsiFile createFileFromText(@NotNull String name,
                                              @NotNull LanguageVersion languageVersion,
                                              @NotNull CharSequence text,
                                              boolean physical,
                                              boolean markAsCopy,
-                                             boolean noSizeLimit);
+                                             boolean noSizeLimit,
+                                             @Nullable VirtualFile original);
 
   public abstract PsiFile createFileFromText(FileType fileType, String fileName, CharSequence chars, int startOffset, int endOffset);
 

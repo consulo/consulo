@@ -18,7 +18,6 @@ package com.intellij.vcs.log.data;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsLogFilterCollection;
-import com.intellij.vcs.log.VcsLogStorage;
 import com.intellij.vcs.log.VcsLogProvider;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.graph.GraphColorManagerImpl;
@@ -42,7 +41,7 @@ public class FakeVisiblePackBuilder {
 
   @NotNull
   public VisiblePack build(@NotNull VisiblePack visiblePack) {
-    if (visiblePack.getVisibleGraph() instanceof VisibleGraphImpl) {
+    if (visiblePack.getVisibleGraph() instanceof VisibleGraphImpl && visiblePack.getVisibleGraph().getVisibleCommitCount() > 0) {
       return build(visiblePack.getDataPack(), ((VisibleGraphImpl<Integer>)visiblePack.getVisibleGraph()), visiblePack.getFilters());
     }
     else {
@@ -64,10 +63,10 @@ public class FakeVisiblePackBuilder {
     DataPackBase newPack = new DataPackBase(oldPack.getLogProviders(), newRefsModel, false);
 
     GraphColorManagerImpl colorManager =
-      new GraphColorManagerImpl(newRefsModel, DataPack.createHashGetter(myHashMap), DataPack.getRefManagerMap(oldPack.getLogProviders()));
+            new GraphColorManagerImpl(newRefsModel, DataPack.createHashGetter(myHashMap), DataPack.getRefManagerMap(oldPack.getLogProviders()));
 
     VisibleGraph<Integer> newGraph =
-      new VisibleGraphImpl<>(new CollapsedController(new BaseController(info), info, null), info, colorManager);
+            new VisibleGraphImpl<>(new CollapsedController(new BaseController(info), info, null), info, colorManager);
 
     return new VisiblePack(newPack, newGraph, true, filters);
   }

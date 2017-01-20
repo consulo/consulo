@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
 
   @NotNull protected final Repo myCurrentRepository;
   @NotNull protected final ListPopupImpl myPopup;
+  @NotNull protected final String myRepoTitleInfo;
 
   protected DvcsBranchPopup(@NotNull Repo currentRepository,
                             @NotNull AbstractRepositoryManager<Repo> repositoryManager,
@@ -60,14 +61,17 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     myVcs = currentRepository.getVcs();
     myVcsSettings = vcsSettings;
     myMultiRootBranchConfig = multiRootBranchConfig;
-    String title = createPopupTitle(currentRepository);
-    myPopup = new BranchActionGroupPopup(title, myProject, preselectActionCondition, createActions());
+    String title = myVcs.getDisplayName() + " Branches";
+    myRepoTitleInfo = (myRepositoryManager.moreThanOneRoot() && myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC)
+                      ? " in " + DvcsUtil.getShortRepositoryName(currentRepository) : "";
+    myPopup = new BranchActionGroupPopup(title + myRepoTitleInfo, myProject, preselectActionCondition, createActions());
 
     initBranchSyncPolicyIfNotInitialized();
     setCurrentBranchInfo();
     warnThatBranchesDivergedIfNeeded();
   }
 
+  @NotNull
   public ListPopup asListPopup() {
     return myPopup;
   }
@@ -84,15 +88,6 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     }
   }
 
-  @NotNull
-  private String createPopupTitle(@NotNull Repo currentRepository) {
-    String title = myVcs.getDisplayName() + " Branches";
-    if (myRepositoryManager.moreThanOneRoot() && myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC) {
-      title += " in " + DvcsUtil.getShortRepositoryName(currentRepository);
-    }
-    return title;
-  }
-
   protected void setCurrentBranchInfo() {
     String branchText = "Current branch : ";
     myPopup.setAdText(branchText + myCurrentRepository.getCurrentBranchName(), SwingConstants.CENTER);
@@ -100,10 +95,10 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
 
   private void notifyAboutSyncedBranches() {
     String description =
-      "You have several " + myVcs.getDisplayName() + " roots in the project and they all are checked out at the same branch. " +
-      "We've enabled synchronous branch control for the project. <br/>" +
-      "If you wish to control branches in different roots separately, " +
-      "you may <a href='settings'>disable</a> the setting.";
+            "You have several " + myVcs.getDisplayName() + " roots in the project and they all are checked out at the same branch. " +
+            "We've enabled synchronous branch control for the project. <br/>" +
+            "If you wish to control branches in different roots separately, " +
+            "you may <a href='settings'>disable</a> the setting.";
     NotificationListener listener = new NotificationListener() {
       @Override
       public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
@@ -147,12 +142,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
   @NotNull
   protected List<Repo> filterRepositoriesNotOnThisBranch(@NotNull final String branch,
                                                          @NotNull List<Repo> allRepositories) {
-    return ContainerUtil.filter(allRepositories, new Condition<Repo>() {
-      @Override
-      public boolean value(Repo repository) {
-        return !branch.equals(repository.getCurrentBranchName());
-      }
-    });
+    return ContainerUtil.filter(allRepositories, repository -> !branch.equals(repository.getCurrentBranchName()));
   }
 
   private void warnThatBranchesDivergedIfNeeded() {
@@ -170,4 +160,10 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
 
   protected abstract void fillPopupWithCurrentRepositoryActions(@NotNull DefaultActionGroup popupGroup,
                                                                 @Nullable DefaultActionGroup actions);
+
+  public static class MyMoreIndex {
+    public static final int MAX_REPO_NUM = 8;
+    public static final int DEFAULT_REPO_NUM = 5;
+    public static final int MAX_BRANCH_NUM = 8;
+  }
 }

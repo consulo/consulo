@@ -21,6 +21,7 @@ package com.intellij.util.messages.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.util.SmartFMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.MessageHandler;
@@ -57,7 +58,6 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public <L> void subscribe(@NotNull Topic<L> topic) throws IllegalStateException {
     if (myDefaultHandler == null) {
       throw new IllegalStateException("Connection must have default handler installed prior to any anonymous subscriptions. "
@@ -68,6 +68,7 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
                                       topic.getListenerClass() + "', actual: '" + myDefaultHandler.getClass() + "'");
     }
 
+    //noinspection unchecked
     subscribe(topic, (L)myDefaultHandler);
   }
 
@@ -77,7 +78,7 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
   }
 
   @Override
-  public void disconnect() {
+  public void dispose() {
     Queue<Message> jobs = myPendingMessages.get();
     myPendingMessages.remove();
     myBus.notifyConnectionTerminated(this);
@@ -87,8 +88,8 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
   }
 
   @Override
-  public void dispose() {
-    disconnect();
+  public void disconnect() {
+    Disposer.dispose(this);
   }
 
   @Override
@@ -133,14 +134,24 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
     }
   }
 
-  void scheduleMessageDelivery(Message message) {
+  void scheduleMessageDelivery(@NotNull Message message) {
     myPendingMessages.get().offer(message);
+  }
+
+  boolean containsMessage(@NotNull Topic topic) {
+    for (Message message : myPendingMessages.get()) {
+      if (message.getTopic() == topic) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public String toString() {
     return mySubscriptions.toString();
   }
 
+  @NotNull
   MessageBusImpl getBus() {
     return myBus;
   }

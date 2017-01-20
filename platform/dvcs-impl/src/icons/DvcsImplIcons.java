@@ -13,4 +13,7 @@ public class DvcsImplIcons {
   }
 
   public static final SwingImageRef CherryPick = load("/icons/cherryPick.png"); // 16x16
+  public static final SwingImageRef Favorite = load("/icons/favorite.png"); // 16x16
+  public static final SwingImageRef FavoriteOnHover = load("/icons/favoriteOnHover.png"); // 16x16
+  public static final SwingImageRef NotFavoriteOnHover = load("/icons/notFavoriteOnHover.png"); // 16x16
 }

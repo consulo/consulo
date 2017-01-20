@@ -621,6 +621,7 @@ public class AllIcons {
 
     public static final SwingImageRef NoNotifications13 = IconLoader.getIcon("/ide/noNotifications13.png"); // 13x13
     public static final SwingImageRef Notifications = IconLoader.getIcon("/ide/notifications.png"); // 16x16
+    public static final SwingImageRef OutgoingChangesOn = IconLoader.getIcon("/ide/outgoingChangesOn.png"); // 16x16
     public static final SwingImageRef Pipette = IconLoader.getIcon("/ide/pipette.png"); // 16x16
     public static final SwingImageRef Pipette_rollover = IconLoader.getIcon("/ide/pipette_rollover.png"); // 16x16
     public static final SwingImageRef Rating = IconLoader.getIcon("/ide/rating.png"); // 11x11

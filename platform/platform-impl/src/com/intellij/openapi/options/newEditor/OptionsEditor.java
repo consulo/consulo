@@ -35,6 +35,7 @@ import com.intellij.openapi.options.ex.GlassPanel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.text.StringUtil;
@@ -66,6 +67,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.List;
 
@@ -1030,7 +1032,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       }
     }
 
-    Disposer.clearOwnFields(this);
+    Disposer.clearOwnFields(this, Conditions.<Field>alwaysTrue());
   }
 
   public OptionsEditorContext getContext() {

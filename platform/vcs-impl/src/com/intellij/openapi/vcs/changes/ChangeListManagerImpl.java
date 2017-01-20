@@ -816,14 +816,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     }
   }
 
-  @NotNull
-  public Couple<Integer> getIgnoredFilesSize() {
-    synchronized (myDataLock) {
-      IgnoredFilesCompositeHolder ignoredFileHolder = myComposite.getIgnoredFileHolder();
-      return Couple.of(ignoredFileHolder.getFilesNum(), ignoredFileHolder.getDirNum());
-    }
-  }
-
   boolean isIgnoredInUpdateMode() {
     return myComposite.getIgnoredFileHolder().isInUpdatingMode();
   }

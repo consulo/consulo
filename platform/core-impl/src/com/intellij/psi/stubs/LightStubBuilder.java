@@ -127,9 +127,6 @@ public class LightStubBuilder implements StubBuilder {
       while (!parents.isEmpty()) {
         parent = parents.pop();
         childNumber = childNumbers.pop();
-        if (children != null && children.size() > 0) {
-          tree.disposeChildren(children);
-        }
         children = kinderGarden.pop();
         parentStub = parentStubs.pop();
         immediateParentStubbed = parentsStubbed.pop();

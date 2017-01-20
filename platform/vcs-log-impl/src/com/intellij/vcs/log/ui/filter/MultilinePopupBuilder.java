@@ -33,6 +33,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.textCompletion.DefaultTextCompletionValueDescriptor;
 import com.intellij.util.textCompletion.TextFieldWithCompletion;
 import com.intellij.util.textCompletion.ValuesCompletionProvider.ValuesCompletionProviderDumbAware;
+import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +41,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.util.Collection;
+import java.util.*;
+import java.util.List;
 
 class MultilinePopupBuilder {
   private static final char[] SEPARATORS = {'|', '\n'};
@@ -60,14 +62,14 @@ class MultilinePopupBuilder {
                                                  boolean supportsNegativeValues,
                                                  @NotNull String initialValue) {
     TextFieldWithCompletion textField =
-      new TextFieldWithCompletion(project, new MyCompletionProvider(values, supportsNegativeValues), initialValue, false, true, false) {
-        @Override
-        protected EditorEx createEditor() {
-          EditorEx editor = super.createEditor();
-          SoftWrapsEditorCustomization.ENABLED.customize(editor);
-          return editor;
-        }
-      };
+            new TextFieldWithCompletion(project, new MyCompletionProvider(values, supportsNegativeValues), initialValue, false, true, false) {
+              @Override
+              protected EditorEx createEditor() {
+                EditorEx editor = super.createEditor();
+                SoftWrapsEditorCustomization.ENABLED.customize(editor);
+                return editor;
+              }
+            };
     textField.setBorder(new CompoundBorder(JBUI.Borders.empty(2), textField.getBorder()));
     return textField;
   }
@@ -77,14 +79,14 @@ class MultilinePopupBuilder {
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(myTextField, BorderLayout.CENTER);
     ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(panel, myTextField)
-      .setCancelOnClickOutside(true)
-      .setAdText(KeymapUtil.getShortcutsText(CommonShortcuts.CTRL_ENTER.getShortcuts()) + " to finish")
-      .setRequestFocus(true)
-      .setResizable(true)
-      .setMayBeParent(true);
+            .setCancelOnClickOutside(true)
+            .setAdText(KeymapUtil.getShortcutsText(CommonShortcuts.CTRL_ENTER.getShortcuts()) + " to finish")
+            .setRequestFocus(true)
+            .setResizable(true)
+            .setMayBeParent(true);
 
     final JBPopup popup = builder.createPopup();
-    popup.setMinimumSize(new Dimension(200, 90));
+    popup.setMinimumSize(new JBDimension(200, 90));
     AnAction okAction = new DumbAwareAction() {
       @Override
       public void actionPerformed(@NotNull AnActionEvent e) {
@@ -97,7 +99,7 @@ class MultilinePopupBuilder {
   }
 
   @NotNull
-  Collection<String> getSelectedValues() {
+  List<String> getSelectedValues() {
     return ContainerUtil.mapNotNull(StringUtil.tokenize(myTextField.getText(), new String(SEPARATORS)), value -> {
       String trimmed = value.trim();
       return trimmed.isEmpty() ? null : trimmed;

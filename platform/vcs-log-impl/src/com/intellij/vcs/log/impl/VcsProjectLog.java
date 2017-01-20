@@ -15,6 +15,7 @@
  */
 package com.intellij.vcs.log.impl;
 
+import com.intellij.ide.caches.CachesInvalidator;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
@@ -31,6 +32,7 @@ import com.intellij.vcs.log.data.VcsLogData;
 import com.intellij.vcs.log.data.VcsLogTabsProperties;
 import com.intellij.vcs.log.ui.VcsLogPanel;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +42,7 @@ import java.util.Collection;
 
 public class VcsProjectLog {
   public static final Topic<ProjectLogListener> VCS_PROJECT_LOG_CHANGED =
-    Topic.create("Project Vcs Log Created or Disposed", ProjectLogListener.class);
+          Topic.create("Project Vcs Log Created or Disposed", ProjectLogListener.class);
   @NotNull private final Project myProject;
   @NotNull private final MessageBus myMessageBus;
   @NotNull private final VcsLogTabsProperties myUiProperties;
@@ -69,7 +71,7 @@ public class VcsProjectLog {
 
   @NotNull
   public JComponent initMainLog(@NotNull String contentTabName) {
-    myUi = myLogManager.getValue().createLogUi(VcsLogTabsProperties.MAIN_LOG_ID, contentTabName);
+    myUi = myLogManager.getValue().createLogUi(VcsLogTabsProperties.MAIN_LOG_ID, contentTabName, null);
     return new VcsLogPanel(myLogManager.getValue(), myUi);
   }
 
@@ -111,7 +113,10 @@ public class VcsProjectLog {
       logManager.scheduleInitialization();
     }
     else if (PostponableLogRefresher.keepUpToDate()) {
-      HeavyAwareExecutor.executeOutOfHeavyProcessLater(logManager::scheduleInitialization, 5000);
+      VcsLogCachesInvalidator invalidator = CachesInvalidator.EP_NAME.findExtension(VcsLogCachesInvalidator.class);
+      if (invalidator.isValid()) {
+        HeavyAwareExecutor.executeOutOfHeavyProcessLater(logManager::scheduleInitialization, 5000);
+      }
     }
   }
 
