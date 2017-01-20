@@ -16,6 +16,8 @@
 package consulo.vfs.impl.archive;
 
 import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -26,6 +28,7 @@ import com.intellij.openapi.vfs.newvfs.VfsImplUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
+import consulo.fileTypes.ArchiveFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,6 +50,11 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
     myProtocol = protocol;
     boolean noCopy = SystemProperties.getBooleanProperty("idea.jars.nocopy", !SystemInfo.isWindows);
     myNoCopyJarPaths = noCopy ? null : ContainerUtil.newConcurrentSet(FileUtil.PATH_HASHING_STRATEGY);
+  }
+
+  public boolean isMyFile(@NotNull VirtualFile local) {
+    FileType fileType = FileTypeRegistry.getInstance().getFileTypeByFileName(local.getName());
+    return fileType instanceof ArchiveFileType && ((ArchiveFileType)fileType).getFileSystem() == this;
   }
 
   @NotNull

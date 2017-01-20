@@ -38,6 +38,7 @@ public class URLUtil {
   public static final String SCHEME_SEPARATOR = "://";
   public static final String FILE_PROTOCOL = "file";
   public static final String HTTP_PROTOCOL = "http";
+  @Deprecated
   public static final String JAR_PROTOCOL = "jar";
   public static final String ARCHIVE_SEPARATOR = "!/";
   @Deprecated

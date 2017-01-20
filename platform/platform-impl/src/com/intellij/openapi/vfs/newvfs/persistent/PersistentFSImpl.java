@@ -16,13 +16,10 @@
 package com.intellij.openapi.vfs.newvfs.persistent;
 
 import com.intellij.concurrency.JobSchedulerImpl;
-import consulo.fileTypes.ArchiveFileType;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.util.ShutDownTracker;
@@ -30,7 +27,6 @@ import com.intellij.openapi.util.io.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
-import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.newvfs.*;
 import com.intellij.openapi.vfs.newvfs.events.*;
 import com.intellij.openapi.vfs.newvfs.impl.*;
@@ -41,6 +37,7 @@ import com.intellij.util.containers.EmptyIntHashSet;
 import com.intellij.util.io.ReplicatorInputStream;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBus;
+import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import gnu.trove.*;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -847,8 +844,8 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
     if (root != null) return root;
 
     String rootName;
-    if (fs instanceof ArchiveFileSystem) {
-      VirtualFile localFile = findLocalByRootPath(basePath, fs);
+    if (fs instanceof ArchiveFileSystemBase) {
+      VirtualFile localFile = findLocalByRootPath(basePath, (ArchiveFileSystemBase)fs);
       if (localFile == null) return null;
       rootName = localFile.getName();
     }
@@ -914,16 +911,10 @@ public class PersistentFSImpl extends PersistentFS implements ApplicationCompone
   }
 
   @Nullable
-  public static VirtualFile findLocalByRootPath(@NotNull String rootPath, @NotNull NewVirtualFileSystem fileSystem) {
+  public static VirtualFile findLocalByRootPath(@NotNull String rootPath, @NotNull ArchiveFileSystemBase fileSystem) {
     String localPath = StringUtil.trimEnd(rootPath, URLUtil.ARCHIVE_SEPARATOR);
     VirtualFile local = StandardFileSystems.local().findFileByPath(localPath);
-    if (local != null) {
-      FileType fileType = FileTypeRegistry.getInstance().getFileTypeByFileName(local.getName());
-      if (fileType instanceof ArchiveFileType) {
-        return fileSystem == ((ArchiveFileType)fileType).getFileSystem() ? local : null;
-      }
-    }
-    return null;
+    return local != null && fileSystem.isMyFile(local) ? local : null;
   }
 
   @NotNull

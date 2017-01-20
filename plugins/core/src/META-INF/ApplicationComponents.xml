@@ -60,10 +60,6 @@
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.vfs.impl.jar.JarFileSystemImpl</implementation-class>
-    </component>
-
-    <component>
       <implementation-class>consulo.vfs.impl.zip.ZipFileSystemImpl</implementation-class>
     </component>
 

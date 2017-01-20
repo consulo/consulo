@@ -17,6 +17,8 @@ package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.io.URLUtil;
+import consulo.annotations.DeprecationInfo;
+import consulo.fileTypes.ZipArchiveFileType;
 import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,16 +29,20 @@ public class StandardFileSystems {
   public static final String FILE_PROTOCOL = URLUtil.FILE_PROTOCOL;
   public static final String FILE_PROTOCOL_PREFIX = FILE_PROTOCOL + URLUtil.SCHEME_SEPARATOR;
 
+  @Deprecated
+  @DeprecationInfo("platform don't known about jar file system")
   public static String JAR_PROTOCOL = "jar";
+  @Deprecated
+  @DeprecationInfo("platform don't known about jar file system")
   public static String JAR_PROTOCOL_PREFIX = "jar://";
+
+  public static final String ZIP_PROTOCOL = "zip";
+  public static final String ZIP_PROTOCOL_PREFIX = ZIP_PROTOCOL + URLUtil.SCHEME_SEPARATOR;
 
   @Deprecated
   public static String JAR_SEPARATOR = "!/";
   @Deprecated
-  @SuppressWarnings("UnusedDeclaration")
-  /**
-   * @deprecated use {@link com.intellij.util.io.URLUtil#HTTP_PROTOCOL}
-   */
+  @DeprecationInfo("use com.intellij.util.io.URLUtil#HTTP_PROTOCOL")
   public static final String HTTP_PROTOCOL = URLUtil.HTTP_PROTOCOL;
 
   private static final NotNullLazyValue<VirtualFileSystem> ourLocal = new NotNullLazyValue<VirtualFileSystem>() {
@@ -47,24 +53,22 @@ public class StandardFileSystems {
     }
   };
 
-  private static final NotNullLazyValue<ArchiveFileSystem> ourJar = new NotNullLazyValue<ArchiveFileSystem>() {
-    @NotNull
-    @Override
-    protected ArchiveFileSystem compute() {
-      return (ArchiveFileSystem)VirtualFileManager.getInstance().getFileSystem(JAR_PROTOCOL);
-    }
-  };
-
+  @NotNull
   public static VirtualFileSystem local() {
     return ourLocal.getValue();
   }
 
   /**
    * @deprecated use JarArchiveFileType.INSTANCE.getFileSystem()
-   * @return
    */
   @Deprecated
+  @DeprecationInfo("use JarArchiveFileType.INSTANCE.getFileSystem()")
   public static ArchiveFileSystem jar() {
-    return ourJar.getValue();
+    return zip();
+  }
+
+  @NotNull
+  public static ArchiveFileSystem zip() {
+    return ZipArchiveFileType.INSTANCE.getFileSystem();
   }
 }

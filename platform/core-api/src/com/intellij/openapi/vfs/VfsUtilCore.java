@@ -566,15 +566,15 @@ public class VfsUtilCore {
     if (uri.startsWith("jar:file:/")) {
       uri = uri.substring("jar:file:/".length());
       if (!SystemInfo.isWindows) uri = "/" + uri;
-      file = VirtualFileManager.getInstance().findFileByUrl(StandardFileSystems.JAR_PROTOCOL_PREFIX + uri);
+      file = VirtualFileManager.getInstance().findFileByUrl(StandardFileSystems.ZIP_PROTOCOL_PREFIX + uri);
     }
     else if (!SystemInfo.isWindows && StringUtil.startsWithChar(uri, '/') ||
              SystemInfo.isWindows && uri.length() >= 2 && Character.isLetter(uri.charAt(0)) && uri.charAt(1) == ':') {
       file = StandardFileSystems.local().findFileByPath(uri);
     }
 
-    if (file == null && uri.contains(URLUtil.JAR_SEPARATOR)) {
-      file = StandardFileSystems.jar().findFileByPath(uri);
+    if (file == null && uri.contains(URLUtil.ARCHIVE_SEPARATOR)) {
+      file = StandardFileSystems.zip().findFileByPath(uri);
       if (file == null && base == null) {
         file = VirtualFileManager.getInstance().findFileByUrl(uri);
       }

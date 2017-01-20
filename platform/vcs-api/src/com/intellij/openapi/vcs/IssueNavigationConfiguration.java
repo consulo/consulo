@@ -19,9 +19,11 @@ package com.intellij.openapi.vcs;
 import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,31 +35,34 @@ import java.util.regex.Pattern;
 /**
  * @author yole
  */
-@State(
-        name = "IssueNavigationConfiguration",
-        storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml", scheme = StorageScheme.DIRECTORY_BASED)})
-public class IssueNavigationConfiguration implements PersistentStateComponent<IssueNavigationConfiguration> {
-  @NonNls private static final Pattern ourHtmlPattern =
+@State(name = "IssueNavigationConfiguration", storages = {
+        @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml", scheme = StorageScheme.DIRECTORY_BASED)})
+public class IssueNavigationConfiguration extends SimpleModificationTracker implements PersistentStateComponent<IssueNavigationConfiguration> {
+  @NonNls
+  private static final Pattern ourHtmlPattern =
           Pattern.compile("(http:|https:)\\/\\/([^\\s()](?!&(gt|lt|nbsp)+;))+[^\\p{Pe}\\p{Pc}\\p{Pd}\\p{Ps}\\p{Po}\\s]/?");
 
   public static IssueNavigationConfiguration getInstance(Project project) {
     return PeriodicalTasksCloser.getInstance().safeGetService(project, IssueNavigationConfiguration.class);
   }
 
-  private List<IssueNavigationLink> myLinks = new ArrayList<IssueNavigationLink>();
+  private List<IssueNavigationLink> myLinks = new ArrayList<>();
 
   public List<IssueNavigationLink> getLinks() {
     return myLinks;
   }
 
   public void setLinks(final List<IssueNavigationLink> links) {
-    myLinks = new ArrayList<IssueNavigationLink>(links);
+    myLinks = new ArrayList<>(links);
+    incModificationCount();
   }
 
+  @Override
   public IssueNavigationConfiguration getState() {
     return this;
   }
 
+  @Override
   public void loadState(IssueNavigationConfiguration state) {
     XmlSerializerUtil.copyBean(state, this);
   }
@@ -79,7 +84,8 @@ public class IssueNavigationConfiguration implements PersistentStateComponent<Is
       return myTargetUrl;
     }
 
-    public int compareTo(Object o) {
+    @Override
+    public int compareTo(@NotNull Object o) {
       if (!(o instanceof LinkMatch)) {
         return 0;
       }
@@ -89,7 +95,7 @@ public class IssueNavigationConfiguration implements PersistentStateComponent<Is
   }
 
   public List<LinkMatch> findIssueLinks(CharSequence text) {
-    final List<LinkMatch> result = new ArrayList<LinkMatch>();
+    final List<LinkMatch> result = new ArrayList<>();
     for (IssueNavigationLink link : myLinks) {
       Pattern issuePattern = link.getIssuePattern();
       Matcher m = issuePattern.matcher(text);
