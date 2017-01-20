@@ -48,7 +48,7 @@ public class ProgressIndicatorUtils {
   }
 
   @NotNull
-  public static ProgressIndicator forceWriteActionPriority(@NotNull final ProgressIndicator progress, @NotNull final Disposable builder) {
+  public static ProgressIndicator forceWriteActionPriority(@NotNull ProgressIndicator progress, @NotNull Disposable parentDisposable) {
     ApplicationManager.getApplication().addApplicationListener(new ApplicationAdapter() {
       @Override
       public void beforeWriteActionStart(@NotNull Object action) {
@@ -56,7 +56,7 @@ public class ProgressIndicatorUtils {
           progress.cancel();
         }
       }
-    }, builder);
+    }, parentDisposable);
     return progress;
   }
 
@@ -88,7 +88,7 @@ public class ProgressIndicatorUtils {
    * This method attempts to run provided action synchronously in a read action, so that, if possible, it wouldn't impact any pending,
    * executing or future write actions (for this to work effectively the action should invoke {@link ProgressManager#checkCanceled()} or
    * {@link ProgressIndicator#checkCanceled()} often enough).
-   * It returns <code>true</code> if action was executed successfully. It returns <code>false</code> if the action was not
+   * It returns {@code true} if action was executed successfully. It returns {@code false} if the action was not
    * executed successfully, i.e. if:
    * <ul>
    * <li>write action was in progress when the method was called</li>
@@ -103,10 +103,11 @@ public class ProgressIndicatorUtils {
     return runInReadActionWithWriteActionPriority(action, null);
   }
 
-  public static boolean runWithWriteActionPriority(@NotNull final Runnable action,
-                                                   @NotNull final ProgressIndicator progressIndicator) {
+  public static boolean runWithWriteActionPriority(@NotNull Runnable action, @NotNull ProgressIndicator progressIndicator) {
     final ApplicationEx application = (ApplicationEx)ApplicationManager.getApplication();
-
+    if (application.isDispatchThread()) {
+      throw new IllegalStateException("Must not call from EDT");
+    }
     if (application.isWriteActionPending()) {
       // first catch: check if write action acquisition started: especially important when current thread has read action, because
       // tryRunReadAction below would just run without really checking if a write action is pending
@@ -230,7 +231,7 @@ public class ProgressIndicatorUtils {
 
   /**
    * Ensure the current EDT activity finishes in case it requires many write actions, with each being delayed a bit
-   * by background thread read action (until its first checkCanceled call).
+   * by background thread read action (until its first checkCanceled call). Shouldn't be called from under read action.
    */
   public static void yieldToPendingWriteActions() {
     ApplicationManager.getApplication().invokeAndWait(EmptyRunnable.INSTANCE, ModalityState.any());

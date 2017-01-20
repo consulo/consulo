@@ -44,6 +44,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Functions;
@@ -386,7 +387,7 @@ class PassExecutorService implements Disposable {
     private final AtomicInteger myRunningPredecessorsCount = new AtomicInteger(0);
     private final Collection<ScheduledPass> mySuccessorsOnCompletion = new ArrayList<>();
     private final Collection<ScheduledPass> mySuccessorsOnSubmit = new ArrayList<>();
-    private final DaemonProgressIndicator myUpdateProgress;
+    @NotNull private final DaemonProgressIndicator myUpdateProgress;
 
     private ScheduledPass(@NotNull FileEditor fileEditor,
                           @NotNull TextEditorHighlightingPass pass,
@@ -516,13 +517,16 @@ class PassExecutorService implements Disposable {
         throw new RuntimeException(message, e);
       }
       if (threadsToStartCountdown.decrementAndGet() == 0) {
+        if (pass instanceof ProgressableTextEditorHighlightingPass) {
+          ((ProgressableTextEditorHighlightingPass)pass).waitForHighlightInfosApplied();
+        }
         log(updateProgress, pass, "Stopping ");
         updateProgress.stopIfRunning();
       }
       else {
         log(updateProgress, pass, "Finished but there are passes in the queue: " + threadsToStartCountdown.get());
       }
-    }, ModalityState.stateForComponent(fileEditor.getComponent()));
+    }, Registry.is("ide.perProjectModality") ? ModalityState.defaultModalityState() : ModalityState.stateForComponent(fileEditor.getComponent()));
   }
 
   protected boolean isDisposed() {
@@ -542,7 +546,7 @@ class PassExecutorService implements Disposable {
   }
 
   private static void sortById(@NotNull List<TextEditorHighlightingPass> result) {
-    ContainerUtil.quickSort(result, (o1, o2) -> o1.getId() - o2.getId());
+    ContainerUtil.quickSort(result, Comparator.comparingInt(TextEditorHighlightingPass::getId));
   }
 
   private static int getThreadNum() {
