@@ -246,7 +246,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
         if (enabled) {
           presentation.setDescription(myExecutor.getDescription());
         }
-        text = myExecutor.getStartActionText(selectedConfiguration.getName());
+        text = myExecutor.getActionText(selectedConfiguration.getName());
       }
       else {
         text = textWithMnemonic;
@@ -259,13 +259,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     private Icon getInformativeIcon(Project project, final RunnerAndConfigurationSettings selectedConfiguration) {
       final ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
 
-      List<RunContentDescriptor> runningDescriptors =
-              executionManager.getRunningDescriptors(new Condition<RunnerAndConfigurationSettings>() {
-                @Override
-                public boolean value(RunnerAndConfigurationSettings s) {
-                  return s == selectedConfiguration;
-                }
-              });
+      List<RunContentDescriptor> runningDescriptors = executionManager.getRunningDescriptors(s -> s == selectedConfiguration);
       runningDescriptors = ContainerUtil.filter(runningDescriptors, new Condition<RunContentDescriptor>() {
         @Override
         public boolean value(RunContentDescriptor descriptor) {

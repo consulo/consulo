@@ -98,7 +98,7 @@ public class ExecutorAction extends AnAction {
     if (list.isEmpty()) return null;
     ConfigurationFromContext configuration = list.get(myOrder < list.size() ? myOrder : 0);
     String actionName = BaseRunConfigurationAction.suggestRunActionName((LocatableConfiguration)configuration.getConfiguration());
-    return executor.getStartActionText(actionName);
+    return executor.getActionText(actionName);
   }
 
   @Nullable

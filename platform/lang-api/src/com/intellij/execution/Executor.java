@@ -16,11 +16,14 @@
 
 package com.intellij.execution;
 
+import com.intellij.BundleBase;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -31,10 +34,12 @@ public abstract class Executor {
   public static final ExtensionPointName<Executor> EP_NAME = ExtensionPointName.create("com.intellij.executor");
 
   public abstract String getToolWindowId();
+
   public abstract Icon getToolWindowIcon();
 
   @NotNull
   public abstract Icon getIcon();
+
   public abstract Icon getDisabledIcon();
 
   public abstract String getDescription();
@@ -62,7 +67,24 @@ public abstract class Executor {
     return true;
   }
 
+  @NotNull
+  public String getActionText(@Nullable String configurationName) {
+    return BundleBase.format(getStartActionText(StringUtil.isEmpty(configurationName)), escapeMnemonicsInConfigurationName(configurationName));
+  }
+
+  private static String escapeMnemonicsInConfigurationName(String configurationName) {
+    return configurationName.replace("_", "__");
+  }
+
+  @NotNull
+  public String getStartActionText(boolean emptyName) {
+    return getStartActionText() + (emptyName ? "" : " ''{0}''");
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use #getStartActionText(emptyName)")
+  @NotNull
   public String getStartActionText(String configurationName) {
-    return getStartActionText() + (StringUtil.isEmpty(configurationName) ? "" : " '" + StringUtil.first(configurationName, 30, true) + "'");
+    return getStartActionText(StringUtil.isEmpty(configurationName));
   }
 }
