@@ -482,9 +482,10 @@ public class VfsUtilCore {
    */
   @Nullable
   public static URL convertToURL(@NotNull String vfsUrl) {
-    if (vfsUrl.startsWith(StandardFileSystems.JAR_PROTOCOL_PREFIX)) {
+    if (vfsUrl.startsWith("jar://") || vfsUrl.startsWith(StandardFileSystems.ZIP_PROTOCOL_PREFIX)) {
       try {
-        return new URL("jar:file:///" + vfsUrl.substring(StandardFileSystems.JAR_PROTOCOL_PREFIX.length()));
+        // jar:// and zip:// have the same lenght
+        return new URL("jar:file:///" + vfsUrl.substring(StandardFileSystems.ZIP_PROTOCOL_PREFIX.length()));
       }
       catch (MalformedURLException e) {
         return null;
@@ -531,7 +532,7 @@ public class VfsUtilCore {
     if (idx >= 0) {
       String s = ideaUrl.substring(0, idx);
 
-      if (s.equals(StandardFileSystems.JAR_PROTOCOL)) {
+      if (s.equals("jar") || s.equals(StandardFileSystems.ZIP_PROTOCOL)) {
         s = "jar:file";
       }
       final String urlWithoutProtocol = ideaUrl.substring(idx + ideaProtocolMarker.length());
