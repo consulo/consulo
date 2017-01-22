@@ -15,20 +15,21 @@
  */
 package com.intellij.psi.scope.util;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiInvalidElementAccessException;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Some base methods for scopes
  */
-@Logger
 public class PsiScopesUtilCore {
+  public static final Logger LOGGER = Logger.getInstance(PsiScopesUtilCore.class);
+
   public static boolean treeWalkUp(@NotNull PsiScopeProcessor processor, @NotNull PsiElement entrance, @Nullable PsiElement maxScope) {
     return treeWalkUp(processor, entrance, maxScope, ResolveState.initial());
   }

@@ -15,12 +15,25 @@
  */
 package com.intellij.internal.statistic;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author Denis Zhdanov
  * @since 4/25/13 1:02 PM
  */
-@Bundle("messages.StatisticsBundle")
-public class StatisticsBundle {
+public class StatisticsBundle extends AbstractBundle {
+  private static final StatisticsBundle ourInstance = new StatisticsBundle();
+
+  private StatisticsBundle() {
+    super("messages.StatisticsBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.StatisticsBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.StatisticsBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

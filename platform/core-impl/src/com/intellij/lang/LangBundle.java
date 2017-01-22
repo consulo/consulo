@@ -16,11 +16,24 @@
 
 package com.intellij.lang;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author yole
  */
-@Bundle("messages.LangBundle")
-public class LangBundle {
+public class LangBundle extends AbstractBundle{
+  private static final LangBundle ourInstance = new LangBundle();
+
+  private LangBundle() {
+    super("messages.LangBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.LangBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.LangBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

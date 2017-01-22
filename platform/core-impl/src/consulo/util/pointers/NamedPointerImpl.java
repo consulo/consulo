@@ -15,15 +15,16 @@
  */
 package consulo.util.pointers;
 
-import consulo.lombok.annotations.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 17:22/15.06.13
  */
-@Logger
 public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
+  public static final Logger LOGGER = Logger.getInstance(NamedPointerImpl.class);
+
   private T myValue;
   @NotNull
   private String myName;

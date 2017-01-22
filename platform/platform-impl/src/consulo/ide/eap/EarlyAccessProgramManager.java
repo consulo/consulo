@@ -18,7 +18,6 @@ package consulo.ide.eap;
 import com.intellij.openapi.components.*;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.hash.LinkedHashMap;
-import consulo.lombok.annotations.ApplicationService;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +28,6 @@ import java.util.Map;
  * @author VISTALL
  * @since 17:11/15.10.13
  */
-@ApplicationService
 @State(
   name = "EarlyAccessProgramManager",
   storages = {
@@ -37,6 +35,11 @@ import java.util.Map;
   }
 )
 public class EarlyAccessProgramManager implements PersistentStateComponent<Element> {
+  @NotNull
+  public static EarlyAccessProgramManager getInstance() {
+    return ServiceManager.getService(EarlyAccessProgramManager.class);
+  }
+
   public static boolean is(@NotNull Class<? extends EarlyAccessProgramDescriptor> key) {
     return getInstance().getState(key);
   }

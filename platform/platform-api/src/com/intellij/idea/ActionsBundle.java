@@ -15,15 +15,29 @@
  */
 package com.intellij.idea;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author Eugene Zhuravlev
  *         Date: Aug 29, 2005
  */
-@Bundle("messages.ActionsBundle")
-public class ActionsBundle {
+public class ActionsBundle extends AbstractBundle{
+  private static final ActionsBundle ourInstance = new ActionsBundle();
+
+  private ActionsBundle() {
+    super("messages.ActionsBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.ActionsBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.ActionsBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
+
   @SuppressWarnings({"HardCodedStringLiteral", "UnresolvedPropertyKey"})
   public static String actionText(@NonNls String actionId) {
     return message("action." + actionId + ".text");

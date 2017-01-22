@@ -17,6 +17,7 @@ package com.intellij.openapi.projectRoots.ui;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.ProjectBundle;
@@ -36,7 +37,6 @@ import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,8 +54,9 @@ import java.util.Set;
  * @author MYakovlev
  * @since Aug 15, 2002
  */
-@Logger
 public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
+  public static final Logger LOGGER = Logger.getInstance(BaseSdkEditor.class);
+
   @NotNull
   protected final Sdk mySdk;
   private final Map<OrderRootType, SdkPathEditor> myPathEditors = new HashMap<OrderRootType, SdkPathEditor>();

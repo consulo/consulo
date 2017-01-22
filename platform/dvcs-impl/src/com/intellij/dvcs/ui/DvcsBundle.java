@@ -15,12 +15,25 @@
  */
 package com.intellij.dvcs.ui;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author VISTALL
  * @since 29.04.14
  */
-@Bundle
-public class DvcsBundle {
+public class DvcsBundle extends AbstractBundle {
+  private static final DvcsBundle ourInstance = new DvcsBundle();
+
+  private DvcsBundle() {
+    super("messages.DvcsBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.DvcsBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.DvcsBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

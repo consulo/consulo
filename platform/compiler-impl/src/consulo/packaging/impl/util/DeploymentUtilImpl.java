@@ -35,7 +35,6 @@ import java.util.Set;
  * @author VISTALL
  * @since 11:43/11.06.13
  */
-//@Logger
 public class DeploymentUtilImpl extends DeploymentUtil {
   private static final Logger LOGGER = Logger.getInstance(DeploymentUtilImpl.class);
 

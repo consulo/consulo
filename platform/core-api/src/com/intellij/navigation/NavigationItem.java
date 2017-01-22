@@ -16,12 +16,22 @@
 package com.intellij.navigation;
 
 import com.intellij.pom.Navigatable;
-import consulo.lombok.annotations.ArrayFactoryFields;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.util.ArrayFactory;
 import consulo.annotations.DeprecationInfo;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@ArrayFactoryFields
 public interface NavigationItem extends Navigatable {
+  public static final NavigationItem[] EMPTY_ARRAY = new NavigationItem[0];
+
+  public static ArrayFactory<NavigationItem> ARRAY_FACTORY = new ArrayFactory<NavigationItem>() {
+    @NotNull
+    @Override
+    public NavigationItem[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new NavigationItem[count];
+    }
+  };
+
   @Deprecated
   @DeprecationInfo("Use NavigationItem#EMPTY_ARRAY")
   NavigationItem[] EMPTY_NAVIGATION_ITEM_ARRAY = new NavigationItem[0];

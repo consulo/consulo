@@ -18,7 +18,7 @@ package com.intellij.openapi.projectRoots;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import com.intellij.util.ArrayFactory;
 import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,8 +27,17 @@ import org.jetbrains.annotations.Nullable;
  * @author Eugene Zhuravlev
  *         Date: Sep 23, 2004
  */
-@ArrayFactoryFields
 public interface Sdk extends UserDataHolder, Named {
+  public static final Sdk[] EMPTY_ARRAY = new Sdk[0];
+
+  public static ArrayFactory<Sdk> ARRAY_FACTORY = new ArrayFactory<Sdk>() {
+    @NotNull
+    @Override
+    public Sdk[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new Sdk[count];
+    }
+  };
+
   @NotNull
   SdkTypeId getSdkType();
 

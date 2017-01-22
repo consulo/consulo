@@ -23,6 +23,7 @@ import com.intellij.mock.MockProgressIndicator;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.VerticalFlowLayout;
@@ -30,7 +31,6 @@ import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Restarter;
 import com.intellij.util.ui.UIUtil;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,8 +44,9 @@ import java.util.Set;
  * @author VISTALL
  * @since 29.11.14
  */
-@Logger
 public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardStep {
+  public static final Logger LOGGER = Logger.getInstance(CustomizeDownloadAndStartStepPanel.class);
+
   private static class MyProgressIndicator extends MockProgressIndicator {
     private final JBLabel myLabel;
     private final JProgressBar myProgressBar;

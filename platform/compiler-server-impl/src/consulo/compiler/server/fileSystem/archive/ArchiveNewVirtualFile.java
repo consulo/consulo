@@ -15,11 +15,11 @@
  */
 package consulo.compiler.server.fileSystem.archive;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
-import consulo.lombok.annotations.Logger;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.impl.archive.ArchiveEntry;
 import consulo.vfs.impl.archive.ArchiveFile;
@@ -40,8 +40,9 @@ import java.util.List;
  * @author VISTALL
  * @since 1:02/11.09.13
  */
-@Logger
 public class ArchiveNewVirtualFile extends NewVirtualFile {
+  public static final Logger LOGGER = Logger.getInstance(ArchiveNewVirtualFile.class);
+
   private final VirtualFile myParent;
   private final ArchiveFileSystem myFileSystem;
 

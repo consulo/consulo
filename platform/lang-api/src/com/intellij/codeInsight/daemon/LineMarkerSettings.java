@@ -15,13 +15,18 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import consulo.lombok.annotations.ApplicationService;
+import com.intellij.openapi.components.ServiceManager;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Dmitry Avdeev
  */
-@ApplicationService
 public abstract class LineMarkerSettings {
+  @NotNull
+  public static LineMarkerSettings getInstance() {
+    return ServiceManager.getService(LineMarkerSettings.class);
+  }
+
   public abstract boolean isEnabled(GutterIconDescriptor descriptor);
 
   public abstract void setEnabled(GutterIconDescriptor descriptor, boolean selected);

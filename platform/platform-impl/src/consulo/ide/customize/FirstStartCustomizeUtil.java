@@ -21,6 +21,7 @@ import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.SystemInfo;
@@ -30,7 +31,6 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.updateSettings.UpdateSettings;
-import consulo.lombok.annotations.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -48,8 +48,9 @@ import java.util.zip.ZipInputStream;
  * @author VISTALL
  * @since 27.11.14
  */
-@Logger
 public class FirstStartCustomizeUtil {
+  public static final Logger LOGGER = Logger.getInstance(FirstStartCustomizeUtil.class);
+
   private static final String TEMPLATES_URL = "https://github.com/consulo/consulo-firststart-templates/archive/2.0.zip";
 
   public static void show(boolean initLaf) {

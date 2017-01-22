@@ -19,6 +19,7 @@ import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -37,7 +38,6 @@ import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.util.Consumer;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,8 +47,8 @@ import java.io.File;
 /**
  * @author max
  */
-@Logger
 public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
+  public static final Logger LOGGER = Logger.getInstance(PlatformProjectOpenProcessor.class);
 
   public static PlatformProjectOpenProcessor getInstance() {
     PlatformProjectOpenProcessor projectOpenProcessor = getInstanceIfItExists();

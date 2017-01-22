@@ -25,6 +25,7 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.TreeViewUtil;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -43,7 +44,6 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.PathUtil;
 import consulo.ide.projectView.ShowExcludedFilesProjectViewPaneOptionProvider;
 import consulo.ide.projectView.impl.nodes.PackageElement;
-import consulo.lombok.annotations.Logger;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.vfs.ArchiveFileSystem;
@@ -54,8 +54,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-@Logger
 public class BaseProjectViewDirectoryHelper {
+  public static final Logger LOGGER = Logger.getInstance(BaseProjectViewDirectoryHelper.class);
+
   @Nullable
   public static String getLocationString(@NotNull PsiDirectory psiDirectory) {
     PsiPackage aPackage = PsiPackageManager.getInstance(psiDirectory.getProject()).findAnyPackage(psiDirectory);

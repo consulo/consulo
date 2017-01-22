@@ -48,6 +48,10 @@ public abstract class AbstractBundle {
   private Reference<ResourceBundle> myBundle;
   @NonNls private final String myPathToBundle;
 
+  protected AbstractBundle() {
+    myPathToBundle = "messages." + getClass().getName();
+  }
+
   protected AbstractBundle(@NonNls @NotNull String pathToBundle) {
     myPathToBundle = pathToBundle;
   }

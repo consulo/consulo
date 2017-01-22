@@ -15,14 +15,28 @@
  */
 package com.intellij.psi;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author max
  */
-@Bundle("messages.PsiBundle")
-public class PsiBundle {
+public class PsiBundle extends AbstractBundle{
+  private static final PsiBundle ourInstance = new PsiBundle();
+
+  private PsiBundle() {
+    super("messages.PsiBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.PsiBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.PsiBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
+
   @NotNull
   public static String visibilityPresentation(@NotNull String modifier) {
     return message(modifier + ".visibility.presentation");

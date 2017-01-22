@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.impl;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
@@ -47,8 +48,9 @@ import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.*;
 
-@consulo.lombok.annotations.Logger
 public class RootIndex {
+  public static final Logger LOGGER = Logger.getInstance(RootIndex.class);
+
   public static final Comparator<OrderEntry> BY_OWNER_MODULE = new Comparator<OrderEntry>() {
     @Override
     public int compare(OrderEntry o1, OrderEntry o2) {

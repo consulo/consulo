@@ -20,6 +20,7 @@ import com.intellij.compiler.MalformedPatternException;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.components.*;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.InputValidator;
@@ -32,8 +33,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import consulo.lombok.annotations.Logger;
-import consulo.lombok.annotations.ProjectService;
 import org.apache.oro.text.regex.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -48,13 +47,18 @@ import java.util.StringTokenizer;
  * @author VISTALL
  * @since 20:16/24.05.13
  */
-@Logger
-@ProjectService
 @State(
   name = "ResourceCompilerConfiguration",
   storages = {
     @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class ResourceCompilerConfiguration implements PersistentStateComponent<Element> {
+  @NotNull
+  public static ResourceCompilerConfiguration getInstance(@NotNull Project project) {
+    return ServiceManager.getService(project, ResourceCompilerConfiguration.class);
+  }
+
+  public static final Logger LOGGER = Logger.getInstance(ResourceCompilerConfiguration.class);
+
   public static final String RESOURCE_EXTENSIONS = "resourceExtensions";
   public static final String WILDCARD_RESOURCE_PATTERNS = "wildcardResourcePatterns";
   public static final String ENTRY = "entry";

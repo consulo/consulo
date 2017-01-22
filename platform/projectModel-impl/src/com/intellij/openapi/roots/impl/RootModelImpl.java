@@ -17,6 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.ProjectTopics;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
@@ -29,26 +30,26 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.lombok.annotations.Logger;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.ModuleRootLayerListener;
-import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
 
 import java.util.*;
 
 /**
  * @author dsl
  */
-@Logger
 public class RootModelImpl extends RootModelBase implements ModifiableRootModel {
+  public static final Logger LOGGER = Logger.getInstance(RootModelImpl.class);
+
   protected final ModuleRootManagerImpl myModuleRootManager;
   private boolean myWritable;
   private boolean myDisposed;

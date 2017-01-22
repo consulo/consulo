@@ -15,11 +15,15 @@
  */
 package com.intellij.xdebugger.settings;
 
-import consulo.lombok.annotations.ApplicationService;
+import com.intellij.openapi.components.ServiceManager;
 import org.jetbrains.annotations.NotNull;
 
-@ApplicationService
 public abstract class XDebuggerSettingsManager {
+  @NotNull
+  public static XDebuggerSettingsManager getInstance() {
+    return ServiceManager.getService(XDebuggerSettingsManager.class);
+  }
+
   public interface DataViewSettings {
     boolean isSortValues();
 

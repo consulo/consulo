@@ -29,6 +29,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
 import com.intellij.openapi.command.undo.UndoManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.DocumentListener;
@@ -84,8 +85,9 @@ import java.util.Set;
 /**
  * @author yole
  */
-@consulo.lombok.annotations.Logger
 public abstract class PlatformTestCase extends UsefulTestCase implements DataProvider {
+  public static final Logger LOGGER = Logger.getInstance(PlatformTestCase.class);
+
   public static final String TEST_DIR_PREFIX = "idea_test_";
 
   protected static ApplicationStarter ourApplication;

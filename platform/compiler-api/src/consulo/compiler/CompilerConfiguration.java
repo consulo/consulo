@@ -15,17 +15,23 @@
  */
 package consulo.compiler;
 
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import consulo.lombok.annotations.ProjectService;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 12:57/10.06.13
  */
-@ProjectService
 public abstract class CompilerConfiguration {
+  @NotNull
+  public static CompilerConfiguration getInstance(@NotNull Project project) {
+    return ServiceManager.getService(project, CompilerConfiguration.class);
+  }
+
   @Nullable
   public abstract VirtualFile getCompilerOutput();
 

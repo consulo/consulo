@@ -24,6 +24,7 @@ import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.StateStorageException;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.*;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -54,23 +55,23 @@ import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphGenerator;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.RequiredWriteAction;
 import consulo.module.ModuleDirIsNotExistsException;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectHashingStrategy;
-import consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredWriteAction;
 
 import java.util.*;
 
 /**
  * @author max
  */
-@Logger
 public abstract class ModuleManagerImpl extends ModuleManager implements ProjectComponent, PersistentStateComponent<Element>, ModificationTracker {
+  public static final Logger LOGGER = Logger.getInstance(ModuleManagerImpl.class);
+
   public static class ModuleLoadItem {
     private final String myDirUrl;
     private final String myName;

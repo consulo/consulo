@@ -15,8 +15,9 @@
  */
 package com.intellij.openapi.projectRoots.impl;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.NotNullFunction;
-import consulo.lombok.annotations.ApplicationService;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.Future;
@@ -24,8 +25,12 @@ import java.util.concurrent.Future;
 /**
  * @author nik
  */
-@ApplicationService
 public abstract class JdkVersionDetector {
+  @NotNull
+  public static JdkVersionDetector getInstance() {
+    return ServiceManager.getService(JdkVersionDetector.class);
+  }
+
   @Nullable
   public abstract String detectJdkVersion(String homePath);
 

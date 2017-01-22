@@ -18,7 +18,7 @@ package com.intellij.psi;
 import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import com.intellij.util.ArrayFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,8 +33,16 @@ import org.jetbrains.annotations.Nullable;
  * @see PsiManager#findFile(com.intellij.openapi.vfs.VirtualFile)
  * @see PsiDocumentManager#getPsiFile(com.intellij.openapi.editor.Document)
  */
-@ArrayFactoryFields
 public interface PsiFile extends PsiFileSystemItem {
+  public static final PsiFile[] EMPTY_ARRAY = new PsiFile[0];
+
+  public static ArrayFactory<PsiFile> ARRAY_FACTORY = new ArrayFactory<PsiFile>() {
+    @NotNull
+    @Override
+    public PsiFile[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new PsiFile[count];
+    }
+  };
 
   /**
    * Returns the virtual file corresponding to the PSI file.

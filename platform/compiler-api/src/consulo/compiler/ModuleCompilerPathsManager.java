@@ -15,19 +15,24 @@
  */
 package consulo.compiler;
 
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleServiceManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import consulo.lombok.annotations.ModuleService;
+import consulo.roots.ContentFolderTypeProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.roots.ContentFolderTypeProvider;
 
 /**
  * @author VISTALL
  * @since 18:27/20.10.13
  */
-@ModuleService
 public abstract class ModuleCompilerPathsManager {
+  @NotNull
+  public static ModuleCompilerPathsManager getInstance(@NotNull Module module) {
+    return ModuleServiceManager.getService(module, ModuleCompilerPathsManager.class);
+  }
+
   public abstract boolean isInheritedCompilerOutput();
 
   public abstract void setInheritedCompilerOutput(boolean val);

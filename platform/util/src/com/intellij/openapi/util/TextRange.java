@@ -16,14 +16,23 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import com.intellij.util.ArrayFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
-@ArrayFactoryFields
 public class TextRange implements Segment, Serializable {
+  public static final TextRange[] EMPTY_ARRAY = new TextRange[0];
+
+  public static ArrayFactory<TextRange> ARRAY_FACTORY = new ArrayFactory<TextRange>() {
+    @NotNull
+    @Override
+    public TextRange[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new TextRange[count];
+    }
+  };
+
   private static final Logger LOG = Logger.getInstance(TextRange.class);
   private static final long serialVersionUID = -670091356599757430L;
   public static final TextRange EMPTY_RANGE = new TextRange(0,0);

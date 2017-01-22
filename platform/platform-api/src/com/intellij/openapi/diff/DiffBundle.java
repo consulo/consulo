@@ -15,11 +15,24 @@
  */
 package com.intellij.openapi.diff;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author lesya
  */
-@Bundle
-public class DiffBundle {
+public class DiffBundle extends AbstractBundle{
+  private static final DiffBundle ourInstance = new DiffBundle();
+
+  private DiffBundle() {
+    super("messages.DiffBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.DiffBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.DiffBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

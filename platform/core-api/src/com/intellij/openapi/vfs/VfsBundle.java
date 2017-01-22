@@ -16,11 +16,24 @@
 
 package com.intellij.openapi.vfs;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author yole
  */
-@Bundle("messages.VfsBundle")
-public class VfsBundle {
+public class VfsBundle extends AbstractBundle{
+  private static final VfsBundle ourInstance = new VfsBundle();
+
+  private VfsBundle() {
+    super("messages.VfsBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.VfsBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.VfsBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

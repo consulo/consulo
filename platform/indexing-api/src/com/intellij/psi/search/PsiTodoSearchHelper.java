@@ -15,8 +15,9 @@
  */
 package com.intellij.psi.search;
 
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,8 +25,12 @@ import org.jetbrains.annotations.NotNull;
  *         Date: 2/24/11
  *         Time: 10:08 AM
  */
-@ProjectService
 public abstract class PsiTodoSearchHelper {
+  @NotNull
+  public static PsiTodoSearchHelper getInstance(@NotNull Project project) {
+    return ServiceManager.getService(project, PsiTodoSearchHelper.class);
+  }
+
   /**
    * Returns the list of all files in the project which have to do items.
    *

@@ -17,9 +17,8 @@ package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
-import consulo.lombok.annotations.Lazy;
-import org.jetbrains.annotations.NotNull;
 import consulo.roots.ContentFolderTypeProvider;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +29,6 @@ import java.awt.*;
  */
 public class TestResourceContentFolderTypeProvider extends ContentFolderTypeProvider {
   @NotNull
-  @Lazy
   public static TestResourceContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(TestResourceContentFolderTypeProvider.class);
   }

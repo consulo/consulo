@@ -21,9 +21,9 @@ package com.intellij.concurrency;
 
 import com.intellij.Patches;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.ReflectionUtil;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,8 +34,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Logger
 public abstract class JobScheduler {
+  public static final Logger LOGGER = Logger.getInstance(JobScheduler.class);
+
   private static final ScheduledThreadPoolExecutor ourScheduledExecutorService;
   private static final boolean ourDoTiming = true;
   private static final int ourTaskLimit = 50;

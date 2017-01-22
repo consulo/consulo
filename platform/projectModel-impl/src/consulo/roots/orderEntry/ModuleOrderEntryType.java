@@ -16,11 +16,10 @@
 package consulo.roots.orderEntry;
 
 import com.intellij.openapi.roots.DependencyScope;
-import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.ModuleOrderEntryImpl;
-import consulo.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.util.InvalidDataException;
-import consulo.lombok.annotations.Lazy;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ModuleOrderEntryType implements OrderEntryType<ModuleOrderEntryImpl> {
   @NotNull
-  @Lazy
   public static ModuleOrderEntryType getInstance() {
     return EP_NAME.findExtension(ModuleOrderEntryType.class);
   }

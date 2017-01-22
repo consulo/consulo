@@ -16,6 +16,7 @@
 
 package consulo.copyright.config;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.InvalidDataException;
@@ -32,8 +33,9 @@ import java.util.TreeMap;
 
 /**
  */
-@consulo.lombok.annotations.Logger
 public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable {
+  public static final Logger LOGGER = Logger.getInstance(CopyrightFileConfigManager.class);
+
   public abstract class LoadedOption {
     public abstract CopyrightFileConfig getConfig();
 

@@ -20,10 +20,20 @@
 package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import com.intellij.util.ArrayFactory;
+import org.jetbrains.annotations.NotNull;
 
-@ArrayFactoryFields
 public interface LighterASTNode {
+  public static final LighterASTNode[] EMPTY_ARRAY = new LighterASTNode[0];
+
+  public static ArrayFactory<LighterASTNode> ARRAY_FACTORY = new ArrayFactory<LighterASTNode>() {
+    @NotNull
+    @Override
+    public LighterASTNode[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new LighterASTNode[count];
+    }
+  };
+
   IElementType getTokenType();
 
   int getStartOffset();

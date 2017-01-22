@@ -17,6 +17,7 @@ package com.intellij.ide.util.gotoByName;
 
 import com.intellij.navigation.ChooseByNameContributorEx;
 import com.intellij.navigation.NavigationItem;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.FilenameIndex;
@@ -28,11 +29,10 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
 import gnu.trove.THashSet;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
-@Logger
 public class DefaultFileNavigationContributor implements ChooseByNameContributorEx, DumbAware {
+  public static final Logger LOGGER = Logger.getInstance(DefaultFileNavigationContributor.class);
 
   @Override
   @NotNull

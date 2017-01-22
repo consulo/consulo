@@ -15,14 +15,18 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import consulo.lombok.annotations.ApplicationService;
+import com.intellij.openapi.components.ServiceManager;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author nik
  */
-@ApplicationService
 public abstract class FileNameMatcherFactory {
+  @NotNull
+  public static FileNameMatcherFactory getInstance() {
+    return ServiceManager.getService(FileNameMatcherFactory.class);
+  }
+
   @NotNull
   public abstract FileNameMatcher createMatcher(@NotNull String pattern);
 }

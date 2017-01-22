@@ -18,6 +18,7 @@ package consulo.ide.updateSettings.impl;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -34,7 +35,6 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.components.BorderLayoutPanel;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,8 +52,9 @@ import java.util.stream.Collectors;
  * @author VISTALL
  * @since 07-Nov-16
  */
-@Logger
 public class PluginListDialog extends DialogWrapper {
+  public static final Logger LOGGER = Logger.getInstance(PluginListDialog.class);
+
   private class OurPluginColumnInfo extends PluginManagerColumnInfo {
     public OurPluginColumnInfo(PluginTableModel model) {
       super(PluginManagerColumnInfo.COLUMN_NAME, model);

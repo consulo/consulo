@@ -15,11 +15,24 @@
  */
 package com.intellij.analysis;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author max
  */
-@Bundle("messages.AnalysisScopeBundle")
-public class AnalysisScopeBundle {
+public class AnalysisScopeBundle extends AbstractBundle {
+  private static final AnalysisScopeBundle ourInstance = new AnalysisScopeBundle();
+
+  private AnalysisScopeBundle() {
+    super("messages.AnalysisScopeBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.AnalysisScopeBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.AnalysisScopeBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

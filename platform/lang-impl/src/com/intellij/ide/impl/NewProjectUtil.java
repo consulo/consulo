@@ -19,13 +19,13 @@
  */
 package com.intellij.ide.impl;
 
-import consulo.compiler.CompilerConfiguration;
 import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.ide.util.projectWizard.ProjectBuilder;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
@@ -41,16 +41,17 @@ import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.util.ui.UIUtil;
-import consulo.lombok.annotations.Logger;
+import consulo.compiler.CompilerConfiguration;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 
-@Logger
 @Deprecated
 public class NewProjectUtil extends NewProjectUtilPlatform {
+  public static final Logger LOGGER = Logger.getInstance(NewProjectUtil.class);
+
   private NewProjectUtil() {
   }
 

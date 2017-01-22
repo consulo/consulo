@@ -17,8 +17,8 @@ package com.intellij.psi.tree;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.ArrayFactory;
 import com.intellij.util.Processor;
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,8 +34,17 @@ import java.util.List;
  * @see com.intellij.lexer.Lexer#getTokenType()
  * @see com.intellij.lang.ASTNode#getElementType()
  */
-@ArrayFactoryFields
 public class IElementType {
+  public static final IElementType[] EMPTY_ARRAY = new IElementType[0];
+
+  public static ArrayFactory<IElementType> ARRAY_FACTORY = new ArrayFactory<IElementType>() {
+    @NotNull
+    @Override
+    public IElementType[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new IElementType[count];
+    }
+  };
+
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.tree.IElementType");
 
   public static final short FIRST_TOKEN_INDEX = 1;

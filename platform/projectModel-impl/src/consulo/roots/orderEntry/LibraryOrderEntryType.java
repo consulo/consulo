@@ -21,7 +21,6 @@ import com.intellij.openapi.roots.impl.LibraryOrderEntryImpl;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.InvalidDataException;
-import consulo.lombok.annotations.Lazy;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +31,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LibraryOrderEntryType implements OrderEntryType<LibraryOrderEntryImpl> {
   @NotNull
-  @Lazy
   public static LibraryOrderEntryType getInstance() {
     return EP_NAME.findExtension(LibraryOrderEntryType.class);
   }

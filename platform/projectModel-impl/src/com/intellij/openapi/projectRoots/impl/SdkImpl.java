@@ -19,6 +19,7 @@ package com.intellij.openapi.projectRoots.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.projectRoots.ex.SdkRoot;
 import com.intellij.openapi.projectRoots.ex.SdkRootContainer;
@@ -32,7 +33,6 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.lombok.annotations.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -41,8 +41,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Logger
 public class SdkImpl extends UserDataHolderBase implements PersistentStateComponent<Element>, Sdk, SdkModificator {
+  public static final Logger LOGGER = Logger.getInstance(SdkImpl.class);
+
   @NonNls
   public static final String ELEMENT_NAME = "name";
   @NonNls

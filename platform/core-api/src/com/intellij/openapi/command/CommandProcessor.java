@@ -16,15 +16,19 @@
 package com.intellij.openapi.command;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@ApplicationService
 public abstract class CommandProcessor {
+  @NotNull
+  public static CommandProcessor getInstance() {
+    return ServiceManager.getService(CommandProcessor.class);
+  }
+
   /**
    * @deprecated use {@link #executeCommand(com.intellij.openapi.project.Project, java.lang.Runnable, java.lang.String, java.lang.Object)}
    */

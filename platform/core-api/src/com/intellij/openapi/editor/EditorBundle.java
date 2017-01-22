@@ -15,11 +15,24 @@
  */
 package com.intellij.openapi.editor;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author lesya
  */
-@Bundle("messages.EditorBundle")
-public class EditorBundle {
+public class EditorBundle extends AbstractBundle{
+  private static final EditorBundle ourInstance = new EditorBundle();
+
+  private EditorBundle() {
+    super("messages.EditorBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.EditorBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.EditorBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

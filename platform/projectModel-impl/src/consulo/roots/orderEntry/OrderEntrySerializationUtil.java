@@ -15,15 +15,13 @@
  */
 package consulo.roots.orderEntry;
 
-import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.OrderEntry;
-import consulo.roots.impl.ModuleRootLayerImpl;
-import consulo.roots.impl.UnknownOrderEntryImpl;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Pair;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.lombok.annotations.Lazy;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.impl.ModuleRootLayerImpl;
+import consulo.roots.impl.UnknownOrderEntryImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -43,14 +41,8 @@ public class OrderEntrySerializationUtil {
   public static final String ORDER_ENTRY_TYPE_ATTR = "type";
 
   @NotNull
-  @Lazy
   public static Map<String, OrderEntryType> getProvidersAsMap() {
-    return ContainerUtil.map2Map(OrderEntryType.EP_NAME.getExtensions(), new Function<OrderEntryType, Pair<String, OrderEntryType>>() {
-      @Override
-      public Pair<String, OrderEntryType> fun(OrderEntryType orderEntryType) {
-        return new Pair<String, OrderEntryType>(orderEntryType.getId(), orderEntryType);
-      }
-    });
+    return ContainerUtil.map2Map(OrderEntryType.EP_NAME.getExtensions(), orderEntryType -> Pair.create(orderEntryType.getId(), orderEntryType));
   }
 
   @Nullable

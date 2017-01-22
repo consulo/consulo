@@ -15,9 +15,9 @@
  */
 package com.intellij.execution.filters;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -25,8 +25,12 @@ import java.util.List;
 /**
  * @author nik
  */
-@ApplicationService
 public abstract class HyperlinkInfoFactory {
+  @NotNull
+  public static HyperlinkInfoFactory getInstance() {
+    return ServiceManager.getService(HyperlinkInfoFactory.class);
+  }
+
   @NotNull
   public abstract HyperlinkInfo createMultipleFilesHyperlinkInfo(@NotNull List<VirtualFile> files,
                                                                  int line, @NotNull Project project);

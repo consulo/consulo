@@ -16,16 +16,20 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import consulo.lombok.annotations.ApplicationService;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 import java.util.List;
 
-@ApplicationService
 public abstract class PredefinedSearchScopeProvider {
+  @NotNull
+  public static PredefinedSearchScopeProvider getInstance() {
+    return ServiceManager.getService(PredefinedSearchScopeProvider.class);
+  }
+
   @RequiredReadAction
   public abstract List<SearchScope> getPredefinedScopes(@NotNull final Project project,
                                                         @Nullable final DataContext dataContext,

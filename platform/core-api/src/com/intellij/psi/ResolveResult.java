@@ -15,7 +15,8 @@
  */
 package com.intellij.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
+import com.intellij.util.ArrayFactory;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -23,8 +24,17 @@ import org.jetbrains.annotations.Nullable;
  *
  * @see com.intellij.psi.PsiElementResolveResult
  */
-@ArrayFactoryFields
 public interface ResolveResult {
+  public static final ResolveResult[] EMPTY_ARRAY = new ResolveResult[0];
+
+  public static ArrayFactory<ResolveResult> ARRAY_FACTORY = new ArrayFactory<ResolveResult>() {
+    @NotNull
+    @Override
+    public ResolveResult[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new ResolveResult[count];
+    }
+  };
+
   /**
    * Returns the result of the resolve.
    *

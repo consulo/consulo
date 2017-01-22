@@ -18,7 +18,7 @@ package consulo.ide.webService;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import consulo.lombok.annotations.ApplicationService;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -28,11 +28,15 @@ import java.util.Map;
  * @author VISTALL
  * @since 19-Nov-16.
  */
-@ApplicationService
 @State(
         name = "WebServicesConfiguration",
         storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/webServices.xml", roamingType = RoamingType.DISABLED)})
 public class WebServicesConfiguration implements PersistentStateComponent<WebServicesConfiguration.State> {
+  @NotNull
+  public static WebServicesConfiguration getInstance() {
+    return ServiceManager.getService(WebServicesConfiguration.class);
+  }
+
   protected static final class State {
     public Map<WebServiceApi, String> oauthKeys = new HashMap<>();
   }

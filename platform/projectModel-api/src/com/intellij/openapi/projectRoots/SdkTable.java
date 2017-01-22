@@ -15,19 +15,23 @@
  */
 package com.intellij.openapi.projectRoots;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.messages.Topic;
+import consulo.annotations.RequiredWriteAction;
 import consulo.bundle.SdkTableListener;
-import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredWriteAction;
 
 import java.util.List;
 
-@ApplicationService
 public abstract class SdkTable {
+  @NotNull
+  public static SdkTable getInstance() {
+    return ServiceManager.getService(SdkTable.class);
+  }
+
   public static Topic<SdkTableListener> SDK_TABLE_TOPIC = Topic.create("Sdk table", SdkTableListener.class);
 
   @Nullable

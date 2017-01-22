@@ -17,13 +17,11 @@ package org.jetbrains.ide;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BuiltInServerManager {
   @NotNull
-  @Lazy
   public static BuiltInServerManager getInstance() {
     return ApplicationManager.getApplication().getComponent(BuiltInServerManager.class);
   }

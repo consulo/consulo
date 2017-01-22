@@ -15,11 +15,24 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author yole
  */
-@Bundle("messages.FileTypesBundle")
-public class FileTypesBundle {
+public class FileTypesBundle extends AbstractBundle{
+  private static final FileTypesBundle ourInstance = new FileTypesBundle();
+
+  private FileTypesBundle() {
+    super("messages.FileTypesBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.FileTypesBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.FileTypesBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

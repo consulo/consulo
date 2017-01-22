@@ -15,11 +15,24 @@
  */
 package com.intellij.codeInspection;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author max
  */
-@Bundle("messages.InspectionsBundle")
-public class InspectionsBundle {
+public class InspectionsBundle extends AbstractBundle {
+  private static final InspectionsBundle ourInstance = new InspectionsBundle();
+
+  private InspectionsBundle() {
+    super("messages.InspectionsBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.InspectionsBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.InspectionsBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

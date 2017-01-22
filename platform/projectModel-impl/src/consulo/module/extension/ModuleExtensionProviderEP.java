@@ -16,6 +16,7 @@
 package consulo.module.extension;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NotNullLazyValue;
@@ -25,7 +26,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.annotations.DeprecationInfo;
-import consulo.lombok.annotations.Logger;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.roots.ModuleRootLayer;
 import org.jetbrains.annotations.NotNull;
@@ -39,8 +39,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author VISTALL
  * @since 11:45/19.05.13
  */
-@Logger
 public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
+  public static final Logger LOGGER = Logger.getInstance(ModuleExtensionProviderEP.class);
+
   private static AtomicInteger ourCounter = new AtomicInteger();
 
   private final int myInternalIndex = ourCounter.getAndIncrement();

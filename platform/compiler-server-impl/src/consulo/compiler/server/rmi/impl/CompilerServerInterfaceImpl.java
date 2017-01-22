@@ -18,13 +18,13 @@ package consulo.compiler.server.rmi.impl;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileStatusNotification;
 import com.intellij.openapi.compiler.CompilerManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import consulo.compiler.server.rmi.CompilerClientConnector;
 import consulo.compiler.server.rmi.CompilerClientInterface;
 import consulo.compiler.server.rmi.CompilerServerInterface;
-import consulo.lombok.annotations.Logger;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -33,8 +33,9 @@ import java.rmi.server.UnicastRemoteObject;
  * @author VISTALL
  * @since 11:14/13.08.13
  */
-@Logger
 public class CompilerServerInterfaceImpl extends UnicastRemoteObject implements CompilerServerInterface {
+  public static final Logger LOGGER = Logger.getInstance(CompilerServerInterfaceImpl.class);
+
   public CompilerServerInterfaceImpl() throws RemoteException {
   }
 

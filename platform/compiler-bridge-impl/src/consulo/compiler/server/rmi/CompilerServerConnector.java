@@ -15,13 +15,18 @@
  */
 package consulo.compiler.server.rmi;
 
-import consulo.lombok.annotations.ApplicationService;
+import com.intellij.openapi.components.ServiceManager;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 11:16/13.08.13
  */
-@ApplicationService
 public abstract class CompilerServerConnector {
+  @NotNull
+  public static CompilerServerConnector getInstance() {
+    return ServiceManager.getService(CompilerServerConnector.class);
+  }
+
   public abstract boolean isConnected();
 }

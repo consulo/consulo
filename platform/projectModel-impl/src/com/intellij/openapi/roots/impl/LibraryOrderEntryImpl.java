@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.roots.impl;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
@@ -24,15 +25,15 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Comparing;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.LibraryOrderEntryType;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author dsl
  */
-@Logger
 public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements LibraryOrderEntry, ClonableOrderEntry {
+  public static final Logger LOGGER = Logger.getInstance(LibraryOrderEntryImpl.class);
+
   private Library myLibrary;
   @Nullable
   private String myLibraryName; // is non-null if myLibrary == null

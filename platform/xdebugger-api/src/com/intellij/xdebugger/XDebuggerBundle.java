@@ -16,11 +16,24 @@
 
 package com.intellij.xdebugger;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author nik
  */
-@Bundle("messages.XDebuggerBundle")
-public class XDebuggerBundle {
+public class XDebuggerBundle extends AbstractBundle {
+  private static final XDebuggerBundle ourInstance = new XDebuggerBundle();
+
+  private XDebuggerBundle() {
+    super("messages.XDebuggerBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.XDebuggerBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.XDebuggerBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

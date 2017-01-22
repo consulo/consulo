@@ -15,11 +15,24 @@
  */
 package com.intellij.codeInsight;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author max
  */
-@Bundle("messages.CodeInsightBundle")
-public class CodeInsightBundle {
+public class CodeInsightBundle extends AbstractBundle {
+  private static final CodeInsightBundle ourInstance = new CodeInsightBundle();
+
+  private CodeInsightBundle() {
+    super("messages.CodeInsightBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.CodeInsightBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.CodeInsightBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

@@ -22,7 +22,6 @@ import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,8 +38,17 @@ import org.jetbrains.annotations.Nullable;
  * @see com.intellij.psi.PsiReferenceBase
  * @see com.intellij.psi.PsiReferenceContributor
  */
-@ArrayFactoryFields
 public interface PsiReference {
+  public static final PsiReference[] EMPTY_ARRAY = new PsiReference[0];
+
+  public static ArrayFactory<PsiReference> ARRAY_FACTORY = new ArrayFactory<PsiReference>() {
+    @NotNull
+    @Override
+    public PsiReference[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new PsiReference[count];
+    }
+  };
+
   /**
    * Returns the underlying (referencing) element of the reference.
    *

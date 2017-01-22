@@ -17,7 +17,6 @@
 package com.intellij.codeInsight.navigation;
 
 import com.intellij.codeInsight.CodeInsightBundle;
-import consulo.codeInsight.TargetElementUtil;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.documentation.DocumentationManagerProtocol;
 import com.intellij.codeInsight.hint.HintManager;
@@ -35,6 +34,7 @@ import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -86,13 +86,13 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.codeInsight.TargetElementUtil;
 import gnu.trove.TIntArrayList;
-import consulo.lombok.annotations.Logger;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
-import consulo.annotations.RequiredReadAction;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -104,8 +104,9 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
 
-@Logger
 public class CtrlMouseHandler extends AbstractProjectComponent {
+  public static final Logger LOGGER = Logger.getInstance(CtrlMouseHandler.class);
+
   private static final AbstractDocumentationTooltipAction[] ourTooltipActions = {new ShowQuickDocAtPinnedWindowFromTooltipAction()};
   private final EditorColorsManager myEditorColorsManager;
 

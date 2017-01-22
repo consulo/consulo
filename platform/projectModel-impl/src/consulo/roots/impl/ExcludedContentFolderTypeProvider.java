@@ -19,9 +19,8 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.ui.DarculaColors;
 import com.intellij.ui.JBColor;
-import consulo.lombok.annotations.Lazy;
-import org.jetbrains.annotations.NotNull;
 import consulo.roots.ContentFolderTypeProvider;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +33,6 @@ public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider
   private static final Color EXCLUDED_COLOR = new JBColor(new Color(0x992E00), DarculaColors.RED);
 
   @NotNull
-  @Lazy
   public static ExcludedContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(ExcludedContentFolderTypeProvider.class);
   }

@@ -1,6 +1,6 @@
 package consulo.util.io2;
 
-import consulo.lombok.annotations.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -15,8 +15,9 @@ import java.util.Set;
  * @author VISTALL
  * @since 31-Oct-16
  */
-@Logger
 public class PathUtil {
+  public static final Logger LOGGER = Logger.getInstance(PathUtil.class);
+
   private static final boolean ourSupportPosixFilePermissions = FileSystems.getDefault().supportedFileAttributeViews().contains("posix");
 
   public static boolean isSupportPosixFilePermissions() {

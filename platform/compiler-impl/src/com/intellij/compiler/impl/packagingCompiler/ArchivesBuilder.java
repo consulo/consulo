@@ -19,21 +19,21 @@ package com.intellij.compiler.impl.packagingCompiler;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.compiler.impl.packagingCompiler.ArchivePackageWriterEx;
-import consulo.packaging.elements.ArchivePackageWriter;
 import com.intellij.packaging.impl.compiler.ArtifactCompilerUtil;
-import consulo.packaging.impl.util.DeploymentUtilImpl;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.GraphGenerator;
+import consulo.compiler.impl.packagingCompiler.ArchivePackageWriterEx;
+import consulo.packaging.elements.ArchivePackageWriter;
+import consulo.packaging.impl.util.DeploymentUtilImpl;
 import gnu.trove.THashSet;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,8 +43,9 @@ import java.util.*;
 /**
  * @author nik
  */
-@Logger
 public class ArchivesBuilder {
+  public static final Logger LOGGER = Logger.getInstance(ArchivesBuilder.class);
+
   private final Set<ArchivePackageInfo> myArchivesToBuild;
   private final FileFilter myFileFilter;
   private final CompileContext myContext;

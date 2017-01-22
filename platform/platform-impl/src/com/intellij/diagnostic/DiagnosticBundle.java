@@ -15,11 +15,24 @@
  */
 package com.intellij.diagnostic;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author yole
  */
-@Bundle("messages.DiagnosticBundle")
-public class DiagnosticBundle {
+public class DiagnosticBundle extends AbstractBundle {
+  private static final DiagnosticBundle ourInstance = new DiagnosticBundle();
+
+  private DiagnosticBundle() {
+    super("messages.DiagnosticBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.DiagnosticBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.DiagnosticBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

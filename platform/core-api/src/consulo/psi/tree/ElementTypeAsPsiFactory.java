@@ -17,11 +17,11 @@ package consulo.psi.tree;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ReflectionUtil;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,8 +32,9 @@ import java.lang.reflect.Constructor;
  * @author VISTALL
  * @since 13:28/29.08.13
  */
-@Logger
 public class ElementTypeAsPsiFactory extends IElementType implements IElementTypeAsPsiFactory {
+  public static final Logger LOGGER = Logger.getInstance(ElementTypeAsPsiFactory.class);
+
   private Constructor<? extends PsiElement> myConstructor;
 
   public ElementTypeAsPsiFactory(@NotNull @NonNls String debugName, @Nullable Language language, @NotNull Class<? extends PsiElement> clazz) {

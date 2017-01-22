@@ -33,8 +33,9 @@ import java.io.File;
  * @author VISTALL
  * @since 0:53/11.09.13
  */
-@consulo.lombok.annotations.Logger
 public class MainTest {
+  public static final Logger LOGGER = Logger.getInstance(MainTest.class);
+
   public static void main(String[] args) throws Exception{
     File t = FileUtil.createTempDirectory("consulo", "data");
     System.setProperty(PathManager.PROPERTY_CONFIG_PATH, t.getAbsolutePath() + "/config");

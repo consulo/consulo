@@ -16,17 +16,25 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import com.intellij.util.ArrayFactory;
+import consulo.annotations.DeprecationInfo;
 import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.DeprecationInfo;
 
 import javax.swing.*;
 
-@ArrayFactoryFields
 public interface FileType extends Named {
+  public static final FileType[] EMPTY_ARRAY = new FileType[0];
+
+  public static ArrayFactory<FileType> ARRAY_FACTORY = new ArrayFactory<FileType>() {
+    @NotNull
+    @Override
+    public FileType[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new FileType[count];
+    }
+  };
   /**
    * Returns the id of the file type. The name must be unique among all file types registered in the system.
    *

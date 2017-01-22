@@ -18,35 +18,35 @@ package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.*;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
-import consulo.roots.ModuleRootLayer;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
-import gnu.trove.THashMap;
-import consulo.lombok.annotations.Logger;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.module.extension.ModuleExtension;
+import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.types.SourcesOrderRootType;
+import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
-import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-
-@Logger
 public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleComponent {
+  public static final Logger LOGGER = Logger.getInstance(ModuleRootManagerImpl.class);
+
   private final Module myModule;
   private RootModelImpl myRootModel;
   private boolean myIsDisposed;

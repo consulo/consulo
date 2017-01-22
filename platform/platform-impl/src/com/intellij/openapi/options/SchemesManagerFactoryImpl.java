@@ -17,20 +17,21 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.application.ex.ApplicationEx2;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.SettingsSavingComponent;
 import com.intellij.openapi.components.impl.stores.StreamProvider;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.lombok.annotations.Logger;
+import consulo.application.ex.ApplicationEx2;
 import consulo.util.pointers.Named;
 
 import java.io.File;
 import java.util.List;
 
-@Logger
 public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements SettingsSavingComponent {
+  public static final Logger LOGGER = Logger.getInstance(SchemesManagerFactoryImpl.class);
+
   private final List<SchemesManagerImpl> myRegisteredManagers = ContainerUtil.createLockFreeCopyOnWriteList();
 
   @Override

@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
@@ -30,22 +31,22 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.lombok.annotations.Logger;
+import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 import consulo.roots.impl.LightContentFolderImpl;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import consulo.roots.ContentFolderTypeProvider;
-import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.util.*;
 
 /**
  * @author dsl
  */
-@Logger
 public class ContentEntryImpl extends BaseModuleRootLayerChild implements ContentEntry, ClonableContentEntry, Comparable<ContentEntryImpl> {
+  public static final Logger LOGGER = Logger.getInstance(ContentEntryImpl.class);
+
   @NonNls
   public static final String ELEMENT_NAME = "content";
   @NonNls

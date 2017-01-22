@@ -20,18 +20,27 @@ import com.intellij.psi.PsiCheckedRenameElement;
 import com.intellij.psi.PsiDirectoryContainer;
 import com.intellij.psi.PsiQualifiedNamedElement;
 import com.intellij.psi.search.GlobalSearchScope;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import com.intellij.util.ArrayFactory;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL
  * @since 7:50/20.05.13
  */
-@ArrayFactoryFields
 public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElement, PsiCheckedRenameElement, NavigationItem {
+  public static final PsiPackage[] EMPTY_ARRAY = new PsiPackage[0];
+
+  public static ArrayFactory<PsiPackage> ARRAY_FACTORY = new ArrayFactory<PsiPackage>() {
+    @NotNull
+    @Override
+    public PsiPackage[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new PsiPackage[count];
+    }
+  };
+
   @Nullable
   PsiPackage getParentPackage();
 

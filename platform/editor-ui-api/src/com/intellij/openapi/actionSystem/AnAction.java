@@ -21,18 +21,16 @@ import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
+import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.annotations.RequiredDispatchThread;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,8 +66,17 @@ import java.util.List;
  * @see Presentation
  * @see ActionPlaces
  */
-@ArrayFactoryFields
 public abstract class AnAction implements PossiblyDumbAware {
+  public static final AnAction[] EMPTY_ARRAY = new AnAction[0];
+
+  public static ArrayFactory<AnAction> ARRAY_FACTORY = new ArrayFactory<AnAction>() {
+    @NotNull
+    @Override
+    public AnAction[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new AnAction[count];
+    }
+  };
+
   public static final Key<List<AnAction>> ACTIONS_KEY = Key.create("AnAction.shortcutSet");
 
   private Presentation myTemplatePresentation;

@@ -15,8 +15,21 @@
  */
 package com.intellij.ui;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
-@Bundle("messages.UIBundle")
-public class UIBundle {
+public class UIBundle extends AbstractBundle{
+  private static final UIBundle ourInstance = new UIBundle();
+
+  private UIBundle() {
+    super("messages.UIBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.UIBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.UIBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

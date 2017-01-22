@@ -16,7 +16,8 @@
 package consulo.compiler.server.rmi;
 
 import com.intellij.openapi.compiler.CompilerMessageCategory;
-import consulo.lombok.annotations.ProjectService;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,8 +25,12 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 15:50/19.08.13
  */
-@ProjectService
 public abstract class CompilerClientConnector {
+  @NotNull
+  public static CompilerClientConnector getInstance(@NotNull Project project) {
+    return ServiceManager.getService(project, CompilerClientConnector.class);
+  }
+
   public abstract void setClientConnection(@Nullable CompilerClientInterface clientConnection);
 
   public abstract void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum);

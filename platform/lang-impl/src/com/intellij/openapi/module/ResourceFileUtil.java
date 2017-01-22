@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.module;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
@@ -25,12 +26,12 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Query;
-import consulo.lombok.annotations.Logger;
-import org.jetbrains.annotations.Nullable;
 import consulo.roots.ContentFolderScopes;
+import org.jetbrains.annotations.Nullable;
 
-@Logger
 public class ResourceFileUtil {
+  public static final Logger LOGGER = Logger.getInstance(ResourceFileUtil.class);
+
   private ResourceFileUtil() {
   }
 

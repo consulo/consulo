@@ -21,6 +21,7 @@ import com.intellij.compiler.impl.CompilerUtil;
 import com.intellij.compiler.make.MakeUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.*;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -32,7 +33,6 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.Chunk;
 import com.intellij.util.ExceptionUtil;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -44,8 +44,9 @@ import java.util.*;
  * Date: Jan 17, 2003
  * Time: 3:48:26 PM
  */
-@Logger
 public class ResourceCompiler implements TranslatingCompiler {
+  public static final Logger LOGGER = Logger.getInstance(ResourceCompiler.class);
+
   private final ResourceCompilerExtension[] myResourceCompilerExtensions = ResourceCompilerExtension.EP_NAME.getExtensions();
   private final ResourceCompilerConfiguration myResourceCompilerConfiguration;
   private final ProjectFileIndex myProjectFileIndex;

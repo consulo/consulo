@@ -15,12 +15,17 @@
  */
 package com.intellij.openapi.project;
 
-import consulo.lombok.annotations.ApplicationService;
+import com.intellij.openapi.components.ServiceManager;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author yole
  */
-@ApplicationService
 public abstract class DefaultProjectFactory {
+  @NotNull
+  public static DefaultProjectFactory getInstance() {
+    return ServiceManager.getService(DefaultProjectFactory.class);
+  }
+
   public abstract Project getDefaultProject();
 }

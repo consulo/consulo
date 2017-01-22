@@ -16,15 +16,25 @@
 
 package com.intellij.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
  */
-@ArrayFactoryFields
 public interface PsiNameIdentifierOwner extends PsiNamedElement {
+  public static final PsiNameIdentifierOwner[] EMPTY_ARRAY = new PsiNameIdentifierOwner[0];
+
+  public static ArrayFactory<PsiNameIdentifierOwner> ARRAY_FACTORY = new ArrayFactory<PsiNameIdentifierOwner>() {
+    @NotNull
+    @Override
+    public PsiNameIdentifierOwner[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new PsiNameIdentifierOwner[count];
+    }
+  };
+
   @Nullable
   @RequiredReadAction
   PsiElement getNameIdentifier();

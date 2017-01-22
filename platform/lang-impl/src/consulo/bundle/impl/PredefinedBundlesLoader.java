@@ -17,20 +17,21 @@ package consulo.bundle.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.util.Consumer;
 import com.intellij.util.SystemProperties;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.bundle.PredefinedBundlesProvider;
-import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
  * @since 15:05/22.11.13
  */
-@Logger
 public class PredefinedBundlesLoader extends ApplicationComponent.Adapter {
+  public static final Logger LOGGER = Logger.getInstance(PredefinedBundlesLoader.class);
+
   @Override
   public void initComponent() {
     if (SystemProperties.is("consulo.disable.predefined.bundles")) {

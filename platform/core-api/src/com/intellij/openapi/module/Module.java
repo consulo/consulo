@@ -21,7 +21,7 @@ import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import com.intellij.util.ArrayFactory;
 import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,8 +32,17 @@ import org.jetbrains.annotations.Nullable;
  * @see ModuleManager#getModules()
  * @see ModuleComponent
  */
-@ArrayFactoryFields
 public interface Module extends ComponentManager, AreaInstance, Disposable, Named {
+  public static final Module[] EMPTY_ARRAY = new Module[0];
+
+  public static ArrayFactory<Module> ARRAY_FACTORY = new ArrayFactory<Module>() {
+    @NotNull
+    @Override
+    public Module[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new Module[count];
+    }
+  };
+
   /**
    * Returns the <code>VirtualFile</code> to the module dir
    *

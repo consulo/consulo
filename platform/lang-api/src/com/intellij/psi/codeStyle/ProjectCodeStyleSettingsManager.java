@@ -16,16 +16,17 @@
 
 package com.intellij.psi.codeStyle;
 
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.components.StorageScheme;
-import consulo.lombok.annotations.ProjectService;
+import com.intellij.openapi.components.*;
+import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
 
 
 @State(
         name = "ProjectCodeStyleSettingsManager",
         storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/codeStyleSettings.xml", scheme = StorageScheme.DIRECTORY_BASED)})
-@ProjectService
 public class ProjectCodeStyleSettingsManager extends CodeStyleSettingsManager {
+  @NotNull
+  public static ProjectCodeStyleSettingsManager getInstance(@NotNull Project project) {
+    return ServiceManager.getService(project, ProjectCodeStyleSettingsManager.class);
+  }
 }

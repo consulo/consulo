@@ -17,6 +17,7 @@ package consulo.compiler.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ui.LightFilePointer;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -24,7 +25,6 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.lombok.annotations.Logger;
 import consulo.roots.ContentFolderTypeProvider;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -38,8 +38,9 @@ import java.util.Map;
  * @author VISTALL
  * @since 18:28/20.10.13
  */
-@Logger
 public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager implements PersistentStateComponent<Element>, Disposable {
+  public static final Logger LOGGER = Logger.getInstance(ModuleCompilerPathsManagerImpl.class);
+
   @NonNls
   private static final String MODULE_OUTPUT_TAG = "module";
   @NonNls

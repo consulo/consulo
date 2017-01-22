@@ -15,12 +15,12 @@
  */
 package consulo.copyright;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
-import consulo.lombok.annotations.Lazy;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -30,20 +30,19 @@ import java.io.InputStream;
  * @author VISTALL
  * @since 16.02.2015
  */
-@Logger
 public class PredefinedCopyrightTextEP extends AbstractExtensionPointBean {
+  public static final Logger LOGGER = Logger.getInstance(PredefinedCopyrightTextEP.class);
+
   public static final ExtensionPointName<PredefinedCopyrightTextEP> EP_NAME = ExtensionPointName.create("com.intellij.predefinedCopyright");
   @Attribute("name")
   public String name;
   @Attribute("file")
   public String file;
 
-  @NotNull
-  @Lazy
-  public String getText() {
+  private NotNullLazyValue<String> myText = NotNullLazyValue.createValue(() -> {
     try {
       InputStream resourceAsStream = getLoaderForClass().getResourceAsStream(file);
-      if(resourceAsStream == null) {
+      if (resourceAsStream == null) {
         LOGGER.error("Copyright file " + file + " not found");
         return "not find";
       }
@@ -53,5 +52,10 @@ public class PredefinedCopyrightTextEP extends AbstractExtensionPointBean {
       LOGGER.error(e);
       return "not loaded";
     }
+  });
+
+  @NotNull
+  public String getText() {
+    return myText.getValue();
   }
 }

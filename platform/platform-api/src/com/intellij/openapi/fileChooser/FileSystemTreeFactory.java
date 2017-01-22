@@ -16,12 +16,16 @@
 package com.intellij.openapi.fileChooser;
 
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 
-@ApplicationService
 public abstract class FileSystemTreeFactory {
+  @NotNull
+  public static FileSystemTreeFactory getInstance() {
+    return ServiceManager.getService(FileSystemTreeFactory.class);
+  }
+
   @NotNull
   public abstract FileSystemTree createFileSystemTree(Project project, FileChooserDescriptor fileChooserDescriptor);
 

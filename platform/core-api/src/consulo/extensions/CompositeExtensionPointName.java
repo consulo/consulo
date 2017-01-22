@@ -15,13 +15,13 @@
  */
 package consulo.extensions;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,8 +39,9 @@ import java.lang.reflect.Proxy;
  * @see com.intellij.util.EventDispatcher
  * @since 20.04.2015
  */
-@Logger
 public abstract class CompositeExtensionPointName<T> {
+  public static final Logger LOGGER = Logger.getInstance(CompositeExtensionPointName.class);
+
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public @interface BooleanBreakResult {

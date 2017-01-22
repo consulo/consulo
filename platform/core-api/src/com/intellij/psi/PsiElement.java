@@ -17,7 +17,6 @@ package com.intellij.psi;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import consulo.lang.LanguageVersion;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
@@ -25,12 +24,13 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
+import com.intellij.util.ArrayFactory;
 import com.intellij.util.IncorrectOperationException;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.annotations.RequiredReadAction;
+import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 /**
  * The common base interface for all elements of the PSI tree.
@@ -38,8 +38,17 @@ import consulo.annotations.RequiredReadAction;
  * Please see <a href="http://confluence.jetbrains.net/display/IDEADEV/IntelliJ+IDEA+Architectural+Overview">IntelliJ IDEA Architectural Overview </a>
  * for high-level overview.
  */
-@ArrayFactoryFields
 public interface PsiElement extends UserDataHolder {
+  public static final PsiElement[] EMPTY_ARRAY = new PsiElement[0];
+
+  public static ArrayFactory<PsiElement> ARRAY_FACTORY = new ArrayFactory<PsiElement>() {
+    @NotNull
+    @Override
+    public PsiElement[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new PsiElement[count];
+    }
+  };
+
   /**
    * Returns the project to which the PSI element belongs.
    *

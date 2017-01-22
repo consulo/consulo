@@ -15,6 +15,7 @@
  */
 package consulo.compiler.server.roots.impl;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
@@ -23,18 +24,18 @@ import com.intellij.openapi.roots.impl.RootIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ConcurrentHashMap;
-import consulo.lombok.annotations.Logger;
+import consulo.roots.ContentFolderTypeProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.Map;
 
 /**
  * @see com.intellij.openapi.roots.impl.DirectoryIndexImpl
  */
-@Logger
 public class CompilerServerDirectoryIndex extends DirectoryIndex {
+  public static final Logger LOGGER = Logger.getInstance(CompilerServerDirectoryIndex.class);
+
   private final Project myProject;
 
   private volatile RootIndex myRootIndex = null;

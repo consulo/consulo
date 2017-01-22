@@ -19,15 +19,19 @@
  */
 package com.intellij.ui;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Function;
-import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-@ApplicationService
 public abstract class IconDeferrer {
+  @NotNull
+  public static IconDeferrer getInstance() {
+    return ServiceManager.getService(IconDeferrer.class);
+  }
+
   public abstract <T> Icon defer(Icon base, T param, @NotNull Function<T, Icon> f);
 
   public abstract <T> Icon deferAutoUpdatable(Icon base, T param, @NotNull Function<T, Icon> f);

@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.roots.impl;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
@@ -23,20 +24,20 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import consulo.lombok.annotations.Logger;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.roots.impl.ModuleRootLayerImpl;
+import consulo.roots.orderEntry.OrderEntryType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.roots.orderEntry.OrderEntryType;
 
 import java.util.Arrays;
 
 /**
  * @author dsl
  */
-@Logger
 public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements OrderEntryWithTracking {
+  public static final Logger LOGGER = Logger.getInstance(LibraryOrderEntryBaseImpl.class);
+
   protected final ProjectRootManagerImpl myProjectRootManagerImpl;
   @NotNull
   protected DependencyScope myScope = DependencyScope.COMPILE;

@@ -18,6 +18,7 @@ package consulo.compiler.roots;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.ex.CompilerPathsEx;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -26,12 +27,11 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.OrderedSet;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.lombok.annotations.Logger;
-import org.jetbrains.annotations.Nullable;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Set;
@@ -40,8 +40,9 @@ import java.util.Set;
  * @author VISTALL
  * @since 18:59/03.11.13
  */
-@Logger
 public class CompilerPathsImpl extends CompilerPathsEx {
+  public static final Logger LOGGER = Logger.getInstance(CompilerPathsImpl.class);
+
   /**
    * @param module
    * @param forTestClasses true if directory for test sources, false - for sources.

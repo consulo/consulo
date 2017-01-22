@@ -15,11 +15,24 @@
  */
 package com.intellij.featureStatistics;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author max
  */
-@Bundle
-public class FeatureStatisticsBundle {
+public class FeatureStatisticsBundle extends AbstractBundle {
+  private static final FeatureStatisticsBundle ourInstance = new FeatureStatisticsBundle();
+
+  private FeatureStatisticsBundle() {
+    super("messages.FeatureStatisticsBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.FeatureStatisticsBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.FeatureStatisticsBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

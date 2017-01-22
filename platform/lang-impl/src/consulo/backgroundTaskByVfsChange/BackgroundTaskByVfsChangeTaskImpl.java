@@ -25,6 +25,7 @@ import com.intellij.execution.process.ProcessEvent;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Comparing;
@@ -40,7 +41,6 @@ import com.intellij.tools.ToolProcessAdapter;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredReadAction;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,8 +52,9 @@ import java.util.List;
  * @author VISTALL
  * @since 23:16/06.10.13
  */
-@Logger
 public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsChangeTask {
+  public static final Logger LOGGER = Logger.getInstance(BackgroundTaskByVfsChangeTaskImpl.class);
+
   private final Project myProject;
   private final BackgroundTaskByVfsParameters myParameters;
   private final VirtualFilePointer myVirtualFilePointer;

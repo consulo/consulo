@@ -15,9 +15,10 @@
  */
 package com.intellij.ide;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.NameUtil;
-import consulo.lombok.annotations.ApplicationService;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -25,8 +26,12 @@ import javax.swing.*;
 /**
  * @author peter
  */
-@ApplicationService
 public abstract class TypePresentationService {
+  @NotNull
+  public static TypePresentationService getInstance() {
+    return ServiceManager.getService(TypePresentationService.class);
+  }
+
   @Nullable
   public abstract Icon getIcon(Object o);
 

@@ -15,11 +15,24 @@
  */
 package com.intellij.execution;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author lesya
  */
-@Bundle("messages.ExecutionBundle")
-public class ExecutionBundle {
+public class ExecutionBundle extends AbstractBundle {
+  private static final ExecutionBundle ourInstance = new ExecutionBundle();
+
+  private ExecutionBundle() {
+    super("messages.ExecutionBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.ExecutionBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.ExecutionBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

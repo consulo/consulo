@@ -17,9 +17,9 @@ package consulo.compiler.server.rmi.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import consulo.compiler.server.rmi.CompilerServerConnector;
 import consulo.compiler.server.rmi.CompilerServerInterface;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.rmi.registry.LocateRegistry;
@@ -30,8 +30,9 @@ import java.util.concurrent.Future;
  * @author VISTALL
  * @since 11:16/13.08.13
  */
-@Logger
 public class CompilerServerConnectorImpl extends CompilerServerConnector implements ApplicationComponent {
+  public static final Logger LOGGER = Logger.getInstance(CompilerServerConnectorImpl.class);
+
   private Future<?> myTask;
   private CompilerServerInterface myServerInterface;
 

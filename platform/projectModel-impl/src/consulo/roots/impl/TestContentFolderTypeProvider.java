@@ -18,9 +18,8 @@ package consulo.roots.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.ui.JBColor;
-import consulo.lombok.annotations.Lazy;
-import org.jetbrains.annotations.NotNull;
 import consulo.roots.ContentFolderTypeProvider;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +32,6 @@ public class TestContentFolderTypeProvider extends ContentFolderTypeProvider {
   private static final Color TESTS_COLOR = new JBColor(new Color(0x008C2E), new Color(73, 140, 101));
 
   @NotNull
-  @Lazy
   public static TestContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(TestContentFolderTypeProvider.class);
   }

@@ -18,7 +18,7 @@ package consulo.application.options;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.CompositePathMacroFilter;
-import consulo.lombok.annotations.ApplicationService;
+import com.intellij.openapi.components.ServiceManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,8 +30,11 @@ import java.util.regex.Pattern;
  * @author VISTALL
  * @since 06-Jun-16
  */
-@ApplicationService
 public abstract class PathMacrosService {
+  @NotNull
+  public static PathMacrosService getInstance() {
+    return ServiceManager.getService(PathMacrosService.class);
+  }
 
   public static final Pattern MACRO_PATTERN = Pattern.compile("\\$([\\w\\-\\.]+?)\\$");
 

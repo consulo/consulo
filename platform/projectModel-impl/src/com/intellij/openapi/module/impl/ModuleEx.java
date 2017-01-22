@@ -16,13 +16,23 @@
 package com.intellij.openapi.module.impl;
 
 import com.intellij.openapi.module.Module;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import com.intellij.util.ArrayFactory;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author yole
  */
-@ArrayFactoryFields
 public interface ModuleEx extends Module {
+  public static final ModuleEx[] EMPTY_ARRAY = new ModuleEx[0];
+
+  public static ArrayFactory<ModuleEx> ARRAY_FACTORY = new ArrayFactory<ModuleEx>() {
+    @NotNull
+    @Override
+    public ModuleEx[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new ModuleEx[count];
+    }
+  };
+
   void init();
   void loadModuleComponents();
   void moduleAdded();

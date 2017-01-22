@@ -15,9 +15,9 @@
  */
 package consulo.util.io;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.NotNullLazyValue;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import sun.nio.ch.DirectBuffer;
 
@@ -31,8 +31,9 @@ import java.nio.ByteBuffer;
  * on => Java 8 sun.misc.Cleaner
  * on >= Java 9 jdk.internal.ref.Cleaner
  */
-@Logger
 public class DirectBufferReflect {
+  public static final Logger LOGGER = Logger.getInstance(DirectBufferReflect.class);
+
   private static final NotNullLazyValue<Couple<Method>> ourCleanMethods = new NotNullLazyValue<Couple<Method>>() {
     @NotNull
     @Override

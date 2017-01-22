@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.io.ZipUtil;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -33,8 +33,9 @@ import java.io.InputStream;
  * @author VISTALL
  * @since 05.06.14
  */
-@Logger
 public abstract class UnzipNewModuleBuilderProcessor<T extends JComponent> implements NewModuleBuilderProcessor<T> {
+  public static final Logger LOGGER = Logger.getInstance(UnzipNewModuleBuilderProcessor.class);
+
   private final String myPath;
 
   public UnzipNewModuleBuilderProcessor(String path) {
@@ -44,7 +45,7 @@ public abstract class UnzipNewModuleBuilderProcessor<T extends JComponent> imple
   protected void unzip(@NotNull ModifiableRootModel model) {
     InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(myPath);
     if(resourceAsStream == null) {
-      UnzipNewModuleBuilderProcessor.LOGGER.error("Resource by path '" + myPath + "' not found");
+      LOGGER.error("Resource by path '" + myPath + "' not found");
       return;
     }
     try {
@@ -57,7 +58,7 @@ public abstract class UnzipNewModuleBuilderProcessor<T extends JComponent> imple
       ZipUtil.extract(tempFile, outputDir, null);
     }
     catch (IOException e) {
-      UnzipNewModuleBuilderProcessor.LOGGER.error(e);
+      LOGGER.error(e);
     }
   }
 }

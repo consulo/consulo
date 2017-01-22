@@ -17,6 +17,7 @@ package consulo.roots.impl;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
@@ -35,7 +36,6 @@ import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredReadAction;
-import consulo.lombok.annotations.Logger;
 import consulo.module.extension.*;
 import consulo.module.extension.impl.ModuleExtensionImpl;
 import consulo.module.extension.impl.ModuleExtensionIndexCache;
@@ -55,8 +55,9 @@ import java.util.*;
  * @author VISTALL
  * @since 29.07.14
  */
-@Logger
 public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposable {
+  public static final Logger LOGGER = Logger.getInstance(ModuleRootLayerImpl.class);
+
   private static class ContentComparator implements Comparator<ContentEntry> {
     public static final ContentComparator INSTANCE = new ContentComparator();
 

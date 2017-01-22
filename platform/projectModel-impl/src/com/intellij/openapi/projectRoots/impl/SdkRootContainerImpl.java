@@ -18,6 +18,7 @@ package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.ProjectRootListener;
 import com.intellij.openapi.projectRoots.ex.SdkRoot;
 import com.intellij.openapi.projectRoots.ex.SdkRootContainer;
@@ -29,7 +30,6 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
-import consulo.lombok.annotations.Logger;
 import consulo.vfs.ArchiveFileSystem;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -40,8 +40,8 @@ import java.util.Map;
 /**
  * @author mike
  */
-@Logger
 public class SdkRootContainerImpl implements PersistentStateComponent<Element>, SdkRootContainer {
+  public static final Logger LOGGER = Logger.getInstance(SdkRootContainerImpl.class);
 
   private final Map<OrderRootType, CompositeSdkRoot> myRoots = new HashMap<OrderRootType, CompositeSdkRoot>();
   private Map<OrderRootType, VirtualFile[]> myFiles = new HashMap<OrderRootType, VirtualFile[]>();

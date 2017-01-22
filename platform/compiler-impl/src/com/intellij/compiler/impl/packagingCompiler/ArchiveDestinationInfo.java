@@ -16,15 +16,16 @@
 
 package com.intellij.compiler.impl.packagingCompiler;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
-import consulo.lombok.annotations.Logger;
 
 /**
  * @author nik
  */
-@Logger
 public class ArchiveDestinationInfo extends DestinationInfo {
+  public static final Logger LOGGER = Logger.getInstance(ArchiveDestinationInfo.class);
+
   private final String myPathInJar;
   private final ArchivePackageInfo myArchivePackageInfo;
 

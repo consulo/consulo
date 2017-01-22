@@ -22,6 +22,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.StorageScheme;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -30,7 +31,6 @@ import com.intellij.openapi.project.impl.ProjectLifecycleListener;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.MessageHandler;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,11 +39,12 @@ import java.lang.reflect.Method;
 /**
  * @author yole
  */
-@Logger
 @State(
         name = ModuleManagerImpl.COMPONENT_NAME,
         storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/modules.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class ModuleManagerComponent extends ModuleManagerImpl {
+  public static final Logger LOGGER = Logger.getInstance(ModuleManagerComponent.class);
+
   private final ProgressManager myProgressManager;
   private final MessageBusConnection myConnection;
 

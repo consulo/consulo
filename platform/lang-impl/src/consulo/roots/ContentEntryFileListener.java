@@ -17,28 +17,31 @@ package consulo.roots;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbModePermission;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import consulo.lombok.annotations.Logger;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL
  * @since 06.04.2015
  */
-@Logger
 public class ContentEntryFileListener extends AbstractProjectComponent {
+  public static final Logger LOGGER = Logger.getInstance(ContentEntryFileListener.class);
+
   public interface PossibleModuleForFileResolver {
     ExtensionPointName<PossibleModuleForFileResolver> EP_NAME = ExtensionPointName.create("com.intellij.possibleModuleForFileResolver");
 

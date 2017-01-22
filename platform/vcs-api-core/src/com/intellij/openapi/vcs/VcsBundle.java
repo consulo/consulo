@@ -15,11 +15,24 @@
  */
 package com.intellij.openapi.vcs;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author lesya
  */
-@Bundle
-public class VcsBundle {
+public class VcsBundle extends AbstractBundle{
+  private static final VcsBundle ourInstance = new VcsBundle();
+
+  private VcsBundle() {
+    super("messages.VcsBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.VcsBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.VcsBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

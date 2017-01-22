@@ -15,15 +15,29 @@
  */
 package com.intellij.openapi.compiler;
 
+import com.intellij.AbstractBundle;
 import com.intellij.openapi.projectRoots.Sdk;
-import consulo.lombok.annotations.Bundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author Eugene Zhuravlev
  *         Date: Sep 9, 2005
  */
-@Bundle("messages.CompilerBundle")
-public class CompilerBundle {
+public class CompilerBundle extends AbstractBundle {
+  private static final CompilerBundle ourInstance = new CompilerBundle();
+
+  private CompilerBundle() {
+    super("messages.CompilerBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.CompilerBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.CompilerBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
+
   public static String jdkHomeNotFoundMessage(final Sdk jdk) {
     return message("javac.error.jdk.home.missing", jdk.getName(), jdk.getHomePath());
   }

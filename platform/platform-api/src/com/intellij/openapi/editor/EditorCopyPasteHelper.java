@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.TextRange;
-import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,8 +25,12 @@ import java.awt.datatransfer.Transferable;
 /**
  * Support for data transfer between editor and clipboard.
  */
-@ApplicationService
 public abstract class EditorCopyPasteHelper {
+  @NotNull
+  public static EditorCopyPasteHelper getInstance() {
+    return ServiceManager.getService(EditorCopyPasteHelper.class);
+  }
+
   /**
    * Copies text selected in editor to clipboard.
    */

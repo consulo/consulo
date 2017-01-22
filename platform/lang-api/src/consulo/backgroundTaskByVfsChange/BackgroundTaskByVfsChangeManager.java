@@ -15,9 +15,10 @@
  */
 package consulo.backgroundTaskByVfsChange;
 
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
-import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -26,8 +27,12 @@ import java.util.List;
  * @author VISTALL
  * @since 22:46/06.10.13
  */
-@ProjectService
 public abstract class BackgroundTaskByVfsChangeManager {
+  @NotNull
+  public static BackgroundTaskByVfsChangeManager getInstance(@NotNull Project project) {
+    return ServiceManager.getService(project, BackgroundTaskByVfsChangeManager.class);
+  }
+
   public interface Listener {
     void taskAdded(@NotNull BackgroundTaskByVfsChangeTask task);
 

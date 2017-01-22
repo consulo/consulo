@@ -16,11 +16,24 @@
 
 package com.intellij.ide;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author yole
  */
-@Bundle("messages.IdeBundle")
-public class IdeBundle {
+public class IdeBundle extends AbstractBundle {
+  private static final IdeBundle ourInstance = new IdeBundle();
+
+  private IdeBundle() {
+    super("messages.IdeBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.IdeBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.IdeBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

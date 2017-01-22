@@ -15,8 +15,9 @@
  */
 package consulo.module.extension;
 
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
 import consulo.annotations.Immutable;
-import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -25,8 +26,12 @@ import java.util.Collection;
  * @author VISTALL
  * @since 7:57/12.11.13
  */
-@ProjectService
 public abstract class ModuleExtensionHelper {
+  @NotNull
+  public static ModuleExtensionHelper getInstance(@NotNull Project project) {
+    return ServiceManager.getService(project, ModuleExtensionHelper.class);
+  }
+
   public abstract boolean hasModuleExtension(@NotNull Class<? extends ModuleExtension> clazz);
 
   @Immutable

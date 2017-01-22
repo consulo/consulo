@@ -16,10 +16,10 @@
 
 package com.intellij.openapi.projectRoots.impl;
 
-import consulo.fileTypes.ArchiveFileType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
@@ -28,12 +28,12 @@ import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.messages.MessageBus;
-import consulo.lombok.annotations.Logger;
+import consulo.annotations.RequiredWriteAction;
+import consulo.fileTypes.ArchiveFileType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredWriteAction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,8 +44,9 @@ import java.util.List;
   roamingType = RoamingType.DISABLED,
   storages = {@Storage(
     file = StoragePathMacros.APP_CONFIG + "/sdk.table.xml")})
-@Logger
 public class SdkTableImpl extends SdkTable implements PersistentStateComponent<Element>, ExportableComponent {
+  public static final Logger LOGGER = Logger.getInstance(SdkTableImpl.class);
+
   @NonNls
   public static final String ELEMENT_SDK = "sdk";
 

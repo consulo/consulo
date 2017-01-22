@@ -15,8 +15,21 @@
  */
 package com.intellij.openapi.project;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
-@Bundle("messages.ProjectBundle")
-public class ProjectBundle {
+public class ProjectBundle extends AbstractBundle {
+  private static final ProjectBundle ourInstance = new ProjectBundle();
+
+  private ProjectBundle() {
+    super("messages.ProjectBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.ProjectBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.ProjectBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

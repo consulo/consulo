@@ -21,7 +21,6 @@ import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
-import consulo.application.ex.ApplicationEx2;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
@@ -29,6 +28,7 @@ import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.components.impl.stores.ApplicationStoreImpl;
 import com.intellij.openapi.components.impl.stores.IApplicationStore;
 import com.intellij.openapi.components.impl.stores.IComponentStore;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
@@ -37,12 +37,12 @@ import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.util.*;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import consulo.lombok.annotations.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.ex.ApplicationEx2;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.picocontainer.MutablePicoContainer;
 
 import javax.swing.*;
@@ -54,8 +54,9 @@ import java.util.concurrent.*;
  * @author VISTALL
  * @since 11:26/12.08.13
  */
-@Logger
 public class CompilerServerApplication extends ComponentManagerImpl implements ApplicationEx2 {
+  public static final Logger LOGGER = Logger.getInstance(CompilerServerApplication.class);
+
   private static class ExecutorServiceHolder {
     private static final ExecutorService ourThreadExecutorsService = createServiceImpl();
 

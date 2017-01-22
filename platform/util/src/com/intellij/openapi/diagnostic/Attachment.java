@@ -1,16 +1,21 @@
 package com.intellij.openapi.diagnostic;
 
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.Base64Converter;
-import com.intellij.util.ExceptionUtil;
-import com.intellij.util.PathUtilRt;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import com.intellij.util.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.UnsupportedEncodingException;
 
-@ArrayFactoryFields
 public class Attachment {
+  public static Attachment[] EMPTY_ARRAY = new Attachment[0];
+
+  public static ArrayFactory<Attachment> ARRAY_FACTORY = new ArrayFactory<Attachment>() {
+    @NotNull
+    @Override
+    public Attachment[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new Attachment[count];
+    }
+  };
+
   private final String myPath;
   private final byte[] myBytes;
   private boolean myIncluded = true;

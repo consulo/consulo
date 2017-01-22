@@ -15,16 +15,15 @@
  */
 package consulo.roots.orderEntry;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.DependencyScope;
-import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.ModuleLibraryOrderEntryImpl;
-import consulo.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
-import consulo.lombok.annotations.Lazy;
-import consulo.lombok.annotations.Logger;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -33,10 +32,10 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 21.08.14
  */
-@Logger
 public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibraryOrderEntryImpl> {
+  public static final Logger LOGGER = Logger.getInstance(ModuleLibraryOrderEntryType.class);
+
   @NotNull
-  @Lazy
   public static ModuleLibraryOrderEntryType getInstance() {
     return EP_NAME.findExtension(ModuleLibraryOrderEntryType.class);
   }

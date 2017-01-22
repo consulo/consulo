@@ -15,11 +15,24 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author max
  */
-@Bundle("messages.DaemonBundle")
-public class DaemonBundle {
+public class DaemonBundle extends AbstractBundle{
+  private static final DaemonBundle ourInstance = new DaemonBundle();
+
+  private DaemonBundle() {
+    super("messages.DaemonBundle");
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.DaemonBundle") String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = "messages.DaemonBundle") String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

@@ -16,15 +16,19 @@
 
 package com.intellij.psi.impl.cache;
 
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
-import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 
-@ProjectService
 public abstract class CacheManager {
+  @NotNull
+  public static CacheManager getInstance(@NotNull Project project) {
+    return ServiceManager.getService(project, CacheManager.class);
+  }
 
   @NotNull
   public abstract PsiFile[] getFilesWithWord(@NotNull String word, short occurenceMask, @NotNull GlobalSearchScope scope, final boolean caseSensitively);

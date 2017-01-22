@@ -17,11 +17,11 @@ package consulo.ide.plugins;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.actions.ShowSettingsUtilImpl;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.FilterComponent;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -31,8 +31,9 @@ import java.awt.*;
  * @author VISTALL
  * @since 04-Sep-16
  */
-@Logger
 public class AvailablePluginsDialog extends SingleConfigurableEditor {
+  public static final Logger LOGGER = Logger.getInstance(AvailablePluginsDialog.class);
+
   public AvailablePluginsDialog(Component parent, SearchableConfigurable configurable, FilterComponent myFilter) {
     super(parent, configurable, ShowSettingsUtilImpl.createDimensionKey(configurable), false);
 

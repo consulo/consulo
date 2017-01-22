@@ -17,7 +17,6 @@ package consulo.ide.updateSettings;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
-import consulo.lombok.annotations.ApplicationService;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -29,8 +28,12 @@ import java.io.File;
 @State(
         name = "UpdateSettings",
         storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/updates.xml", roamingType = RoamingType.DISABLED)})
-@ApplicationService
 public class UpdateSettings implements PersistentStateComponent<UpdateSettings.State> {
+  @NotNull
+  public static UpdateSettings getInstance() {
+    return ServiceManager.getService(UpdateSettings.class);
+  }
+
   static class State {
     public boolean enable = true;
     public long lastTimeCheck = 0;

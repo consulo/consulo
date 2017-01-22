@@ -20,6 +20,7 @@ import com.intellij.lang.Commenter;
 import com.intellij.lang.LanguageCommenters;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
@@ -37,17 +38,17 @@ import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
 import com.maddyhome.idea.copyright.util.FileTypeUtil;
-import consulo.lombok.annotations.Logger;
+import consulo.copyright.config.CopyrightFileConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.copyright.config.CopyrightFileConfig;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Logger
 public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
+  public static final Logger LOGGER = Logger.getInstance(UpdatePsiFileCopyright.class);
+
   private final T myFileConfig;
   @NotNull
   private final PsiFile myPsiFile;

@@ -15,6 +15,7 @@
  */
 package consulo.bundle.ui;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
@@ -25,7 +26,6 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,8 +38,9 @@ import javax.swing.event.ChangeListener;
  * @author VISTALL
  * @since 21.03.14
  */
-@Logger
 public class SdkEditor extends BaseSdkEditor {
+  public static final Logger LOGGER = Logger.getInstance(SdkEditor.class);
+
   @NonNls
   private static final String SDK_TAB = "sdkTab";
   @NotNull private final History myHistory;

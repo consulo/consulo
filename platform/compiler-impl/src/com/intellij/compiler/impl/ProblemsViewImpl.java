@@ -18,6 +18,7 @@ package com.intellij.compiler.impl;
 import com.intellij.compiler.ProblemsView;
 import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
@@ -33,7 +34,6 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.compiler.server.rmi.CompilerClientConnector;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,8 +45,9 @@ import java.util.concurrent.ExecutorService;
  * @author Eugene Zhuravlev
  *         Date: 9/18/12
  */
-@Logger
 public class ProblemsViewImpl extends ProblemsView {
+  public static final Logger LOGGER = Logger.getInstance(ProblemsViewImpl.class);
+
   private static class TempMessage {
     final int type;
     @NotNull

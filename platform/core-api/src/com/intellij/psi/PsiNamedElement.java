@@ -15,19 +15,28 @@
  */
 package com.intellij.psi;
 
+import com.intellij.util.ArrayFactory;
 import com.intellij.util.IncorrectOperationException;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
 
 /**
  * A PSI element which has a name and can be renamed (for example, a class or a method).
  */
-@ArrayFactoryFields
 public interface PsiNamedElement extends PsiElement {
+  public static final PsiNamedElement[] EMPTY_ARRAY = new PsiNamedElement[0];
+
+  public static ArrayFactory<PsiNamedElement> ARRAY_FACTORY = new ArrayFactory<PsiNamedElement>() {
+    @NotNull
+    @Override
+    public PsiNamedElement[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new PsiNamedElement[count];
+    }
+  };
+
   /**
    * Returns the name of the element.
    *

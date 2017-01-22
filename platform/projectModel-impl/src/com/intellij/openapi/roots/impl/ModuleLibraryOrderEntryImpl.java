@@ -16,27 +16,28 @@
 
 package com.intellij.openapi.roots.impl;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
-import consulo.roots.impl.ModuleRootLayerImpl;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.PathUtil;
-import consulo.lombok.annotations.Logger;
-import org.jetbrains.annotations.NotNull;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.ModuleLibraryOrderEntryType;
+import consulo.roots.types.BinariesOrderRootType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Library entry for module ("in-place") libraries
  *
  * @author dsl
  */
-@Logger
 public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements LibraryOrderEntry, ClonableOrderEntry {
+  public static final Logger LOGGER = Logger.getInstance(ModuleLibraryOrderEntryImpl.class);
+
   private final Library myLibrary;
   private boolean myExported;
 

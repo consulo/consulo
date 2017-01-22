@@ -16,7 +16,6 @@
 package consulo.roots.types;
 
 import com.intellij.openapi.roots.OrderRootType;
-import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SourcesOrderRootType extends OrderRootType {
   @NotNull
-  @Lazy
   public static SourcesOrderRootType getInstance() {
     return getOrderRootType(SourcesOrderRootType.class);
   }

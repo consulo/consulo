@@ -15,12 +15,26 @@
  */
 package com.intellij.openapi.application;
 
-import consulo.lombok.annotations.Bundle;
+import com.intellij.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * Provides access to localized properties for the application component of IDEA.
  */
-@Bundle("messages.ApplicationBundle")
-public class ApplicationBundle {
+public class ApplicationBundle extends AbstractBundle {
   public static final String BUNDLE = "messages.ApplicationBundle";
+
+  private static final ApplicationBundle ourInstance = new ApplicationBundle();
+
+  private ApplicationBundle() {
+    super(BUNDLE);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
+    return ourInstance.getMessage(key);
+  }
+
+  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
+    return ourInstance.getMessage(key, params);
+  }
 }

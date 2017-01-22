@@ -16,13 +16,15 @@
 
 package com.intellij.openapi.roots.impl;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.OrderEntry;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jetbrains.annotations.NotNull;
 import consulo.roots.orderEntry.OrderEntryType;
 
-@consulo.lombok.annotations.Logger
 public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implements OrderEntry {
+  public static final Logger LOGGER = Logger.getInstance(OrderEntryBaseImpl.class);
+
   private static int _hc = 0;
 
   @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})

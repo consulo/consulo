@@ -16,7 +16,7 @@
 package com.intellij.openapi.options;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import consulo.lombok.annotations.ArrayFactoryFields;
+import com.intellij.util.ArrayFactory;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
@@ -52,8 +52,16 @@ import javax.swing.*;
  * @see SearchableConfigurable
  * @see consulo.options.SimpleConfigurable
  */
-@ArrayFactoryFields
 public interface Configurable extends UnnamedConfigurable {
+  public static final Configurable[] EMPTY_ARRAY = new Configurable[0];
+
+  public static ArrayFactory<Configurable> ARRAY_FACTORY = new ArrayFactory<Configurable>() {
+    @NotNull
+    @Override
+    public Configurable[] create(int count) {
+      return count == 0 ? EMPTY_ARRAY : new Configurable[count];
+    }
+  };
 
   ExtensionPointName<ConfigurableEP<Configurable>> APPLICATION_CONFIGURABLE = ExtensionPointName.create("com.intellij.applicationConfigurable");
 

@@ -41,12 +41,11 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.lombok.annotations.Lazy;
 import consulo.annotations.Immutable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -56,7 +55,6 @@ import java.util.*;
  */
 public class TargetElementUtil {
   @NotNull
-  @Lazy
   @Immutable
   public static Set<String> getAllAccepted() {
     Set<String> flags = new LinkedHashSet<String>();
@@ -65,7 +63,6 @@ public class TargetElementUtil {
   }
 
   @NotNull
-  @Lazy
   @Immutable
   public static Set<String> getDefinitionSearchFlags() {
     Set<String> flags = new LinkedHashSet<String>();
@@ -74,7 +71,6 @@ public class TargetElementUtil {
   }
 
   @NotNull
-  @Lazy
   @Immutable
   public static Set<String> getReferenceSearchFlags() {
     Set<String> flags = new LinkedHashSet<String>();

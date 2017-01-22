@@ -17,6 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.injected.editor.VirtualFileWindow;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -38,8 +39,9 @@ import consulo.roots.impl.TestResourceContentFolderTypeProvider;
 import java.util.Arrays;
 import java.util.List;
 
-@consulo.lombok.annotations.Logger
 public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIndex {
+  public static final Logger LOGGER = Logger.getInstance(ProjectFileIndexImpl.class);
+
   private final Project myProject;
   private final ContentFilter myContentFilter;
 

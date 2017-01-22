@@ -16,8 +16,8 @@
 package com.intellij.openapi.components;
 
 import com.intellij.openapi.application.PathMacroFilter;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.lombok.annotations.Logger;
 import org.jdom.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,8 +26,9 @@ import org.jetbrains.annotations.Nullable;
  * @author Eugene Zhuravlev
  * @since Dec 6, 2004
  */
-@Logger
 public abstract class PathMacroMap {
+  public static final Logger LOGGER = Logger.getInstance(PathMacroMap.class);
+
   public abstract String substitute(String text, boolean caseSensitive);
 
   public final void substitute(@NotNull Element e, boolean caseSensitive) {

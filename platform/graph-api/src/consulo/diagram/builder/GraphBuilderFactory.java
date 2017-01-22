@@ -15,13 +15,18 @@
  */
 package consulo.diagram.builder;
 
-import consulo.lombok.annotations.ApplicationService;
+import com.intellij.openapi.components.ServiceManager;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 22:36/15.10.13
  */
-@ApplicationService
 public abstract class GraphBuilderFactory {
+  @NotNull
+  public static GraphBuilderFactory getInstance() {
+    return ServiceManager.getService(GraphBuilderFactory.class);
+  }
+
   public abstract GraphBuilder createBuilder();
 }

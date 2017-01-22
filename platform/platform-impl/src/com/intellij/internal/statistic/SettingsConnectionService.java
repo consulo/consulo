@@ -15,9 +15,6 @@
  */
 package com.intellij.internal.statistic;
 
-import consulo.lombok.annotations.Logger;
-
-@Logger
 public abstract class SettingsConnectionService {
 
 }
