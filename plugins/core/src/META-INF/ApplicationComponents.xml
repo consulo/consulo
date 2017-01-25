@@ -315,5 +315,10 @@
     <component>
       <implementation-class>com.intellij.openapi.editor.richcopy.settings.RichCopySettings</implementation-class>
     </component>
+
+    <component>
+      <interface-class>com.intellij.util.gist.GistManager</interface-class>
+      <implementation-class>com.intellij.util.gist.GistManagerImpl</implementation-class>
+    </component>
   </application-components>
 </idea-plugin>
