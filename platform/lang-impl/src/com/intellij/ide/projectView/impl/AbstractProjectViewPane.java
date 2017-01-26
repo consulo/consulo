@@ -443,7 +443,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     return myTreeBuilder;
   }
 
-  public void readExternal(Element element) throws InvalidDataException {
+  public void readExternal(Element element) {
     List<Element> subPanes = element.getChildren(ELEMENT_SUBPANE);
     for (Element subPane : subPanes) {
       String subId = subPane.getAttributeValue(ATTRIBUTE_SUBID);
@@ -462,7 +462,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
   }
 
-  public void writeExternal(Element element) throws WriteExternalException {
+  public void writeExternal(Element element) {
     saveExpandedPaths();
     for (String subId : myReadTreeState.keySet()) {
       TreeState treeState = myReadTreeState.get(subId);

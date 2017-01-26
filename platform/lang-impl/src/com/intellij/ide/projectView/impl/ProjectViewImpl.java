@@ -571,12 +571,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
     myExtensionsLoaded = true;
     for(AbstractProjectViewPane pane: Extensions.getExtensions(AbstractProjectViewPane.EP_NAME, myProject)) {
       if (myUninitializedPaneState.containsKey(pane.getId())) {
-        try {
-          pane.readExternal(myUninitializedPaneState.get(pane.getId()));
-        }
-        catch (InvalidDataException e) {
-          // ignore
-        }
+        pane.readExternal(myUninitializedPaneState.get(pane.getId()));
         myUninitializedPaneState.remove(pane.getId());
       }
       if (pane.isInitiallyVisible() && !myId2Pane.containsKey(pane.getId())) {
@@ -1352,12 +1347,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
       String paneId = paneElement.getAttributeValue(ATTRIBUTE_ID);
       final AbstractProjectViewPane pane = myId2Pane.get(paneId);
       if (pane != null) {
-        try {
-          pane.readExternal(paneElement);
-        }
-        catch (InvalidDataException e) {
-          // ignore
-        }
+        pane.readExternal(paneElement);
       }
       else {
         myUninitializedPaneState.put(paneId, paneElement);
@@ -1406,12 +1396,7 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
     for (AbstractProjectViewPane pane : myId2Pane.values()) {
       Element paneElement = new Element(ELEMENT_PANE);
       paneElement.setAttribute(ATTRIBUTE_ID, pane.getId());
-      try {
-        pane.writeExternal(paneElement);
-      }
-      catch (WriteExternalException e) {
-        continue;
-      }
+      pane.writeExternal(paneElement);
       panesElement.addContent(paneElement);
     }
     for (Element element : myUninitializedPaneState.values()) {
