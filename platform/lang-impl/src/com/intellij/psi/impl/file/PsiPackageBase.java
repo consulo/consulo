@@ -134,12 +134,6 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     }
   }
 
-  @Nullable
-  @Override
-  public PsiQualifiedNamedElement getContainer() {
-    return getParentPackage();
-  }
-
   @Override
   public void handleQualifiedNameChange(@NotNull String newQualifiedName) {
 
