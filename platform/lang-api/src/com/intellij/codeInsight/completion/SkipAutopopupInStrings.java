@@ -33,12 +33,6 @@ import org.jetbrains.annotations.NotNull;
 public class SkipAutopopupInStrings extends CompletionConfidence {
   @NotNull
   @Override
-  public ThreeState shouldFocusLookup(@NotNull CompletionParameters parameters) {
-    return ThreeState.UNSURE;
-  }
-
-  @NotNull
-  @Override
   public ThreeState shouldSkipAutopopup(@NotNull PsiElement contextElement, @NotNull PsiFile psiFile, int offset) {
     if (isInStringLiteral(contextElement)) {
       return ThreeState.YES;

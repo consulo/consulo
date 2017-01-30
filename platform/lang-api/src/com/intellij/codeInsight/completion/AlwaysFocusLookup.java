@@ -15,16 +15,9 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.util.ThreeState;
-import org.jetbrains.annotations.NotNull;
-
 /**
  * @author peter
  */
+@Deprecated
 public class AlwaysFocusLookup extends CompletionConfidence {
-  @NotNull
-  @Override
-  public ThreeState shouldFocusLookup(@NotNull CompletionParameters parameters) {
-    return ThreeState.YES;
-  }
 }

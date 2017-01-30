@@ -15,21 +15,9 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ThreeState;
-import org.jetbrains.annotations.NotNull;
-
 /**
  * @author peter
  */
+@Deprecated
 public class UnfocusedComments extends CompletionConfidence {
-  @NotNull
-  @Override
-  public ThreeState shouldFocusLookup(@NotNull CompletionParameters parameters) {
-    if (PsiTreeUtil.getParentOfType(parameters.getPosition(), PsiComment.class, false) != null) {
-      return ThreeState.NO;
-    }
-    return ThreeState.UNSURE;
-  }
 }
