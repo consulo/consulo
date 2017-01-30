@@ -19,7 +19,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.projectWizard.ProjectBuilder;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
@@ -36,8 +35,6 @@ import java.util.List;
  * @author Vladislav.Kaznacheev
  */
 public abstract class ProjectImportBuilder<T> extends ProjectBuilder {
-  public static final ExtensionPointName<ProjectImportBuilder> EXTENSIONS_POINT_NAME = ExtensionPointName.create("com.intellij.projectImportBuilder");
-
   private boolean myUpdate;
   private String myFileToImport;
 
