@@ -56,7 +56,7 @@ public class SelectExternalProjectStep extends AbstractImportFromExternalSystemW
   }
 
   @Override
-  public void updateStep(WizardContext wizardContext) {
+  public void updateStep(@NotNull WizardContext wizardContext) {
     if (!myGradleSettingsInitialised) {
       initExternalProjectSettingsControl();
     }

@@ -89,10 +89,12 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
     }
   }
 
+  @Nullable
+  @SuppressWarnings("unchecked")
   private static Project doCreate(final AddModuleWizard wizard, @Nullable Project projectToClose, boolean openAfter) throws IOException {
     final ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
     final String projectFilePath = wizard.getNewProjectFilePath();
-    final ModuleImportProvider<?> importProvider = wizard.getImportProvider();
+    final ModuleImportProvider importProvider = wizard.getImportProvider();
 
     ModuleImportContext importContext = importProvider == null ? null : wizard.getWizardContext().getModuleImportContext(importProvider);
 
@@ -150,7 +152,7 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
       }
 
       if (importProvider != null) {
-        importProvider.commit(newProject, null, ModulesProvider.EMPTY_MODULES_PROVIDER, null);
+        importProvider.commit(importContext, newProject, null, ModulesProvider.EMPTY_MODULES_PROVIDER, null);
       }
 
       final boolean need2OpenProjectStructure = importContext == null || importContext.isOpenProjectSettingsAfter();

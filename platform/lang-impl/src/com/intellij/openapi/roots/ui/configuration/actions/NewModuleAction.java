@@ -93,8 +93,9 @@ public class NewModuleAction extends AnAction implements DumbAware {
   }
 
   @Nullable
+  @SuppressWarnings("unchecked")
   public static Module createModuleFromWizard(Project project, @Nullable Object dataFromContext, AddModuleWizard wizard) {
-    final ModuleImportProvider<?> importProvider = wizard.getImportProvider();
+    final ModuleImportProvider importProvider = wizard.getImportProvider();
     if (importProvider instanceof ModuleBuilder) {
       final ModuleBuilder moduleBuilder = (ModuleBuilder)importProvider;
       if (moduleBuilder.getName() == null) {
@@ -114,7 +115,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
     }
     else {
       ModuleImportContext context = wizard.getWizardContext().getModuleImportContext(importProvider);
-      List<Module> modules = importProvider.commit(project, null, DefaultModulesProvider.createForProject(project), null);
+      List<Module> modules = importProvider.commit(context, project, null, DefaultModulesProvider.createForProject(project), null);
       if (context.isOpenProjectSettingsAfter()) {
         ModulesConfigurator.showDialog(project, null, null);
       }

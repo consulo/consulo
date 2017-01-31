@@ -88,7 +88,7 @@ public class ImportChooserStep extends ProjectImportWizardStep {
   }
 
   @Override
-  public void updateStep(WizardContext wizardContext) {
+  public void updateStep(@NotNull WizardContext wizardContext) {
     if (myList.getSelectedValue() != null) return;
 
     if (myList.getSelectedValue() == null) {

@@ -59,7 +59,7 @@ public class ExternalModuleSettingsStep<S extends ExternalProjectSettings> exten
   }
 
   @Override
-  public boolean validate(WizardContext wizardContext) throws ConfigurationException {
+  public boolean validate(@NotNull WizardContext wizardContext) throws ConfigurationException {
     if (!super.validate(wizardContext)) {
       return false;
     }
@@ -73,7 +73,7 @@ public class ExternalModuleSettingsStep<S extends ExternalProjectSettings> exten
   }
 
   @Override
-  public void updateStep(WizardContext wizardContext) {
+  public void updateStep(@NotNull WizardContext wizardContext) {
     String contentPath = myExternalModuleBuilder.getContentEntryPath();
     if (contentPath != null) {
       myControl.getInitialSettings().setExternalProjectPath(contentPath);

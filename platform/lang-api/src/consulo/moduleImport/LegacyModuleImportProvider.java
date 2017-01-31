@@ -69,7 +69,11 @@ public class LegacyModuleImportProvider implements ModuleImportProvider<ModuleIm
 
   @NotNull
   @Override
-  public List<Module> commit(@NotNull Project project, ModifiableModuleModel model, @NotNull ModulesProvider modulesProvider, ModifiableArtifactModel artifactModel) {
+  public List<Module> commit(@NotNull ModuleImportContext context,
+                             @NotNull Project project,
+                             ModifiableModuleModel model,
+                             @NotNull ModulesProvider modulesProvider,
+                             ModifiableArtifactModel artifactModel) {
     ProjectImportBuilder<?> builder = myProvider.getBuilder();
     List<Module> list = builder.commit(project, model, modulesProvider);
     return list == null ? Collections.<Module>emptyList() : list;

@@ -39,6 +39,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ModuleImportProviders;
 import org.jetbrains.annotations.NotNull;
@@ -77,6 +78,7 @@ public class ImportModuleAction extends AnAction {
 
   @NotNull
   @RequiredReadAction
+  @SuppressWarnings("unchecked")
   public static List<Module> createFromWizard(Project project, @NotNull AddModuleWizard wizard) {
     if (project == null && wizard.getStepCount() > 0) {
       Project newProject = NewProjectUtil.createFromWizard(wizard, null);
@@ -85,7 +87,7 @@ public class ImportModuleAction extends AnAction {
 
     WizardContext wizardContext = wizard.getWizardContext();
 
-    ModuleImportProvider<?> importProvider = wizard.getImportProvider();
+    ModuleImportProvider importProvider = wizard.getImportProvider();
 
     try {
       if (wizard.getStepCount() > 0) {
@@ -93,7 +95,8 @@ public class ImportModuleAction extends AnAction {
         return Collections.singletonList(module);
       }
       else {
-        return importProvider.commit(project);
+        ModuleImportContext moduleImportContext = wizardContext.getModuleImportContext(importProvider);
+        return importProvider.commit(moduleImportContext, project);
       }
     }
     finally {

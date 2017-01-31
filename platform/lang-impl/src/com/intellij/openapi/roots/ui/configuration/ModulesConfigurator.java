@@ -44,6 +44,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
@@ -54,6 +55,7 @@ import com.intellij.util.graph.GraphGenerator;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.ide.newProject.actions.NewProjectAction;
+import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
@@ -325,15 +327,21 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
 
   @Nullable
   @RequiredDispatchThread
+  @SuppressWarnings("unchecked")
   public List<Module> addModule(Component parent, boolean anImport) {
     if (myProject.isDefault()) return null;
 
     if (anImport) {
-      final ModuleImportProvider<?> builder = runModuleWizard(parent, true);
-      if (builder != null) {
+      Pair<ModuleImportProvider, ModuleImportContext> pair = runModuleWizard(parent, true);
+      if (pair != null) {
+        ModuleImportProvider importProvider = pair.getFirst();
+        ModuleImportContext importContext = pair.getSecond();
+        assert importProvider != null;
+        assert importContext != null;
+
         final ModifiableArtifactModel artifactModel =
                 ProjectStructureConfigurable.getInstance(myProject).getArtifactsStructureConfigurable().getModifiableArtifactModel();
-        List<Module> commitedModules = builder.commit(myProject, myModuleModel, this, artifactModel);
+        List<Module> commitedModules = importProvider.commit(importContext, myProject, myModuleModel, this, artifactModel);
 
         ApplicationManager.getApplication().runWriteAction(() -> {
           for (Module module : commitedModules) {
@@ -440,12 +448,14 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
   @Nullable
-  ModuleImportProvider<?> runModuleWizard(Component dialogParent, boolean anImport) {
+  Pair<ModuleImportProvider, ModuleImportContext> runModuleWizard(Component dialogParent, boolean anImport) {
     AddModuleWizard wizard;
     if (anImport) {
       wizard = ImportModuleAction.selectFileAndCreateWizard(myProject, dialogParent);
       if (wizard == null) return null;
-      if (wizard.getStepCount() == 0) return wizard.getImportProvider();
+      if (wizard.getStepCount() == 0) {
+        return Pair.create(wizard.getImportProvider(), wizard.getWizardContext().getModuleImportContext(wizard.getImportProvider()));
+      }
     }
     else {
       wizard = new AddModuleWizard(dialogParent, myProject, this);
@@ -465,7 +475,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       if (!builder.validate(myProject, myProject)) {
         return null;
       }
-      return wizard.getImportProvider();
+      return Pair.create(wizard.getImportProvider(), wizard.getWizardContext().getModuleImportContext(builder));
     }
 
     return null;

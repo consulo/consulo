@@ -128,7 +128,8 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
 
   @NotNull
   @Override
-  public List<Module> commit(@NotNull final Project project,
+  public List<Module> commit(@NotNull ExternalModuleImportContext context,
+                             @NotNull final Project project,
                              ModifiableModuleModel model,
                              @NotNull ModulesProvider modulesProvider,
                              ModifiableArtifactModel artifactModel) {

@@ -54,12 +54,13 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
 
   boolean canImport(@NotNull VirtualFile fileOrDirectory);
 
-  default List<Module> commit(@NotNull Project project) {
-    return commit(project, null, DefaultModulesProvider.createForProject(project), null);
+  default List<Module> commit(@NotNull C context, @NotNull Project project) {
+    return commit(context, project, null, DefaultModulesProvider.createForProject(project), null);
   }
 
   @NotNull
-  List<Module> commit(@NotNull Project project,
+  List<Module> commit(@NotNull C context,
+                      @NotNull Project project,
                       @Nullable ModifiableModuleModel model,
                       @NotNull ModulesProvider modulesProvider,
                       @Nullable ModifiableArtifactModel artifactModel);

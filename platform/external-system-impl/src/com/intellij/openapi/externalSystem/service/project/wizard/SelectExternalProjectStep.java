@@ -41,7 +41,7 @@ public class SelectExternalProjectStep extends AbstractImportFromExternalSystemW
   }
 
   @Override
-  public void updateStep(WizardContext wizardContext) {
+  public void updateStep(@NotNull WizardContext wizardContext) {
     if (!myGradleSettingsInitialised) {
       initExternalProjectSettingsControl();
     }
@@ -58,7 +58,7 @@ public class SelectExternalProjectStep extends AbstractImportFromExternalSystemW
   //}
 
   @Override
-  public boolean validate(WizardContext wizardContext) throws ConfigurationException {
+  public boolean validate(@NotNull WizardContext wizardContext) throws ConfigurationException {
     myControl.apply();
     AbstractExternalProjectImportBuilder builder = (AbstractExternalProjectImportBuilder)getBuilder();
     if (builder == null) {

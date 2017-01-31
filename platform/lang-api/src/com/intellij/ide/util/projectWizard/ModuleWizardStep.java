@@ -48,11 +48,15 @@ public abstract class ModuleWizardStep extends StepAdapter {
     return true;
   }
 
-  public void onStepLeaving() {
-    // empty by default
+  public void onStepLeaving(@NotNull WizardContext wizardContext) {
+    onStepLeaving();
   }
 
-  public void updateStep(WizardContext wizardContext) {
+  @Deprecated
+  public void onStepLeaving() {
+  }
+
+  public void updateStep(@NotNull WizardContext wizardContext) {
     updateStep();
   }
 

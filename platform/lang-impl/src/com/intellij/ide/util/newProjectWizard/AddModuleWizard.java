@@ -227,7 +227,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
         if (!commitStepData(step)) {
           return;
         }
-        step.onStepLeaving();
+        step.onStepLeaving(getWizardContext());
         try {
           step._commit(true);
         }
@@ -274,21 +274,21 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
     if (!commitStepData(step)) {
       return;
     }
-    step.onStepLeaving();
+    step.onStepLeaving(getWizardContext());
     super.doNextAction();
   }
 
   @Override
   protected void doPreviousAction() {
     final ModuleWizardStep step = getCurrentStepObject();
-    step.onStepLeaving();
+    step.onStepLeaving(getWizardContext());
     super.doPreviousAction();
   }
 
   @Override
   public void doCancelAction() {
     final ModuleWizardStep step = getCurrentStepObject();
-    step.onStepLeaving();
+    step.onStepLeaving(getWizardContext());
     super.doCancelAction();
   }
 
