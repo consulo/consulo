@@ -36,12 +36,11 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
-import consulo.annotations.RequiredReadAction;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -87,14 +86,8 @@ public class PsiManagerImpl extends PsiManagerEx {
     myFileManager = isProjectDefault ? new EmptyFileManager(this) : new FileManagerImpl(this, fileDocumentManager, fileIndex);
 
     myTreeChangePreprocessors.add((PsiTreeChangePreprocessor)modificationTracker);
-    Collections.addAll(myTreeChangePreprocessors, Extensions.getExtensions(PsiTreeChangePreprocessor.EP_NAME, myProject));
 
-    Disposer.register(project, new Disposable() {
-      @Override
-      public void dispose() {
-        myIsDisposed = true;
-      }
-    });
+    Disposer.register(project, () -> myIsDisposed = true);
   }
 
   @Override
@@ -362,6 +355,10 @@ public class PsiManagerImpl extends PsiManagerEx {
     }
     try {
       for (PsiTreeChangePreprocessor preprocessor : myTreeChangePreprocessors) {
+        preprocessor.treeChanged(event);
+      }
+
+      for (PsiTreeChangePreprocessor preprocessor : Extensions.getExtensions(PsiTreeChangePreprocessor.EP_NAME, myProject)) {
         preprocessor.treeChanged(event);
       }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,84 +16,106 @@
 
 package com.intellij.psi.impl;
 
-import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiModificationTracker;
+import com.intellij.psi.PsiFileSystemItem;
+import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author yole
- */
 public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePreprocessor {
-  private final PsiModificationTrackerImpl myModificationTracker;
 
-  public PsiTreeChangePreprocessorBase(@NotNull Project project) {
-    myModificationTracker = (PsiModificationTrackerImpl)PsiModificationTracker.SERVICE.getInstance(project);
+  protected final PsiManager myPsiManager;
+
+  public PsiTreeChangePreprocessorBase(@NotNull PsiManager psiManager) {
+    myPsiManager = psiManager;
+  }
+
+  protected abstract boolean acceptsEvent(@NotNull PsiTreeChangeEventImpl event);
+
+  /**
+   * Shall return true <em>if and only if</em> the element is considered to be "out of code block"
+   * (the exact meaning is language- or technology-specific); otherwise false.
+   *
+   * @see PsiModificationTrackerImpl#getOutOfCodeBlockModificationCount()
+   */
+  protected abstract boolean isOutOfCodeBlock(@NotNull PsiElement element);
+
+  protected boolean isOutOfCodeBlock(@NotNull PsiFileSystemItem file) {
+    return true;
+  }
+
+  private boolean outOfCodeBlock(@Nullable PsiElement element) {
+    if (element == null || !element.isValid()) return false;
+    if (element instanceof PsiDirectory) return false; // handled by PsiModificationTrackerImpl#treeChanged()
+    if (element instanceof PsiFileSystemItem) return isOutOfCodeBlock((PsiFileSystemItem)element);
+    return isOutOfCodeBlock(element);
   }
 
   @Override
   public final void treeChanged(@NotNull PsiTreeChangeEventImpl event) {
-    boolean modifyOutOfCodeCounter = false;
+    if (!PsiModificationTrackerImpl.canAffectPsi(event)) {
+      return;
+    }
+    if (!acceptsEvent(event)) {
+      return;
+    }
+    onTreeChanged(event);
+  }
+
+  protected void onTreeChanged(@NotNull PsiTreeChangeEventImpl event) {
+    boolean outOfCodeBlock;
 
     switch (event.getCode()) {
-      case BEFORE_CHILDREN_CHANGE:
-        if (event.getParent() instanceof PsiFile) {
-          modifyOutOfCodeCounter = false;
-          break; // May be caused by fake PSI event from PomTransaction. A real event will anyway follow.
-        }
+      case BEFORE_PROPERTY_CHANGE:
+      case BEFORE_CHILD_MOVEMENT:
+      case BEFORE_CHILD_ADDITION:
+      case BEFORE_CHILD_REMOVAL:
+      case BEFORE_CHILD_REPLACEMENT:
+        outOfCodeBlock = false;
+        break;
 
+      case BEFORE_CHILDREN_CHANGE:
       case CHILDREN_CHANGED:
         if (event.isGenericChange()) {
           return;
         }
-        modifyOutOfCodeCounter = modifyOutOfCodeCounter(event.getFile(), event.getParent());
+        outOfCodeBlock = outOfCodeBlock(event.getParent());
         break;
 
-      case BEFORE_CHILD_ADDITION:
-      case BEFORE_CHILD_REMOVAL:
       case CHILD_ADDED:
       case CHILD_REMOVED:
-        modifyOutOfCodeCounter = modifyOutOfCodeCounter(event.getFile(), event.getParent());
-        break;
-
-      case BEFORE_PROPERTY_CHANGE:
-      case PROPERTY_CHANGED:
-        modifyOutOfCodeCounter = true;
-        break;
-
-      case BEFORE_CHILD_REPLACEMENT:
       case CHILD_REPLACED:
-        modifyOutOfCodeCounter = modifyOutOfCodeCounter(event.getFile(), event.getParent());
+        outOfCodeBlock = outOfCodeBlock(event.getParent()) ||
+                         outOfCodeBlock(event.getChild()) ||
+                         outOfCodeBlock(event.getOldChild()) ||
+                         outOfCodeBlock(event.getNewChild());
         break;
 
-      case BEFORE_CHILD_MOVEMENT:
+      case PROPERTY_CHANGED:
+        outOfCodeBlock = true;
+        break;
+
       case CHILD_MOVED:
-        modifyOutOfCodeCounter = modifyOutOfCodeCounter(event.getFile(), event.getOldParent()) && modifyOutOfCodeCounter(event.getFile(), event.getNewParent());
+        outOfCodeBlock = outOfCodeBlock(event.getOldParent()) ||
+                         outOfCodeBlock(event.getNewParent()) ||
+                         outOfCodeBlock(event.getChild());
+        break;
+      default:
+        outOfCodeBlock = true;
         break;
     }
 
-    if (modifyOutOfCodeCounter) {
-      myModificationTracker.incOutOfCodeBlockModificationCounter();
+    if (outOfCodeBlock) {
+      onOutOfCodeBlockModification(event);
+      doIncOutOfCodeBlockCounter();
     }
   }
 
-  protected abstract boolean isMyFile(@NotNull PsiFile file);
-
-  protected boolean isMaybeMyElement(@Nullable PsiElement element) {
-    return false;
+  protected void onOutOfCodeBlockModification(@NotNull PsiTreeChangeEventImpl event) {
   }
 
-  protected boolean modifyOutOfCodeCounter(@Nullable PsiFile file, @Nullable PsiElement element) {
-    if(file == null) {
-      return isMaybeMyElement(element);
-    }
-    else if(isMyFile(file)) {
-      return !isInsideCodeBlock(element);
-    }
-    return false;
+  protected void doIncOutOfCodeBlockCounter() {
+    ((PsiModificationTrackerImpl)myPsiManager.getModificationTracker()).incOutOfCodeBlockModificationCounter();
   }
-
-  protected abstract boolean isInsideCodeBlock(@Nullable PsiElement element);
 }
