@@ -21,6 +21,13 @@
     </component>
   </project-components>
 
+  <actions>
+    <group id="XDebugger.AttachGroup">
+      <action id="XDebugger.AttachToLocalProcess" class="com.intellij.xdebugger.impl.actions.AttachToLocalProcessAction"/>
+      <add-to-group group-id="RunMenu" anchor="before" relative-to-action="editRunConfigurations"/>
+    </group>
+  </actions>
+
   <extensionPoints>
     <extensionPoint name="xdebugger.settings" interface="com.intellij.xdebugger.settings.XDebuggerSettings"/>
     <extensionPoint name="xdebugger.breakpointType" interface="com.intellij.xdebugger.breakpoints.XBreakpointType"/>
@@ -28,6 +35,7 @@
     <extensionPoint name="xdebugger.lineBreakpointTypeResolver" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="consulo.xdebugger.breakpoints.XLineBreakpointTypeResolver"/>
     </extensionPoint>
+    <extensionPoint name="xdebugger.localAttachDebuggerProvider" interface="com.intellij.xdebugger.attach.XLocalAttachDebuggerProvider"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">

@@ -515,6 +515,7 @@
           <orderEntry type="module" module-name="diff-api" />
           <orderEntry type="library" name="commons-compress" level="project" />
           <orderEntry type="library" name="args4j" level="project" />
+          <orderEntry type="library" name="javasysmon" level="project" />
         </module-layer>
       </module>
       <module name="impl/platform-main" dirurl="file://$PROJECT_DIR$/platform/platform-main" current-layer="Default">

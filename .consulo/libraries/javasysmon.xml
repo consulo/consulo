@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="javasysmon">
+    <binaries>
+      <root url="jar://$PROJECT_DIR$/lib/javasysmon-0.3.6.jar!/" />
+    </binaries>
+    <sources>
+      <root url="zip://$PROJECT_DIR$/libSrc/javasysmon-0.3.6-src.zip!/" />
+    </sources>
+  </library>
+</component>
