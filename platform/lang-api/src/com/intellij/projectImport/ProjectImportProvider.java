@@ -34,6 +34,7 @@ import consulo.annotations.DeprecationInfo;
 
 import javax.swing.*;
 
+@Deprecated
 public abstract class ProjectImportProvider {
   public static final ExtensionPointName<ProjectImportProvider> EP_NAME = ExtensionPointName.create("com.intellij.projectImportProvider");
 
@@ -41,6 +42,7 @@ public abstract class ProjectImportProvider {
 
   protected ProjectImportProvider(final ProjectImportBuilder builder) {
     myBuilder = builder;
+    myBuilder.setProvider(this);
   }
 
   public ProjectImportBuilder getBuilder() {

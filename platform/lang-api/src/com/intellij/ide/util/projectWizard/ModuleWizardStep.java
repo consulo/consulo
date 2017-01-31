@@ -21,6 +21,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.FieldPanel;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,12 +31,19 @@ public abstract class ModuleWizardStep extends StepAdapter {
 
   @Override
   public abstract JComponent getComponent();
+
   public abstract void updateDataModel();
 
-  @NonNls public String getHelpId() {
+  @NonNls
+  public String getHelpId() {
     return null;
   }
 
+  public boolean validate(@NotNull WizardContext wizardContext) throws ConfigurationException {
+    return validate();
+  }
+
+  @Deprecated
   public boolean validate() throws ConfigurationException {
     return true;
   }
@@ -44,8 +52,12 @@ public abstract class ModuleWizardStep extends StepAdapter {
     // empty by default
   }
 
+  public void updateStep(WizardContext wizardContext) {
+    updateStep();
+  }
+
+  @Deprecated
   public void updateStep() {
-    // empty by default
   }
 
   @Override

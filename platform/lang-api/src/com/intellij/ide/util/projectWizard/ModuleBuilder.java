@@ -17,10 +17,8 @@ package com.intellij.ide.util.projectWizard;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import consulo.ide.util.DefaultModuleBuilder;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -29,7 +27,6 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
@@ -38,9 +35,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.EventDispatcher;
+import consulo.ide.util.DefaultModuleBuilder;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -51,9 +47,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+@Deprecated
 public abstract class ModuleBuilder extends AbstractModuleBuilder {
-  private static final ExtensionPointName<ModuleBuilderFactory> EP_NAME = ExtensionPointName.create("com.intellij.moduleBuilder");
-
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.projectWizard.ModuleBuilder");
   protected Sdk myJdk;
   private String myName;
@@ -62,14 +57,6 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   private final Set<ModuleConfigurationUpdater> myUpdaters = new HashSet<ModuleConfigurationUpdater>();
   private final EventDispatcher<ModuleBuilderListener> myDispatcher = EventDispatcher.create(ModuleBuilderListener.class);
   private Map<String, Boolean> myAvailableFrameworks;
-
-  public static List<ModuleBuilder> getAllBuilders() {
-    final ArrayList<ModuleBuilder> result = new ArrayList<ModuleBuilder>();
-    for (ModuleBuilderFactory factory : EP_NAME.getExtensions()) {
-      result.add(factory.createBuilder());
-    }
-    return result;
-  }
 
   @Nullable
   protected final String acceptParameter(String param) {
@@ -173,15 +160,6 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
     if (myContentEntryPath != null) {
       myContentEntryPath = myContentEntryPath.replace(File.separatorChar, '/');
     }
-  }
-
-  protected @Nullable ContentEntry doAddContentEntry(ModifiableRootModel modifiableRootModel) {
-    final String contentEntryPath = getContentEntryPath();
-    if (contentEntryPath == null) return null;
-    new File(contentEntryPath).mkdirs();
-    final VirtualFile moduleContentRoot = LocalFileSystem.getInstance().refreshAndFindFileByPath(contentEntryPath.replace('\\', '/'));
-    if (moduleContentRoot == null) return null;
-    return modifiableRootModel.addContentEntry(moduleContentRoot);
   }
 
   @Nullable
@@ -291,10 +269,6 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
       }
     }
     return null;
-  }
-
-  public Icon getBigIcon() {
-    return AllIcons.Nodes.Module;
   }
 
   public Icon getNodeIcon() {

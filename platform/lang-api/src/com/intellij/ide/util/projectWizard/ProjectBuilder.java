@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@Deprecated
 public abstract class ProjectBuilder {
   public boolean isUpdate() {
     return false;

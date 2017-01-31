@@ -18,6 +18,8 @@ package com.intellij.projectImport;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.moduleImport.ModuleImportProvider;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -34,9 +36,15 @@ public abstract class ProjectImportWizardStep extends ModuleWizardStep {
   public Icon getIcon() {
     return myContext.getStepIcon();
   }
-  
+
+  @Deprecated
   protected ProjectImportBuilder getBuilder() {
     return (ProjectImportBuilder)myContext.getProjectBuilder();
+  }
+
+  @Nullable
+  protected ModuleImportProvider<?> getImportProvider() {
+    return myContext.getImportProvider();
   }
 
   protected WizardContext getWizardContext() {

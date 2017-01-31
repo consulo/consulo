@@ -23,6 +23,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  * @author VISTALL
  * @since 20:38/18.05.13
  */
+@Deprecated
 public class DefaultModuleBuilder extends ModuleBuilder {
   @Override
   public void setupRootModel(ModifiableRootModel modifiableRootModel) throws ConfigurationException {

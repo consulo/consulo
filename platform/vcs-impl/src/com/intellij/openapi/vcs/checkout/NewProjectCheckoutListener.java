@@ -26,7 +26,7 @@ import com.intellij.openapi.vcs.VcsDirectoryMapping;
 import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.projectImport.ProjectImportProvider;
+import consulo.moduleImport.ModuleImportProviders;
 
 import java.io.File;
 import java.util.Collections;
@@ -47,7 +47,7 @@ public class NewProjectCheckoutListener implements VcsAwareCheckoutListener {
       final Project[] projects = pm.getOpenProjects();
       final Set<VirtualFile> files = projectsLocationSet(projects);
       VirtualFile file = LocalFileSystem.getInstance().findFileByIoFile(directory);
-      AddModuleWizard wizard = ImportModuleAction.createImportWizard(null, null, file, ProjectImportProvider.EP_NAME.getExtensions());
+      AddModuleWizard wizard = ImportModuleAction.createImportWizard(null, null, file, ModuleImportProviders.getExtensions());
       if(wizard == null) {
         return false;
       }

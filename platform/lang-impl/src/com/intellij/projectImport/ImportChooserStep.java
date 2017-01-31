@@ -28,16 +28,15 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
+import consulo.moduleImport.ModuleImportProvider;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class ImportChooserStep extends ProjectImportWizardStep {
@@ -45,18 +44,18 @@ public class ImportChooserStep extends ProjectImportWizardStep {
 
   private final StepSequence mySequence;
 
-  private JBList myList;
+  private JBList<ModuleImportProvider> myList;
   private JPanel myPanel;
   private JBLabel myImportTitleLabel;
 
-  public ImportChooserStep(final ProjectImportProvider[] providers, final StepSequence sequence, final WizardContext context) {
+  public ImportChooserStep(final ModuleImportProvider[] providers, final StepSequence sequence, final WizardContext context) {
     super(context);
     mySequence = sequence;
 
     myImportTitleLabel.setText(ProjectBundle.message("project.new.wizard.import.title", context.getPresentationName()));
-    final DefaultListModel model = new DefaultListModel();
-    for (ProjectImportProvider provider : sorted(providers)) {
-       model.addElement(provider);
+    final DefaultListModel<ModuleImportProvider> model = new DefaultListModel<>();
+    for (ModuleImportProvider provider : sorted(providers)) {
+      model.addElement(provider);
     }
     myList.setModel(model);
     myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -64,10 +63,12 @@ public class ImportChooserStep extends ProjectImportWizardStep {
       @Override
       public Component getListCellRendererComponent(final JList list,
                                                     final Object value,
-                                                    final int index, final boolean isSelected, final boolean cellHasFocus) {
+                                                    final int index,
+                                                    final boolean isSelected,
+                                                    final boolean cellHasFocus) {
         final Component rendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        setText(((ProjectImportProvider)value).getName());
-        Icon icon = ((ProjectImportProvider)value).getIcon();
+        setText(((ModuleImportProvider)value).getName());
+        Icon icon = ((ModuleImportProvider)value).getIcon();
         setIcon(icon);
         setDisabledIcon(IconLoader.getDisabledIcon(icon));
         return rendererComponent;
@@ -75,12 +76,7 @@ public class ImportChooserStep extends ProjectImportWizardStep {
     });
 
 
-    myList.addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(final ListSelectionEvent e) {
-        updateSteps();
-      }
-    });
+    myList.addListSelectionListener(e -> updateSteps());
 
     new DoubleClickListener() {
       @Override
@@ -92,7 +88,7 @@ public class ImportChooserStep extends ProjectImportWizardStep {
   }
 
   @Override
-  public void updateStep() {
+  public void updateStep(WizardContext wizardContext) {
     if (myList.getSelectedValue() != null) return;
 
     if (myList.getSelectedValue() == null) {
@@ -101,23 +97,19 @@ public class ImportChooserStep extends ProjectImportWizardStep {
   }
 
   private void updateSteps() {
-    final ProjectImportProvider provider = getSelectedProvider();
+    final ModuleImportProvider provider = getSelectedProvider();
     if (provider != null) {
-      mySequence.setType(provider.getId());
-      PropertiesComponent.getInstance().setValue(PREFERRED, provider.getId());
+      mySequence.setType(provider.getClass().getName());
+      PropertiesComponent.getInstance().setValue(PREFERRED, provider.getClass().getName());
       getWizardContext().requestWizardButtonsUpdate();
     }
   }
 
-  private static List<ProjectImportProvider> sorted(ProjectImportProvider[] providers) {
-    List<ProjectImportProvider> result = new ArrayList<ProjectImportProvider>();
+  @NotNull
+  private static List<ModuleImportProvider> sorted(ModuleImportProvider[] providers) {
+    List<ModuleImportProvider> result = new ArrayList<>();
     Collections.addAll(result, providers);
-    Collections.sort(result, new Comparator<ProjectImportProvider>() {
-      @Override
-      public int compare(ProjectImportProvider l, ProjectImportProvider r) {
-        return l.getName().compareToIgnoreCase(r.getName());
-      }
-    });
+    Collections.sort(result, (l, r) -> l.getName().compareToIgnoreCase(r.getName()));
     return result;
   }
 
@@ -133,17 +125,18 @@ public class ImportChooserStep extends ProjectImportWizardStep {
 
   @Override
   public void updateDataModel() {
-    final ProjectImportProvider provider = getSelectedProvider();
+    final ModuleImportProvider provider = getSelectedProvider();
     if (provider != null) {
-      mySequence.setType(provider.getId());
-      final ProjectImportBuilder builder = provider.getBuilder();
-      getWizardContext().setProjectBuilder(builder);
-      builder.setUpdate(getWizardContext().getProject() != null);
+      mySequence.setType(provider.getClass().getName());
+
+      getWizardContext().setImportProvider(provider);
+
+      getWizardContext().getModuleImportContext(provider).setUpdate(getWizardContext().getProject() != null);
     }
   }
 
-  private ProjectImportProvider getSelectedProvider() {
-    return (ProjectImportProvider)myList.getSelectedValue();
+  private ModuleImportProvider getSelectedProvider() {
+    return myList.getSelectedValue();
   }
 
   @Override

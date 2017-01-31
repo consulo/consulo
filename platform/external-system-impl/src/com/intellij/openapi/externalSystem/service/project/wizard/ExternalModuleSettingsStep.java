@@ -16,6 +16,7 @@
 package com.intellij.openapi.externalSystem.service.project.wizard;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
+import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.externalSystem.service.settings.AbstractExternalProjectSettingsControl;
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUiUtil;
@@ -30,6 +31,7 @@ import javax.swing.*;
  * @author Denis Zhdanov
  * @since 6/26/13 1:38 PM
  */
+@Deprecated
 public class ExternalModuleSettingsStep<S extends ExternalProjectSettings> extends ModuleWizardStep {
 
   @NotNull private final AbstractExternalModuleBuilder<S> myExternalModuleBuilder;
@@ -57,8 +59,8 @@ public class ExternalModuleSettingsStep<S extends ExternalProjectSettings> exten
   }
 
   @Override
-  public boolean validate() throws ConfigurationException {
-    if (!super.validate()) {
+  public boolean validate(WizardContext wizardContext) throws ConfigurationException {
+    if (!super.validate(wizardContext)) {
       return false;
     }
     return myControl.validate(myExternalModuleBuilder.getExternalProjectSettings());
@@ -71,7 +73,7 @@ public class ExternalModuleSettingsStep<S extends ExternalProjectSettings> exten
   }
 
   @Override
-  public void updateStep() {
+  public void updateStep(WizardContext wizardContext) {
     String contentPath = myExternalModuleBuilder.getContentEntryPath();
     if (contentPath != null) {
       myControl.getInitialSettings().setExternalProjectPath(contentPath);

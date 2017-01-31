@@ -23,6 +23,7 @@ import javax.swing.*;
  * @author Dmitry Avdeev
  *         Date: 10/23/12
  */
+@Deprecated
 public interface SettingsStep {
 
   WizardContext getContext();

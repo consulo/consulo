@@ -19,7 +19,6 @@ import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.ide.actions.ImportModuleAction;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
-import com.intellij.ide.util.projectWizard.ProjectBuilder;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -49,13 +48,13 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
-import consulo.ide.newProject.actions.NewProjectAction;
-import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.newProject.NewProjectDialog;
+import consulo.ide.newProject.actions.NewProjectAction;
+import consulo.moduleImport.ModuleImportProvider;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
 import org.jetbrains.annotations.NotNull;
@@ -234,8 +233,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
         final String previousName = contentRootToModuleNameMap.put(contentRoot, moduleName);
         if (previousName != null && !previousName.equals(moduleName)) {
           throw new ConfigurationException(
-            ProjectBundle.message("module.paths.validation.duplicate.content.error", contentRoot.getPresentableUrl(), previousName, moduleName)
-          );
+                  ProjectBundle.message("module.paths.validation.duplicate.content.error", contentRoot.getPresentableUrl(), previousName, moduleName));
         }
 
         final VirtualFile[] sourceAndTestFiles = contentEntry.getFolderFiles(ContentFolderScopes.all(false));
@@ -252,9 +250,8 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
               problematicModule = contentRootToModuleNameMap.get(contentRoot);
               correctModule = contentRootToModuleNameMap.get(anotherContentRoot);
             }
-            throw new ConfigurationException(
-              ProjectBundle.message("module.paths.validation.duplicate.source.root.error", problematicModule, srcRoot.getPresentableUrl(), correctModule)
-            );
+            throw new ConfigurationException(ProjectBundle.message("module.paths.validation.duplicate.source.root.error", problematicModule,
+                                                                   srcRoot.getPresentableUrl(), correctModule));
           }
         }
       }
@@ -265,12 +262,14 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       final VirtualFile correspondingContent = entry.getValue();
       final String expectedModuleName = contentRootToModuleNameMap.get(correspondingContent);
 
-      for (VirtualFile candidateContent = srcRoot; candidateContent != null && !candidateContent.equals(correspondingContent); candidateContent = candidateContent.getParent()) {
+      for (VirtualFile candidateContent = srcRoot;
+           candidateContent != null && !candidateContent.equals(correspondingContent);
+           candidateContent = candidateContent.getParent()) {
         final String moduleName = contentRootToModuleNameMap.get(candidateContent);
         if (moduleName != null && !moduleName.equals(expectedModuleName)) {
-          throw new ConfigurationException(
-            ProjectBundle.message("module.paths.validation.source.root.belongs.to.another.module.error", srcRoot.getPresentableUrl(), expectedModuleName, moduleName)
-          );
+          throw new ConfigurationException(ProjectBundle
+                                                   .message("module.paths.validation.source.root.belongs.to.another.module.error", srcRoot.getPresentableUrl(),
+                                                            expectedModuleName, moduleName));
         }
       }
     }
@@ -324,37 +323,24 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     return doRemoveModule(moduleEditor);
   }
 
-
   @Nullable
   @RequiredDispatchThread
   public List<Module> addModule(Component parent, boolean anImport) {
     if (myProject.isDefault()) return null;
 
-    if(anImport) {
-      final ProjectBuilder builder = runModuleWizard(parent, true);
-      if (builder != null ) {
-        final List<Module> modules = new ArrayList<Module>();
-        final List<Module> commitedModules;
-        if (builder instanceof ProjectImportBuilder<?>) {
-          final ModifiableArtifactModel artifactModel =
-            ProjectStructureConfigurable.getInstance(myProject).getArtifactsStructureConfigurable().getModifiableArtifactModel();
-          commitedModules = ((ProjectImportBuilder<?>)builder).commit(myProject, myModuleModel, this, artifactModel);
-        }
-        else {
-          commitedModules = builder.commit(myProject, myModuleModel, this);
-        }
-        if (commitedModules != null) {
-          modules.addAll(commitedModules);
-        }
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            for (Module module : modules) {
-              getOrCreateModuleEditor(module);
-            }
+    if (anImport) {
+      final ModuleImportProvider<?> builder = runModuleWizard(parent, true);
+      if (builder != null) {
+        final ModifiableArtifactModel artifactModel =
+                ProjectStructureConfigurable.getInstance(myProject).getArtifactsStructureConfigurable().getModifiableArtifactModel();
+        List<Module> commitedModules = builder.commit(myProject, myModuleModel, this, artifactModel);
+
+        ApplicationManager.getApplication().runWriteAction(() -> {
+          for (Module module : commitedModules) {
+            getOrCreateModuleEditor(module);
           }
         });
-        return modules;
+        return commitedModules;
       }
     }
     else {
@@ -362,12 +348,12 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
         @RequiredDispatchThread
         @Override
         public boolean isFileSelectable(VirtualFile file) {
-          if(!super.isFileSelectable(file)) {
+          if (!super.isFileSelectable(file)) {
             return false;
           }
           for (Module module : myModuleModel.getModules()) {
             VirtualFile moduleDir = module.getModuleDir();
-            if(moduleDir != null && moduleDir.equals(file)) {
+            if (moduleDir != null && moduleDir.equals(file)) {
               return false;
             }
           }
@@ -378,14 +364,14 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
 
       final VirtualFile moduleDir = FileChooser.chooseFile(fileChooserDescriptor, myProject, null);
 
-      if(moduleDir == null) {
+      if (moduleDir == null) {
         return null;
       }
 
       final NewProjectDialog dialog = new NewProjectDialog(myProject, moduleDir);
       final com.intellij.openapi.util.Ref<Module> moduleRef = com.intellij.openapi.util.Ref.create();
 
-      if(dialog.showAndGet()) {
+      if (dialog.showAndGet()) {
         DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
           @Override
           public void run() {
@@ -395,7 +381,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       }
 
       final Module newModule = moduleRef.get();
-      if(newModule == null) {
+      if (newModule == null) {
         return null;
       }
 
@@ -431,8 +417,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       }
     });
     if (ex[0] != null) {
-      Messages.showErrorDialog(ProjectBundle.message("module.add.error.message", ex[0].getMessage()),
-                               ProjectBundle.message("module.add.error.title"));
+      Messages.showErrorDialog(ProjectBundle.message("module.add.error.message", ex[0].getMessage()), ProjectBundle.message("module.add.error.title"));
     }
     return module;
   }
@@ -455,19 +440,19 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
   @Nullable
-  ProjectBuilder runModuleWizard(Component dialogParent, boolean anImport) {
+  ModuleImportProvider<?> runModuleWizard(Component dialogParent, boolean anImport) {
     AddModuleWizard wizard;
     if (anImport) {
       wizard = ImportModuleAction.selectFileAndCreateWizard(myProject, dialogParent);
       if (wizard == null) return null;
-      if (wizard.getStepCount() == 0) return wizard.getProjectBuilder();
+      if (wizard.getStepCount() == 0) return wizard.getImportProvider();
     }
     else {
       wizard = new AddModuleWizard(dialogParent, myProject, this);
     }
     wizard.show();
     if (wizard.isOK()) {
-      final ProjectBuilder builder = wizard.getProjectBuilder();
+      final ModuleImportProvider<?> builder = wizard.getImportProvider();
       if (builder instanceof ModuleBuilder) {
         final ModuleBuilder moduleBuilder = (ModuleBuilder)builder;
         if (moduleBuilder.getName() == null) {
@@ -480,7 +465,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       if (!builder.validate(myProject, myProject)) {
         return null;
       }
-      return wizard.getProjectBuilder();
+      return wizard.getImportProvider();
     }
 
     return null;
@@ -496,8 +481,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     else {
       question = ProjectBundle.message("module.remove.confirmation", selectedEditor.getModule().getName());
     }
-    int result =
-      Messages.showYesNoDialog(myProject, question, ProjectBundle.message("module.remove.confirmation.title"), Messages.getQuestionIcon());
+    int result = Messages.showYesNoDialog(myProject, question, ProjectBundle.message("module.remove.confirmation.title"), Messages.getQuestionIcon());
     if (result != Messages.YES) {
       return false;
     }
@@ -517,7 +501,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     ModuleDeleteProvider.removeModule(moduleToRemove, null, modifiableRootModels, myModuleModel);
     processModuleCountChanged();
     Disposer.dispose(selectedEditor);
-    
+
     return true;
   }
 

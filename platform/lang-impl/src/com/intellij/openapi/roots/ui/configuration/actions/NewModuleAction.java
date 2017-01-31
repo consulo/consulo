@@ -17,30 +17,26 @@ package com.intellij.openapi.roots.ui.configuration.actions;
 
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
-import com.intellij.ide.util.projectWizard.ProjectBuilder;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.Result;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.ide.newProject.actions.NewProjectAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.newProject.NewProjectDialog;
+import consulo.ide.newProject.actions.NewProjectAction;
+import consulo.moduleImport.ModuleImportContext;
+import consulo.moduleImport.ModuleImportProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -60,21 +56,16 @@ public class NewModuleAction extends AnAction implements DumbAware {
     if (project == null) {
       return;
     }
-    Object dataFromContext = prepareDataFromContext(e);
-
     final VirtualFile virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
 
-    Module newModule = null;
     VirtualFile moduleDir = selectModuleDirectory(project, virtualFile);
     if(moduleDir == null) {
       return;
     }
 
     NewProjectDialog dialog = new NewProjectDialog(project, moduleDir);
-    newModule = dialog.showAndGet() ? NewProjectAction.doCreate(dialog.getProjectPanel(), project, moduleDir) : null;
-
-    if (newModule != null) {
-      processCreatedModule(newModule, dataFromContext);
+    if (dialog.showAndGet()) {
+      NewProjectAction.doCreate(dialog.getProjectPanel(), project, moduleDir);
     }
   }
 
@@ -102,38 +93,10 @@ public class NewModuleAction extends AnAction implements DumbAware {
   }
 
   @Nullable
-  public static Module createModuleBySimpleWay(Project project, VirtualFile virtualFile) {
-    final ModuleManager moduleManager = ModuleManager.getInstance(project);
-
-    VirtualFile moduleDir = selectModuleDirectory(project, virtualFile);
-    if(moduleDir == null) {
-      return null;
-    }
-
-    final ModifiableModuleModel modifiableModel = moduleManager.getModifiableModel();
-
-    Module newModule = modifiableModel.newModule(moduleDir.getNameWithoutExtension(), moduleDir.getPath());
-
-    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(newModule);
-
-    final ModifiableRootModel moduleRootManagerModifiableModel = moduleRootManager.getModifiableModel();
-    moduleRootManagerModifiableModel.addContentEntry(moduleDir);
-    new WriteAction<Object>() {
-      @Override
-      protected void run(Result<Object> result) throws Throwable {
-        moduleRootManagerModifiableModel.commit();
-
-        modifiableModel.commit();
-      }
-    }.execute();
-    return newModule;
-  }
-
-  @Nullable
-  public Module createModuleFromWizard(Project project, @Nullable Object dataFromContext, AddModuleWizard wizard) {
-    final ProjectBuilder builder = wizard.getProjectBuilder();
-    if (builder instanceof ModuleBuilder) {
-      final ModuleBuilder moduleBuilder = (ModuleBuilder)builder;
+  public static Module createModuleFromWizard(Project project, @Nullable Object dataFromContext, AddModuleWizard wizard) {
+    final ModuleImportProvider<?> importProvider = wizard.getImportProvider();
+    if (importProvider instanceof ModuleBuilder) {
+      final ModuleBuilder moduleBuilder = (ModuleBuilder)importProvider;
       if (moduleBuilder.getName() == null) {
         moduleBuilder.setName(wizard.getProjectName());
       }
@@ -141,38 +104,29 @@ public class NewModuleAction extends AnAction implements DumbAware {
         moduleBuilder.setModuleDirPath(wizard.getModuleDirPath());
       }
     }
-    if (!builder.validate(project, project)) {
+    if (!importProvider.validate(project, project)) {
       return null;
     }
     Module module;
-    if (builder instanceof ModuleBuilder) {
-      module = ((ModuleBuilder)builder).commitModule(project, null);
-      if (module != null) {
-        processCreatedModule(module, dataFromContext);
-      }
+    if (importProvider instanceof ModuleBuilder) {
+      module = ((ModuleBuilder)importProvider).commitModule(project, null);
       return module;
     }
     else {
-      List<Module> modules = builder.commit(project, null, new DefaultModulesProvider(project));
-      if (builder.isOpenProjectSettingsAfter()) {
+      ModuleImportContext context = wizard.getWizardContext().getModuleImportContext(importProvider);
+      List<Module> modules = importProvider.commit(project, null, DefaultModulesProvider.createForProject(project), null);
+      if (context.isOpenProjectSettingsAfter()) {
         ModulesConfigurator.showDialog(project, null, null);
       }
-      module = modules == null || modules.isEmpty() ? null : modules.get(0);
+      module = modules.isEmpty() ? null : modules.get(0);
     }
     project.save();
     return module;
   }
 
-  @Nullable
-  protected Object prepareDataFromContext(final AnActionEvent e) {
-    return null;
-  }
-
-  protected void processCreatedModule(final Module module, @Nullable final Object dataFromContext) {
-  }
-
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabled(e.getProject() != null);
   }

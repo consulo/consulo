@@ -43,6 +43,7 @@ import java.io.IOException;
  * @author Denis Zhdanov
  * @since 6/26/13 10:39 AM
  */
+@Deprecated
 public abstract class AbstractExternalModuleBuilder<S extends ExternalProjectSettings> extends ModuleBuilder {
 
   private static final Logger LOG = Logger.getInstance("#" + AbstractExternalModuleBuilder.class.getName());

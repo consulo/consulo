@@ -29,8 +29,17 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.projectImport.ProjectImportProvider;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.externalSystem.service.module.wizard.AbstractExternalModuleImportProvider;
+import consulo.moduleImport.ModuleImportProvider;
+import consulo.moduleImport.ModuleImportProviders;
+import consulo.moduleImport.LegacyModuleImportProvider;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 
 /**
  * @author Denis Zhdanov
@@ -43,26 +52,28 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
     getTemplatePresentation().setDescription(ExternalSystemBundle.message("action.attach.external.project.description", "external"));
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     ProjectSystemId externalSystemId = ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID.getData(e.getDataContext());
     if (externalSystemId != null) {
       String name = externalSystemId.getReadableName();
       e.getPresentation().setText(ExternalSystemBundle.message("action.attach.external.project.text", name));
       e.getPresentation().setDescription(ExternalSystemBundle.message("action.attach.external.project.description", name));
     }
-    
+
     e.getPresentation().setIcon(SystemInfoRt.isMac ? AllIcons.ToolbarDecorator.Mac.Add : AllIcons.ToolbarDecorator.Add);
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     ProjectSystemId externalSystemId = ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID.getData(e.getDataContext());
     if (externalSystemId == null) {
       return;
     }
 
-    ExternalSystemManager<?,?,?,?,?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
+    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     if (manager == null) {
       return;
     }
@@ -71,24 +82,30 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
     if (project == null) {
       return;
     }
-    
-    ProjectImportProvider[] projectImportProviders = new ProjectImportProvider[1];
-    for (ProjectImportProvider provider : ProjectImportProvider.EP_NAME.getExtensions()) {
-      if (provider instanceof AbstractExternalProjectImportProvider
-          && externalSystemId.equals(((AbstractExternalProjectImportProvider)provider).getExternalSystemId()))
-      {
-        projectImportProviders[0] = provider;
+
+    Ref<ModuleImportProvider<?>> providerRef = Ref.create();
+    for (ModuleImportProvider<?> provider : ModuleImportProviders.getExtensions()) {
+      if (provider instanceof AbstractExternalModuleImportProvider &&
+          externalSystemId.equals(((AbstractExternalModuleImportProvider)provider).getExternalSystemId())) {
+        providerRef.set(provider);
         break;
       }
+      else if (provider instanceof LegacyModuleImportProvider) {
+        ProjectImportProvider projectImportProvider = ((LegacyModuleImportProvider)provider).getProvider();
+        if (projectImportProvider instanceof AbstractExternalProjectImportProvider &&
+            externalSystemId.equals(((AbstractExternalProjectImportProvider)projectImportProvider).getExternalSystemId())) {
+
+          providerRef.set(provider);
+          break;
+        }
+      }
     }
-    if (projectImportProviders[0] == null) {
+    if (providerRef.get() == null) {
       return;
     }
 
-    AddModuleWizard wizard = ImportModuleAction.selectFileAndCreateWizard(project,
-                                                                          null,
-                                                                          manager.getExternalProjectDescriptor(),
-                                                                          projectImportProviders);
+    AddModuleWizard wizard =
+            ImportModuleAction.selectFileAndCreateWizard(project, null, manager.getExternalProjectDescriptor(), Arrays.asList(providerRef.get()));
     if (wizard != null && (wizard.getStepCount() <= 0 || wizard.showAndGet())) {
       ImportModuleAction.createFromWizard(project, wizard);
     }

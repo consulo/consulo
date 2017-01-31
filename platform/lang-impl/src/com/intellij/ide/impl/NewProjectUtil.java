@@ -21,7 +21,6 @@ package com.intellij.ide.impl;
 
 import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
-import com.intellij.ide.util.projectWizard.ProjectBuilder;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
@@ -35,6 +34,7 @@ import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.wm.*;
@@ -42,13 +42,14 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.util.ui.UIUtil;
 import consulo.compiler.CompilerConfiguration;
+import consulo.moduleImport.ModuleImportContext;
+import consulo.moduleImport.ModuleImportProvider;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 
-@Deprecated
 public class NewProjectUtil extends NewProjectUtilPlatform {
   public static final Logger LOGGER = Logger.getInstance(NewProjectUtil.class);
 
@@ -77,20 +78,17 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
       return doCreate(dialog, projectToClose);
     }
     catch (final IOException e) {
-      UIUtil.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          Messages.showErrorDialog(e.getMessage(), "Project Initialization Failed");
-        }
-      });
+      UIUtil.invokeLaterIfNeeded(() -> Messages.showErrorDialog(e.getMessage(), "Project Initialization Failed"));
       return null;
     }
   }
 
-  private static Project doCreate(final AddModuleWizard dialog, @Nullable Project projectToClose) throws IOException {
+  private static Project doCreate(final AddModuleWizard wizard, @Nullable Project projectToClose) throws IOException {
     final ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
-    final String projectFilePath = dialog.getNewProjectFilePath();
-    final ProjectBuilder projectBuilder = dialog.getProjectBuilder();
+    final String projectFilePath = wizard.getNewProjectFilePath();
+    final ModuleImportProvider<?> importProvider = wizard.getImportProvider();
+
+    ModuleImportContext importContext = importProvider == null ? null : wizard.getWizardContext().getModuleImportContext(importProvider);
 
     try {
       File projectDir = new File(projectFilePath).getParentFile();
@@ -100,11 +98,10 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
       FileUtil.ensureExists(ideaDir);
 
       final Project newProject;
-      if (projectBuilder == null || !projectBuilder.isUpdate()) {
-        String name = dialog.getProjectName();
-        newProject = projectBuilder == null
-                   ? projectManager.newProject(name, projectFilePath, true, false)
-                   : projectBuilder.createProject(name, projectFilePath);
+      if (importContext == null || !importContext.isUpdate()) {
+        String name = wizard.getProjectName();
+        newProject =
+                importProvider == null ? projectManager.newProject(name, projectFilePath, true, false) : projectManager.createProject(name, projectFilePath);
       }
       else {
         newProject = projectToClose;
@@ -113,7 +110,7 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
       if (newProject == null) return projectToClose;
 
 
-      final String compileOutput = dialog.getNewCompileOutput();
+      final String compileOutput = wizard.getNewCompileOutput();
       CommandProcessor.getInstance().executeCommand(newProject, new Runnable() {
         @Override
         public void run() {
@@ -138,7 +135,7 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
         newProject.save();
       }
 
-      if (projectBuilder != null && !projectBuilder.validate(projectToClose, newProject)) {
+      if (importProvider != null && !importProvider.validate(projectToClose, newProject)) {
         return projectToClose;
       }
 
@@ -146,11 +143,11 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
         closePreviousProject(projectToClose);
       }
 
-      if (projectBuilder != null) {
-        projectBuilder.commit(newProject, null, ModulesProvider.EMPTY_MODULES_PROVIDER);
+      if (importProvider != null) {
+        importProvider.commit(newProject, null, ModulesProvider.EMPTY_MODULES_PROVIDER, null);
       }
 
-      final boolean need2OpenProjectStructure = projectBuilder == null || projectBuilder.isOpenProjectSettingsAfter();
+      final boolean need2OpenProjectStructure = importContext == null || importContext.isOpenProjectSettingsAfter();
       StartupManager.getInstance(newProject).registerPostStartupActivity(new Runnable() {
         @Override
         public void run() {
@@ -200,9 +197,7 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
       return newProject;
     }
     finally {
-      if (projectBuilder != null) {
-        projectBuilder.cleanup();
-      }
+      Disposer.dispose(wizard.getWizardContext());
     }
   }
 }

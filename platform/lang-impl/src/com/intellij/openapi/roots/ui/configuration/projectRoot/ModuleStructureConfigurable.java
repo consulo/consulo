@@ -47,19 +47,17 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.projectImport.ProjectImportProvider;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.moduleImport.ModuleImportProviders;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -590,6 +588,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
       super("", "", AllIcons.ObjectBrowser.CompactEmptyPackages);
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(final AnActionEvent e) {
       super.update(e);
@@ -794,22 +793,19 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
       myImport = anImport;
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(final AnActionEvent e) {
       addModule(myImport);
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       super.update(e);
       if(myImport) {
         Presentation presentation = e.getPresentation();
-        presentation.setEnabledAndVisible(ContainerUtil.find(ProjectImportProvider.EP_NAME.getExtensions(), new Condition<ProjectImportProvider>() {
-          @Override
-          public boolean value(ProjectImportProvider projectImportProvider) {
-            return !projectImportProvider.canCreateNewProject();
-          }
-        }) != null);
+        presentation.setEnabledAndVisible(!ModuleImportProviders.getExtensions().isEmpty());
       }
     }
   }

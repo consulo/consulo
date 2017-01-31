@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.externalSystem.service.module.wizard;
 
-package com.intellij.ide.util.projectWizard;
-
-import com.intellij.openapi.module.Module;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.EventListener;
+import consulo.moduleImport.ModuleImportContext;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 30-Jan-17
  */
-@Deprecated
-public interface ModuleBuilderListener extends EventListener {
-
-  void moduleCreated(@NotNull Module module);
-  
+public class ExternalModuleImportContext extends ModuleImportContext {
 }

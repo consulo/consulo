@@ -108,7 +108,7 @@ public abstract class AbstractStepWithProgress<Result> extends ModuleWizardStep 
   }
   
   
-  public void updateStep() {
+  public void updateStep(WizardContext wizardContext) {
     if (shouldRunProgress()) {
       runProgress();
     }
@@ -174,7 +174,7 @@ public abstract class AbstractStepWithProgress<Result> extends ModuleWizardStep 
     myPanel.revalidate();
   }
 
-  public boolean validate() throws ConfigurationException {
+  public boolean validate(WizardContext wizardContext) throws ConfigurationException {
     if (isProgressRunning()) {
       final int answer = Messages.showOkCancelDialog(getComponent(), myPromptStopSearch,
                                              IdeBundle.message("title.question"), IdeBundle.message("action.continue.searching"), IdeBundle.message("action.stop.searching"), Messages.getWarningIcon());

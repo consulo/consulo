@@ -15,22 +15,30 @@
  */
 package com.intellij.ide.util.projectWizard;
 
-import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.moduleImport.LegacyModuleImportProvider;
+import consulo.moduleImport.ModuleImportContext;
+import consulo.moduleImport.ModuleImportProvider;
+import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-public class WizardContext extends UserDataHolderBase {
+public class WizardContext extends UserDataHolderBase implements Disposable {
   /**
    * a project where the module should be added, can be null => the wizard creates a new project
    */
@@ -40,16 +48,34 @@ public class WizardContext extends UserDataHolderBase {
   private String myProjectName;
   private String myCompilerOutputDirectory;
 
-  private ProjectBuilder myProjectBuilder;
+  private ModuleImportProvider<?> myImportProvider;
   private final List<Listener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+
+  private final Map<ModuleImportProvider, ModuleImportContext> myModuleImportContexts = new THashMap<>();
 
   public interface Listener {
     void buttonsUpdateRequested();
+
     void nextStepRequested();
   }
 
   public WizardContext(@Nullable Project project) {
     myProject = project;
+  }
+
+  public void initModuleImportContext(@NotNull ModuleImportProvider<?> provider) {
+    ModuleImportContext context = provider.createContext();
+
+    Disposer.register(this, context);
+
+    if (myModuleImportContexts.put(provider, context) != null) {
+      throw new IllegalArgumentException();
+    }
+  }
+
+  @NotNull
+  public ModuleImportContext getModuleImportContext(@NotNull ModuleImportProvider<?> provider) {
+    return Objects.requireNonNull(myModuleImportContexts.get(provider));
   }
 
   @Nullable
@@ -125,15 +151,37 @@ public class WizardContext extends UserDataHolderBase {
   }
 
   @Nullable
+  @Deprecated
   public ProjectBuilder getProjectBuilder() {
-    return myProjectBuilder;
+    if (myImportProvider == null) {
+      return null;
+    }
+    if (myImportProvider instanceof LegacyModuleImportProvider) {
+      return ((LegacyModuleImportProvider)myImportProvider).getProvider().getBuilder();
+    }
+    throw new IllegalArgumentException();
   }
 
-  public void setProjectBuilder(@Nullable final ProjectBuilder projectBuilder) {
-    myProjectBuilder = projectBuilder;
+  @Nullable
+  public ModuleImportProvider<?> getImportProvider() {
+    return myImportProvider;
+  }
+
+  public void setImportProvider(@Nullable final ModuleImportProvider<?> projectBuilder) {
+    myImportProvider = projectBuilder;
+  }
+
+  @Deprecated
+  public void setProjectBuilder(@Nullable final ProjectImportBuilder projectBuilder) {
+    myImportProvider = new LegacyModuleImportProvider(projectBuilder.getProvider());
   }
 
   public String getPresentationName() {
     return myProject == null ? IdeBundle.message("project.new.wizard.project.identification") : IdeBundle.message("project.new.wizard.module.identification");
+  }
+
+  @Override
+  public void dispose() {
+    myModuleImportContexts.clear();
   }
 }

@@ -24,6 +24,7 @@ import javax.swing.*;
 /**
  * @author yole
  */
+@Deprecated
 public abstract class AbstractModuleBuilder extends ProjectBuilder {
   public abstract Icon getNodeIcon();
 

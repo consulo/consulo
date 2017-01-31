@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
+@Deprecated
 public abstract class WizardMode implements Disposable {
   private StepSequence myStepSequence;
 
