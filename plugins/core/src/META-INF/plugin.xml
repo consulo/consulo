@@ -168,9 +168,6 @@
 
     <extensionPoint name="lang.elementIcon" beanClass="consulo.lang.LanguageElementIcon"/>
 
-    <extensionPoint name="projectOpenProcessor"
-                    interface="com.intellij.projectImport.ProjectOpenProcessor"/>
-
     <extensionPoint name="gutterMarkPreprocessor" interface="com.intellij.openapi.editor.GutterMarkPreprocessor"/>
 
     <extensionPoint name="codeInsight.linkHandler"
@@ -2501,8 +2498,6 @@
     <actionPromoter implementation="com.intellij.ui.EditorTextFieldActionPromoter"/>
     <actionPromoter implementation="com.intellij.ui.ToolbarDecoratorActionPromoter"/>
     <actionPromoter implementation="com.intellij.openapi.vcs.actions.VcsActionPromoter"/>
-
-    <projectOpenProcessor implementation="com.intellij.platform.PlatformProjectOpenProcessor"/>
 
     <elementPreviewProvider implementation="com.intellij.codeInsight.preview.ElementPreviewHintProvider"/>
 
