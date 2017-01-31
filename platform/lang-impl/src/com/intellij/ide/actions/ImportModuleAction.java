@@ -108,10 +108,9 @@ public class ImportModuleAction extends AnAction {
 
       @Override
       public Icon getIcon(VirtualFile file) {
-        for (ModuleImportProvider projectImportProvider : ModuleImportProviders.getExtensions()) {
-          final Icon iconForFile = projectImportProvider.getIconForFile(file);
-          if (iconForFile != null) {
-            return iconForFile;
+        for (ModuleImportProvider importProvider : ModuleImportProviders.getExtensions()) {
+          if (importProvider.canImport(file)) {
+            return importProvider.getIcon();
           }
         }
         Icon icon = myDelegate.getIcon(file);

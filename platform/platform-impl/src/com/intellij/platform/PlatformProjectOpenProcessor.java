@@ -38,6 +38,9 @@ import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.util.Consumer;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.project.ProjectOpenProcessors;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,17 +51,11 @@ import java.io.File;
  * @author max
  */
 public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
-  public static final Logger LOGGER = Logger.getInstance(PlatformProjectOpenProcessor.class);
+  private static final Logger LOGGER = Logger.getInstance(PlatformProjectOpenProcessor.class);
+  private static final PlatformProjectOpenProcessor INSTANCE = new PlatformProjectOpenProcessor();
 
   public static PlatformProjectOpenProcessor getInstance() {
-    PlatformProjectOpenProcessor projectOpenProcessor = getInstanceIfItExists();
-    assert projectOpenProcessor != null;
-    return projectOpenProcessor;
-  }
-
-  @Nullable
-  public static PlatformProjectOpenProcessor getInstanceIfItExists() {
-    return EXTENSION_POINT_NAME.findExtension(PlatformProjectOpenProcessor.class);
+    return INSTANCE;
   }
 
   @Override
@@ -66,16 +63,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     return file.isDirectory() && file.findChild(Project.DIRECTORY_STORE_FOLDER) != null;
   }
 
-  @Override
-  public boolean isProjectFile(VirtualFile file) {
-    return false;
-  }
-
-  @Override
-  public boolean lookForProjectsInDirectory() {
-    return false;
-  }
-
+  @RequiredDispatchThread
   @Override
   @Nullable
   public Project doOpenProject(@NotNull final VirtualFile virtualFile, @Nullable final Project projectToClose, final boolean forceOpenInNewFrame) {
@@ -124,10 +112,10 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     Project project = null;
     if (projectDir.exists()) {
       try {
-        for (ProjectOpenProcessor processor : ProjectOpenProcessor.EXTENSION_POINT_NAME.getExtensions()) {
+        for (ProjectOpenProcessor processor : ProjectOpenProcessors.getInstance().getProcessors()) {
           processor.refreshProjectFiles(projectDir);
         }
-        
+
         project = projectManager.convertAndLoadProject(baseDir.getPath());
         if (project == null) {
           WelcomeFrame.showIfNoProjectOpened();
@@ -201,7 +189,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     StartupManager.getInstance(project).registerPostStartupActivity(new DumbAwareRunnable() {
       @Override
       public void run() {
-        if(project.isDisposed()) {
+        if (project.isDisposed()) {
           return;
         }
         ToolWindowManager.getInstance(project).invokeLater(new Runnable() {
@@ -212,7 +200,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
               public void run() {
                 if (!virtualFile.isDirectory()) {
                   if (line > 0) {
-                    new OpenFileDescriptor(project, virtualFile, line-1, 0).navigate(true);
+                    new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
                   }
                   else {
                     new OpenFileDescriptor(project, virtualFile).navigate(true);
@@ -229,7 +217,13 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
   @Override
   @Nullable
   public Icon getIcon() {
-    return null;
+    return SandboxUtil.getAppIcon();
+  }
+
+  @NotNull
+  @Override
+  public String getFileSample() {
+    return "<b>Consulo</b> project";
   }
 
   @Override

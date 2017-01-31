@@ -20,6 +20,7 @@ import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,10 +31,11 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     super(chooseFiles, true, chooseFiles, chooseFiles, false, false);
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isFileSelectable(final VirtualFile file) {
     if (file == null) return false;
-    return isProjectDirectory(file) || isProjectFile(file);
+    return isProjectDirectory(file) || canOpen(file);
   }
 
   @Override
@@ -41,7 +43,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
     if (isProjectDirectory(file)) {
       return dressIcon(file, SandboxUtil.getAppIcon());
     }
-    final Icon icon = getImporterIcon(file);
+    final Icon icon = getProcessorIcon(file);
     if (icon != null) {
       return dressIcon(file, icon);
     }
@@ -49,10 +51,10 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   }
 
   @Nullable
-  private static Icon getImporterIcon(final VirtualFile virtualFile) {
-    final ProjectOpenProcessor provider = ProjectOpenProcessor.getImportProvider(virtualFile);
+  private static Icon getProcessorIcon(final VirtualFile virtualFile) {
+    final ProjectOpenProcessor provider = ProjectOpenProcessor.findProcessor(virtualFile);
     if (provider != null) {
-      return virtualFile.isDirectory() && provider.lookForProjectsInDirectory() ? SandboxUtil.getAppIcon() : provider.getIcon(virtualFile);
+      return provider.getIcon(virtualFile);
     }
     return null;
   }
@@ -60,16 +62,15 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   @Override
   public boolean isFileVisible(final VirtualFile file, final boolean showHiddenFiles) {
     if (!showHiddenFiles && FileElement.isFileHidden(file)) return false;
-    return isProjectFile(file) || super.isFileVisible(file, showHiddenFiles) && file.isDirectory();
+    return canOpen(file) || super.isFileVisible(file, showHiddenFiles) && file.isDirectory();
   }
 
-  public static boolean isProjectFile(final VirtualFile file) {
-    final ProjectOpenProcessor importProvider = ProjectOpenProcessor.getImportProvider(file);
-    return importProvider != null;
+  public static boolean canOpen(final VirtualFile file) {
+    return ProjectOpenProcessor.findProcessor(file) != null;
   }
 
   private static boolean isProjectDirectory(final VirtualFile virtualFile) {
-    // the root directory of any drive is never an IDEA project
+    // the root directory of any drive is never an Consulo project
     if (virtualFile.getParent() == null) return false;
     // NOTE: For performance reasons, it's very important not to iterate through all of the children here.
     if (virtualFile.isDirectory() && virtualFile.isValid() && virtualFile.findChild(Project.DIRECTORY_STORE_FOLDER) != null) return true;

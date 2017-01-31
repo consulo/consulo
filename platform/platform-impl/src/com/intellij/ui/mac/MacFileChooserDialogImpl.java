@@ -18,7 +18,6 @@ package com.intellij.ui.mac;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
@@ -34,7 +33,6 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeMenuBar;
-import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import com.intellij.ui.mac.foundation.MacUtil;
@@ -43,6 +41,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
+import consulo.project.ProjectOpenProcessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -388,7 +387,7 @@ public class MacFileChooserDialogImpl implements PathChooserDialog {
       UIUtil.invokeAndWaitIfNeeded(new Runnable() {
         @Override
         public void run() {
-          Extensions.getExtensions(ProjectOpenProcessor.EXTENSION_POINT_NAME);
+          ProjectOpenProcessors.getInstance().getProcessors();
         }
       });
       initialized = true;

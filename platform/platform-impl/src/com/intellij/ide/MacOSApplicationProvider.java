@@ -181,7 +181,7 @@ public class MacOSApplicationProvider implements ApplicationComponent {
             @Override
             public void run() {
               File file = new File(filename);
-              if (ProjectUtil.openOrImport(file.getAbsolutePath(), project, true) != null) {
+              if (ProjectUtil.open(file.getAbsolutePath(), project, true) != null) {
                 ApplicationStarter.getInstance().setPerformProjectLoad(false);
                 return;
               }

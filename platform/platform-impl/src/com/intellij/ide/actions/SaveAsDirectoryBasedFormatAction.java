@@ -65,7 +65,7 @@ public class SaveAsDirectoryBasedFormatAction extends AnAction implements DumbAw
             projectStore.setProjectFilePath(baseDir.getPath());
             project.save();
             ProjectUtil.closeAndDispose(project);
-            ProjectUtil.openOrImport(baseDir.getPath(), null, false);
+            ProjectUtil.open(baseDir.getPath(), null, false);
           }
           else {
             Messages.showErrorDialog(project, String.format("Unable to create '.idea' directory (%s)", ideaDir), "Error saving project!");

@@ -42,6 +42,7 @@ import com.intellij.util.containers.HashMap;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.options.ExternalOptionHelper;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -195,6 +196,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
             return super.isFileVisible(file, showHiddenFiles) || canContainCopyright(file);
           }
 
+          @RequiredDispatchThread
           @Override
           public boolean isFileSelectable(VirtualFile file) {
             return super.isFileSelectable(file) || canContainCopyright(file);

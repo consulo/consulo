@@ -13,7 +13,7 @@
   - See the License for the specific language governing permissions and
   - limitations under the License.
   -->
-<idea-plugin version="2">
+<idea-plugin>
   <actions>
     <group id="Vcs.KeymapGroup" text="Version Control Systems"/>
     <!-- grouping for Settings -> Keymap -> Version Control Systems -->
@@ -1031,8 +1031,7 @@
 
     <group id="WelcomeScreen.QuickStart.IDEA">
       <action id="WelcomeScreen.CreateNewProject" class="consulo.ide.newProject.actions.NewProjectAction" icon="AllIcons.General.CreateNewProject"/>
-      <action id="WelcomeScreen.ImportProject" class="com.intellij.ide.actions.ImportProjectAction" icon="AllIcons.General.ImportProject"/>
-      <action id="WelcomeScreen.OpenProject" class="com.intellij.ide.actions.OpenFileAction" icon="AllIcons.General.OpenProject"/>
+      <action id="WelcomeScreen.OpenProject" class="com.intellij.ide.actions.OpenProjectAction" icon="AllIcons.General.OpenProject"/>
       <add-to-group group-id="WelcomeScreen.QuickStart" anchor="first"/>
     </group>
 

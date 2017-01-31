@@ -73,9 +73,15 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
     createFromWizard(dialog, projectToClose);
   }
 
+  @Nullable
   public static Project createFromWizard(AddModuleWizard dialog, Project projectToClose) {
+    return createFromWizard(dialog, projectToClose, true);
+  }
+
+  @Nullable
+  public static Project createFromWizard(AddModuleWizard dialog, Project projectToClose, boolean openAfter) {
     try {
-      return doCreate(dialog, projectToClose);
+      return doCreate(dialog, projectToClose, openAfter);
     }
     catch (final IOException e) {
       UIUtil.invokeLaterIfNeeded(() -> Messages.showErrorDialog(e.getMessage(), "Project Initialization Failed"));
@@ -83,7 +89,7 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
     }
   }
 
-  private static Project doCreate(final AddModuleWizard wizard, @Nullable Project projectToClose) throws IOException {
+  private static Project doCreate(final AddModuleWizard wizard, @Nullable Project projectToClose, boolean openAfter) throws IOException {
     final ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
     final String projectFilePath = wizard.getNewProjectFilePath();
     final ModuleImportProvider<?> importProvider = wizard.getImportProvider();
@@ -175,22 +181,25 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
         }
       });
 
-      if (newProject != projectToClose) {
-        ProjectUtil.updateLastProjectLocation(projectFilePath);
+      if(openAfter) {
+        if (newProject != projectToClose) {
+          ProjectUtil.updateLastProjectLocation(projectFilePath);
 
-        if (WindowManager.getInstance().isFullScreenSupportedInCurrentOS()) {
-          IdeFocusManager instance = IdeFocusManager.findInstance();
-          IdeFrame lastFocusedFrame = instance.getLastFocusedFrame();
-          if (lastFocusedFrame instanceof IdeFrameEx) {
-            boolean fullScreen = ((IdeFrameEx)lastFocusedFrame).isInFullScreen();
-            if (fullScreen) {
-              newProject.putUserData(IdeFrameImpl.SHOULD_OPEN_IN_FULL_SCREEN, Boolean.TRUE);
+          if (WindowManager.getInstance().isFullScreenSupportedInCurrentOS()) {
+            IdeFocusManager instance = IdeFocusManager.findInstance();
+            IdeFrame lastFocusedFrame = instance.getLastFocusedFrame();
+            if (lastFocusedFrame instanceof IdeFrameEx) {
+              boolean fullScreen = ((IdeFrameEx)lastFocusedFrame).isInFullScreen();
+              if (fullScreen) {
+                newProject.putUserData(IdeFrameImpl.SHOULD_OPEN_IN_FULL_SCREEN, Boolean.TRUE);
+              }
             }
           }
-        }
 
-        projectManager.openProject(newProject);
+          projectManager.openProject(newProject);
+        }
       }
+
       if (!ApplicationManager.getApplication().isUnitTestMode()) {
         newProject.save();
       }

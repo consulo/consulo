@@ -80,7 +80,7 @@ public class LegacyModuleImportProvider implements ModuleImportProvider<ModuleIm
     return myProvider.createSteps(context);
   }
 
-  @Nullable
+  @NotNull
   @Override
   public String getFileSample() {
     return myProvider.getFileSample();

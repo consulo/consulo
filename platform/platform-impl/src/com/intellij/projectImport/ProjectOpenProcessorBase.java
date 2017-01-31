@@ -35,6 +35,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.annotations.RequiredDispatchThread;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +47,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
+@Deprecated
 public abstract class ProjectOpenProcessorBase<T extends ProjectImportBuilder> extends ProjectOpenProcessor {
 
   private final T myBuilder;
@@ -110,6 +112,7 @@ public abstract class ProjectOpenProcessorBase<T extends ProjectImportBuilder> e
   @Nullable
   public abstract String[] getSupportedExtensions();
 
+  @RequiredDispatchThread
   @Override
   @Nullable
   public Project doOpenProject(@NotNull VirtualFile virtualFile, Project projectToClose, boolean forceOpenInNewFrame) {

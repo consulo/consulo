@@ -83,13 +83,14 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
     return ModuleWizardStep.EMPTY_ARRAY;
   }
 
-  @Nullable
+  @NotNull
   @Language("HTML")
   default String getFileSample() {
-    return null;
+    return getName();
   }
 
   @Nullable
+  @Deprecated
   default Icon getIconForFile(VirtualFile file) {
     return null;
   }

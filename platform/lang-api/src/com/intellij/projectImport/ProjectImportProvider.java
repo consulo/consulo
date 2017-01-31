@@ -97,10 +97,10 @@ public abstract class ProjectImportProvider {
     return ModuleWizardStep.EMPTY_ARRAY;
   }
 
-  @Nullable
+  @NotNull
   @Language("HTML")
   public String getFileSample() {
-    return null;
+    return getName();
   }
 
   @Nullable

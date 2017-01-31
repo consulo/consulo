@@ -15,9 +15,9 @@
  */
 package com.intellij.ide.actions;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -30,35 +30,19 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import com.intellij.projectImport.ProjectOpenProcessorBase;
-import com.intellij.util.Consumer;
-
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.project.ProjectOpenProcessors;
+import org.jetbrains.annotations.NotNull;
 
 public class OpenProjectAction extends AnAction implements DumbAware {
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true);
     descriptor.setTitle(IdeBundle.message("title.open.project"));
-    final Set<String> extensions = new LinkedHashSet<String>();
-    for (ProjectOpenProcessor openProcessor : ProjectOpenProcessor.EXTENSION_POINT_NAME.getExtensions()) {
-      if(openProcessor instanceof ProjectOpenProcessorBase) {
-        final String[] supportedExtensions = ((ProjectOpenProcessorBase)openProcessor).getSupportedExtensions();
-        if (supportedExtensions != null) {
-          Collections.addAll(extensions, supportedExtensions);
-        }
-      }
-    }
-    if(extensions.isEmpty()) {
-      descriptor.setDescription(IdeBundle.message("filter.project.directories"));
-    }
-    else {
-      descriptor.setDescription(IdeBundle.message("filter.project.files", StringUtil.join(extensions, ", ")));
-    }
+    descriptor.setDescription(getFileChooserDescription());
     VirtualFile userHomeDir = null;
     if (SystemInfo.isUnix) {
       userHomeDir = VfsUtil.getUserHomeDir();
@@ -67,19 +51,24 @@ public class OpenProjectAction extends AnAction implements DumbAware {
     descriptor.putUserData(PathChooserDialog.PREFER_LAST_OVER_EXPLICIT, Boolean.TRUE);
 
     final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
-    FileChooser.chooseFiles(descriptor, project, userHomeDir, new Consumer<List<VirtualFile>>() {
-      @Override
-      public void consume(final List<VirtualFile> files) {
-        if (files.size() == 1) {
-          ProjectUtil.openOrImport(files.get(0).getPath(), project, false);
-        }
+    FileChooser.chooseFiles(descriptor, project, userHomeDir, files -> {
+      if (files.size() == 1) {
+        ProjectUtil.open(files.get(0).getPath(), project, false);
       }
     });
   }
 
+  public static String getFileChooserDescription() {
+    ProjectOpenProcessor[] providers = ProjectOpenProcessors.getInstance().getProcessors();
+
+    return IdeBundle.message("import.project.chooser.header", StringUtil.join(providers, ProjectOpenProcessor::getFileSample, ", <br>"));
+  }
+
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
-    super.update(e);
-    e.getPresentation().setVisible(ActionPlaces.WELCOME_SCREEN.equals(e.getPlace()));
+  public void update(@NotNull AnActionEvent e) {
+    if (WelcomeFrame.isFromWelcomeFrame(e)) {
+      e.getPresentation().setIcon(AllIcons.Welcome.OpenProject);
+    }
   }
 }

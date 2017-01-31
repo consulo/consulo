@@ -64,13 +64,13 @@ public class CommandLineProcessor {
       Messages.showErrorDialog("Cannot find file '" + name + "'", "Cannot find file");
       return null;
     }
-    ProjectOpenProcessor provider = ProjectOpenProcessor.getImportProvider(virtualFile);
+    ProjectOpenProcessor provider = ProjectOpenProcessor.findProcessor(virtualFile);
     if (provider instanceof PlatformProjectOpenProcessor && !virtualFile.isDirectory()) {
       // HACK: PlatformProjectOpenProcessor agrees to open anything
       provider = null;
     }
     if (provider != null || new File(name, Project.DIRECTORY_STORE_FOLDER).exists()) {
-      final Project result = ProjectUtil.openOrImport(name, null, true);
+      final Project result = ProjectUtil.open(name, null, true);
       if (result == null) {
         Messages.showErrorDialog("Cannot open project '" + name + "'", "Cannot open project");
       }

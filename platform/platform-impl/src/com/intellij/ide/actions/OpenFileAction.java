@@ -43,18 +43,21 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.util.Consumer;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class OpenFileAction extends AnAction implements DumbAware {
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     @Nullable final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     final boolean showFiles = project != null;
 
     final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
+      @RequiredDispatchThread
       @Override
       public boolean isFileSelectable(VirtualFile file) {
         if (super.isFileSelectable(file)) {
@@ -106,6 +109,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
     });
   }
 
+  @RequiredDispatchThread
   @Override
   public void update(@NotNull AnActionEvent e) {
     if (WelcomeFrame.isFromWelcomeFrame(e)) {
@@ -117,18 +121,18 @@ public class OpenFileAction extends AnAction implements DumbAware {
                                  @NotNull final List<VirtualFile> result) {
     for (final VirtualFile file : result) {
       if (file.isDirectory()) {
-        Project openedProject = ProjectUtil.openOrImport(file.getPath(), project, false);
+        Project openedProject = ProjectUtil.open(file.getPath(), project, false);
         FileChooserUtil.setLastOpenedFile(openedProject, file);
         return;
       }
 
-      if (OpenProjectFileChooserDescriptor.isProjectFile(file)) {
+      if (OpenProjectFileChooserDescriptor.canOpen(file)) {
         int answer = Messages.showYesNoDialog(project,
                                               IdeBundle.message("message.open.file.is.project", file.getName()),
                                               IdeBundle.message("title.open.project"),
                                               Messages.getQuestionIcon());
         if (answer == 0) {
-          FileChooserUtil.setLastOpenedFile(ProjectUtil.openOrImport(file.getPath(), project, false), file);
+          FileChooserUtil.setLastOpenedFile(ProjectUtil.open(file.getPath(), project, false), file);
           return;
         }
       }

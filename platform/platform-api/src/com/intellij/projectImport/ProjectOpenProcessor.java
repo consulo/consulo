@@ -20,9 +20,12 @@
 package com.intellij.projectImport;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.DeprecationInfo;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.project.ProjectOpenProcessors;
+import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,11 +33,25 @@ import javax.swing.*;
 import java.io.File;
 
 public abstract class ProjectOpenProcessor {
-  public static final ExtensionPointName<ProjectOpenProcessor> EXTENSION_POINT_NAME = new ExtensionPointName<ProjectOpenProcessor>("com.intellij.projectOpenProcessor");
+  @Deprecated
+  @DeprecationInfo("Not Used")
+  public static final ExtensionPointName<ProjectOpenProcessor> EP_NAME = new ExtensionPointName<>("com.intellij.projectOpenProcessor");
+
+  @Nullable
+  @Deprecated
+  public static ProjectOpenProcessor findProcessor(VirtualFile file) {
+    return ProjectOpenProcessors.getInstance().findProcessor(file);
+  }
 
   public abstract String getName();
 
-  @Nullable
+  @NotNull
+  @Language("HTML")
+  public String getFileSample() {
+    return getName();
+  }
+
+  @NotNull
   public abstract Icon getIcon();
 
   @Nullable
@@ -44,31 +61,21 @@ public abstract class ProjectOpenProcessor {
 
   public abstract boolean canOpenProject(VirtualFile file);
 
+  @Deprecated
+  @DeprecationInfo("Not used")
+  public boolean lookForProjectsInDirectory() {
+    return true;
+  }
+
+  @Deprecated
+  @DeprecationInfo("Not used")
   public boolean isProjectFile(VirtualFile file) {
     return canOpenProject(file);
   }
 
   @Nullable
+  @RequiredDispatchThread
   public abstract Project doOpenProject(@NotNull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame);
-
-  /**
-   * Allow opening a directory directly if the project files are located in that directory.
-   *
-   * @return true if project files are searched inside the selected directory, false if the project files must be selected directly.
-   */
-  public boolean lookForProjectsInDirectory() {
-    return true;
-  }
-
-  @Nullable
-  public static ProjectOpenProcessor getImportProvider(VirtualFile file) {
-    for (ProjectOpenProcessor provider : Extensions.getExtensions(EXTENSION_POINT_NAME)) {
-      if (provider.canOpenProject(file)) {
-        return provider;
-      }
-    }
-    return null;
-  }
 
   public void refreshProjectFiles(File basedir) {
 

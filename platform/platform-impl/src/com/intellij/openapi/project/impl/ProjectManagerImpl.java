@@ -763,7 +763,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
           return;
         }
 
-        ProjectUtil.openOrImport(presentableUrl, null, true);
+        ProjectUtil.open(presentableUrl, null, true);
       }
     }, ModalityState.NON_MODAL);
   }

@@ -134,7 +134,7 @@ public class InspectionApplication {
         if (myErrorCodeRequired) System.exit(1);
         return;
       }
-      myProject = ProjectUtil.openOrImport(myProjectPath, null, false);
+      myProject = ProjectUtil.open(myProjectPath, null, false);
 
       if (myProject == null) {
         logError("Unable to open project");

@@ -152,7 +152,7 @@ public interface MergeVersion {
     }
 
     public static boolean isProjectFile(VirtualFile file) {
-      final ProjectOpenProcessor importProvider = ProjectOpenProcessor.getImportProvider(file);
+      final ProjectOpenProcessor importProvider = ProjectOpenProcessor.findProcessor(file);
       return importProvider != null && importProvider.lookForProjectsInDirectory();
     }
 
