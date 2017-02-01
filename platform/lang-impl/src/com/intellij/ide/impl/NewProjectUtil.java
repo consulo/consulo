@@ -44,6 +44,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.compiler.CompilerConfiguration;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -208,7 +209,11 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
       return newProject;
     }
     finally {
-      Disposer.dispose(wizard.getWizardContext());
+      disposeContext(wizard);
     }
+  }
+
+  public static void disposeContext(@NotNull AddModuleWizard wizard) {
+    Disposer.dispose(wizard.getWizardContext());
   }
 }

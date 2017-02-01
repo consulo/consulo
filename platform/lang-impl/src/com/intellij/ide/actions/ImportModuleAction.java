@@ -31,7 +31,6 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -71,7 +70,10 @@ public class ImportModuleAction extends AnAction {
     if (wizard == null) {
       return Collections.emptyList();
     }
-    if (wizard.getStepCount() > 0 && !wizard.showAndGet()) return Collections.emptyList();
+    if (wizard.getStepCount() > 0 && !wizard.showAndGet()) {
+      NewProjectUtil.disposeContext(wizard);
+      return Collections.emptyList();
+    }
 
     return createFromWizard(project, wizard);
   }
@@ -100,7 +102,7 @@ public class ImportModuleAction extends AnAction {
       }
     }
     finally {
-      Disposer.dispose(wizardContext);
+      NewProjectUtil.disposeContext(wizard);
     }
   }
 

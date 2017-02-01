@@ -117,6 +117,7 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
       assert dialog != null;
       dialog.show();
       if (!dialog.isOK()) {
+        NewProjectUtil.disposeContext(dialog);
         return null;
       }
       projectToOpen = NewProjectUtil.createFromWizard(dialog, null, false);
