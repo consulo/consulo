@@ -63,7 +63,8 @@ public class WizardContext extends UserDataHolderBase implements Disposable {
     myProject = project;
   }
 
-  public void initModuleImportContext(@NotNull ModuleImportProvider<?> provider) {
+  @NotNull
+  public ModuleImportContext initModuleImportContext(@NotNull ModuleImportProvider<?> provider) {
     ModuleImportContext context = provider.createContext();
 
     Disposer.register(this, context);
@@ -71,6 +72,7 @@ public class WizardContext extends UserDataHolderBase implements Disposable {
     if (myModuleImportContexts.put(provider, context) != null) {
       throw new IllegalArgumentException();
     }
+    return context;
   }
 
   @NotNull

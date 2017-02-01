@@ -164,10 +164,8 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
       myWizardMode = new ImportMode(myImportProviders);
 
       for (ModuleImportProvider<?> provider : myImportProviders) {
-        ModuleImportContext context = provider.createContext();
+        ModuleImportContext context = myWizardContext.initModuleImportContext(provider);
         context.setFileToImport(defaultPath);
-
-        myWizardContext.initModuleImportContext(provider);
       }
 
       StepSequence sequence = myWizardMode.createSteps(myWizardContext);
