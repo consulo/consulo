@@ -25,12 +25,12 @@ import java.lang.reflect.Constructor;
  */
 public abstract class LazyInstance<T> extends NotNullLazyValue<T> {
   @NotNull
-  public static <T> LazyInstance<T> by(@NotNull final NotNullFactory<Class<T>> value) {
+  public static <T> LazyInstance<T> createInstance(@NotNull final ThrowableComputable<Class<T>, ClassNotFoundException> value) {
     return new LazyInstance<T>() {
       @NotNull
       @Override
       protected Class<T> getInstanceClass() throws ClassNotFoundException {
-        return value.create();
+        return value.compute();
       }
     };
   }
