@@ -691,6 +691,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
+    if(myExtensions.length == 0) {
+      return null;
+    }
+
     int[] ids = ModuleExtensionIndexCache.get(clazz);
     for (int id : ids) {
       ModuleExtension extension = myExtensions[id];
@@ -705,6 +709,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
+    if(myExtensions.length == 0) {
+      return null;
+    }
+
     int[] ids = ModuleExtensionIndexCache.get(clazz);
     for (int id : ids) {
       ModuleExtension extension = myExtensions[id];
