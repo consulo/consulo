@@ -17,6 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.Component;
 import consulo.ui.DockLayout;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -27,6 +28,7 @@ import java.util.Map;
  * @since 11-Jun-16
  */
 public class WGwtDockLayoutImpl extends WGwtLayoutImpl<String> implements DockLayout {
+  @RequiredUIAccess
   @NotNull
   @Override
   public DockLayout top(@NotNull Component component) {
@@ -34,6 +36,7 @@ public class WGwtDockLayoutImpl extends WGwtLayoutImpl<String> implements DockLa
     return this;
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public DockLayout bottom(@NotNull Component component) {
@@ -41,6 +44,7 @@ public class WGwtDockLayoutImpl extends WGwtLayoutImpl<String> implements DockLa
     return this;
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public DockLayout center(@NotNull Component component) {
@@ -48,6 +52,7 @@ public class WGwtDockLayoutImpl extends WGwtLayoutImpl<String> implements DockLa
     return this;
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public DockLayout left(@NotNull Component component) {
@@ -55,6 +60,7 @@ public class WGwtDockLayoutImpl extends WGwtLayoutImpl<String> implements DockLa
     return this;
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public DockLayout right(@NotNull Component component) {

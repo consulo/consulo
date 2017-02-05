@@ -24,6 +24,36 @@ import org.jetbrains.annotations.NotNull;
 public interface DockLayout extends Layout {
   @NotNull
   @RequiredUIAccess
+  default DockLayout top(@NotNull PseudoComponent component) {
+    return top(component.getComponent());
+  }
+
+  @NotNull
+  @RequiredUIAccess
+  default DockLayout bottom(@NotNull PseudoComponent component) {
+    return bottom(component.getComponent());
+  }
+
+  @NotNull
+  @RequiredUIAccess
+  default DockLayout center(@NotNull PseudoComponent component) {
+    return center(component.getComponent());
+  }
+
+  @NotNull
+  @RequiredUIAccess
+  default DockLayout left(@NotNull PseudoComponent component) {
+    return left(component.getComponent());
+  }
+
+  @NotNull
+  @RequiredUIAccess
+  default DockLayout right(@NotNull PseudoComponent component) {
+    return right(component.getComponent());
+  }
+
+  @NotNull
+  @RequiredUIAccess
   DockLayout top(@NotNull Component component);
 
   @NotNull

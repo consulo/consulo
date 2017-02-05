@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,14 @@
  */
 package consulo.ui;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 05-Feb-17
  */
-public interface Layout extends Component {
+public interface PseudoComponent {
+  @NotNull
+  @RequiredUIAccess
+  Component getComponent();
 }

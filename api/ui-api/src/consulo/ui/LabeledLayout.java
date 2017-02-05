@@ -23,5 +23,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface LabeledLayout extends Layout {
   @NotNull
+  @RequiredUIAccess
+  default LabeledLayout set(@NotNull PseudoComponent component) {
+    return set(component.getComponent());
+  }
+
+  @NotNull
+  @RequiredUIAccess
   LabeledLayout set(@NotNull Component component);
 }

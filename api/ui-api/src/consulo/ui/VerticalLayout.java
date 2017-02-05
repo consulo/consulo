@@ -24,5 +24,11 @@ import org.jetbrains.annotations.NotNull;
 public interface VerticalLayout extends Layout {
   @NotNull
   @RequiredUIAccess
+  default VerticalLayout add(@NotNull PseudoComponent component) {
+    return add(component.getComponent());
+  }
+
+  @NotNull
+  @RequiredUIAccess
   VerticalLayout add(@NotNull Component component);
 }

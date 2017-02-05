@@ -16,6 +16,7 @@
 package consulo.ui.internal;
 
 import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.SplitLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,12 +46,14 @@ public abstract class WGwtSplitLayoutImpl extends WGwtLayoutImpl<Boolean> implem
     myProportion = percent;
   }
 
+  @RequiredUIAccess
   @Override
   public SplitLayout setFirstComponent(@NotNull Component component) {
     addChild((WGwtBaseComponent)component, Boolean.TRUE);
     return this;
   }
 
+  @RequiredUIAccess
   @Override
   public SplitLayout setSecondComponent(@NotNull Component component) {
     addChild((WGwtBaseComponent)component, Boolean.FALSE);

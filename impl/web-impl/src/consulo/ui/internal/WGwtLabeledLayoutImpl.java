@@ -17,6 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.Component;
 import consulo.ui.LabeledLayout;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -39,6 +40,7 @@ public class WGwtLabeledLayoutImpl extends WGwtLayoutImpl<Object> implements Lab
     map.put("text", myText);
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public LabeledLayout set(@NotNull Component component) {

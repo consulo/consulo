@@ -17,6 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.Component;
 import consulo.ui.HorizontalLayout;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -30,6 +31,7 @@ public class DesktopHorizontalLayoutImpl extends JPanel implements HorizontalLay
     super(new com.intellij.ui.components.panels.HorizontalLayout(0));
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public HorizontalLayout add(@NotNull Component component) {

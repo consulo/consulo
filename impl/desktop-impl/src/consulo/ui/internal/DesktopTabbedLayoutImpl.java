@@ -16,6 +16,7 @@
 package consulo.ui.internal;
 
 import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
@@ -30,12 +31,14 @@ import java.awt.*;
  * @since 14-Jun-16
  */
 public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout, SwingWrapper {
+  @RequiredUIAccess
   @NotNull
   @Override
   public TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component) {
     return this;
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public TabbedLayout addTab(@NotNull String tabName, @NotNull Component component) {

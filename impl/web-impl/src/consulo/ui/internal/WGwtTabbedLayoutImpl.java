@@ -17,6 +17,7 @@ package consulo.ui.internal;
 
 import com.intellij.util.containers.hash.LinkedHashMap;
 import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
 import consulo.web.gwtUI.shared.UIComponent;
@@ -73,6 +74,7 @@ public class WGwtTabbedLayoutImpl extends WGwtBaseComponent implements TabbedLay
     }
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component) {
@@ -81,6 +83,7 @@ public class WGwtTabbedLayoutImpl extends WGwtBaseComponent implements TabbedLay
     return this;
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public TabbedLayout addTab(@NotNull String tabName, @NotNull Component component) {
