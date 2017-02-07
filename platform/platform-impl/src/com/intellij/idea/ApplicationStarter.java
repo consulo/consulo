@@ -114,7 +114,7 @@ public class ApplicationStarter {
   @NotNull
   private static String getStarterClass(boolean isUnitTest, boolean asWebApp) {
     if (isUnitTest) {
-      return "com.intellij.idea.starter.UnitTestPostStarter";
+      return "consulo.start.UnitTestPostStarter";
     }
 
     return asWebApp ? "consulo.web.main.WebPostStarter" : "com.intellij.idea.starter.DefaultApplicationPostStarter";
