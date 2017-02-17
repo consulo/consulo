@@ -79,6 +79,10 @@
     <xi:fallback/>
   </xi:include>
 
+  <xi:include href="/META-INF/ExternalStorage.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+
   <extensionPoints>
     <extensionPoint name="listOfElements" beanClass="consulo.extensions.ListOfElementsEP"/>
     <extensionPoint name="addTo.listOfElements" beanClass="consulo.extensions.AddToElementEP"/>
