@@ -48,7 +48,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -94,11 +93,10 @@ public class ITNReporter extends ErrorReportSubmitter {
     Throwable t = event.getThrowable();
     if (t != null) {
       Set<PluginId> pluginIds = IdeErrorsDialog.findPluginIds(t);
-      Map<String, String> affectedPluginIds = errorBean.getAffectedPluginIds();
       for (PluginId pluginId : pluginIds) {
         final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(pluginId);
         if (pluginDescriptor != null) {
-          affectedPluginIds.put(pluginId.getIdString(), StringUtil.notNullize(pluginDescriptor.getVersion(), "?"));
+          errorBean.addAffectedPlugin(pluginId, StringUtil.notNullize(pluginDescriptor.getVersion(), "?"));
         }
       }
     }
