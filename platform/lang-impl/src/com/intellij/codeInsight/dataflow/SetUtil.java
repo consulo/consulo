@@ -1,10 +1,14 @@
 package com.intellij.codeInsight.dataflow;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author: oleg
+ * @author oleg
  */
 public class SetUtil {
   private SetUtil() {
@@ -13,22 +17,33 @@ public class SetUtil {
   /**
    * Intersects two sets
    */
-  public static <T> Set<T> intersect(final Set<T> set1, final Set<T> set2) {
-    if (set1.equals(set2)){
+  @NotNull
+  public static <T> Set<T> intersect(@Nullable Set<T> set1, @Nullable Set<T> set2) {
+    if (set1 == null && set2 == null) {
+      return Collections.emptySet();
+    }
+    if (set1 == null) {
+      return set2;
+    }
+    if (set2 == null) {
       return set1;
     }
-    final HashSet<T> result = new HashSet<T>();
+    if (set1.equals(set2)) {
+      return set1;
+    }
+    Set<T> result = new HashSet<T>();
     Set<T> minSet;
     Set<T> otherSet;
-    if (set1.size() < set2.size()){
+    if (set1.size() < set2.size()) {
       minSet = set1;
       otherSet = set2;
-    } else {
+    }
+    else {
       minSet = set2;
       otherSet = set1;
     }
     for (T s : minSet) {
-      if (otherSet.contains(s)){
+      if (otherSet.contains(s)) {
         result.add(s);
       }
     }
