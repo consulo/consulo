@@ -50,7 +50,7 @@ public class ErrorReportSender {
     PLATFORM_UPDATE_REQUIRED,
     PLUGIN_UPDATE_REQUIRED,
     BAD_REPORT,
-    AUTHORIZATION_FAILED
+    BAD_OAUTHK_KEY
   }
 
   private ErrorReportSender() {
@@ -91,7 +91,7 @@ public class ErrorReportSender {
             throw new WebServiceException();
           }
           return id;
-        case AUTHORIZATION_FAILED:
+        case BAD_OAUTHK_KEY:
           throw new AuthorizationFailedException();
         case PLATFORM_UPDATE_REQUIRED:
         case PLUGIN_UPDATE_REQUIRED:

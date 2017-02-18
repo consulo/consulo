@@ -178,6 +178,7 @@ public class PluginListDialog extends DialogWrapper {
 
   @Override
   public void doOKAction() {
+    super.doOKAction();
     Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
       List<IdeaPluginDescriptor> installed = new ArrayList<>(myNodes.size());
 
@@ -206,16 +207,13 @@ public class PluginListDialog extends DialogWrapper {
         myAfterCallback.accept(installed);
       }
 
+    }, () -> {
       if (myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL) {
-        UIUtil.invokeLaterIfNeeded(() -> {
-          if (PluginManagerConfigurable.showRestartIDEADialog() == Messages.YES) {
-            ApplicationManagerEx.getApplicationEx().restart(true);
-          }
-        });
+        if (PluginManagerConfigurable.showRestartIDEADialog() == Messages.YES) {
+          ApplicationManagerEx.getApplicationEx().restart(true);
+        }
       }
     });
-
-    super.doOKAction();
   }
 
   @Nullable

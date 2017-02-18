@@ -20,29 +20,42 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.Attachment;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.SystemProperties;
 import consulo.ide.updateSettings.UpdateChannel;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.*;
 
-/**
- * @author stathik
- * @since May 5, 2003
- */
 @SuppressWarnings("unused")
 public class ErrorBean {
   private static class AttachmentBean {
-    private String name;
-    private String path;
-    private String encodedText;
+    private final String name;
+    private final String path;
+    private final String encodedText;
 
     private AttachmentBean(String name, String path, String encodedText) {
       this.name = name;
       this.path = path;
       this.encodedText = encodedText;
+    }
+  }
+
+  private static class AffectedPlugin implements Comparable<AffectedPlugin> {
+    private final String pluginId;
+    private final String pluginVersion;
+
+    private AffectedPlugin(String pluginId, String pluginVersion) {
+      this.pluginId = pluginId;
+      this.pluginVersion = pluginVersion;
+    }
+
+    @Override
+    public int compareTo(@NotNull AffectedPlugin o) {
+      return pluginId.compareToIgnoreCase(o.pluginId);
     }
   }
 
@@ -65,7 +78,7 @@ public class ErrorBean {
   private String description;
   private Integer assigneeId;
 
-  private final Map<String, String> affectedPluginIds = new TreeMap<>();
+  private final Set<AffectedPlugin> affectedPlugins = new TreeSet<>();
 
   private List<AttachmentBean> attachments = Collections.emptyList();
 
@@ -90,8 +103,8 @@ public class ErrorBean {
     this.lastAction = lastAction;
   }
 
-  public Map<String, String> getAffectedPluginIds() {
-    return affectedPluginIds;
+  public void addAffectedPlugin(@NotNull PluginId pluginId, @NotNull String version) {
+    affectedPlugins.add(new AffectedPlugin(pluginId.toString(), version));
   }
 
   public String getPreviousException() {
