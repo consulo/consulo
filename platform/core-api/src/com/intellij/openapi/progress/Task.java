@@ -223,6 +223,26 @@ public abstract class Task implements TaskInfo, Progressive {
       }.queue();
     }
 
+    public static void queue(@Nullable Project project,
+                             @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title,
+                             boolean canBeCancelled,
+                             @Nullable PerformInBackgroundOption backgroundOption,
+                             @NotNull Consumer<ProgressIndicator> consumer,
+                             @NotNull Runnable onSuccess) {
+      new Backgroundable(project, title, canBeCancelled, backgroundOption) {
+        @Override
+        public void run(@NotNull ProgressIndicator indicator) {
+          consumer.accept(indicator);
+        }
+
+        @RequiredDispatchThread
+        @Override
+        public void onSuccess() {
+          onSuccess.run();
+        }
+      }.queue();
+    }
+
     protected final PerformInBackgroundOption myBackgroundOption;
 
     public Backgroundable(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title) {
