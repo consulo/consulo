@@ -17,6 +17,7 @@ package consulo.ide.updateSettings;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -44,6 +45,10 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
 
   @NotNull
   private static UpdateChannel findDefaultChannel() {
+    if(SandboxUtil.isInsideSandbox()) {
+      return UpdateChannel.nightly;
+    }
+
     File file = PathManager.getDistributionDirectory();
     for (UpdateChannel channel : UpdateChannel.values()) {
       if (new File(file, "." + channel.name()).exists()) {
