@@ -18,7 +18,6 @@ package com.intellij.openapi.module.impl;
 
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -36,10 +35,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.ModificationTracker;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
@@ -50,10 +46,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.StringInterner;
-import com.intellij.util.graph.CachingSemiGraph;
-import com.intellij.util.graph.DFSTBuilder;
-import com.intellij.util.graph.Graph;
-import com.intellij.util.graph.GraphGenerator;
+import com.intellij.util.graph.*;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotations.RequiredWriteAction;
 import consulo.module.ModuleDirIsNotExistsException;
@@ -694,22 +687,16 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
       String dirUrl = item.getDirUrl();
       if (dirUrl != null) {
-        final VirtualFile moduleDir = VirtualFileManager.getInstance().findFileByUrl(dirUrl);
+        Ref<VirtualFile> ref = Ref.create();
+        ApplicationManager.getApplication().invokeAndWait(() -> ref.set(VirtualFileManager.getInstance().refreshAndFindFileByUrl(dirUrl)));
+        VirtualFile moduleDir = ref.get();
+
         if (moduleDir == null || !moduleDir.exists() || !moduleDir.isDirectory()) {
           throw new ModuleDirIsNotExistsException(
                   ProjectBundle.message("module.dir.does.not.exist.error", FileUtil.toSystemDependentName(VirtualFileManager.extractPath(dirUrl))));
         }
 
         oldModule = getModuleByDirUrl(moduleDir.getUrl());
-        if (oldModule == null) {
-          ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-              moduleDir.refresh(false, false);
-            }
-          }, ModalityState.defaultModalityState());
-
-        }
       }
 
       if (oldModule == null) {
@@ -755,7 +742,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     private Graph<Module> moduleGraph(final boolean includeTests) {
-      return GraphGenerator.create(CachingSemiGraph.create(new GraphGenerator.SemiGraph<Module>() {
+      return GraphGenerator.generate(CachingSemiGraph.cache(new InboundSemiGraph<Module>() {
         @Override
         public Collection<Module> getNodes() {
           return myModules;
@@ -801,6 +788,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       myNewNameToModule.clear();
     }
 
+    @RequiredWriteAction
     @Override
     public void dispose() {
       assertWritable();
