@@ -27,9 +27,10 @@ import java.lang.reflect.TypeVariable;
  * @author nik
  */
 public class ComponentSerializationUtil {
-  public static Class getStateClass(final Class<? extends PersistentStateComponent> aClass) {
+  @SuppressWarnings("unchecked")
+  public static <T> Class<T> getStateClass(final Class<? extends PersistentStateComponent> aClass) {
     TypeVariable<Class<PersistentStateComponent>> variable = PersistentStateComponent.class.getTypeParameters()[0];
-    return ReflectionUtil.getRawType(ReflectionUtil.resolveVariableInHierarchy(variable, aClass));
+    return (Class<T>)ReflectionUtil.getRawType(ReflectionUtil.resolveVariableInHierarchy(variable, aClass));
   }
 
   public static <S> void loadComponentState(@NotNull PersistentStateComponent<S> configuration, @Nullable Element element) {

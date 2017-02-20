@@ -1072,6 +1072,8 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="library" name="Snappy-Java" level="project" />
+          <orderEntry type="library" name="apache-httpclient" level="project" />
+          <orderEntry type="library" name="gson" level="project" />
         </module-layer>
       </module>
     </modules>

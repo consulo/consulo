@@ -93,9 +93,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   private final Object lock = new Object();
   private final List<ProjectManagerListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  private final MultiMap<Project, Pair<VirtualFile, StateStorage>> myChangedProjectFiles = MultiMap.createSet();
+  private final MultiMap<Project, StateStorage> myChangedProjectFiles = MultiMap.createSet();
   private final SingleAlarm myChangedFilesAlarm;
-  private final List<Pair<VirtualFile, StateStorage>> myChangedApplicationFiles = new SmartList<Pair<VirtualFile, StateStorage>>();
+  private final List<StateStorage> myChangedApplicationFiles = new SmartList<>();
   private final AtomicInteger myReloadBlockCount = new AtomicInteger(0);
 
   private final ProgressManager myProgressManager;
@@ -632,7 +632,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       return true;
     }
 
-    Set<Pair<VirtualFile, StateStorage>> causes = new THashSet<Pair<VirtualFile, StateStorage>>(myChangedApplicationFiles);
+    Set<StateStorage> causes = new THashSet<>(myChangedApplicationFiles);
     myChangedApplicationFiles.clear();
 
     ReloadComponentStoreStatus status = ComponentStoreImpl.reloadStore(causes, ((ApplicationImpl)ApplicationManager.getApplication()).getStateStore());
@@ -650,12 +650,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       return false;
     }
 
-    Collection<Pair<VirtualFile, StateStorage>> causes = new SmartList<Pair<VirtualFile, StateStorage>>();
-    Collection<Pair<VirtualFile, StateStorage>> changes;
+    Collection<StateStorage> causes = new SmartList<>();
+    Collection<StateStorage> changes;
     synchronized (myChangedProjectFiles) {
       changes = myChangedProjectFiles.remove(project);
       if (!ContainerUtil.isEmpty(changes)) {
-        for (Pair<VirtualFile, StateStorage> change : changes) {
+        for (StateStorage change : changes) {
           causes.add(change);
         }
       }
@@ -721,10 +721,10 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     }
 
     if (project == null) {
-      myChangedApplicationFiles.add(Pair.create(file, storage));
+      myChangedApplicationFiles.add(storage);
     }
     else {
-      myChangedProjectFiles.putValue(project, Pair.create(file, storage));
+      myChangedProjectFiles.putValue(project, storage);
     }
 
     if (storage instanceof StateStorageBase) {

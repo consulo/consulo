@@ -37,6 +37,6 @@ public class ExternalStorageAppListener implements ApplicationLoadListener {
 
     ExternalStorage storage = new ExternalStorage();
 
-    stateStorageManager.setStreamProvider(new ExternalStorageStreamProvider(storage));
+    stateStorageManager.setStreamProvider(new ExternalStorageStreamProvider(storage, stateStorageManager));
   }
 }

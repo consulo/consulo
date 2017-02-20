@@ -17,9 +17,14 @@ package consulo.externalStorage.storage;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.impl.stores.StateStorageManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.io.UnsyncByteArrayOutputStream;
+import consulo.externalStorage.ExternalStorageUtil;
 import org.iq80.snappy.SnappyInputStream;
 import org.iq80.snappy.SnappyOutputStream;
 import org.jetbrains.annotations.NotNull;
@@ -42,26 +47,41 @@ public class ExternalStorage {
 
   private File myProxyDirectory;
 
-  private ExternalStorageQueue myQueue = new ExternalStorageQueue();
+  private final ExternalStorageQueue myQueue = new ExternalStorageQueue();
 
   public ExternalStorage() {
     myProxyDirectory = new File(PathManager.getSystemPath(), "externalStorage");
   }
 
   @Nullable
-  public InputStream loadContent(String fileSpec, RoamingType roamingType) throws IOException {
-    fileSpec = buildFileSpec(roamingType, fileSpec);
-
-    File file = new File(myProxyDirectory, fileSpec);
-    if (file.exists()) {
-      return new SnappyInputStream(new FileInputStream(file));
+  public InputStream loadContent(String fileSpec, RoamingType roamingType, StateStorageManager stateStorageManager) throws IOException {
+    Ref<byte[]> ref = myQueue.getContent(fileSpec, roamingType);
+    if (ref != null) {
+      byte[] bytes = ref.get();
+      return bytes == null ? null : new SnappyInputStream(new UnsyncByteArrayInputStream(bytes));
     }
-    return null;
+
+    InputStream stream = null;
+    int mod = -1;
+    File file = new File(myProxyDirectory, buildFileSpec(roamingType, fileSpec));
+    if (file.exists()) {
+      stream = new SnappyInputStream(new FileInputStream(file));
+
+      File modFile = ExternalStorageUtil.getModCountFile(file);
+      if (modFile.exists()) {
+        try {
+          mod = Integer.parseInt(FileUtil.loadFile(modFile));
+        }
+        catch (IOException ignored) {
+        }
+      }
+    }
+
+    myQueue.wantLoad(fileSpec, roamingType, mod, stateStorageManager);
+    return stream;
   }
 
   public void saveContent(@NotNull String fileSpec, @NotNull RoamingType roamingType, byte[] content, int size) throws IOException {
-    fileSpec = buildFileSpec(roamingType, fileSpec);
-
     UnsyncByteArrayOutputStream out = new UnsyncByteArrayOutputStream(size);
     try (SnappyOutputStream snappyOutputStream = new SnappyOutputStream(out)) {
       snappyOutputStream.write(content, 0, size);
@@ -69,7 +89,7 @@ public class ExternalStorage {
 
     byte[] compressedContent = out.toByteArray();
 
-    myQueue.addWrite(myProxyDirectory, fileSpec, compressedContent);
+    myQueue.wantSave(myProxyDirectory, fileSpec, roamingType, compressedContent);
   }
 
   @NotNull
@@ -91,7 +111,7 @@ public class ExternalStorage {
   }
 
   @NotNull
-  private static String buildFileSpec(@NotNull RoamingType roamingType, @NotNull String fileSpec) {
+  public static String buildFileSpec(@NotNull RoamingType roamingType, @NotNull String fileSpec) {
     switch (roamingType) {
       case PER_PLATFORM:
         return "$OS$/" + getOsPrefix() + "/" + fileSpec;

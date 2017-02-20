@@ -41,7 +41,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Set;
 
 public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData> {
@@ -93,7 +92,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
   }
 
   @Override
-  public void analyzeExternalChangesAndUpdateIfNeed(@NotNull Collection<VirtualFile> changedFiles, @NotNull Set<String> result) {
+  public void analyzeExternalChangesAndUpdateIfNeed(@NotNull Set<String> result) {
     // todo reload only changed file, compute diff
     DirectoryStorageData oldData = myStorageData;
     DirectoryStorageData newData = loadState();

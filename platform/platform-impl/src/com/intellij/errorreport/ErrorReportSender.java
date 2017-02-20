@@ -46,11 +46,7 @@ import java.util.Map;
  */
 public class ErrorReportSender {
   private static enum ResultType {
-    OK,
-    PLATFORM_UPDATE_REQUIRED,
-    PLUGIN_UPDATE_REQUIRED,
-    BAD_REPORT,
-    BAD_OAUTHK_KEY
+    OK, PLATFORM_UPDATE_REQUIRED, PLUGIN_UPDATE_REQUIRED, BAD_REPORT, BAD_OAUTHK_KEY
   }
 
   private ErrorReportSender() {
@@ -107,21 +103,22 @@ public class ErrorReportSender {
   }
 
   private static String doPost(String url, ErrorBean errorBean) throws IOException {
-    CloseableHttpClient httpClient = HttpClients.createDefault();
-    HttpPost post = new HttpPost(url);
-    post.setEntity(new StringEntity(new Gson().toJson(errorBean), ContentType.APPLICATION_JSON));
+    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+      HttpPost post = new HttpPost(url);
+      post.setEntity(new StringEntity(new Gson().toJson(errorBean), ContentType.APPLICATION_JSON));
 
-    String authKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.ERROR_REPORTER_API);
-    if(authKey != null) {
-      post.addHeader("Authorization", authKey);
-    }
-    return httpClient.execute(post, response -> {
-      int statusCode = response.getStatusLine().getStatusCode();
-      if (statusCode != HttpURLConnection.HTTP_OK) {
-        throw new WebServiceException(DiagnosticBundle.message("error.http.result.code", statusCode));
+      String authKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.ERROR_REPORTER_API);
+      if (authKey != null) {
+        post.addHeader("Authorization", authKey);
       }
+      return httpClient.execute(post, response -> {
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != HttpURLConnection.HTTP_OK) {
+          throw new WebServiceException(DiagnosticBundle.message("error.http.result.code", statusCode));
+        }
 
-      return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-    });
+        return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+      });
+    }
   }
 }

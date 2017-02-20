@@ -16,6 +16,7 @@
 package consulo.externalStorage;
 
 import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.impl.stores.StateStorageManager;
 import com.intellij.openapi.components.impl.stores.StreamProvider;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.externalStorage.storage.ExternalStorage;
@@ -34,9 +35,11 @@ import java.util.Collection;
  */
 public class ExternalStorageStreamProvider extends StreamProvider {
   private ExternalStorage myStorage;
+  private StateStorageManager myStateStorageManager;
 
-  public ExternalStorageStreamProvider(ExternalStorage storage) {
+  public ExternalStorageStreamProvider(ExternalStorage storage, StateStorageManager stateStorageManager) {
     myStorage = storage;
+    myStateStorageManager = stateStorageManager;
   }
 
   @Override
@@ -58,7 +61,7 @@ public class ExternalStorageStreamProvider extends StreamProvider {
   @Nullable
   @Override
   public InputStream loadContent(@NotNull String fileSpec, @NotNull RoamingType roamingType) throws IOException {
-    return myStorage.loadContent(fileSpec, roamingType);
+    return myStorage.loadContent(fileSpec, roamingType, myStateStorageManager);
   }
 
   @Override

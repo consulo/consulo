@@ -22,6 +22,8 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.util.io.URLUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public final class UriUtil {
@@ -29,6 +31,16 @@ public final class UriUtil {
   public static final CharMatcher SLASH_MATCHER = CharMatcher.is('/');
 
   private UriUtil() {
+  }
+
+  @NotNull
+  public static String encode(@NotNull String url) {
+    try {
+      return URLEncoder.encode(url, "UTF-8");
+    }
+    catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @NotNull
