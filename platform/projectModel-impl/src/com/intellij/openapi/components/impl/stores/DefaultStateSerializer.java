@@ -17,7 +17,6 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StorageId;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
@@ -56,14 +55,7 @@ public class DefaultStateSerializer {
             return false;
           }
 
-          if (storage != null) {
-            StorageId storageId = accessor.getAnnotation(StorageId.class);
-            if (storageId != null && !storageId.value().equals(storage.id())) {
-              return false;
-            }
-            return storage.isDefault();
-          }
-          return true;
+          return storage == null || storage.isDefault();
         }
       });
     }

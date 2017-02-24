@@ -16,10 +16,13 @@
 
 package com.intellij.openapi.components;
 
+import consulo.annotations.DeprecationInfo;
+
 /**
  * @author mike
  */
 public enum StorageScheme {
-  DEFAULT, //idea 6.0 compatible
+  @Deprecated @DeprecationInfo("Use #DIRECTORY_BASED")
+  DEFAULT,
   DIRECTORY_BASED
 }
