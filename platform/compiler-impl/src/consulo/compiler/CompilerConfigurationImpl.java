@@ -43,7 +43,7 @@ import java.util.Set;
  */
 @State(
         name = "CompilerConfiguration",
-        storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)}
+        storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml")}
 )
 public class CompilerConfigurationImpl extends CompilerConfiguration implements PersistentStateComponent<Element> {
   public static class MyWatchedRootsProvider implements WatchedRootsProvider {

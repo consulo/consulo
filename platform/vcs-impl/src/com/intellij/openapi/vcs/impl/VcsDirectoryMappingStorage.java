@@ -26,12 +26,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author yole
  */
-@State(
-  name = "VcsDirectoryMappings",
-  storages = {
-          @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml", scheme = StorageScheme.DIRECTORY_BASED)
-    }
-)
+@State(name = "VcsDirectoryMappings", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml")})
 public class VcsDirectoryMappingStorage extends AbstractProjectComponent implements PersistentStateComponent<Element> {
   private final ProjectLevelVcsManager myVcsManager;
 
@@ -42,12 +37,12 @@ public class VcsDirectoryMappingStorage extends AbstractProjectComponent impleme
 
   public Element getState() {
     final Element e = new Element("state");
-    ((ProjectLevelVcsManagerImpl) myVcsManager).writeDirectoryMappings(e);
+    ((ProjectLevelVcsManagerImpl)myVcsManager).writeDirectoryMappings(e);
     return e;
   }
 
   public void loadState(Element state) {
-    ((ProjectLevelVcsManagerImpl) myVcsManager).readDirectoryMappings(state);
+    ((ProjectLevelVcsManagerImpl)myVcsManager).readDirectoryMappings(state);
   }
 
   @NonNls

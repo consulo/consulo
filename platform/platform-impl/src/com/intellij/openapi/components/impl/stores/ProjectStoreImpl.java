@@ -33,6 +33,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
+import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
@@ -51,18 +52,18 @@ import java.util.List;
 public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements IProjectStore {
   private static final Logger LOG = Logger.getInstance(ProjectStoreImpl.class);
 
-  @NonNls private static final String OLD_PROJECT_SUFFIX = "_old.";
-  @NonNls static final String OPTION_WORKSPACE = "workspace";
+  @NonNls
+  private static final String OLD_PROJECT_SUFFIX = "_old.";
+  @NonNls
+  static final String OPTION_WORKSPACE = "workspace";
 
   private static int originalVersion = -1;
 
   protected ProjectImpl myProject;
-  private StorageScheme myScheme = StorageScheme.DEFAULT;
   private String myPresentableUrl;
 
   ProjectStoreImpl(@NotNull ProjectImpl project, @NotNull PathMacroManager pathMacroManager) {
     super(pathMacroManager);
-
     myProject = project;
   }
 
@@ -71,8 +72,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     if (originalVersion >= 0 && originalVersion < ProjectManagerImpl.CURRENT_FORMAT_VERSION) {
       final VirtualFile projectFile = getProjectFile();
       LOG.assertTrue(projectFile != null);
-      String message = ProjectBundle.message("project.convert.old.prompt", projectFile.getName(),
-                                             ApplicationNamesInfo.getInstance().getProductName(),
+      String message = ProjectBundle.message("project.convert.old.prompt", projectFile.getName(), ApplicationNamesInfo.getInstance().getProductName(),
                                              projectFile.getNameWithoutExtension() + OLD_PROJECT_SUFFIX + projectFile.getExtension());
       if (Messages.showYesNoDialog(message, CommonBundle.getWarningTitle(), Messages.getWarningIcon()) != Messages.YES) return false;
 
@@ -86,8 +86,8 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
         }
         buffer.append(ProjectBundle.message("project.convert.problems.help"));
         if (Messages.showOkCancelDialog(myProject, buffer.toString(), ProjectBundle.message("project.convert.problems.title"),
-                                        ProjectBundle.message("project.convert.problems.help.button"),
-                                        CommonBundle.getCloseButtonText(), Messages.getWarningIcon()) == Messages.OK) {
+                                        ProjectBundle.message("project.convert.problems.help.button"), CommonBundle.getCloseButtonText(),
+                                        Messages.getWarningIcon()) == Messages.OK) {
           HelpManager.getInstance().invokeHelp("project.migrationProblems");
         }
       }
@@ -119,15 +119,14 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     }
 
     return originalVersion <= ProjectManagerImpl.CURRENT_FORMAT_VERSION ||
-           MessageDialogBuilder.yesNo(CommonBundle.getWarningTitle(),
-                                      ProjectBundle.message("project.load.new.version.warning", myProject.getName(), ApplicationNamesInfo.getInstance().getProductName()))
-                   .icon(Messages.getWarningIcon())
-                   .project(myProject).is();
+           MessageDialogBuilder.yesNo(CommonBundle.getWarningTitle(), ProjectBundle
+                   .message("project.load.new.version.warning", myProject.getName(), ApplicationNamesInfo.getInstance().getProductName()))
+                   .icon(Messages.getWarningIcon()).project(myProject).is();
   }
 
   @Override
   public TrackingPathMacroSubstitutor[] getSubstitutors() {
-    return new TrackingPathMacroSubstitutor[] {getStateStorageManager().getMacroSubstitutor()};
+    return new TrackingPathMacroSubstitutor[]{getStateStorageManager().getMacroSubstitutor()};
   }
 
   @Override
@@ -147,10 +146,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     final File file = new File(filePath);
 
-    myScheme = StorageScheme.DIRECTORY_BASED;
-
-    final File dirStore = file.isDirectory() ? new File(file, Project.DIRECTORY_STORE_FOLDER)
-                                             : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
+    final File dirStore = file.isDirectory() ? new File(file, Project.DIRECTORY_STORE_FOLDER) : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, new File(dirStore, "misc.xml").getPath());
 
     final File ws = new File(dirStore, "workspace.xml");
@@ -198,7 +194,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   private String getBasePath(@NotNull File file) {
-    if (myScheme == StorageScheme.DEFAULT) {
+    if (myProject.isDefault()) {
       return file.getParent();
     }
     else {
@@ -211,35 +207,26 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Override
   public String getProjectName() {
     final VirtualFile baseDir = getProjectBaseDir();
-    assert baseDir != null : "scheme=" + myScheme + " project file=" + getProjectFilePath();
+    assert baseDir != null : "project file=" + getProjectFilePath();
 
     final VirtualFile ideaDir = baseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
     if (ideaDir != null && ideaDir.isValid()) {
       final VirtualFile nameFile = ideaDir.findChild(ProjectImpl.NAME_FILE);
       if (nameFile != null && nameFile.isValid()) {
         try {
-          BufferedReader in = new BufferedReader(new InputStreamReader(nameFile.getInputStream(), CharsetToolkit.UTF8_CHARSET));
-          try {
+          try (BufferedReader in = new BufferedReader(new InputStreamReader(nameFile.getInputStream(), CharsetToolkit.UTF8_CHARSET))) {
             final String name = in.readLine();
             if (name != null && name.length() > 0) {
               return name.trim();
             }
           }
-          finally {
-            in.close();
-          }
         }
-        catch (IOException ignored) { }
+        catch (IOException ignored) {
+        }
       }
     }
 
     return baseDir.getName().replace(":", "");
-  }
-
-  @NotNull
-  @Override
-  public StorageScheme getStorageScheme() {
-    return myScheme;
   }
 
   @Override
@@ -248,7 +235,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
       return null;
     }
     if (myPresentableUrl == null) {
-      String url = myScheme == StorageScheme.DIRECTORY_BASED ? getProjectBasePath() : getProjectFilePath();
+      String url = !myProject.isDefault() ? getProjectBasePath() : getProjectFilePath();
       if (url != null) {
         myPresentableUrl = FileUtil.toSystemDependentName(url);
       }
@@ -310,7 +297,60 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     return new ProjectStateStorageManager(myPathMacroManager.createTrackingSubstitutor(), myProject);
   }
 
-  static class  ProjectStorageData extends BaseStorageData {
+  @NotNull
+  @Override
+  protected <T> Storage[] getComponentStorageSpecs(@NotNull PersistentStateComponent<T> persistentStateComponent,
+                                                   @NotNull State stateSpec,
+                                                   @NotNull StateStorageOperation operation) {
+    Storage[] storages = stateSpec.storages();
+    if (storages.length == 1) {
+      return storages;
+    }
+    assert storages.length > 0;
+
+    if (operation == StateStorageOperation.READ) {
+      List<Storage> result = new SmartList<>();
+      for (int i = storages.length - 1; i >= 0; i--) {
+        Storage storage = storages[i];
+        if (storage.scheme() == StorageScheme.DIRECTORY_BASED) {
+          result.add(storage);
+        }
+      }
+
+      for (Storage storage : storages) {
+        if (storage.scheme() == StorageScheme.DEFAULT) {
+          result.add(storage);
+        }
+      }
+
+      return result.toArray(new Storage[result.size()]);
+    }
+    else if (operation == StateStorageOperation.WRITE) {
+      List<Storage> result = new SmartList<>();
+      for (Storage storage : storages) {
+        if (storage.scheme() == StorageScheme.DIRECTORY_BASED) {
+          result.add(storage);
+        }
+      }
+
+      if (!result.isEmpty()) {
+        return result.toArray(new Storage[result.size()]);
+      }
+
+      for (Storage storage : storages) {
+        if (storage.scheme() == StorageScheme.DEFAULT) {
+          result.add(storage);
+        }
+      }
+
+      return result.toArray(new Storage[result.size()]);
+    }
+    else {
+      return new Storage[]{};
+    }
+  }
+
+  static class ProjectStorageData extends BaseStorageData {
     protected final Project myProject;
 
     ProjectStorageData(final String rootElementName, Project project) {
@@ -402,7 +442,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
         throw new SaveCancelledException();
       }
       else {
-        List<Pair<SaveSession, VirtualFile>> oldList = new ArrayList<Pair<SaveSession, VirtualFile>>(readonlyFiles);
+        List<Pair<SaveSession, VirtualFile>> oldList = new ArrayList<>(readonlyFiles);
         readonlyFiles.clear();
         for (Pair<SaveSession, VirtualFile> entry : oldList) {
           executeSave(entry.first, readonlyFiles);

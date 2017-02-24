@@ -27,7 +27,6 @@ import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
@@ -77,7 +76,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   private final AtomicBoolean mySavingInProgress = new AtomicBoolean(false);
 
   public boolean myOptimiseTestLoadSpeed;
-  @NonNls public static final String TEMPLATE_PROJECT_NAME = "Default (Template) Project";
+  @NonNls
+  public static final String TEMPLATE_PROJECT_NAME = "Default (Template) Project";
 
   private String myName;
   private String myOldName;
@@ -86,7 +86,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
   protected ProjectImpl(@NotNull ProjectManager manager, @NotNull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName) {
-    super(ApplicationManager.getApplication(), "Project "+(projectName == null ? dirPath : projectName));
+    super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName));
     putUserData(CREATION_TIME, System.nanoTime());
 
     if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -104,7 +104,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     myManager = manager;
 
     myName = isDefault() ? TEMPLATE_PROJECT_NAME : projectName == null ? getStateStore().getProjectName() : projectName;
-    if (!isDefault() && projectName != null && getStateStore().getStorageScheme().equals(StorageScheme.DIRECTORY_BASED)) {
+    if (!isDefault() && projectName != null) {
       myOldName = "";  // new project
     }
   }
@@ -143,8 +143,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         if (myDelegate == null) {
 
           final Class storeClass = isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class;
-          myDelegate = new CachingComponentAdapter(
-            new ConstructorInjectionComponentAdapter(storeClass, storeClass, null, true));
+          myDelegate = new CachingComponentAdapter(new ConstructorInjectionComponentAdapter(storeClass, storeClass, null, true));
         }
 
         return myDelegate;
@@ -191,8 +190,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       ProgressIndicator indicator = getProgressIndicator();
       if (indicator != null) {
         indicator.setText2(getComponentName(component));
-  //      indicator.setIndeterminate(false);
-  //      indicator.setFraction(myComponentsRegistry.getPercentageOfComponentsLoaded());
+        //      indicator.setIndeterminate(false);
+        //      indicator.setFraction(myComponentsRegistry.getPercentageOfComponentsLoaded());
       }
     }
 
@@ -258,7 +257,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     String str = getPresentableUrl();
     if (str == null) str = getName();
 
-    final String prefix = getStateStore().getStorageScheme() == StorageScheme.DIRECTORY_BASED ? "" : getName();
+    final String prefix = !isDefault() ? "" : getName();
     return prefix + Integer.toHexString(str.hashCode());
   }
 
@@ -295,7 +294,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public boolean isToSaveProjectName() {
     if (!isDefault()) {
       final IProjectStore stateStore = getStateStore();
-      if (stateStore.getStorageScheme().equals(StorageScheme.DIRECTORY_BASED)) {
+      if (!isDefault()) {
         final VirtualFile baseDir = stateStore.getProjectBaseDir();
         if (baseDir != null && baseDir.isValid()) {
           return myOldName != null && !myOldName.equals(getName());
@@ -405,7 +404,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public String getDefaultName() {
     if (isDefault()) return TEMPLATE_PROJECT_NAME;
 
-    return getStateStore().getProjectName();    
+    return getStateStore().getProjectName();
   }
 
   private class MyProjectManagerListener extends ProjectManagerAdapter {
@@ -446,7 +445,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       if (!showDialog || ProjectMacrosUtil.checkMacros(this, new HashSet<String>(unknownMacros))) {
         final PathMacros pathMacros = PathMacros.getInstance();
         final Set<String> macros2invalidate = new HashSet<String>(unknownMacros);
-        for (Iterator it = macros2invalidate.iterator(); it.hasNext();) {
+        for (Iterator it = macros2invalidate.iterator(); it.hasNext(); ) {
           final String macro = (String)it.next();
           final String value = pathMacros.getValue(macro);
           if ((value == null || value.trim().isEmpty()) && !pathMacros.isIgnoredMacroName(macro)) {
@@ -466,7 +465,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
             }
 
             final UnknownMacroNotification[] notifications =
-              NotificationsManager.getNotificationsManager().getNotificationsOfType(UnknownMacroNotification.class, this);
+                    NotificationsManager.getNotificationsManager().getNotificationsOfType(UnknownMacroNotification.class, this);
             for (final UnknownMacroNotification notification : notifications) {
               if (macros2invalidate.containsAll(notification.getMacros())) notification.expire();
             }
@@ -479,8 +478,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
             });
           }
           else {
-            if (Messages.showYesNoDialog(this, "Component could not be reloaded. Reload project?", "Configuration Changed",
-                                         Messages.getQuestionIcon()) == Messages.YES) {
+            if (Messages.showYesNoDialog(this, "Component could not be reloaded. Reload project?", "Configuration Changed", Messages.getQuestionIcon()) ==
+                Messages.YES) {
               ProjectManagerEx.getInstanceEx().reloadProject(this);
             }
           }
@@ -493,10 +492,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Override
   public String toString() {
     return "Project" +
-           (isDisposed() ? " (Disposed" + (temporarilyDisposed ? " temporarily" : "") + ")"
-                         : isDefault() ? "" : " '" + getPresentableUrl() + "'") +
+           (isDisposed() ? " (Disposed" + (temporarilyDisposed ? " temporarily" : "") + ")" : isDefault() ? "" : " '" + getPresentableUrl() + "'") +
            (isDefault() ? " (Default)" : "") +
-           " " + myName;
+           " " +
+           myName;
   }
 
   @Override
@@ -506,7 +505,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   public static void dropUnableToSaveProjectNotification(@NotNull final Project project, final VirtualFile[] readOnlyFiles) {
     final UnableToSaveProjectNotification[] notifications =
-      NotificationsManager.getNotificationsManager().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
+            NotificationsManager.getNotificationsManager().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
     if (notifications.length == 0) {
       Notifications.Bus.notify(new UnableToSaveProjectNotification(project, readOnlyFiles), project);
     }
@@ -544,8 +543,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     private static String buildMessage() {
-      final StringBuilder sb = new StringBuilder(
-        "<p>Unable to save project files. Please ensure project files are writable and you have permissions to modify them.");
+      final StringBuilder sb =
+              new StringBuilder("<p>Unable to save project files. Please ensure project files are writable and you have permissions to modify them.");
       return sb.append(" <a href=\"\">Try to save project again</a>.</p>").toString();
     }
 

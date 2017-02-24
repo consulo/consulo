@@ -18,13 +18,11 @@ package com.intellij.openapi.vcs.impl;
 
 import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -69,8 +67,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
         result.add(myBaseDir);
       }
     }
-    final StorageScheme storageScheme = ((ProjectEx)myProject).getStateStore().getStorageScheme();
-    if (StorageScheme.DIRECTORY_BASED.equals(storageScheme) && (myBaseDir != null)) {
+    if (myBaseDir != null) {
       final VirtualFile ideaDir = myBaseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
       if (ideaDir != null && ideaDir.isValid() && ideaDir.isDirectory()) {
         final AbstractVcs vcsFor = vcsManager.getVcsFor(ideaDir);
@@ -125,8 +122,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
     if (contentRoot != null) {
       return contentRoot;
     }
-    final StorageScheme storageScheme = ((ProjectEx)myProject).getStateStore().getStorageScheme();
-    if (StorageScheme.DIRECTORY_BASED.equals(storageScheme) && (myBaseDir != null)) {
+    if (myBaseDir != null) {
       final VirtualFile ideaDir = myBaseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
       if (ideaDir != null && ideaDir.isValid() && ideaDir.isDirectory()) {
         if (VfsUtilCore.isAncestor(ideaDir, file, false)) {
@@ -142,8 +138,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   public Collection<VirtualFile> getDirtyRoots() {
     Collection<VirtualFile> dirtyRoots = ContainerUtil.newHashSet();
 
-    final StorageScheme storageScheme = ((ProjectEx)myProject).getStateStore().getStorageScheme();
-    if (StorageScheme.DIRECTORY_BASED.equals(storageScheme) && (myBaseDir != null)) {
+    if (myBaseDir != null) {
       final VirtualFile ideaDir = myBaseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
       if (ideaDir != null && ideaDir.isValid() && ideaDir.isDirectory()) {
         dirtyRoots.add(ideaDir);

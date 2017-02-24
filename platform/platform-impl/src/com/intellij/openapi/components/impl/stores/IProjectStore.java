@@ -16,7 +16,6 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.StateStorageException;
-import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.InvalidDataException;
@@ -45,9 +44,6 @@ public interface IProjectStore extends IComponentStore.Reloadable {
   String getProjectName();
 
   TrackingPathMacroSubstitutor[] getSubstitutors();
-
-  @NotNull
-  StorageScheme getStorageScheme();
 
   @Nullable
   String getPresentableUrl();

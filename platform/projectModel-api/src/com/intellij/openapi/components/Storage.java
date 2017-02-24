@@ -24,8 +24,6 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Storage {
-  boolean isDefault() default true;
-
   @NonNls String value() default "";
 
   @Deprecated
@@ -33,7 +31,7 @@ public @interface Storage {
   @NonNls String file() default "";
 
   @Deprecated
-  StorageScheme scheme() default StorageScheme.DIRECTORY_BASED;
+  StorageScheme scheme() default StorageScheme.DEFAULT;
 
   /**
    * If deprecated: Data will be removed on write. And ignored on read if (and only if) new storage exists.

@@ -24,7 +24,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
@@ -49,15 +48,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * User: anna
  * Date: 30-Nov-2005
  */
-@State(
-        name = "InspectionProjectProfileManager",
-        storages = {
-                @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/inspectionProfiles/", scheme = StorageScheme.DIRECTORY_BASED,
-                         stateSplitter = InspectionProjectProfileManagerImpl.ProfileStateSplitter.class)
-        }
-)
+@State(name = "InspectionProjectProfileManager", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR +
+                                                                             "/inspectionProfiles/", stateSplitter = InspectionProjectProfileManagerImpl.ProfileStateSplitter.class)})
 public class InspectionProjectProfileManagerImpl extends InspectionProjectProfileManager {
-  private final Map<String, InspectionProfileWrapper>  myName2Profile = new ConcurrentHashMap<String, InspectionProfileWrapper>();
+  private final Map<String, InspectionProfileWrapper> myName2Profile = new ConcurrentHashMap<String, InspectionProfileWrapper>();
   private final SeverityRegistrar mySeverityRegistrar;
   private final NamedScopeManager myLocalScopesHolder;
   private NamedScopesHolder.ScopeListener myScopeListener;
@@ -71,7 +65,7 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
     mySeverityRegistrar = new SeverityRegistrar(project.getMessageBus());
   }
 
-  public static InspectionProjectProfileManagerImpl getInstanceImpl(Project project){
+  public static InspectionProjectProfileManagerImpl getInstanceImpl(Project project) {
     return (InspectionProjectProfileManagerImpl)project.getComponent(InspectionProjectProfileManager.class);
   }
 
@@ -81,16 +75,16 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
   }
 
   @NotNull
-  public synchronized InspectionProfileWrapper getProfileWrapper(){
+  public synchronized InspectionProfileWrapper getProfileWrapper() {
     final InspectionProfile profile = getInspectionProfile();
     final String profileName = profile.getName();
-    if (!myName2Profile.containsKey(profileName)){
+    if (!myName2Profile.containsKey(profileName)) {
       initProfileWrapper(profile);
     }
     return myName2Profile.get(profileName);
   }
 
-  public InspectionProfileWrapper getProfileWrapper(final String profileName){
+  public InspectionProfileWrapper getProfileWrapper(final String profileName) {
     return myName2Profile.get(profileName);
   }
 

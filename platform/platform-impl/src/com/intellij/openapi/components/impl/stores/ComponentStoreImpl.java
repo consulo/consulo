@@ -278,7 +278,7 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   }
 
   @NotNull
-  private <T> Storage[] getComponentStorageSpecs(@NotNull PersistentStateComponent<T> persistentStateComponent,
+  protected  <T> Storage[] getComponentStorageSpecs(@NotNull PersistentStateComponent<T> persistentStateComponent,
                                                  @NotNull State stateSpec,
                                                  @NotNull StateStorageOperation operation) {
     Storage[] storages = stateSpec.storages();
@@ -287,53 +287,42 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     }
     assert storages.length > 0;
 
-    StateStorageChooser<PersistentStateComponent<?>> defaultStateStorageChooser = getDefaultStateStorageChooser();
-    if (defaultStateStorageChooser == null) {
-      int actualStorageCount = 0;
-      for (Storage storage : storages) {
-        if (!storage.deprecated()) {
-          actualStorageCount++;
-        }
+    int actualStorageCount = 0;
+    for (Storage storage : storages) {
+      if (!storage.deprecated()) {
+        actualStorageCount++;
       }
-
-      if (actualStorageCount > 1) {
-        LOG.error("State chooser not specified for: " + persistentStateComponent.getClass());
-      }
-
-      if (!storages[0].deprecated()) {
-        boolean othersAreDeprecated = true;
-        for (int i = 1; i < storages.length; i++) {
-          if (!storages[i].deprecated()) {
-            othersAreDeprecated = false;
-            break;
-          }
-        }
-
-        if (othersAreDeprecated) {
-          return storages;
-        }
-      }
-
-      Storage[] sorted = Arrays.copyOf(storages, storages.length);
-      Arrays.sort(sorted, (o1, o2) -> {
-        int w1 = o1.deprecated() ? 1 : 0;
-        int w2 = o2.deprecated() ? 1 : 0;
-        return w1 - w2;
-      });
-      return sorted;
     }
-    else {
-      return defaultStateStorageChooser.selectStorages(storages, persistentStateComponent, operation);
+
+    if (actualStorageCount > 1) {
+      LOG.error("State chooser not specified for: " + persistentStateComponent.getClass());
     }
+
+    if (!storages[0].deprecated()) {
+      boolean othersAreDeprecated = true;
+      for (int i = 1; i < storages.length; i++) {
+        if (!storages[i].deprecated()) {
+          othersAreDeprecated = false;
+          break;
+        }
+      }
+
+      if (othersAreDeprecated) {
+        return storages;
+      }
+    }
+
+    Storage[] sorted = Arrays.copyOf(storages, storages.length);
+    Arrays.sort(sorted, (o1, o2) -> {
+      int w1 = o1.deprecated() ? 1 : 0;
+      int w2 = o2.deprecated() ? 1 : 0;
+      return w1 - w2;
+    });
+    return sorted;
   }
 
   protected boolean optimizeTestLoading() {
     return false;
-  }
-
-  @Nullable
-  protected StateStorageChooser<PersistentStateComponent<?>> getDefaultStateStorageChooser() {
-    return null;
   }
 
   @Override

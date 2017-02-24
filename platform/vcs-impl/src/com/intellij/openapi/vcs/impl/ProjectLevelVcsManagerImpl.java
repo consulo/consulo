@@ -35,7 +35,6 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
-import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
@@ -83,12 +82,11 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-@State(
-        name = "ProjectLevelVcsManager",
-        storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@State(name = "ProjectLevelVcsManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx implements ProjectComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl");
-  @NonNls public static final String SETTINGS_EDITED_MANUALLY = "settingsEditedManually";
+  @NonNls
+  public static final String SETTINGS_EDITED_MANUALLY = "settingsEditedManually";
 
   private final ProjectLevelVcsManagerSerialization mySerialization;
   private final OptionsAndConfirmations myOptionsAndConfirmations;
@@ -112,12 +110,18 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   private final VcsInitialization myInitialization;
 
-  @NonNls private static final String ELEMENT_MAPPING = "mapping";
-  @NonNls private static final String ATTRIBUTE_DIRECTORY = "directory";
-  @NonNls private static final String ATTRIBUTE_VCS = "vcs";
-  @NonNls private static final String ATTRIBUTE_DEFAULT_PROJECT = "defaultProject";
-  @NonNls private static final String ELEMENT_ROOT_SETTINGS = "rootSettings";
-  @NonNls private static final String ATTRIBUTE_CLASS = "class";
+  @NonNls
+  private static final String ELEMENT_MAPPING = "mapping";
+  @NonNls
+  private static final String ATTRIBUTE_DIRECTORY = "directory";
+  @NonNls
+  private static final String ATTRIBUTE_VCS = "vcs";
+  @NonNls
+  private static final String ATTRIBUTE_DEFAULT_PROJECT = "defaultProject";
+  @NonNls
+  private static final String ELEMENT_ROOT_SETTINGS = "rootSettings";
+  @NonNls
+  private static final String ATTRIBUTE_CLASS = "class";
 
   private boolean myMappingsLoaded = false;
   private boolean myHaveLegacyVcsConfiguration = false;
@@ -884,12 +888,14 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
       @Override
       public Boolean compute() {
-        return vf != null && (myExcludedIndex.isInContent(vf) ||
-                              isFileInBaseDir(vf) ||
-                              vf.equals(myProject.getBaseDir()) ||
-                              hasExplicitMapping(vf) ||
-                              isInDirectoryBasedRoot(vf) ||
-                              !Registry.is("ide.hide.excluded.files") && myExcludedIndex.isExcludedFile(vf)) && !isIgnored(vf);
+        return vf != null &&
+               (myExcludedIndex.isInContent(vf) ||
+                isFileInBaseDir(vf) ||
+                vf.equals(myProject.getBaseDir()) ||
+                hasExplicitMapping(vf) ||
+                isInDirectoryBasedRoot(vf) ||
+                !Registry.is("ide.hide.excluded.files") && myExcludedIndex.isExcludedFile(vf)) &&
+               !isIgnored(vf);
       }
     });
   }
@@ -917,14 +923,10 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   private boolean isInDirectoryBasedRoot(final VirtualFile file) {
     if (file == null) return false;
-    final StorageScheme storageScheme = ((ProjectEx)myProject).getStateStore().getStorageScheme();
-    if (StorageScheme.DIRECTORY_BASED.equals(storageScheme)) {
-      final VirtualFile baseDir = myProject.getBaseDir();
-      if (baseDir == null) return false;
-      final VirtualFile ideaDir = baseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
-      return ideaDir != null && ideaDir.isValid() && ideaDir.isDirectory() && VfsUtilCore.isAncestor(ideaDir, file, false);
-    }
-    return false;
+    final VirtualFile baseDir = myProject.getBaseDir();
+    if (baseDir == null) return false;
+    final VirtualFile ideaDir = baseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
+    return ideaDir != null && ideaDir.isValid() && ideaDir.isDirectory() && VfsUtilCore.isAncestor(ideaDir, file, false);
   }
 
   private boolean isFileInBaseDir(final VirtualFile file) {

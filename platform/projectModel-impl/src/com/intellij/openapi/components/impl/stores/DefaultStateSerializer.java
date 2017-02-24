@@ -51,11 +51,7 @@ public class DefaultStateSerializer {
       return XmlSerializer.serializeIfNotDefault(state, new SkipDefaultValuesSerializationFilters() {
         @Override
         protected boolean accepts(@NotNull Accessor accessor, @NotNull Object bean, @Nullable Object beanValue) {
-          if (!super.accepts(accessor, bean, beanValue)) {
-            return false;
-          }
-
-          return storage == null || storage.isDefault();
+          return super.accepts(accessor, bean, beanValue) && storage == null;
         }
       });
     }

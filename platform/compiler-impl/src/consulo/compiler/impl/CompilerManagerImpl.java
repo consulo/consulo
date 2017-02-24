@@ -54,7 +54,7 @@ import java.util.concurrent.Semaphore;
 @State(
   name = "CompilerManager",
   storages = {
-    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)})
+    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml")})
 public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element> {
   public static final Logger LOGGER = Logger.getInstance(CompilerManagerImpl.class);
 
