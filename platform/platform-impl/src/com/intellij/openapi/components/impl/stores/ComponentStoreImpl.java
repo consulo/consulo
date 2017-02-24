@@ -34,7 +34,6 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtilRt;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
@@ -288,53 +287,43 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     }
     assert storages.length > 0;
 
-    Class<? extends StateStorageChooser> storageChooserClass = stateSpec.storageChooser();
-    if (storageChooserClass == StateStorageChooser.class) {
-      StateStorageChooser<PersistentStateComponent<?>> defaultStateStorageChooser = getDefaultStateStorageChooser();
-      if (defaultStateStorageChooser == null) {
-        int actualStorageCount = 0;
-        for (Storage storage : storages) {
-          if (!storage.deprecated()) {
-            actualStorageCount++;
-          }
+    StateStorageChooser<PersistentStateComponent<?>> defaultStateStorageChooser = getDefaultStateStorageChooser();
+    if (defaultStateStorageChooser == null) {
+      int actualStorageCount = 0;
+      for (Storage storage : storages) {
+        if (!storage.deprecated()) {
+          actualStorageCount++;
         }
-
-        if (actualStorageCount > 1) {
-          LOG.error("State chooser not specified for: " + persistentStateComponent.getClass());
-        }
-
-        if (!storages[0].deprecated()) {
-          boolean othersAreDeprecated = true;
-          for (int i = 1; i < storages.length; i++) {
-            if (!storages[i].deprecated()) {
-              othersAreDeprecated = false;
-              break;
-            }
-          }
-
-          if (othersAreDeprecated) {
-            return storages;
-          }
-        }
-
-        Storage[] sorted = Arrays.copyOf(storages, storages.length);
-        Arrays.sort(sorted, new Comparator<Storage>() {
-          @Override
-          public int compare(Storage o1, Storage o2) {
-            int w1 = o1.deprecated() ? 1 : 0;
-            int w2 = o2.deprecated() ? 1 : 0;
-            return w1 - w2;
-          }
-        });
-        return sorted;
       }
-      else {
-        return defaultStateStorageChooser.selectStorages(storages, persistentStateComponent, operation);
+
+      if (actualStorageCount > 1) {
+        LOG.error("State chooser not specified for: " + persistentStateComponent.getClass());
       }
+
+      if (!storages[0].deprecated()) {
+        boolean othersAreDeprecated = true;
+        for (int i = 1; i < storages.length; i++) {
+          if (!storages[i].deprecated()) {
+            othersAreDeprecated = false;
+            break;
+          }
+        }
+
+        if (othersAreDeprecated) {
+          return storages;
+        }
+      }
+
+      Storage[] sorted = Arrays.copyOf(storages, storages.length);
+      Arrays.sort(sorted, (o1, o2) -> {
+        int w1 = o1.deprecated() ? 1 : 0;
+        int w2 = o2.deprecated() ? 1 : 0;
+        return w1 - w2;
+      });
+      return sorted;
     }
     else {
-      @SuppressWarnings("unchecked") StateStorageChooser<PersistentStateComponent<T>> storageChooser = ReflectionUtil.newInstance(storageChooserClass);
-      return storageChooser.selectStorages(storages, persistentStateComponent, operation);
+      return defaultStateStorageChooser.selectStorages(storages, persistentStateComponent, operation);
     }
   }
 
@@ -444,7 +433,10 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   }
 
   public enum ReloadComponentStoreStatus {
-    RESTART_AGREED, RESTART_CANCELLED, ERROR, SUCCESS,
+    RESTART_AGREED,
+    RESTART_CANCELLED,
+    ERROR,
+    SUCCESS,
   }
 
   @NotNull

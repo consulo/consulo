@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.components;
 
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 
 import java.lang.annotation.Retention;
@@ -25,6 +26,10 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Storage {
   boolean isDefault() default true;
 
+  @NonNls String value() default "";
+
+  @Deprecated
+  @DeprecationInfo("Use #value()")
   @NonNls String file() default "";
 
   @Deprecated
@@ -36,10 +41,9 @@ public @interface Storage {
   boolean deprecated() default false;
 
   /**
-   * You must not store components with different roaming types in one file ({@link #file()}).
+   * You must not store components with different roaming types in one file ({@link #value()}).
    */
   RoamingType roamingType() default RoamingType.PER_USER;
 
-  Class<? extends StateStorage> storageClass() default StateStorage.class;
-  Class<? extends StateSplitter> stateSplitter() default StateSplitter.class;
+  Class<? extends StateSplitterEx> stateSplitter() default StateSplitterEx.class;
 }

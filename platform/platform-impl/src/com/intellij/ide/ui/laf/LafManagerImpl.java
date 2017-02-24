@@ -24,11 +24,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
-import consulo.actionSystem.ex.ComboBoxButtonUI;
-import consulo.ide.ui.laf.intellij.ActionButtonUI;
-import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
-import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
-import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
@@ -57,10 +52,15 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.mac.MacPopupMenuUI;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.ui.BuildInLookAndFeel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.actionSystem.ex.ComboBoxButtonUI;
 import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;
+import consulo.ide.ui.laf.intellij.ActionButtonUI;
+import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
+import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
+import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
+import consulo.util.ui.BuildInLookAndFeel;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -91,30 +91,35 @@ import java.util.List;
  * @author Eugene Belyaev
  * @author Vladimir Kondratyev
  */
-@State(
-        name = "LafManager",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml"),
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/laf.xml", roamingType = RoamingType.PER_PLATFORM)},
-        storageChooser = LastStorageChooserForWrite.ElementStateLastStorageChooserForWrite.class)
+@State(name = "LafManager", storages = {
+        @Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml", deprecated = true),
+        @Storage(file = StoragePathMacros.APP_CONFIG + "/laf.xml", roamingType = RoamingType.PER_PLATFORM)
+})
 public final class LafManagerImpl extends LafManager implements ApplicationComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.LafManager");
 
-  @NonNls private static final String ELEMENT_LAF = "laf";
-  @NonNls private static final String ATTRIBUTE_CLASS_NAME = "class-name";
-  @NonNls private static final String GNOME_THEME_PROPERTY_NAME = "gnome.Net/ThemeName";
+  @NonNls
+  private static final String ELEMENT_LAF = "laf";
+  @NonNls
+  private static final String ATTRIBUTE_CLASS_NAME = "class-name";
+  @NonNls
+  private static final String GNOME_THEME_PROPERTY_NAME = "gnome.Net/ThemeName";
 
-  @NonNls private static final String[] ourPatchableFontResources =
+  @NonNls
+  private static final String[] ourPatchableFontResources =
           {"Button.font", "ToggleButton.font", "RadioButton.font", "CheckBox.font", "ColorChooser.font", "ComboBox.font", "Label.font", "List.font",
                   "MenuBar.font", "MenuItem.font", "MenuItem.acceleratorFont", "RadioButtonMenuItem.font", "CheckBoxMenuItem.font", "Menu.font",
                   "PopupMenu.font", "OptionPane.font", "Panel.font", "ProgressBar.font", "ScrollPane.font", "Viewport.font", "TabbedPane.font", "Table.font",
                   "TableHeader.font", "TextField.font", "PasswordField.font", "TextArea.font", "TextPane.font", "EditorPane.font", "TitledBorder.font",
                   "ToolBar.font", "ToolTip.font", "Tree.font"};
 
-  @NonNls private static final String[] ourFileChooserTextKeys =
+  @NonNls
+  private static final String[] ourFileChooserTextKeys =
           {"FileChooser.viewMenuLabelText", "FileChooser.newFolderActionLabelText", "FileChooser.listViewActionLabelText",
                   "FileChooser.detailsViewActionLabelText", "FileChooser.refreshActionLabelText"};
 
-  @NonNls private static final String[] ourOptionPaneIconKeys =
+  @NonNls
+  private static final String[] ourOptionPaneIconKeys =
           {"OptionPane.errorIcon", "OptionPane.informationIcon", "OptionPane.warningIcon", "OptionPane.questionIcon"};
 
   private final EventListenerList myListenerList;

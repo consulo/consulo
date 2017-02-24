@@ -21,6 +21,8 @@ import consulo.annotations.DeprecationInfo;
 /**
  * @author mike
  */
+@Deprecated
+@DeprecationInfo("Always directory based")
 public enum StorageScheme {
   @Deprecated @DeprecationInfo("Use #DIRECTORY_BASED")
   DEFAULT,

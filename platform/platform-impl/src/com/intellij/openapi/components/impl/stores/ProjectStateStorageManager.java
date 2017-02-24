@@ -33,6 +33,12 @@ class ProjectStateStorageManager extends StateStorageManagerImpl {
     myProject = project;
   }
 
+  @NotNull
+  @Override
+  protected String getConfigurationMacro(boolean directorySpec) {
+    return StoragePathMacros.PROJECT_CONFIG_DIR;
+  }
+
   @Override
   protected StorageData createStorageData(@NotNull String fileSpec, @NotNull String filePath) {
     if (fileSpec.equals(StoragePathMacros.PROJECT_FILE)) {

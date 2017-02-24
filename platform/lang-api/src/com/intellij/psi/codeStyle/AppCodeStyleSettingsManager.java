@@ -21,12 +21,6 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 
 
-@State(
-  name = "CodeStyleSettingsManager",
-    storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/other.xml"
-    )}
-)
-public class AppCodeStyleSettingsManager extends CodeStyleSettingsManager{
+@State(name = "CodeStyleSettingsManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml"))
+public class AppCodeStyleSettingsManager extends CodeStyleSettingsManager {
 }

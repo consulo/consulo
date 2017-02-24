@@ -33,7 +33,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
-import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
@@ -427,57 +426,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
       files[i] = readonlyFiles.get(i).second;
     }
     return files;
-  }
-
-  private final StateStorageChooser<PersistentStateComponent<?>> myStateStorageChooser = new StateStorageChooser<PersistentStateComponent<?>>() {
-    @Override
-    public Storage[] selectStorages(@NotNull Storage[] storages, @NotNull PersistentStateComponent<?> component, @NotNull StateStorageOperation operation) {
-      if (operation == StateStorageOperation.READ) {
-        List<Storage> result = new SmartList<Storage>();
-        for (int i = storages.length - 1; i >= 0; i--) {
-          Storage storage = storages[i];
-          if (storage.scheme() == myScheme) {
-            result.add(storage);
-          }
-        }
-
-        for (Storage storage : storages) {
-          if (storage.scheme() == StorageScheme.DEFAULT) {
-            result.add(storage);
-          }
-        }
-
-        return result.toArray(new Storage[result.size()]);
-      }
-      else if (operation == StateStorageOperation.WRITE) {
-        List<Storage> result = new SmartList<Storage>();
-        for (Storage storage : storages) {
-          if (storage.scheme() == myScheme) {
-            result.add(storage);
-          }
-        }
-
-        if (!result.isEmpty()) {
-          return result.toArray(new Storage[result.size()]);
-        }
-
-        for (Storage storage : storages) {
-          if (storage.scheme() == StorageScheme.DEFAULT) {
-            result.add(storage);
-          }
-        }
-
-        return result.toArray(new Storage[result.size()]);
-      }
-      else {
-        return new Storage[]{};
-      }
-    }
-  };
-
-  @Override
-  protected StateStorageChooser<PersistentStateComponent<?>> getDefaultStateStorageChooser() {
-    return myStateStorageChooser;
   }
 
   @NotNull

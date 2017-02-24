@@ -15,14 +15,12 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
-import com.intellij.openapi.components.StateSplitter;
 import com.intellij.openapi.components.StateSplitterEx;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.SmartList;
 import com.intellij.util.containers.StringInterner;
 import consulo.application.options.PathMacrosService;
 import gnu.trove.THashMap;
@@ -246,36 +244,19 @@ public class DirectoryStorageData extends StorageDataBase {
   }
 
   @Nullable
-  public Element getCompositeStateAndArchive(@NotNull String componentName, @SuppressWarnings("deprecation") @NotNull StateSplitter splitter) {
+  public Element getCompositeStateAndArchive(@NotNull String componentName, @NotNull StateSplitterEx splitter) {
     StateMap fileToState = myStates.get(componentName);
     Element state = new Element(StorageData.COMPONENT);
     if (fileToState == null || fileToState.isEmpty()) {
       return state;
     }
 
-    if (splitter instanceof StateSplitterEx) {
-      StateSplitterEx splitterEx = (StateSplitterEx)splitter;
-      for (String fileName : fileToState.keys()) {
-        Element subState = fileToState.getStateAndArchive(fileName);
-        if (subState == null) {
-          return null;
-        }
-        splitterEx.mergeStateInto(state, subState);
+    for (String fileName : fileToState.keys()) {
+      Element subState = fileToState.getStateAndArchive(fileName);
+      if (subState == null) {
+        return null;
       }
-    }
-    else {
-      List<Element> subElements = new SmartList<Element>();
-      for (String fileName : fileToState.keys()) {
-        Element subState = fileToState.getStateAndArchive(fileName);
-        if (subState == null) {
-          return null;
-        }
-        subElements.add(subState);
-      }
-
-      if (!subElements.isEmpty()) {
-        splitter.mergeStatesInto(state, subElements.toArray(new Element[subElements.size()]));
-      }
+      splitter.mergeStateInto(state, subState);
     }
     return state;
   }

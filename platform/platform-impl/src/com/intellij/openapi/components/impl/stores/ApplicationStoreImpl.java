@@ -51,6 +51,12 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
     myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application.getPicoContainer()) {
       private boolean myConfigDirectoryRefreshed;
 
+      @NotNull
+      @Override
+      protected String getConfigurationMacro(boolean directorySpec) {
+        return directorySpec ? StoragePathMacros.ROOT_CONFIG : StoragePathMacros.APP_CONFIG;
+      }
+
       @Override
       protected StorageData createStorageData(@NotNull String fileSpec, @NotNull String filePath) {
         return new StorageData(ROOT_ELEMENT_NAME);

@@ -46,13 +46,13 @@ import java.util.Set;
 public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData> {
   private final File myDir;
   private volatile VirtualFile myVirtualFile;
-  private final StateSplitter mySplitter;
+  private final StateSplitterEx mySplitter;
 
   private DirectoryStorageData myStorageData;
 
   public DirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
                                @NotNull String dir,
-                               @NotNull StateSplitter splitter,
+                               @NotNull StateSplitterEx splitter,
                                @NotNull Disposable parentDisposable,
                                @Nullable final Listener listener) {
     super(pathMacroSubstitutor);

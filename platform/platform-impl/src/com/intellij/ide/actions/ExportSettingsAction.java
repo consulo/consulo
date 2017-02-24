@@ -169,9 +169,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
           if (storages.length == 1) {
             storageIndex = 0;
           }
-          else if (storages.length > 1 &&
-                   (stateAnnotation.storageChooser() == LastStorageChooserForWrite.class ||
-                    stateAnnotation.storageChooser() == LastStorageChooserForWrite.ElementStateLastStorageChooserForWrite.class)) {
+          else if (storages.length > 1) {
             storageIndex = storages.length - 1;
           }
           else {
@@ -180,7 +178,6 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
 
           Storage storage = storages[storageIndex];
           if (storage.roamingType() != RoamingType.DISABLED &&
-              storage.storageClass().equals(StateStorage.class) &&
               storage.scheme() == StorageScheme.DEFAULT &&
               !StringUtil.isEmpty(storage.file()) &&
               storage.file().startsWith(StoragePathMacros.APP_CONFIG)) {
