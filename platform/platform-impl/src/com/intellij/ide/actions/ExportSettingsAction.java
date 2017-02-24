@@ -41,7 +41,6 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PairProcessor;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
@@ -224,15 +223,6 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
 
   @NotNull
   private static String getComponentPresentableName(@NotNull State state, @NotNull Class<?> aClass, @Nullable PluginDescriptor pluginDescriptor) {
-    if (state.presentableName() != State.NameGetter.class) {
-      try {
-        return ReflectionUtil.newInstance(state.presentableName()).get();
-      }
-      catch (Exception e) {
-        LOG.error(e);
-      }
-    }
-
     String defaultName = state.name();
     String resourceBundleName;
     if (pluginDescriptor != null && pluginDescriptor instanceof IdeaPluginDescriptor && !"com.intellij".equals(pluginDescriptor.getPluginId().getIdString())) {
