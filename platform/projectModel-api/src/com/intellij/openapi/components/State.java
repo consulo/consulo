@@ -25,12 +25,6 @@ import java.lang.annotation.RetentionPolicy;
 public @interface State {
   String name();
 
-  @Deprecated
-  /**
-   * @deprecated Use {@link Storage#roamingType()}
-   */
-  RoamingType roamingType() default RoamingType.PER_USER;
-
   Storage[] storages();
 
   Class<? extends StateStorageChooser> storageChooser() default StateStorageChooser.class;
