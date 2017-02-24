@@ -17,13 +17,10 @@ package com.intellij.application.options;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
-import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.components.ExpandMacroToPathMap;
-import com.intellij.openapi.components.PathMacroUtil;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.NamedJDOMExternalizable;
-import com.intellij.openapi.util.RoamingTypeDisabled;
+import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
@@ -38,7 +35,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * @author dsl
  */
-public class PathMacrosImpl extends PathMacros implements ApplicationComponent, NamedJDOMExternalizable, RoamingTypeDisabled {
+@State(name = "PathMacrosImpl", storages = @Storage(value = "path.macros.xml", roamingType = RoamingType.DISABLED))
+public class PathMacrosImpl extends PathMacros implements ApplicationComponent, JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.application.options.PathMacrosImpl");
   private final Map<String, String> myLegacyMacros = new HashMap<String, String>();
   private final Map<String, String> myMacros = new HashMap<String, String>();
@@ -93,11 +91,6 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
 
   @Override
   public void disposeComponent() {
-  }
-
-  @Override
-  public String getExternalFileName() {
-    return EXT_FILE_NAME;
   }
 
   @Override

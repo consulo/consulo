@@ -23,8 +23,9 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.ExportableApplicationComponent;
+import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
@@ -37,7 +38,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.NamedJDOMExternalizable;
+import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.CustomStatusBarWidget;
@@ -61,7 +62,6 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -70,7 +70,8 @@ import java.util.Set;
 /**
  * @author max
  */
-public class ActionMacroManager implements ExportableApplicationComponent, NamedJDOMExternalizable {
+@State(name = "ActionMacroManager", storages = @Storage("macros.xml"))
+public class ActionMacroManager implements ApplicationComponent, JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actionMacro.ActionMacroManager");
 
   private static final String TYPING_SAMPLE = "WWWWWWWWWWWWWWWWWWWW";
@@ -137,19 +138,6 @@ public class ActionMacroManager implements ExportableApplicationComponent, Named
     registerActions();
   }
 
-  public String getExternalFileName() {
-    return "macros";
-  }
-
-  @NotNull
-  public File[] getExportFiles() {
-    return new File[]{PathManager.getOptionsFile(this)};
-  }
-
-  @NotNull
-  public String getPresentableName() {
-    return IdeBundle.message("title.macros");
-  }
 
   public void writeExternal(Element element) throws WriteExternalException {
     for (ActionMacro macro : myMacros) {
@@ -185,12 +173,8 @@ public class ActionMacroManager implements ExportableApplicationComponent, Named
   private class Widget implements CustomStatusBarWidget, Consumer<MouseEvent> {
 
     private AnimatedIcon myIcon = new AnimatedIcon("Macro recording",
-                                                   new Icon[]{
-                                                     AllIcons.Ide.Macro.Recording_1,
-                                                     AllIcons.Ide.Macro.Recording_2,
-                                                     AllIcons.Ide.Macro.Recording_3,
-                                                     AllIcons.Ide.Macro.Recording_4},
-                                                   AllIcons.Ide.Macro.Recording_1, 1000);
+                                                   new Icon[]{AllIcons.Ide.Macro.Recording_1, AllIcons.Ide.Macro.Recording_2, AllIcons.Ide.Macro.Recording_3,
+                                                           AllIcons.Ide.Macro.Recording_4}, AllIcons.Ide.Macro.Recording_1, 1000);
     private StatusBar myStatusBar;
     private final WidgetPresentation myPresentation;
 
@@ -245,16 +229,10 @@ public class ActionMacroManager implements ExportableApplicationComponent, Named
         return;
       }
 
-      myBalloon = JBPopupFactory.getInstance().createBalloonBuilder(myBalloonComponent)
-        .setAnimationCycle(200)
-        .setCloseButtonEnabled(true)
-        .setHideOnAction(false)
-        .setHideOnClickOutside(false)
-        .setHideOnFrameResize(false)
-        .setHideOnKeyOutside(false)
-        .setSmallVariant(true)
-        .setShadow(true)
-        .createBalloon();
+      myBalloon =
+              JBPopupFactory.getInstance().createBalloonBuilder(myBalloonComponent).setAnimationCycle(200).setCloseButtonEnabled(true).setHideOnAction(false)
+                      .setHideOnClickOutside(false).setHideOnFrameResize(false).setHideOnKeyOutside(false).setSmallVariant(true).setShadow(true)
+                      .createBalloon();
 
       Disposer.register(myBalloon, new Disposable() {
         @Override
@@ -339,9 +317,7 @@ public class ActionMacroManager implements ExportableApplicationComponent, Named
     myLastActionInputEvent.clear();
     String macroName;
     do {
-      macroName = Messages.showInputDialog(project,
-                                           IdeBundle.message("prompt.enter.macro.name"),
-                                           IdeBundle.message("title.enter.macro.name"),
+      macroName = Messages.showInputDialog(project, IdeBundle.message("prompt.enter.macro.name"), IdeBundle.message("title.enter.macro.name"),
                                            Messages.getQuestionIcon());
       if (macroName == null) {
         myRecordingMacro = null;
@@ -411,17 +387,15 @@ public class ActionMacroManager implements ExportableApplicationComponent, Named
 
     myIsPlaying = true;
 
-    runner.run()
-      .doWhenDone(new Runnable() {
-        public void run() {
-          frame.getStatusBar().setInfo("Script execution finished");
-        }
-      })
-      .doWhenProcessed(new Runnable() {
-        public void run() {
-          myIsPlaying = false;
-        }
-      });
+    runner.run().doWhenDone(new Runnable() {
+      public void run() {
+        frame.getStatusBar().setInfo("Script execution finished");
+      }
+    }).doWhenProcessed(new Runnable() {
+      public void run() {
+        myIsPlaying = false;
+      }
+    });
   }
 
   public boolean isRecording() {
@@ -489,8 +463,7 @@ public class ActionMacroManager implements ExportableApplicationComponent, Named
     final ActionManagerEx actionManager = (ActionManagerEx)ActionManager.getInstance();
     final String actionId = ActionMacro.MACRO_ACTION_PREFIX + name;
     if (actionManager.getAction(actionId) != null) {
-      if (Messages.showYesNoDialog(IdeBundle.message("message.macro.exists", name),
-                                   IdeBundle.message("title.macro.name.already.used"),
+      if (Messages.showYesNoDialog(IdeBundle.message("message.macro.exists", name), IdeBundle.message("title.macro.name.already.used"),
                                    Messages.getWarningIcon()) != 0) {
         return false;
       }
@@ -593,7 +566,8 @@ public class ActionMacroManager implements ExportableApplicationComponent, Named
         myLastTyping = "..." + myLastTyping.substring(myLastTyping.length() - maxLength);
       }
       actualText = myLastTyping;
-    } else {
+    }
+    else {
       myLastTyping = "";
     }
 

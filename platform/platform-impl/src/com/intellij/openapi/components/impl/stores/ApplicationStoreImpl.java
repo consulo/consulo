@@ -17,17 +17,16 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.openapi.application.PathManager;
-import consulo.application.ex.ApplicationEx2;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.StateStorageOperation;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.NamedJDOMExternalizable;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
+import consulo.application.ex.ApplicationEx2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,12 +64,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
       @Nullable
       @Override
       protected String getOldStorageSpec(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation) {
-        if (component instanceof NamedJDOMExternalizable) {
-          return StoragePathMacros.APP_CONFIG + '/' + ((NamedJDOMExternalizable)component).getExternalFileName() + DirectoryStorageData.DEFAULT_EXT;
-        }
-        else {
-          return DEFAULT_STORAGE_SPEC;
-        }
+        return DEFAULT_STORAGE_SPEC;
       }
 
       @Override

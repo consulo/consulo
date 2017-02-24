@@ -16,15 +16,14 @@
 package com.intellij.ide.ui.customization;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.ExportableComponent;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.keymap.impl.ui.ActionsTreeUtil;
 import com.intellij.openapi.keymap.impl.ui.Group;
@@ -51,23 +50,29 @@ import java.util.List;
  * User: anna
  * Date: Jan 20, 2005
  */
-public class CustomActionsSchema implements ExportableComponent, NamedJDOMExternalizable {
-
-  @NonNls private static final String ACTIONS_SCHEMA = "custom_actions_schema";
-  @NonNls private static final String ACTIVE = "active";
-  @NonNls private static final String ELEMENT_ACTION = "action";
-  @NonNls private static final String ATTRIBUTE_ID = "id";
-  @NonNls private static final String ATTRIBUTE_ICON = "icon";
+@State(name = "com.intellij.ide.ui.customization.CustomActionsSchema", storages = @Storage("customization.xml"))
+public class CustomActionsSchema implements JDOMExternalizable {
+  @NonNls
+  private static final String ACTIONS_SCHEMA = "custom_actions_schema";
+  @NonNls
+  private static final String ACTIVE = "active";
+  @NonNls
+  private static final String ELEMENT_ACTION = "action";
+  @NonNls
+  private static final String ATTRIBUTE_ID = "id";
+  @NonNls
+  private static final String ATTRIBUTE_ICON = "icon";
 
   private final Map<String, String> myIconCustomizations = new HashMap<String, String>();
 
   private ArrayList<ActionUrl> myActions = new ArrayList<ActionUrl>();
 
-  private final HashMap<String , ActionGroup> myIdToActionGroup = new HashMap<String, ActionGroup>();
+  private final HashMap<String, ActionGroup> myIdToActionGroup = new HashMap<String, ActionGroup>();
 
   private final List<Pair> myIdToNameList = new ArrayList<Pair>();
 
-  @NonNls private static final String GROUP = "group";
+  @NonNls
+  private static final String GROUP = "group";
   private static final Logger LOG = Logger.getInstance("#" + CustomActionsSchema.class.getName());
 
   public CustomActionsSchema() {
@@ -84,13 +89,12 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
     myIdToNameList.add(new Pair(IdeActions.GROUP_NAVBAR_POPUP, "Navigation Bar"));
     myIdToNameList.add(new Pair("NavBarToolBar", "Navigation Bar Toolbar"));
 
-    CustomizableActionGroupProvider.CustomizableActionGroupRegistrar registrar =
-            new CustomizableActionGroupProvider.CustomizableActionGroupRegistrar() {
-              @Override
-              public void addCustomizableActionGroup(@NotNull String groupId, @NotNull String groupTitle) {
-                myIdToNameList.add(new Pair(groupId, groupTitle));
-              }
-            };
+    CustomizableActionGroupProvider.CustomizableActionGroupRegistrar registrar = new CustomizableActionGroupProvider.CustomizableActionGroupRegistrar() {
+      @Override
+      public void addCustomizableActionGroup(@NotNull String groupId, @NotNull String groupTitle) {
+        myIdToNameList.add(new Pair(groupId, groupTitle));
+      }
+    };
     for (CustomizableActionGroupProvider provider : CustomizableActionGroupProvider.EP_NAME.getExtensions()) {
       provider.registerGroups(registrar);
     }
@@ -120,8 +124,8 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
     myIconCustomizations.clear();
 
     for (ActionUrl actionUrl : result.myActions) {
-      final ActionUrl url = new ActionUrl(new ArrayList<String>(actionUrl.getGroupPath()), actionUrl.getComponent(),
-                                          actionUrl.getActionType(), actionUrl.getAbsolutePosition());
+      final ActionUrl url = new ActionUrl(new ArrayList<String>(actionUrl.getGroupPath()), actionUrl.getComponent(), actionUrl.getActionType(),
+                                          actionUrl.getAbsolutePosition());
       url.setInitialPosition(actionUrl.getInitialPosition());
       myActions.add(url);
     }
@@ -163,8 +167,7 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
     if (activeName != null) {
       for (Element toolbarElement : (Iterable<Element>)element.getChildren(ACTIONS_SCHEMA)) {
         for (Object o : toolbarElement.getChildren("option")) {
-          if (Comparing.strEqual(((Element)o).getAttributeValue("name"), "myName") &&
-              Comparing.strEqual(((Element)o).getAttributeValue("value"), activeName)) {
+          if (Comparing.strEqual(((Element)o).getAttributeValue("name"), "myName") && Comparing.strEqual(((Element)o).getAttributeValue("value"), activeName)) {
             schElement = toolbarElement;
             break;
           }
@@ -198,12 +201,12 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
   }
 
   public AnAction getCorrectedAction(String id) {
-    if (! myIdToNameList.contains(new Pair(id, ""))){
+    if (!myIdToNameList.contains(new Pair(id, ""))) {
       return ActionManager.getInstance().getAction(id);
     }
     if (myIdToActionGroup.get(id) == null) {
       for (Pair pair : myIdToNameList) {
-        if (pair.first.equals(id)){
+        if (pair.first.equals(id)) {
           final ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(id);
           if (actionGroup != null) { //J2EE/Commander plugin was disabled
             myIdToActionGroup.put(id, CustomizationUtil.correctActionGroup(actionGroup, this, pair.second));
@@ -223,7 +226,7 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
     }
   }
 
-  public void fillActionGroups(DefaultMutableTreeNode root){
+  public void fillActionGroups(DefaultMutableTreeNode root) {
     final ActionManager actionManager = ActionManager.getInstance();
     for (Pair pair : myIdToNameList) {
       final ActionGroup actionGroup = (ActionGroup)actionManager.getAction(pair.first);
@@ -235,7 +238,7 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
 
 
   public boolean isCorrectActionGroup(ActionGroup group, String defaultGroupName) {
-    if (myActions.isEmpty()){
+    if (myActions.isEmpty()) {
       return false;
     }
 
@@ -263,14 +266,14 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
     final ArrayList<String> groupPath = url.getGroupPath();
     for (ActionUrl actionUrl : myActions) {
       int index = 0;
-      if (groupPath.size() <= actionUrl.getGroupPath().size()){
-        while (index < groupPath.size()){
-          if (!Comparing.equal(groupPath.get(index), actionUrl.getGroupPath().get(index))){
+      if (groupPath.size() <= actionUrl.getGroupPath().size()) {
+        while (index < groupPath.size()) {
+          if (!Comparing.equal(groupPath.get(index), actionUrl.getGroupPath().get(index))) {
             break;
           }
           index++;
         }
-        if (index == groupPath.size()){
+        if (index == groupPath.size()) {
           result.add(actionUrl);
         }
       }
@@ -296,7 +299,7 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
       Element action = (Element)actionO;
       final String actionId = action.getAttributeValue(ATTRIBUTE_ID);
       final String iconPath = action.getAttributeValue(ATTRIBUTE_ICON);
-      if (actionId != null){
+      if (actionId != null) {
         myIconCustomizations.put(actionId, iconPath);
       }
     }
@@ -352,24 +355,6 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
     }
   }
 
-
-  @Override
-  @NotNull
-  public File[] getExportFiles() {
-    return new File[]{PathManager.getOptionsFile(this)};
-  }
-
-  @Override
-  @NotNull
-  public String getPresentableName() {
-    return IdeBundle.message("title.custom.actions.schemas");
-  }
-
-  @Override
-  public String getExternalFileName() {
-    return "customization";
-  }
-
   private static class Pair {
     String first;
     String second;
@@ -394,6 +379,7 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
     public static ActionUrlComparator INSTANCE = new ActionUrlComparator();
     private static final int DELETED = 1;
     private static final int ADDED = 2;
+
     @Override
     public int compare(ActionUrl u1, ActionUrl u2) {
       final int w1 = getEquivalenceClass(u1);
@@ -409,9 +395,12 @@ public class CustomActionsSchema implements ExportableComponent, NamedJDOMExtern
 
     private static int getEquivalenceClass(ActionUrl url) {
       switch (url.getActionType()) {
-        case ActionUrl.DELETED: return 1;
-        case ActionUrl.ADDED: return 2;
-        default: return 3;
+        case ActionUrl.DELETED:
+          return 1;
+        case ActionUrl.ADDED:
+          return 2;
+        default:
+          return 3;
       }
     }
   }

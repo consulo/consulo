@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.application;
 
-import com.intellij.openapi.util.NamedJDOMExternalizable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
@@ -168,11 +167,6 @@ public class PathManager {
   @NotNull
   public static File getOptionsFile(@NotNull String fileName) {
     return new File(getOptionsPath(), fileName + ".xml");
-  }
-
-  @NotNull
-  public static File getOptionsFile(@NotNull NamedJDOMExternalizable externalizable) {
-    return getOptionsFile(externalizable.getExternalFileName());
   }
 
   @NotNull
