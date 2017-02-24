@@ -39,11 +39,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-@State(
-  name = "SdkTable",
-  roamingType = RoamingType.DISABLED,
-  storages = {@Storage(
-    file = StoragePathMacros.APP_CONFIG + "/sdk.table.xml")})
+@State(name = "SdkTable", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/sdk.table.xml", roamingType = RoamingType.DISABLED))
 public class SdkTableImpl extends SdkTable implements PersistentStateComponent<Element>, ExportableComponent {
   public static final Logger LOGGER = Logger.getInstance(SdkTableImpl.class);
 
@@ -131,7 +127,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   @Nullable
   public Sdk findPredefinedSdkByType(@NotNull SdkTypeId sdkType) {
     for (Sdk sdk : mySdks) {
-      if(sdk.isPredefined() && sdk.getSdkType() == sdkType) {
+      if (sdk.isPredefined() && sdk.getSdkType() == sdkType) {
         return sdk;
       }
     }
@@ -164,7 +160,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     final String newName = modifiedSdk.getName();
 
     boolean nameChanged = !previousName.equals(newName);
-    if(nameChanged) {
+    if (nameChanged) {
       myMessageBus.syncPublisher(SDK_TABLE_TOPIC).beforeSdkNameChanged(originalSdk, previousName);
     }
 
