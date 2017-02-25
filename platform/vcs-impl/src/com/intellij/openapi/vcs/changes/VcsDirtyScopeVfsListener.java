@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vcs.ConstantZipperUpdater;
+import com.intellij.openapi.util.ZipperUpdater;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -41,18 +41,19 @@ import java.util.List;
  * Listens to file system events and notifies VcsDirtyScopeManagers responsible for changed files to mark these files dirty.
  */
 public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
-  @NotNull private final ProjectLevelVcsManager myVcsManager;
+  @NotNull
+  private final ProjectLevelVcsManager myVcsManager;
 
   private boolean myForbid; // for tests only
 
-  private final ConstantZipperUpdater myZipperUpdater;
+  @NotNull
+  private final ZipperUpdater myZipperUpdater;
   private final List<FilesAndDirs> myQueue;
   private final Object myLock;
+  @NotNull
   private final Runnable myDirtReporter;
 
-  public VcsDirtyScopeVfsListener(@NotNull Project project,
-                                  @NotNull ProjectLevelVcsManager vcsManager,
-                                  @NotNull VcsDirtyScopeManager dirtyScopeManager) {
+  public VcsDirtyScopeVfsListener(@NotNull Project project, @NotNull ProjectLevelVcsManager vcsManager, @NotNull VcsDirtyScopeManager dirtyScopeManager) {
     myVcsManager = vcsManager;
 
     myLock = new Object();
@@ -77,7 +78,7 @@ public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
         }
       }
     };
-    myZipperUpdater = new ConstantZipperUpdater(300, Alarm.ThreadToUse.POOLED_THREAD, this, myDirtReporter);
+    myZipperUpdater = new ZipperUpdater(300, Alarm.ThreadToUse.POOLED_THREAD, this);
     Disposer.register(project, this);
     project.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, this);
   }
@@ -156,7 +157,8 @@ public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
           // if a directory was renamed, all its children are recursively dirty, the parent dir is also dirty but not recursively.
           dirtyFilesAndDirs.add(file);   // the file is dirty recursively
           dirtyFilesAndDirs.addToFiles(file.getParent()); // directory is dirty alone. if parent is null - is checked in the method
-        } else {
+        }
+        else {
           dirtyFilesAndDirs.addToFiles(file);
         }
       }
@@ -169,7 +171,7 @@ public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
       synchronized (myLock) {
         myQueue.add(dirtyFilesAndDirs);
       }
-      myZipperUpdater.request();
+      myZipperUpdater.queue(myDirtReporter);
     }
   }
 
@@ -179,8 +181,10 @@ public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
    * not recursively, you should add it to files.
    */
   private static class FilesAndDirs {
-    @NotNull HashSet<FilePath> dirtyFiles = ContainerUtil.newHashSet();
-    @NotNull HashSet<FilePath> dirtyDirs = ContainerUtil.newHashSet();
+    @NotNull
+    HashSet<FilePath> dirtyFiles = ContainerUtil.newHashSet();
+    @NotNull
+    HashSet<FilePath> dirtyDirs = ContainerUtil.newHashSet();
 
     private void add(@Nullable VirtualFile file, boolean addToFiles) {
       if (file == null) return;

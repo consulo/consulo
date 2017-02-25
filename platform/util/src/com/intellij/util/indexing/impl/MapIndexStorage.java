@@ -27,6 +27,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -66,17 +67,17 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
 
   protected void initMapAndCache() throws IOException {
     final ValueContainerMap<Key, Value> map;
-    PersistentHashMapValueStorage.CreationTimeOptions.EXCEPTIONAL_IO_CANCELLATION.set(
-            new PersistentHashMapValueStorage.ExceptionalIOCancellationCallback() {
-              @Override
-              public void checkCancellation() {
-                checkCanceled();
-              }
-            });
+    PersistentHashMapValueStorage.CreationTimeOptions.EXCEPTIONAL_IO_CANCELLATION.set(new PersistentHashMapValueStorage.ExceptionalIOCancellationCallback() {
+      @Override
+      public void checkCancellation() {
+        checkCanceled();
+      }
+    });
     PersistentHashMapValueStorage.CreationTimeOptions.COMPACT_CHUNKS_WITH_VALUE_DESERIALIZATION.set(Boolean.TRUE);
     try {
       map = new ValueContainerMap<Key, Value>(getStorageFile(), myKeyDescriptor, myDataExternalizer, myKeyIsUniqueForIndexedFile);
-    } finally {
+    }
+    finally {
       PersistentHashMapValueStorage.CreationTimeOptions.EXCEPTIONAL_IO_CANCELLATION.set(null);
       PersistentHashMapValueStorage.CreationTimeOptions.COMPACT_CHUNKS_WITH_VALUE_DESERIALIZATION.set(null);
     }
@@ -161,7 +162,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   }
 
   @Override
-  public void clear() throws StorageException{
+  public void clear() throws StorageException {
     try {
       myMap.close();
     }
@@ -211,7 +212,8 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
       try {
         l.lock();
         cached = myCache.getIfCached(key);
-      } finally {
+      }
+      finally {
         l.unlock();
       }
 
@@ -243,7 +245,15 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
 
   @Override
   public void clearCaches() {
-
+    l.lock();
+    try {
+      for (Map.Entry<Key, ChangeTrackingValueContainer<Value>> entry : myCache.entrySet()) {
+        entry.getValue().dropMergedData();
+      }
+    }
+    finally {
+      l.unlock();
+    }
   }
 
   protected static <T> T unwrapCauseAndRethrow(RuntimeException e) throws StorageException {

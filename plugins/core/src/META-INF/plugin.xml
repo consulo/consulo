@@ -1392,6 +1392,9 @@
 
     <projectService serviceImplementation="com.intellij.openapi.vcs.changes.VcsDirtyScopeVfsListener"/>
 
+    <projectService serviceInterface="com.intellij.util.indexing.FileBasedIndexScanRunnableCollector"
+                    serviceImplementation="com.intellij.util.indexing.FileBasedIndexScanRunnableCollectorImpl"/>
+
     <fileTypeFactory implementation="com.intellij.openapi.fileTypes.impl.PlatformFileTypeFactory"/>
     <postStartupActivity implementation="com.intellij.openapi.fileTypes.impl.ApproveRemovedMappingsActivity"/>
     <applicationService serviceInterface="com.intellij.openapi.options.colors.ColorSettingsPages"
