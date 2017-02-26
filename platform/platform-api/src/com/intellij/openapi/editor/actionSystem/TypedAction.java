@@ -34,7 +34,8 @@ import org.jetbrains.annotations.Nullable;
  * @see EditorActionManager#getTypedAction()
  */
 public class TypedAction {
-  @NotNull private TypedActionHandler myRawHandler;
+  @NotNull
+  private TypedActionHandler myRawHandler;
   private TypedActionHandler myHandler;
   private boolean myHandlersLoaded;
 

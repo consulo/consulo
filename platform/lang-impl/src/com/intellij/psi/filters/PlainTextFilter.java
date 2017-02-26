@@ -18,13 +18,12 @@ package com.intellij.psi.filters;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
-import com.intellij.util.ArrayUtil;
 
 /**
  * @author yole
  */
-public class PlainTextFilter implements ElementFilter, InitializableFilter {
-  protected String[] myValue;
+public class PlainTextFilter implements ElementFilter {
+  protected final String[] myValue;
   protected boolean myCaseInsensitiveFlag = false;
 
   public PlainTextFilter(final String value, final boolean insensitiveFlag) {
@@ -44,13 +43,13 @@ public class PlainTextFilter implements ElementFilter, InitializableFilter {
   }
 
   @Override
-  public boolean isClassAcceptable(Class hintClass){
+  public boolean isClassAcceptable(Class hintClass) {
     return true;
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context){
-    if(element != null) {
+  public boolean isAcceptable(Object element, PsiElement context) {
+    if (element != null) {
       for (final String value : myValue) {
         if (value == null) {
           return true;
@@ -68,11 +67,11 @@ public class PlainTextFilter implements ElementFilter, InitializableFilter {
     return false;
   }
 
-  public String toString(){
+  public String toString() {
     String ret = "(";
-    for(int i = 0; i < myValue.length; i++){
+    for (int i = 0; i < myValue.length; i++) {
       ret += myValue[i];
-      if(i < myValue.length - 1){
+      if (i < myValue.length - 1) {
         ret += " | ";
       }
     }
@@ -80,24 +79,13 @@ public class PlainTextFilter implements ElementFilter, InitializableFilter {
     return ret;
   }
 
-  @Override
-  public void init(Object[] fromGetter){
-    try{
-      myValue = new String[fromGetter.length];
-      System.arraycopy(fromGetter, 0, myValue, 0, fromGetter.length);
-    }
-    catch(ClassCastException cce){
-      myValue = ArrayUtil.EMPTY_STRING_ARRAY;
-    }
-  }
-
-  protected String getTextByElement(Object element){
+  protected String getTextByElement(Object element) {
     String elementValue = null;
-    if(element instanceof PsiNamedElement){
+    if (element instanceof PsiNamedElement) {
       elementValue = ((PsiNamedElement)element).getName();
     }
     else if (element instanceof PsiElement) {
-      elementValue = ((PsiElement) element).getText();
+      elementValue = ((PsiElement)element).getText();
     }
     return elementValue;
   }

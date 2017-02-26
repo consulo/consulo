@@ -36,6 +36,8 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
 import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
+import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.ui.popup.PopupStep;
@@ -48,12 +50,16 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.PsiElementProcessor;
-import com.intellij.ui.*;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.JBColor;
+import com.intellij.ui.SeparatorWithText;
+import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.ui.components.JBList;
+import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -107,13 +113,8 @@ public final class NavigationUtil {
                                                                   @Nullable final String title,
                                                                   @NotNull final PsiElementProcessor<T> processor,
                                                                   @Nullable final T selection) {
-    final JList list = new JBListWithHintProvider(elements) {
-      @Nullable
-      @Override
-      protected PsiElement getPsiElementForHint(Object selectedValue) {
-        return (PsiElement)selectedValue;
-      }
-    };
+    final JList list = new JBList(elements);
+    HintUpdateSupply.installSimpleHintUpdateSupply(list);
     list.setCellRenderer(renderer);
 
     list.setFont(EditorUtil.getEditorFont());
@@ -143,7 +144,20 @@ public final class NavigationUtil {
     builder.getScrollPane().setBorder(null);
     builder.getScrollPane().setViewportBorder(null);
 
+    hidePopupIfDumbModeStarts(popup, elements[0].getProject());
+
     return popup;
+  }
+
+  public static void hidePopupIfDumbModeStarts(@NotNull JBPopup popup, @NotNull Project project) {
+    if (!DumbService.isDumb(project)) {
+      project.getMessageBus().connect(popup).subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+        @Override
+        public void enteredDumbMode() {
+          popup.cancel();
+        }
+      });
+    }
   }
 
   public static boolean activateFileWithPsiElement(@NotNull PsiElement elt) {
@@ -355,7 +369,7 @@ public final class NavigationUtil {
 
         final JComponent leftRenderer = (JComponent)component.getComponents()[0];
         component.remove(leftRenderer);
-        panelWithMnemonic.setBorder(JBUI.Borders.empty(0, 7, 0, 0));
+        panelWithMnemonic.setBorder(BorderFactory.createEmptyBorder(0, 7, 0, 0));
         panelWithMnemonic.setBackground(leftRenderer.getBackground());
         label.setBackground(leftRenderer.getBackground());
         panelWithMnemonic.add(label, BorderLayout.WEST);
@@ -434,7 +448,7 @@ public final class NavigationUtil {
       }
     });
 
-    popup.setMinimumSize(JBUI.size(200, -1));
+    popup.setMinimumSize(new Dimension(200, -1));
 
     for (Object item : elements) {
       final int mnemonic = getMnemonic(item, itemsMap);

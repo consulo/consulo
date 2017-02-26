@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,30 +24,33 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.actions.BaseNavigateToSourceAction;
 import com.intellij.ide.actions.ExternalJavaDocAction;
-import com.intellij.lang.documentation.CompositeDocumentationProvider;
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.documentation.DocumentationProvider;
-import com.intellij.lang.documentation.ExternalDocumentationHandler;
 import com.intellij.lang.documentation.ExternalDocumentationProvider;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.options.FontSize;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
+import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SideBorder;
@@ -55,10 +58,11 @@ import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.io.URLUtil;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.accessibility.ScreenReader;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,25 +73,23 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.*;
+import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
 
 public class DocumentationComponent extends JPanel implements Disposable, DataProvider {
 
-  @NonNls private static final String DOCUMENTATION_TOPIC_ID = "reference.toolWindows.Documentation";
+  private static final Logger LOG = Logger.getInstance(DocumentationComponent.class);
 
-  private static final DataContext EMPTY_DATA_CONTEXT = new DataContext() {
-    @Override
-    public Object getData(@NonNls String dataId) {
-      return null;
-    }
-  };
+  private static final Color DOCUMENTATION_COLOR = new JBColor(new Color(0xf6f6f6), new Color(0x4d4f51));
+  public static final ColorKey COLOR_KEY = ColorKey.createColorKey("DOCUMENTATION_COLOR", DOCUMENTATION_COLOR);
+
+  private static final Highlighter.HighlightPainter LINK_HIGHLIGHTER = new LinkHighlighter();
+  @NonNls private static final String DOCUMENTATION_TOPIC_ID = "reference.toolWindows.Documentation";
 
   private static final int PREFERRED_WIDTH_EM = 37;
   private static final int PREFERRED_HEIGHT_MIN_EM = 7;
@@ -95,14 +97,17 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   private DocumentationManager myManager;
   private SmartPsiElementPointer myElement;
+  private long myModificationCount;
 
-  private final Stack<Context> myBackStack = new Stack<Context>();
-  private final Stack<Context> myForwardStack = new Stack<Context>();
+  private static final String QUICK_DOC_FONT_SIZE_PROPERTY = "quick.doc.font.size";
+
+  private final Stack<Context> myBackStack = new Stack<>();
+  private final Stack<Context> myForwardStack = new Stack<>();
   private final ActionToolbar myToolBar;
   private volatile boolean myIsEmpty;
   private boolean myIsShown;
   private final JLabel myElementLabel;
-  private Style myFontSizeStyle;
+  private final MutableAttributeSet myFontSizeStyle = new SimpleAttributeSet();
   private JSlider myFontSizeSlider;
   private final JComponent mySettingsPanel;
   private final MyShowSettingsButton myShowSettingsButton;
@@ -116,19 +121,37 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       if (element == null) return null;
       URL url = (URL)key;
       Image inMemory = myManager.getElementImage(element, url.toExternalForm());
-      return inMemory != null ? inMemory : Toolkit.getDefaultToolkit().createImage(url);
+      if (inMemory != null) {
+        return inMemory;
+      }
+
+      /*Url parsedUrl = Urls.parseEncoded(url.toExternalForm());
+      BuiltInServerManager builtInServerManager = BuiltInServerManager.getInstance();
+      if (parsedUrl != null && builtInServerManager.isOnBuiltInWebServer(parsedUrl)) {
+        try {
+          url = new URL(builtInServerManager.addAuthToken(parsedUrl).toExternalForm());
+        }
+        catch (MalformedURLException e) {
+          LOG.warn(e);
+        }
+      } */
+      return Toolkit.getDefaultToolkit().createImage(url);
     }
   };
 
   private static class Context {
-    final SmartPsiElementPointer element;
-    final String text;
-    final Rectangle viewRect;
+    private final SmartPsiElementPointer element;
+    private final String text;
+    private final String externalUrl;
+    private final Rectangle viewRect;
+    private final int highlightedLink;
 
-    public Context(SmartPsiElementPointer element, String text, Rectangle viewRect) {
+    public Context(SmartPsiElementPointer element, String text, String externalUrl, Rectangle viewRect, int highlightedLink) {
       this.element = element;
       this.text = text;
+      this.externalUrl = externalUrl;
       this.viewRect = viewRect;
+      this.highlightedLink = highlightedLink;
     }
   }
 
@@ -139,20 +162,36 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   private boolean myControlPanelVisible;
   private final ExternalDocAction myExternalDocAction;
   private Consumer<PsiElement> myNavigateCallback;
+  private int myHighlightedLink = -1;
+  private Object myHighlightingTag;
 
   private JBPopup myHint;
 
-  private final Map<KeyStroke, ActionListener> myKeyboardActions = new HashMap<KeyStroke, ActionListener>();
+  private final Map<KeyStroke, ActionListener> myKeyboardActions = new HashMap<>();
 
   @Override
   public boolean requestFocusInWindow() {
-    return myScrollPane.requestFocusInWindow();
+    // With a screen reader active, set the focus directly to the editor because
+    // it makes it easier for users to read/navigate the documentation contents.
+    if (ScreenReader.isActive())
+      return myEditorPane.requestFocusInWindow();
+    else
+      return myScrollPane.requestFocusInWindow();
   }
 
 
   @Override
   public void requestFocus() {
-    myScrollPane.requestFocus();
+    // With a screen reader active, set the focus directly to the editor because
+    // it makes it easier for users to read/navigate the documentation contents.
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+      if (ScreenReader.isActive()) {
+        IdeFocusManager.getGlobalInstance().requestFocus(myEditorPane, true);
+      }
+      else {
+        IdeFocusManager.getGlobalInstance().requestFocus(myScrollPane, true);
+      }
+    });
   }
 
   public DocumentationComponent(final DocumentationManager manager, final AnAction[] additionalActions) {
@@ -162,16 +201,11 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     myEditorPane = new JEditorPane(UIUtil.HTML_MIME, "") {
       @Override
-      public EditorKit getEditorKit() {
-        return new HTMLEditorKit();
-      }
-
-      @Override
       public Dimension getPreferredScrollableViewportSize() {
         int em = myEditorPane.getFont().getSize();
-        int prefWidth = JBUI.scale(PREFERRED_WIDTH_EM) * em;
-        int prefHeightMin = JBUI.scale(PREFERRED_HEIGHT_MIN_EM) * em;
-        int prefHeightMax = JBUI.scale(PREFERRED_HEIGHT_MAX_EM) * em;
+        int prefWidth = PREFERRED_WIDTH_EM * em;
+        int prefHeightMin = PREFERRED_HEIGHT_MIN_EM * em;
+        int prefHeightMax = PREFERRED_HEIGHT_MAX_EM * em;
 
         if (getWidth() == 0 || getHeight() == 0) {
           setSize(prefWidth, prefHeightMax);
@@ -179,8 +213,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
         Insets ins = myEditorPane.getInsets();
         View rootView = myEditorPane.getUI().getRootView(myEditorPane);
-        rootView.setSize(prefWidth,
-                         prefHeightMax);  // Necessary! Without this line, the size won't increase when the content does
+        rootView.setSize(prefWidth, prefHeightMax);  // Necessary! Without this line, the size won't increase when the content does
 
         int prefHeight = (int)rootView.getPreferredSpan(View.Y_AXIS) + ins.bottom + ins.top +
                          myScrollPane.getHorizontalScrollBar().getMaximumSize().height;
@@ -227,8 +260,12 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     myEditorPane.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, helpDataProvider);
     myText = "";
     myEditorPane.setEditable(false);
+    if (ScreenReader.isActive()) {
+      // Note: Making the caret visible is merely for convenience
+      myEditorPane.getCaret().setVisible(true);
+    }
     myEditorPane.setBackground(HintUtil.INFORMATION_COLOR);
-    myEditorPane.setEditorKit(UIUtil.getHTMLEditorKit());
+    myEditorPane.setEditorKit(UIUtil.getHTMLEditorKit(false));
     myScrollPane = new JBScrollPane(myEditorPane) {
       @Override
       protected void processMouseWheelEvent(MouseWheelEvent e) {
@@ -237,11 +274,11 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
           return;
         }
 
-        int change = Math.abs(e.getWheelRotation());
-        boolean increase = e.getWheelRotation() <= 0;
-        EditorColorsManager colorsManager = EditorColorsManager.getInstance();
-        EditorColorsScheme scheme = colorsManager.getGlobalScheme();
-        FontSize newFontSize = scheme.getQuickDocFontSize();
+        int rotation = e.getWheelRotation();
+        if (rotation == 0) return;
+        int change = Math.abs(rotation);
+        boolean increase = rotation <= 0;
+        FontSize newFontSize = getQuickDocFontSize();
         for (; change > 0; change--) {
           if (increase) {
             newFontSize = newFontSize.larger();
@@ -251,11 +288,11 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
           }
         }
 
-        if (newFontSize == scheme.getQuickDocFontSize()) {
+        if (newFontSize == getQuickDocFontSize()) {
           return;
         }
 
-        scheme.setQuickDocFontSize(newFontSize);
+        setQuickDocFontSize(newFontSize);
         applyFontSize();
         setFontSizeSliderSize(newFontSize);
       }
@@ -263,7 +300,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     myScrollPane.setBorder(null);
     myScrollPane.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, helpDataProvider);
 
-    final MouseAdapter mouseAdapter = new MouseAdapter() {
+    final MouseListener mouseAdapter = new MouseAdapter() {
       @Override
       public void mousePressed(MouseEvent e) {
         myManager.requestFocus();
@@ -278,13 +315,12 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       }
     });
 
-    final FocusAdapter focusAdapter = new FocusAdapter() {
+    final FocusListener focusAdapter = new FocusAdapter() {
       @Override
       public void focusLost(FocusEvent e) {
-        Component previouslyFocused =
-                WindowManagerEx.getInstanceEx().getFocusedComponent(manager.getProject(getElement()));
+        Component previouslyFocused = WindowManagerEx.getInstanceEx().getFocusedComponent(manager.getProject(getElement()));
 
-        if (!(previouslyFocused == myEditorPane)) {
+        if (previouslyFocused != myEditorPane) {
           if (myHint != null && !myHint.isDisposed()) myHint.cancel();
         }
       }
@@ -308,7 +344,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
             component.setBounds(0, 0, r.width, r.height);
           }
           else {
-            int insets = JBUI.scale(2);
+            int insets = 2;
             Dimension d = component.getPreferredSize();
             component.setBounds(r.width - d.width - insets, insets, d.width, d.height);
           }
@@ -319,8 +355,18 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       public Dimension getPreferredSize() {
         Dimension editorPaneSize = myEditorPane.getPreferredScrollableViewportSize();
         Dimension controlPanelSize = myControlPanel.getPreferredSize();
-        return new Dimension(Math.max(editorPaneSize.width, controlPanelSize.width),
-                             editorPaneSize.height + controlPanelSize.height);
+        return getSize(editorPaneSize, controlPanelSize);
+      }
+
+      @Override
+      public Dimension getMinimumSize() {
+        Dimension editorPaneSize = new JBDimension(20, 20);
+        Dimension controlPanelSize = myControlPanel.getMinimumSize();
+        return getSize(editorPaneSize, controlPanelSize);
+      }
+
+      private Dimension getSize(Dimension editorPaneSize, Dimension controlPanelSize) {
+        return new Dimension(Math.max(editorPaneSize.width, controlPanelSize.width), editorPaneSize.height + controlPanelSize.height);
       }
     };
     layeredPane.add(myScrollPane);
@@ -342,8 +388,25 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     actions.add(myExternalDocAction = new ExternalDocAction());
     actions.add(edit);
 
-    back.registerCustomShortcutSet(CustomShortcutSet.fromString("LEFT"), this);
-    forward.registerCustomShortcutSet(CustomShortcutSet.fromString("RIGHT"), this);
+    try {
+      String backKey = ScreenReader.isActive() ? "alt LEFT" : "LEFT";
+      CustomShortcutSet backShortcutSet = new CustomShortcutSet(KeyboardShortcut.fromString(backKey),
+                                                                KeymapUtil.parseMouseShortcut("button4"));
+
+      String forwardKey = ScreenReader.isActive() ? "alt RIGHT" : "RIGHT";
+      CustomShortcutSet forwardShortcutSet = new CustomShortcutSet(KeyboardShortcut.fromString(forwardKey),
+                                                                   KeymapUtil.parseMouseShortcut("button5"));
+      back.registerCustomShortcutSet(backShortcutSet, this);
+      forward.registerCustomShortcutSet(forwardShortcutSet, this);
+      // mouse actions are checked only for exact component over which click was performed,
+      // so we need to register shortcuts for myEditorPane as well
+      back.registerCustomShortcutSet(backShortcutSet, myEditorPane);
+      forward.registerCustomShortcutSet(forwardShortcutSet, myEditorPane);
+    }
+    catch (InvalidDataException e) {
+      LOG.error(e);
+    }
+
     myExternalDocAction.registerCustomShortcutSet(CustomShortcutSet.fromString("UP"), this);
     edit.registerCustomShortcutSet(CommonShortcuts.getEditSource(), this);
     if (additionalActions != null) {
@@ -356,13 +419,17 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       }
     }
 
+    new NextLinkAction().registerCustomShortcutSet(CustomShortcutSet.fromString("TAB"), this);
+    new PreviousLinkAction().registerCustomShortcutSet(CustomShortcutSet.fromString("shift TAB"), this);
+    new ActivateLinkAction().registerCustomShortcutSet(CustomShortcutSet.fromString("ENTER"), this);
+
     myToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.JAVADOC_TOOLBAR, actions, true);
 
-    myControlPanel = new JPanel(new BorderLayout(JBUI.scale(5), JBUI.scale(5)));
+    myControlPanel = new JPanel(new BorderLayout(5, 5));
     myControlPanel.setBorder(IdeBorderFactory.createBorder(SideBorder.BOTTOM));
 
     myElementLabel = new JLabel();
-    myElementLabel.setMinimumSize(JBUI.size(100, 0)); // do not recalculate size according to the text
+    myElementLabel.setMinimumSize(new Dimension(100, 0)); // do not recalculate size according to the text
 
     myControlPanel.add(myToolBar.getComponent(), BorderLayout.WEST);
     myControlPanel.add(myElementLabel, BorderLayout.CENTER);
@@ -401,14 +468,14 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       // Javadocs often contain &nbsp; symbols (non-breakable white space). We don't want to copy them as is and replace
       // with raw white spaces. See IDEA-86633 for more details.
       String selectedText = myEditorPane.getSelectedText();
-      return selectedText == null ? null : selectedText.replace((char)160, ' ');
+      return selectedText == null? null : selectedText.replace((char)160, ' ');
     }
 
     return null;
   }
 
   private JComponent createSettingsPanel() {
-    JPanel result = new JPanel(new FlowLayout(FlowLayout.RIGHT, JBUI.scale(3), 0));
+    JPanel result = new JPanel(new FlowLayout(FlowLayout.RIGHT, 3, 0));
     result.add(new JLabel(ApplicationBundle.message("label.font.size")));
     myFontSizeSlider = new JSlider(SwingConstants.HORIZONTAL, 0, FontSize.values().length - 1, 3);
     myFontSizeSlider.setMinorTickSpacing(1);
@@ -417,7 +484,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     myFontSizeSlider.setSnapToTicks(true);
     UIUtil.setSliderIsFilled(myFontSizeSlider, true);
     result.add(myFontSizeSlider);
-    result.setBorder(JBUI.Borders.customLine(JBColor.border(), 1));
+    result.setBorder(BorderFactory.createLineBorder(JBColor.border(), 1));
 
     myFontSizeSlider.addChangeListener(new ChangeListener() {
       @Override
@@ -425,9 +492,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         if (myIgnoreFontSizeSliderChange) {
           return;
         }
-        EditorColorsManager colorsManager = EditorColorsManager.getInstance();
-        EditorColorsScheme scheme = colorsManager.getGlobalScheme();
-        scheme.setQuickDocFontSize(FontSize.values()[myFontSizeSlider.getValue()]);
+        setQuickDocFontSize(FontSize.values()[myFontSizeSlider.getValue()]);
         applyFontSize();
       }
     });
@@ -439,6 +504,24 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     result.setOpaque(true);
     myFontSizeSlider.setOpaque(true);
     return result;
+  }
+
+  @NotNull
+  public static FontSize getQuickDocFontSize() {
+    String strValue = PropertiesComponent.getInstance().getValue(QUICK_DOC_FONT_SIZE_PROPERTY);
+    if (strValue != null) {
+      try {
+        return FontSize.valueOf(strValue);
+      }
+      catch (IllegalArgumentException iae) {
+        // ignore, fall back to default font.
+      }
+    }
+    return FontSize.SMALL;
+  }
+
+  public void setQuickDocFontSize(@NotNull FontSize fontSize) {
+    PropertiesComponent.getInstance().setValue(QUICK_DOC_FONT_SIZE_PROPERTY, fontSize.toString());
   }
 
   private void setFontSizeSliderSize(FontSize fontSize) {
@@ -480,6 +563,10 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     myHint = hint;
   }
 
+  public JBPopup getHint() {
+    return myHint;
+  }
+
   public JComponent getComponent() {
     return myEditorPane;
   }
@@ -487,6 +574,19 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   @Nullable
   public PsiElement getElement() {
     return myElement != null ? myElement.getElement() : null;
+  }
+
+  private void setElement(SmartPsiElementPointer element) {
+    myElement = element;
+    myModificationCount = getCurrentModificationCount();
+  }
+
+  public boolean isUpToDate() {
+    return getElement() != null && myModificationCount == getCurrentModificationCount();
+  }
+
+  private long getCurrentModificationCount() {
+    return myElement != null ? PsiModificationTracker.SERVICE.getInstance(myElement.getProject()).getModificationCount() : -1;
   }
 
   public void setNavigateCallback(Consumer<PsiElement> navigateCallback) {
@@ -524,73 +624,54 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   public void setData(PsiElement _element, String text, final boolean clearHistory, String effectiveExternalUrl) {
-    myEffectiveExternalUrl = effectiveExternalUrl;
+    setData(_element, text, clearHistory, effectiveExternalUrl, null);
+  }
+
+  public void setData(PsiElement _element, String text, final boolean clearHistory, String effectiveExternalUrl, String ref) {
     if (myElement != null) {
       myBackStack.push(saveContext());
       myForwardStack.clear();
     }
+    myEffectiveExternalUrl = effectiveExternalUrl;
 
-    final SmartPsiElementPointer element =
-            _element != null && _element.isValid() ? SmartPointerManager.getInstance(_element.getProject())
-                    .createSmartPsiElementPointer(_element) : null;
+    final SmartPsiElementPointer element = _element != null && _element.isValid()
+                                           ? SmartPointerManager.getInstance(_element.getProject()).createSmartPsiElementPointer(_element)
+                                           : null;
 
     if (element != null) {
-      myElement = element;
+      setElement(element);
     }
 
     myIsEmpty = false;
     updateControlState();
-    setDataInternal(element, text, new Rectangle(0, 0));
+    setDataInternal(element, text, new Rectangle(0, 0), ref);
 
     if (clearHistory) clearHistory();
   }
 
-  private void setDataInternal(SmartPsiElementPointer element, String text, final Rectangle viewRect) {
-    setDataInternal(element, text, viewRect, false);
-  }
+  private void setDataInternal(SmartPsiElementPointer element, String text, final Rectangle viewRect, final String ref) {
+    setElement(element);
 
-  private void setDataInternal(SmartPsiElementPointer element, String text, final Rectangle viewRect, boolean skip) {
-    myElement = element;
+    highlightLink(-1);
 
-    boolean justShown = false;
-    if (!myIsShown && myHint != null) {
-      myEditorPane.setText(text);
-      applyFontSize();
+    myEditorPane.setText(text);
+    applyFontSize();
+
+    if (!myIsShown && myHint != null && !ApplicationManager.getApplication().isUnitTestMode()) {
       myManager.showHint(myHint);
-      myIsShown = justShown = true;
+      myIsShown = true;
     }
 
-    if (!justShown) {
-      myEditorPane.setText(text);
-      applyFontSize();
-    }
-
-    if (!skip) {
-      myText = text;
-    }
-
-    Document document = myEditorPane.getDocument();
-    if (document instanceof HTMLDocument && element != null) {
-      // set base URL for this javadoc to resolve relative images correctly
-      VirtualFile virtualFile = element.getVirtualFile();
-      VirtualFile directory = virtualFile == null ? null : virtualFile.getParent();
-      String path = directory == null ? "" : directory.getPath() + "/";
-
-      try {
-        URL url = new URL(URLUtil.FILE_PROTOCOL, null, path);
-        ((HTMLDocument)document).setBase(url);
-      }
-      catch (MalformedURLException ignored) {
-      }
-    }
+    myText = text;
 
     //noinspection SSBasedInspection
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        myEditorPane.scrollRectToVisible(viewRect);
-      }
-    });
+    SwingUtilities.invokeLater(() -> {
+      myEditorPane.scrollRectToVisible(viewRect); // if ref is defined but is not found in document, this provides a default location
+      if (ref != null) {
+        myEditorPane.scrollToReference(ref);
+      } else if (ScreenReader.isActive()) {
+        myEditorPane.setCaretPosition(0);
+      }});
   }
 
   private void applyFontSize() {
@@ -600,24 +681,16 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
 
     final StyledDocument styledDocument = (StyledDocument)document;
-    if (myFontSizeStyle == null) {
-      myFontSizeStyle = styledDocument.addStyle("active", null);
-    }
 
     EditorColorsManager colorsManager = EditorColorsManager.getInstance();
     EditorColorsScheme scheme = colorsManager.getGlobalScheme();
-    StyleConstants.setFontSize(myFontSizeStyle, scheme.getQuickDocFontSize().getScaledSize());
+    StyleConstants.setFontSize(myFontSizeStyle, JBUI.scale(getQuickDocFontSize().getSize()));
     if (Registry.is("documentation.component.editor.font")) {
       StyleConstants.setFontFamily(myFontSizeStyle, scheme.getEditorFontName());
     }
 
-    final Style sizeStyle = myFontSizeStyle;
-    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-      @Override
-      public void run() {
-        styledDocument.setCharacterAttributes(0, styledDocument.getLength(), sizeStyle, false);
-      }
-    });
+    ApplicationManager.getApplication().executeOnPooledThread(
+            () -> styledDocument.setCharacterAttributes(0, styledDocument.getLength(), myFontSizeStyle, false));
   }
 
   private void goBack() {
@@ -638,17 +711,19 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   private Context saveContext() {
     Rectangle rect = myScrollPane.getViewport().getViewRect();
-    return new Context(myElement, myText, rect);
+    return new Context(myElement, myText, myEffectiveExternalUrl, rect, myHighlightedLink);
   }
 
   private void restoreContext(Context context) {
-    setDataInternal(context.element, context.text, context.viewRect);
+    setDataInternal(context.element, context.text, context.viewRect, null);
+    myEffectiveExternalUrl = context.externalUrl;
     if (myNavigateCallback != null) {
       final PsiElement element = context.element.getElement();
       if (element != null) {
         myNavigateCallback.consume(element);
       }
     }
+    highlightLink(context.highlightedLink);
   }
 
   private void updateControlState() {
@@ -693,7 +768,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   private class EditDocumentationSourceAction extends BaseNavigateToSourceAction {
 
-    EditDocumentationSourceAction() {
+    private EditDocumentationSourceAction() {
       super(true);
       getTemplatePresentation().setIcon(AllIcons.Actions.EditSource);
       getTemplatePresentation().setText("Edit Source");
@@ -714,7 +789,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       SmartPsiElementPointer element = myElement;
       if (element != null) {
         PsiElement psiElement = element.getElement();
-        return psiElement instanceof Navigatable ? new Navigatable[]{(Navigatable)psiElement} : null;
+        return psiElement instanceof Navigatable ? new Navigatable[] {(Navigatable)psiElement} : null;
       }
       return null;
     }
@@ -722,43 +797,21 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
 
   private class ExternalDocAction extends AnAction implements HintManagerImpl.ActionToIgnore {
-    public ExternalDocAction() {
+    private ExternalDocAction() {
       super(CodeInsightBundle.message("javadoc.action.view.external"), null, AllIcons.Actions.Browser_externalJavaDoc);
-      registerCustomShortcutSet(
-              ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), null);
+      registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), null);
     }
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-      if (myElement != null) {
-        final PsiElement element = myElement.getElement();
-        final DocumentationProvider provider = DocumentationManager.getProviderFromElement(element);
-        final PsiElement originalElement = DocumentationManager.getOriginalElement(element);
-        boolean processed = false;
-        if (provider instanceof CompositeDocumentationProvider) {
-          for (DocumentationProvider p : ((CompositeDocumentationProvider)provider).getAllProviders()) {
-            if (p instanceof ExternalDocumentationHandler &&
-                ((ExternalDocumentationHandler)p).handleExternal(element, originalElement)) {
-              processed = true;
-              break;
-            }
-          }
-        }
-
-        if (!processed) {
-          final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(e.getDataContext());
-          final List<String> urls;
-          if (!StringUtil.isEmptyOrSpaces(myEffectiveExternalUrl)) {
-            urls = Collections.singletonList(myEffectiveExternalUrl);
-          }
-          else {
-            urls = provider.getUrlFor(element, originalElement);
-            assert urls != null : provider;
-            assert !urls.isEmpty() : provider;
-          }
-          ExternalJavaDocAction.showExternalJavadoc(urls, component);
-        }
+      if (myElement == null) {
+        return;
       }
+
+      final PsiElement element = myElement.getElement();
+      final PsiElement originalElement = DocumentationManager.getOriginalElement(element);
+
+      ExternalJavaDocAction.showExternalJavadoc(element, originalElement, myEffectiveExternalUrl, e.getDataContext());
     }
 
     @Override
@@ -770,9 +823,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         final DocumentationProvider provider = DocumentationManager.getProviderFromElement(element);
         final PsiElement originalElement = DocumentationManager.getOriginalElement(element);
         if (provider instanceof ExternalDocumentationProvider) {
-          presentation.setEnabled(element != null &&
-                                  ((ExternalDocumentationProvider)provider)
-                                          .hasDocumentationFor(element, originalElement));
+          presentation.setEnabled(element != null && ((ExternalDocumentationProvider)provider).hasDocumentationFor(element, originalElement));
         }
         else {
           final List<String> urls = provider.getUrlFor(element, originalElement);
@@ -783,100 +834,104 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   private void registerActions() {
-    myExternalDocAction.registerCustomShortcutSet(
-            ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), myEditorPane);
+    myExternalDocAction
+            .registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), myEditorPane);
 
-    myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
-        int value = scrollBar.getValue() - scrollBar.getUnitIncrement(-1);
-        value = Math.max(value, 0);
-        scrollBar.setValue(value);
-      }
-    });
+    // With screen readers, we want the default keyboard behavior inside
+    // the document text editor, i.e. the caret moves with cursor keys, etc.
+    if (!ScreenReader.isActive()) {
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
+          int value = scrollBar.getValue() - scrollBar.getUnitIncrement(-1);
+          value = Math.max(value, 0);
+          scrollBar.setValue(value);
+        }
+      });
 
-    myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
-        int value = scrollBar.getValue() + scrollBar.getUnitIncrement(+1);
-        value = Math.min(value, scrollBar.getMaximum());
-        scrollBar.setValue(value);
-      }
-    });
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
+          int value = scrollBar.getValue() + scrollBar.getUnitIncrement(+1);
+          value = Math.min(value, scrollBar.getMaximum());
+          scrollBar.setValue(value);
+        }
+      });
 
-    myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
-        int value = scrollBar.getValue() - scrollBar.getUnitIncrement(-1);
-        value = Math.max(value, 0);
-        scrollBar.setValue(value);
-      }
-    });
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
+          int value = scrollBar.getValue() - scrollBar.getUnitIncrement(-1);
+          value = Math.max(value, 0);
+          scrollBar.setValue(value);
+        }
+      });
 
-    myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
-        int value = scrollBar.getValue() + scrollBar.getUnitIncrement(+1);
-        value = Math.min(value, scrollBar.getMaximum());
-        scrollBar.setValue(value);
-      }
-    });
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
+          int value = scrollBar.getValue() + scrollBar.getUnitIncrement(+1);
+          value = Math.min(value, scrollBar.getMaximum());
+          scrollBar.setValue(value);
+        }
+      });
 
-    myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
-        int value = scrollBar.getValue() - scrollBar.getBlockIncrement(-1);
-        value = Math.max(value, 0);
-        scrollBar.setValue(value);
-      }
-    });
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
+          int value = scrollBar.getValue() - scrollBar.getBlockIncrement(-1);
+          value = Math.max(value, 0);
+          scrollBar.setValue(value);
+        }
+      });
 
-    myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
-        int value = scrollBar.getValue() + scrollBar.getBlockIncrement(+1);
-        value = Math.min(value, scrollBar.getMaximum());
-        scrollBar.setValue(value);
-      }
-    });
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
+          int value = scrollBar.getValue() + scrollBar.getBlockIncrement(+1);
+          value = Math.min(value, scrollBar.getMaximum());
+          scrollBar.setValue(value);
+        }
+      });
 
-    myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0), new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
-        scrollBar.setValue(0);
-      }
-    });
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0), new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
+          scrollBar.setValue(0);
+        }
+      });
 
-    myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0), new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
-        scrollBar.setValue(scrollBar.getMaximum());
-      }
-    });
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0), new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
+          scrollBar.setValue(scrollBar.getMaximum());
+        }
+      });
 
-    myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, InputEvent.CTRL_MASK), new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
-        scrollBar.setValue(0);
-      }
-    });
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, InputEvent.CTRL_MASK), new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
+          scrollBar.setValue(0);
+        }
+      });
 
-    myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, InputEvent.CTRL_MASK), new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
-        scrollBar.setValue(scrollBar.getMaximum());
-      }
-    });
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, InputEvent.CTRL_MASK), new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
+          scrollBar.setValue(scrollBar.getMaximum());
+        }
+      });
+    }
   }
 
   public String getText() {
@@ -894,25 +949,77 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     myNavigateCallback = null;
   }
 
+  private int getLinkCount() {
+    HTMLDocument document = (HTMLDocument)myEditorPane.getDocument();
+    int linkCount = 0;
+    for (HTMLDocument.Iterator it = document.getIterator(HTML.Tag.A); it.isValid(); it.next()) {
+      if (it.getAttributes().isDefined(HTML.Attribute.HREF)) linkCount++;
+    }
+    return linkCount;
+  }
+
+  @Nullable
+  private HTMLDocument.Iterator getLink(int n) {
+    if (n >= 0) {
+      HTMLDocument document = (HTMLDocument)myEditorPane.getDocument();
+      int linkCount = 0;
+      for (HTMLDocument.Iterator it = document.getIterator(HTML.Tag.A); it.isValid(); it.next()) {
+        if (it.getAttributes().isDefined(HTML.Attribute.HREF) && linkCount++ == n) return it;
+      }
+    }
+    return null;
+  }
+
+  private void highlightLink(int n) {
+    myHighlightedLink = n;
+    Highlighter highlighter = myEditorPane.getHighlighter();
+    HTMLDocument.Iterator link = getLink(n);
+    if (link != null) {
+      int startOffset = link.getStartOffset();
+      int endOffset = link.getEndOffset();
+      try {
+        if (myHighlightingTag == null) {
+          myHighlightingTag = highlighter.addHighlight(startOffset, endOffset, LINK_HIGHLIGHTER);
+        }
+        else {
+          highlighter.changeHighlight(myHighlightingTag, startOffset, endOffset);
+        }
+        myEditorPane.setCaretPosition(startOffset);
+      }
+      catch (BadLocationException e) {
+        LOG.warn("Error highlighting link", e);
+      }
+    }
+    else if (myHighlightingTag != null) {
+      highlighter.removeHighlight(myHighlightingTag);
+      myHighlightingTag = null;
+    }
+  }
+
+  private void activateLink(int n) {
+    HTMLDocument.Iterator link = getLink(n);
+    if (link != null) {
+      String href = (String)link.getAttributes().getAttribute(HTML.Attribute.HREF);
+      myManager.navigateByLink(this, href);
+    }
+  }
+
   private class MyShowSettingsButton extends ActionButton {
 
-    MyShowSettingsButton() {
-      this(new MyShowSettingsAction(), new Presentation(), ActionPlaces.JAVADOC_INPLACE_SETTINGS,
-           JBUI.size(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+    private MyShowSettingsButton() {
+      this(new MyShowSettingsAction(), new Presentation(), ActionPlaces.JAVADOC_INPLACE_SETTINGS, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
     }
 
-    MyShowSettingsButton(AnAction action, Presentation presentation, String place, @NotNull Dimension minimumSize) {
+    private MyShowSettingsButton(AnAction action, Presentation presentation, String place, @NotNull Dimension minimumSize) {
       super(action, presentation, place, minimumSize);
       myPresentation.setIcon(AllIcons.General.SecondaryGroup);
     }
 
-    public void hideSettings() {
+    private void hideSettings() {
       if (!mySettingsPanel.isVisible()) {
         return;
       }
-      AnActionEvent event =
-              new AnActionEvent(null, EMPTY_DATA_CONTEXT, ActionPlaces.JAVADOC_INPLACE_SETTINGS, myPresentation,
-                                ActionManager.getInstance(), 0);
+      AnActionEvent event = AnActionEvent.createFromDataContext(myPlace, myPresentation, DataContext.EMPTY_CONTEXT);
       myAction.actionPerformed(event);
     }
   }
@@ -931,14 +1038,12 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         return;
       }
 
-      EditorColorsManager colorsManager = EditorColorsManager.getInstance();
-      EditorColorsScheme scheme = colorsManager.getGlobalScheme();
-      setFontSizeSliderSize(scheme.getQuickDocFontSize());
+      setFontSizeSliderSize(getQuickDocFontSize());
       mySettingsPanel.setVisible(true);
     }
   }
 
-  private static abstract class MyDictionary<K, V> extends Dictionary<K, V> {
+  private abstract static class MyDictionary<K, V> extends Dictionary<K, V> {
     @Override
     public int size() {
       throw new UnsupportedOperationException();
@@ -967,6 +1072,54 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     @Override
     public V remove(Object key) {
       throw new UnsupportedOperationException();
+    }
+  }
+
+  private class PreviousLinkAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+      int linkCount = getLinkCount();
+      if (linkCount <= 0) return;
+      highlightLink(myHighlightedLink < 0 ? (linkCount - 1) : (myHighlightedLink + linkCount - 1) % linkCount);
+    }
+  }
+
+  private class NextLinkAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+      int linkCount = getLinkCount();
+      if (linkCount <= 0) return;
+      highlightLink((myHighlightedLink + 1) % linkCount);
+    }
+  }
+
+  private class ActivateLinkAction extends AnAction implements HintManagerImpl.ActionToIgnore {
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+      activateLink(myHighlightedLink);
+    }
+  }
+
+  private static class LinkHighlighter implements Highlighter.HighlightPainter {
+    private static final Stroke STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{1}, 0);
+
+    @Override
+    public void paint(Graphics g, int p0, int p1, Shape bounds, JTextComponent c) {
+      try {
+        Rectangle target = c.getUI().getRootView(c).modelToView(p0, Position.Bias.Forward, p1, Position.Bias.Backward, bounds).getBounds();
+        Graphics2D g2d = (Graphics2D)g.create();
+        try {
+          g2d.setStroke(STROKE);
+          g2d.setColor(c.getSelectionColor());
+          g2d.drawRect(target.x, target.y, target.width - 1, target.height - 1);
+        }
+        finally {
+          g2d.dispose();
+        }
+      }
+      catch (Exception e) {
+        LOG.warn("Error painting link highlight", e);
+      }
     }
   }
 }

@@ -23,7 +23,6 @@ import com.intellij.patterns.ElementPattern;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.filters.ContextGetter;
 import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.filters.position.PatternFilter;
 import com.intellij.util.ReflectionUtil;
@@ -145,14 +144,6 @@ public class CompletionVariant {
 
   public void addCompletion(@NonNls String keyword, TailType tailType){
     addCompletion((Object)keyword, tailType);
-  }
-
-  public void addCompletion(ContextGetter chooser){
-    addCompletion(chooser, DEFAULT_TAIL_TYPE);
-  }
-
-  public void addCompletion(ContextGetter chooser, TailType tailType){
-    addCompletion((Object)chooser, tailType);
   }
 
   private void addCompletion(Object completion, TailType tail){

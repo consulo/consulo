@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.execution.util;
 
-package com.intellij.psi.filters;
+import com.intellij.ui.components.JBTextField;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.codeInsight.completion.CompletionContext;
+import javax.swing.*;
+import javax.swing.text.Document;
 
-/**
- * Created by IntelliJ IDEA.
- * User: ik
- * Date: 20.03.2003
- * Time: 21:14:27
- * To change this template use Options | File Templates.
- */
-public interface ContextGetter{
-  Object[] get(final PsiElement context, CompletionContext completionContext);
+public class StringWithNewLinesCellEditor extends DefaultCellEditor {
+
+  public StringWithNewLinesCellEditor() {
+    super(new JBTextField() {
+      @Override
+      public void setDocument(Document doc) {
+        super.setDocument(doc);
+        doc.putProperty("filterNewlines", Boolean.FALSE);
+      }
+    });
+  }
 }

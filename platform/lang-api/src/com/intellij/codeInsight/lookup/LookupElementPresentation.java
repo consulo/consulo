@@ -17,7 +17,6 @@ package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.JBColor;
-import com.intellij.util.Function;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +39,8 @@ public class LookupElementPresentation {
   private boolean myItemTextBold;
   private boolean myItemTextUnderlined;
   private boolean myTypeGrayed;
-  @Nullable private List<TextFragment> myTail;
+  @Nullable
+  private List<TextFragment> myTail;
 
   public void setIcon(@Nullable Icon icon) {
     myIcon = icon;
@@ -67,12 +67,16 @@ public class LookupElementPresentation {
   }
 
   public void appendTailText(@NotNull String text, boolean grayed) {
-    appendTailText(new TextFragment(text, grayed, null));
+    appendTailText(new TextFragment(text, grayed, false, null));
+  }
+
+  public void appendTailTextItalic(@NotNull String text, boolean grayed) {
+    appendTailText(new TextFragment(text, grayed, true, null));
   }
 
   private void appendTailText(@NotNull TextFragment fragment) {
     if (myTail == null) {
-      myTail = new SmartList<TextFragment>();
+      myTail = new SmartList<>();
     }
     myTail.add(fragment);
   }
@@ -80,14 +84,14 @@ public class LookupElementPresentation {
   public void setTailText(@Nullable String text, boolean grayed) {
     clearTail();
     if (text != null) {
-      appendTailText(new TextFragment(text, grayed, null));
+      appendTailText(new TextFragment(text, grayed, false, null));
     }
   }
 
   public void setTailText(@Nullable String text, @Nullable Color foreground) {
     clearTail();
     if (text != null) {
-      appendTailText(new TextFragment(text, false, foreground));
+      appendTailText(new TextFragment(text, false, false, foreground));
     }
   }
 
@@ -101,7 +105,7 @@ public class LookupElementPresentation {
   }
 
   /**
-   * Is equivalent to instanceof {@link com.intellij.codeInsight.lookup.RealLookupElementPresentation} check.
+   * Is equivalent to instanceof {@link RealLookupElementPresentation} check.
    *
    * @return whether the presentation is requested to actually render lookup element on screen, or just to estimate its width.
    * In the second, 'non-real' case, some heavy operations (e.g. getIcon()) can be omitted (only icon width is important)
@@ -127,18 +131,13 @@ public class LookupElementPresentation {
 
   @NotNull
   public List<TextFragment> getTailFragments() {
-    return myTail == null ? Collections.<TextFragment>emptyList() : Collections.unmodifiableList(myTail);
+    return myTail == null ? Collections.emptyList() : Collections.unmodifiableList(myTail);
   }
 
   @Nullable
   public String getTailText() {
     if (myTail == null) return null;
-    return StringUtil.join(myTail, new Function<TextFragment, String>() {
-      @Override
-      public String fun(TextFragment fragment) {
-        return fragment.text;
-      }
-    }, "");
+    return StringUtil.join(myTail, fragment -> fragment.text, "");
   }
 
   @Nullable
@@ -152,13 +151,13 @@ public class LookupElementPresentation {
 
   @Deprecated
   public boolean isTailGrayed() {
-    return myTail != null && myTail.get(0).grayed;
+    return myTail != null && myTail.get(0).myGrayed;
   }
 
   @Nullable
   @Deprecated
   public Color getTailForeground() {
-    return myTail != null ? myTail.get(0).fgColor : null;
+    return myTail != null ? myTail.get(0).myFgColor : null;
   }
 
   public boolean isItemTextBold() {
@@ -173,7 +172,8 @@ public class LookupElementPresentation {
     myItemTextUnderlined = itemTextUnderlined;
   }
 
-  @NotNull public Color getItemTextForeground() {
+  @NotNull
+  public Color getItemTextForeground() {
     return myItemTextForeground;
   }
 
@@ -187,7 +187,7 @@ public class LookupElementPresentation {
     myItemText = presentation.myItemText;
 
     List<TextFragment> thatTail = presentation.myTail;
-    myTail = thatTail == null ? null : new SmartList<TextFragment>(thatTail);
+    myTail = thatTail == null ? null : new SmartList<>(thatTail);
 
     myTypeText = presentation.myTypeText;
     myStrikeout = presentation.myStrikeout;
@@ -213,40 +213,39 @@ public class LookupElementPresentation {
 
   @Override
   public String toString() {
-    return "LookupElementPresentation{" +
-           ", itemText='" + myItemText + '\'' +
-           ", tail=" + myTail +
-           ", typeText='" + myTypeText + '\'' +
-           '}';
+    return "LookupElementPresentation{" + ", itemText='" + myItemText + '\'' + ", tail=" + myTail + ", typeText='" + myTypeText + '\'' + '}';
   }
 
   public static class TextFragment {
     public final String text;
-    private final boolean grayed;
-    @Nullable private final Color fgColor;
+    private final boolean myGrayed;
+    private final boolean myItalic;
+    @Nullable
+    private final Color myFgColor;
 
-    public TextFragment(String text, boolean grayed, @Nullable Color fgColor) {
+    private TextFragment(String text, boolean grayed, boolean italic, @Nullable Color fgColor) {
       this.text = text;
-      this.grayed = grayed;
-      this.fgColor = fgColor;
+      myGrayed = grayed;
+      myItalic = italic;
+      myFgColor = fgColor;
     }
 
     @Override
     public String toString() {
-      return "TextFragment{" +
-             "text='" + text + '\'' +
-             ", grayed=" + grayed +
-             ", fgColor=" + fgColor +
-             '}';
+      return "TextFragment{" + "text='" + text + '\'' + ", grayed=" + myGrayed + ", fgColor=" + myFgColor + '}';
     }
 
     public boolean isGrayed() {
-      return grayed;
+      return myGrayed;
+    }
+
+    public boolean isItalic() {
+      return myItalic;
     }
 
     @Nullable
     public Color getForegroundColor() {
-      return fgColor;
+      return myFgColor;
     }
   }
 }
