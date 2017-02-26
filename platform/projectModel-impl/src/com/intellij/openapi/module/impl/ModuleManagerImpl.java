@@ -19,6 +19,7 @@ package com.intellij.openapi.module.impl;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
@@ -150,6 +151,9 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   private final List<ModuleLoadItem> myFailedModulePaths = new ArrayList<>();
 
   private List<ModuleLoadItem> myModuleLoadItems = Collections.emptyList();
+
+  private boolean myFirstLoad = true;
+
   @NonNls
   public static final String ELEMENT_MODULES = "modules";
   @NonNls
@@ -208,6 +212,11 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   @Override
   @RequiredWriteAction
   public void loadState(Element state) {
+    boolean firstLoad = myFirstLoad;
+    if (firstLoad) {
+      myFirstLoad = false;
+    }
+
     final Element modules = state.getChild(ELEMENT_MODULES);
     if (modules != null) {
       myModuleLoadItems = new ArrayList<>();
@@ -224,9 +233,44 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     else {
       myModuleLoadItems = Collections.emptyList();
     }
+
+    // if file changed, load changes
+    if (!firstLoad) {
+      ModuleModelImpl model = new ModuleModelImpl(myModuleModel);
+      // dispose not exists module
+      for (Module module : model.getModules()) {
+        ModuleLoadItem item = findModuleByUrl(module.getName(), module.getModuleDirUrl());
+        if (item == null) {
+          WriteAction.run(() -> model.disposeModule(module));
+        }
+      }
+
+      loadModules(model, false);
+
+      WriteAction.run(model::commit);
+    }
   }
 
-  protected void loadModules(final ModuleModelImpl moduleModel) {
+  @Nullable
+  private ModuleLoadItem findModuleByUrl(@NotNull String name, @Nullable String url) {
+    if (url == null) {
+      for (ModuleLoadItem item : myModuleLoadItems) {
+        if (item.getName().equals(name) && item.getDirUrl() == null) {
+          return item;
+        }
+      }
+    }
+    else {
+      for (ModuleLoadItem item : myModuleLoadItems) {
+        if (url.equals(item.getDirUrl())) {
+          return item;
+        }
+      }
+    }
+    return null;
+  }
+
+  protected void loadModules(final ModuleModelImpl moduleModel, boolean firstLoad) {
     if (myModuleLoadItems.isEmpty()) {
       return;
     }
@@ -244,12 +288,12 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     List<ModuleLoadingErrorDescription> errors = new ArrayList<>();
 
     for (ModuleLoadItem moduleLoadItem : myModuleLoadItems) {
-      if(progressIndicator != null) {
+      if (progressIndicator != null) {
         progressIndicator.checkCanceled();
       }
 
       try {
-        final Module module = moduleModel.loadModuleInternal(moduleLoadItem, progressIndicator);
+        final Module module = moduleModel.loadModuleInternal(moduleLoadItem, firstLoad, progressIndicator);
         final String[] groups = moduleLoadItem.getGroups();
         if (groups != null) {
           groupInterner.setModuleGroupPath(moduleModel, module, groups); //model should be updated too
@@ -659,7 +703,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     @NotNull
-    private Module loadModuleInternal(@NotNull ModuleLoadItem item, @Nullable ProgressIndicator progressIndicator)
+    private Module loadModuleInternal(@NotNull ModuleLoadItem item, boolean firstLoad, @Nullable ProgressIndicator progressIndicator)
             throws ModuleWithNameAlreadyExistsException, ModuleDirIsNotExistsException, StateStorageException {
 
       final String moduleName = item.getName();
@@ -667,9 +711,11 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
         progressIndicator.setText2(moduleName);
       }
 
-      for (Module module : myModules) {
-        if (module.getName().equals(moduleName)) {
-          throw new ModuleWithNameAlreadyExistsException(ProjectBundle.message("module.already.exists.error", moduleName), moduleName);
+      if(firstLoad) {
+        for (Module module : myModules) {
+          if (module.getName().equals(moduleName)) {
+            throw new ModuleWithNameAlreadyExistsException(ProjectBundle.message("module.already.exists.error", moduleName), moduleName);
+          }
         }
       }
 
@@ -691,6 +737,12 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
       if (oldModule == null) {
         oldModule = createAndLoadModule(item, this, progressIndicator);
+      }
+      else {
+        collapseOrExpandMacros(oldModule, item.getElement(), false);
+
+        final ModuleRootManagerImpl moduleRootManager = (ModuleRootManagerImpl)ModuleRootManager.getInstance(oldModule);
+        ApplicationManager.getApplication().runReadAction(() -> moduleRootManager.loadState(item.getElement(), progressIndicator));
       }
       return oldModule;
     }
