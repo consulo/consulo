@@ -24,6 +24,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.RoamingTypeDisabled;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtilRt;
 import com.intellij.util.ReflectionUtil;
@@ -91,7 +92,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       LOG.error("Storage.value() is empty");
       value = "other.xml";
     }
-    return getConfigurationMacro(directorySpec) + "/" + value + "/";
+    return getConfigurationMacro(directorySpec) + "/" + value + (directorySpec ? "/" : "");
   }
 
 
@@ -214,7 +215,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   @NotNull
   private StateStorage createFileStateStorage(@NotNull String fileSpec, @Nullable RoamingType roamingType) {
-    String filePath = expandMacros(fileSpec);
+    String filePath = FileUtil.toSystemIndependentName(expandMacros(fileSpec));
 
     if (!ourHeadlessEnvironment && PathUtilRt.getFileName(filePath).lastIndexOf('.') < 0) {
       throw new IllegalArgumentException("Extension is missing for storage file: " + filePath);

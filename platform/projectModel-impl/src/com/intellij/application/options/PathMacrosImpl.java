@@ -20,8 +20,6 @@ import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import gnu.trove.THashSet;
@@ -36,10 +34,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author dsl
  */
 @State(name = "PathMacrosImpl", storages = @Storage(value = "path.macros.xml", roamingType = RoamingType.DISABLED))
-public class PathMacrosImpl extends PathMacros implements ApplicationComponent, JDOMExternalizable {
+public class PathMacrosImpl extends PathMacros implements ApplicationComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.application.options.PathMacrosImpl");
-  private final Map<String, String> myLegacyMacros = new HashMap<String, String>();
-  private final Map<String, String> myMacros = new HashMap<String, String>();
+  private final Map<String, String> myLegacyMacros = new HashMap<>();
+  private final Map<String, String> myMacros = new HashMap<>();
   private int myModificationStamp = 0;
   private final ReentrantReadWriteLock myLock = new ReentrantReadWriteLock();
   private final List<String> myIgnoredMacros = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -61,7 +59,7 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
   @NonNls
   public static final String USER_HOME_MACRO_NAME = PathMacroUtil.USER_HOME_NAME;
 
-  private static final Set<String> SYSTEM_MACROS = new HashSet<String>();
+  private static final Set<String> SYSTEM_MACROS = new HashSet<>();
   @NonNls public static final String EXT_FILE_NAME = "path.macros";
 
   static {
@@ -97,7 +95,7 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
   public Set<String> getUserMacroNames() {
     myLock.readLock().lock();
     try {
-      return new THashSet<String>(myMacros.keySet()); // keyset should not escape the lock
+      return new THashSet<>(myMacros.keySet()); // keyset should not escape the lock
     }
     finally {
       myLock.readLock().unlock();
@@ -144,7 +142,7 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
   public Set<String> getAllMacroNames() {
     final Set<String> userMacroNames = getUserMacroNames();
     final Set<String> systemMacroNames = getSystemMacroNames();
-    final Set<String> allNames = new HashSet<String>(userMacroNames.size() + systemMacroNames.size());
+    final Set<String> allNames = new HashSet<>(userMacroNames.size() + systemMacroNames.size());
     allNames.addAll(systemMacroNames);
     allNames.addAll(userMacroNames);
     return allNames;
@@ -177,7 +175,7 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
   public Collection<String> getLegacyMacroNames() {
     try {
       myLock.readLock().lock();
-      return new THashSet<String>(myLegacyMacros.keySet()); // keyset should not escape the lock
+      return new THashSet<>(myLegacyMacros.keySet()); // keyset should not escape the lock
     }
     finally {
       myLock.readLock().unlock();
@@ -224,15 +222,14 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
   }
 
   @Override
-  public void readExternal(Element element) throws InvalidDataException {
+  public void loadState(Element state) {
     try {
       myLock.writeLock().lock();
 
-      final List children = element.getChildren(MACRO_ELEMENT);
-      for (Object aChildren : children) {
-        Element macro = (Element)aChildren;
-        final String name = macro.getAttributeValue(NAME_ATTR);
-        String value = macro.getAttributeValue(VALUE_ATTR);
+      final List<Element> children = state.getChildren(MACRO_ELEMENT);
+      for (Element aChildren : children) {
+        final String name = aChildren.getAttributeValue(NAME_ATTR);
+        String value = aChildren.getAttributeValue(VALUE_ATTR);
         if (name == null || value == null) {
           throw new InvalidDataException();
         }
@@ -248,10 +245,9 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
         myMacros.put(name, value);
       }
 
-      final List ignoredChildren = element.getChildren(IGNORED_MACRO_ELEMENT);
-      for (final Object child : ignoredChildren) {
-        final Element macroElement = (Element)child;
-        final String ignoredName = macroElement.getAttributeValue(NAME_ATTR);
+      final List<Element> ignoredChildren = state.getChildren(IGNORED_MACRO_ELEMENT);
+      for (final Element child : ignoredChildren) {
+        final String ignoredName = child.getAttributeValue(NAME_ATTR);
         if (ignoredName != null && !ignoredName.isEmpty() && !myIgnoredMacros.contains(ignoredName)) {
           myIgnoredMacros.add(ignoredName);
         }
@@ -264,7 +260,8 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
   }
 
   @Override
-  public void writeExternal(Element element) throws WriteExternalException {
+  public Element getState() {
+    Element state = new Element("state");
     try {
       myLock.writeLock().lock();
 
@@ -275,19 +272,20 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
           final Element macro = new Element(MACRO_ELEMENT);
           macro.setAttribute(NAME_ATTR, entry.getKey());
           macro.setAttribute(VALUE_ATTR, value);
-          element.addContent(macro);
+          state.addContent(macro);
         }
       }
 
       for (final String macro : myIgnoredMacros) {
         final Element macroElement = new Element(IGNORED_MACRO_ELEMENT);
         macroElement.setAttribute(NAME_ATTR, macro);
-        element.addContent(macroElement);
+        state.addContent(macroElement);
       }
     }
     finally {
       myLock.writeLock().unlock();
     }
+    return state;
   }
 
   public void addMacroReplacements(ReplacePathToMacroMap result) {

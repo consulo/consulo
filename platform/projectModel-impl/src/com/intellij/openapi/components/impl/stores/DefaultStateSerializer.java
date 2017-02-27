@@ -23,7 +23,6 @@ import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.xmlb.Accessor;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
@@ -48,12 +47,7 @@ public class DefaultStateSerializer {
       return element;
     }
     else {
-      return XmlSerializer.serializeIfNotDefault(state, new SkipDefaultValuesSerializationFilters() {
-        @Override
-        protected boolean accepts(@NotNull Accessor accessor, @NotNull Object bean, @Nullable Object beanValue) {
-          return super.accepts(accessor, bean, beanValue) && storage == null;
-        }
-      });
+      return XmlSerializer.serializeIfNotDefault(state, new SkipDefaultValuesSerializationFilters());
     }
   }
 

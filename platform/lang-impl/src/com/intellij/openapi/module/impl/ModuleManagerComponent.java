@@ -29,18 +29,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.messages.MessageHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.lang.reflect.Method;
 
 /**
  * @author yole
  */
-@State(
-        name = ModuleManagerImpl.COMPONENT_NAME,
-        storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/modules.xml")})
+@State(name = ModuleManagerImpl.COMPONENT_NAME, storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/modules.xml"))
 public class ModuleManagerComponent extends ModuleManagerImpl {
   public static final Logger LOGGER = Logger.getInstance(ModuleManagerComponent.class);
 
@@ -51,19 +46,14 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     super(project, bus);
     myConnection = bus.connect(project);
     myProgressManager = progressManager;
-    myConnection.setDefaultHandler(new MessageHandler() {
-      @Override
-      public void handle(Method event, Object... params) {
-        cleanCachedStuff();
-      }
-    });
+    myConnection.setDefaultHandler((event, params) -> cleanCachedStuff());
 
     myConnection.subscribe(ProjectTopics.PROJECT_ROOTS);
-    myConnection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener.Adapter() {
+    myConnection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
       @Override
-      public void projectComponentsInitialized(final Project project) {
+      public void projectComponentsInitialized(@NotNull final Project project) {
         long t = System.currentTimeMillis();
-        loadModules(myModuleModel);
+        loadModules(myModuleModel, true);
         t = System.currentTimeMillis() - t;
         LOGGER.info(myModuleModel.getModules().length + " module(s) loaded in " + t + " ms");
       }
@@ -86,24 +76,16 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
       return;
     }
 
-    Runnable runnableWithProgress = new Runnable() {
-      @Override
-      public void run() {
-        for (final Module module : myModuleModel.getModules()) {
-          final Application app = ApplicationManager.getApplication();
-          final Runnable swingRunnable = new Runnable() {
-            @Override
-            public void run() {
-              fireModuleAddedInWriteAction(module);
-            }
-          };
-          if (app.isDispatchThread() || app.isHeadlessEnvironment()) {
-            swingRunnable.run();
-          }
-          else {
-            ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
-            app.invokeAndWait(swingRunnable, pi.getModalityState());
-          }
+    Runnable runnableWithProgress = () -> {
+      for (final Module module : myModuleModel.getModules()) {
+        final Application app = ApplicationManager.getApplication();
+        final Runnable swingRunnable = () -> fireModuleAddedInWriteAction(module);
+        if (app.isDispatchThread() || app.isHeadlessEnvironment()) {
+          swingRunnable.run();
+        }
+        else {
+          ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
+          app.invokeAndWait(swingRunnable, pi.getModalityState());
         }
       }
     };
