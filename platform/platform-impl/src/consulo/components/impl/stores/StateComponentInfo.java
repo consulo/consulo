@@ -19,6 +19,7 @@ import com.intellij.diagnostic.PluginException;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMExternalizable;
@@ -34,6 +35,8 @@ import java.util.Map;
  * @since 27-Feb-17
  */
 public class StateComponentInfo<T> {
+  private static final Logger LOGGER = Logger.getInstance(StateComponentInfo.class);
+
   @NonNls
   private static final String OPTION_WORKSPACE = "workspace";
 
@@ -47,6 +50,14 @@ public class StateComponentInfo<T> {
     if (o instanceof PersistentStateComponent) {
       state = getStateSpec(o.getClass());
       stateComponent = (PersistentStateComponent<?>)o;
+
+      if (project != null) {
+        final ComponentConfig config = ((ComponentManagerImpl)project).getConfig(o.getClass());
+
+        if (config != null && isWorkspace(config.options)) {
+          LOGGER.warn("Marker 'workspace' is ignored for component: " + o.getClass().getName());
+        }
+      }
     }
     else if (o instanceof JDOMExternalizable) {
       state = getStateSpec(o.getClass());
@@ -74,8 +85,8 @@ public class StateComponentInfo<T> {
 
     PluginId pluginId = PluginManagerCore.getPluginId(o.getClass());
     if (state != null && state.storages().length == 0) {
-      if(pluginId == null) {
-        throw new RuntimeException("No @State.storages() define in " + o.getClass().getName()); 
+      if (pluginId == null) {
+        throw new RuntimeException("No @State.storages() define in " + o.getClass().getName());
       }
       else {
         throw new PluginException("No @State.storages() define in " + o.getClass().getName(), pluginId);
