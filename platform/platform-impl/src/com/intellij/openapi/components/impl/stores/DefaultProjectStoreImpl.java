@@ -139,12 +139,6 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       }
 
       @Override
-      @Nullable
-      public StateStorage getOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation) {
-        return storage;
-      }
-
-      @Override
       public void setStreamProvider(@Nullable StreamProvider streamProvider) {
         throw new UnsupportedOperationException("Method setStreamProvider not implemented in " + getClass());
       }
@@ -179,11 +173,6 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
     @Override
     public void setState(@NotNull Storage[] storageSpecs, @NotNull Object component, @NotNull String componentName, @NotNull Object state) {
-      externalizationSession.setState(component, componentName, state, null);
-    }
-
-    @Override
-    public void setStateInOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull Object state) {
       externalizationSession.setState(component, componentName, state, null);
     }
 

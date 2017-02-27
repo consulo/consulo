@@ -195,7 +195,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       }
     }
 
-    getStateStore().initComponent(component, service);
+    getStateStore().initComponent(component);
   }
 
   @Override

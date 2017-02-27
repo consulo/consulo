@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface IComponentStore {
-  void initComponent(@NotNull Object component, boolean service);
+  void initComponent(@NotNull Object component);
 
   void reinitComponents(@NotNull Set<String> componentNames, boolean reloadData);
 

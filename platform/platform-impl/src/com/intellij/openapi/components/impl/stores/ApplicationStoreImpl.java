@@ -18,7 +18,6 @@ package com.intellij.openapi.components.impl.stores;
 import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.PathMacroManager;
-import com.intellij.openapi.components.StateStorageOperation;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.diagnostic.Logger;
@@ -35,7 +34,6 @@ import java.io.IOException;
 public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplicationStore {
   private static final Logger LOG = Logger.getInstance(ApplicationStoreImpl.class);
 
-  private static final String DEFAULT_STORAGE_SPEC = StoragePathMacros.APP_CONFIG + "/other" + DirectoryStorageData.DEFAULT_EXT;
   private static final String ROOT_ELEMENT_NAME = "application";
 
   private final ApplicationEx2 myApplication;
@@ -59,12 +57,6 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
       @Override
       protected StorageData createStorageData(@NotNull String fileSpec, @NotNull String filePath) {
         return new StorageData(ROOT_ELEMENT_NAME);
-      }
-
-      @Nullable
-      @Override
-      protected String getOldStorageSpec(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation) {
-        return DEFAULT_STORAGE_SPEC;
       }
 
       @Override

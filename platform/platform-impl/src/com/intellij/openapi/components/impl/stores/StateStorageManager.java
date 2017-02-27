@@ -46,9 +46,6 @@ public interface StateStorageManager {
   @Nullable
   ExternalizationSession startExternalization();
 
-  @Nullable
-  StateStorage getOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation);
-
   @NotNull
   String expandMacros(@NotNull String file);
 
@@ -62,8 +59,6 @@ public interface StateStorageManager {
 
   interface ExternalizationSession {
     void setState(@NotNull Storage[] storageSpecs, @NotNull Object component, @NotNull String componentName, @NotNull Object state);
-
-    void setStateInOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull Object state);
 
     /**
      * return empty list if nothing to save

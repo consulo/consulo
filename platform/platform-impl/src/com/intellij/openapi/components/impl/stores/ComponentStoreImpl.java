@@ -19,7 +19,6 @@ import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
-import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.components.impl.stores.StateStorageManager.ExternalizationSession;
 import com.intellij.openapi.components.store.ReadOnlyModificationException;
 import com.intellij.openapi.components.store.StateStorageBase;
@@ -28,8 +27,6 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -38,6 +35,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.xmlb.JDOMXIncluder;
+import consulo.components.impl.stores.StateComponentInfo;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -49,30 +47,26 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@SuppressWarnings({"deprecation"})
 public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   private static final Logger LOG = Logger.getInstance(ComponentStoreImpl.class);
-  private final Map<String, Object> myComponents = Collections.synchronizedMap(new THashMap<String, Object>());
+
+  private final Map<String, StateComponentInfo<?>> myComponents = Collections.synchronizedMap(new THashMap<>());
   private final List<SettingsSavingComponent> mySettingsSavingComponents = new CopyOnWriteArrayList<>();
 
   @Override
-  public void initComponent(@NotNull Object component, boolean service) {
+  public void initComponent(@NotNull Object component) {
     if (component instanceof SettingsSavingComponent) {
       mySettingsSavingComponents.add((SettingsSavingComponent)component);
     }
 
-    if (!(component instanceof JDOMExternalizable || component instanceof PersistentStateComponent)) {
+    StateComponentInfo<?> componentInfo = StateComponentInfo.of(component, getProject());
+    if (componentInfo == null) {
       return;
     }
 
     AccessToken token = ReadAction.start();
     try {
-      if (component instanceof PersistentStateComponent) {
-        initPersistentComponent((PersistentStateComponent<?>)component, null, false);
-      }
-      else {
-        initJdomExternalizable((JDOMExternalizable)component);
-      }
+      initComponent(componentInfo, null, false);
     }
     catch (StateStorageException | ProcessCanceledException e) {
       throw e;
@@ -92,13 +86,9 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
       String[] names = ArrayUtilRt.toStringArray(myComponents.keySet());
       Arrays.sort(names);
       for (String name : names) {
-        Object component = myComponents.get(name);
-        if (component instanceof PersistentStateComponent) {
-          commitPersistentComponent((PersistentStateComponent<?>)component, externalizationSession);
-        }
-        else if (component instanceof JDOMExternalizable) {
-          externalizationSession.setStateInOldStorage(component, ComponentManagerImpl.getComponentName(component), component);
-        }
+        StateComponentInfo<?> componentInfo = myComponents.get(name);
+
+        commitComponent(componentInfo, externalizationSession);
       }
     }
 
@@ -131,67 +121,23 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     }
   }
 
-  private <T> void commitPersistentComponent(@NotNull PersistentStateComponent<T> persistentStateComponent, @NotNull ExternalizationSession session) {
-    T state = persistentStateComponent.getState();
+  private <T> void commitComponent(@NotNull StateComponentInfo<T> componentInfo, @NotNull ExternalizationSession session) {
+    PersistentStateComponent<T> component = componentInfo.getComponent();
+
+    T state = component.getState();
     if (state != null) {
-      Storage[] storageSpecs =
-              getComponentStorageSpecs(persistentStateComponent, StoreUtil.getStateSpec(persistentStateComponent), StateStorageOperation.WRITE);
-      session.setState(storageSpecs, persistentStateComponent, getComponentName(persistentStateComponent), state);
+      Storage[] storageSpecs = getComponentStorageSpecs(component, componentInfo.getState(), StateStorageOperation.WRITE);
+      session.setState(storageSpecs, component, componentInfo.getName(), state);
     }
   }
 
-  private void initJdomExternalizable(@NotNull JDOMExternalizable component) {
-    String componentName = ComponentManagerImpl.getComponentName(component);
-    doAddComponent(componentName, component);
-
-    if (optimizeTestLoading()) {
-      return;
+  private void doAddComponent(@NotNull String componentName, @NotNull StateComponentInfo<?> stateComponentInfo) {
+    StateComponentInfo<?> existing = myComponents.get(componentName);
+    if (existing != null && !existing.equals(stateComponentInfo)) {
+      LOG.error("Conflicting component name '" + componentName + "': " + existing.getComponent().getClass() + " and " + stateComponentInfo.getComponent()
+              .getClass());
     }
-
-    loadJdomDefaults(component, componentName);
-
-    StateStorage stateStorage = getStateStorageManager().getOldStorage(component, componentName, StateStorageOperation.READ);
-    if (stateStorage == null) {
-      return;
-    }
-
-    Element element = stateStorage.getState(component, componentName, Element.class, null);
-    if (element == null) {
-      return;
-    }
-
-    try {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Loading configuration for " + component.getClass());
-      }
-      component.readExternal(element);
-    }
-    catch (InvalidDataException e) {
-      LOG.error(e);
-      return;
-    }
-
-    validateUnusedMacros(componentName, true);
-  }
-
-  private void doAddComponent(String componentName, Object component) {
-    Object existing = myComponents.get(componentName);
-    if (existing != null && existing != component) {
-      LOG.error("Conflicting component name '" + componentName + "': " + existing.getClass() + " and " + component.getClass());
-    }
-    myComponents.put(componentName, component);
-  }
-
-  private void loadJdomDefaults(@NotNull JDOMExternalizable component, @NotNull String componentName) {
-    try {
-      Element defaultState = getDefaultState(component, componentName, Element.class);
-      if (defaultState != null) {
-        component.readExternal(defaultState);
-      }
-    }
-    catch (Exception e) {
-      LOG.error("Cannot load defaults for " + component.getClass(), e);
-    }
+    myComponents.put(componentName, stateComponentInfo);
   }
 
   @Nullable
@@ -213,14 +159,17 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
     }
   }
 
-  private <T> String initPersistentComponent(@NotNull PersistentStateComponent<T> component,
-                                             @Nullable Collection<? extends StateStorage> changedStorages,
-                                             boolean reloadData) {
-    State stateSpec = StoreUtil.getStateSpec(component);
+  private <T> String initComponent(@NotNull StateComponentInfo<T> componentInfo,
+                                   @Nullable Collection<? extends StateStorage> changedStorages,
+                                   boolean reloadData) {
+    PersistentStateComponent<T> component = componentInfo.getComponent();
+    State stateSpec = componentInfo.getState();
     String name = stateSpec.name();
+
     if (changedStorages == null || !reloadData) {
-      doAddComponent(name, component);
+      doAddComponent(name, componentInfo);
     }
+
     if (optimizeTestLoading()) {
       return name;
     }
@@ -273,14 +222,9 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   }
 
   @NotNull
-  public static String getComponentName(@NotNull PersistentStateComponent<?> persistentStateComponent) {
-    return StoreUtil.getStateSpec(persistentStateComponent).name();
-  }
-
-  @NotNull
-  protected  <T> Storage[] getComponentStorageSpecs(@NotNull PersistentStateComponent<T> persistentStateComponent,
-                                                 @NotNull State stateSpec,
-                                                 @NotNull StateStorageOperation operation) {
+  protected <T> Storage[] getComponentStorageSpecs(@NotNull PersistentStateComponent<T> persistentStateComponent,
+                                                   @NotNull State stateSpec,
+                                                   @NotNull StateStorageOperation operation) {
     Storage[] storages = stateSpec.storages();
     if (storages.length == 1) {
       return storages;
@@ -328,13 +272,11 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   @Override
   public boolean isReloadPossible(@NotNull final Set<String> componentNames) {
     for (String componentName : componentNames) {
-      final Object component = myComponents.get(componentName);
-      if (component != null &&
-          (!(component instanceof PersistentStateComponent) || !StoreUtil.getStateSpec((PersistentStateComponent<?>)component).reloadable())) {
+      final StateComponentInfo<?> component = myComponents.get(componentName);
+      if (!component.getState().reloadable()) {
         return false;
       }
     }
-
     return true;
   }
 
@@ -343,9 +285,8 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   public final Collection<String> getNotReloadableComponents(@NotNull Collection<String> componentNames) {
     Set<String> notReloadableComponents = null;
     for (String componentName : componentNames) {
-      Object component = myComponents.get(componentName);
-      if (component != null &&
-          (!(component instanceof PersistentStateComponent) || !StoreUtil.getStateSpec((PersistentStateComponent<?>)component).reloadable())) {
+      StateComponentInfo<?> component = myComponents.get(componentName);
+      if (!component.getState().reloadable()) {
         if (notReloadableComponents == null) {
           notReloadableComponents = new LinkedHashSet<>();
         }
@@ -361,15 +302,14 @@ public abstract class ComponentStoreImpl implements IComponentStore.Reloadable {
   }
 
   protected boolean reinitComponent(@NotNull String componentName, @NotNull Collection<? extends StateStorage> changedStorages) {
-    PersistentStateComponent component = (PersistentStateComponent)myComponents.get(componentName);
-    if (component == null) {
+    StateComponentInfo<?> componentInfo = myComponents.get(componentName);
+    if (componentInfo == null) {
       return false;
     }
-    else {
-      boolean changedStoragesEmpty = changedStorages.isEmpty();
-      initPersistentComponent(component, changedStoragesEmpty ? null : changedStorages, changedStoragesEmpty);
-      return true;
-    }
+
+    boolean changedStoragesEmpty = changedStorages.isEmpty();
+    initComponent(componentInfo, changedStoragesEmpty ? null : changedStorages, changedStoragesEmpty);
+    return true;
   }
 
   @NotNull

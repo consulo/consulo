@@ -34,7 +34,6 @@ import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,8 +46,6 @@ import java.util.List;
 
 public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements IProjectStore {
   private static final Logger LOG = Logger.getInstance(ProjectStoreImpl.class);
-  @NonNls
-  static final String OPTION_WORKSPACE = "workspace";
 
   protected ProjectImpl myProject;
   private String myPresentableUrl;

@@ -228,6 +228,15 @@ public class PluginManagerCore {
     return ourPluginClasses.getPluginByClassName(className);
   }
 
+  @Nullable
+  public static PluginId getPluginId(@NotNull Class<?> clazz) {
+    ClassLoader loader = clazz.getClassLoader();
+    if(!(loader instanceof PluginClassLoader)) {
+      return null;
+    }
+    return ((PluginClassLoader)loader).getPluginId();
+  }
+
   public static void dumpPluginClassStatistics() {
     ourPluginClasses.dumpPluginClassStatistics();
   }
@@ -659,41 +668,40 @@ public class PluginManagerCore {
     for (final Iterator<? extends IdeaPluginDescriptor> it = result.iterator(); it.hasNext(); ) {
       final IdeaPluginDescriptor pluginDescriptor = it.next();
       checkDependants(pluginDescriptor, new Function<PluginId, IdeaPluginDescriptor>() {
-                        @Override
-                        public IdeaPluginDescriptor fun(final PluginId pluginId) {
-                          return idToDescriptorMap.get(pluginId);
-                        }
-                      }, new Condition<PluginId>() {
-                        @Override
-                        public boolean value(final PluginId pluginId) {
-                          if (!idToDescriptorMap.containsKey(pluginId)) {
-                            pluginDescriptor.setEnabled(false);
-                            faultyDescriptors.add(pluginId.getIdString());
-                            disabledPluginIds.add(pluginDescriptor.getPluginId().getIdString());
-                            message.append("<br>");
-                            final String name = pluginDescriptor.getName();
-                            final IdeaPluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
-                            String pluginName;
-                            if (descriptor == null) {
-                              pluginName = pluginId.getIdString();
-                              if (disabledPluginNames.containsKey(pluginName)) {
-                                pluginName = disabledPluginNames.get(pluginName);
-                              }
-                            }
-                            else {
-                              pluginName = descriptor.getName();
-                            }
+        @Override
+        public IdeaPluginDescriptor fun(final PluginId pluginId) {
+          return idToDescriptorMap.get(pluginId);
+        }
+      }, new Condition<PluginId>() {
+        @Override
+        public boolean value(final PluginId pluginId) {
+          if (!idToDescriptorMap.containsKey(pluginId)) {
+            pluginDescriptor.setEnabled(false);
+            faultyDescriptors.add(pluginId.getIdString());
+            disabledPluginIds.add(pluginDescriptor.getPluginId().getIdString());
+            message.append("<br>");
+            final String name = pluginDescriptor.getName();
+            final IdeaPluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
+            String pluginName;
+            if (descriptor == null) {
+              pluginName = pluginId.getIdString();
+              if (disabledPluginNames.containsKey(pluginName)) {
+                pluginName = disabledPluginNames.get(pluginName);
+              }
+            }
+            else {
+              pluginName = descriptor.getName();
+            }
 
-                            message.append(getDisabledPlugins().contains(pluginId.getIdString())
-                                           ? IdeBundle.message("error.required.plugin.disabled", name, pluginName)
-                                           : IdeBundle.message("error.required.plugin.not.installed", name, pluginName));
-                            it.remove();
-                            return false;
-                          }
-                          return true;
-                        }
-                      }
-      );
+            message.append(getDisabledPlugins().contains(pluginId.getIdString())
+                           ? IdeBundle.message("error.required.plugin.disabled", name, pluginName)
+                           : IdeBundle.message("error.required.plugin.not.installed", name, pluginName));
+            it.remove();
+            return false;
+          }
+          return true;
+        }
+      });
     }
     if (!disabledPluginIds.isEmpty()) {
       myPlugins2Disable = disabledPluginIds;
@@ -759,7 +767,7 @@ public class PluginManagerCore {
     loadDescriptorsFromProperty(result);
 
     // insert consulo unit dummy plugin
-    if(Boolean.getBoolean(ApplicationProperties.CONSULO_IN_UNIT_TEST)) {
+    if (Boolean.getBoolean(ApplicationProperties.CONSULO_IN_UNIT_TEST)) {
       IdeaPluginDescriptorImpl pluginDescriptor = new IdeaPluginDescriptorImpl(new File(PathManager.getPreInstalledPluginsPath(), "unittest"));
       pluginDescriptor.setId(UNIT_TEST_PLUGIN);
       List<PluginId> map = ContainerUtil.map(result, IdeaPluginDescriptorImpl::getPluginId);
@@ -855,7 +863,7 @@ public class PluginManagerCore {
 
   public static boolean isIncompatible(final IdeaPluginDescriptor descriptor) {
     String platformVersion = descriptor.getPlatformVersion();
-    if(StringUtil.isEmpty(platformVersion)) {
+    if (StringUtil.isEmpty(platformVersion)) {
       return false;
     }
 

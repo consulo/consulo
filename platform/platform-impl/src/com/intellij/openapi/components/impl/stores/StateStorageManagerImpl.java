@@ -23,7 +23,6 @@ import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.RoamingTypeDisabled;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtilRt;
@@ -317,17 +316,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       }
     }
 
-    @Override
-    public void setStateInOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull Object state) {
-      StateStorage stateStorage = getOldStorage(component, componentName, StateStorageOperation.WRITE);
-      if (stateStorage != null) {
-        StateStorage.ExternalizationSession session = getExternalizationSession(stateStorage);
-        if (session != null) {
-          session.setState(component, componentName, state, null);
-        }
-      }
-    }
-
     @Nullable
     private StateStorage.ExternalizationSession getExternalizationSession(@NotNull StateStorage stateStorage) {
       StateStorage.ExternalizationSession session = mySessions.get(stateStorage);
@@ -364,19 +352,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       return ContainerUtil.notNullize(saveSessions);
     }
   }
-
-  @Override
-  @Nullable
-  public StateStorage getOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation) {
-    String oldStorageSpec = getOldStorageSpec(component, componentName, operation);
-    //noinspection deprecation
-    return oldStorageSpec == null
-           ? null
-           : getStateStorage(oldStorageSpec, component instanceof RoamingTypeDisabled ? RoamingType.DISABLED : RoamingType.PER_USER);
-  }
-
-  @Nullable
-  protected abstract String getOldStorageSpec(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation);
 
   @Override
   public void dispose() {
