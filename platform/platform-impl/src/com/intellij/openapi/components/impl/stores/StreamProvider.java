@@ -28,9 +28,8 @@ public abstract class StreamProvider {
    * @param content bytes of content, size of array is not actual size of data, you must use {@code size}
    * @param size actual size of data
    * @param roamingType
-   * @param async
    */
-  public abstract void saveContent(@NotNull String fileSpec, @NotNull byte[] content, int size, @NotNull RoamingType roamingType, boolean async) throws IOException;
+  public abstract void saveContent(@NotNull String fileSpec, @NotNull byte[] content, int size, @NotNull RoamingType roamingType) throws IOException;
 
   @Nullable
   public abstract InputStream loadContent(@NotNull String fileSpec, @NotNull RoamingType roamingType) throws IOException;

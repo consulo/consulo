@@ -54,7 +54,7 @@ public class ExternalStorageStreamProvider extends StreamProvider {
   }
 
   @Override
-  public void saveContent(@NotNull String fileSpec, @NotNull byte[] content, int size, @NotNull RoamingType roamingType, boolean async) throws IOException {
+  public void saveContent(@NotNull String fileSpec, @NotNull byte[] content, int size, @NotNull RoamingType roamingType) throws IOException {
     myStorage.saveContent(fileSpec, roamingType, content, size);
   }
 
