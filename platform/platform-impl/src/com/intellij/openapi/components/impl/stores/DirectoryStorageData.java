@@ -46,7 +46,7 @@ public class DirectoryStorageData extends StorageDataBase {
   private final Map<String, StateMap> myStates;
 
   public DirectoryStorageData() {
-    this(new THashMap<String, StateMap>());
+    this(new THashMap<>());
   }
 
   private DirectoryStorageData(@NotNull Map<String, StateMap> states) {
@@ -104,10 +104,7 @@ public class DirectoryStorageData extends StorageDataBase {
         }
         setState(name, file.getName(), state);
       }
-      catch (IOException e) {
-        LOG.info("Unable to load state", e);
-      }
-      catch (JDOMException e) {
+      catch (IOException | JDOMException e) {
         LOG.info("Unable to load state", e);
       }
     }
@@ -230,7 +227,7 @@ public class DirectoryStorageData extends StorageDataBase {
 
   @Override
   protected DirectoryStorageData clone() {
-    return new DirectoryStorageData(new THashMap<String, StateMap>(myStates));
+    return new DirectoryStorageData(new THashMap<>(myStates));
   }
 
   public void clear() {
