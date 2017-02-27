@@ -17,19 +17,14 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.StateStorageException;
-import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.List;
 
 abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
   @NonNls
   public static final String ATTRIBUTE_NAME = "name";
-
-  private static final List<String> ourConversionProblemsStorage = new SmartList<String>();
 
   private StateStorageManager myStateStorageManager;
   protected final PathMacroManager myPathMacroManager;
@@ -40,11 +35,6 @@ abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
 
   @NotNull
   protected abstract XmlElementStorage getMainStorage();
-
-  @Nullable
-  static List<String> getConversionProblemsStorage() {
-    return ourConversionProblemsStorage;
-  }
 
   @Override
   public void load() throws IOException, StateStorageException {
