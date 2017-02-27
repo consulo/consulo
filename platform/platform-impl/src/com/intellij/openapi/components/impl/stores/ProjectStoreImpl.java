@@ -15,26 +15,22 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
-import com.intellij.CommonBundle;
 import com.intellij.notification.NotificationsManager;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.impl.ProjectImpl;
-import com.intellij.openapi.project.impl.ProjectManagerImpl;
-import com.intellij.openapi.ui.MessageDialogBuilder;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -51,13 +47,8 @@ import java.util.List;
 
 public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements IProjectStore {
   private static final Logger LOG = Logger.getInstance(ProjectStoreImpl.class);
-
-  @NonNls
-  private static final String OLD_PROJECT_SUFFIX = "_old.";
   @NonNls
   static final String OPTION_WORKSPACE = "workspace";
-
-  private static int originalVersion = -1;
 
   protected ProjectImpl myProject;
   private String myPresentableUrl;
@@ -65,63 +56,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   ProjectStoreImpl(@NotNull ProjectImpl project, @NotNull PathMacroManager pathMacroManager) {
     super(pathMacroManager);
     myProject = project;
-  }
-
-  @Override
-  public boolean checkVersion() {
-    if (originalVersion >= 0 && originalVersion < ProjectManagerImpl.CURRENT_FORMAT_VERSION) {
-      final VirtualFile projectFile = getProjectFile();
-      LOG.assertTrue(projectFile != null);
-      String message = ProjectBundle.message("project.convert.old.prompt", projectFile.getName(), ApplicationNamesInfo.getInstance().getProductName(),
-                                             projectFile.getNameWithoutExtension() + OLD_PROJECT_SUFFIX + projectFile.getExtension());
-      if (Messages.showYesNoDialog(message, CommonBundle.getWarningTitle(), Messages.getWarningIcon()) != Messages.YES) return false;
-
-      List<String> conversionProblems = getConversionProblemsStorage();
-      if (!ContainerUtil.isEmpty(conversionProblems)) {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append(ProjectBundle.message("project.convert.problems.detected"));
-        for (String s : conversionProblems) {
-          buffer.append('\n');
-          buffer.append(s);
-        }
-        buffer.append(ProjectBundle.message("project.convert.problems.help"));
-        if (Messages.showOkCancelDialog(myProject, buffer.toString(), ProjectBundle.message("project.convert.problems.title"),
-                                        ProjectBundle.message("project.convert.problems.help.button"), CommonBundle.getCloseButtonText(),
-                                        Messages.getWarningIcon()) == Messages.OK) {
-          HelpManager.getInstance().invokeHelp("project.migrationProblems");
-        }
-      }
-
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          try {
-            VirtualFile projectDir = projectFile.getParent();
-            assert projectDir != null;
-
-            backup(projectDir, projectFile);
-
-            VirtualFile workspaceFile = getWorkspaceFile();
-            if (workspaceFile != null) {
-              backup(projectDir, workspaceFile);
-            }
-          }
-          catch (IOException e) {
-            LOG.error(e);
-          }
-        }
-
-        private void backup(final VirtualFile projectDir, final VirtualFile vile) throws IOException {
-          final String oldName = vile.getNameWithoutExtension() + OLD_PROJECT_SUFFIX + vile.getExtension();
-          VfsUtil.saveText(projectDir.findOrCreateChildData(this, oldName), VfsUtilCore.loadText(vile));
-        }
-      });
-    }
-
-    return originalVersion <= ProjectManagerImpl.CURRENT_FORMAT_VERSION ||
-           MessageDialogBuilder.yesNo(CommonBundle.getWarningTitle(), ProjectBundle
-                   .message("project.load.new.version.warning", myProject.getName(), ApplicationNamesInfo.getInstance().getProductName()))
-                   .icon(Messages.getWarningIcon()).project(myProject).is();
   }
 
   @Override
@@ -154,12 +88,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
 
-    ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-      @Override
-      public void run() {
-        VfsUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore));
-      }
-    }, ModalityState.defaultModalityState());
+    ApplicationManager.getApplication().invokeAndWait(() -> VfsUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore)), ModalityState.defaultModalityState());
 
     myPresentableUrl = null;
   }
@@ -347,71 +276,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     }
     else {
       return new Storage[]{};
-    }
-  }
-
-  static class ProjectStorageData extends BaseStorageData {
-    protected final Project myProject;
-
-    ProjectStorageData(final String rootElementName, Project project) {
-      super(rootElementName);
-      myProject = project;
-    }
-
-    protected ProjectStorageData(ProjectStorageData storageData) {
-      super(storageData);
-      myProject = storageData.myProject;
-    }
-
-    @Override
-    public StorageData clone() {
-      return new ProjectStorageData(this);
-    }
-  }
-
-  static class WsStorageData extends ProjectStorageData {
-    WsStorageData(final String rootElementName, final Project project) {
-      super(rootElementName, project);
-    }
-
-    WsStorageData(final WsStorageData storageData) {
-      super(storageData);
-    }
-
-    @Override
-    public StorageData clone() {
-      return new WsStorageData(this);
-    }
-  }
-
-  static class IprStorageData extends ProjectStorageData {
-    IprStorageData(final String rootElementName, Project project) {
-      super(rootElementName, project);
-    }
-
-    IprStorageData(final IprStorageData storageData) {
-      super(storageData);
-    }
-
-    @Override
-    public void load(@NotNull Element rootElement, @Nullable PathMacroSubstitutor pathMacroSubstitutor, boolean intern) {
-      final String v = rootElement.getAttributeValue(VERSION_OPTION);
-      //noinspection AssignmentToStaticFieldFromInstanceMethod
-      originalVersion = v != null ? Integer.parseInt(v) : 0;
-
-      if (originalVersion != ProjectManagerImpl.CURRENT_FORMAT_VERSION) {
-        convert(rootElement, originalVersion);
-      }
-
-      super.load(rootElement, pathMacroSubstitutor, intern);
-    }
-
-    protected void convert(final Element root, final int originalVersion) {
-    }
-
-    @Override
-    public StorageData clone() {
-      return new IprStorageData(this);
     }
   }
 

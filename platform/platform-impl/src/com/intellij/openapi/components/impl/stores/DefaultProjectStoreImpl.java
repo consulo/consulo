@@ -80,7 +80,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       @Override
       @NotNull
       protected StorageData createStorageData() {
-        return new BaseStorageData(ROOT_TAG_NAME);
+        return new StorageData(ROOT_TAG_NAME);
       }
     };
 
@@ -112,7 +112,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       @NotNull
       @Override
       public Couple<Collection<FileBasedStorage>> getCachedFileStateStorages(@NotNull Collection<String> changed, @NotNull Collection<String> deleted) {
-        return new Couple<Collection<FileBasedStorage>>(Collections.<FileBasedStorage>emptyList(), Collections.<FileBasedStorage>emptyList());
+        return new Couple<>(Collections.<FileBasedStorage>emptyList(), Collections.<FileBasedStorage>emptyList());
       }
 
       @Override

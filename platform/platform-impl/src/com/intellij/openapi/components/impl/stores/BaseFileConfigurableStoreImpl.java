@@ -16,23 +16,18 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.PathMacroManager;
-import com.intellij.openapi.components.PathMacroSubstitutor;
 import com.intellij.openapi.components.StateStorageException;
-import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.util.SmartList;
-import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
-  @NonNls protected static final String VERSION_OPTION = "version";
-  @NonNls public static final String ATTRIBUTE_NAME = "name";
+  @NonNls
+  public static final String ATTRIBUTE_NAME = "name";
 
   private static final List<String> ourConversionProblemsStorage = new SmartList<String>();
 
@@ -41,56 +36,6 @@ abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
 
   protected BaseFileConfigurableStoreImpl(@NotNull PathMacroManager pathMacroManager) {
     myPathMacroManager = pathMacroManager;
-  }
-
-  protected static class BaseStorageData extends StorageData {
-    private int myVersion = ProjectManagerImpl.CURRENT_FORMAT_VERSION;
-
-    public BaseStorageData(@NotNull String rootElementName) {
-      super(rootElementName);
-    }
-
-    protected BaseStorageData(BaseStorageData storageData) {
-      super(storageData);
-    }
-
-    @Override
-    public void load(@NotNull Element rootElement, @Nullable PathMacroSubstitutor pathMacroSubstitutor, boolean intern) {
-      super.load(rootElement, pathMacroSubstitutor, intern);
-
-      String v = rootElement.getAttributeValue(VERSION_OPTION);
-      myVersion = v == null ? ProjectManagerImpl.CURRENT_FORMAT_VERSION : Integer.parseInt(v);
-    }
-
-    @Override
-    @NotNull
-    protected final Element save(@NotNull Map<String, Element> newLiveStates) {
-      Element root = super.save(newLiveStates);
-      if (root == null) {
-        root = new Element(myRootElementName);
-      }
-      writeOptions(root, Integer.toString(myVersion));
-      return root;
-    }
-
-    protected void writeOptions(@NotNull Element root, @NotNull String versionString) {
-      root.setAttribute(VERSION_OPTION, versionString);
-    }
-
-    @Override
-    public StorageData clone() {
-      return new BaseStorageData(this);
-    }
-
-    @Nullable
-    @Override
-    public Set<String> getChangedComponentNames(@NotNull StorageData newStorageData, @Nullable PathMacroSubstitutor substitutor) {
-      BaseStorageData data = (BaseStorageData)newStorageData;
-      if (myVersion != data.myVersion) {
-        return null;
-      }
-      return super.getChangedComponentNames(newStorageData, substitutor);
-    }
   }
 
   @NotNull
@@ -106,8 +51,8 @@ abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
     getMainStorageData(); //load it
   }
 
-  public BaseStorageData getMainStorageData() {
-    return (BaseStorageData)getMainStorage().getStorageData();
+  public StorageData getMainStorageData() {
+    return getMainStorage().getStorageData();
   }
 
   @NotNull

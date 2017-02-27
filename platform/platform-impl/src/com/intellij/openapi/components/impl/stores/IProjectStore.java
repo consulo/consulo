@@ -30,8 +30,6 @@ import java.io.IOException;
  * @see com.intellij.openapi.project.ex.ProjectEx#getStateStore()
  */
 public interface IProjectStore extends IComponentStore.Reloadable {
-  boolean checkVersion();
-
   void setProjectFilePath(@NotNull String filePath);
 
   @Nullable

@@ -41,19 +41,7 @@ class ProjectStateStorageManager extends StateStorageManagerImpl {
 
   @Override
   protected StorageData createStorageData(@NotNull String fileSpec, @NotNull String filePath) {
-    if (fileSpec.equals(StoragePathMacros.PROJECT_FILE)) {
-      return createIprStorageData(filePath);
-    }
-    else if (fileSpec.equals(StoragePathMacros.WORKSPACE_FILE)) {
-      return new ProjectStoreImpl.WsStorageData(ROOT_TAG_NAME, myProject);
-    }
-    else {
-      return new ProjectStoreImpl.ProjectStorageData(ROOT_TAG_NAME, myProject);
-    }
-  }
-
-  protected StorageData createIprStorageData(@NotNull String filePath) {
-    return new ProjectStoreImpl.IprStorageData(ROOT_TAG_NAME, myProject);
+    return new StorageData(ROOT_TAG_NAME);
   }
 
   @Nullable
