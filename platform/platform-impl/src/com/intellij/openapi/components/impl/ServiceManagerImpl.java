@@ -18,16 +18,12 @@ package com.intellij.openapi.components.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.BaseComponent;
-import com.intellij.openapi.components.ComponentConfig;
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.components.ServiceDescriptor;
+import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.ex.ComponentManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.*;
 import com.intellij.openapi.extensions.impl.ExtensionComponentAdapter;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
@@ -42,10 +38,10 @@ import java.util.Collection;
 import java.util.List;
 
 public class ServiceManagerImpl implements BaseComponent {
-  public static final Logger LOGGER = Logger.getInstance(ServiceManagerImpl.class);
+  private static final Logger LOGGER = Logger.getInstance(ServiceManagerImpl.class);
 
-  private static final ExtensionPointName<ServiceDescriptor> APP_SERVICES = new ExtensionPointName<ServiceDescriptor>("com.intellij.applicationService");
-  private static final ExtensionPointName<ServiceDescriptor> PROJECT_SERVICES = new ExtensionPointName<ServiceDescriptor>("com.intellij.projectService");
+  private static final ExtensionPointName<ServiceDescriptor> APP_SERVICES = new ExtensionPointName<>("com.intellij.applicationService");
+  private static final ExtensionPointName<ServiceDescriptor> PROJECT_SERVICES = new ExtensionPointName<>("com.intellij.projectService");
   private ExtensionPointName<ServiceDescriptor> myExtensionPointName;
   private ExtensionPointListener<ServiceDescriptor> myExtensionPointListener;
 
@@ -186,46 +182,62 @@ public class ServiceManagerImpl implements BaseComponent {
     }
 
     @Override
-    public Object getComponentInstance(final PicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
+    public Object getComponentInstance(@NotNull PicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
       Object instance = myInitializedComponentInstance;
-      if (instance != null) return instance;
-
-      return ApplicationManager.getApplication().runReadAction(new Computable<Object>() {
-        @Override
-        public Object compute() {
-          // prevent storages from flushing and blocking FS
-          AccessToken token = HeavyProcessLatch.INSTANCE.processStarted("Creating component '" + myDescriptor.getImplementation() + "'");
-          try {
-            synchronized (MyComponentAdapter.this) {
-              Object instance = myInitializedComponentInstance;
-              if (instance != null) return instance; // DCL is fine, field is volatile
-              myInitializedComponentInstance = instance = initializeInstance(container);
-              return instance;
-            }
-          }
-          finally {
-            token.finish();
-          }
-        }
-      });
-    }
-
-    protected Object initializeInstance(final PicoContainer container) {
-      final Object serviceInstance = getDelegate().getComponentInstance(container);
-      if (serviceInstance instanceof Disposable) {
-        Disposer.register(myComponentManager, (Disposable)serviceInstance);
+      if (instance != null) {
+        return instance;
       }
 
-      myComponentManager.initializeComponent(serviceInstance, true);
+      synchronized (this) {
+        instance = myInitializedComponentInstance;
+        if (instance != null) {
+          // DCL is fine, field is volatile
+          return instance;
+        }
 
-      return serviceInstance;
+        ComponentAdapter delegate = getDelegate();
+
+        if (LOGGER.isDebugEnabled() &&
+            ApplicationManager.getApplication().isWriteAccessAllowed() &&
+            !ApplicationManager.getApplication().isUnitTestMode() &&
+            PersistentStateComponent.class.isAssignableFrom(delegate.getComponentImplementation())) {
+          LOGGER.warn(
+                  new Throwable("Getting service from write-action leads to possible deadlock. Service implementation " + myDescriptor.getImplementation()));
+        }
+
+        // prevent storages from flushing and blocking FS
+        AccessToken token = HeavyProcessLatch.INSTANCE.processStarted("Creating component '" + myDescriptor.getImplementation() + "'");
+        try {
+          instance = delegate.getComponentInstance(container);
+          if (instance instanceof Disposable) {
+            Disposer.register(myComponentManager, (Disposable)instance);
+          }
+
+          myComponentManager.initializeComponent(instance, true);
+
+          myInitializedComponentInstance = instance;
+          return instance;
+        }
+        finally {
+          token.finish();
+        }
+      }
     }
 
+    @NotNull
     private synchronized ComponentAdapter getDelegate() {
       if (myDelegate == null) {
-        myDelegate = new CachingConstructorInjectionComponentAdapter(getComponentKey(), loadClass(myDescriptor.getImplementation()), null, true);
-      }
+        Class<?> implClass;
+        try {
+          ClassLoader classLoader = myPluginDescriptor != null ? myPluginDescriptor.getPluginClassLoader() : getClass().getClassLoader();
+          implClass = Class.forName(myDescriptor.getImplementation(), true, classLoader);
+        }
+        catch (ClassNotFoundException e) {
+          throw new RuntimeException(e);
+        }
 
+        myDelegate = new CachingConstructorInjectionComponentAdapter(getComponentKey(), implClass, null, true);
+      }
       return myDelegate;
     }
 

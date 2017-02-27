@@ -15,14 +15,15 @@
  */
 package com.intellij.psi;
 
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.EventListener;
@@ -256,9 +257,16 @@ public abstract class PsiDocumentManager {
   public abstract boolean performWhenAllCommitted(@NotNull Runnable action);
 
   /**
-   * Schedule the runnable to be executed on Swing thread when all the documents are committed at some later moment.
+   * Same as {@link #performLaterWhenAllCommitted(Runnable, ModalityState)} using {@link ModalityState#defaultModalityState()}
+   */
+  public void performLaterWhenAllCommitted(@NotNull Runnable runnable) {
+    performLaterWhenAllCommitted(runnable, ModalityState.defaultModalityState());
+  }
+
+  /**
+   * Schedule the runnable to be executed on Swing thread when all the documents are committed at some later moment in a given modality state.
    * The runnable is guaranteed to be invoked when no write action is running, and not immediately.
    * If the project is disposed before such moment, the runnable is not run.
    */
-  public abstract void performLaterWhenAllCommitted(@NotNull Runnable runnable);
+  public abstract void performLaterWhenAllCommitted(@NotNull Runnable runnable, ModalityState modalityState);
 }

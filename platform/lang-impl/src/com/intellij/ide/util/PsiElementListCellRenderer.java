@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.ide.util;
 
-import com.intellij.util.ui.JBUI;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -37,31 +36,46 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.*;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
-import com.intellij.util.Function;
 import com.intellij.util.IconUtil;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.text.MatcherHolder;
 import com.intellij.util.ui.UIUtil;
+import consulo.ide.IconDescriptorUpdaters;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.accessibility.Accessible;
+import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
 
-public abstract class PsiElementListCellRenderer<T extends PsiElement> extends JPanel implements ListCellRenderer, MatcherHolder {
+public abstract class PsiElementListCellRenderer<T extends PsiElement> extends JPanel implements ListCellRenderer {
+  private static final String LEFT = BorderLayout.WEST;
 
-  private Matcher myMatcher;
-  private boolean myFocusBorderEnabled = true;
+  private boolean myFocusBorderEnabled = Registry.is("psi.element.list.cell.renderer.focus.border.enabled");
   protected int myRightComponentWidth;
 
   protected PsiElementListCellRenderer() {
     super(new BorderLayout());
   }
 
+  private class MyAccessibleContext extends JPanel.AccessibleJPanel {
+    @Override
+    public String getAccessibleName() {
+      LayoutManager lm = PsiElementListCellRenderer.this.getLayout();
+      assert lm instanceof BorderLayout;
+      Component leftCellRendererComp = ((BorderLayout)lm).getLayoutComponent(LEFT);
+      return leftCellRendererComp instanceof Accessible ? leftCellRendererComp.getAccessibleContext().getAccessibleName() : super.getAccessibleName();
+    }
+  }
+
   @Override
-  public void setPatternMatcher(final Matcher matcher) {
-    myMatcher = matcher;
+  public AccessibleContext getAccessibleContext() {
+    if (accessibleContext == null) {
+      accessibleContext = new MyAccessibleContext();
+    }
+    return accessibleContext;
   }
 
   protected static Color getBackgroundColor(@Nullable Object value) {
@@ -75,7 +89,8 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
 
         if (psiFile != null) {
           file = psiFile.getVirtualFile();
-        } else if (psiElement instanceof PsiDirectory) {
+        }
+        else if (psiElement instanceof PsiDirectory) {
           file = ((PsiDirectory)psiElement).getVirtualFile();
         }
         final Color fileBgColor = file != null ? colorManager.getRendererBackground(file) : null;
@@ -99,7 +114,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
     }
 
     @Override
-    protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
+    protected void customizeCellRenderer(@NotNull JList list, Object value, int index, boolean selected, boolean hasFocus) {
       Color bgColor = UIUtil.getListBackground();
       Color color = list.getForeground();
       setPaintFocusBorder(hasFocus && UIUtil.isToUseDottedCellBorder() && myFocusBorderEnabled);
@@ -134,38 +149,37 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
 
         SimpleTextAttributes nameAttributes = attributes != null ? SimpleTextAttributes.fromTextAttributes(attributes) : null;
 
-        if (nameAttributes == null) nameAttributes = new SimpleTextAttributes(Font.PLAIN, color);
+        if (nameAttributes == null) nameAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);
 
         assert name != null : "Null name for PSI element " + element + " (by " + PsiElementListCellRenderer.this + ")";
-        SpeedSearchUtil.appendColoredFragmentForMatcher(name,  this, nameAttributes, myMatcher, bgColor, selected);
+        SpeedSearchUtil.appendColoredFragmentForMatcher(name, this, nameAttributes, myMatcher, bgColor, selected);
         if (!element.isValid()) {
           append(" Invalid", SimpleTextAttributes.ERROR_ATTRIBUTES);
           return;
         }
         setIcon(PsiElementListCellRenderer.this.getIcon(element));
 
-        String containerText = getContainerText(element, name + (myModuleName != null ? myModuleName + "        " : ""));
+        String containerText = getContainerTextForLeftComponent(element, name + (myModuleName != null ? myModuleName + "        " : ""));
         if (containerText != null) {
-          append(" " + containerText, new SimpleTextAttributes(Font.PLAIN, JBColor.GRAY));
+          append(" " + containerText, new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, JBColor.GRAY));
         }
       }
       else if (!customizeNonPsiElementLeftRenderer(this, list, value, index, selected, hasFocus)) {
         setIcon(IconUtil.getEmptyIcon(false));
-        append(value == null ? "" : value.toString(), new SimpleTextAttributes(Font.PLAIN, list.getForeground()));
+        append(value == null ? "" : value.toString(), new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, list.getForeground()));
       }
       setBackground(selected ? UIUtil.getListSelectionBackground() : bgColor);
     }
-
   }
 
   @Nullable
-  protected static TextAttributes getNavigationItemAttributes(Object value) {
+  protected TextAttributes getNavigationItemAttributes(Object value) {
     TextAttributes attributes = null;
 
     if (value instanceof NavigationItem) {
       TextAttributesKey attributesKey = null;
       final ItemPresentation presentation = ((NavigationItem)value).getPresentation();
-      if (presentation instanceof ColoredItemPresentation) attributesKey = ((ColoredItemPresentation) presentation).getTextAttributesKey();
+      if (presentation instanceof ColoredItemPresentation) attributesKey = ((ColoredItemPresentation)presentation).getTextAttributesKey();
 
       if (attributesKey != null) {
         attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(attributesKey);
@@ -185,15 +199,15 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
       rightCellRendererComponent = rightRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
       add(rightCellRendererComponent, BorderLayout.EAST);
       spacer = new JPanel();
-      spacer.setBorder(JBUI.Borders.empty(0, 2, 0, 2));
+      spacer.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
       add(spacer, BorderLayout.CENTER);
       myRightComponentWidth = rightCellRendererComponent.getPreferredSize().width;
       myRightComponentWidth += spacer.getPreferredSize().width;
     }
 
-    ListCellRenderer leftRenderer = new LeftRenderer(null, myMatcher);
+    ListCellRenderer leftRenderer = new LeftRenderer(null, MatcherHolder.getAssociatedMatcher(list));
     final Component leftCellRendererComponent = leftRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-    add(leftCellRendererComponent, BorderLayout.WEST);
+    add(leftCellRendererComponent, LEFT);
     final Color bg = isSelected ? UIUtil.getListSelectionBackground() : leftCellRendererComponent.getBackground();
     setBackground(bg);
     if (rightCellRendererComponent != null) {
@@ -231,6 +245,11 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
   @Nullable
   protected abstract String getContainerText(T element, final String name);
 
+  @Nullable
+  protected String getContainerTextForLeftComponent(T element, final String name) {
+    return getContainerText(element, name);
+  }
+
   @Iconable.IconFlags
   protected abstract int getIconFlags();
 
@@ -239,19 +258,17 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
   }
 
   public Comparator<T> getComparator() {
-    return new Comparator<T>() {
-      @Override
-      public int compare(T o1, T o2) {
-        return getComparingObject(o1).compareTo(getComparingObject(o2));
-      }
-    };
+    //noinspection unchecked
+    return Comparator.comparing(this::getComparingObject);
   }
 
   @NotNull
   public Comparable getComparingObject(T element) {
-    String elementText = getElementText(element);
-    String containerText = getContainerText(element, elementText);
-    return containerText != null ? elementText + " " + containerText : elementText;
+    return ReadAction.compute(() -> {
+      String elementText = getElementText(element);
+      String containerText = getContainerText(element, elementText);
+      return containerText != null ? elementText + " " + containerText : elementText;
+    });
   }
 
   public void installSpeedSearch(PopupChooserBuilder builder) {
@@ -259,19 +276,16 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
   }
 
   public void installSpeedSearch(PopupChooserBuilder builder, final boolean includeContainerText) {
-    builder.setFilteringEnabled(new Function<Object, String>() {
-      @Override
-      public String fun(Object o) {
-        if (o instanceof PsiElement) {
-          final String elementText = getElementText((T)o);
-          if (includeContainerText) {
-            return elementText + " " + getContainerText((T)o, elementText);
-          }
-          return elementText;
+    builder.setFilteringEnabled(o -> {
+      if (o instanceof PsiElement) {
+        final String elementText = getElementText((T)o);
+        if (includeContainerText) {
+          return elementText + " " + getContainerText((T)o, elementText);
         }
-        else {
-          return o.toString();
-        }
+        return elementText;
+      }
+      else {
+        return o.toString();
       }
     });
   }

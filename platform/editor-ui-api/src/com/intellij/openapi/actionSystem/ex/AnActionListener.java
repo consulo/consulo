@@ -25,28 +25,35 @@
 package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  * @author Kirill Kalishev
  * @author Konstantin Bulenkov
  */
 public interface AnActionListener {
-  void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event);
+  default void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+  }
 
-  void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event);
+  default void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+  }
 
-  void beforeEditorTyping(char c, DataContext dataContext);
+  default void beforeEditorTyping(char c, DataContext dataContext) {
+  }
 
+  @Deprecated
   class Adapter implements AnActionListener {
     @Override
-    public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {}
+    public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+    }
 
     @Override
-    public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {}
+    public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+    }
 
     @Override
-    public void beforeEditorTyping(char c, DataContext dataContext) {}
+    public void beforeEditorTyping(char c, DataContext dataContext) {
+    }
   }
 }

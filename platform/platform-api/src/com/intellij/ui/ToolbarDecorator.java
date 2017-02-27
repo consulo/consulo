@@ -190,6 +190,15 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     return setToolbarBorder(new CustomLineBorder(top, left, bottom, right));
   }
 
+  public ToolbarDecorator addExtraActions(AnActionButton... actions) {
+    for (AnActionButton action : actions) {
+      if (action != null) {
+        addExtraAction(action);
+      }
+    }
+    return this;
+  }
+
   public ToolbarDecorator addExtraAction(AnActionButton action) {
     myExtraActions.add(action);
     return this;

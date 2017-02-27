@@ -65,6 +65,7 @@ public abstract class DumbService {
 
   /**
    * Executes the runnable immediately if not in dumb mode, or on AWT Event Dispatch thread when the dumb mode ends.
+   *
    * @param runnable runnable to run
    */
   public abstract void runWhenSmart(@NotNull Runnable runnable);
@@ -151,6 +152,7 @@ public abstract class DumbService {
 
   /**
    * Invoke the runnable later on EventDispatchThread AND when IDEA isn't in dumb mode
+   *
    * @param runnable runnable
    */
   public abstract void smartInvokeLater(@NotNull Runnable runnable);
@@ -229,16 +231,16 @@ public abstract class DumbService {
 
   /**
    * Enables or disables alternative resolve strategies for the current thread.<p/>
-   *
+   * <p>
    * Normally reference resolution uses index, and hence is not available in dumb mode. In some cases, alternative ways
    * of performing resolve are available, although much slower. It's impractical to always use these ways because it'll
    * lead to overloaded CPU (especially given there's also indexing in progress). But for some explicit user actions
    * (e.g. explicit Goto Declaration) turning these slower methods is beneficial.<p/>
-   *
+   * <p>
    * NOTE: even with alternative resolution enabled, methods like resolve(), findClass() etc may still throw
    * {@link IndexNotReadyException}. So alternative resolve is not a panacea, it might help provide navigation in some cases
    * but not in all.<p/>
-   *
+   * <p>
    * A typical usage would involve try-finally, where the alternative resolution is first enabled, then an action is performed,
    * and then alternative resolution is turned off in the finally block.
    */
@@ -246,6 +248,7 @@ public abstract class DumbService {
 
   /**
    * Invokes the given runnable with alternative resolve set to true.
+   *
    * @see #setAlternativeResolveEnabled(boolean)
    */
   public void withAlternativeResolveEnabled(@NotNull Runnable runnable) {
@@ -260,7 +263,6 @@ public abstract class DumbService {
 
   /**
    * @return whether alternative resolution is enabled for the current thread.
-   *
    * @see #setAlternativeResolveEnabled(boolean)
    */
   public abstract boolean isAlternativeResolveEnabled();
@@ -269,11 +271,11 @@ public abstract class DumbService {
    * By default, dumb mode tasks (including indexing) are allowed in non-modal state only. The reason is that
    * when some code shows a dialog, it probably does't expect that after the dialog is closed the dumb mode will be on.
    * Therefore any dumb mode started within a dialog is considered a mistake, performed under modal progress and reported as an exception.<p/>
-   *
+   * <p>
    * If the dialog (e.g. Project Structure) starting background dumb mode is an expected situation, the dumb mode should be started inside the runnable
    * passed to this method. This will suppress the exception and allow either modal or background indexing. Note that this will only affect the invocation time
    * modality state, so showing other dialogs from within the runnable and starting dumb mode from them would still result in an assertion failure.<p/>
-   *
+   * <p>
    * If this exception occurs inside invokeLater call which happens to run when a modal dialog is shown, the correct fix is supplying an explicit modality state
    * in {@link com.intellij.openapi.application.Application#invokeLater(Runnable, ModalityState)}.
    */
@@ -285,17 +287,17 @@ public abstract class DumbService {
    * @see #DUMB_MODE
    */
   public interface DumbModeListener {
+    /**
+     * The event arrives on EDT
+     */
+    default void enteredDumbMode() {
+    }
 
     /**
      * The event arrives on EDT
      */
-    void enteredDumbMode();
-
-    /**
-     * The event arrives on EDT
-     */
-    void exitDumbMode();
-
+    default void exitDumbMode() {
+    }
   }
 
 }

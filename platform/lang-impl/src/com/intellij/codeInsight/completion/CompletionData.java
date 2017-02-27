@@ -28,7 +28,6 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.ObjectPattern;
 import com.intellij.psi.*;
-import com.intellij.psi.filters.ContextGetter;
 import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.filters.TrueFilter;
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
@@ -352,15 +351,6 @@ public class CompletionData {
                              final CompletionVariant variant, final Object comp, final TailType tailType) {
     if (comp instanceof String) {
       addKeyword(set, tailType, comp, matcher, file, variant);
-    }
-    else {
-      final CompletionContext context = position.getUserData(CompletionContext.COMPLETION_CONTEXT_KEY);
-      if (comp instanceof ContextGetter) {
-        final Object[] elements = ((ContextGetter)comp).get(position, context);
-        for (Object element : elements) {
-          addLookupItem(set, tailType, element, file, variant);
-        }
-      }
     }
   }
 

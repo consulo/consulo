@@ -48,7 +48,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   private Icon myIcon;
   protected final Presentation myPresentation;
   protected final AnAction myAction;
-  private final String myPlace;
+  protected final String myPlace;
   private boolean myMouseDown;
   private boolean myRollover;
   private static boolean ourGlobalMouseDown;

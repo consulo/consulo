@@ -102,6 +102,7 @@ import com.intellij.ui.popup.PopupPositionManager;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.Matcher;
+import com.intellij.util.text.MatcherHolder;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.StatusText;
@@ -1076,10 +1077,10 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
                  && myProject != null
                  && ((((VirtualFile)value).isDirectory() && (file = PsiManager.getInstance(myProject).findDirectory((VirtualFile)value)) != null )
                      || (file = PsiManager.getInstance(myProject).findFile((VirtualFile)value)) != null)) {
-        myFileRenderer.setPatternMatcher(matcher);
+        MatcherHolder.associateMatcher(myFileRenderer, matcher);
         cmp = myFileRenderer.getListCellRendererComponent(list, file, index, isSelected, cellHasFocus);
       } else if (value instanceof PsiElement) {
-        myFileRenderer.setPatternMatcher(matcher);
+        MatcherHolder.associateMatcher(myFileRenderer, matcher);
         cmp = myFileRenderer.getListCellRendererComponent(list, value, index, isSelected, isSelected);
       } else {
         cmp = super.getListCellRendererComponent(list, value, index, isSelected, isSelected);

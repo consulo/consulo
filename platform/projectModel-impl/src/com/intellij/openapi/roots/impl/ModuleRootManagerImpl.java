@@ -45,15 +45,14 @@ import java.util.Map;
 import java.util.Set;
 
 public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleComponent {
-  public static final Logger LOGGER = Logger.getInstance(ModuleRootManagerImpl.class);
+  private static final Logger LOGGER = Logger.getInstance(ModuleRootManagerImpl.class);
 
   private final Module myModule;
   private RootModelImpl myRootModel;
   private boolean myIsDisposed;
   private boolean isModuleAdded;
   private final OrderRootsCache myOrderRootsCache;
-  private final Map<RootModelImpl, Throwable> myModelCreations = new THashMap<RootModelImpl, Throwable>();
-
+  private final Map<RootModelImpl, Throwable> myModelCreations = new THashMap<>();
 
   public ModuleRootManagerImpl(Module module) {
     myModule = module;
@@ -399,12 +398,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
       final RootModelImpl newModel = new RootModelImpl(element, indicator, this, throwEvent);
 
       if (throwEvent) {
-        makeRootsChange(new Runnable() {
-          @Override
-          public void run() {
-            newModel.doCommitAndDispose(false);
-          }
-        });
+        makeRootsChange(() -> newModel.doCommitAndDispose(false));
       }
       else {
         myRootModel = newModel;

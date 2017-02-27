@@ -181,7 +181,7 @@
       </module>
       <module name="api/core-api" dirurl="file://$PROJECT_DIR$/platform/core-api" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
             <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
@@ -199,7 +199,7 @@
       </module>
       <module name="impl/core-impl" dirurl="file://$PROJECT_DIR$/platform/core-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
@@ -733,7 +733,7 @@
       </module>
       <module name="impl/util" dirurl="file://$PROJECT_DIR$/platform/util" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-name="1.8" language-level-name="JDK_1_6" bytecode-version="1.6" />
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
             <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
@@ -760,7 +760,7 @@
       </module>
       <module name="impl/util-rt" dirurl="file://$PROJECT_DIR$/platform/util-rt" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-name="1.8" language-level-name="JDK_1_6" bytecode-version="1.6" />
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
