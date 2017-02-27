@@ -78,7 +78,10 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     final File file = new File(filePath);
 
     final File dirStore = file.isDirectory() ? new File(file, Project.DIRECTORY_STORE_FOLDER) : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
-    stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, new File(dirStore, "misc.xml").getPath());
+    String defaultFilePath = new File(dirStore, "misc.xml").getPath();
+    // deprecated
+    stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, defaultFilePath);
+    stateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, defaultFilePath);
 
     final File ws = new File(dirStore, "workspace.xml");
     stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, ws.getPath());
@@ -111,7 +114,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     }
 
     //we are not yet initialized completely ("open directory", etc)
-    StateStorage storage = getStateStorageManager().getStateStorage(StoragePathMacros.PROJECT_FILE, RoamingType.PER_USER);
+    StateStorage storage = getStateStorageManager().getStateStorage(StoragePathMacros.DEFAULT_FILE, RoamingType.PER_USER);
     if (!(storage instanceof FileBasedStorage)) {
       return null;
     }
@@ -176,13 +179,13 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   @Override
   public VirtualFile getProjectFile() {
-    return myProject.isDefault() ? null : ((FileBasedStorage)getProjectFileStorage()).getVirtualFile();
+    return myProject.isDefault() ? null : ((FileBasedStorage)getDefaultFileStorage()).getVirtualFile();
   }
 
   @NotNull
-  private XmlElementStorage getProjectFileStorage() {
+  private XmlElementStorage getDefaultFileStorage() {
     // XmlElementStorage if default project, otherwise FileBasedStorage
-    XmlElementStorage storage = (XmlElementStorage)getStateStorageManager().getStateStorage(StoragePathMacros.PROJECT_FILE, RoamingType.PER_USER);
+    XmlElementStorage storage = (XmlElementStorage)getStateStorageManager().getStateStorage(StoragePathMacros.DEFAULT_FILE, RoamingType.PER_USER);
     assert storage != null;
     return storage;
   }
@@ -201,20 +204,20 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     Element element = ((DefaultProjectStoreImpl)defaultProject.getStateStore()).getStateCopy();
     if (element != null) {
-      getProjectFileStorage().setDefaultState(element);
+      getDefaultFileStorage().setDefaultState(element);
     }
   }
 
   @NotNull
   @Override
   public String getProjectFilePath() {
-    return myProject.isDefault() ? "" : ((FileBasedStorage)getProjectFileStorage()).getFilePath();
+    return myProject.isDefault() ? "" : ((FileBasedStorage)getDefaultFileStorage()).getFilePath();
   }
 
   @NotNull
   @Override
   protected XmlElementStorage getMainStorage() {
-    return getProjectFileStorage();
+    return getDefaultFileStorage();
   }
 
   @NotNull

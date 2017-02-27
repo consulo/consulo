@@ -89,7 +89,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     String value = storage.value();
     if (value.isEmpty()) {
       LOG.error("Storage.value() is empty");
-      value = "other.xml";
+      return StoragePathMacros.DEFAULT_FILE;
     }
     return getConfigurationMacro(directorySpec) + "/" + value + (directorySpec ? "/" : "");
   }

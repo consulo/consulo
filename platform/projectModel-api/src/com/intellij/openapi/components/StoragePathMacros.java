@@ -72,6 +72,13 @@ public class StoragePathMacros {
   @NotNull
   public static final String WORKSPACE_FILE = "$WORKSPACE_FILE$";
 
+  /**
+   *  Default file for storage. For application it's 'other.xml', for project it's 'misc.xml'
+   */
+  @NonNls
+  @NotNull
+  public static final String DEFAULT_FILE = "$DEFAULT_FILE$";
+
   @NonNls
   @NotNull
   @Deprecated

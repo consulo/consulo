@@ -19,7 +19,6 @@ import com.intellij.diagnostic.PluginException;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
-import com.intellij.openapi.components.impl.stores.DirectoryStorageData;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMExternalizable;
@@ -35,8 +34,6 @@ import java.util.Map;
  * @since 27-Feb-17
  */
 public class StateComponentInfo<T> {
-  private static final String DEFAULT_APPLICATION_STORAGE_SPEC = StoragePathMacros.APP_CONFIG + "/other" + DirectoryStorageData.DEFAULT_EXT;
-
   @NonNls
   private static final String OPTION_WORKSPACE = "workspace";
 
@@ -59,14 +56,14 @@ public class StateComponentInfo<T> {
         String name = ComponentManagerImpl.getComponentName(o);
         String file;
         if (project == null) {
-          file = DEFAULT_APPLICATION_STORAGE_SPEC;
+          file = StoragePathMacros.DEFAULT_FILE;
         }
         else {
           final ComponentConfig config = ((ComponentManagerImpl)project).getConfig(o.getClass());
           assert config != null : "Couldn't find old storage for " + o.getClass().getName();
 
           final boolean workspace = isWorkspace(config.options);
-          file = workspace ? StoragePathMacros.WORKSPACE_FILE : StoragePathMacros.PROJECT_FILE;
+          file = workspace ? StoragePathMacros.WORKSPACE_FILE : StoragePathMacros.DEFAULT_FILE;
         }
 
         state = new SimpleState(name, file, type);

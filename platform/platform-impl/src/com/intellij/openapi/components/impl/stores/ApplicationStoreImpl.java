@@ -45,46 +45,47 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   @SuppressWarnings({"UnusedDeclaration"})
   public ApplicationStoreImpl(final ApplicationEx2 application, PathMacroManager pathMacroManager) {
     myApplication = application;
-    myStateStorageManager = new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application.getPicoContainer()) {
-      private boolean myConfigDirectoryRefreshed;
+    myStateStorageManager =
+            new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application.getPicoContainer()) {
+              private boolean myConfigDirectoryRefreshed;
 
-      @NotNull
-      @Override
-      protected String getConfigurationMacro(boolean directorySpec) {
-        return directorySpec ? StoragePathMacros.ROOT_CONFIG : StoragePathMacros.APP_CONFIG;
-      }
+              @NotNull
+              @Override
+              protected String getConfigurationMacro(boolean directorySpec) {
+                return directorySpec ? StoragePathMacros.ROOT_CONFIG : StoragePathMacros.APP_CONFIG;
+              }
 
-      @Override
-      protected StorageData createStorageData(@NotNull String fileSpec, @NotNull String filePath) {
-        return new StorageData(ROOT_ELEMENT_NAME);
-      }
+              @Override
+              protected StorageData createStorageData(@NotNull String fileSpec, @NotNull String filePath) {
+                return new StorageData(ROOT_ELEMENT_NAME);
+              }
 
-      @Override
-      protected TrackingPathMacroSubstitutor getMacroSubstitutor(@NotNull final String fileSpec) {
-        if (fileSpec.equals(StoragePathMacros.APP_CONFIG + '/' + PathMacrosImpl.EXT_FILE_NAME + DirectoryStorageData.DEFAULT_EXT)) return null;
-        return super.getMacroSubstitutor(fileSpec);
-      }
+              @Override
+              protected TrackingPathMacroSubstitutor getMacroSubstitutor(@NotNull final String fileSpec) {
+                if (fileSpec.equals(StoragePathMacros.APP_CONFIG + '/' + PathMacrosImpl.EXT_FILE_NAME + DirectoryStorageData.DEFAULT_EXT)) return null;
+                return super.getMacroSubstitutor(fileSpec);
+              }
 
-      @Override
-      protected boolean isUseXmlProlog() {
-        return false;
-      }
+              @Override
+              protected boolean isUseXmlProlog() {
+                return false;
+              }
 
-      @Override
-      protected void beforeFileBasedStorageCreate() {
-        if (!myConfigDirectoryRefreshed && (application.isUnitTestMode() || application.isDispatchThread())) {
-          try {
-            VirtualFile configDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(getConfigPath());
-            if (configDir != null) {
-              VfsUtil.markDirtyAndRefresh(false, true, true, configDir);
-            }
-          }
-          finally {
-            myConfigDirectoryRefreshed = true;
-          }
-        }
-      }
-    };
+              @Override
+              protected void beforeFileBasedStorageCreate() {
+                if (!myConfigDirectoryRefreshed && (application.isUnitTestMode() || application.isDispatchThread())) {
+                  try {
+                    VirtualFile configDir = LocalFileSystem.getInstance().refreshAndFindFileByPath(getConfigPath());
+                    if (configDir != null) {
+                      VfsUtil.markDirtyAndRefresh(false, true, true, configDir);
+                    }
+                  }
+                  finally {
+                    myConfigDirectoryRefreshed = true;
+                  }
+                }
+              }
+            };
   }
 
   @Override
@@ -98,6 +99,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   @Override
   public void setOptionsPath(@NotNull String path) {
     myStateStorageManager.addMacro(StoragePathMacros.APP_CONFIG, path);
+    myStateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, path + "/other" + DirectoryStorageData.DEFAULT_EXT);
   }
 
   @Override
