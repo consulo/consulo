@@ -17,7 +17,10 @@
 package com.intellij.psi.impl.source;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.fileTypes.*;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
+import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
@@ -32,8 +35,12 @@ public class DummyHolder extends PsiFileImpl {
   private final CharTable myTable;
   private final Boolean myExplicitlyValid;
   private final Language myLanguage;
-  private volatile FileElement myFileElement;
-  @SuppressWarnings("EmptyClass") private static class DummyHolderTreeLock {}
+  private volatile FileElement myFileElement = null;
+
+  @SuppressWarnings("EmptyClass")
+  private static class DummyHolderTreeLock {
+  }
+
   private final DummyHolderTreeLock myTreeElementLock = new DummyHolderTreeLock();
 
   public DummyHolder(@NotNull PsiManager manager, TreeElement contentElement, PsiElement context) {
@@ -62,7 +69,12 @@ public class DummyHolder extends PsiFileImpl {
     return contextLanguage;
   }
 
-  public DummyHolder(@NotNull PsiManager manager, @Nullable TreeElement contentElement, @Nullable PsiElement context, @Nullable CharTable table, @Nullable Boolean validity, Language language) {
+  public DummyHolder(@NotNull PsiManager manager,
+                     @Nullable TreeElement contentElement,
+                     @Nullable PsiElement context,
+                     @Nullable CharTable table,
+                     @Nullable Boolean validity,
+                     Language language) {
     super(TokenType.DUMMY_HOLDER, TokenType.DUMMY_HOLDER, new DummyHolderViewProvider(manager));
     myLanguage = language;
     ((DummyHolderViewProvider)getViewProvider()).setDummyHolder(this);
@@ -126,7 +138,6 @@ public class DummyHolder extends PsiFileImpl {
   }
 
   @Override
-  @NotNull
   public FileElement getTreeElement() {
     FileElement fileElement = myFileElement;
     if (fileElement != null) return fileElement;
@@ -172,10 +183,5 @@ public class DummyHolder extends PsiFileImpl {
   public FileViewProvider getViewProvider() {
     if(myViewProvider != null) return myViewProvider;
     return super.getViewProvider();
-  }
-
-  @Override
-  public boolean useStrongRefs() {
-    return true;
   }
 }
