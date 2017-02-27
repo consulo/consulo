@@ -470,12 +470,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
               if (macros2invalidate.containsAll(notification.getMacros())) notification.expire();
             }
 
-            ApplicationManager.getApplication().runWriteAction(new Runnable() {
-              @Override
-              public void run() {
-                stateStore.reinitComponents(components, true);
-              }
-            });
+            ApplicationManager.getApplication().runWriteAction(() -> stateStore.reinitComponents(components, true));
           }
           else {
             if (Messages.showYesNoDialog(this, "Component could not be reloaded. Reload project?", "Configuration Changed", Messages.getQuestionIcon()) ==

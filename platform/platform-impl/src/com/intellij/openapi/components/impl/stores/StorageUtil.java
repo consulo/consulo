@@ -15,8 +15,6 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.NotificationsManager;
 import com.intellij.openapi.application.AccessToken;
@@ -51,7 +49,6 @@ import org.jdom.Parent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.event.HyperlinkEvent;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.LinkedHashSet;
@@ -98,12 +95,7 @@ public class StorageUtil {
                            "Some of the files describing the current project settings contain unknown path variables " +
                            "and " + productName + " cannot restore those paths.";
           new UnknownMacroNotification("Load Error", "Load error: undefined path variables", content, NotificationType.ERROR,
-                                       new NotificationListener() {
-                                         @Override
-                                         public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
-                                           ((ProjectEx)project).checkUnknownMacros(true);
-                                         }
-                                       }, macros).notify(project);
+                                       (notification, event) -> ((ProjectEx)project).checkUnknownMacros(true), macros).notify(project);
         }
       }
     });
