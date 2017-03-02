@@ -1064,7 +1064,7 @@
       </module>
       <module name="impl/external-storage-impl" dirurl="file://$PROJECT_DIR$/impl/external-storage-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-name="1.8" language-level-name="JDK_1_8" bytecode-version="1.8" />
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>

@@ -20,6 +20,8 @@
     <group id="VcsGeneral.KeymapGroup"/>
     <!-- grouping for Settings -> Keymap -> Version Control Systems -->
 
+    <action id="Login" class="consulo.auth.action.LoginAction" />
+
     <group id="Diff.KeymapGroup" text="Diff">
       <action id="Diff.ShowDiff" class="com.intellij.openapi.actionSystem.EmptyAction" icon="AllIcons.Actions.Diff"/>
       <!-- CommonShortcuts.getDiff() -->
@@ -540,6 +542,7 @@
       <separator/>
       <reference ref="HelpTopics"/>
       <reference ref="SearchEverywhere"/>
+      <reference ref="Login" />
     </group>
 
     <group id="NavBarVcsGroup"/>
@@ -1405,6 +1408,7 @@
       <reference id="NavBarToolBarOthers"/>
       <separator/>
       <reference ref="SearchEverywhere"/>
+      <reference ref="Login" />
     </group>
 
     <group id="Bookmarks">

@@ -85,6 +85,7 @@ public class AllIcons {
     public static final SwingImageRef Install = IconLoader.getIcon("/actions/install.png"); // 16x16
     public static final SwingImageRef IntentionBulb = IconLoader.getIcon("/actions/intentionBulb.png"); // 16x16
     public static final SwingImageRef Left = IconLoader.getIcon("/actions/left.png"); // 16x16
+    public static final SwingImageRef LoginAvator = IconLoader.getIcon("/actions/loginAvatar.png"); // 16x16
     public static final SwingImageRef Lightning = IconLoader.getIcon("/actions/lightning.png"); // 16x16
     public static final SwingImageRef Menu_cut = IconLoader.getIcon("/actions/menu-cut.png"); // 16x16
     public static final SwingImageRef Menu_find = IconLoader.getIcon("/actions/menu-find.png"); // 16x16
