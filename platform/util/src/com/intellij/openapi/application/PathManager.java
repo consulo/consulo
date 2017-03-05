@@ -21,6 +21,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
@@ -93,8 +94,14 @@ public class PathManager {
     return ourHomePath;
   }
 
+  /**
+   * @return external platform directory for mac, or platform directory inside application for other oses
+   */
   @NotNull
-  public static File getPlatformDirectory() {
+  public static File getExternalPlatformDirectory() {
+    if (SystemInfo.isMac) {
+      return new File(SystemProperties.getUserHome(), "Library/Application Support/Consulo Platform");
+    }
     return new File(getDistributionDirectory(), PLATFORM_FOLDER);
   }
 
