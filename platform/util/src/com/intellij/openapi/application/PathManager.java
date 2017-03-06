@@ -26,6 +26,7 @@ import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
 import consulo.application.DefaultPaths;
+import consulo.util.SandboxUtil;
 import gnu.trove.THashSet;
 import org.apache.log4j.Appender;
 import org.apache.oro.text.regex.PatternMatcher;
@@ -99,7 +100,7 @@ public class PathManager {
    */
   @NotNull
   public static File getExternalPlatformDirectory() {
-    if (SystemInfo.isMac) {
+    if (SystemInfo.isMac && !SandboxUtil.isInsideSandbox()) {
       return new File(SystemProperties.getUserHome(), "Library/Application Support/Consulo Platform");
     }
     return new File(getDistributionDirectory(), PLATFORM_FOLDER);
