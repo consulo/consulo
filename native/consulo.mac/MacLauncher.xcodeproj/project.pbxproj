@@ -12,7 +12,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		50E17735155444B900E97451 /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		50E17735155444B900E97451 /* consulo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = consulo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50E17737155444B900E97451 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		50E1773F155444B900E97451 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0B58A123544A15DA59B13DC /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -48,7 +48,7 @@
 		C0B58A123544A15DA59B13CB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				50E17735155444B900E97451 /* Launcher.app */,
+				50E17735155444B900E97451 /* consulo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -79,7 +79,7 @@
 			);
 			name = consulo;
 			productName = Launcher;
-			productReference = 50E17735155444B900E97451 /* Launcher.app */;
+			productReference = 50E17735155444B900E97451 /* consulo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

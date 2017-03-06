@@ -3,45 +3,65 @@
 typedef int (launchConsulo)(int argc, char* argv[], NSString* workingDirectory, NSString* propertiesFile, NSString* vmOptionsFile);
 
 void error(NSString* message) {
-    NSAlert *alert = [[NSAlert alloc] init];
+    NSAlert* alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:@"OK"];
     [alert setMessageText:@"Consulo"];
-    [alert setInformativeText:message];
+    [alert setInformativeText:[NSString stringWithFormat:@"%@.\nVisit 'https://consulo.io/trouble.html' for identify problem", message]];
     [alert setAlertStyle:NSCriticalAlertStyle];
-    [alert runModal];
+    [alert addButtonWithTitle:@"Visit consulo.io"];
+    if ([alert runModal] == NSAlertSecondButtonReturn) {
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://consulo.io/throuble.html"]];
+    }
     [alert release];
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     NSFileManager* fileManager = [NSFileManager defaultManager];
 
     NSString* appPath = [[NSBundle mainBundle] bundlePath];
 
     NSString* platformDir = [NSString stringWithFormat:@"%@/Contents/%@", appPath, @"platform"];
     if (![fileManager fileExistsAtPath:platformDir]) {
-        error(@"'platform' directory is not exists");
+        error(@"'platform' directory is not found");
         return 1;
     }
 
-    NSArray *dirFiles = [fileManager contentsOfDirectoryAtPath:platformDir error:nil];
+    NSMutableArray* rootBuilds = [NSMutableArray arrayWithCapacity:1];
+    NSArray* dirFiles = [fileManager contentsOfDirectoryAtPath:platformDir error:nil];
 
-    NSMutableArray* builds = [NSMutableArray arrayWithCapacity:dirFiles.count];
+    // collect build from .app directory
+    NSMutableArray* builds = [NSMutableArray arrayWithCapacity:dirFiles.count + 1];
     for (NSString* dir in dirFiles) {
         if ([dir hasPrefix:@"build"]) {
             [builds addObject:dir];
+            [rootBuilds addObject:dir];
         }
     }
 
-    if(builds.count == 0) {
+    // collect builds from app support
+    NSString* appSupportDir = [NSString stringWithFormat:@"%@/%@", NSHomeDirectory(), @"Library/Application Support/Consulo Platform"];
+    if ([fileManager fileExistsAtPath:appSupportDir]) {
+        for (NSString* dir in [fileManager contentsOfDirectoryAtPath:appSupportDir error:nil]) {
+            if ([dir hasPrefix:@"build"]) {
+                [builds addObject:dir];
+            }
+        }
+    }
+
+    if (builds.count == 0) {
         error(@"No build for run");
         return 1;
     }
 
-    NSArray* sortedArray = [builds sortedArrayUsingComparator:^(id a, id b) { return [a compare:b options:NSNumericSearch]; }];
+    NSArray* sortedArray = [builds sortedArrayUsingComparator:^(id a, id b) {
+        return [a compare:b options:NSNumericSearch];
+    }];
 
-    NSString* lastBuildNotAbsolute = sortedArray[sortedArray.count -1];
+    NSString* lastBuildNotAbsolute = sortedArray[sortedArray.count - 1];
 
-    NSString* lastBuild = [NSString stringWithFormat:@"%@/%@", platformDir, lastBuildNotAbsolute];
+    BOOL isBootBuild = [rootBuilds containsObject:lastBuildNotAbsolute];
+
+    NSString* selectedBuild = [NSString stringWithFormat:@"%@/%@", isBootBuild ? platformDir : appSupportDir, lastBuildNotAbsolute];
 
     NSString* propertiesFile = [NSString stringWithFormat:@"%@/Contents/consulo.properties", appPath];
 
@@ -57,7 +77,7 @@ int main(int argc, char *argv[]) {
         return 2;
     }
 
-    void *libHandle = dlopen([[NSString stringWithFormat:@"%@/bin/libconsulo.dylib", lastBuild] UTF8String], RTLD_NOW + RTLD_GLOBAL);
+    void* libHandle = dlopen([[NSString stringWithFormat:@"%@/bin/libconsulo.dylib", selectedBuild] UTF8String], RTLD_NOW + RTLD_GLOBAL);
     if (libHandle) {
         launchConsulo* main = dlsym(libHandle, "launchConsulo");
         if (!main) {
@@ -65,7 +85,7 @@ int main(int argc, char *argv[]) {
             return 3;
         }
 
-        return main(argc,argv, lastBuild, propertiesFile, vmOptionsFile);
+        return main(argc, argv, selectedBuild, propertiesFile, vmOptionsFile);
     }
     else {
         error(@"Failed load launcher library");

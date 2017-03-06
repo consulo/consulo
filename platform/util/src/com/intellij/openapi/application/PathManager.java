@@ -20,10 +20,12 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
 import consulo.application.DefaultPaths;
+import consulo.util.SandboxUtil;
 import gnu.trove.THashSet;
 import org.apache.log4j.Appender;
 import org.apache.oro.text.regex.PatternMatcher;
@@ -92,8 +94,14 @@ public class PathManager {
     return ourHomePath;
   }
 
+  /**
+   * @return external platform directory for mac, or platform directory inside application for other oses
+   */
   @NotNull
-  public static File getPlatformDirectory() {
+  public static File getExternalPlatformDirectory() {
+    if (SystemInfo.isMac && !SandboxUtil.isInsideSandbox()) {
+      return new File(SystemProperties.getUserHome(), "Library/Application Support/Consulo Platform");
+    }
     return new File(getDistributionDirectory(), PLATFORM_FOLDER);
   }
 

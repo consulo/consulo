@@ -132,7 +132,7 @@ public class PluginDownloader {
 
       String prefix = SystemInfo.isMac ? "Consulo.app/Contents/platform/" : "Consulo/platform/";
 
-      File platformDirectory = PathManager.getPlatformDirectory();
+      File platformDirectory = PathManager.getExternalPlatformDirectory();
 
       try (TarArchiveInputStream ais = new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(myFile)))) {
         TarArchiveEntry tempEntry;
@@ -163,10 +163,13 @@ public class PluginDownloader {
         }
       }
 
-      // at start - delete old version, after restart
+      // at start - delete old version, after restart. On mac - we can't delete boot build
       String buildNumber = ApplicationInfo.getInstance().getBuild().asString();
-      StartupActionScriptManager.ActionCommand deleteTemp = new StartupActionScriptManager.DeleteCommand(new File(platformDirectory, "build" + buildNumber));
-      StartupActionScriptManager.addActionCommand(deleteTemp);
+      File oldBuild = new File(platformDirectory, "build" + buildNumber);
+      if(oldBuild.exists()) {
+        StartupActionScriptManager.ActionCommand deleteTemp = new StartupActionScriptManager.DeleteCommand(oldBuild);
+        StartupActionScriptManager.addActionCommand(deleteTemp);
+      }
 
       FileUtil.delete(myFile);
 
