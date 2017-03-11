@@ -27,6 +27,7 @@ import java.util.Locale;
 public enum WebServiceApi {
   MAIN(null, "https://consulo.io"),
   ERROR_REPORTER_API("Error Reporter", "https://hub.consulo.io/api/errorReporter/"),
+  ERROR_REPORT(null, "https://hub.consulo.io/errorReport"),
   STATISTICS_API(null, "https://hub.consulo.io/api/statistics/"),
   SYNCHRONIZE_API("Synchronize", "https://hub.consulo.io/api/synchronize/"),
   REPOSITORY_API(null, "https://hub.consulo.io/api/repository/");
