@@ -17,7 +17,6 @@ package com.intellij.diff.actions;
 
 import com.intellij.diff.DiffRequestFactory;
 import com.intellij.diff.requests.DiffRequest;
-import consulo.fileTypes.ArchiveFileType;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -27,6 +26,8 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.fileTypes.ArchiveFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +37,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
   public static final String LAST_USED_FILE_KEY = "two.files.diff.last.used.file";
   public static final String LAST_USED_FOLDER_KEY = "two.files.diff.last.used.folder";
 
+  @RequiredDispatchThread
   @Override
   public void update(@NotNull AnActionEvent e) {
     super.update(e);
@@ -70,6 +72,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
     e.getPresentation().setText(text);
   }
 
+  @Override
   protected boolean isAvailable(@NotNull AnActionEvent e) {
     DiffRequest request = e.getData(DIFF_REQUEST);
     if (request != null) {
@@ -82,10 +85,10 @@ public class CompareFilesAction extends BaseShowDiffAction {
     }
 
     if (files.length == 1) {
-      return files[0].isValid();
+      return hasContent(files[0]);
     }
     else if (files.length == 2) {
-      return files[0].isValid() && files[1].isValid();
+      return hasContent(files[0]) && hasContent(files[1]);
     }
     else {
       return false;
@@ -105,7 +108,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
     if (data.length == 1) {
       VirtualFile otherFile = getOtherFile(project, data[0]);
       if (otherFile == null) return null;
-      if (!data[0].isValid()) return null;
+      if (!hasContent(data[0])) return null;
       return DiffRequestFactory.getInstance().createFromFiles(project, data[0], otherFile);
     }
     else {
@@ -120,7 +123,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
 
     Type type = getType(file);
     if (type == Type.DIRECTORY || type == Type.ARCHIVE) {
-      descriptor = new FileChooserDescriptor(false, true, true, false, false, false);
+      descriptor = new FileChooserDescriptor(false, true, true, true, true, false);
       key = LAST_USED_FOLDER_KEY;
     }
     else {
