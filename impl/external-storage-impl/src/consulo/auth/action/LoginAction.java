@@ -18,10 +18,16 @@ package consulo.auth.action;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.RightAlignedToolbarAction;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.util.ObjectUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.auth.ServiceAuthConfiguration;
+import consulo.auth.ui.ServiceAuthDialog;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -34,7 +40,28 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
+    ServiceAuthConfiguration configuration = ServiceAuthConfiguration.getInstance();
 
+    Presentation presentation = e.getPresentation();
+
+    String email = configuration.getEmail();
+    if (email == null) {
+      presentation.setText("Logged as anonymous");
+      presentation.setIcon(AllIcons.Actions.LoginAvator);
+    }
+    else {
+      presentation.setText("Logged as '" + email + "'");
+
+      Icon userIcon = configuration.getUserIcon();
+      presentation.setIcon(ObjectUtil.notNull(userIcon, AllIcons.Actions.LoginAvator));
+    }
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public void actionPerformed(@NotNull AnActionEvent e) {
+    ServiceAuthDialog dialog = new ServiceAuthDialog();
+    dialog.show();
   }
 }

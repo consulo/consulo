@@ -1339,6 +1339,8 @@
     <applicationService serviceInterface="consulo.ide.webService.WebServicesConfiguration"
                         serviceImplementation="consulo.ide.webService.WebServicesConfiguration"/>
 
+    <applicationService serviceImplementation="consulo.auth.ServiceAuthConfiguration"/>
+
     <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.startup.StartupManager"
@@ -2442,7 +2444,7 @@
              order="after openedInEditor"/>
 
 
-    <iconDescriptorUpdater implementation="consulo.ide.impl.PsiDirectoryIconDescriptorUpdater" id="directory" />
+    <iconDescriptorUpdater implementation="consulo.ide.impl.PsiDirectoryIconDescriptorUpdater" id="directory"/>
     <iconDescriptorUpdater implementation="consulo.ide.impl.PsiFileIconDescriptorUpdater" id="default" order="last"/>
 
     <lang.ast.lazyFactory implementation="consulo.psi.tree.impl.DefaultASTLazyFactory" order="last"/>
