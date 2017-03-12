@@ -10,7 +10,7 @@ void error(NSString* message) {
     [alert setAlertStyle:NSCriticalAlertStyle];
     [alert addButtonWithTitle:@"Visit consulo.io"];
     if ([alert runModal] == NSAlertSecondButtonReturn) {
-        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://consulo.io/throuble.html"]];
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://consulo.io/trouble.html"]];
     }
     [alert release];
 }
