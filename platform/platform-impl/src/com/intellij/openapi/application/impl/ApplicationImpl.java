@@ -256,6 +256,8 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     if (isUnitTestMode) {
       ApplicationStarter.ourLoaded = true;
     }
+
+    NoSwingUnderWriteAction.watchForEvents(this);
   }
 
   private void registerShutdownHook() {
