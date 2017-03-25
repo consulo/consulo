@@ -44,7 +44,7 @@ public abstract class SdkType implements SdkTypeId {
    */
   @NotNull
   public Collection<String> suggestHomePaths() {
-    return Collections.<String>emptyList();
+    return Collections.emptyList();
   }
 
   public boolean canCreatePredefinedSdks() {
