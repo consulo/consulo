@@ -70,6 +70,7 @@ import consulo.annotations.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
 import consulo.start.CommandLineArgs;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -257,7 +258,9 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       ApplicationStarter.ourLoaded = true;
     }
 
-    NoSwingUnderWriteAction.watchForEvents(this);
+    if(SandboxUtil.isInsideSandbox()) {
+      NoSwingUnderWriteAction.watchForEvents(this);
+    }
   }
 
   private void registerShutdownHook() {
