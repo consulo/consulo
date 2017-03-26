@@ -23,6 +23,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.jetbrains.annotations.NotNull;
 import sun.awt.AppContext;
@@ -41,6 +43,7 @@ import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -56,7 +59,8 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
     try {
       if (SystemInfo.isWindows || SystemInfo.isLinux) {
         base = new IdeaLaf();
-      } else {
+      }
+      else {
         final String name = UIManager.getSystemLookAndFeelClassName();
         base = (BasicLookAndFeel)Class.forName(name).newInstance();
       }
@@ -103,7 +107,7 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
 
       LafManagerImpl.initInputMapDefaults(defaults);
       initIdeaDefaults(defaults);
-      patchStyledEditorKit();
+      patchStyledEditorKit(defaults);
       patchComboBox(metalDefaults, defaults);
       defaults.remove("Spinner.arrowButtonBorder");
       defaults.put("Spinner.arrowButtonSize", new Dimension(16, 5));
@@ -141,20 +145,16 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
   }
 
   @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
-  private void patchStyledEditorKit() {
+  private void patchStyledEditorKit(UIDefaults defaults) {
+    URL url = getClass().getResource(getPrefix() + (JBUI.isHiDPI() ? "@2x.css" : ".css"));
+    StyleSheet styleSheet = UIUtil.loadStyleSheet(url);
+    defaults.put("StyledEditorKit.JBDefaultStyle", styleSheet);
     try {
-      InputStream is = getClass().getResourceAsStream(getPrefix() + ".css");
-      if (is != null) {
-        StyleSheet defaultStyles = new StyleSheet();
-        Reader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-        defaultStyles.loadRules(r, null);
-        r.close();
-        final Field keyField = HTMLEditorKit.class.getDeclaredField("DEFAULT_STYLES_KEY");
-        keyField.setAccessible(true);
-        final Object key = keyField.get(null);
-        AppContext.getAppContext().put(key, defaultStyles);
-      }
-    } catch (Exception e) {
+      Field keyField = HTMLEditorKit.class.getDeclaredField("DEFAULT_STYLES_KEY");
+      keyField.setAccessible(true);
+      AppContext.getAppContext().put(keyField.get(null), UIUtil.loadStyleSheet(url));
+    }
+    catch (Exception e) {
       log(e);
     }
   }
@@ -181,56 +181,24 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
   @SuppressWarnings({"HardCodedStringLiteral"})
   protected void initIdeaDefaults(UIDefaults defaults) {
     loadDefaults(defaults);
-    defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(new Object[] {
-            "ctrl C", "copy",
-            "ctrl V", "paste",
-            "ctrl X", "cut",
-            "COPY", "copy",
-            "PASTE", "paste",
-            "CUT", "cut",
-            "control INSERT", "copy",
-            "shift INSERT", "paste",
-            "shift DELETE", "cut",
-            "RIGHT", "selectNextColumn",
-            "KP_RIGHT", "selectNextColumn",
-            "LEFT", "selectPreviousColumn",
-            "KP_LEFT", "selectPreviousColumn",
-            "DOWN", "selectNextRow",
-            "KP_DOWN", "selectNextRow",
-            "UP", "selectPreviousRow",
-            "KP_UP", "selectPreviousRow",
-            "shift RIGHT", "selectNextColumnExtendSelection",
-            "shift KP_RIGHT", "selectNextColumnExtendSelection",
-            "shift LEFT", "selectPreviousColumnExtendSelection",
-            "shift KP_LEFT", "selectPreviousColumnExtendSelection",
-            "shift DOWN", "selectNextRowExtendSelection",
-            "shift KP_DOWN", "selectNextRowExtendSelection",
-            "shift UP", "selectPreviousRowExtendSelection",
-            "shift KP_UP", "selectPreviousRowExtendSelection",
-            "PAGE_UP", "scrollUpChangeSelection",
-            "PAGE_DOWN", "scrollDownChangeSelection",
-            "HOME", "selectFirstColumn",
-            "END", "selectLastColumn",
-            "shift PAGE_UP", "scrollUpExtendSelection",
-            "shift PAGE_DOWN", "scrollDownExtendSelection",
-            "shift HOME", "selectFirstColumnExtendSelection",
-            "shift END", "selectLastColumnExtendSelection",
-            "ctrl PAGE_UP", "scrollLeftChangeSelection",
-            "ctrl PAGE_DOWN", "scrollRightChangeSelection",
-            "ctrl HOME", "selectFirstRow",
-            "ctrl END", "selectLastRow",
-            "ctrl shift PAGE_UP", "scrollRightExtendSelection",
-            "ctrl shift PAGE_DOWN", "scrollLeftExtendSelection",
-            "ctrl shift HOME", "selectFirstRowExtendSelection",
-            "ctrl shift END", "selectLastRowExtendSelection",
-            "TAB", "selectNextColumnCell",
-            "shift TAB", "selectPreviousColumnCell",
-            //"ENTER", "selectNextRowCell",
-            "shift ENTER", "selectPreviousRowCell",
-            "ctrl A", "selectAll",
-            //"ESCAPE", "cancel",
-            "F2", "startEditing"
-    }));
+    defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(
+            new Object[]{"ctrl C", "copy", "ctrl V", "paste", "ctrl X", "cut", "COPY", "copy", "PASTE", "paste", "CUT", "cut", "control INSERT", "copy",
+                    "shift INSERT", "paste", "shift DELETE", "cut", "RIGHT", "selectNextColumn", "KP_RIGHT", "selectNextColumn", "LEFT", "selectPreviousColumn",
+                    "KP_LEFT", "selectPreviousColumn", "DOWN", "selectNextRow", "KP_DOWN", "selectNextRow", "UP", "selectPreviousRow", "KP_UP",
+                    "selectPreviousRow", "shift RIGHT", "selectNextColumnExtendSelection", "shift KP_RIGHT", "selectNextColumnExtendSelection", "shift LEFT",
+                    "selectPreviousColumnExtendSelection", "shift KP_LEFT", "selectPreviousColumnExtendSelection", "shift DOWN", "selectNextRowExtendSelection",
+                    "shift KP_DOWN", "selectNextRowExtendSelection", "shift UP", "selectPreviousRowExtendSelection", "shift KP_UP",
+                    "selectPreviousRowExtendSelection", "PAGE_UP", "scrollUpChangeSelection", "PAGE_DOWN", "scrollDownChangeSelection", "HOME",
+                    "selectFirstColumn", "END", "selectLastColumn", "shift PAGE_UP", "scrollUpExtendSelection", "shift PAGE_DOWN", "scrollDownExtendSelection",
+                    "shift HOME", "selectFirstColumnExtendSelection", "shift END", "selectLastColumnExtendSelection", "ctrl PAGE_UP",
+                    "scrollLeftChangeSelection", "ctrl PAGE_DOWN", "scrollRightChangeSelection", "ctrl HOME", "selectFirstRow", "ctrl END", "selectLastRow",
+                    "ctrl shift PAGE_UP", "scrollRightExtendSelection", "ctrl shift PAGE_DOWN", "scrollLeftExtendSelection", "ctrl shift HOME",
+                    "selectFirstRowExtendSelection", "ctrl shift END", "selectLastRowExtendSelection", "TAB", "selectNextColumnCell", "shift TAB",
+                    "selectPreviousColumnCell",
+                    //"ENTER", "selectNextRowCell",
+                    "shift ENTER", "selectPreviousRowCell", "ctrl A", "selectAll",
+                    //"ESCAPE", "cancel",
+                    "F2", "startEditing"}));
   }
 
   @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
@@ -269,21 +237,26 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
         defaults.put(key, parseValue(key, value));
       }
     }
-    catch (IOException e) {log(e);}
+    catch (IOException e) {
+      log(e);
+    }
   }
 
   protected Object parseValue(String key, @NotNull String value) {
     if (key.endsWith("Insets")) {
       final List<String> numbers = StringUtil.split(value, ",");
-      return new InsetsUIResource(Integer.parseInt(numbers.get(0)),
-                                  Integer.parseInt(numbers.get(1)),
-                                  Integer.parseInt(numbers.get(2)),
+      return new InsetsUIResource(Integer.parseInt(numbers.get(0)), Integer.parseInt(numbers.get(1)), Integer.parseInt(numbers.get(2)),
                                   Integer.parseInt(numbers.get(3)));
-    } else if (key.endsWith(".border")) {
+    }
+    else if (key.endsWith(".border")) {
       try {
         return Class.forName(value).newInstance();
-      } catch (Exception e) {log(e);}
-    } else {
+      }
+      catch (Exception e) {
+        log(e);
+      }
+    }
+    else {
       final Color color = parseColor(value);
       final Integer invVal = getInteger(value);
       final Boolean boolVal = "true".equals(value) ? Boolean.TRUE : "false".equals(value) ? Boolean.FALSE : null;
@@ -292,12 +265,15 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
         icon = IconLoader.findIcon(value, getClass(), true);
       }
       if (color != null) {
-        return  new ColorUIResource(color);
-      } else if (invVal != null) {
+        return new ColorUIResource(color);
+      }
+      else if (invVal != null) {
         return invVal;
-      } else if (icon != null) {
+      }
+      else if (icon != null) {
         return new IconUIResource(icon);
-      } else if (boolVal != null) {
+      }
+      else if (boolVal != null) {
         return boolVal;
       }
     }
@@ -312,7 +288,9 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
         try {
           int alpha = Integer.parseInt(value.substring(6, 8), 16);
           return new ColorUIResource(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
-        } catch (Exception ignore){}
+        }
+        catch (Exception ignore) {
+        }
       }
       return null;
     }
@@ -376,10 +354,7 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
   @Override
   protected void loadSystemColors(UIDefaults defaults, String[] systemColors, boolean useNative) {
     try {
-      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("loadSystemColors",
-                                                                          UIDefaults.class,
-                                                                          String[].class,
-                                                                          boolean.class);
+      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("loadSystemColors", UIDefaults.class, String[].class, boolean.class);
       superMethod.setAccessible(true);
       superMethod.invoke(base, defaults, systemColors, useNative);
     }
