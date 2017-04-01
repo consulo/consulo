@@ -106,14 +106,9 @@ class FindInProjectTask {
     myProjectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     myFileIndex = myModule == null ? myProjectFileIndex : ModuleRootManager.getInstance(myModule).getFileIndex();
 
-    final Condition<String> patternCondition = FindInProjectUtil.createFileMaskCondition(findModel.getFileFilter());
+    final Condition<CharSequence> patternCondition = FindInProjectUtil.createFileMaskCondition(findModel.getFileFilter());
 
-    myFileMask = new Condition<VirtualFile>() {
-      @Override
-      public boolean value(VirtualFile file) {
-        return file != null && patternCondition.value(file.getName());
-      }
-    };
+    myFileMask = file -> file != null && patternCondition.value(file.getNameSequence());
 
     final ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
     myProgress = progress != null ? progress : new EmptyProgressIndicator();

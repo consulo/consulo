@@ -29,21 +29,21 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.psi.*;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class ReformatCodeAction extends AnAction implements DumbAware {
@@ -53,8 +53,9 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
   protected static ReformatFilesOptions myTestOptions;
 
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent event) {
+  public void actionPerformed(@NotNull AnActionEvent event) {
     DataContext dataContext = event.getDataContext();
     final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) {
@@ -223,49 +224,30 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
       return;
     }
 
-    processor.addFileFilter(new VirtualFileFilter() {
-      @Override
-      public boolean accept(@NotNull VirtualFile file) {
-        if (scope instanceof LocalSearchScope) {
-          return ((LocalSearchScope)scope).isInScope(file);
-        }
-        if (scope instanceof GlobalSearchScope) {
-          return ((GlobalSearchScope)scope).contains(file);
-        }
-
-        return false;
-      }
-    });
+    processor.addFileFilter(scope::contains);
   }
 
   public static void registerFileMaskFilter(@NotNull AbstractLayoutCodeProcessor processor, @Nullable String fileTypeMask) {
     if (fileTypeMask == null)
       return;
 
-    final Pattern pattern = getFileTypeMaskPattern(fileTypeMask);
-    if (pattern != null) {
-      processor.addFileFilter(new VirtualFileFilter() {
-        @Override
-        public boolean accept(@NotNull VirtualFile file) {
-          return pattern.matcher(file.getName()).matches();
-        }
-      });
-    }
+    final Condition<CharSequence> patternCondition = getFileTypeMaskPattern(fileTypeMask);
+    processor.addFileFilter(file -> patternCondition.value(file.getNameSequence()));
   }
 
-  @Nullable
-  private static Pattern getFileTypeMaskPattern(@Nullable String mask) {
+  private static Condition<CharSequence> getFileTypeMaskPattern(@Nullable String mask) {
     try {
-      return FindInProjectUtil.createFileMaskRegExp(mask);
+      return FindInProjectUtil.createFileMaskCondition(mask);
     } catch (PatternSyntaxException e) {
       LOG.info("Error while processing file mask: ", e);
-      return null;
+      return Conditions.alwaysTrue();
     }
   }
 
+  @RequiredReadAction
   public static PsiFile[] convertToPsiFiles(final VirtualFile[] files,Project project) {
     final PsiManager manager = PsiManager.getInstance(project);
-    final ArrayList<PsiFile> result = new ArrayList<PsiFile>();
+    final ArrayList<PsiFile> result = new ArrayList<>();
     for (VirtualFile virtualFile : files) {
       final PsiFile psiFile = manager.findFile(virtualFile);
       if (psiFile != null) result.add(psiFile);
@@ -273,8 +255,9 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     return PsiUtilCore.toPsiFileArray(result);
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent event){
+  public void update(@NotNull AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
     Project project = CommonDataKeys.PROJECT.getData(dataContext);
@@ -388,5 +371,4 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     return true;
   }
 }
-
 

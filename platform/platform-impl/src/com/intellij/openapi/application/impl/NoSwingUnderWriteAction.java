@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author peter
  */
 class NoSwingUnderWriteAction {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.impl.NoSwingUnderWriteAction");
+  private static final Logger LOG = Logger.getInstance(NoSwingUnderWriteAction.class);
 
   static void watchForEvents(Application application) {
     AtomicBoolean reported = new AtomicBoolean();

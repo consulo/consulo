@@ -163,7 +163,7 @@ public class LayoutProjectCodeDialog extends DialogWrapper implements ReformatFi
 
   private static boolean isMaskValid(@NotNull String mask) {
     try {
-      FindInProjectUtil.createFileMaskRegExp(mask);
+      FindInProjectUtil.createFileMaskCondition(mask);
     }
     catch (PatternSyntaxException e) {
       return false;

@@ -212,6 +212,11 @@ public class LocalSearchScope extends SearchScope {
     return commonParent;
   }
 
+  @Override
+  public boolean contains(@NotNull VirtualFile file) {
+    return isInScope(file);
+  }
+
   public boolean isInScope(VirtualFile file) {
     for (PsiElement element : myScope) {
       PsiFile containingFile = element.getContainingFile();
