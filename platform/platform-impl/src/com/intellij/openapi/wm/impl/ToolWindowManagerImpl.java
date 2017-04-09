@@ -1839,7 +1839,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     final ToolWindowImpl toolWindow = (ToolWindowImpl)getToolWindow(id);
     final FocusWatcher focusWatcher = myId2FocusWatcher.get(id);
     commandList
-            .add(new RequestFocusInToolWindowCmd(getFocusManager(), toolWindow, focusWatcher, myWindowManager.getCommandProcessor(), forced));
+            .add(new RequestFocusInToolWindowCmd(getFocusManager(), toolWindow, focusWatcher, myWindowManager.getCommandProcessor(), myProject));
   }
 
   /**

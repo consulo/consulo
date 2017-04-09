@@ -25,6 +25,7 @@ public interface QuickActionProvider extends QuickAccessProvider {
   DataKey<QuickActionProvider> KEY = DataKey.create("QuickActionProvider");
 
   String getName();
+
   List<AnAction> getActions(boolean originalProvider);
 
 }
