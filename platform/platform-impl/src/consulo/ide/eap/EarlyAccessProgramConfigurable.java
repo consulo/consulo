@@ -15,6 +15,7 @@
  */
 package consulo.ide.eap;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -22,27 +23,31 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.LightColors;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.util.Function;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.util.ui.components.VerticalLayoutPanel;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * @author VISTALL
  * @since 16:30/15.10.13
  */
-public class EarlyAccessProgramConfigurable implements Configurable {
+public class EarlyAccessProgramConfigurable implements Configurable, Configurable.NoScroll {
   public static class EarlyAccessCellRender implements ListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-      CheckBoxList checkBoxList = (CheckBoxList) list;
+      CheckBoxList checkBoxList = (CheckBoxList)list;
       EarlyAccessProgramDescriptor earlyAccessProgramDescriptor = (EarlyAccessProgramDescriptor)checkBoxList.getItemAt(index);
 
       JCheckBox checkbox = (JCheckBox)value;
@@ -51,7 +56,7 @@ public class EarlyAccessProgramConfigurable implements Configurable {
       checkbox.setFocusPainted(false);
       checkbox.setBorderPainted(true);
 
-      if(earlyAccessProgramDescriptor == null) {
+      if (earlyAccessProgramDescriptor == null) {
         return checkbox;
       }
       else {
@@ -69,20 +74,20 @@ public class EarlyAccessProgramConfigurable implements Configurable {
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(checkbox, BorderLayout.WEST);
 
-        if(earlyAccessProgramDescriptor.isRestartRequired()) {
+        if (earlyAccessProgramDescriptor.isRestartRequired()) {
           JBLabel comp = new JBLabel("Restart required");
           comp.setForeground(JBColor.GRAY);
           topPanel.add(comp, BorderLayout.EAST);
         }
 
         panel.add(topPanel);
-        panel.setBorder(new CustomLineBorder(0, 0 ,1, 0));
+        panel.setBorder(new CustomLineBorder(0, 0, 1, 0));
 
         String description = StringUtil.notNullizeIfEmpty(earlyAccessProgramDescriptor.getDescription(), "Description is not available");
         JTextPane textPane = new JTextPane();
         textPane.setText(description);
         textPane.setEditable(false);
-        if(!earlyAccessProgramDescriptor.isAvailable()) {
+        if (!earlyAccessProgramDescriptor.isAvailable()) {
           textPane.setForeground(JBColor.GRAY);
         }
         panel.add(textPane);
@@ -105,42 +110,47 @@ public class EarlyAccessProgramConfigurable implements Configurable {
     return null;
   }
 
+  @RequiredDispatchThread
   @Nullable
   @Override
   public JComponent createComponent() {
-    myList = new CheckBoxList<EarlyAccessProgramDescriptor>();
+    myList = new CheckBoxList<>();
     myList.setBorder(null);
 
     EarlyAccessProgramDescriptor[] extensions = EarlyAccessProgramDescriptor.EP_NAME.getExtensions();
-    Arrays.sort(extensions, new Comparator<EarlyAccessProgramDescriptor>() {
-      @Override
-      public int compare(EarlyAccessProgramDescriptor o1, EarlyAccessProgramDescriptor o2) {
-        if(o1.isAvailable() && !o2.isAvailable()) {
-          return -1;
-        }
-        else if(o2.isAvailable() && !o1.isAvailable()) {
-          return 1;
-        }
-        return o1.getName().compareToIgnoreCase(o2.getName());
+    Arrays.sort(extensions, (o1, o2) -> {
+      if (o1.isAvailable() && !o2.isAvailable()) {
+        return -1;
       }
+      else if (o2.isAvailable() && !o1.isAvailable()) {
+        return 1;
+      }
+      return o1.getName().compareToIgnoreCase(o2.getName());
     });
-    myList.setItems(Arrays.asList(extensions), new Function<EarlyAccessProgramDescriptor, String>() {
-                      @Override
-                      public String fun(EarlyAccessProgramDescriptor earlyAccessProgramDescriptor) {
-                        return earlyAccessProgramDescriptor.getName();
-                      }
-                    }, new Function<EarlyAccessProgramDescriptor, Boolean>() {
-                      @Override
-                      public Boolean fun(EarlyAccessProgramDescriptor earlyAccessProgramDescriptor) {
-                        return EarlyAccessProgramManager.is(earlyAccessProgramDescriptor.getClass());
-                      }
-                    }
-    );
+    myList.setItems(Arrays.asList(extensions), EarlyAccessProgramDescriptor::getName, desc -> EarlyAccessProgramManager.is(desc.getClass()));
     myList.setCellRenderer(new EarlyAccessCellRender());
 
-    return ScrollPaneFactory.createScrollPane(myList, true);
+    return JBUI.Panels.simplePanel().addToTop(createWarningPanel()).addToCenter(ScrollPaneFactory.createScrollPane(myList, true));
   }
 
+  private static JComponent createWarningPanel() {
+    VerticalLayoutPanel panel = JBUI.Panels.verticalPanel();
+    panel.setBackground(LightColors.RED);
+    panel.setBorder(new CompoundBorder(JBUI.Borders.customLine(JBColor.GRAY), JBUI.Borders.empty(5)));
+
+    JBLabel warnLabel = new JBLabel("WARNING", AllIcons.General.BalloonWarning, SwingConstants.LEFT);
+    warnLabel.setFont(UIUtil.getFont(UIUtil.FontSize.BIGGER, warnLabel.getFont()).deriveFont(Font.BOLD));
+    panel.addComponent(warnLabel);
+    JTextArea textArea = new JTextArea(IdeBundle.message("eap.configurable.warning.text"));
+    textArea.setLineWrap(true);
+    textArea.setFont(JBUI.Fonts.label());
+    textArea.setOpaque(false);
+    textArea.setEditable(false);
+    panel.addComponent(textArea);
+    return panel;
+  }
+
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
@@ -153,6 +163,7 @@ public class EarlyAccessProgramConfigurable implements Configurable {
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
@@ -162,6 +173,7 @@ public class EarlyAccessProgramConfigurable implements Configurable {
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
@@ -169,9 +181,5 @@ public class EarlyAccessProgramConfigurable implements Configurable {
     for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
       myList.setItemSelected(descriptor, manager.getState(descriptor.getClass()));
     }
-  }
-
-  @Override
-  public void disposeUIResources() {
   }
 }
