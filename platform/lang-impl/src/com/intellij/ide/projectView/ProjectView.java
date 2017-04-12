@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -36,11 +37,14 @@ public abstract class ProjectView {
 
   public abstract ActionCallback selectCB(Object element, VirtualFile file, boolean requestFocus);
 
+  public abstract ActionCallback changeViewCB(@NotNull String viewId, String subId);
+
   @Nullable
   public abstract PsiElement getParentOfCurrentSelection();
 
   // show pane identified by id using default(or currently selected) subId
   public abstract void changeView(String viewId);
+
   public abstract void changeView(String viewId, String subId);
 
   public abstract void changeView();
@@ -79,13 +83,19 @@ public abstract class ProjectView {
 
   /**
    * e.g. {@link com.intellij.ide.projectView.impl.ProjectViewPane#ID}
+   *
    * @see com.intellij.ide.projectView.impl.AbstractProjectViewPane#getId()
    */
   public abstract String getCurrentViewId();
 
+  public abstract boolean isManualOrder(String paneId);
+
+  public abstract void setManualOrder(@NotNull String paneId, final boolean enabled);
+
   public abstract void selectPsiElement(PsiElement element, boolean requestFocus);
 
   public abstract boolean isSortByType(String paneId);
+
   public abstract void setSortByType(String paneId, final boolean sortByType);
 
   public abstract AbstractProjectViewPane getCurrentProjectViewPane();

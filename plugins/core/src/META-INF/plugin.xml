@@ -1234,8 +1234,6 @@
     <applicationService serviceInterface="com.intellij.ide.ui.search.SearchableOptionsRegistrar"
                         serviceImplementation="com.intellij.ide.ui.search.SearchableOptionsRegistrarImpl"/>
 
-    <applicationService serviceImplementation="com.intellij.openapi.options.ex.IdeConfigurablesGroup"/>
-
     <applicationService serviceInterface="com.intellij.openapi.editor.EditorCopyPasteHelper"
                         serviceImplementation="com.intellij.openapi.editor.impl.EditorCopyPasteHelperImpl"/>
 
@@ -2267,6 +2265,8 @@
                     serviceImplementation="com.intellij.codeInspection.ex.InspectionManagerEx"/>
     <projectService serviceInterface="com.intellij.usageView.UsageViewManager"
                     serviceImplementation="com.intellij.usageView.impl.UsageViewManagerImpl"/>
+    <applicationService serviceInterface="com.intellij.ide.projectView.impl.ProjectViewSharedSettings"
+                        serviceImplementation="com.intellij.ide.projectView.impl.ProjectViewSharedSettings"/>
     <projectService serviceInterface="com.intellij.ide.projectView.ProjectView"
                     serviceImplementation="com.intellij.ide.projectView.impl.ProjectViewImpl"/>
     <projectService serviceInterface="com.intellij.execution.ui.RunnerLayoutUi$Factory"

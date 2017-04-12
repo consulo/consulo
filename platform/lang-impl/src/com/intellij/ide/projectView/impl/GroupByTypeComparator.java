@@ -26,6 +26,8 @@ import com.intellij.openapi.project.Project;
 import java.util.Collection;
 import java.util.Comparator;
 
+import static com.intellij.openapi.util.text.StringUtil.naturalCompare;
+
 /**
  * @author cdr
  */
@@ -63,9 +65,19 @@ public class GroupByTypeComparator implements Comparator<NodeDescriptor> {
     if (descriptor1 instanceof ProjectViewNode && descriptor2 instanceof ProjectViewNode) {
       final Project project = descriptor1.getProject();
       final ProjectView projectView = ProjectView.getInstance(project);
-      if (!(projectView instanceof ProjectViewImpl && !((ProjectViewImpl)projectView).isFoldersAlwaysOnTop())) {
-        ProjectViewNode node1 = (ProjectViewNode)descriptor1;
-        ProjectViewNode node2 = (ProjectViewNode)descriptor2;
+
+      ProjectViewNode node1 = (ProjectViewNode)descriptor1;
+      ProjectViewNode node2 = (ProjectViewNode)descriptor2;
+
+      if (isManualOrder()) {
+        final Comparable key1 = node1.getManualOrderKey();
+        final Comparable key2 = node2.getManualOrderKey();
+        int result = compare(key1, key2);
+        if (result != 0) return result;
+      }
+
+      boolean isFoldersOnTop = !(projectView instanceof ProjectViewImpl && !((ProjectViewImpl)projectView).isFoldersAlwaysOnTop());
+      if (isFoldersOnTop) {
         int typeWeight1 = node1.getTypeSortWeight(isSortByType());
         int typeWeight2 = node2.getTypeSortWeight(isSortByType());
         if (typeWeight1 != 0 && typeWeight2 == 0) {
@@ -77,36 +89,41 @@ public class GroupByTypeComparator implements Comparator<NodeDescriptor> {
         if (typeWeight1 != 0 && typeWeight2 != typeWeight1) {
           return typeWeight1 - typeWeight2;
         }
+      }
 
-        if (isSortByType()) {
-          final Comparable typeSortKey1 = node1.getTypeSortKey();
-          final Comparable typeSortKey2 = node2.getTypeSortKey();
-          if (typeSortKey1 != null && typeSortKey2 != null) {
-            final int result = typeSortKey1.compareTo(typeSortKey2);
-            if (result != 0) return result;
-          }
+      if (isSortByType()) {
+        final Comparable typeSortKey1 = node1.getTypeSortKey();
+        final Comparable typeSortKey2 = node2.getTypeSortKey();
+        int result = compare(typeSortKey1, typeSortKey2);
+        if (result != 0) return result;
+      }
+      else {
+        final Comparable typeSortKey1 = node1.getSortKey();
+        final Comparable typeSortKey2 = node2.getSortKey();
+        if (typeSortKey1 != null && typeSortKey2 != null) {
+          int result = compare(typeSortKey1, typeSortKey2);
+          if (result != 0) return result;
         }
-        else {
-          final Comparable typeSortKey1 = node1.getSortKey();
-          final Comparable typeSortKey2 = node2.getSortKey();
-          if (typeSortKey1 != null && typeSortKey2 != null) {
-            final int result = typeSortKey1.compareTo(typeSortKey2);
-            if (result != 0) return result;
-          }
-        }
+      }
 
-        if (isAbbreviateQualifiedNames()) {
-          String key1 = node1.getQualifiedNameSortKey();
-          String key2 = node2.getQualifiedNameSortKey();
-          if (key1 != null && key2 != null) {
-            return key1.compareToIgnoreCase(key2);
-          }
+      if (isAbbreviateQualifiedNames()) {
+        String key1 = node1.getQualifiedNameSortKey();
+        String key2 = node2.getQualifiedNameSortKey();
+        if (key1 != null && key2 != null) {
+          return naturalCompare(key1, key2);
         }
       }
     }
-    if (descriptor1 == null) return -1; 
+    if (descriptor1 == null) return -1;
     if (descriptor2 == null) return 1;
     return AlphaComparator.INSTANCE.compare(descriptor1, descriptor2);
+  }
+
+  protected boolean isManualOrder() {
+    if (myProjectView != null) {
+      return myProjectView.isManualOrder(myPaneId);
+    }
+    return true;
   }
 
   protected boolean isSortByType() {
@@ -120,4 +137,14 @@ public class GroupByTypeComparator implements Comparator<NodeDescriptor> {
     return myProjectView != null && myProjectView.isAbbreviatePackageNames(myPaneId);
   }
 
+  private static int compare(Comparable key1, Comparable key2) {
+    if (key1 == null && key2 == null) return 0;
+    if (key1 == null) return 1;
+    if (key2 == null) return -1;
+    if (key1 instanceof String && key2 instanceof String) {
+      return naturalCompare((String)key1, (String)key2);
+    }
+    //noinspection unchecked
+    return key1.compareTo(key2);
+  }
 }

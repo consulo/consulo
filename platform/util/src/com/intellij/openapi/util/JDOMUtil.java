@@ -55,7 +55,8 @@ import java.util.List;
 public class JDOMUtil {
   private static final ThreadLocal<SoftReference<SAXBuilder>> ourSaxBuilder = new ThreadLocal<SoftReference<SAXBuilder>>();
 
-  private JDOMUtil() { }
+  private JDOMUtil() {
+  }
 
   @NotNull
   public static List<Element> getChildren(@Nullable Element parent) {
@@ -88,9 +89,9 @@ public class JDOMUtil {
     if (e1 == null && e2 == null) return true;
     if (e1 == null || e2 == null) return false;
 
-    return Comparing.equal(e1.getName(), e2.getName())
-           && attListsEqual(e1.getAttributes(), e2.getAttributes())
-           && contentListsEqual(e1.getContent(CONTENT_FILTER), e2.getContent(CONTENT_FILTER));
+    return Comparing.equal(e1.getName(), e2.getName()) &&
+           attListsEqual(e1.getAttributes(), e2.getAttributes()) &&
+           contentListsEqual(e1.getContent(CONTENT_FILTER), e2.getContent(CONTENT_FILTER));
   }
 
   private static final EmptyTextFilter CONTENT_FILTER = new EmptyTextFilter();
@@ -140,8 +141,7 @@ public class JDOMUtil {
   @Deprecated
   /**
    * to remove in IDEA 15
-   */
-  public static Object[] getChildNodesWithAttrs(@NotNull Element e) {
+   */ public static Object[] getChildNodesWithAttrs(@NotNull Element e) {
     ArrayList<Object> result = new ArrayList<Object>();
     result.addAll(e.getContent());
     result.addAll(e.getAttributes());
@@ -225,7 +225,7 @@ public class JDOMUtil {
   @NotNull
   public static CharSequence legalizeChars(@NotNull CharSequence str) {
     StringBuilder result = new StringBuilder(str.length());
-    for (int i = 0, len = str.length(); i < len; i ++) {
+    for (int i = 0, len = str.length(); i < len; i++) {
       appendLegalized(result, str.charAt(i));
     }
     return result;
@@ -286,9 +286,9 @@ public class JDOMUtil {
   }
 
   public static boolean areDocumentsEqual(@NotNull Document d1, @NotNull Document d2) {
-    if(d1.hasRootElement() != d2.hasRootElement()) return false;
+    if (d1.hasRootElement() != d2.hasRootElement()) return false;
 
-    if(!d1.hasRootElement()) return true;
+    if (!d1.hasRootElement()) return true;
 
     CharArrayWriter w1 = new CharArrayWriter();
     CharArrayWriter w2 = new CharArrayWriter();
@@ -425,7 +425,7 @@ public class JDOMUtil {
         writeDocument((Document)element, writer, lineSeparator);
       }
       else {
-        writeElement((Element) element, writer, lineSeparator);
+        writeElement((Element)element, writer, lineSeparator);
       }
     }
     finally {
@@ -468,9 +468,10 @@ public class JDOMUtil {
 
   public static void writeParent(Parent element, Writer writer, String lineSeparator) throws IOException {
     if (element instanceof Element) {
-      writeElement((Element) element, writer, lineSeparator);
-    } else if (element instanceof Document) {
-      writeDocument((Document) element, writer, lineSeparator);
+      writeElement((Element)element, writer, lineSeparator);
+    }
+    else if (element instanceof Document) {
+      writeDocument((Document)element, writer, lineSeparator);
     }
   }
 
@@ -503,18 +504,13 @@ public class JDOMUtil {
   }
 
   @NotNull
-  public static String writeChildren(@Nullable final Element element, @NotNull final String lineSeparator) {
-    try {
-      final StringWriter writer = new StringWriter();
-      for (Element child : getChildren(element)) {
-        writeElement(child, writer, lineSeparator);
-        writer.append(lineSeparator);
-      }
-      return writer.toString();
+  public static String writeChildren(@Nullable final Element element, @NotNull final String lineSeparator) throws IOException {
+    final StringWriter writer = new StringWriter();
+    for (Element child : getChildren(element)) {
+      writeElement(child, writer, lineSeparator);
+      writer.append(lineSeparator);
     }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    return writer.toString();
   }
 
   public static void writeDocument(@NotNull Document document, @NotNull Writer writer, String lineSeparator) throws IOException {
@@ -548,15 +544,24 @@ public class JDOMUtil {
   @Nullable
   private static String escapeChar(char c, boolean escapeApostrophes, boolean escapeSpaces, boolean escapeLineEnds) {
     switch (c) {
-      case '\n': return escapeLineEnds ? "&#10;" : null;
-      case '\r': return escapeLineEnds ? "&#13;" : null;
-      case '\t': return escapeLineEnds ? "&#9;" : null;
-      case ' ' : return escapeSpaces  ? "&#20" : null;
-      case '<':  return "&lt;";
-      case '>':  return "&gt;";
-      case '\"': return "&quot;";
-      case '\'': return escapeApostrophes ? "&apos;": null;
-      case '&':  return "&amp;";
+      case '\n':
+        return escapeLineEnds ? "&#10;" : null;
+      case '\r':
+        return escapeLineEnds ? "&#13;" : null;
+      case '\t':
+        return escapeLineEnds ? "&#9;" : null;
+      case ' ':
+        return escapeSpaces ? "&#20" : null;
+      case '<':
+        return "&lt;";
+      case '>':
+        return "&gt;";
+      case '\"':
+        return "&quot;";
+      case '\'':
+        return escapeApostrophes ? "&apos;" : null;
+      case '&':
+        return "&amp;";
     }
     return null;
   }
@@ -714,7 +719,8 @@ public class JDOMUtil {
   }
 
   private static class ElementInfo {
-    @NotNull public String name = "";
+    @NotNull
+    public String name = "";
     public boolean hasNullAttributes = false;
   }
 

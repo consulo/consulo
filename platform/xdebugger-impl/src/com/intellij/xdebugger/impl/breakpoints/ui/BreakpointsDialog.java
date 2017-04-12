@@ -70,7 +70,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
   private MasterController myMasterController = new MasterController() {
     @Override
     public ItemWrapper[] getSelectedItems() {
-      final List<BreakpointItem> res = myTreeController.getSelectedBreakpoints();
+      final List<BreakpointItem> res = myTreeController.getSelectedBreakpoints(false);
       return res.toArray(new ItemWrapper[res.size()]);
     }
 
@@ -335,7 +335,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
   }
 
   private void navigate(final boolean requestFocus) {
-    List<BreakpointItem> breakpoints = myTreeController.getSelectedBreakpoints();
+    List<BreakpointItem> breakpoints = myTreeController.getSelectedBreakpoints(false);
     if (!breakpoints.isEmpty()) {
       breakpoints.get(0).navigate(requestFocus);
     }
@@ -472,7 +472,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
           return;
         }
       }
-      for (BreakpointItem item : myTreeController.getSelectedBreakpoints()) {
+      for (BreakpointItem item : myTreeController.getSelectedBreakpoints(true)) {
         Object breakpoint = item.getBreakpoint();
         if (item.allowedToRemove() && breakpoint instanceof XBreakpointBase) {
           ((XBreakpointBase)breakpoint).setGroup(groupName);

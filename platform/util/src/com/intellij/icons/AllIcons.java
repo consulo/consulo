@@ -292,6 +292,7 @@ public class AllIcons {
     public static final SwingImageRef CurrentLine = IconLoader.getIcon("/diff/currentLine.png"); // 16x16
     public static final SwingImageRef Diff = IconLoader.getIcon("/diff/Diff.png"); // 16x16
     public static final SwingImageRef LeftDiff = IconLoader.getIcon("/diff/leftDiff.png"); // 16x16
+    public static final SwingImageRef MagicResolve = IconLoader.getIcon("/diff/magicResolve.png"); // 12x12
     public static final SwingImageRef Remove = IconLoader.getIcon("/diff/remove.png"); // 11x11
     public static final SwingImageRef RightDiff = IconLoader.getIcon("/diff/rightDiff.png"); // 16x16
 

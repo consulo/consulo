@@ -18,8 +18,9 @@ package com.intellij.ui.switcher;
 import javax.swing.*;
 
 public interface QuickAccessProvider {
-
   JComponent getComponent();
-  boolean isCycleRoot();
 
+  default boolean isCycleRoot() {
+    return false;
+  }
 }

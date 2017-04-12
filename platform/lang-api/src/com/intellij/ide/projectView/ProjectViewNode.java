@@ -250,6 +250,11 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
   }
 
   @Nullable
+  public Comparable getManualOrderKey() {
+    return null;
+  }
+
+  @Nullable
   public String getQualifiedNameSortKey() {
     return null;
   }

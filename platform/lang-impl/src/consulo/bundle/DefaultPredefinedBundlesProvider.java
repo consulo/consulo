@@ -36,14 +36,18 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
         Collection<String> paths = sdkType.suggestHomePaths();
 
         for (String path : paths) {
+          path = sdkType.adjustSelectedSdkHome(path);
+
           if(sdkType.isValidSdkHome(path)) {
             VirtualFile dirPath = LocalFileSystem.getInstance().findFileByPath(path);
             if(dirPath == null) {
               continue;
             }
 
-            SdkImpl sdk = createSdk(sdkType, path);
-            sdk.setHomePath(path);
+            String sdkPath = sdkType.sdkPath(dirPath);
+
+            SdkImpl sdk = createSdk(sdkType, sdkPath);
+            sdk.setHomePath(sdkPath);
             sdk.setVersionString(sdkType.getVersionString(sdk));
             sdkType.setupSdkPaths(sdk);
 

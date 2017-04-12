@@ -44,6 +44,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.ide.updateSettings.UpdateSettings;
+import consulo.ide.webService.WebServiceApi;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -56,7 +57,7 @@ import java.util.Set;
 public class ITNReporter extends ErrorReportSubmitter {
   public static final ITNReporter ourInternalInstance = new ITNReporter();
 
-  private static String previousExceptionThreadId;
+  private static String ourPreviousErrorReporterId;
 
   @Override
   public boolean trySubmitAsync(IdeaLoggingEvent[] events, String additionalInfo, Component parentComponent, Consumer<SubmittedReportInfo> consumer) {
@@ -86,8 +87,8 @@ public class ITNReporter extends ErrorReportSubmitter {
     errorBean.setDescription(description);
     errorBean.setMessage(event.getMessage());
 
-    if (previousExceptionThreadId != null) {
-      errorBean.setPreviousException(previousExceptionThreadId);
+    if (ourPreviousErrorReporterId != null) {
+      errorBean.setPreviousException(ourPreviousErrorReporterId);
     }
 
     Throwable t = event.getThrowable();
@@ -112,8 +113,9 @@ public class ITNReporter extends ErrorReportSubmitter {
     }
 
     ErrorReportSender.sendReport(project, errorBean, id -> {
-      previousExceptionThreadId = id;
-      final SubmittedReportInfo reportInfo = new SubmittedReportInfo(null, null, SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
+      ourPreviousErrorReporterId = id;
+      String shortId = id.substring(0, 8);
+      final SubmittedReportInfo reportInfo = new SubmittedReportInfo(WebServiceApi.ERROR_REPORT.buildUrl("#" + id), shortId, SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
       callback.consume(reportInfo);
 
       ApplicationManager.getApplication().invokeLater(() -> {

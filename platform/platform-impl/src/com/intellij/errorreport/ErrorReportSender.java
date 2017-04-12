@@ -46,7 +46,11 @@ import java.util.Map;
  */
 public class ErrorReportSender {
   private static enum ResultType {
-    OK, PLATFORM_UPDATE_REQUIRED, PLUGIN_UPDATE_REQUIRED, BAD_REPORT, BAD_OAUTHK_KEY
+    OK,
+    PLATFORM_UPDATE_REQUIRED,
+    PLUGIN_UPDATE_REQUIRED,
+    BAD_REPORT,
+    BAD_OAUTHK_KEY
   }
 
   private ErrorReportSender() {
@@ -67,7 +71,8 @@ public class ErrorReportSender {
     });
   }
 
-  public static String sendAndHandleResult(ErrorBean error) throws IOException, AuthorizationFailedException, UpdateAvailableException {
+  @NotNull
+  public static String sendAndHandleResult(@NotNull ErrorBean error) throws IOException, AuthorizationFailedException, UpdateAvailableException {
     String reply = doPost(WebServiceApi.ERROR_REPORTER_API.buildUrl("create"), error);
 
     Map<String, String> map = new Gson().fromJson(reply, new TypeToken<Map<String, String>>() {
@@ -103,9 +108,9 @@ public class ErrorReportSender {
   }
 
   private static String doPost(String url, ErrorBean errorBean) throws IOException {
-    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-      HttpPost post = new HttpPost(url);
-      post.setEntity(new StringEntity(new Gson().toJson(errorBean), ContentType.APPLICATION_JSON));
+    CloseableHttpClient httpClient = HttpClients.createDefault();
+    HttpPost post = new HttpPost(url);
+    post.setEntity(new StringEntity(new Gson().toJson(errorBean), ContentType.APPLICATION_JSON));
 
       String authKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.ERROR_REPORTER_API);
       if (authKey != null) {

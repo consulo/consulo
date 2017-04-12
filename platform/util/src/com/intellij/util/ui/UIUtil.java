@@ -2342,7 +2342,7 @@ public class UIUtil {
     }
 
     final StyleSheet style = new StyleSheet();
-    style.addStyleSheet(isUnderDarcula() ? (StyleSheet)UIManager.getDefaults().get("StyledEditorKit.JBDefaultStyle") : DEFAULT_HTML_KIT_CSS);
+    style.addStyleSheet(isUnderDarkBuildInLaf() ? (StyleSheet)UIManager.getDefaults().get("StyledEditorKit.JBDefaultStyle") : DEFAULT_HTML_KIT_CSS);
     style.addRule(customCss);
 
     return new HTMLEditorKit() {
