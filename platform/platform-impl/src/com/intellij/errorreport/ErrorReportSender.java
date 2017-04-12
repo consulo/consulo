@@ -34,6 +34,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -108,9 +109,9 @@ public class ErrorReportSender {
   }
 
   private static String doPost(String url, ErrorBean errorBean) throws IOException {
-    CloseableHttpClient httpClient = HttpClients.createDefault();
-    HttpPost post = new HttpPost(url);
-    post.setEntity(new StringEntity(new Gson().toJson(errorBean), ContentType.APPLICATION_JSON));
+    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+      HttpPost post = new HttpPost(url);
+      post.setEntity(new StringEntity(new Gson().toJson(errorBean), ContentType.APPLICATION_JSON));
 
       String authKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.ERROR_REPORTER_API);
       if (authKey != null) {
