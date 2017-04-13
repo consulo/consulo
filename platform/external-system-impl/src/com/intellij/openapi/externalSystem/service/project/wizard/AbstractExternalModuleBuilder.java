@@ -95,7 +95,7 @@ public abstract class AbstractExternalModuleBuilder<S extends ExternalProjectSet
     VirtualFile configFile = getExternalProjectConfigFile(vContentRootDir);
     final String templateConfigName = getTemplateConfigName(myExternalProjectSettings);
     if (configFile != null && templateConfigName != null) {
-      FileTemplateManager manager = FileTemplateManager.getInstance();
+      FileTemplateManager manager = FileTemplateManager.getInstance(model.getProject());
       FileTemplate template = manager.getInternalTemplate(templateConfigName);
       try {
         VfsUtil.saveText(configFile, template.getText());

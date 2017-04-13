@@ -1657,8 +1657,9 @@
     <applicationService serviceInterface="com.intellij.packageDependencies.DependencyUISettings"
                         serviceImplementation="com.intellij.packageDependencies.DependencyUISettings"/>
 
-    <applicationService serviceInterface="com.intellij.ide.fileTemplates.FileTemplateManager"
+    <projectService serviceInterface="com.intellij.ide.fileTemplates.FileTemplateManager"
                         serviceImplementation="com.intellij.ide.fileTemplates.impl.FileTemplateManagerImpl"/>
+    <projectService serviceImplementation="com.intellij.ide.fileTemplates.impl.FileTemplateSettings"/>
     <applicationService serviceInterface="com.intellij.ide.fileTemplates.impl.ExportableFileTemplateSettings"
                         serviceImplementation="com.intellij.ide.fileTemplates.impl.ExportableFileTemplateSettings"/>
     <exportable serviceInterface="com.intellij.ide.fileTemplates.impl.ExportableFileTemplateSettings"/>

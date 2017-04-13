@@ -75,7 +75,7 @@
                              key="group.code.folding"
                              bundle="messages.ApplicationBundle"/>
 
-    <applicationConfigurable instance="com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable"
+    <projectConfigurable instance="com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable"
                              id="fileTemplates"
                              parentId="editor"
                              key="title.file.templates"

@@ -38,13 +38,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.ArrayUtil;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.VelocityException;
 import org.apache.velocity.runtime.parser.ParseException;
-import org.apache.velocity.runtime.parser.node.ASTReference;
-import org.apache.velocity.runtime.parser.node.ASTSetDirective;
-import org.apache.velocity.runtime.parser.node.Node;
-import org.apache.velocity.runtime.parser.node.SimpleNode;
+import org.apache.velocity.runtime.parser.Token;
+import org.apache.velocity.runtime.parser.node.*;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,43 +55,50 @@ import java.util.*;
 /**
  * @author MYakovlev
  */
-public class FileTemplateUtil{
+public class FileTemplateUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.FileTemplateUtil");
   private static final CreateFromTemplateHandler ourDefaultCreateFromTemplateHandler = new DefaultCreateFromTemplateHandler();
 
   private FileTemplateUtil() {
   }
 
-  public static String[] calculateAttributes(String templateContent, Properties properties, boolean includeDummies) throws ParseException {
-    Set<String> propertiesNames = new HashSet<String>();
+  public static String[] calculateAttributes(String templateContent, Properties properties, boolean includeDummies, Project project) throws ParseException {
+    Set<String> propertiesNames = new HashSet<>();
     for (Enumeration e = properties.propertyNames(); e.hasMoreElements(); ) {
       propertiesNames.add((String)e.nextElement());
     }
-    return calculateAttributes(templateContent, propertiesNames, includeDummies);
+    return calculateAttributes(templateContent, propertiesNames, includeDummies, project);
   }
 
-  public static String[] calculateAttributes(String templateContent, Map<String, Object> properties, boolean includeDummies) throws ParseException {
-    return calculateAttributes(templateContent, properties.keySet(), includeDummies);
+  public static String[] calculateAttributes(String templateContent, Map<String, Object> properties, boolean includeDummies, Project project)
+          throws ParseException {
+    return calculateAttributes(templateContent, properties.keySet(), includeDummies, project);
   }
 
-  public static String[] calculateAttributes(String templateContent, Set<String> propertiesNames, boolean includeDummies) throws ParseException {
-    final Set<String> unsetAttributes = new LinkedHashSet<String>();
-    final Set<String> definedAttributes = new HashSet<String>();
-    //noinspection HardCodedStringLiteral
+  private static String[] calculateAttributes(String templateContent, Set<String> propertiesNames, boolean includeDummies, Project project)
+          throws ParseException {
+    final Set<String> unsetAttributes = new LinkedHashSet<>();
+    final Set<String> definedAttributes = new HashSet<>();
     SimpleNode template = VelocityWrapper.parse(new StringReader(templateContent), "MyTemplate");
-    collectAttributes(unsetAttributes, definedAttributes, template, propertiesNames, includeDummies);
+    collectAttributes(unsetAttributes, definedAttributes, template, propertiesNames, includeDummies, new HashSet<>(), project);
     for (String definedAttribute : definedAttributes) {
       unsetAttributes.remove(definedAttribute);
     }
     return ArrayUtil.toStringArray(unsetAttributes);
   }
 
-  private static void collectAttributes(Set<String> referenced, Set<String> defined, Node apacheNode, Set<String> propertiesNames, boolean includeDummies){
+  private static void collectAttributes(Set<String> referenced,
+                                        Set<String> defined,
+                                        Node apacheNode,
+                                        final Set<String> propertiesNames,
+                                        final boolean includeDummies,
+                                        Set<String> visitedIncludes,
+                                        Project project) throws ParseException {
     int childCount = apacheNode.jjtGetNumChildren();
-    for(int i = 0; i < childCount; i++){
+    for (int i = 0; i < childCount; i++) {
       Node apacheChild = apacheNode.jjtGetChild(i);
-      collectAttributes(referenced, defined, apacheChild, propertiesNames, includeDummies);
-      if (apacheChild instanceof ASTReference){
+      collectAttributes(referenced, defined, apacheChild, propertiesNames, includeDummies, visitedIncludes, project);
+      if (apacheChild instanceof ASTReference) {
         ASTReference apacheReference = (ASTReference)apacheChild;
         String s = apacheReference.literal();
         s = referenceToAttribute(s, includeDummies);
@@ -103,10 +107,24 @@ public class FileTemplateUtil{
         }
       }
       else if (apacheChild instanceof ASTSetDirective) {
-        ASTReference lhs = (ASTReference) apacheChild.jjtGetChild(0);
+        ASTReference lhs = (ASTReference)apacheChild.jjtGetChild(0);
         String attr = referenceToAttribute(lhs.literal(), false);
         if (attr != null) {
           defined.add(attr);
+        }
+      }
+      else if (apacheChild instanceof ASTDirective && "parse".equals(((ASTDirective)apacheChild).getDirectiveName()) && apacheChild.jjtGetNumChildren() == 1) {
+        Node literal = apacheChild.jjtGetChild(0);
+        if (literal instanceof ASTStringLiteral && literal.jjtGetNumChildren() == 0) {
+          Token firstToken = literal.getFirstToken();
+          if (firstToken != null) {
+            String s = StringUtil.unquoteString(firstToken.toString());
+            final FileTemplate includedTemplate = FileTemplateManager.getInstance(project).getTemplate(s);
+            if (includedTemplate != null && visitedIncludes.add(s)) {
+              SimpleNode template = VelocityWrapper.parse(new StringReader(includedTemplate.getText()), "MyTemplate");
+              collectAttributes(referenced, defined, template, propertiesNames, includeDummies, visitedIncludes, project);
+            }
+          }
         }
       }
     }
@@ -130,7 +148,9 @@ public class FileTemplateUtil{
       if (includeDummies) {
         attrib = attrib.substring(1);
       }
-      else return null;
+      else {
+        return null;
+      }
     }
     if (!StringUtil.startsWithChar(attrib, '$')) {
       return null;
@@ -165,7 +185,7 @@ public class FileTemplateUtil{
     return attrib;
   }
 
-  public static String mergeTemplate(Map attributes, String content, boolean useSystemLineSeparators) throws IOException{
+  public static String mergeTemplate(Map attributes, String content, boolean useSystemLineSeparators) throws IOException {
     VelocityContext context = new VelocityContext();
     for (final Object o : attributes.keySet()) {
       String name = (String)o;
@@ -174,10 +194,10 @@ public class FileTemplateUtil{
     return mergeTemplate(content, context, useSystemLineSeparators);
   }
 
-  public static String mergeTemplate(Properties attributes, String content, boolean useSystemLineSeparators) throws IOException{
+  public static String mergeTemplate(Properties attributes, String content, boolean useSystemLineSeparators) throws IOException {
     VelocityContext context = new VelocityContext();
     Enumeration<?> names = attributes.propertyNames();
-    while (names.hasMoreElements()){
+    while (names.hasMoreElements()) {
       String name = (String)names.nextElement();
       context.put(name, attributes.getProperty(name));
     }
@@ -190,14 +210,9 @@ public class FileTemplateUtil{
       VelocityWrapper.evaluate(null, context, stringWriter, templateContent);
     }
     catch (final VelocityException e) {
-      LOG.error("Error evaluating template:\n"+templateContent,e);
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          Messages.showErrorDialog(IdeBundle.message("error.parsing.file.template", e.getMessage()),
-                                   IdeBundle.message("title.velocity.error"));
-        }
-      });
+      LOG.error("Error evaluating template:\n" + templateContent, e);
+      ApplicationManager.getApplication().invokeLater(
+              () -> Messages.showErrorDialog(IdeBundle.message("error.parsing.file.template", e.getMessage()), IdeBundle.message("title.velocity.error")));
     }
     final String result = stringWriter.toString();
 
@@ -217,13 +232,29 @@ public class FileTemplateUtil{
                                               @NotNull final PsiDirectory directory) throws Exception {
     Map<String, Object> map;
     if (props != null) {
-      map = new HashMap<String, Object>();
+      map = new HashMap<>();
       putAll(map, props);
     }
     else {
       map = null;
     }
     return createFromTemplate(template, fileName, map, directory, null);
+  }
+
+  @NotNull
+  public static FileTemplate createTemplate(@NotNull String prefName, @NotNull String extension, @NotNull String content, FileTemplate[] templates) {
+    final Set<String> names = new HashSet<>();
+    for (FileTemplate template : templates) {
+      names.add(template.getName());
+    }
+    String name = prefName;
+    int i = 0;
+    while (names.contains(name)) {
+      name = prefName + " (" + ++i + ")";
+    }
+    final FileTemplate newTemplate = new CustomFileTemplate(name, extension);
+    newTemplate.setText(content);
+    return newTemplate;
   }
 
   public static PsiElement createFromTemplate(@NotNull final FileTemplate template,
@@ -233,7 +264,7 @@ public class FileTemplateUtil{
                                               @Nullable ClassLoader classLoader) throws Exception {
     Map<String, Object> map;
     if (props != null) {
-      map = new HashMap<String, Object>();
+      map = new HashMap<>();
       putAll(map, props);
     }
     else {
@@ -249,11 +280,11 @@ public class FileTemplateUtil{
                                               @Nullable ClassLoader classLoader) throws Exception {
     @NotNull final Project project = directory.getProject();
     if (propsMap == null) {
-      Properties p = FileTemplateManager.getInstance().getDefaultProperties(directory.getProject());
-      propsMap = new HashMap<String, Object>();
+      Properties p = FileTemplateManager.getInstance(project).getDefaultProperties();
+      propsMap = new HashMap<>();
       putAll(propsMap, p);
     }
-    FileTemplateManager.getInstance().addRecentName(template.getName());
+    FileTemplateManager.getInstance(project).addRecentName(template.getName());
     Properties p = new Properties();
     fillDefaultProperties(p, directory);
     putAll(propsMap, p);
@@ -270,7 +301,7 @@ public class FileTemplateUtil{
     }
 
     //Set escaped references to dummy values to remove leading "\" (if not already explicitely set)
-    String[] dummyRefs = calculateAttributes(template.getText(), propsMap, true);
+    String[] dummyRefs = calculateAttributes(template.getText(), propsMap, true, project);
     for (String dummyRef : dummyRefs) {
       propsMap.put(dummyRef, "");
     }
@@ -279,26 +310,26 @@ public class FileTemplateUtil{
 
     final Map<String, Object> props_ = propsMap;
     final String fileName_ = fileName;
-    String mergedText = ClassLoaderUtil.runWithClassLoader(classLoader != null ? classLoader : FileTemplateUtil.class.getClassLoader(),
-                                                           new ThrowableComputable<String, IOException>() {
-                                                             @Override
-                                                             public String compute() throws IOException {
-                                                               return template.getText(props_);
-                                                             }
-                                                           });
+    String mergedText = ClassLoaderUtil
+            .runWithClassLoader(classLoader != null ? classLoader : FileTemplateUtil.class.getClassLoader(), new ThrowableComputable<String, IOException>() {
+              @Override
+              public String compute() throws IOException {
+                return template.getText(props_);
+              }
+            });
     final String templateText = StringUtil.convertLineSeparators(mergedText);
     final Exception[] commandException = new Exception[1];
     final PsiElement[] result = new PsiElement[1];
-    CommandProcessor.getInstance().executeCommand(project, new Runnable(){
+    CommandProcessor.getInstance().executeCommand(project, new Runnable() {
       @Override
-      public void run(){
-        ApplicationManager.getApplication().runWriteAction(new Runnable(){
+      public void run() {
+        ApplicationManager.getApplication().runWriteAction(new Runnable() {
           @Override
-          public void run(){
-            try{
+          public void run() {
+            try {
               result[0] = handler.createFromTemplate(project, directory, fileName_, template, templateText, props_);
             }
-            catch (Exception ex){
+            catch (Exception ex) {
               commandException[0] = ex;
             }
           }
@@ -307,14 +338,14 @@ public class FileTemplateUtil{
     }, template.isTemplateOfType(InternalStdFileTypes.JAVA)
        ? IdeBundle.message("command.create.class.from.template")
        : IdeBundle.message("command.create.file.from.template"), null);
-    if(commandException[0] != null){
+    if (commandException[0] != null) {
       throw commandException[0];
     }
     return result[0];
   }
 
   public static CreateFromTemplateHandler findHandler(final FileTemplate template) {
-    for(CreateFromTemplateHandler handler: Extensions.getExtensions(CreateFromTemplateHandler.EP_NAME)) {
+    for (CreateFromTemplateHandler handler : Extensions.getExtensions(CreateFromTemplateHandler.EP_NAME)) {
       if (handler.handlesTemplate(template)) {
         return handler;
       }
@@ -324,18 +355,18 @@ public class FileTemplateUtil{
 
   public static void fillDefaultProperties(final Properties props, final PsiDirectory directory) {
     final DefaultTemplatePropertiesProvider[] providers = Extensions.getExtensions(DefaultTemplatePropertiesProvider.EP_NAME);
-    for(DefaultTemplatePropertiesProvider provider: providers) {
+    for (DefaultTemplatePropertiesProvider provider : providers) {
       provider.fillProperties(directory, props);
     }
   }
 
   public static String indent(String methodText, Project project, FileType fileType) {
     int indent = CodeStyleSettingsManager.getSettings(project).getIndentSize(fileType);
-    return methodText.replaceAll("\n", "\n" + StringUtil.repeatSymbol(' ',indent));
+    return methodText.replaceAll("\n", "\n" + StringUtil.repeatSymbol(' ', indent));
   }
 
 
-  public static boolean canCreateFromTemplate (PsiDirectory[] dirs, FileTemplate template) {
+  public static boolean canCreateFromTemplate(PsiDirectory[] dirs, FileTemplate template) {
     FileType fileType = FileTypeManagerEx.getInstanceEx().getFileTypeByExtension(template.getExtension());
     if (fileType.equals(UnknownFileType.INSTANCE)) return false;
     CreateFromTemplateHandler handler = findHandler(template);
@@ -345,14 +376,14 @@ public class FileTemplateUtil{
   @Nullable
   public static Icon getIcon(@NotNull FileTemplate fileTemplate) {
     String extension = fileTemplate.getExtension();
-    if(fileTemplate instanceof CustomFileTemplate) {
+    if (fileTemplate instanceof CustomFileTemplate) {
       extension = ((CustomFileTemplate)fileTemplate).getEditorExtension();
     }
     return FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon();
   }
 
   public static void putAll(final Map<String, Object> props, final Properties p) {
-    for (Enumeration<?> e = p.propertyNames(); e.hasMoreElements();) {
+    for (Enumeration<?> e = p.propertyNames(); e.hasMoreElements(); ) {
       String s = (String)e.nextElement();
       props.put(s, p.getProperty(s));
     }
