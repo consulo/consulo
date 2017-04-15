@@ -156,7 +156,9 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
   private static void install(File entryFile, boolean globalEntry) throws IOException, ExecutionException, InterruptedException {
     if (globalEntry) {
       File script = ExecUtil.createTempExecutableScript("sudo", ".sh", "#!/bin/sh\n" +
-                                                                       "xdg-desktop-menu install --mode system \"" + entryFile.getAbsolutePath() + "\"\n" +
+                                                                       "xdg-desktop-menu install --mode system --novendor \"" +
+                                                                       entryFile.getAbsolutePath() +
+                                                                       "\"\n" +
                                                                        "RV=$?\n" +
                                                                        "xdg-desktop-menu forceupdate --mode system\n" +
                                                                        "exit $RV\n");
@@ -166,7 +168,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
       if (result != 0) throw new RuntimeException("'" + script.getAbsolutePath() + "' : " + result);
     }
     else {
-      int result = new GeneralCommandLine("xdg-desktop-menu", "install", "--mode", "user", entryFile.getAbsolutePath()).createProcess().waitFor();
+      int result = new GeneralCommandLine("xdg-desktop-menu", "install", "--mode", "user", "--novendor", entryFile.getAbsolutePath()).createProcess().waitFor();
       if (result != 0) throw new RuntimeException("'" + entryFile.getAbsolutePath() + "' : " + result);
       new GeneralCommandLine("xdg-desktop-menu", "forceupdate", "--mode", "user").createProcess().waitFor();
     }
