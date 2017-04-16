@@ -20,6 +20,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <eapDescriptor implementation="consulo.diagram.actions.ShowDiagramAction$DiagramSupport" />
+    <eapDescriptor implementation="consulo.auth.ServiceAuthEarlyAccessProgramDescriptor" />
 
     <applicationConfigurable parentId="preferences.pluginManager"
                              bundle="messages.IdeBundle"

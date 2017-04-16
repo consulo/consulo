@@ -24,7 +24,9 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.ObjectUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.auth.ServiceAuthConfiguration;
+import consulo.auth.ServiceAuthEarlyAccessProgramDescriptor;
 import consulo.auth.ui.ServiceAuthDialog;
+import consulo.ide.eap.EarlyAccessProgramManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -41,6 +43,11 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
   @RequiredDispatchThread
   @Override
   public void update(@NotNull AnActionEvent e) {
+    if (!EarlyAccessProgramManager.is(ServiceAuthEarlyAccessProgramDescriptor.class)) {
+      e.getPresentation().setEnabledAndVisible(false);
+      return;
+    }
+
     ServiceAuthConfiguration configuration = ServiceAuthConfiguration.getInstance();
 
     Presentation presentation = e.getPresentation();
