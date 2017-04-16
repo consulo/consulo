@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package com.intellij.codeInsight.daemon.quickFix;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.Result;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -46,21 +44,18 @@ import java.io.IOException;
 
 /**
  * @author peter
-*/
+ */
 public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
   private final boolean myIsDirectory;
   private final String myNewFileName;
   private final String myText;
-  @NotNull private final String myKey;
+  @NotNull
+  private final String myKey;
   private boolean myIsAvailable;
   private long myIsAvailableTimeStamp;
   private static final int REFRESH_INTERVAL = 1000;
 
-  public CreateFileFix(boolean isDirectory,
-                       @NotNull String newFileName,
-                       @NotNull PsiDirectory directory,
-                       @Nullable String text,
-                       @NotNull String key) {
+  public CreateFileFix(boolean isDirectory, @NotNull String newFileName, @NotNull PsiDirectory directory, @Nullable String text, @NotNull String key) {
     super(directory);
 
     myIsDirectory = isDirectory;
@@ -72,11 +67,11 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
   }
 
   public CreateFileFix(@NotNull String newFileName, @NotNull PsiDirectory directory, String text) {
-    this(false,newFileName,directory, text, "create.file.text");
+    this(false, newFileName, directory, text, "create.file.text");
   }
 
   public CreateFileFix(final boolean isDirectory, @NotNull String newFileName, @NotNull PsiDirectory directory) {
-    this(isDirectory,newFileName,directory,null, isDirectory ? "create.directory.text":"create.file.text" );
+    this(isDirectory, newFileName, directory, null, isDirectory ? "create.directory.text" : "create.file.text");
   }
 
   @Nullable
@@ -97,27 +92,19 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
   }
 
   @Override
-  public void invoke(@NotNull final Project project,
-                     @NotNull PsiFile file,
-                     Editor editor,
-                     @NotNull PsiElement startElement,
-                     @NotNull PsiElement endElement) {
-    final PsiDirectory myDirectory = (PsiDirectory)startElement;
+  public void invoke(@NotNull final Project project, @NotNull PsiFile file, Editor editor, @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
     if (isAvailable(project, null, file)) {
-      new WriteCommandAction(project) {
-        @Override
-        protected void run(Result result) throws Throwable {
-          invoke(project, myDirectory);
-        }
-      }.execute();
+      invoke(project, (PsiDirectory)startElement);
     }
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project,
-                             @NotNull PsiFile file,
-                             @NotNull PsiElement startElement,
-                             @NotNull PsiElement endElement) {
+  public void applyFix() {
+    invoke(myStartElement.getProject(), (PsiDirectory)myStartElement.getElement());
+  }
+
+  @Override
+  public boolean isAvailable(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
     final PsiDirectory myDirectory = (PsiDirectory)startElement;
     long current = System.currentTimeMillis();
 
@@ -165,27 +152,31 @@ public class CreateFileFix extends LocalQuickFixAndIntentionActionOnPsiElement {
           text = psiElement.getText();
         }
 
-        final FileEditorManager editorManager = FileEditorManager.getInstance(directory.getProject());
-        final FileEditor[] fileEditors = editorManager.openFile(newFile.getVirtualFile(), true);
-
-        if (text != null) {
-          for(FileEditor fileEditor: fileEditors) {
-            if (fileEditor instanceof TextEditor) { // JSP is not safe to edit via Psi
-              final Document document = ((TextEditor)fileEditor).getEditor().getDocument();
-              document.setText(text);
-
-              if (ApplicationManager.getApplication().isUnitTestMode()) {
-                FileDocumentManager.getInstance().saveDocument(document);
-              }
-              PsiDocumentManager.getInstance(project).commitDocument(document);
-              break;
-            }
-          }
-        }
+        openFile(project, directory, newFile, text);
       }
     }
     catch (IncorrectOperationException e) {
       myIsAvailable = false;
+    }
+  }
+
+  protected void openFile(@NotNull Project project, PsiDirectory directory, PsiFile newFile, String text) {
+    final FileEditorManager editorManager = FileEditorManager.getInstance(directory.getProject());
+    final FileEditor[] fileEditors = editorManager.openFile(newFile.getVirtualFile(), true);
+
+    if (text != null) {
+      for (FileEditor fileEditor : fileEditors) {
+        if (fileEditor instanceof TextEditor) { // JSP is not safe to edit via Psi
+          final Document document = ((TextEditor)fileEditor).getEditor().getDocument();
+          document.setText(text);
+
+          if (ApplicationManager.getApplication().isUnitTestMode()) {
+            FileDocumentManager.getInstance().saveDocument(document);
+          }
+          PsiDocumentManager.getInstance(project).commitDocument(document);
+          break;
+        }
+      }
     }
   }
 }

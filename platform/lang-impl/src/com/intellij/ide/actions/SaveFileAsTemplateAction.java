@@ -23,16 +23,19 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 public class SaveFileAsTemplateAction extends AnAction{
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e){
-    Project project = e.getData(CommonDataKeys.PROJECT);
+  public void actionPerformed(@NotNull AnActionEvent e){
+    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     String fileText = e.getData(PlatformDataKeys.FILE_TEXT);
     VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
     String extension = file.getExtension();
     String nameWithoutExtension = file.getNameWithoutExtension();
-    AllFileTemplatesConfigurable fileTemplateOptions = new AllFileTemplatesConfigurable();
+    AllFileTemplatesConfigurable fileTemplateOptions = new AllFileTemplatesConfigurable(project);
     ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(project, fileTemplateOptions);
     PsiFile psiFile = e.getData(LangDataKeys.PSI_FILE);
     for(SaveFileAsTemplateHandler handler: Extensions.getExtensions(SaveFileAsTemplateHandler.EP_NAME)) {
@@ -46,8 +49,9 @@ public class SaveFileAsTemplateAction extends AnAction{
     dialog.show();
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
     String fileText = e.getData(PlatformDataKeys.FILE_TEXT);
     e.getPresentation().setEnabled((fileText != null) && (file != null));

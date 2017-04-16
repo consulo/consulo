@@ -20,16 +20,15 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
-import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.ui.ListCellRendererWrapper;
+import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 /*
  * @author: MYakovlev
  * Date: Aug 22, 2002
@@ -62,19 +61,15 @@ public class SelectTemplateDialog extends DialogWrapper{
     centerPanel.add(myCbxTemplates,       new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 50, 0));
     centerPanel.add(editTemplatesButton,       new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
 
-    editTemplatesButton.addActionListener(new ActionListener(){
-      @Override
-      public void actionPerformed(ActionEvent e){
-        onEditTemplates();
-      }
-    });
+    editTemplatesButton.addActionListener(e -> onEditTemplates());
 
     return centerPanel;
   }
 
+  @RequiredDispatchThread
   private void loadCombo(){
     DefaultComboBoxModel model = new DefaultComboBoxModel();
-    FileTemplate[] allTemplates = FileTemplateManager.getInstance().getAllTemplates();
+    FileTemplate[] allTemplates = FileTemplateManager.getInstance(myProject).getAllTemplates();
     PsiDirectory[] dirs = {myDirectory};
     for (FileTemplate template : allTemplates) {
       if (FileTemplateUtil.canCreateFromTemplate(dirs, template)) {

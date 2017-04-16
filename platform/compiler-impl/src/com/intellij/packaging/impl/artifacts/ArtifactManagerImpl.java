@@ -26,6 +26,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.ProjectLoadingErrorsNotifier;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -63,11 +64,12 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   private boolean myLoaded;
   private long myModificationCount;
   private final ModificationTracker myModificationTracker = new ModificationTracker() {
+    @Override
     public long getModificationCount() {
       return myModificationCount;
     }
   };
-  private final Map<String, LocalFileSystem.WatchRequest> myWatchedOutputs = new HashMap<String, LocalFileSystem.WatchRequest>();
+  private final Map<String, LocalFileSystem.WatchRequest> myWatchedOutputs = new HashMap<>();
 
   public ArtifactManagerImpl(Project project) {
     myProject = project;
@@ -78,25 +80,30 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     updateWatchedRoots();
   }
 
+  @Override
   @NotNull
   public Artifact[] getArtifacts() {
     return myModel.getArtifacts();
   }
 
+  @Override
   public Artifact findArtifact(@NotNull String name) {
     return myModel.findArtifact(name);
   }
 
+  @Override
   @NotNull
   public Artifact getArtifactByOriginal(@NotNull Artifact artifact) {
     return myModel.getArtifactByOriginal(artifact);
   }
 
+  @Override
   @NotNull
   public Artifact getOriginalArtifact(@NotNull Artifact artifact) {
     return myModel.getOriginalArtifact(artifact);
   }
 
+  @Override
   @NotNull
   public Collection<? extends Artifact> getArtifactsByType(@NotNull ArtifactType type) {
     return myModel.getArtifactsByType(type);
@@ -107,6 +114,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     return myModel.getAllArtifactsIncludingInvalid();
   }
 
+  @Override
   public ArtifactManagerState getState() {
     final ArtifactManagerState state = new ArtifactManagerState();
     for (Artifact artifact : getAllArtifactsIncludingInvalid()) {
@@ -128,6 +136,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
           }
         }
         Collections.sort(artifactState.getPropertiesList(), new Comparator<ArtifactPropertiesState>() {
+          @Override
           public int compare(ArtifactPropertiesState o1, ArtifactPropertiesState o2) {
             return o1.getId().compareTo(o2.getId());
           }
@@ -185,8 +194,9 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     return packagingElement;
   }
 
+  @Override
   public void loadState(ArtifactManagerState managerState) {
-    final List<ArtifactImpl> artifacts = new ArrayList<ArtifactImpl>();
+    final List<ArtifactImpl> artifacts = new ArrayList<>();
     for (ArtifactState state : managerState.getArtifacts()) {
       artifacts.add(loadArtifact(state));
     }
@@ -204,6 +214,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   private ArtifactImpl loadArtifact(ArtifactState state) {
     ArtifactType type = ArtifactType.findById(state.getArtifactType());
     if (type == null) {
+      UnknownFeaturesCollector.getInstance(myProject).registerUnknownFeature(ArtifactType.EP_NAME.getName(), state.getArtifactType());
       return createInvalidArtifact(state, "Unknown artifact type: " + state.getArtifactType());
     }
 
@@ -260,8 +271,8 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   }
 
   private void updateWatchedRoots() {
-    Set<String> pathsToRemove = new HashSet<String>(myWatchedOutputs.keySet());
-    Set<String> toAdd = new HashSet<String>();
+    Set<String> pathsToRemove = new HashSet<>(myWatchedOutputs.keySet());
+    Set<String> toAdd = new HashSet<>();
     for (Artifact artifact : getArtifacts()) {
       final String path = artifact.getOutputPath();
       if (path != null && path.length() > 0) {
@@ -272,10 +283,10 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
       }
     }
 
-    List<LocalFileSystem.WatchRequest> requestsToRemove = new ArrayList<LocalFileSystem.WatchRequest>();
+    List<LocalFileSystem.WatchRequest> requestsToRemove = new ArrayList<>();
     for (String path : pathsToRemove) {
       final LocalFileSystem.WatchRequest request = myWatchedOutputs.remove(path);
-      ContainerUtil.addIfNotNull(request, requestsToRemove);
+      ContainerUtil.addIfNotNull(requestsToRemove, request);
     }
 
     Set<LocalFileSystem.WatchRequest> newRequests = LocalFileSystem.getInstance().replaceWatchedRoots(requestsToRemove, toAdd, null);
@@ -317,9 +328,9 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
 
       final List<ArtifactImpl> allArtifacts = artifactModel.getOriginalArtifacts();
 
-      final Set<ArtifactImpl> removed = new THashSet<ArtifactImpl>(myModel.myArtifactsList);
-      final List<ArtifactImpl> added = new ArrayList<ArtifactImpl>();
-      final List<Pair<ArtifactImpl, String>> changed = new ArrayList<Pair<ArtifactImpl, String>>();
+      final Set<ArtifactImpl> removed = new THashSet<>(myModel.myArtifactsList);
+      final List<ArtifactImpl> added = new ArrayList<>();
+      final List<Pair<ArtifactImpl, String>> changed = new ArrayList<>();
 
       for (ArtifactImpl artifact : allArtifacts) {
         final boolean isAdded = !removed.remove(artifact);
@@ -339,6 +350,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
       final ArtifactListener publisher = myProject.getMessageBus().syncPublisher(TOPIC);
       hasChanges = !removed.isEmpty() || !added.isEmpty() || !changed.isEmpty();
       ProjectRootManagerEx.getInstanceEx(myProject).mergeRootsChangesDuring(new Runnable() {
+        @Override
         public void run() {
           for (ArtifactImpl artifact : removed) {
             publisher.artifactRemoved(artifact);
@@ -366,9 +378,11 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     return myProject;
   }
 
+  @Override
   @NotNull
   public Artifact addArtifact(@NotNull final String name, @NotNull final ArtifactType type, final CompositePackagingElement<?> root) {
     return new WriteAction<Artifact>() {
+      @Override
       protected void run(final Result<Artifact> result) {
         final ModifiableArtifactModel model = createModifiableModel();
         final ModifiableArtifact artifact = model.addArtifact(name, type);
@@ -392,6 +406,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     final CompositePackagingElement<?> root = model.getOrCreateModifiableArtifact(artifact).getRootElement();
     PackagingElementFactory.getInstance().getOrCreateDirectory(root, relativePath).addOrFindChildren(elements);
     new WriteAction() {
+      @Override
       protected void run(final Result result) {
         model.commit();
       }
@@ -404,7 +419,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   }
 
   private static class ArtifactManagerModel extends ArtifactModelBase {
-    private List<ArtifactImpl> myArtifactsList = new ArrayList<ArtifactImpl>();
+    private List<ArtifactImpl> myArtifactsList = new ArrayList<>();
     private Artifact[] mySortedArtifacts;
 
     public void setArtifactsList(List<ArtifactImpl> artifactsList) {
@@ -418,6 +433,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
       mySortedArtifacts = null;
     }
 
+    @Override
     protected List<? extends Artifact> getArtifactsList() {
       return myArtifactsList;
     }

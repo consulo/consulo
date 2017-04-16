@@ -339,4 +339,9 @@ public class StorageUtil {
   public static boolean isProjectOrModuleFile(@NotNull String fileSpec) {
     return fileSpec.startsWith(StoragePathMacros.PROJECT_CONFIG_DIR);
   }
+
+  @NotNull
+  public static String getStoreDir(@NotNull Project project) {
+    return project.getBasePath() + "/" + Project.DIRECTORY_STORE_FOLDER;
+  }
 }

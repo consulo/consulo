@@ -19,6 +19,7 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +39,7 @@ public abstract class FileTemplateBase implements FileTemplate {
   @Nullable
   private String myText;
   private boolean myShouldReformatCode = DEFAULT_REFORMAT_CODE_VALUE;
+  private boolean myLiveTemplateEnabled;
 
   @Override
   public final boolean isReformatCode() {
@@ -54,7 +56,7 @@ public abstract class FileTemplateBase implements FileTemplate {
   }
 
   public static String getQualifiedName(final String name, final String extension) {
-    return name + "." + extension;
+    return FTManager.encodeFileName(name, extension);
   }
 
   @Override
@@ -94,8 +96,8 @@ public abstract class FileTemplateBase implements FileTemplate {
 
   @Override
   @NotNull
-  public final String[] getUnsetAttributes(@NotNull Properties properties) throws ParseException {
-    return FileTemplateUtil.calculateAttributes(getText(), properties, false);
+  public final String[] getUnsetAttributes(@NotNull Properties properties, Project project) throws ParseException {
+    return FileTemplateUtil.calculateAttributes(getText(), properties, false, project);
   }
 
   @Override
@@ -112,4 +114,16 @@ public abstract class FileTemplateBase implements FileTemplate {
   public boolean isTemplateOfType(@NotNull final FileType fType) {
     return fType.equals(FileTypeManagerEx.getInstanceEx().getFileTypeByExtension(getExtension()));
   }
+
+  @Override
+  public boolean isLiveTemplateEnabled() {
+    return myLiveTemplateEnabled;
+  }
+
+  @Override
+  public void setLiveTemplateEnabled(boolean value) {
+    myLiveTemplateEnabled = value;
+  }
+
+  public boolean isLiveTemplateEnabledByDefault() { return false; }
 }

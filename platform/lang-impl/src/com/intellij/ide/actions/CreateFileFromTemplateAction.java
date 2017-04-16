@@ -18,10 +18,10 @@ package com.intellij.ide.actions;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
+import com.intellij.ide.fileTemplates.actions.CreateFromTemplateActionBase;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -32,6 +32,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * @author Dmitry Avdeev
@@ -43,28 +45,47 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
   }
 
   protected PsiFile createFileFromTemplate(String name, FileTemplate template, PsiDirectory dir) {
-    return createFileFromTemplate(name, template, dir, getDefaultTemplateProperty());
+    return createFileFromTemplate(name, template, dir, getDefaultTemplateProperty(), true);
   }
 
-  @SuppressWarnings("DialogTitleCapitalization")
   @Nullable
   public static PsiFile createFileFromTemplate(@Nullable String name,
                                                @NotNull FileTemplate template,
                                                @NotNull PsiDirectory dir,
-                                               @Nullable String defaultTemplateProperty) {
-    CreateFileAction.MkDirs mkdirs = new CreateFileAction.MkDirs(name, dir);
-    name = mkdirs.newName;
-    dir = mkdirs.directory;
+                                               @Nullable String defaultTemplateProperty,
+                                               boolean openFile) {
+    return createFileFromTemplate(name, template, dir, defaultTemplateProperty, openFile, Collections.emptyMap());
+  }
+
+  @Nullable
+  public static PsiFile createFileFromTemplate(@Nullable String name,
+                                               @NotNull FileTemplate template,
+                                               @NotNull PsiDirectory dir,
+                                               @Nullable String defaultTemplateProperty,
+                                               boolean openFile,
+                                               @NotNull Map<String, String> liveTemplateDefaultValues) {
+    if (name != null) {
+      CreateFileAction.MkDirs mkdirs = new CreateFileAction.MkDirs(name, dir);
+      name = mkdirs.newName;
+      dir = mkdirs.directory;
+    }
+
     PsiElement element;
     Project project = dir.getProject();
     try {
-      element = FileTemplateUtil
-        .createFromTemplate(template, name, FileTemplateManager.getInstance().getDefaultProperties(project), dir);
+      element = FileTemplateUtil.createFromTemplate(template, name, FileTemplateManager.getInstance(dir.getProject()).getDefaultProperties(), dir);
       final PsiFile psiFile = element.getContainingFile();
 
       final VirtualFile virtualFile = psiFile.getVirtualFile();
       if (virtualFile != null) {
-        FileEditorManager.getInstance(project).openFile(virtualFile, true);
+        if (openFile) {
+          if (template.isLiveTemplateEnabled()) {
+            CreateFromTemplateActionBase.startLiveTemplate(psiFile, liveTemplateDefaultValues);
+          }
+          else {
+            FileEditorManager.getInstance(project).openFile(virtualFile, true);
+          }
+        }
         if (defaultTemplateProperty != null) {
           PropertiesComponent.getInstance(project).setValue(defaultTemplateProperty, template.getName());
         }
@@ -72,8 +93,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
       }
     }
     catch (ParseException e) {
-      Messages.showErrorDialog(project, "Error parsing Velocity template: " + e.getMessage(), "Create File from Template");
-      return null;
+      throw new IncorrectOperationException("Error parsing Velocity template: " + e.getMessage(), (Throwable)e);
     }
     catch (IncorrectOperationException e) {
       throw e;
@@ -87,7 +107,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
 
   @Override
   protected PsiFile createFile(String name, String templateName, PsiDirectory dir) {
-    final FileTemplate template = FileTemplateManager.getInstance().getInternalTemplate(templateName);
+    final FileTemplate template = FileTemplateManager.getInstance(dir.getProject()).getInternalTemplate(templateName);
     return createFileFromTemplate(name, template, dir);
   }
 }

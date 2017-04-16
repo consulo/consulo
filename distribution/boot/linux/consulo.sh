@@ -3,7 +3,7 @@
 ROOT_DIR="$(dirname "$0")"
 
 while true ; do
-  BUILD_DIR=`ls -1v platform | tail -n 1`
+  BUILD_DIR=`ls -1v $ROOT_DIR/platform | tail -n 1`
 
   CONSULO_HOME="$ROOT_DIR/platform/$BUILD_DIR"
 
