@@ -28,9 +28,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 19-Nov-16.
  */
-@State(
-        name = "WebServicesConfiguration",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/webServices.xml", roamingType = RoamingType.DISABLED)})
+@State(name = "WebServicesConfiguration", storages = @Storage(value = "webServices.xml", roamingType = RoamingType.DISABLED))
 public class WebServicesConfiguration implements PersistentStateComponent<WebServicesConfiguration.State> {
   @NotNull
   public static WebServicesConfiguration getInstance() {

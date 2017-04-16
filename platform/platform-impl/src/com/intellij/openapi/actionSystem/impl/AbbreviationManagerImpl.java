@@ -29,16 +29,8 @@ import java.util.*;
 /**
  * @author Konstantin Bulenkov
  */
-@State(
-  name = "AbbreviationManager",
-  roamingType = RoamingType.PER_PLATFORM,
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/abbreviations.xml"
-    )}
-)
-public class AbbreviationManagerImpl extends AbbreviationManager implements
-                                                                 ExportableApplicationComponent, PersistentStateComponent<Element> {
+@State(name = "AbbreviationManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/abbreviations.xml", roamingType = RoamingType.PER_PLATFORM))
+public class AbbreviationManagerImpl extends AbbreviationManager implements ExportableApplicationComponent, PersistentStateComponent<Element> {
   private final Map<String, List<String>> myAbbreviation2ActionId = new THashMap<String, List<String>>();
   private final Map<String, LinkedHashSet<String>> myActionId2Abbreviations = new THashMap<String, LinkedHashSet<String>>();
   private final Map<String, LinkedHashSet<String>> myPluginsActionId2Abbreviations = new THashMap<String, LinkedHashSet<String>>();
@@ -195,7 +187,8 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements
     final LinkedHashSet<String> abbreviations = myActionId2Abbreviations.get(actionId);
     if (abbreviations != null) {
       abbreviations.remove(abbreviation);
-    } else {
+    }
+    else {
       final LinkedHashSet<String> abbrs = myActionId2Abbreviations.get(actionId);
       if (abbrs != null) {
         final LinkedHashSet<String> customValues = new LinkedHashSet<String>(abbrs);

@@ -17,7 +17,10 @@ package com.intellij.packageDependencies;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.MainConfigurationStateSplitter;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -38,12 +41,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-@State(
-        name = "DependencyValidationManager",
-        storages = {
-                @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/scopes/", scheme = StorageScheme.DIRECTORY_BASED,
-                         stateSplitter = DependencyValidationManagerImpl.ScopesStateSplitter.class)}
-)
+@State(name = "DependencyValidationManager", storages = {
+        @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/scopes/", stateSplitter = DependencyValidationManagerImpl.ScopesStateSplitter.class)})
 public class DependencyValidationManagerImpl extends DependencyValidationManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.packageDependencies.DependencyValidationManagerImpl");
 
@@ -53,12 +52,18 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   private boolean mySkipImportStatements;
   private boolean mySkipImportStatementsWasSpecified;
 
-  @NonNls private static final String DENY_RULE_KEY = "deny_rule";
-  @NonNls private static final String FROM_SCOPE_KEY = "from_scope";
-  @NonNls private static final String TO_SCOPE_KEY = "to_scope";
-  @NonNls private static final String IS_DENY_KEY = "is_deny";
-  @NonNls private static final String UNNAMED_SCOPE = "unnamed_scope";
-  @NonNls private static final String VALUE = "value";
+  @NonNls
+  private static final String DENY_RULE_KEY = "deny_rule";
+  @NonNls
+  private static final String FROM_SCOPE_KEY = "from_scope";
+  @NonNls
+  private static final String TO_SCOPE_KEY = "to_scope";
+  @NonNls
+  private static final String IS_DENY_KEY = "is_deny";
+  @NonNls
+  private static final String UNNAMED_SCOPE = "unnamed_scope";
+  @NonNls
+  private static final String VALUE = "value";
 
   private final Map<String, PackageSet> myUnnamedScopes = new THashMap<String, PackageSet>();
 
@@ -340,8 +345,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     });
   }
 
-  private static void addScopesToList(@NotNull final List<Pair<NamedScope, NamedScopesHolder>> scopeList,
-                                      @NotNull final NamedScopesHolder holder) {
+  private static void addScopesToList(@NotNull final List<Pair<NamedScope, NamedScopesHolder>> scopeList, @NotNull final NamedScopesHolder holder) {
     for (NamedScope scope : holder.getScopes()) {
       scopeList.add(Pair.create(scope, holder));
     }

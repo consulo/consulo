@@ -19,5 +19,5 @@ package com.intellij.errorreport.error;
  * @author stathik
  * @since 2:56:46 PM Aug 5, 2003
  */
-public class AuthorizationFailedException extends Exception {
+public class AuthorizationFailedException extends RuntimeException {
 }

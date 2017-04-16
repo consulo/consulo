@@ -571,7 +571,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
     if (myProvider != null && myProvider.isEnabled()) {
       String fileSpec = getFileFullPath(fileName);
       if (myProvider.isApplicable(fileSpec, myRoamingType)) {
-        myProvider.saveContent(fileSpec, byteOut.getInternalBuffer(), byteOut.size(), myRoamingType, true);
+        myProvider.saveContent(fileSpec, byteOut.getInternalBuffer(), byteOut.size(), myRoamingType);
       }
     }
   }

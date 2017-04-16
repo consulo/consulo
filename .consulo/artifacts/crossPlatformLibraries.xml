@@ -105,6 +105,9 @@
       <element id="zip-archive" name="consulo-xcoverage-impl.jar">
         <element id="module-output" name="coverage-impl" />
       </element>
+      <element id="zip-archive" name="consulo-external-storage-impl.jar">
+        <element id="module-output" name="external-storage-impl" />
+      </element>
     </root>
   </artifact>
 </component>

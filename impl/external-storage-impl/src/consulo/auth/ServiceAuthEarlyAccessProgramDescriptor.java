@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl.stores;
+package consulo.auth;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ide.eap.EarlyAccessProgramDescriptor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public interface IModuleStore extends IComponentStore {
-
-  void setModuleFilePath(final String filePath);
-
-  @Nullable
-  VirtualFile getModuleFile();
+/**
+ * @author VISTALL
+ * @since 16-Apr-17
+ */
+public class ServiceAuthEarlyAccessProgramDescriptor extends EarlyAccessProgramDescriptor {
+  @NotNull
+  @Override
+  public String getName() {
+    return "hub.consulo.io authorization & external storage support";
+  }
 
   @NotNull
-  String getModuleFilePath();
+  @Override
+  public String getDescription() {
+    return "Enabled support for hub.consulo.io. Provide support for storing settings at hub.consulo.io";
+  }
 
-  @NotNull
-  String getModuleFileName();
-
-  void setOption(final String optionName, final String optionValue);
-
-  void clearOption(final String optionName);
-
-  String getOptionValue(final String optionName);
+  @Override
+  public boolean isRestartRequired() {
+    return true;
+  }
 }

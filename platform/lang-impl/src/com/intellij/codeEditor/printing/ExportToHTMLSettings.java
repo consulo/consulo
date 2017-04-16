@@ -21,17 +21,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
 
-@State(
-  name = "ExportToHTMLSettings",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.PROJECT_FILE
-    )}
-)
+@State(name = "ExportToHTMLSettings", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class ExportToHTMLSettings implements PersistentStateComponent<ExportToHTMLSettings> {
   public boolean PRINT_LINE_NUMBERS;
   public boolean OPEN_IN_BROWSER;
-  @NonNls public String OUTPUT_DIRECTORY;
+  @NonNls
+  public String OUTPUT_DIRECTORY;
 
   private int myPrintScope;
 

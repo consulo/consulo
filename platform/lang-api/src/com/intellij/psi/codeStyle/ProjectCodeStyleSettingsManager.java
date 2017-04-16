@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 @State(
         name = "ProjectCodeStyleSettingsManager",
-        storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/codeStyleSettings.xml", scheme = StorageScheme.DIRECTORY_BASED)})
+        storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/codeStyleSettings.xml")})
 public class ProjectCodeStyleSettingsManager extends CodeStyleSettingsManager {
   @NotNull
   public static ProjectCodeStyleSettingsManager getInstance(@NotNull Project project) {

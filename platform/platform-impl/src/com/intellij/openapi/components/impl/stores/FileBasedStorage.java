@@ -132,10 +132,6 @@ public class FileBasedStorage extends XmlElementStorage {
         LOG.error(e);
       }
 
-      if (LOG.isDebugEnabled() && myFileSpec.equals(StoragePathMacros.MODULE_FILE)) {
-        LOG.debug("doSave " + getFilePath());
-      }
-
       if (content == null) {
         StorageUtil.deleteFile(myFile, this, getVirtualFile());
         myCachedVirtualFile = null;

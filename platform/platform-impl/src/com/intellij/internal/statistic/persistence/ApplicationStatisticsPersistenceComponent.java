@@ -40,16 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@State(
-  name = "StatisticsApplicationUsages",
-  roamingType = RoamingType.DISABLED,
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/statistics.application.usages.xml"
-    )}
-)
+@State(name = "StatisticsApplicationUsages", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
+                                                                        "/statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
 public class ApplicationStatisticsPersistenceComponent extends ApplicationStatisticsPersistence
-  implements ApplicationComponent, PersistentStateComponent<Element> {
+        implements ApplicationComponent, PersistentStateComponent<Element> {
   private boolean persistOnClosing = !ApplicationManager.getApplication().isUnitTestMode();
 
   private static final String TOKENIZER = ",";
@@ -147,7 +141,8 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
         }
       }
       return new UsageDescriptor(usage, 1);
-    } catch (AssertionError e) {
+    }
+    catch (AssertionError e) {
       //escape loading of invalid usages
     }
     return null;

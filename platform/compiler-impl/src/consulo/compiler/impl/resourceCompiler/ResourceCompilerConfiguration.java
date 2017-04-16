@@ -50,7 +50,7 @@ import java.util.StringTokenizer;
 @State(
   name = "ResourceCompilerConfiguration",
   storages = {
-    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)})
+    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml")})
 public class ResourceCompilerConfiguration implements PersistentStateComponent<Element> {
   @NotNull
   public static ResourceCompilerConfiguration getInstance(@NotNull Project project) {

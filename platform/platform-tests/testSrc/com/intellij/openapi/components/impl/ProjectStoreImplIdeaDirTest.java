@@ -41,7 +41,7 @@ public class ProjectStoreImplIdeaDirTest extends ProjectStoreBaseTestCase {
     ((ProjectEx)myProject).setOptimiseTestLoadSpeed(false);
 
     final TestIprComponent testIprComponent = new TestIprComponent();
-    projectStore.initComponent(testIprComponent, false);
+    projectStore.initComponent(testIprComponent);
     assertNotNull(testIprComponent.myState);
   }
 }

@@ -18,8 +18,10 @@
     <group id="Vcs.KeymapGroup" text="Version Control Systems"/>
     <!-- grouping for Settings -> Keymap -> Version Control Systems -->
     <group id="VcsGeneral.KeymapGroup"/>
-    <!-- grouping for Settings -> Keymap -> Version Control Systems -->
 
+    <action id="Login" class="consulo.auth.action.LoginAction" />
+
+    <!-- grouping for Settings -> Keymap -> Version Control Systems -->
     <group id="Diff.KeymapGroup" text="Diff \&amp;\&amp; Merge">
       <action id="Diff.ShowDiff" class="com.intellij.openapi.actionSystem.EmptyAction" icon="AllIcons.Actions.Diff"/> <!-- CommonShortcuts.getDiff() -->
       <action id="CompareTwoFiles" class="com.intellij.diff.actions.CompareFilesAction" icon="AllIcons.Actions.Diff"/>
@@ -557,6 +559,7 @@
       <separator/>
       <reference ref="HelpTopics"/>
       <reference ref="SearchEverywhere"/>
+      <reference ref="Login" />
     </group>
 
     <group id="NavBarVcsGroup"/>
@@ -1425,6 +1428,7 @@
       <reference id="NavBarToolBarOthers"/>
       <separator/>
       <reference ref="SearchEverywhere"/>
+      <reference ref="Login" />
     </group>
 
     <group id="Bookmarks">
@@ -1977,9 +1981,6 @@
     <group>
       <add-to-group group-id="ExportImportGroup" anchor="first"/>
     </group>
-    <action id="SaveAsNewFormat" class="com.intellij.ide.actions.SaveAsDirectoryBasedFormatAction" text="Save as Directory-Based Format...">
-      <add-to-group group-id="ExportImportGroup" anchor="last"/>
-    </action>
 
     <!-- Edit -->
     <reference ref="EditorCompleteStatement">

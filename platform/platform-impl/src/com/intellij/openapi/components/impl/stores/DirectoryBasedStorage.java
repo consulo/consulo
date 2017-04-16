@@ -41,19 +41,18 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Set;
 
 public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData> {
   private final File myDir;
   private volatile VirtualFile myVirtualFile;
-  private final StateSplitter mySplitter;
+  private final StateSplitterEx mySplitter;
 
   private DirectoryStorageData myStorageData;
 
   public DirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
                                @NotNull String dir,
-                               @NotNull StateSplitter splitter,
+                               @NotNull StateSplitterEx splitter,
                                @NotNull Disposable parentDisposable,
                                @Nullable final Listener listener) {
     super(pathMacroSubstitutor);
@@ -93,7 +92,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
   }
 
   @Override
-  public void analyzeExternalChangesAndUpdateIfNeed(@NotNull Collection<VirtualFile> changedFiles, @NotNull Set<String> result) {
+  public void analyzeExternalChangesAndUpdateIfNeed(@NotNull Set<String> result) {
     // todo reload only changed file, compute diff
     DirectoryStorageData oldData = myStorageData;
     DirectoryStorageData newData = loadState();

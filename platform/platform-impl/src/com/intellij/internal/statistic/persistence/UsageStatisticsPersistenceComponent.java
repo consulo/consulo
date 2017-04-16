@@ -33,31 +33,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@State(
-  name = "UsagesStatistic",
-  roamingType = RoamingType.DISABLED,
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/usage.statistics.xml"
-    )}
-)
+@State(name = "UsagesStatistic", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/usage.statistics.xml", roamingType = RoamingType.DISABLED))
 public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersistenceComponent
-  implements ApplicationComponent, PersistentStateComponent<Element> {
+        implements ApplicationComponent, PersistentStateComponent<Element> {
 
-  @NonNls private boolean myAllowed = true;
-  @NotNull private SendPeriod myPeriod = SendPeriod.WEEKLY;
+  @NonNls
+  private boolean myAllowed = true;
+  @NotNull
+  private SendPeriod myPeriod = SendPeriod.WEEKLY;
 
-  @NonNls private static final String DATA_ATTR = "data";
-  @NonNls private static final String GROUP_TAG = "group";
-  @NonNls private static final String GROUP_ID_ATTR = "id";
-  @NonNls private static final String GROUP_PRIORITY_ATTR = "priority";
+  @NonNls
+  private static final String DATA_ATTR = "data";
+  @NonNls
+  private static final String GROUP_TAG = "group";
+  @NonNls
+  private static final String GROUP_ID_ATTR = "id";
+  @NonNls
+  private static final String GROUP_PRIORITY_ATTR = "priority";
 
-  @NonNls private static final String LAST_TIME_ATTR = "time";
-  @NonNls private static final String IS_ALLOWED_ATTR = "allowed";
-  @NonNls private static final String PERIOD_ATTR = "period";
+  @NonNls
+  private static final String LAST_TIME_ATTR = "time";
+  @NonNls
+  private static final String IS_ALLOWED_ATTR = "allowed";
+  @NonNls
+  private static final String PERIOD_ATTR = "period";
 
   public UsageStatisticsPersistenceComponent() {
-    if(SandboxUtil.isInsideSandbox() || ApplicationManager.getApplication().isInternal()) {
+    if (SandboxUtil.isInsideSandbox() || ApplicationManager.getApplication().isInternal()) {
       myAllowed = false;
     }
   }
@@ -78,7 +80,8 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
       if (!StringUtil.isEmptyOrSpaces(groupId) && !StringUtil.isEmptyOrSpaces(valueData)) {
         try {
           getSentUsages().putAll(ConvertUsagesUtil.convertValueString(GroupDescriptor.create(groupId, groupPriority), valueData));
-        } catch (AssertionError e) {
+        }
+        catch (AssertionError e) {
           //don't load incorrect groups
         }
       }
@@ -100,8 +103,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
   public Element getState() {
     Element element = new Element("state");
 
-    for (Map.Entry<GroupDescriptor, Set<UsageDescriptor>> entry : ConvertUsagesUtil.sortDescriptorsByPriority(getSentUsages())
-      .entrySet()) {
+    for (Map.Entry<GroupDescriptor, Set<UsageDescriptor>> entry : ConvertUsagesUtil.sortDescriptorsByPriority(getSentUsages()).entrySet()) {
       Element projectElement = new Element(GROUP_TAG);
       projectElement.setAttribute(GROUP_ID_ATTR, entry.getKey().getId());
       projectElement.setAttribute(GROUP_PRIORITY_ATTR, Double.toString(entry.getKey().getPriority()));

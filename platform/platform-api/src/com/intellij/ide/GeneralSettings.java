@@ -16,9 +16,10 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.ExportableApplicationComponent;
-import com.intellij.openapi.util.NamedJDOMExternalizable;
+import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.util.JDOMExternalizable;
 import consulo.annotations.DeprecationInfo;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
@@ -27,15 +28,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.File;
 import java.util.List;
 
-public class GeneralSettings implements NamedJDOMExternalizable, ExportableApplicationComponent {
-  @NonNls private static final String OPTION_INACTIVE_TIMEOUT = "inactiveTimeout";
-  @NonNls public static final String PROP_INACTIVE_TIMEOUT = OPTION_INACTIVE_TIMEOUT;
+@State(name = "GeneralSettings", storages = @Storage("ide.general.xml"))
+public class GeneralSettings implements JDOMExternalizable, ApplicationComponent {
+  @NonNls
+  private static final String OPTION_INACTIVE_TIMEOUT = "inactiveTimeout";
+  @NonNls
+  public static final String PROP_INACTIVE_TIMEOUT = OPTION_INACTIVE_TIMEOUT;
   private static final int DEFAULT_INACTIVE_TIMEOUT = 15;
 
-  @NonNls private String myBrowserPath;
+  @NonNls
+  private String myBrowserPath;
   private boolean myShowTipsOnStartup = true;
   private int myLastTip = 0;
   private boolean myShowOccupiedMemory = false;
@@ -52,47 +56,66 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
   private boolean myConfirmExit = true;
   private int myConfirmOpenNewProject = OPEN_PROJECT_ASK;
 
-  @NonNls private static final String ELEMENT_OPTION = "option";
-  @NonNls private static final String ATTRIBUTE_NAME = "name";
-  @NonNls private static final String ATTRIBUTE_VALUE = "value";
-  @NonNls private static final String OPTION_BROWSER_PATH = "browserPath";
-  @NonNls private static final String OPTION_LAST_TIP = "lastTip";
-  @NonNls private static final String OPTION_SHOW_TIPS_ON_STARTUP = "showTipsOnStartup";
-  @NonNls private static final String OPTION_SHOW_OCCUPIED_MEMORY = "showOccupiedMemory";
-  @NonNls private static final String OPTION_REOPEN_LAST_PROJECT = "reopenLastProject";
-  @NonNls private static final String OPTION_AUTO_SYNC_FILES = "autoSyncFiles";
-  @NonNls private static final String OPTION_AUTO_SAVE_FILES = "autoSaveFiles";
-  @NonNls private static final String OPTION_AUTO_SAVE_IF_INACTIVE = "autoSaveIfInactive";
-  @NonNls private static final String OPTION_USE_SAFE_WRITE = "useSafeWrite";
-  @NonNls private static final String OPTION_USE_DEFAULT_BROWSER = "useDefaultBrowser";
-  @NonNls private static final String OPTION_CONFIRM_EXTRACT_FILES = "confirmExtractFiles";
-  @NonNls private static final String OPTION_SEARCH_IN_BACKGROUND = "searchInBackground";
-  @NonNls private static final String OPTION_CONFIRM_EXIT = "confirmExit";
-  @NonNls private static final String OPTION_CONFIRM_OPEN_NEW_PROJECT = "confirmOpenNewProject2";
+  @NonNls
+  private static final String ELEMENT_OPTION = "option";
+  @NonNls
+  private static final String ATTRIBUTE_NAME = "name";
+  @NonNls
+  private static final String ATTRIBUTE_VALUE = "value";
+  @NonNls
+  private static final String OPTION_BROWSER_PATH = "browserPath";
+  @NonNls
+  private static final String OPTION_LAST_TIP = "lastTip";
+  @NonNls
+  private static final String OPTION_SHOW_TIPS_ON_STARTUP = "showTipsOnStartup";
+  @NonNls
+  private static final String OPTION_SHOW_OCCUPIED_MEMORY = "showOccupiedMemory";
+  @NonNls
+  private static final String OPTION_REOPEN_LAST_PROJECT = "reopenLastProject";
+  @NonNls
+  private static final String OPTION_AUTO_SYNC_FILES = "autoSyncFiles";
+  @NonNls
+  private static final String OPTION_AUTO_SAVE_FILES = "autoSaveFiles";
+  @NonNls
+  private static final String OPTION_AUTO_SAVE_IF_INACTIVE = "autoSaveIfInactive";
+  @NonNls
+  private static final String OPTION_USE_SAFE_WRITE = "useSafeWrite";
+  @NonNls
+  private static final String OPTION_USE_DEFAULT_BROWSER = "useDefaultBrowser";
+  @NonNls
+  private static final String OPTION_CONFIRM_EXTRACT_FILES = "confirmExtractFiles";
+  @NonNls
+  private static final String OPTION_SEARCH_IN_BACKGROUND = "searchInBackground";
+  @NonNls
+  private static final String OPTION_CONFIRM_EXIT = "confirmExit";
+  @NonNls
+  private static final String OPTION_CONFIRM_OPEN_NEW_PROJECT = "confirmOpenNewProject2";
 
-  public static GeneralSettings getInstance(){
+  public static GeneralSettings getInstance() {
     return ApplicationManager.getApplication().getComponent(GeneralSettings.class);
   }
 
   public GeneralSettings() {
-    myInactiveTimeout=DEFAULT_INACTIVE_TIMEOUT;
+    myInactiveTimeout = DEFAULT_INACTIVE_TIMEOUT;
     myBrowserPath = BrowserUtil.getDefaultAlternativeBrowserPath();
     myPropertyChangeSupport = new PropertyChangeSupport(this);
   }
 
-  public void addPropertyChangeListener(PropertyChangeListener listener){
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
     myPropertyChangeSupport.addPropertyChangeListener(listener);
   }
 
-  public void removePropertyChangeListener(PropertyChangeListener listener){
+  public void removePropertyChangeListener(PropertyChangeListener listener) {
     myPropertyChangeSupport.removePropertyChangeListener(listener);
   }
 
   @Override
-  public void initComponent() { }
+  public void initComponent() {
+  }
 
   @Override
-  public void disposeComponent() { }
+  public void disposeComponent() {
+  }
 
   public String getBrowserPath() {
     return myBrowserPath;
@@ -160,7 +183,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
   /**
    * @return <code>true</code> if IDEA saves all files after "idle" timeout.
    */
-  public boolean isAutoSaveIfInactive(){
+  public boolean isAutoSaveIfInactive() {
     return myAutoSaveIfInactive;
   }
 
@@ -172,7 +195,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
    * @return timeout in seconds after which IDEA saves all files if there was no user activity.
    * The method always return non positive (more then zero) value.
    */
-  public int getInactiveTimeout(){
+  public int getInactiveTimeout() {
     return myInactiveTimeout;
   }
 
@@ -180,9 +203,7 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
     int oldInactiveTimeout = myInactiveTimeout;
 
     myInactiveTimeout = inactiveTimeout;
-    myPropertyChangeSupport.firePropertyChange(
-        PROP_INACTIVE_TIMEOUT, Integer.valueOf(oldInactiveTimeout), Integer.valueOf(inactiveTimeout)
-    );
+    myPropertyChangeSupport.firePropertyChange(PROP_INACTIVE_TIMEOUT, Integer.valueOf(oldInactiveTimeout), Integer.valueOf(inactiveTimeout));
   }
 
   public boolean isUseSafeWrite() {
@@ -365,13 +386,13 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
     parentNode.addContent(optionElement);
 
     optionElement = new Element(ELEMENT_OPTION);
-    optionElement.setAttribute(ATTRIBUTE_NAME,OPTION_AUTO_SAVE_IF_INACTIVE);
-    optionElement.setAttribute(ATTRIBUTE_VALUE,(myAutoSaveIfInactive?Boolean.TRUE:Boolean.FALSE).toString());
+    optionElement.setAttribute(ATTRIBUTE_NAME, OPTION_AUTO_SAVE_IF_INACTIVE);
+    optionElement.setAttribute(ATTRIBUTE_VALUE, (myAutoSaveIfInactive ? Boolean.TRUE : Boolean.FALSE).toString());
     parentNode.addContent(optionElement);
 
     optionElement = new Element(ELEMENT_OPTION);
-    optionElement.setAttribute(ATTRIBUTE_NAME,OPTION_INACTIVE_TIMEOUT);
-    optionElement.setAttribute(ATTRIBUTE_VALUE,Integer.toString(myInactiveTimeout));
+    optionElement.setAttribute(ATTRIBUTE_NAME, OPTION_INACTIVE_TIMEOUT);
+    optionElement.setAttribute(ATTRIBUTE_VALUE, Integer.toString(myInactiveTimeout));
     parentNode.addContent(optionElement);
 
     optionElement = new Element(ELEMENT_OPTION);
@@ -405,22 +426,6 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
     parentNode.addContent(optionElement);
   }
 
-  @Override
-  public String getExternalFileName() {
-    return "ide.general";
-  }
-
-  @Override
-  @NotNull
-  public File[] getExportFiles() {
-    return new File[]{PathManager.getOptionsFile(this)};
-  }
-
-  @Override
-  @NotNull
-  public String getPresentableName() {
-    return IdeBundle.message("general.settings");
-  }
 
   @Override
   @NotNull
@@ -453,10 +458,11 @@ public class GeneralSettings implements NamedJDOMExternalizable, ExportableAppli
   }
 
   @MagicConstant(intValues = {OPEN_PROJECT_ASK, OPEN_PROJECT_NEW_WINDOW, OPEN_PROJECT_SAME_WINDOW})
-  @interface OpenNewProjectOption {}
+  @interface OpenNewProjectOption {
+  }
+
   /**
-   * @return
-   * <ul>
+   * @return <ul>
    * <li>{@link GeneralSettings#OPEN_PROJECT_NEW_WINDOW} if new project should be opened in new window
    * <li>{@link GeneralSettings#OPEN_PROJECT_SAME_WINDOW} if new project should be opened in same window
    * <li>{@link GeneralSettings#OPEN_PROJECT_ASK} if a confirmation dialog should be shown

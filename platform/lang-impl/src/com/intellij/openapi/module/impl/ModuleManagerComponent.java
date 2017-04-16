@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @State(name = ModuleManagerImpl.COMPONENT_NAME, storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/modules.xml"))
 public class ModuleManagerComponent extends ModuleManagerImpl {
-  private static final Logger LOGGER = Logger.getInstance(ModuleManagerComponent.class);
+  public static final Logger LOGGER = Logger.getInstance(ModuleManagerComponent.class);
 
   private final ProgressManager myProgressManager;
   private final MessageBusConnection myConnection;
@@ -49,15 +49,16 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     myConnection.setDefaultHandler((event, params) -> cleanCachedStuff());
 
     myConnection.subscribe(ProjectTopics.PROJECT_ROOTS);
-    myConnection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener.Adapter() {
+    myConnection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
       @Override
-      public void projectComponentsInitialized(@NotNull Project project) {
+      public void projectComponentsInitialized(@NotNull final Project project) {
         long t = System.currentTimeMillis();
         loadModules(myModuleModel, true);
         t = System.currentTimeMillis() - t;
         LOGGER.info(myModuleModel.getModules().length + " module(s) loaded in " + t + " ms");
       }
     });
+
   }
 
   @NotNull

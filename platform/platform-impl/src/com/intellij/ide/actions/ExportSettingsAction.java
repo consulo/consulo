@@ -41,7 +41,6 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PairProcessor;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
@@ -170,9 +169,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
           if (storages.length == 1) {
             storageIndex = 0;
           }
-          else if (storages.length > 1 &&
-                   (stateAnnotation.storageChooser() == LastStorageChooserForWrite.class ||
-                    stateAnnotation.storageChooser() == LastStorageChooserForWrite.ElementStateLastStorageChooserForWrite.class)) {
+          else if (storages.length > 1) {
             storageIndex = storages.length - 1;
           }
           else {
@@ -181,7 +178,6 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
 
           Storage storage = storages[storageIndex];
           if (storage.roamingType() != RoamingType.DISABLED &&
-              storage.storageClass().equals(StateStorage.class) &&
               storage.scheme() == StorageScheme.DEFAULT &&
               !StringUtil.isEmpty(storage.file()) &&
               storage.file().startsWith(StoragePathMacros.APP_CONFIG)) {
@@ -224,15 +220,6 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
 
   @NotNull
   private static String getComponentPresentableName(@NotNull State state, @NotNull Class<?> aClass, @Nullable PluginDescriptor pluginDescriptor) {
-    if (state.presentableName() != State.NameGetter.class) {
-      try {
-        return ReflectionUtil.newInstance(state.presentableName()).get();
-      }
-      catch (Exception e) {
-        LOG.error(e);
-      }
-    }
-
     String defaultName = state.name();
     String resourceBundleName;
     if (pluginDescriptor != null && pluginDescriptor instanceof IdeaPluginDescriptor && !"com.intellij".equals(pluginDescriptor.getPluginId().getIdString())) {

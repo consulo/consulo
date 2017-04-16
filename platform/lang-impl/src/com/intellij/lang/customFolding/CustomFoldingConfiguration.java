@@ -24,7 +24,7 @@ import com.intellij.openapi.project.Project;
 @State(
     name = "CustomFolding",
     storages = {
-        @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/customFolding.xml", scheme = StorageScheme.DIRECTORY_BASED)
+        @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/customFolding.xml")
 })
 public class CustomFoldingConfiguration implements PersistentStateComponent<CustomFoldingConfiguration.State> {
   

@@ -122,7 +122,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @Override
   public void initializeComponent(Object component, boolean service) {
-    getStateStore().initComponent(component, service);
+    getStateStore().initComponent(component);
   }
 
   @NotNull

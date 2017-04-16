@@ -15,8 +15,6 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.NotificationsManager;
 import com.intellij.openapi.application.AccessToken;
@@ -51,7 +49,6 @@ import org.jdom.Parent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.event.HyperlinkEvent;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.LinkedHashSet;
@@ -98,12 +95,7 @@ public class StorageUtil {
                            "Some of the files describing the current project settings contain unknown path variables " +
                            "and " + productName + " cannot restore those paths.";
           new UnknownMacroNotification("Load Error", "Load error: undefined path variables", content, NotificationType.ERROR,
-                                       new NotificationListener() {
-                                         @Override
-                                         public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
-                                           ((ProjectEx)project).checkUnknownMacros(true);
-                                         }
-                                       }, macros).notify(project);
+                                       (notification, event) -> ((ProjectEx)project).checkUnknownMacros(true), macros).notify(project);
         }
       }
     });
@@ -316,13 +308,13 @@ public class StorageUtil {
     return writeToBytes(element, useSystemLineSeparator ? SystemProperties.getLineSeparator() : "\n");
   }
 
-  public static void sendContent(@NotNull StreamProvider provider, @NotNull String fileSpec, @NotNull Parent element, @NotNull RoamingType type, boolean async) {
+  public static void sendContent(@NotNull StreamProvider provider, @NotNull String fileSpec, @NotNull Parent element, @NotNull RoamingType type) {
     if (!provider.isApplicable(fileSpec, type)) {
       return;
     }
 
     try {
-      doSendContent(provider, fileSpec, element, type, async);
+      doSendContent(provider, fileSpec, element, type);
     }
     catch (IOException e) {
       LOG.warn(e);
@@ -338,14 +330,14 @@ public class StorageUtil {
   /**
    * You must call {@link StreamProvider#isApplicable(String, com.intellij.openapi.components.RoamingType)} before
    */
-  public static void doSendContent(@NotNull StreamProvider provider, @NotNull String fileSpec, @NotNull Parent element, @NotNull RoamingType type, boolean async) throws IOException {
+  public static void doSendContent(@NotNull StreamProvider provider, @NotNull String fileSpec, @NotNull Parent element, @NotNull RoamingType type) throws IOException {
     // we should use standard line-separator (\n) - stream provider can share file content on any OS
     BufferExposingByteArrayOutputStream content = elementToBytes(element, false);
-    provider.saveContent(fileSpec, content.getInternalBuffer(), content.size(), type, async);
+    provider.saveContent(fileSpec, content.getInternalBuffer(), content.size(), type);
   }
 
   public static boolean isProjectOrModuleFile(@NotNull String fileSpec) {
-    return fileSpec.startsWith(StoragePathMacros.PROJECT_CONFIG_DIR) || fileSpec.equals(StoragePathMacros.MODULE_FILE);
+    return fileSpec.startsWith(StoragePathMacros.PROJECT_CONFIG_DIR);
   }
 
   @NotNull

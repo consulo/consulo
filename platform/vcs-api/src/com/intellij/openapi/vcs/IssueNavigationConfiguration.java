@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  * @author yole
  */
 @State(name = "IssueNavigationConfiguration", storages = {
-        @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml", scheme = StorageScheme.DIRECTORY_BASED)})
+        @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml")})
 public class IssueNavigationConfiguration extends SimpleModificationTracker implements PersistentStateComponent<IssueNavigationConfiguration> {
   @NonNls
   private static final Pattern ourHtmlPattern =

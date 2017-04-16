@@ -16,23 +16,17 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.diagnostic.IdeErrorsDialog;
-import com.intellij.diagnostic.PluginException;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +40,7 @@ public final class StoreUtil {
   public static void save(@NotNull IComponentStore stateStore, @Nullable Project project) {
     ShutDownTracker.getInstance().registerStopperThread(Thread.currentThread());
     try {
-      stateStore.save(new SmartList<Pair<SaveSession, VirtualFile>>());
+      stateStore.save(new SmartList<>());
     }
     catch (IComponentStore.SaveCancelledException e) {
       LOG.info(e);
@@ -81,30 +75,4 @@ public final class StoreUtil {
     }
   }
 
-  @NotNull
-  public static <T> State getStateSpec(@NotNull PersistentStateComponent<T> persistentStateComponent) {
-    Class<? extends PersistentStateComponent> componentClass = persistentStateComponent.getClass();
-    State spec = getStateSpec(componentClass);
-    if (spec != null) {
-      return spec;
-    }
-
-    PluginId pluginId = PluginManagerCore.getPluginByClassName(componentClass.getName());
-    if (pluginId != null) {
-      throw new PluginException("No @State annotation found in " + componentClass, pluginId);
-    }
-    throw new RuntimeException("No @State annotation found in " + componentClass);
-  }
-
-  @Nullable
-  public static State getStateSpec(@NotNull Class<?> aClass) {
-    do {
-      State stateSpec = aClass.getAnnotation(State.class);
-      if (stateSpec != null) {
-        return stateSpec;
-      }
-    }
-    while ((aClass = aClass.getSuperclass()) != null);
-    return null;
-  }
 }

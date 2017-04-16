@@ -1062,6 +1062,21 @@
           <orderEntry type="module" module-name="ui-api" />
         </module-layer>
       </module>
+      <module name="impl/external-storage-impl" dirurl="file://$PROJECT_DIR$/impl/external-storage-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="library" name="Snappy-Java" level="project" />
+          <orderEntry type="library" name="apache-httpclient" level="project" />
+          <orderEntry type="library" name="gson" level="project" />
+          <orderEntry type="module" module-name="util" />
+        </module-layer>
+      </module>
     </modules>
   </component>
 </project>

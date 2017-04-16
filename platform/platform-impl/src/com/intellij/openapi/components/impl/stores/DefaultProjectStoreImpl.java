@@ -80,7 +80,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       @Override
       @NotNull
       protected StorageData createStorageData() {
-        return new BaseStorageData(ROOT_TAG_NAME);
+        return new StorageData(ROOT_TAG_NAME);
       }
     };
 
@@ -112,7 +112,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       @NotNull
       @Override
       public Couple<Collection<FileBasedStorage>> getCachedFileStateStorages(@NotNull Collection<String> changed, @NotNull Collection<String> deleted) {
-        return new Couple<Collection<FileBasedStorage>>(Collections.<FileBasedStorage>emptyList(), Collections.<FileBasedStorage>emptyList());
+        return new Couple<>(Collections.<FileBasedStorage>emptyList(), Collections.<FileBasedStorage>emptyList());
       }
 
       @Override
@@ -136,12 +136,6 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       @Override
       public String collapseMacros(@NotNull String path) {
         throw new UnsupportedOperationException("Method collapseMacros not implemented in " + getClass());
-      }
-
-      @Override
-      @Nullable
-      public StateStorage getOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation) {
-        return storage;
       }
 
       @Override
@@ -179,11 +173,6 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
     @Override
     public void setState(@NotNull Storage[] storageSpecs, @NotNull Object component, @NotNull String componentName, @NotNull Object state) {
-      externalizationSession.setState(component, componentName, state, null);
-    }
-
-    @Override
-    public void setStateInOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull Object state) {
       externalizationSession.setState(component, componentName, state, null);
     }
 

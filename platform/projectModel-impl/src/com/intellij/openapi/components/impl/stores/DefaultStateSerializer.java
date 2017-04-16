@@ -17,14 +17,12 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StorageId;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.xmlb.Accessor;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
@@ -49,23 +47,7 @@ public class DefaultStateSerializer {
       return element;
     }
     else {
-      return XmlSerializer.serializeIfNotDefault(state, new SkipDefaultValuesSerializationFilters() {
-        @Override
-        protected boolean accepts(@NotNull Accessor accessor, @NotNull Object bean, @Nullable Object beanValue) {
-          if (!super.accepts(accessor, bean, beanValue)) {
-            return false;
-          }
-
-          if (storage != null) {
-            StorageId storageId = accessor.getAnnotation(StorageId.class);
-            if (storageId != null && !storageId.value().equals(storage.id())) {
-              return false;
-            }
-            return storage.isDefault();
-          }
-          return true;
-        }
-      });
+      return XmlSerializer.serializeIfNotDefault(state, new SkipDefaultValuesSerializationFilters());
     }
   }
 

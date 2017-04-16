@@ -183,7 +183,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   @Override
   public void initializeComponent(@NotNull Object component, boolean service) {
-    getStateStore().initComponent(component, service);
+    getStateStore().initComponent(component);
   }
 
   static {

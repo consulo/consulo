@@ -23,7 +23,7 @@ import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.RoamingTypeDisabled;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtilRt;
 import com.intellij.util.ReflectionUtil;
@@ -34,7 +34,6 @@ import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoContainer;
 
 import java.util.*;
@@ -47,14 +46,15 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private static final Logger LOG = Logger.getInstance(StateStorageManagerImpl.class);
 
   private static final boolean ourHeadlessEnvironment;
+
   static {
     final Application app = ApplicationManager.getApplication();
     ourHeadlessEnvironment = app.isHeadlessEnvironment() || app.isUnitTestMode();
   }
 
-  private final Map<String, String> myMacros = new LinkedHashMap<String, String>();
+  private final Map<String, String> myMacros = new LinkedHashMap<>();
   private final Lock myStorageLock = new ReentrantLock();
-  private final Map<String, StateStorage> myStorages = new THashMap<String, StateStorage>();
+  private final Map<String, StateStorage> myStorages = new THashMap<>();
   private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
   private final String myRootTagName;
   private final PicoContainer myPicoContainer;
@@ -70,6 +70,39 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     myPathMacroSubstitutor = pathMacroSubstitutor;
     if (parentDisposable != null) {
       Disposer.register(parentDisposable, this);
+    }
+  }
+
+  @NotNull
+  protected abstract String getConfigurationMacro(boolean directorySpec);
+
+  @NotNull
+  @SuppressWarnings("deprecation")
+  private String buildFileSpec(@NotNull Storage storage) {
+    boolean directorySpec = !storage.stateSplitter().equals(StateSplitterEx.class);
+
+    String file = storage.file();
+    if (!StringUtil.isEmpty(file)) {
+      return file;
+    }
+
+    String value = storage.value();
+    if (value.isEmpty()) {
+      LOG.error("Storage.value() is empty");
+      return StoragePathMacros.DEFAULT_FILE;
+    }
+    return getConfigurationMacro(directorySpec) + "/" + value + (directorySpec ? "/" : "");
+  }
+
+
+  @NotNull
+  private StateStorage createStateStorage(@NotNull Storage storageSpec) {
+    if (!storageSpec.stateSplitter().equals(StateSplitterEx.class)) {
+      StateSplitterEx splitter = ReflectionUtil.newInstance(storageSpec.stateSplitter());
+      return new DirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener());
+    }
+    else {
+      return createFileStateStorage(buildFileSpec(storageSpec), storageSpec.roamingType());
     }
   }
 
@@ -92,7 +125,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   @Override
   @NotNull
   public StateStorage getStateStorage(@NotNull Storage storageSpec) {
-    String key = getStorageSpecId(storageSpec);
+    String key = buildFileSpec(storageSpec);
 
     myStorageLock.lock();
     try {
@@ -148,7 +181,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       StateStorage storage = myStorages.get(fileSpec);
       if (storage instanceof FileBasedStorage) {
         if (result == null) {
-          result = new SmartList<FileBasedStorage>();
+          result = new SmartList<>();
         }
         result.add((FileBasedStorage)storage);
       }
@@ -168,32 +201,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     }
   }
 
-  @SuppressWarnings("deprecation")
-  @NotNull
-  private StateStorage createStateStorage(Storage storageSpec) {
-    if (!storageSpec.storageClass().equals(StateStorage.class)) {
-      String key = UUID.randomUUID().toString();
-      ((MutablePicoContainer)myPicoContainer).registerComponentImplementation(key, storageSpec.storageClass());
-      return (StateStorage)myPicoContainer.getComponentInstance(key);
-    }
-    else if (!storageSpec.stateSplitter().equals(StateSplitter.class)) {
-      StateSplitter splitter = ReflectionUtil.newInstance(storageSpec.stateSplitter());
-      return new DirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(storageSpec.file()), splitter, this, createStorageTopicListener());
-    }
-    else {
-      return createFileStateStorage(storageSpec.file(), storageSpec.roamingType());
-    }
-  }
-
-  private static String getStorageSpecId(Storage storageSpec) {
-    if (!storageSpec.storageClass().equals(StateStorage.class)) {
-      return storageSpec.storageClass().getName();
-    }
-    else {
-      return storageSpec.file();
-    }
-  }
-
   @Override
   public void clearStateStorage(@NotNull String file) {
     myStorageLock.lock();
@@ -207,7 +214,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   @NotNull
   private StateStorage createFileStateStorage(@NotNull String fileSpec, @Nullable RoamingType roamingType) {
-    String filePath = expandMacros(fileSpec);
+    String filePath = FileUtil.toSystemIndependentName(expandMacros(fileSpec));
 
     if (!ourHeadlessEnvironment && PathUtilRt.getFileName(filePath).lastIndexOf('.') < 0) {
       throw new IllegalArgumentException("Extension is missing for storage file: " + filePath);
@@ -295,7 +302,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   }
 
   protected class StateStorageManagerExternalizationSession implements ExternalizationSession {
-    final Map<StateStorage, StateStorage.ExternalizationSession> mySessions = new LinkedHashMap<StateStorage, StateStorage.ExternalizationSession>();
+    final Map<StateStorage, StateStorage.ExternalizationSession> mySessions = new LinkedHashMap<>();
 
     @Override
     public void setState(@NotNull Storage[] storageSpecs, @NotNull Object component, @NotNull String componentName, @NotNull Object state) {
@@ -305,17 +312,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
         if (session != null) {
           // empty element as null state, so, will be deleted
           session.setState(component, componentName, storageSpec.deprecated() ? new Element("empty") : state, storageSpec);
-        }
-      }
-    }
-
-    @Override
-    public void setStateInOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull Object state) {
-      StateStorage stateStorage = getOldStorage(component, componentName, StateStorageOperation.WRITE);
-      if (stateStorage != null) {
-        StateStorage.ExternalizationSession session = getExternalizationSession(stateStorage);
-        if (session != null) {
-          session.setState(component, componentName, state, null);
         }
       }
     }
@@ -348,7 +344,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
             if (externalizationSessions.size() == 1) {
               return Collections.singletonList(saveSession);
             }
-            saveSessions = new SmartList<SaveSession>();
+            saveSessions = new SmartList<>();
           }
           saveSessions.add(saveSession);
         }
@@ -356,17 +352,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       return ContainerUtil.notNullize(saveSessions);
     }
   }
-
-  @Override
-  @Nullable
-  public StateStorage getOldStorage(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation) {
-    String oldStorageSpec = getOldStorageSpec(component, componentName, operation);
-    //noinspection deprecation
-    return oldStorageSpec == null ? null : getStateStorage(oldStorageSpec, component instanceof RoamingTypeDisabled ? RoamingType.DISABLED : RoamingType.PER_USER);
-  }
-
-  @Nullable
-  protected abstract String getOldStorageSpec(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation);
 
   @Override
   public void dispose() {

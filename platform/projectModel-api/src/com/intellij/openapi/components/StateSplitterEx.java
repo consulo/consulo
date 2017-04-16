@@ -27,17 +27,11 @@ import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
-public abstract class StateSplitterEx implements StateSplitter {
-  @Override
+public abstract class StateSplitterEx {
   public abstract List<Pair<Element, String>> splitState(@NotNull Element state);
 
   public void mergeStateInto(@NotNull Element target, @NotNull Element subState) {
     target.addContent(subState);
-  }
-
-  @Override
-  public final void mergeStatesInto(Element target, Element[] elements) {
-    throw new IllegalStateException();
   }
 
   @NotNull

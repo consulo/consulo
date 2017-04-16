@@ -230,7 +230,7 @@ public final class HttpRequests {
         return userAgent(info.getVersionName() + '/' + info.getBuild().asString());
       }
       else {
-        return userAgent("IntelliJ");
+        return userAgent("Consulo");
       }
     }
 

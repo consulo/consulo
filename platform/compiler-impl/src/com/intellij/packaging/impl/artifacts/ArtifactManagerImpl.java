@@ -19,7 +19,9 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.ProjectLoadingErrorsNotifier;
 import com.intellij.openapi.project.Project;
@@ -48,16 +50,13 @@ import java.util.*;
 /**
  * @author nik
  */
-@State(
-    name = "ArtifactManager",
-    storages = {
-        @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/artifacts/", scheme = StorageScheme.DIRECTORY_BASED, stateSplitter = ArtifactManagerStateSplitter.class)
-    }
-)
+@State(name = "ArtifactManager", storages = @Storage(value = "artifacts", stateSplitter = ArtifactManagerStateSplitter.class))
 public class ArtifactManagerImpl extends ArtifactManager implements Disposable, PersistentStateComponent<ArtifactManagerState> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.packaging.impl.artifacts.ArtifactManagerImpl");
-  @NonNls public static final String PACKAGING_ELEMENT_NAME = "element";
-  @NonNls public static final String TYPE_ID_ATTRIBUTE = "id";
+  @NonNls
+  public static final String PACKAGING_ELEMENT_NAME = "element";
+  @NonNls
+  public static final String TYPE_ID_ATTRIBUTE = "id";
   private final ArtifactManagerModel myModel;
   private final Project myProject;
   private final DefaultPackagingElementResolvingContext myResolvingContext;
@@ -402,8 +401,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   }
 
   @Override
-  public void addElementsToDirectory(@NotNull Artifact artifact, @NotNull String relativePath,
-                                     @NotNull Collection<? extends PackagingElement<?>> elements) {
+  public void addElementsToDirectory(@NotNull Artifact artifact, @NotNull String relativePath, @NotNull Collection<? extends PackagingElement<?>> elements) {
     final ModifiableArtifactModel model = createModifiableModel();
     final CompositePackagingElement<?> root = model.getOrCreateModifiableArtifact(artifact).getRootElement();
     PackagingElementFactory.getInstance().getOrCreateDirectory(root, relativePath).addOrFindChildren(elements);

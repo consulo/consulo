@@ -18,14 +18,12 @@ package com.intellij.openapi.components.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
-import com.intellij.openapi.components.StateStorageOperation;
 import com.intellij.openapi.components.impl.stores.StateStorageManagerImpl;
 import com.intellij.openapi.components.impl.stores.StorageData;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.testFramework.LightPlatformLangTestCase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -42,15 +40,15 @@ public class StateStorageManagerImplTest extends LightPlatformLangTestCase {
   public final void setUp() throws Exception {
     super.setUp();
     myStateStorageManager = new StateStorageManagerImpl(null, "foo", null, ApplicationManager.getApplication().getPicoContainer()) {
+      @NotNull
+      @Override
+      protected String getConfigurationMacro(boolean directorySpec) {
+        throw new UnsupportedOperationException();
+      }
+
       @Override
       protected StorageData createStorageData(@NotNull String fileSpec, @NotNull String filePath) {
         throw new UnsupportedOperationException("Method createStorageData not implemented in " + getClass());
-      }
-
-      @Nullable
-      @Override
-      protected String getOldStorageSpec(@NotNull Object component, @NotNull String componentName, @NotNull StateStorageOperation operation) {
-        throw new UnsupportedOperationException("Method getOldStorageSpec not implemented in " + getClass());
       }
     };
     myStateStorageManager.addMacro("$MACRO1$", "/temp/m1");
