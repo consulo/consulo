@@ -15,7 +15,10 @@
  */
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
-import com.intellij.ide.*;
+import com.intellij.ide.ProjectGroup;
+import com.intellij.ide.ProjectGroupActionGroup;
+import com.intellij.ide.RecentProjectsManager;
+import com.intellij.ide.ReopenProjectAction;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -246,10 +249,11 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               name.setIcon(IconUtil.toSize(group.isExpanded() ? UIUtil.getTreeExpandedIcon() : UIUtil.getTreeCollapsedIcon(), JBUI.scale(16), JBUI.scale(16)));
               name.setFont(name.getFont().deriveFont(Font.BOLD));
               add(name);
-            } else if (value instanceof ReopenProjectAction) {
+            }
+            else if (value instanceof ReopenProjectAction) {
               final NonOpaquePanel p = new NonOpaquePanel(new BorderLayout());
-              name.setText(((ReopenProjectAction)value).getTemplatePresentation().getText());
-              path.setText(getTitle2Text((ReopenProjectAction)value, path, JBUI.scale(isInsideGroup ? 80 : 60)));
+              name.setText(getTitle2Text(((ReopenProjectAction)value).getTemplatePresentation().getText(), name, JBUI.scale(55)));
+              path.setText(getTitle2Text(((ReopenProjectAction)value).getProjectPath(), path, JBUI.scale(isInsideGroup ? 80 : 60)));
               p.add(name, BorderLayout.NORTH);
               p.add(path, BorderLayout.SOUTH);
 
@@ -275,6 +279,13 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
             return new Dimension(super.getPreferredSize().width, JBUI.scale(44));
           }
         };
+      }
+
+      @Override
+      public Dimension getPreferredSize() {
+        Dimension size = super.getPreferredSize();
+        int h = myName.getPreferredSize().height + myPath.getPreferredSize().height;
+        return new Dimension(size.width, h + JBUI.scale(26));
       }
     };
   }

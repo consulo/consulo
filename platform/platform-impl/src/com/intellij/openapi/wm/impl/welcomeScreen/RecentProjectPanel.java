@@ -432,8 +432,8 @@ public class RecentProjectPanel extends JPanel {
 
       if (value instanceof ReopenProjectAction) {
         ReopenProjectAction item = (ReopenProjectAction)value;
-        myName.setText(item.getTemplatePresentation().getText());
-        myPath.setText(getTitle2Text(item, myPath, JBUI.scale(40)));
+        myName.setText(getTitle2Text(item.getTemplatePresentation().getText(), myName, JBUI.scale(55)));
+        myPath.setText(getTitle2Text(item.getProjectPath(), myPath, JBUI.scale(55)));
       }
       else if (value instanceof ProjectGroupActionGroup) {
         final ProjectGroupActionGroup group = (ProjectGroupActionGroup)value;
@@ -445,9 +445,8 @@ public class RecentProjectPanel extends JPanel {
       return this;
     }
 
-    protected String getTitle2Text(ReopenProjectAction action, JComponent pathLabel, int leftOffset) {
-      String fullText = action.getProjectPath();
-      if (fullText == null || fullText.length() == 0) return " ";
+    protected String getTitle2Text(String fullText, JComponent pathLabel, int leftOffset) {
+      if (StringUtil.isEmpty(fullText)) return " ";
 
       fullText = FileUtil.getLocationRelativeToUserHome(fullText, false);
 
