@@ -68,11 +68,15 @@ public class PluginsAdvertiser implements StartupActivity {
         return;
       }
 
-      if(project.isDisposed()) {
+      UIUtil.invokeLaterIfNeeded(() -> {
+        if (!project.isDisposed()) {
+          EditorNotifications.getInstance(project).updateAllNotifications();
+        }
+      });
+
+      if (project.isDisposed()) {
         return;
       }
-
-      UIUtil.invokeLaterIfNeeded(() -> EditorNotifications.getInstance(project).updateAllNotifications());
 
       final UnknownFeaturesCollector collectorSuggester = UnknownFeaturesCollector.getInstance(project);
       final Set<UnknownExtension> unknownExtensions = collectorSuggester.getUnknownExtensions();
