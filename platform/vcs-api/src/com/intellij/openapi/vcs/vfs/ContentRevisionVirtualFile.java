@@ -28,19 +28,18 @@ import com.intellij.util.containers.WeakHashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 /**
  * @author yole
  */
 public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
-  private final ContentRevision myContentRevision;
+  @NotNull private final ContentRevision myContentRevision;
   private byte[] myContent;
   private boolean myContentLoadFailed;
 
-  private static final WeakHashMap<ContentRevision, ContentRevisionVirtualFile> ourMap = new WeakHashMap<ContentRevision, ContentRevisionVirtualFile>();
+  private static final WeakHashMap<ContentRevision, ContentRevisionVirtualFile> ourMap = new WeakHashMap<>();
 
-  public static ContentRevisionVirtualFile create(ContentRevision contentRevision) {
+  public static ContentRevisionVirtualFile create(@NotNull ContentRevision contentRevision) {
     synchronized(ourMap) {
       ContentRevisionVirtualFile revisionVirtualFile = ourMap.get(contentRevision);
       if (revisionVirtualFile == null) {
@@ -51,16 +50,18 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
     }
   }
 
-  private ContentRevisionVirtualFile(ContentRevision contentRevision) {
+  private ContentRevisionVirtualFile(@NotNull ContentRevision contentRevision) {
     super(contentRevision.getFile().getPath(), VcsFileSystem.getInstance());
     myContentRevision = contentRevision;
     setCharset(CharsetToolkit.UTF8_CHARSET);
   }
 
+  @Override
   public boolean isDirectory() {
     return false;
   }
 
+  @Override
   @NotNull
   public byte[] contentsToByteArray() throws IOException {
     if (myContentLoadFailed || myProcessingBeforeContentsChange) {
@@ -84,9 +85,9 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
 
       myModificationStamp++;
       setRevision(myContentRevision.getRevisionNumber().asString());
-      final ByteBuffer byteBuffer = getCharset().encode(content);
-      myContent = byteBuffer.compact().array();
+      myContent = content.getBytes(getCharset());
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
         public void run() {
           vcsFileSystem.fireContentsChanged(this, ContentRevisionVirtualFile.this, 0);
         }
@@ -96,6 +97,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
     catch (VcsException e) {
       myContentLoadFailed = true;
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
         public void run() {
           vcsFileSystem.fireBeforeFileDeletion(this, ContentRevisionVirtualFile.this);
         }
@@ -104,11 +106,12 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
       setRevision("0");
 
       Messages.showMessageDialog(
-        VcsBundle.message("message.text.could.not.load.virtual.file.content", getPresentableUrl(), e.getLocalizedMessage()),
-                                 VcsBundle.message("message.title.could.not.load.content"),
-                                 Messages.getInformationIcon());
+              VcsBundle.message("message.text.could.not.load.virtual.file.content", getPresentableUrl(), e.getLocalizedMessage()),
+              VcsBundle.message("message.title.could.not.load.content"),
+              Messages.getInformationIcon());
 
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
         public void run() {
           vcsFileSystem.fireFileDeleted(this, ContentRevisionVirtualFile.this, getName(), getParent());
         }
@@ -118,5 +121,10 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
     catch (ProcessCanceledException ex) {
       myContent = ArrayUtil.EMPTY_BYTE_ARRAY;
     }
+  }
+
+  @NotNull
+  public ContentRevision getContentRevision() {
+    return myContentRevision;
   }
 }

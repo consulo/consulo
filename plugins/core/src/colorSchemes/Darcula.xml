@@ -42,6 +42,12 @@
     <option name="TEARLINE_COLOR" value="555555" />
     <option name="WHITESPACES_MODIFIED_LINES_COLOR" value="2d4249"/>
     <option name="WHITESPACES" value="505050" />
+
+    <option name="VCS_ANNOTATIONS_COLOR_1" value="464c43"/>
+    <option name="VCS_ANNOTATIONS_COLOR_2" value="444342"/>
+    <option name="VCS_ANNOTATIONS_COLOR_3" value="41444a"/>
+    <option name="VCS_ANNOTATIONS_COLOR_4" value="484248"/>
+    <option name="VCS_ANNOTATIONS_COLOR_5" value="4c393a"/>
   </colors>
   <attributes>
     <option name="DEBUGGER_INLINED_VALUES">

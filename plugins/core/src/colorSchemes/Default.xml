@@ -51,6 +51,12 @@
     <option name="FILESTATUS_OBSOLETE" value="7c7c00"/>
     <option name="FILESTATUS_SWITCHED" value="08978f"/>
     <option name="FILESTATUS_SUPPRESSED" value=""/>
+
+    <option name="VCS_ANNOTATIONS_COLOR_1" value="eaffe2"/>
+    <option name="VCS_ANNOTATIONS_COLOR_2" value="d1d1d1"/>
+    <option name="VCS_ANNOTATIONS_COLOR_3" value="d9e4f9"/>
+    <option name="VCS_ANNOTATIONS_COLOR_4" value="fffbcf"/>
+    <option name="VCS_ANNOTATIONS_COLOR_5" value="ffbfc3"/>
   </colors>
 
   <attributes>

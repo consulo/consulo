@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -43,20 +44,23 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
   private boolean myContentLoadFailed = false;
   private Charset myCharset;
 
-  public VcsVirtualFile(String path,
-                        VcsFileRevision revision, VirtualFileSystem fileSystem) {
+  public VcsVirtualFile(@NotNull String path,
+                        @Nullable VcsFileRevision revision,
+                        @NotNull VirtualFileSystem fileSystem) {
     super(path, fileSystem);
     myFileRevision = revision;
   }
 
-  public VcsVirtualFile(String path,
-                        byte[] content,
-                        String revision, VirtualFileSystem fileSystem) {
+  public VcsVirtualFile(@NotNull String path,
+                        @NotNull byte[] content,
+                        @Nullable String revision,
+                        @NotNull VirtualFileSystem fileSystem) {
     this(path, null, fileSystem);
     myContent = content;
     setRevision(revision);
   }
 
+  @Override
   @NotNull
   public byte[] contentsToByteArray() throws IOException {
     if (myContentLoadFailed || myProcessingBeforeContentsChange) {
@@ -70,7 +74,8 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
 
   private void loadContent() throws IOException {
     if (myContent != null) return;
-    
+    assert myFileRevision != null;
+
     final VcsFileSystem vcsFileSystem = ((VcsFileSystem)getFileSystem());
 
     try {
@@ -88,6 +93,7 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
       myContent = myFileRevision.getContent();
       myCharset = new CharsetToolkit(myContent).guessEncoding(myContent.length);
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
         public void run() {
           vcsFileSystem.fireContentsChanged(this, VcsVirtualFile.this, 0);
         }
@@ -97,6 +103,7 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
     catch (VcsException e) {
       myContentLoadFailed = true;
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
         public void run() {
           vcsFileSystem.fireBeforeFileDeletion(this, VcsVirtualFile.this);
         }
@@ -105,11 +112,12 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
       setRevision("0");
 
       Messages.showMessageDialog(
-        VcsBundle.message("message.text.could.not.load.virtual.file.content", getPresentableUrl(), e.getLocalizedMessage()),
-                                 VcsBundle.message("message.title.could.not.load.content"),
-                                 Messages.getInformationIcon());
+              VcsBundle.message("message.text.could.not.load.virtual.file.content", getPresentableUrl(), e.getLocalizedMessage()),
+              VcsBundle.message("message.title.could.not.load.content"),
+              Messages.getInformationIcon());
 
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
         public void run() {
           vcsFileSystem.fireFileDeleted(this, VcsVirtualFile.this, getName(), getParent());
         }
@@ -122,12 +130,19 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
 
   }
 
+  @Nullable
+  public VcsFileRevision getFileRevision() {
+    return myFileRevision;
+  }
+
+  @NotNull
   @Override
   public Charset getCharset() {
     if (myCharset != null) return myCharset;
     return super.getCharset();
   }
 
+  @Override
   public boolean isDirectory() {
     return false;
   }
