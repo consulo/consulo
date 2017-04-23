@@ -28,17 +28,16 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.*;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.*;
@@ -49,12 +48,12 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
   @NonNls public static final String RUNNERS_GROUP = "RunnerActions";
   @NonNls public static final String RUN_CONTEXT_GROUP = "RunContextGroup";
 
-  private List<Executor> myExecutors = new ArrayList<Executor>();
+  private List<Executor> myExecutors = new ArrayList<>();
   private ActionManager myActionManager;
-  private final Map<String, Executor> myId2Executor = new HashMap<String, Executor>();
-  private final Set<String> myContextActionIdSet = new HashSet<String>();
-  private final Map<String, AnAction> myId2Action = new HashMap<String, AnAction>();
-  private final Map<String, AnAction> myContextActionId2Action = new HashMap<String, AnAction>();
+  private final Map<String, Executor> myId2Executor = new HashMap<>();
+  private final Set<String> myContextActionIdSet = new HashSet<>();
+  private final Map<String, AnAction> myId2Action = new HashMap<>();
+  private final Map<String, AnAction> myContextActionId2Action = new HashMap<>();
 
   // [Project, ExecutorId, RunnerId]
   private final Set<Trinity<Project, String, String>> myInProgress = Collections.synchronizedSet(new java.util.HashSet<Trinity<Project, String, String>>());
@@ -192,7 +191,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
   @Override
   public synchronized void disposeComponent() {
     if (!myExecutors.isEmpty()) {
-      for (Executor executor : new ArrayList<Executor>(myExecutors)) {
+      for (Executor executor : new ArrayList<>(myExecutors)) {
         deinitExecutor(executor);
       }
     }
@@ -211,7 +210,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
 
     @RequiredDispatchThread
     @Override
-    public void update(final AnActionEvent e) {
+    public void update(@NotNull final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
       final Project project = e.getProject();
 
@@ -260,12 +259,9 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
       final ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(project);
 
       List<RunContentDescriptor> runningDescriptors = executionManager.getRunningDescriptors(s -> s == selectedConfiguration);
-      runningDescriptors = ContainerUtil.filter(runningDescriptors, new Condition<RunContentDescriptor>() {
-        @Override
-        public boolean value(RunContentDescriptor descriptor) {
-          RunContentDescriptor contentDescriptor = executionManager.getContentManager().findContentDescriptor(myExecutor, descriptor.getProcessHandler());
-          return contentDescriptor != null && executionManager.getExecutors(contentDescriptor).contains(myExecutor);
-        }
+      runningDescriptors = ContainerUtil.filter(runningDescriptors, descriptor -> {
+        RunContentDescriptor contentDescriptor = executionManager.getContentManager().findContentDescriptor(myExecutor, descriptor.getProcessHandler());
+        return contentDescriptor != null && executionManager.getExecutors(contentDescriptor).contains(myExecutor);
       });
 
       if (!runningDescriptors.isEmpty() && DefaultRunExecutor.EXECUTOR_ID.equals(myExecutor.getId()) && selectedConfiguration.isSingleton()) {
@@ -290,7 +286,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
 
     @RequiredDispatchThread
     @Override
-    public void actionPerformed(final AnActionEvent e) {
+    public void actionPerformed(@NotNull final AnActionEvent e) {
       final Project project = e.getProject();
       if (project == null || project.isDisposed()) {
         return;
