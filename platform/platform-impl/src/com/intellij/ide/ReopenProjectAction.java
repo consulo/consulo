@@ -21,9 +21,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.BitUtil;
+import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.InputEvent;
 import java.io.File;
+import java.util.List;
 
 /**
  * @author yole
@@ -31,10 +34,12 @@ import java.io.File;
 public class ReopenProjectAction extends AnAction implements DumbAware {
   private final String myProjectPath;
   private final String myProjectName;
+  private List<String> myExtensions;
 
-  public ReopenProjectAction(final String projectPath, final String projectName, final String displayName) {
+  public ReopenProjectAction(final String projectPath, final String projectName, final String displayName, @NotNull List<String> extensions) {
     myProjectPath = projectPath;
     myProjectName = projectName;
+    myExtensions = extensions;
 
     final Presentation presentation = getTemplatePresentation();
     String text = projectPath.equals(displayName) ? FileUtil.getLocationRelativeToUserHome(projectPath) : displayName;
@@ -43,26 +48,33 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
   }
 
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     //Force move focus to IdeFrame
     IdeEventQueue.getInstance().getPopupManager().closeAllPopups();
 
     final int modifiers = e.getModifiers();
-    final boolean forceOpenInNewFrame = BitUtil.isSet(modifiers, InputEvent.CTRL_MASK)
-                                        || BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK)
-                                        || e.getPlace() == ActionPlaces.WELCOME_SCREEN;
+    final boolean forceOpenInNewFrame =
+            BitUtil.isSet(modifiers, InputEvent.CTRL_MASK) || BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK) || e.getPlace() == ActionPlaces.WELCOME_SCREEN;
 
     Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     if (!new File(myProjectPath).exists()) {
-      if (Messages.showDialog(project, "The path " + FileUtil.toSystemDependentName(myProjectPath) + " does not exist.\n" +
-                                       "If it is on a removable or network drive, please make sure that the drive is connected.",
-                              "Reopen Project", new String[]{"OK", "&Remove From List"}, 0, Messages.getErrorIcon()) == 1) {
+      if (Messages.showDialog(project, "The path " +
+                                       FileUtil.toSystemDependentName(myProjectPath) +
+                                       " does not exist.\n" +
+                                       "If it is on a removable or network drive, please make sure that the drive is connected.", "Reopen Project",
+                              new String[]{"OK", "&Remove From List"}, 0, Messages.getErrorIcon()) == 1) {
         RecentProjectsManager.getInstance().removePath(myProjectPath);
       }
       return;
     }
     RecentProjectsManagerBase.getInstanceEx().doOpenProject(myProjectPath, project, forceOpenInNewFrame);
+  }
+
+  @NotNull
+  public List<String> getExtensions() {
+    return myExtensions;
   }
 
   public String getProjectPath() {

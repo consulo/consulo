@@ -36,6 +36,8 @@ import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.impl.ModuleExtensionProviders;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -91,7 +93,8 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
         final ProjectGroup group;
         if (selected instanceof ProjectGroupActionGroup) {
           group = ((ProjectGroupActionGroup)selected).getGroup();
-        } else {
+        }
+        else {
           group = null;
         }
 
@@ -105,7 +108,8 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               RecentProjectsWelcomeScreenActionBase.rebuildRecentProjectDataModel((DefaultListModel)model);
               list.setSelectedIndex(group.getProjects().isEmpty() ? index : index + 1);
             }
-          } else {
+          }
+          else {
             FlatWelcomeFrame frame = UIUtil.getParentOfType(FlatWelcomeFrame.class, list);
             if (frame != null) {
               FocusTraversalPolicy policy = frame.getFocusTraversalPolicy();
@@ -117,7 +121,8 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               }
             }
           }
-        } else if (keyCode == KeyEvent.VK_LEFT ) {
+        }
+        else if (keyCode == KeyEvent.VK_LEFT) {
           if (group != null && group.isExpanded()) {
             group.setExpanded(false);
             int index = list.getSelectedIndex();
@@ -156,7 +161,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
       private GridBagConstraints pathCell;
       private GridBagConstraints closeButtonCell;
 
-      private void initConstraints () {
+      private void initConstraints() {
         nameCell = new GridBagConstraints();
         pathCell = new GridBagConstraints();
         closeButtonCell = new GridBagConstraints();
@@ -167,7 +172,6 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
         nameCell.weighty = 1.0;
         nameCell.anchor = GridBagConstraints.FIRST_LINE_START;
         nameCell.insets = JBUI.insets(6, 5, 1, 5);
-
 
 
         pathCell.gridx = 0;
@@ -203,6 +207,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
         add(myName, nameCell);
         add(myPath, pathCell);
       }
+
       JComponent spacer = new NonOpaquePanel() {
         @Override
         public Dimension getPreferredSize() {
@@ -257,7 +262,18 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               p.add(name, BorderLayout.NORTH);
               p.add(path, BorderLayout.SOUTH);
 
-              final JLabel projectIcon = new JLabel("", EmptyIcon.ICON_16, SwingConstants.LEFT) {
+              List<String> extensions = ((ReopenProjectAction)value).getExtensions();
+              Icon moduleMainIcon = EmptyIcon.ICON_16;
+              if (!extensions.isEmpty()) {
+                for (String extensionId : extensions) {
+                  ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(extensionId);
+                  if (provider != null) {
+                    moduleMainIcon = provider.getIcon();
+                    break;
+                  }
+                }
+              }
+              final JLabel projectIcon = new JLabel("", moduleMainIcon, SwingConstants.LEFT) {
                 @Override
                 protected void paintComponent(Graphics g) {
                   getIcon().paintIcon(this, g, 0, (getHeight() - getIcon().getIconHeight()) / 2);

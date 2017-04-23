@@ -15,26 +15,36 @@
  */
 package com.intellij.ide;
 
+import com.intellij.ProjectTopics;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.project.impl.ProjectImpl;
+import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.RequiredReadAction;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.impl.ModuleExtensionProviders;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
@@ -132,7 +142,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   }
 
   private static void removePathFrom(List<String> items, String path) {
-    for (Iterator<String> iterator = items.iterator(); iterator.hasNext();) {
+    for (Iterator<String> iterator = items.iterator(); iterator.hasNext(); ) {
       final String next = iterator.next();
       if (SystemInfo.isFileSystemCaseSensitive ? path.equals(next) : path.equalsIgnoreCase(next)) {
         iterator.remove();
@@ -239,9 +249,11 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   @Override
   public AnAction[] getRecentProjectsActions(boolean forMainMenu, boolean useGroups) {
     final Set<String> paths;
+    final Map<String, RecentProjectMetaInfo> metaInfoMap;
     synchronized (myStateLock) {
       myState.validateRecentProjects();
       paths = ContainerUtil.newLinkedHashSet(myState.recentPaths);
+      metaInfoMap = ContainerUtil.newHashMap(myState.additionalInfo);
     }
 
     Set<String> openedPaths = new THashSet<>();
@@ -284,7 +296,8 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
       for (ProjectGroup group : groups) {
         final List<AnAction> children = new ArrayList<>();
         for (String path : group.getProjects()) {
-          final AnAction action = createOpenAction(path, duplicates);
+          RecentProjectMetaInfo metaInfo = metaInfoMap.get(path);
+          final AnAction action = createOpenAction(path, metaInfo, duplicates);
           if (action != null) {
             children.add(action);
 
@@ -303,7 +316,9 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
     }
 
     for (final String path : paths) {
-      final AnAction action = createOpenAction(path, duplicates);
+      RecentProjectMetaInfo metaInfo = metaInfoMap.get(path);
+
+      final AnAction action = createOpenAction(path, metaInfo, duplicates);
       if (action != null) {
         actions.add(action);
       }
@@ -316,7 +331,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
     return actions.toArray(new AnAction[actions.size()]);
   }
 
-  private AnAction createOpenAction(String path, Set<String> duplicates) {
+  private AnAction createOpenAction(String path, @Nullable RecentProjectMetaInfo metaInfo, Set<String> duplicates) {
     String projectName = getProjectName(path);
     String displayName;
     synchronized (myStateLock) {
@@ -326,16 +341,21 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
       displayName = duplicates.contains(path) ? path : projectName;
     }
 
+    List<String> extensions = Collections.emptyList();
+    if (metaInfo != null) {
+      extensions = new ArrayList<>(metaInfo.extensions);
+    }
+
     // It's better don't to remove non-existent projects. Sometimes projects stored
     // on USB-sticks or flash-cards, and it will be nice to have them in the list
     // when USB device or SD-card is mounted
     //if (new File(path).exists()) {
-    return new ReopenProjectAction(path, projectName, displayName);
+    return new ReopenProjectAction(path, projectName, displayName, extensions);
     //}
     //return null;
   }
 
-  private void markPathRecent(String path) {
+  private void markPathRecent(String path, @Nullable Project project) {
     synchronized (myStateLock) {
       if (path.endsWith(File.separator)) {
         path = path.substring(0, path.length() - File.separator.length());
@@ -350,7 +370,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
         group.save(projects);
       }
       myState.additionalInfo.remove(path);
-      myState.additionalInfo.put(path, RecentProjectMetaInfo.create());
+      myState.additionalInfo.put(path, RecentProjectMetaInfo.create(project));
     }
   }
 
@@ -380,9 +400,16 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
     public void projectOpened(final Project project) {
       String path = getProjectPath(project);
       if (path != null) {
-        markPathRecent(path);
+        markPathRecent(path, project);
       }
       SystemDock.updateMenu();
+
+      project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+        @Override
+        public void rootsChanged(ModuleRootEvent event) {
+          updateProjectModuleExtensions(project);
+        }
+      });
     }
 
     @Override
@@ -398,7 +425,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
       if (openProjects.length > 0) {
         String path = getProjectPath(openProjects[openProjects.length - 1]);
         if (path != null) {
-          markPathRecent(path);
+          markPathRecent(path, null);
         }
       }
       SystemDock.updateMenu();
@@ -424,14 +451,25 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
         myNameCache.put(p, readProjectName(p));
       }
     }, 50);
-    String name = new File(path).getName();
-    return path.endsWith(".ipr") ? FileUtilRt.getNameWithoutExtension(name) : name;
+    return new File(path).getName();
   }
 
   @Override
   public void clearNameCache() {
     myNameCache.clear();
     myDuplicatesCache = null;
+  }
+
+  @Override
+  public void updateProjectModuleExtensions(@NotNull Project project) {
+    String projectPath = getProjectPath(project);
+    if (projectPath == null) {
+      return;
+    }
+
+    synchronized (myStateLock) {
+      myState.additionalInfo.put(projectPath, RecentProjectMetaInfo.create(project));
+    }
   }
 
   private static String readProjectName(@NotNull String path) {
@@ -451,7 +489,8 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
             in.close();
           }
         }
-        catch (IOException ignored) { }
+        catch (IOException ignored) {
+        }
       }
       return file.getName();
     }
@@ -519,19 +558,32 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   }
 
   public static class RecentProjectMetaInfo {
-    public String build;
-    public boolean eap;
-    public String binFolder;
-    public long projectOpenTimestamp;
-    public long buildTimestamp;
+    public List<String> extensions = new ArrayList<>();
 
-    public static RecentProjectMetaInfo create() {
+    @RequiredReadAction
+    public static RecentProjectMetaInfo create(@Nullable Project project) {
       RecentProjectMetaInfo info = new RecentProjectMetaInfo();
-      info.build = ApplicationInfoEx.getInstanceEx().getBuild().asString();
-      info.eap = ApplicationInfoEx.getInstanceEx().isEAP();
-      info.binFolder = PathManager.getBinPath();
-      info.projectOpenTimestamp = System.currentTimeMillis();
-      info.buildTimestamp = ApplicationInfoEx.getInstanceEx().getBuildDate().getTimeInMillis();
+      if (project == null) {
+        return info;
+      }
+
+      ModuleManager moduleManager = ModuleManager.getInstance(project);
+      for (Module module : moduleManager.getModules()) {
+        VirtualFile moduleDir = module.getModuleDir();
+        if (Comparing.equal(project.getBaseDir(), moduleDir)) {
+          ModuleRootManager manager = ModuleRootManager.getInstance(module);
+
+          ModuleExtension[] extensions = manager.getExtensions();
+          for (ModuleExtension extension : extensions) {
+            ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(extension.getId());
+            assert provider != null;
+
+            if (provider.parentKey == null) {
+              info.extensions.add(provider.getKey());
+            }
+          }
+        }
+      }
       return info;
     }
   }

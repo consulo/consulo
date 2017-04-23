@@ -17,6 +17,8 @@ package com.intellij.ide;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -34,6 +36,8 @@ public abstract class RecentProjectsManager {
 
   public abstract void clearNameCache();
 
+  public abstract void updateProjectModuleExtensions(@NotNull Project project);
+
   public abstract void updateLastProjectPath();
 
   public abstract String getLastProjectPath();
@@ -49,9 +53,15 @@ public abstract class RecentProjectsManager {
     return getRecentProjectsActions(addClearListItem);
   }
 
-  public List<ProjectGroup> getGroups() {return Collections.emptyList();}
-  public void addGroup(ProjectGroup group) {}
-  public void removeGroup(ProjectGroup group) {}
+  public List<ProjectGroup> getGroups() {
+    return Collections.emptyList();
+  }
+
+  public void addGroup(ProjectGroup group) {
+  }
+
+  public void removeGroup(ProjectGroup group) {
+  }
 
   public boolean hasPath(String path) {
     return false;
