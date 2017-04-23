@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,55 +13,83 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.execution.actions;
 
+import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.ExecutionManager;
 import com.intellij.execution.KillableProcess;
+import com.intellij.execution.configurations.RunProfile;
+import com.intellij.execution.impl.ExecutionManagerImpl;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.execution.ui.RunContentManager;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListItemDescriptor;
-import com.intellij.openapi.ui.popup.PopupChooserBuilder;
-import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.reference.SoftReference;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.IconUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.InputEvent;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class StopAction extends DumbAwareAction implements AnAction.TransparentUpdate {
+class StopAction extends DumbAwareAction implements AnAction.TransparentUpdate {
+  private WeakReference<JBPopup> myActivePopupRef = null;
+
+  private static boolean isPlaceGlobal(AnActionEvent e) {
+    return ActionPlaces.isMainMenuOrActionSearch(e.getPlace()) ||
+           ActionPlaces.MAIN_TOOLBAR.equals(e.getPlace()) ||
+           ActionPlaces.NAVIGATION_BAR_TOOLBAR.equals(e.getPlace());
+  }
+
   @Override
   public void update(final AnActionEvent e) {
     boolean enable = false;
     Icon icon = getTemplatePresentation().getIcon();
     String description = getTemplatePresentation().getDescription();
-    final Presentation presentation = e.getPresentation();
-
-    if (ActionPlaces.MAIN_MENU.equals(e.getPlace())) {
-      enable = !getCancellableProcesses(e.getProject()).isEmpty() || !getActiveDescriptors(e.getDataContext()).isEmpty();
+    Presentation presentation = e.getPresentation();
+    if (isPlaceGlobal(e)) {
+      List<RunContentDescriptor> stoppableDescriptors = getActiveStoppableDescriptors(e.getDataContext());
+      List<Pair<TaskInfo, ProgressIndicator>> cancellableProcesses = getCancellableProcesses(e.getProject());
+      int todoSize = stoppableDescriptors.size() + cancellableProcesses.size();
+      if (todoSize > 1) {
+        presentation.setText(getTemplatePresentation().getText() + "...");
+      }
+      else if (todoSize == 1) {
+        if (stoppableDescriptors.size() == 1) {
+          presentation
+                  .setText(ExecutionBundle.message("stop.configuration.action.name", StringUtil.escapeMnemonics(stoppableDescriptors.get(0).getDisplayName())));
+        }
+        else {
+          TaskInfo taskInfo = cancellableProcesses.get(0).first;
+          presentation.setText(taskInfo.getCancelText() + " " + taskInfo.getTitle());
+        }
+      }
+      else {
+        presentation.setText(getTemplatePresentation().getText());
+      }
+      enable = todoSize > 0;
+      if (todoSize > 1) {
+        icon = IconUtil.addText(icon, String.valueOf(todoSize));
+      }
     }
     else {
-      final ProcessHandler processHandler = getHandler(e.getDataContext());
+      RunContentDescriptor contentDescriptor = e.getData(LangDataKeys.RUN_CONTENT_DESCRIPTOR);
+      ProcessHandler processHandler = contentDescriptor == null ? null : contentDescriptor.getProcessHandler();
       if (processHandler != null && !processHandler.isProcessTerminated()) {
         if (!processHandler.isProcessTerminating()) {
           enable = true;
@@ -71,6 +99,15 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
           icon = AllIcons.Debugger.KillProcess;
           description = "Kill process";
         }
+      }
+
+      RunProfile runProfile = e.getData(LangDataKeys.RUN_PROFILE);
+      if (runProfile == null && contentDescriptor == null) {
+        presentation.setText(getTemplatePresentation().getText());
+      }
+      else {
+        presentation.setText(ExecutionBundle.message("stop.configuration.action.name", StringUtil
+                .escapeMnemonics(runProfile == null ? contentDescriptor.getDisplayName() : runProfile.getName())));
       }
     }
 
@@ -82,113 +119,130 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
   @Override
   public void actionPerformed(final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    ProcessHandler activeProcessHandler = getHandler(dataContext);
-
-    List<Pair<TaskInfo, ProgressIndicator>> backgroundTasks = getCancellableProcesses(e.getProject());
-    if (ActionPlaces.MAIN_MENU.equals(e.getPlace())) {
-      if (activeProcessHandler != null && !activeProcessHandler.isProcessTerminating() && !activeProcessHandler.isProcessTerminated()
-          && backgroundTasks.isEmpty()) {
-        stopProcess(activeProcessHandler);
+    Project project = e.getProject();
+    List<Pair<TaskInfo, ProgressIndicator>> cancellableProcesses = getCancellableProcesses(project);
+    List<RunContentDescriptor> stoppableDescriptors = getActiveStoppableDescriptors(dataContext);
+    if (isPlaceGlobal(e)) {
+      int todoSize = cancellableProcesses.size() + stoppableDescriptors.size();
+      if (todoSize == 1) {
+        if (!stoppableDescriptors.isEmpty()) {
+          ExecutionManagerImpl.stopProcess(stoppableDescriptors.get(0));
+        }
+        else {
+          cancellableProcesses.get(0).second.cancel();
+        }
         return;
       }
 
-      Pair<List<HandlerItem>, HandlerItem>
-              handlerItems = getItemsList(backgroundTasks, getActiveDescriptors(dataContext), activeProcessHandler);
-      if (handlerItems.first.isEmpty()) return;
+      Pair<List<HandlerItem>, HandlerItem> handlerItems =
+              getItemsList(cancellableProcesses, stoppableDescriptors, getRecentlyStartedContentDescriptor(dataContext));
+      if (handlerItems == null || handlerItems.first.isEmpty()) {
+        return;
+      }
 
-      final JBList list = new JBList(handlerItems.first);
+      final JBList<HandlerItem> list = new JBList<>(handlerItems.first);
       if (handlerItems.second != null) list.setSelectedValue(handlerItems.second, true);
+      HandlerItem stopAllItem =
+              new HandlerItem(ExecutionBundle.message("stop.all", KeymapUtil.getFirstKeyboardShortcutText("Stop")), AllIcons.Actions.Suspend, true) {
+                @Override
+                void stop() {
+                  for (HandlerItem item : handlerItems.first) {
+                    item.stop();
+                  }
+                }
+              };
+      ((DefaultListModel<HandlerItem>)list.getModel()).addElement(stopAllItem);
+      JBPopup activePopup = SoftReference.dereference(myActivePopupRef);
+      if (activePopup != null) {
+        stopAllItem.stop();
+        activePopup.cancel();
+        return;
+      }
 
-      list.setCellRenderer(new GroupedItemsListRenderer(new ListItemDescriptor() {
+      list.setCellRenderer(new GroupedItemsListRenderer<>(new ListItemDescriptorAdapter<HandlerItem>() {
         @Nullable
         @Override
-        public String getTextFor(Object value) {
-          return value instanceof HandlerItem ? ((HandlerItem)value).displayName : null;
+        public String getTextFor(HandlerItem item) {
+          return item.displayName;
         }
 
         @Nullable
         @Override
-        public String getTooltipFor(Object value) {
-          return null;
-        }
-
-        @Nullable
-        @Override
-        public Icon getIconFor(Object value) {
-          return value instanceof HandlerItem ? ((HandlerItem)value).icon : null;
+        public Icon getIconFor(HandlerItem item) {
+          return item.icon;
         }
 
         @Override
-        public boolean hasSeparatorAboveOf(Object value) {
-          return value instanceof HandlerItem && ((HandlerItem)value).hasSeparator;
-        }
-
-        @Nullable
-        @Override
-        public String getCaptionAboveOf(Object value) {
-          return null;
+        public boolean hasSeparatorAboveOf(HandlerItem item) {
+          return item.hasSeparator;
         }
       }));
 
-      final PopupChooserBuilder builder = JBPopupFactory.getInstance().createListPopupBuilder(list);
-      final JBPopup popup = builder
-              .setMovable(true)
-              .setTitle(handlerItems.first.size() == 1 ? "Confirm process stop" : "Stop process")
-              .setFilteringEnabled(new Function<Object, String>() {
-                @Override
-                public String fun(Object o) {
-                  return ((HandlerItem)o).displayName;
+      JBPopup popup = JBPopupFactory.getInstance().createListPopupBuilder(list).setMovable(true)
+              .setTitle(handlerItems.first.size() == 1 ? "Confirm process stop" : "Stop process").setFilteringEnabled(o -> ((HandlerItem)o).displayName)
+              .setItemChoosenCallback(() -> {
+                List valuesList = list.getSelectedValuesList();
+                for (Object o : valuesList) {
+                  if (o instanceof HandlerItem) ((HandlerItem)o).stop();
                 }
-              })
-              .setItemChoosenCallback(new Runnable() {
+              }).addListener(new JBPopupAdapter() {
                 @Override
-                public void run() {
-                  HandlerItem item = (HandlerItem)list.getSelectedValue();
-                  if (item != null) item.stop();
+                public void onClosed(LightweightWindowEvent event) {
+                  myActivePopupRef = null;
                 }
               }).setRequestFocus(true).createPopup();
-
-      popup.showCenteredInCurrentWindow(e.getProject());
-    }
-    else {
-      if (activeProcessHandler != null) {
-        stopProcess(activeProcessHandler);
+      myActivePopupRef = new WeakReference<>(popup);
+      InputEvent inputEvent = e.getInputEvent();
+      Component component = inputEvent != null ? inputEvent.getComponent() : null;
+      if (component != null && ActionPlaces.MAIN_TOOLBAR.equals(e.getPlace())) {
+        popup.showUnderneathOf(component);
+      }
+      else if (project == null) {
+        popup.showInBestPositionFor(dataContext);
+      }
+      else {
+        popup.showCenteredInCurrentWindow(project);
       }
     }
+    else {
+      ExecutionManagerImpl.stopProcess(getRecentlyStartedContentDescriptor(dataContext));
+    }
   }
 
-  private static List<Pair<TaskInfo, ProgressIndicator>> getCancellableProcesses(Project project) {
-    IdeFrame frame = ((WindowManagerEx)WindowManager.getInstance()).findFrameFor(project);
-    StatusBarEx statusBar = frame == null ? null : (StatusBarEx)frame.getStatusBar();
-    if (statusBar == null) return Collections.emptyList();
-
-    return ContainerUtil.findAll(statusBar.getBackgroundProcesses(),
-                                 new Condition<Pair<TaskInfo, ProgressIndicator>>() {
-                                   @Override
-                                   public boolean value(Pair<TaskInfo, ProgressIndicator> pair) {
-                                     return pair.first.isCancellable() && !pair.second.isCanceled();
-                                   }
-                                 });
+  @NotNull
+  private static List<Pair<TaskInfo, ProgressIndicator>> getCancellableProcesses(@Nullable Project project) {
+    return Collections.emptyList();//Don't confuse users with 'Stop Everything' toolbar button
+    //IdeFrame frame = ((WindowManagerEx)WindowManager.getInstance()).findFrameFor(project);
+    //StatusBarEx statusBar = frame == null ? null : (StatusBarEx)frame.getStatusBar();
+    //if (statusBar == null) return Collections.emptyList();
+    //
+    //return ContainerUtil.findAll(statusBar.getBackgroundProcesses(),
+    //                             pair -> pair.first.isCancellable() && !pair.second.isCanceled());
   }
 
+  @Nullable
   private static Pair<List<HandlerItem>, HandlerItem> getItemsList(List<Pair<TaskInfo, ProgressIndicator>> tasks,
                                                                    List<RunContentDescriptor> descriptors,
-                                                                   ProcessHandler activeProcessHandler) {
-    if (tasks.isEmpty() && descriptors.isEmpty()) return Pair.create(Collections.<HandlerItem>emptyList(), null);
+                                                                   RunContentDescriptor toSelect) {
+    if (tasks.isEmpty() && descriptors.isEmpty()) {
+      return null;
+    }
 
-    ArrayList<HandlerItem> items = new ArrayList<HandlerItem>(tasks.size() + descriptors.size());
+    List<HandlerItem> items = new ArrayList<>(tasks.size() + descriptors.size());
     HandlerItem selected = null;
-    for (RunContentDescriptor descriptor : descriptors) {
+    for (final RunContentDescriptor descriptor : descriptors) {
       final ProcessHandler handler = descriptor.getProcessHandler();
       if (handler != null) {
         HandlerItem item = new HandlerItem(descriptor.getDisplayName(), descriptor.getIcon(), false) {
           @Override
           void stop() {
-            stopProcess(handler);
+            ExecutionManagerImpl.stopProcess(descriptor);
           }
         };
         items.add(item);
-        if (handler == activeProcessHandler) selected = item;
+        if (descriptor == toSelect) {
+          selected = item;
+        }
       }
     }
 
@@ -202,43 +256,25 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
       });
       hasSeparator = false;
     }
-    return Pair.<List<HandlerItem>, HandlerItem>create(items, selected);
-  }
-
-  private static void stopProcess(ProcessHandler processHandler) {
-    if (processHandler instanceof KillableProcess && processHandler.isProcessTerminating()) {
-      ((KillableProcess)processHandler).killProcess();
-      return;
-    }
-
-    if (processHandler.detachIsDefault()) {
-      processHandler.detachProcess();
-    }
-    else {
-      processHandler.destroyProcess();
-    }
+    return Pair.create(items, selected);
   }
 
   @Nullable
-  static ProcessHandler getHandler(final DataContext dataContext) {
-    final RunContentDescriptor contentDescriptor = RunContentManager.RUN_CONTENT_DESCRIPTOR.getData(dataContext);
-    final ProcessHandler processHandler;
+  static RunContentDescriptor getRecentlyStartedContentDescriptor(@NotNull DataContext dataContext) {
+    final RunContentDescriptor contentDescriptor = LangDataKeys.RUN_CONTENT_DESCRIPTOR.getData(dataContext);
     if (contentDescriptor != null) {
       // toolwindow case
-      processHandler = contentDescriptor.getProcessHandler();
+      return contentDescriptor;
     }
     else {
       // main menu toolbar
       final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-      final RunContentDescriptor selectedContent =
-              project == null ? null : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
-      processHandler = selectedContent == null ? null : selectedContent.getProcessHandler();
+      return project == null ? null : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
     }
-    return processHandler;
   }
 
   @NotNull
-  private static List<RunContentDescriptor> getActiveDescriptors(final DataContext dataContext) {
+  private static List<RunContentDescriptor> getActiveStoppableDescriptors(final DataContext dataContext) {
     final Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) {
       return Collections.emptyList();
@@ -247,14 +283,20 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
     if (runningProcesses.isEmpty()) {
       return Collections.emptyList();
     }
-    final List<RunContentDescriptor> activeDescriptors = new ArrayList<RunContentDescriptor>();
+    final List<RunContentDescriptor> activeDescriptors = new ArrayList<>();
     for (RunContentDescriptor descriptor : runningProcesses) {
-      final ProcessHandler processHandler = descriptor.getProcessHandler();
-      if (processHandler != null && !processHandler.isProcessTerminating() && !processHandler.isProcessTerminated()) {
+      if (canBeStopped(descriptor)) {
         activeDescriptors.add(descriptor);
       }
     }
     return activeDescriptors;
+  }
+
+  private static boolean canBeStopped(@Nullable RunContentDescriptor descriptor) {
+    @Nullable ProcessHandler processHandler = descriptor != null ? descriptor.getProcessHandler() : null;
+    return processHandler != null &&
+           !processHandler.isProcessTerminated() &&
+           (!processHandler.isProcessTerminating() || processHandler instanceof KillableProcess && ((KillableProcess)processHandler).canKillProcess());
   }
 
   private abstract static class HandlerItem {
@@ -265,7 +307,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
     private HandlerItem(String displayName, Icon icon, boolean hasSeparator) {
       this.displayName = displayName;
       this.icon = icon;
-      this.hasSeparator =  hasSeparator;
+      this.hasSeparator = hasSeparator;
     }
 
     public String toString() {

@@ -84,6 +84,34 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     myProject = project;
   }
 
+  public static void stopProcess(@Nullable RunContentDescriptor descriptor) {
+    stopProcess(descriptor != null ? descriptor.getProcessHandler() : null);
+  }
+
+  public static void stopProcess(@Nullable ProcessHandler processHandler) {
+    if (processHandler == null) {
+      return;
+    }
+
+    processHandler.putUserData(ProcessHandler.TERMINATION_REQUESTED, Boolean.TRUE);
+
+    if (processHandler instanceof KillableProcess && processHandler.isProcessTerminating()) {
+      // process termination was requested, but it's still alive
+      // in this case 'force quit' will be performed
+      ((KillableProcess)processHandler).killProcess();
+      return;
+    }
+
+    if (!processHandler.isProcessTerminated()) {
+      if (processHandler.detachIsDefault()) {
+        processHandler.detachProcess();
+      }
+      else {
+        processHandler.destroyProcess();
+      }
+    }
+  }
+
   @Override
   public void dispose() {
     for (Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity : myRunningConfigurations) {
@@ -356,7 +384,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
       }
 
       for (RunContentDescriptor descriptor : runningToStop) {
-        stop(descriptor);
+        stopProcess(descriptor);
       }
     }
 
@@ -512,27 +540,6 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
       }
     }
     return result;
-  }
-
-  private static void stop(@Nullable RunContentDescriptor descriptor) {
-    ProcessHandler processHandler = descriptor != null ? descriptor.getProcessHandler() : null;
-    if (processHandler == null) {
-      return;
-    }
-
-    if (processHandler instanceof KillableProcess && processHandler.isProcessTerminating()) {
-      ((KillableProcess)processHandler).killProcess();
-      return;
-    }
-
-    if (!processHandler.isProcessTerminated()) {
-      if (processHandler.detachIsDefault()) {
-        processHandler.detachProcess();
-      }
-      else {
-        processHandler.destroyProcess();
-      }
-    }
   }
 
   @NotNull
