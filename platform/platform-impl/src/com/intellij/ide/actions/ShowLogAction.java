@@ -30,7 +30,7 @@ import java.io.File;
 public class ShowLogAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final File logFile = new File(PathManager.getLogPath(), "idea.log");
+    final File logFile = new File(PathManager.getLogPath(), "consulo.log");
     ShowFilePathAction.openFile(logFile);
   }
 
