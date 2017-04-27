@@ -37,10 +37,13 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.WatchedRootsProvider;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
+import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexImpl;
@@ -96,7 +99,9 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
       }
     }, project);
 
-    startupManager.registerStartupActivity(() -> myStartupActivityPerformed = true);
+    if (!project.isDefault()) {
+      startupManager.registerStartupActivity(() -> myStartupActivityPerformed = true);
+    }
 
     myHandler = new BatchUpdateListener() {
       @Override
@@ -243,6 +248,12 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
       recursive.addAll(extension.getRootsToWatch());
     }
 
+    addRootsFromModules(includeSourceRoots, recursive, flat);
+
+    return Pair.create(recursive, flat);
+  }
+
+  private void addRootsFromModules(boolean includeSourceRoots, Set<String> recursive, Set<String> flat) {
     final Module[] modules = ModuleManager.getInstance(myProject).getModules();
     for (Module module : modules) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
@@ -262,8 +273,6 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         }
       }
     }
-
-    return Pair.create(recursive, flat);
   }
 
   private static void addRootsToTrack(final String[] urls, final Collection<String> recursive, final Collection<String> flat) {
@@ -295,6 +304,20 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     DumbServiceImpl dumbService = DumbServiceImpl.getInstance(myProject);
     if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
       dumbService.queueTask(new UnindexedFilesUpdater(myProject));
+    }
+  }
+
+  @Override
+  public void markRootsForRefresh() {
+    Set<String> paths = ContainerUtil.newTroveSet(FileUtil.PATH_HASHING_STRATEGY);
+    addRootsFromModules(false, paths, paths);
+
+    LocalFileSystem fs = LocalFileSystem.getInstance();
+    for (String path : paths) {
+      VirtualFile root = fs.findFileByPath(path);
+      if (root instanceof NewVirtualFile) {
+        ((NewVirtualFile)root).markDirtyRecursively();
+      }
     }
   }
 

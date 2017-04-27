@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,13 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -40,22 +38,18 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.impl.local.FileWatcher;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl;
-import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
+import com.intellij.ui.GuiUtils;
 import com.intellij.util.SmartList;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import java.io.FileNotFoundException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class StartupManagerImpl extends StartupManagerEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.startup.impl.StartupManagerImpl");
@@ -72,32 +66,35 @@ public class StartupManagerImpl extends StartupManagerEx {
   private volatile boolean myStartupActivitiesPassed;
 
   private final Project myProject;
+  private boolean myInitialRefreshScheduled;
 
   public StartupManagerImpl(Project project) {
     myProject = project;
   }
 
+  private void checkNonDefaultProject() {
+    LOG.assertTrue(!myProject.isDefault(), "Please don't register startup activities for the default project: they won't ever be run");
+  }
+
   @Override
   public void registerPreStartupActivity(@NotNull Runnable runnable) {
+    checkNonDefaultProject();
     LOG.assertTrue(!myPreStartupActivitiesPassed, "Registering pre startup activity that will never be run");
     myPreStartupActivities.add(runnable);
   }
 
   @Override
   public void registerStartupActivity(@NotNull Runnable runnable) {
+    checkNonDefaultProject();
     LOG.assertTrue(!myStartupActivitiesPassed, "Registering startup activity that will never be run");
     myStartupActivities.add(runnable);
   }
 
   @Override
   public synchronized void registerPostStartupActivity(@NotNull Runnable runnable) {
+    checkNonDefaultProject();
     LOG.assertTrue(!myPostStartupActivitiesPassed, "Registering post-startup activity that will never be run:" +
-                                                   " disposed=" +
-                                                   myProject.isDisposed() +
-                                                   "; open=" +
-                                                   myProject.isOpen() +
-                                                   "; passed=" +
-                                                   myStartupActivitiesPassed);
+                                                   " disposed=" + myProject.isDisposed() + "; open=" + myProject.isOpen() + "; passed=" + myStartupActivitiesPassed);
     (DumbService.isDumbAware(runnable) ? myDumbAwarePostStartupActivities : myNotDumbAwarePostStartupActivities).add(runnable);
   }
 
@@ -143,10 +140,16 @@ public class StartupManagerImpl extends StartupManagerEx {
   }
 
   public void runPostStartupActivitiesFromExtensions() {
-    for (final StartupActivity extension : Extensions.getExtensions(StartupActivity.POST_STARTUP_ACTIVITY)) {
+    StartupActivity[] extensions = Extensions.getExtensions(StartupActivity.POST_STARTUP_ACTIVITY);
+    for (final StartupActivity extension : extensions) {
       final Runnable runnable = () -> {
         if (!myProject.isDisposed()) {
+          long start = System.currentTimeMillis();
           extension.runActivity(myProject);
+          long duration = System.currentTimeMillis() - start;
+          if (duration > 200) {
+            LOG.info(extension.getClass().getSimpleName() + " run in " + duration);
+          }
         }
       };
       if (extension instanceof DumbAware) {
@@ -177,7 +180,8 @@ public class StartupManagerImpl extends StartupManagerEx {
 
     runActivities(myDumbAwarePostStartupActivities);
 
-    DumbService.getInstance(myProject).runWhenSmart(new Runnable() {
+    DumbService dumbService = DumbService.getInstance(myProject);
+    dumbService.runWhenSmart(new Runnable() {
       @Override
       public void run() {
         app.assertIsDispatchThread();
@@ -185,17 +189,20 @@ public class StartupManagerImpl extends StartupManagerEx {
         // myDumbAwarePostStartupActivities might be non-empty if new activities were registered during dumb mode
         runActivities(myDumbAwarePostStartupActivities);
 
-        //noinspection SynchronizeOnThis
-        synchronized (StartupManagerImpl.this) {
-          if (!myNotDumbAwarePostStartupActivities.isEmpty()) {
-            while (!myNotDumbAwarePostStartupActivities.isEmpty()) {
-              queueSmartModeActivity(myNotDumbAwarePostStartupActivities.remove(0));
-            }
+        while (true) {
+          List<Runnable> dumbUnaware = takeDumbUnawareStartupActivities();
+          if (dumbUnaware.isEmpty()) break;
 
-            // return here later to set myPostStartupActivitiesPassed
-            DumbService.getInstance(myProject).runWhenSmart(this);
-          }
-          else {
+          dumbUnaware.forEach(StartupManagerImpl.this::queueSmartModeActivity);
+        }
+
+        if (dumbService.isDumb()) {
+          // return here later to process newly submitted activities (if any) and set myPostStartupActivitiesPassed
+          dumbService.runWhenSmart(this);
+        }
+        else {
+          //noinspection SynchronizeOnThis
+          synchronized (this) {
             myPostStartupActivitiesPassed = true;
           }
         }
@@ -203,14 +210,21 @@ public class StartupManagerImpl extends StartupManagerEx {
     });
   }
 
-  public void scheduleInitialVfsRefresh() {
-    UIUtil.invokeLaterIfNeeded(() -> {
-      if (myProject.isDisposed()) return;
+  private synchronized List<Runnable> takeDumbUnawareStartupActivities() {
+    List<Runnable> result = new ArrayList<>(myNotDumbAwarePostStartupActivities);
+    myNotDumbAwarePostStartupActivities.clear();
+    return result;
+  }
 
-      markContentRootsForRefresh();
+  public void scheduleInitialVfsRefresh() {
+    GuiUtils.invokeLaterIfNeeded(() -> {
+      if (myProject.isDisposed() || myInitialRefreshScheduled) return;
+
+      myInitialRefreshScheduled = true;
+      ((ProjectRootManagerImpl)ProjectRootManager.getInstance(myProject)).markRootsForRefresh();
 
       Application app = ApplicationManager.getApplication();
-      if (!app.isHeadlessEnvironment()) {
+      if (!app.isCommandLine()) {
         final long sessionId = VirtualFileManager.getInstance().asyncRefresh(null);
         final MessageBusConnection connection = app.getMessageBus().connect();
         connection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
@@ -226,17 +240,7 @@ public class StartupManagerImpl extends StartupManagerEx {
       else {
         VirtualFileManager.getInstance().syncRefresh();
       }
-    });
-  }
-
-  private void markContentRootsForRefresh() {
-    for (Module module : ModuleManager.getInstance(myProject).getModules()) {
-      for (VirtualFile contentRoot : ModuleRootManager.getInstance(module).getContentRoots()) {
-        if (contentRoot instanceof NewVirtualFile) {
-          ((NewVirtualFile)contentRoot).markDirtyRecursively();
-        }
-      }
-    }
+    }, ModalityState.defaultModalityState());
   }
 
   private void checkFsSanity() {
@@ -245,15 +249,15 @@ public class StartupManagerImpl extends StartupManagerEx {
       if (path == null || FileUtil.isAncestor(PathManager.getConfigPath(), path, true)) {
         return;
       }
-
       boolean expected = SystemInfo.isFileSystemCaseSensitive, actual = FileUtil.isFileSystemCaseSensitive(path);
       LOG.info(path + " case-sensitivity: expected=" + expected + " actual=" + actual);
       if (actual != expected) {
         int prefix = expected ? 1 : 0;  // IDE=true -> FS=false -> prefix='in'
         String title = ApplicationBundle.message("fs.case.sensitivity.mismatch.title");
         String text = ApplicationBundle.message("fs.case.sensitivity.mismatch.message", prefix);
-        Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, title, text, NotificationType.WARNING,
-                                                  NotificationListener.URL_OPENING_LISTENER), myProject);
+        Notifications.Bus.notify(
+                new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, title, text, NotificationType.WARNING, NotificationListener.URL_OPENING_LISTENER),
+                myProject);
       }
     }
     catch (FileNotFoundException e) {
@@ -280,7 +284,7 @@ public class StartupManagerImpl extends StartupManagerEx {
 
       Collection<String> manualWatchRoots = watcher.getManualWatchRoots();
       if (!manualWatchRoots.isEmpty()) {
-        List<String> nonWatched = new SmartList<String>();
+        List<String> nonWatched = new SmartList<>();
         for (VirtualFile root : roots) {
           if (!(root.getFileSystem() instanceof LocalFileSystem)) continue;
           String rootPath = root.getPath();
@@ -301,6 +305,8 @@ public class StartupManagerImpl extends StartupManagerEx {
   }
 
   public void startCacheUpdate() {
+    if (myProject.isDisposed()) return;
+
     try {
       DumbServiceImpl dumbService = DumbServiceImpl.getInstance(myProject);
 
@@ -353,28 +359,23 @@ public class StartupManagerImpl extends StartupManagerEx {
     final Application application = ApplicationManager.getApplication();
     if (application == null) return;
 
-    //noinspection SynchronizeOnThis
-    synchronized (this) {
-      // in tests which simulate project opening, post-startup activities could have been run already.
-      // Then we should act as if the project was initialized
-      boolean initialized = myProject.isInitialized() || application.isUnitTestMode() && myPostStartupActivitiesPassed;
-      if (!initialized) {
-        registerPostStartupActivity(action);
-        return;
-      }
-    }
-
     Runnable runnable = () -> {
-      if (!myProject.isDisposed()) {
-        action.run();
+      if (myProject.isDisposed()) return;
+
+      //noinspection SynchronizeOnThis
+      synchronized (this) {
+        // in tests which simulate project opening, post-startup activities could have been run already.
+        // Then we should act as if the project was initialized
+        boolean initialized = myProject.isInitialized() || myProject.isDefault() || application.isUnitTestMode() && myPostStartupActivitiesPassed;
+        if (!initialized) {
+          registerPostStartupActivity(action);
+          return;
+        }
       }
+
+      action.run();
     };
-    if (application.isDispatchThread() && ModalityState.current() == ModalityState.NON_MODAL) {
-      runnable.run();
-    }
-    else {
-      application.invokeLater(runnable, ModalityState.NON_MODAL);
-    }
+    GuiUtils.invokeLaterIfNeeded(runnable, ModalityState.NON_MODAL);
   }
 
   @TestOnly

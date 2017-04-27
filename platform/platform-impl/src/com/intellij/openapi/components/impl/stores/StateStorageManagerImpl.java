@@ -91,6 +91,10 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       LOG.error("Storage.value() is empty");
       return StoragePathMacros.DEFAULT_FILE;
     }
+
+    if (value.equals(StoragePathMacros.WORKSPACE_FILE)) {
+      return value;
+    }
     return getConfigurationMacro(directorySpec) + "/" + value + (directorySpec ? "/" : "");
   }
 

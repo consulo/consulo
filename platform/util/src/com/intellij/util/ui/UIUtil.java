@@ -2130,13 +2130,13 @@ public class UIUtil {
   }
 
   @NotNull
-  public static Color getBgFillColor(@NotNull JComponent c) {
+  public static Color getBgFillColor(@NotNull Component c) {
     final Component parent = findNearestOpaque(c);
     return parent == null ? c.getBackground() : parent.getBackground();
   }
 
   @Nullable
-  public static Component findNearestOpaque(JComponent c) {
+  public static Component findNearestOpaque(Component c) {
     Component eachParent = c;
     while (eachParent != null) {
       if (eachParent.isOpaque()) return eachParent;
@@ -3431,6 +3431,31 @@ public class UIUtil {
     UndoManager undoManager = getClientProperty(textComponent, UNDO_MANAGER);
     if (undoManager != null) {
       undoManager.discardAllEdits();
+    }
+  }
+
+  //May have no usages but it's useful in runtime (Debugger "watches", some logging etc.)
+  public static String getDebugText(Component c) {
+    StringBuilder builder  = new StringBuilder();
+    getAllTextsRecursivelyImpl(c, builder);
+    return builder.toString();
+  }
+
+  private static void getAllTextsRecursivelyImpl(Component component, StringBuilder builder) {
+    String candidate = "";
+    if (component instanceof JLabel) candidate = ((JLabel)component).getText();
+    if (component instanceof JTextComponent) candidate = ((JTextComponent)component).getText();
+    if (component instanceof AbstractButton) candidate = ((AbstractButton)component).getText();
+    if (StringUtil.isNotEmpty(candidate)) {
+      candidate = candidate.replaceAll("<a href=\"#inspection/[^)]+\\)", "");
+      if (builder.length() > 0) builder.append(' ');
+      builder.append(StringUtil.removeHtmlTags(candidate).trim());
+    }
+    if (component instanceof Container) {
+      Component[] components = ((Container)component).getComponents();
+      for (Component child : components) {
+        getAllTextsRecursivelyImpl(child, builder);
+      }
     }
   }
 

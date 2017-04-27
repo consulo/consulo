@@ -50,6 +50,8 @@ import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import com.intellij.openapi.vfs.impl.ZipHandler;
+import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.GuiUtils;
 import com.intellij.util.*;
@@ -66,17 +68,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@State(
-        name = "ProjectManager",
-        storages = {@Storage(
-                file = StoragePathMacros.APP_CONFIG + "/project.default.xml"
-        )}
-)
+@State(name = "ProjectManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/project.default.xml")})
 public class ProjectManagerImpl extends ProjectManagerEx implements PersistentStateComponent<Element>, ExportableApplicationComponent {
   private static final Logger LOG = Logger.getInstance(ProjectManagerImpl.class);
 
@@ -217,7 +215,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
   private static final boolean LOG_PROJECT_LEAKAGE_IN_TESTS = false;
   private static final int MAX_LEAKY_PROJECTS = 42;
-  @SuppressWarnings("FieldCanBeLocal") private final Map<Project, String> myProjects = new WeakHashMap<Project, String>();
+  @SuppressWarnings("FieldCanBeLocal")
+  private final Map<Project, String> myProjects = new WeakHashMap<Project, String>();
 
   @Override
   @Nullable
@@ -417,55 +416,56 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       }
     }
 
+    for (Project p : getOpenProjects()) {
+      if (ProjectUtil.isSameProject(project.getProjectFilePath(), p)) {
+        GuiUtils.invokeLaterIfNeeded(() -> ProjectUtil.focusProjectWindow(p, false), ModalityState.NON_MODAL);
+        return false;
+      }
+    }
+
     if (!addToOpened(project)) {
       return false;
     }
 
-    Runnable process = new Runnable() {
-      @Override
-      public void run() {
-        TransactionGuard.getInstance().submitTransactionAndWait(new Runnable() {
-          @Override
-          public void run() {
-            fireProjectOpened(project);
-          }
-        });
+    Runnable process = () -> {
+      TransactionGuard.getInstance().submitTransactionAndWait(() -> fireProjectOpened(project));
 
-        final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
-        startupManager.runStartupActivities();
+      final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
+      startupManager.runStartupActivities();
 
-        // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
-        // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
-        // Post-startup activities should not ever see unindexed and at the same time non-dumb state
-        TransactionGuard.getInstance().submitTransactionAndWait(new Runnable() {
-          @Override
-          public void run() {
-            startupManager.startCacheUpdate();
-          }
-        });
+      // Startup activities (e.g. the one in FileBasedIndexProjectHandler) have scheduled dumb mode to begin "later"
+      // Now we schedule-and-wait to the same event queue to guarantee that the dumb mode really begins now:
+      // Post-startup activities should not ever see unindexed and at the same time non-dumb state
+      TransactionGuard.getInstance().submitTransactionAndWait(startupManager::startCacheUpdate);
 
-        startupManager.runPostStartupActivitiesFromExtensions();
+      startupManager.runPostStartupActivitiesFromExtensions();
 
-        GuiUtils.invokeLaterIfNeeded(new Runnable() {
-          @Override
-          public void run() {
-            if (!project.isDisposed()) {
-              startupManager.runPostStartupActivities();
+      GuiUtils.invokeLaterIfNeeded(() -> {
+        if (!project.isDisposed()) {
+          startupManager.runPostStartupActivities();
 
 
-              Application application = ApplicationManager.getApplication();
-              if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
-                final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
-                if (macroSubstitutor != null) {
-                  StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
-                }
-              }
+          Application application = ApplicationManager.getApplication();
+          if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
+            final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
+            if (macroSubstitutor != null) {
+              StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
             }
           }
-        }, ModalityState.NON_MODAL);
-      }
+
+          if (ApplicationManager.getApplication().isActive()) {
+            JFrame projectFrame = WindowManager.getInstance().getFrame(project);
+            if (projectFrame != null) {
+              IdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
+            }
+          }
+        }
+      }, ModalityState.NON_MODAL);
     };
-    if (myProgressManager.getProgressIndicator() != null) {
+
+    ProgressIndicator indicator = myProgressManager.getProgressIndicator();
+    if (indicator != null) {
+      indicator.setText("Preparing workspace...");
       process.run();
       return true;
     }

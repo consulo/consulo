@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.DataManagerImpl;
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.Application;
@@ -40,6 +39,8 @@ import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.messages.MessageBus;
+import com.intellij.util.ui.JBInsets;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.platform.WindowUtils;
 import org.jdom.Element;
@@ -50,6 +51,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.peer.ComponentPeer;
 import java.awt.peer.FramePeer;
 import java.util.Collection;
@@ -61,10 +64,7 @@ import java.util.Set;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-@State(
-        name = "WindowManager",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/window.manager.xml", roamingType = RoamingType.DISABLED)}
-)
+@State(name = "WindowManager", storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED))
 public final class WindowManagerImpl extends WindowManagerEx implements NamedComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.WindowManagerImpl");
 
@@ -86,9 +86,6 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
       LOG.info("jawt failed to load", t);
     }
   }
-
-  private static final boolean ORACLE_BUG_8007219 = SystemInfo.isMac && SystemInfo.isJavaVersionAtLeast("1.7");
-  private static final int ORACLE_BUG_8007219_THRESHOLD = 5;
 
   private Boolean myAlphaModeSupported = null;
 
@@ -114,18 +111,15 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   private final WindowAdapter myActivationListener;
   private final DataManager myDataManager;
   private final ActionManagerEx myActionManager;
-  private final UISettings myUiSettings;
 
   /**
    * invoked by reflection
    */
   public WindowManagerImpl(DataManager dataManager,
                            ActionManagerEx actionManager,
-                           UISettings uiSettings,
                            MessageBus bus) {
     myDataManager = dataManager;
     myActionManager = actionManager;
-    myUiSettings = uiSettings;
     if (myDataManager instanceof DataManagerImpl) {
       ((DataManagerImpl)myDataManager).setWindowManager(this);
     }
@@ -145,8 +139,8 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener(FOCUSED_WINDOW_PROPERTY_NAME, myWindowWatcher);
     myLayout = new DesktopLayout();
-    myProject2Frame = new HashMap<Project, IdeFrameImpl>();
-    myDialogsToDispose = new HashMap<Project, Set<JDialog>>();
+    myProject2Frame = new HashMap<>();
+    myDialogsToDispose = new HashMap<>();
     myFrameExtendedState = Frame.NORMAL;
 
     myActivationListener = new WindowAdapter() {
@@ -411,7 +405,6 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   }
 
   @Override
-  @Nullable
   public final StatusBar getStatusBar(final Project project) {
     if (!myProject2Frame.containsKey(project)) {
       return null;
@@ -515,58 +508,21 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
 
   public void showFrame() {
     final IdeFrameImpl frame = new IdeFrameImpl(ApplicationInfoEx.getInstanceEx(),
-                                                myActionManager, myUiSettings, myDataManager,
+                                                myActionManager, myDataManager,
                                                 ApplicationManager.getApplication());
     myProject2Frame.put(null, frame);
 
     if (myFrameBounds == null || !ScreenUtil.isVisible(myFrameBounds)) { //avoid situations when IdeFrame is out of all screens
-      final Rectangle rect = ScreenUtil.getMainScreenBounds();
-      int yParts = rect.height / 6;
-      int xParts = rect.width / 5;
-      myFrameBounds = new Rectangle(xParts, yParts, xParts * 3, yParts * 4);
+      myFrameBounds = ScreenUtil.getMainScreenBounds();
+      int xOff = myFrameBounds.width / 8;
+      int yOff = myFrameBounds.height / 8;
+      JBInsets.removeFrom(myFrameBounds, new Insets(yOff, xOff, yOff, xOff));
     }
-
-    fixForOracleBug8007219(frame);
 
     frame.setBounds(myFrameBounds);
     frame.setExtendedState(myFrameExtendedState);
     frame.setVisible(true);
 
-  }
-
-  private void fixForOracleBug8007219(IdeFrameImpl frame) {
-    if ((myFrameExtendedState & Frame.MAXIMIZED_BOTH) > 0 && ORACLE_BUG_8007219) {
-      final Rectangle screenBounds = ScreenUtil.getMainScreenBounds();
-      final Insets screenInsets = ScreenUtil.getScreenInsets(frame.getGraphicsConfiguration());
-
-      final int leftGap = myFrameBounds.x - screenInsets.left;
-
-      myFrameBounds.x = leftGap > ORACLE_BUG_8007219_THRESHOLD ?
-                        myFrameBounds.x :
-                        screenInsets.left + ORACLE_BUG_8007219_THRESHOLD + 1;
-
-      final int topGap = myFrameBounds.y - screenInsets.top;
-
-      myFrameBounds.y = topGap > ORACLE_BUG_8007219_THRESHOLD ?
-                        myFrameBounds.y :
-                        screenInsets.top + ORACLE_BUG_8007219_THRESHOLD + 1;
-
-      final int maximumFrameWidth = screenBounds.width - screenInsets.right - myFrameBounds.x;
-
-      final int rightGap = maximumFrameWidth - myFrameBounds.width;
-
-      myFrameBounds.width = rightGap > ORACLE_BUG_8007219_THRESHOLD ?
-                            myFrameBounds.width :
-                            maximumFrameWidth - ORACLE_BUG_8007219_THRESHOLD - 1;
-
-      final int maximumFrameHeight = screenBounds.height - screenInsets.bottom - myFrameBounds.y;
-
-      final int bottomGap = maximumFrameHeight - myFrameBounds.height;
-
-      myFrameBounds.height =  bottomGap > ORACLE_BUG_8007219_THRESHOLD ?
-                              myFrameBounds.height :
-                              - ORACLE_BUG_8007219_THRESHOLD - 1;
-    }
   }
 
   private IdeFrameImpl getDefaultEmptyIdeFrame() {
@@ -585,7 +541,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
       frame.setProject(project);
     }
     else {
-      frame = new IdeFrameImpl(ApplicationInfoEx.getInstanceEx(), myActionManager, myUiSettings,
+      frame = new IdeFrameImpl(ApplicationInfoEx.getInstanceEx(), myActionManager,
                                myDataManager, ApplicationManager.getApplication());
 
       final Rectangle bounds = ProjectFrameBounds.getInstance(project).getBounds();
@@ -595,7 +551,6 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
       }
 
       if (myFrameBounds != null) {
-        fixForOracleBug8007219(frame);
         frame.setBounds(myFrameBounds);
       }
       frame.setProject(project);
@@ -628,7 +583,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   private void queueForDisposal(JDialog dialog, Project project) {
     Set<JDialog> dialogs = myDialogsToDispose.get(project);
     if (dialogs == null) {
-      dialogs = new HashSet<JDialog>();
+      dialogs = new HashSet<>();
       myDialogsToDispose.put(project, dialogs);
     }
     dialogs.add(dialog);
@@ -742,7 +697,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     catch (NumberFormatException ignored) {
       return null;
     }
-    return bounds;
+    return FrameBoundsConverter.convertFromDeviceSpace(bounds);
   }
 
   @Nullable
@@ -757,9 +712,10 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     state.addContent(frameState);
 
     // Save default layout
-    Element layoutElement = new Element(DesktopLayout.TAG);
-    state.addContent(layoutElement);
-    myLayout.writeExternal(layoutElement);
+    Element layoutElement = myLayout.writeExternal(DesktopLayout.TAG);
+    if (layoutElement != null) {
+      state.addContent(layoutElement);
+    }
     return state;
   }
 
@@ -777,7 +733,9 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     }
 
     int extendedState = updateFrameBounds(frame);
-    Rectangle rectangle = myFrameBounds;
+
+    Rectangle rectangle = FrameBoundsConverter.convertToDeviceSpace(frame.getGraphicsConfiguration(), myFrameBounds);
+
     final Element frameElement = new Element(FRAME_ELEMENT);
     frameElement.setAttribute(X_ATTR, Integer.toString(rectangle.x));
     frameElement.setAttribute(Y_ATTR, Integer.toString(rectangle.y));
@@ -793,7 +751,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   private int updateFrameBounds(IdeFrameImpl frame) {
     int extendedState = frame.getExtendedState();
     if (SystemInfo.isMacOSLion) {
-      @SuppressWarnings("deprecation") ComponentPeer peer = frame.getPeer();
+      ComponentPeer peer = frame.getPeer();
       if (peer instanceof FramePeer) {
         // frame.state is not updated by jdk so get it directly from peer
         extendedState = ((FramePeer)peer).getState();
@@ -837,5 +795,85 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
 
   public static boolean isFloatingMenuBarSupported() {
     return !SystemInfo.isMac && getInstance().isFullScreenSupportedInCurrentOS();
+  }
+
+  /**
+   * Converts the frame bounds b/w the user space (JRE-managed HiDPI mode) and the device space (IDE-managed HiDPI mode).
+   * See {@link UIUtil#isJreHiDPIEnabled()}
+   */
+  private static class FrameBoundsConverter {
+    /**
+     * @param bounds the bounds in the device space
+     * @return the bounds in the user space
+     */
+    public static Rectangle convertFromDeviceSpace(@NotNull Rectangle bounds) {
+      Rectangle b = bounds.getBounds();
+      if (!shouldConvert()) return b;
+
+      try {
+        for (GraphicsDevice gd : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) {
+          Rectangle devBounds = gd.getDefaultConfiguration().getBounds(); // in user space
+          scaleUp(devBounds, gd.getDefaultConfiguration()); // to device space
+          Rectangle2D.Float devBounds2D = new Rectangle2D.Float(devBounds.x, devBounds.y, devBounds.width, devBounds.height);
+          Point2D.Float center2d = new Point2D.Float(b.x + b.width / 2, b.y + b.height / 2);
+          if (devBounds2D.contains(center2d)) {
+            scaleDown(b, gd.getDefaultConfiguration());
+            break;
+          }
+        }
+      }
+      catch (HeadlessException ignore) {
+      }
+      return b;
+    }
+
+    /**
+     * @param gc the graphics config
+     * @param bounds the bounds in the user space
+     * @return the bounds in the device space
+     */
+    public static Rectangle convertToDeviceSpace(GraphicsConfiguration gc, @NotNull Rectangle bounds) {
+      Rectangle b = bounds.getBounds();
+      if (!shouldConvert()) return b;
+
+      try {
+        scaleUp(b, gc);
+      }
+      catch (HeadlessException ignore) {
+      }
+      return b;
+    }
+
+    private static boolean shouldConvert() {
+      if (SystemInfo.isLinux || // JRE-managed HiDPI mode is not yet implemented (pending)
+          SystemInfo.isMac)     // JRE-managed HiDPI mode is permanent
+      {
+        return false;
+      }
+      if (!UIUtil.isJreHiDPIEnabled()) return false; // device space equals user space
+      return true;
+    }
+
+    private static void scaleUp(@NotNull Rectangle bounds, @NotNull GraphicsConfiguration gc) {
+      scale(bounds, gc.getBounds(), JBUI.sysScale(gc));
+    }
+
+    private static void scaleDown(@NotNull Rectangle bounds, @NotNull GraphicsConfiguration gc) {
+      float scale = JBUI.sysScale(gc);
+      assert scale != 0;
+      scale(bounds, gc.getBounds(), 1 / scale);
+    }
+
+    private static void scale(@NotNull Rectangle bounds, @NotNull Rectangle deviceBounds, float scale) {
+      // On Windows, JB SDK transforms the screen bounds to the user space as follows:
+      // [x, y, width, height] -> [x, y, width / scale, height / scale]
+      // xy are not transformed in order to avoid overlapping of the screen bounds in multi-dpi env.
+
+      // scale the delta b/w xy and deviceBounds.xy
+      int x = (int)Math.floor(deviceBounds.x + (bounds.x - deviceBounds.x) * scale);
+      int y = (int)Math.floor(deviceBounds.y + (bounds.y - deviceBounds.y) * scale);
+
+      bounds.setBounds(x, y, (int)Math.ceil(bounds.width * scale), (int)Math.ceil(bounds.height * scale));
+    }
   }
 }

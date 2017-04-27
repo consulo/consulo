@@ -40,11 +40,6 @@ public class IdeFocusManagerImpl extends IdeFocusManager {
   }
 
   @Override
-  public ActionCallback requestFocusInProject(@NotNull Component c, @Nullable Project project) {
-    return getGlobalInstance().requestFocusInProject(c, project);
-  }
-
-  @Override
   @NotNull
   public ActionCallback requestFocus(@NotNull final Component c, final boolean forced) {
     return getGlobalInstance().requestFocus(c, forced);
@@ -54,6 +49,11 @@ public class IdeFocusManagerImpl extends IdeFocusManager {
   @NotNull
   public ActionCallback requestFocus(@NotNull final FocusCommand command, final boolean forced) {
     return getGlobalInstance().requestFocus(command, forced);
+  }
+
+  @Override
+  public ActionCallback requestFocusInProject(@NotNull Component c, @Nullable Project project) {
+    return getGlobalInstance().requestFocusInProject(c, project);
   }
 
   @Override
@@ -88,8 +88,8 @@ public class IdeFocusManagerImpl extends IdeFocusManager {
   }
 
   @Override
-  public void typeAheadUntil(ActionCallback done) {
-    getGlobalInstance().typeAheadUntil(done);
+  public void typeAheadUntil(@NotNull ActionCallback callback, @NotNull String cause) {
+    getGlobalInstance().typeAheadUntil(callback, cause);
   }
 
 

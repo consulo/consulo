@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
+import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.status.IdeStatusBarImpl;
 import com.intellij.openapi.wm.impl.status.MemoryUsagePanel;
@@ -44,11 +46,11 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -67,33 +69,31 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
   private boolean myStatusBarDisposed;
 
   private final Box myNorthPanel = Box.createVerticalBox();
-  private final List<IdeRootPaneNorthExtension> myNorthComponents = new ArrayList<IdeRootPaneNorthExtension>();
+  private final List<IdeRootPaneNorthExtension> myNorthComponents = new ArrayList<>();
 
   /**
-   * Current <code>ToolWindowsPane</code>. If there is no such pane then this field is null.
+   * Current {@code ToolWindowsPane}. If there is no such pane then this field is null.
    */
   private ToolWindowsPane myToolWindowsPane;
   private JBPanel myContentPane;
   private final ActionManager myActionManager;
-  private final UISettings myUISettings;
 
   private final boolean myGlassPaneInitialized;
-  private final IdeGlassPaneImpl myGlassPane;
 
   private MemoryUsagePanel myMemoryWidget;
 
   private boolean myFullScreen;
 
-  public IdeRootPane(ActionManagerEx actionManager, UISettings uiSettings, DataManager dataManager, Application application, final IdeFrame frame) {
+  IdeRootPane(ActionManagerEx actionManager, DataManager dataManager, Application application, final IdeFrame frame) {
     myActionManager = actionManager;
-    myUISettings = uiSettings;
 
     myContentPane.add(myNorthPanel, BorderLayout.NORTH);
+
+    myContentPane.addMouseMotionListener(new MouseMotionAdapter() {}); // listen to mouse motion events for a11y
 
     createStatusBar(frame);
 
     updateStatusBarVisibility();
-    updateToolbar();
 
     myContentPane.add(myStatusBar, BorderLayout.SOUTH);
 
@@ -113,11 +113,11 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
       setJMenuBar(new IdeMenuBar(actionManager, dataManager));
     }
 
-    myGlassPane = new IdeGlassPaneImpl(this);
-    setGlassPane(myGlassPane);
+    IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(this, true);
+    setGlassPane(glassPane);
     myGlassPaneInitialized = true;
 
-    myGlassPane.setVisible(false);
+    glassPane.setVisible(false);
   }
 
   @Override
@@ -136,43 +136,40 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
    * Invoked when enclosed frame is being shown.
    */
   @Override
-  public final void addNotify() {
+  public final void addNotify(){
     super.addNotify();
-    myUISettings.addUISettingsListener(this);
   }
 
   /**
    * Invoked when enclosed frame is being disposed.
    */
   @Override
-  public final void removeNotify() {
+  public final void removeNotify(){
     if (ScreenUtil.isStandardAddRemoveNotify(this)) {
       if (!myStatusBarDisposed) {
         myStatusBarDisposed = true;
         Disposer.dispose(myStatusBar);
       }
-
-      myUISettings.removeUISettingsListener(this);
       removeToolbar();
+      setJMenuBar(null);
     }
-
     super.removeNotify();
   }
 
   /**
    * Sets current tool windows pane (panel where all tool windows are located).
-   * If <code>toolWindowsPane</code> is <code>null</code> then the method just removes
+   * If {@code toolWindowsPane} is {@code null} then the method just removes
    * the current tool windows pane.
    */
   final void setToolWindowsPane(@Nullable final ToolWindowsPane toolWindowsPane) {
     final JComponent contentPane = (JComponent)getContentPane();
-    if (myToolWindowsPane != null) {
+    if(myToolWindowsPane != null){
       contentPane.remove(myToolWindowsPane);
     }
 
     myToolWindowsPane = toolWindowsPane;
-    if (myToolWindowsPane != null) {
-      contentPane.add(myToolWindowsPane, BorderLayout.CENTER);
+    if(myToolWindowsPane != null) {
+      contentPane.add(myToolWindowsPane,BorderLayout.CENTER);
     }
 
     contentPane.revalidate();
@@ -181,12 +178,12 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
   @Override
   protected JLayeredPane createLayeredPane() {
     JLayeredPane p = new JBLayeredPane();
-    p.setName(this.getName() + ".layeredPane");
+    p.setName(getName() + ".layeredPane");
     return p;
   }
 
   @Override
-  protected final Container createContentPane() {
+  protected final Container createContentPane(){
     return myContentPane = new IdePanePanel(new BorderLayout());
   }
 
@@ -212,14 +209,18 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     myContentPane.revalidate();
   }
 
-  void updateMainMenuActions() {
+  void updateMainMenuActions(){
     ((IdeMenuBar)menuBar).updateMenuActions();
     menuBar.repaint();
   }
 
   private JComponent createToolbar() {
     ActionGroup group = (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_TOOLBAR);
-    final ActionToolbar toolBar = myActionManager.createActionToolbar(ActionPlaces.MAIN_TOOLBAR, group, true);
+    final ActionToolbar toolBar= myActionManager.createActionToolbar(
+            ActionPlaces.MAIN_TOOLBAR,
+            group,
+            true
+    );
     toolBar.setLayoutPolicy(ActionToolbar.WRAP_LAYOUT_POLICY);
 
     DefaultActionGroup menuGroup = new DefaultActionGroup();
@@ -239,10 +240,10 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     myStatusBar.addWidget(myMemoryWidget);
     myStatusBar.addWidget(new IdeMessagePanel(frame, MessagePool.getInstance()), "before " + MemoryUsagePanel.WIDGET_ID);
 
-    setMemoryIndicatorVisible(myUISettings.SHOW_MEMORY_INDICATOR);
+    setMemoryIndicatorVisible(UISettings.getInstance().SHOW_MEMORY_INDICATOR);
   }
 
-  void setMemoryIndicatorVisible(final boolean visible) {
+  private void setMemoryIndicatorVisible(final boolean visible) {
     if (myMemoryWidget != null) {
       myMemoryWidget.setShowing(visible);
       if (!SystemInfo.isMac) {
@@ -260,23 +261,23 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     return myStatusBar.isVisible() ? myStatusBar.getHeight() : 0;
   }
 
-  private void updateToolbarVisibility() {
-    myToolbar.setVisible(myUISettings.SHOW_MAIN_TOOLBAR && !UISettings.getInstance().PRESENTATION_MODE);
+  private void updateToolbarVisibility(){
+    myToolbar.setVisible(UISettings.getInstance().SHOW_MAIN_TOOLBAR && !UISettings.getInstance().PRESENTATION_MODE);
   }
 
-  private void updateStatusBarVisibility() {
-    myStatusBar.setVisible(myUISettings.SHOW_STATUS_BAR && !myUISettings.PRESENTATION_MODE);
+  private void updateStatusBarVisibility(){
+    myStatusBar.setVisible(UISettings.getInstance().SHOW_STATUS_BAR && !UISettings.getInstance().PRESENTATION_MODE);
   }
 
-  public void installNorthComponents(final Project project) {
+  void installNorthComponents(final Project project) {
     ContainerUtil.addAll(myNorthComponents, Extensions.getExtensions(IdeRootPaneNorthExtension.EP_NAME, project));
     for (IdeRootPaneNorthExtension northComponent : myNorthComponents) {
       myNorthPanel.add(northComponent.getComponent());
-      northComponent.uiSettingsChanged(myUISettings);
+      northComponent.uiSettingsChanged(UISettings.getInstance());
     }
   }
 
-  public void deinstallNorthComponents() {
+  void deinstallNorthComponents(){
     for (IdeRootPaneNorthExtension northComponent : myNorthComponents) {
       myNorthPanel.remove(northComponent.getComponent());
       Disposer.dispose(northComponent);
@@ -294,26 +295,22 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
   }
 
   @Override
-  public void uiSettingsChanged(UISettings source) {
-    setMemoryIndicatorVisible(source.SHOW_MEMORY_INDICATOR);
+  public void uiSettingsChanged(UISettings uiSettings) {
+    setMemoryIndicatorVisible(uiSettings.SHOW_MEMORY_INDICATOR);
     updateToolbarVisibility();
     updateStatusBarVisibility();
     for (IdeRootPaneNorthExtension component : myNorthComponents) {
-      component.uiSettingsChanged(source);
+      component.uiSettingsChanged(uiSettings);
     }
     IdeFrame frame = UIUtil.getParentOfType(IdeFrame.class, this);
     BalloonLayout layout = frame != null ? frame.getBalloonLayout() : null;
     if (layout instanceof BalloonLayoutImpl) ((BalloonLayoutImpl)layout).queueRelayout();
   }
 
-  public ToolWindowsPane getToolWindowsPane() {
-    return myToolWindowsPane;
-  }
-
   private class MyRootLayout extends RootLayout {
     @Override
     public Dimension preferredLayoutSize(Container parent) {
-      Dimension rd, mbd;
+      Dimension rd;
       Insets i = getInsets();
 
       if (contentPane != null) {
@@ -322,18 +319,20 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
       else {
         rd = parent.getSize();
       }
+      Dimension mbd;
       if (menuBar != null && menuBar.isVisible() && !myFullScreen) {
         mbd = menuBar.getPreferredSize();
       }
       else {
         mbd = JBUI.emptySize();
       }
-      return new Dimension(Math.max(rd.width, mbd.width) + i.left + i.right, rd.height + mbd.height + i.top + i.bottom);
+      return new Dimension(Math.max(rd.width, mbd.width) + i.left + i.right,
+                           rd.height + mbd.height + i.top + i.bottom);
     }
 
     @Override
     public Dimension minimumLayoutSize(Container parent) {
-      Dimension rd, mbd;
+      Dimension rd;
       Insets i = getInsets();
       if (contentPane != null) {
         rd = contentPane.getMinimumSize();
@@ -341,18 +340,20 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
       else {
         rd = parent.getSize();
       }
+      Dimension mbd;
       if (menuBar != null && menuBar.isVisible() && !myFullScreen) {
         mbd = menuBar.getMinimumSize();
       }
       else {
         mbd = JBUI.emptySize();
       }
-      return new Dimension(Math.max(rd.width, mbd.width) + i.left + i.right, rd.height + mbd.height + i.top + i.bottom);
+      return new Dimension(Math.max(rd.width, mbd.width) + i.left + i.right,
+                           rd.height + mbd.height + i.top + i.bottom);
     }
 
     @Override
     public Dimension maximumLayoutSize(Container target) {
-      Dimension rd, mbd;
+      Dimension mbd;
       Insets i = getInsets();
       if (menuBar != null && menuBar.isVisible() && !myFullScreen) {
         mbd = menuBar.getMaximumSize();
@@ -360,20 +361,22 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
       else {
         mbd = JBUI.emptySize();
       }
+      Dimension rd;
       if (contentPane != null) {
         rd = contentPane.getMaximumSize();
       }
       else {
-        rd = new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE - i.top - i.bottom - mbd.height - 1);
+        rd = new Dimension(Integer.MAX_VALUE,
+                           Integer.MAX_VALUE - i.top - i.bottom - mbd.height - 1);
       }
-      return new Dimension(Math.min(rd.width, mbd.width) + i.left + i.right, rd.height + mbd.height + i.top + i.bottom);
+      return new Dimension(Math.min(rd.width, mbd.width) + i.left + i.right,
+                           rd.height + mbd.height + i.top + i.bottom);
     }
 
     @Override
     public void layoutContainer(Container parent) {
       Rectangle b = parent.getBounds();
       Insets i = getInsets();
-      int contentY = 0;
       int w = b.width - i.right - i.left;
       int h = b.height - i.top - i.bottom;
 
@@ -383,6 +386,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
       if (glassPane != null) {
         glassPane.setBounds(i.left, i.top, w, h);
       }
+      int contentY = 0;
       if (menuBar != null && menuBar.isVisible()) {
         Dimension mbd = menuBar.getPreferredSize();
         menuBar.setBounds(0, 0, w, mbd.height);

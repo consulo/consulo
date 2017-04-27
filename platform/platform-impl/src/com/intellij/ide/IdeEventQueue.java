@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.keymap.KeyboardSettingsExternalizable;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;
 import com.intellij.openapi.keymap.impl.KeyState;
@@ -60,6 +59,9 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.awt.event.MouseEvent.MOUSE_MOVED;
+import static java.awt.event.MouseEvent.MOUSE_PRESSED;
 
 /**
  * @author Vladimir Kondratyev
@@ -348,8 +350,6 @@ public class IdeEventQueue extends EventQueue {
       return;
     }
 
-    e = fixNonEnglishKeyboardLayouts(e);
-
     e = mapEvent(e);
     if (Registry.is("keymap.windows.as.meta")) {
       e = mapMetaState(e);
@@ -426,9 +426,6 @@ public class IdeEventQueue extends EventQueue {
   @NotNull
   private static AWTEvent fixNonEnglishKeyboardLayouts(@NotNull AWTEvent e) {
     if (!(e instanceof KeyEvent)) return e;
-
-    KeyboardSettingsExternalizable externalizable = KeyboardSettingsExternalizable.getInstance();
-    if (!Registry.is("ide.non.english.keyboard.layout.fix") || externalizable == null || !externalizable.isNonEnglishKeyboardSupportEnabled()) return e;
 
     KeyEvent ke = (KeyEvent)e;
 
@@ -560,6 +557,7 @@ public class IdeEventQueue extends EventQueue {
     }
 
     if (!typeAheadFlushing && typeAheadDispatchToFocusManager(e)) {
+      LOG.debug("Typeahead dispatch for event ", e);
       return;
     }
 
@@ -607,6 +605,7 @@ public class IdeEventQueue extends EventQueue {
         }
       }
     }
+
     if (myPopupManager.isPopupActive() && myPopupManager.dispatch(e)) {
       if (myKeyEventDispatcher.isWaitingForSecondKeyStroke()) {
         myKeyEventDispatcher.setState(KeyState.STATE_INIT);
@@ -615,20 +614,18 @@ public class IdeEventQueue extends EventQueue {
       return;
     }
 
-    for (EventDispatcher eachDispatcher : myDispatchers) {
-      if (eachDispatcher.dispatch(e)) {
-        return;
-      }
-    }
+    if (dispatchByCustomDispatchers(e)) return;
 
     if (e instanceof InputMethodEvent) {
       if (SystemInfo.isMac && myKeyEventDispatcher.isWaitingForSecondKeyStroke()) {
         return;
       }
     }
+
     if (e instanceof ComponentEvent && myWindowManager != null) {
       myWindowManager.dispatchComponentEvent((ComponentEvent)e);
     }
+
     if (e instanceof KeyEvent) {
       if (mySuspendMode || !myKeyEventDispatcher.dispatchKeyEvent((KeyEvent)e)) {
         defaultDispatchEvent(e);
@@ -640,6 +637,12 @@ public class IdeEventQueue extends EventQueue {
     }
     else if (e instanceof MouseEvent) {
       MouseEvent me = (MouseEvent)e;
+      if (me.getID() == MOUSE_PRESSED && me.getModifiers() > 0 && me.getModifiersEx() == 0 ) {
+        // In case of these modifiers java.awt.Container#LightweightDispatcher.processMouseEvent() uses a recent 'active' component
+        // from inner WeakReference (see mouseEventTarget field) even if the component has been already removed from component hierarchy.
+        // So we have to reset this WeakReference with synthetic event just before processing of actual event
+        super.dispatchEvent(new MouseEvent(me.getComponent(), MOUSE_MOVED, me.getWhen(), 0, me.getX(), me.getY(), 0, false, 0));
+      }
       if (IdeMouseEventDispatcher.patchClickCount(me) && me.getID() == MouseEvent.MOUSE_CLICKED) {
         final MouseEvent toDispatch =
                 new MouseEvent(me.getComponent(), me.getID(), System.currentTimeMillis(), me.getModifiers(), me.getX(), me.getY(), 1,
@@ -654,6 +657,15 @@ public class IdeEventQueue extends EventQueue {
     else {
       defaultDispatchEvent(e);
     }
+  }
+
+  private boolean dispatchByCustomDispatchers(@NotNull AWTEvent e) {
+    for (EventDispatcher eachDispatcher : myDispatchers) {
+      if (eachDispatcher.dispatch(e)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private static void fixStickyWindow(@NotNull KeyboardFocusManager mgr, Window wnd, @NotNull String resetMethod) {
@@ -892,6 +904,9 @@ public class IdeEventQueue extends EventQueue {
   }
 
   public void pumpEventsForHierarchy(Component modalComponent, @NotNull Condition<AWTEvent> exitCondition) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("pumpEventsForHierarchy(" + modalComponent + ", " + exitCondition + ")");
+    }
     AWTEvent event;
     do {
       try {
@@ -905,6 +920,9 @@ public class IdeEventQueue extends EventQueue {
             while (c != null && c != modalWindow) c = c.getParent();
             if (c == null) {
               eventOk = false;
+              if (LOG.isDebugEnabled()) {
+                LOG.debug("pumpEventsForHierarchy.consumed: "+event);
+              }
               ((InputEvent)event).consume();
             }
           }
@@ -920,6 +938,9 @@ public class IdeEventQueue extends EventQueue {
       }
     }
     while (!exitCondition.value(event));
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("pumpEventsForHierarchy.exit(" + modalComponent + ", " + exitCondition + ")");
+    }
   }
 
   @FunctionalInterface
@@ -1055,8 +1076,8 @@ public class IdeEventQueue extends EventQueue {
           myWaitingForAltRelease = false;
         }
         else {
-          if (ApplicationManager.getApplication() == null ||
-              UISettings.getInstance() == null ||
+          UISettings uiSettings = UISettings.getInstanceOrNull();
+          if (uiSettings == null ||
               !SystemInfo.isWindows ||
               !Registry.is("actionSystem.win.suppressAlt") ||
               !(UISettings.getInstance().HIDE_TOOL_STRIPES || UISettings.getInstance().PRESENTATION_MODE)) {
@@ -1132,8 +1153,13 @@ public class IdeEventQueue extends EventQueue {
   private final FrequentEventDetector myFrequentEventDetector = new FrequentEventDetector(1009, 100);
   @Override
   public void postEvent(@NotNull AWTEvent event) {
+    doPostEvent(event);
+  }
+
+  // return true if posted, false if consumed immediately
+  boolean doPostEvent(@NotNull AWTEvent event) {
     for (PostEventHook listener : myPostEventListeners.getListeners()) {
-      if (listener.consumePostedEvent(event)) return;
+      if (listener.consumePostedEvent(event)) return false;
     }
 
     myFrequentEventDetector.eventHappened(event);
@@ -1141,6 +1167,7 @@ public class IdeEventQueue extends EventQueue {
       myKeyboardEventsPosted.incrementAndGet();
     }
     super.postEvent(event);
+    return true;
   }
 
   private static boolean isKeyboardEvent(@NotNull AWTEvent event) {
@@ -1182,6 +1209,7 @@ public class IdeEventQueue extends EventQueue {
   /**
    * An absolutely guru API, please avoid using it at all cost.
    */
+  @FunctionalInterface
   public interface PostEventHook extends EventListener {
     /**
      * @return true if event is handled by the listener and should't be added to event queue at all

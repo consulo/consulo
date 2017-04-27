@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.actions.ActivateToolWindowAction;
 import com.intellij.ide.ui.UISettings;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
@@ -30,6 +31,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.ui.MouseDragHelper;
 import com.intellij.ui.PopupHandler;
+import com.intellij.util.ui.JBImageIcon;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +47,7 @@ import java.awt.image.BufferedImage;
  * @author Eugene Belyaev
  * @author Vladimir Kondratyev
  */
-public final class StripeButton extends AnchoredButton implements ActionListener {
+public final class StripeButton extends AnchoredButton implements ActionListener, Disposable {
   private final Color ourBackgroundColor = new Color(247, 243, 239);
 
   /**
@@ -106,7 +109,7 @@ public final class StripeButton extends AnchoredButton implements ActionListener
   private void init() {
     setFocusable(false);
     setBackground(ourBackgroundColor);
-    final Border border = BorderFactory.createEmptyBorder(5, 5, 0, 5);
+    final Border border = JBUI.Borders.empty(5, 5, 0, 5);
     setBorder(border);
     updatePresentation();
     apply(myDecorator.getWindowInfo());
@@ -123,7 +126,7 @@ public final class StripeButton extends AnchoredButton implements ActionListener
         processDrag(e);
       }
     });
-    KeymapManager.getInstance().addKeymapManagerListener(myKeymapListener);
+    KeymapManager.getInstance().addKeymapManagerListener(myKeymapListener, this);
   }
 
 
@@ -181,14 +184,30 @@ public final class StripeButton extends AnchoredButton implements ActionListener
 
       myDragPane = findLayeredPane(e);
       if (myDragPane == null) return;
-      final BufferedImage image = UIUtil.createImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-      paint(image.getGraphics());
-      myDragButtonImage = new JLabel(new ImageIcon(image)) {
+      int width = getWidth() - 1; // -1 because StripeButtonUI.paint will not paint 1 pixel in case (anchor == ToolWindowAnchor.LEFT)
+      int height = getHeight() - 1; // -1 because StripeButtonUI.paint will not paint 1 pixel in case (anchor.isHorizontal())
+      BufferedImage image = UIUtil.createImage(e.getComponent(), width, height, BufferedImage.TYPE_INT_RGB);
+      Graphics graphics = image.getGraphics();
+      graphics.setColor(UIUtil.getBgFillColor(getParent()));
+      graphics.fillRect(0, 0, width, height);
+      paint(graphics);
+      graphics.dispose();
+      myDragButtonImage = new JLabel(new JBImageIcon(image)) {
 
         public String toString() {
           return "Image for: " + StripeButton.this.toString();
         }
       };
+
+      myDragButtonImage.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseReleased(MouseEvent e) {
+          finishDragging();
+          myPressedPoint = null;
+          myDragButtonImage = null;
+          super.mouseReleased(e);
+        }
+      });
       myDragPane.add(myDragButtonImage, JLayeredPane.POPUP_LAYER);
       myDragButtonImage.setSize(myDragButtonImage.getPreferredSize());
       setVisible(false);
@@ -288,10 +307,11 @@ public final class StripeButton extends AnchoredButton implements ActionListener
 
   public void apply(@NotNull WindowInfoImpl info) {
     setSelected(info.isVisible() || info.isActive());
+    updateState();
   }
 
-  void dispose() {
-    KeymapManager.getInstance().removeKeymapManagerListener(myKeymapListener);
+  @Override
+  public void dispose() {
   }
 
   private void showPopup(final Component component, final int x, final int y) {
@@ -340,10 +360,10 @@ public final class StripeButton extends AnchoredButton implements ActionListener
     ToolWindowImpl window = myDecorator.getToolWindow();
     boolean toShow = window.isAvailable() || window.isPlaceholderMode();
     if (UISettings.getInstance().ALWAYS_SHOW_WINDOW_BUTTONS) {
-      setVisible(true);
+      setVisible(window.isShowStripeButton() || isSelected());
     }
     else {
-      setVisible(toShow);
+      setVisible(toShow && (window.isShowStripeButton() || isSelected()));
     }
     setEnabled(toShow && !window.isPlaceholderMode());
   }

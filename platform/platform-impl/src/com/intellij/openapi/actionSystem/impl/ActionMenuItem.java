@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
+import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
@@ -26,8 +27,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.SizedIcon;
 import com.intellij.ui.plaf.beg.BegMenuItemUI;
@@ -236,43 +239,26 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
     public void actionPerformed(final ActionEvent e) {
       final IdeFocusManager fm = IdeFocusManager.findInstanceByContext(myContext);
       final ActionCallback typeAhead = new ActionCallback();
-      fm.typeAheadUntil(typeAhead);
-      fm.runOnOwnContext(myContext, new Runnable() {
-        @Override
-        public void run() {
-          final AnActionEvent event = new AnActionEvent(
-                  new MouseEvent(ActionMenuItem.this, MouseEvent.MOUSE_PRESSED, 0, e.getModifiers(), getWidth() / 2, getHeight() / 2, 1, false),
-                  myContext, myPlace, myPresentation, ActionManager.getInstance(), e.getModifiers()
-          );
-          final AnAction action = myAction.getAction();
-          if (ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
-            ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
-            actionManager.fireBeforeActionPerformed(action, myContext, event);
-            Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(event.getDataContext());
-            if (component != null && !isInTree(component)) {
-              typeAhead.setDone();
-              return;
-            }
-
-            SimpleTimer.getInstance().setUp(new Runnable() {
-              @Override
-              public void run() {
-                //noinspection SSBasedInspection
-                SwingUtilities.invokeLater(new Runnable() {
-                  @Override
-                  public void run() {
-                    fm.doWhenFocusSettlesDown(typeAhead.createSetDoneRunnable());
-                  }
-                });
-              }
-            }, Registry.intValue("actionSystem.typeAheadTimeAfterPopupAction"));
-
-            ActionUtil.performActionDumbAware(action, event);
-            actionManager.queueActionPerformedEvent(action, myContext, event);
-          }
-          else {
-            typeAhead.setDone();
-          }
+      final String id = ActionManager.getInstance().getId(myAction.getAction());
+      if (id != null) {
+        FeatureUsageTracker.getInstance().triggerFeatureUsed("context.menu.click.stats." + id.replace(' ', '.'));
+      }
+      fm.typeAheadUntil(typeAhead, getText());
+      fm.runOnOwnContext(myContext, () -> {
+        final AnActionEvent event = new AnActionEvent(
+                new MouseEvent(ActionMenuItem.this, MouseEvent.MOUSE_PRESSED, 0, e.getModifiers(), getWidth() / 2, getHeight() / 2, 1, false),
+                myContext, myPlace, myPresentation, ActionManager.getInstance(), e.getModifiers()
+        );
+        final AnAction menuItemAction = myAction.getAction();
+        if (ActionUtil.lastUpdateAndCheckDumb(menuItemAction, event, false)) {
+          ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
+          actionManager.fireBeforeActionPerformed(menuItemAction, myContext, event);
+          fm.doWhenFocusSettlesDown(typeAhead::setDone);
+          ActionUtil.performActionDumbAware(menuItemAction, event);
+          actionManager.queueActionPerformedEvent(menuItemAction, myContext, event);
+        }
+        else {
+          typeAhead.setDone();
         }
       });
     }

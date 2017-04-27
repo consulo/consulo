@@ -21,8 +21,10 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.components.impl.stores.IProjectStore;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.ActionCallback;
@@ -48,6 +50,30 @@ public class ProjectUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.impl.ProjectUtil");
 
   private ProjectUtil() {
+  }
+
+  public static boolean isSameProject(@Nullable String projectFilePath, @NotNull Project project) {
+    if (projectFilePath == null) return false;
+
+    IProjectStore projectStore = ((ProjectEx)project).getStateStore();
+    String existingBaseDirPath = projectStore.getProjectBasePath();
+    if (existingBaseDirPath == null) {
+      // could be null if not yet initialized
+      return false;
+    }
+
+    File projectFile = new File(projectFilePath);
+    if (projectFile.isDirectory()) {
+      return FileUtil.pathsEqual(projectFilePath, existingBaseDirPath);
+    }
+
+
+    File parent = projectFile.getParentFile();
+    if (parent.getName().equals(Project.DIRECTORY_STORE_FOLDER)) {
+      parent = parent.getParentFile();
+      return parent != null && FileUtil.pathsEqual(parent.getPath(), existingBaseDirPath);
+    }
+    return false;
   }
 
   public static void updateLastProjectLocation(final String projectFilePath) {

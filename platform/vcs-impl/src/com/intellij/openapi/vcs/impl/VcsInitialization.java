@@ -44,7 +44,8 @@ public class VcsInitialization implements Disposable {
 
   private final List<Pair<VcsInitObject, Runnable>> myList = new ArrayList<>();
   private final Object myLock;
-  @NotNull private final Project myProject;
+  @NotNull
+  private final Project myProject;
   private boolean myInitStarted;
   private volatile Future<?> myFuture;
   private final ProgressIndicator myIndicator = new StandardProgressIndicatorBase();
@@ -53,10 +54,12 @@ public class VcsInitialization implements Disposable {
     myProject = project;
     myLock = new Object();
 
+    if (project.isDefault()) return;
+
     StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
       if (project.isDisposed()) return;
-      myFuture = ((ProgressManagerImpl)ProgressManager.getInstance()).runProcessWithProgressAsynchronously(
-              new Task.Backgroundable(myProject, "VCS Initialization") {
+      myFuture = ((ProgressManagerImpl)ProgressManager.getInstance())
+              .runProcessWithProgressAsynchronously(new Task.Backgroundable(myProject, "VCS Initialization") {
                 @Override
                 public void run(@NotNull ProgressIndicator indicator) {
                   execute();
@@ -68,7 +71,7 @@ public class VcsInitialization implements Disposable {
   public void add(@NotNull final VcsInitObject vcsInitObject, @NotNull final Runnable runnable) {
     synchronized (myLock) {
       if (myInitStarted) {
-        if (! vcsInitObject.isCanBeLast()) {
+        if (!vcsInitObject.isCanBeLast()) {
           LOG.info("Registering startup activity AFTER initialization ", new Throwable());
         }
         // post startup are normally called on awt thread
@@ -135,7 +138,8 @@ public class VcsInitialization implements Disposable {
       TimeoutUtil.sleep(10);
     }
     if (myIndicator.isRunning()) {
-      LOG.error("Failed to wait for completion if VCS initialization for project "+myProject, new Attachment("thread dump", ThreadDumper.dumpThreadsToString()));
+      LOG.error("Failed to wait for completion if VCS initialization for project " + myProject,
+                new Attachment("thread dump", ThreadDumper.dumpThreadsToString()));
     }
   }
 }

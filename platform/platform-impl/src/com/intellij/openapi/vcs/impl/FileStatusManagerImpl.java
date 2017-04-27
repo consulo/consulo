@@ -106,6 +106,8 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
       }
     });
 
+    if (project.isDefault()) return;
+
     startupManager.registerPreStartupActivity(() -> {
       DocumentAdapter documentListener = new DocumentAdapter() {
         @Override

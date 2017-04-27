@@ -396,25 +396,12 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
     return callback;
   }
 
-  public void exitFullScreenAndDispose() {
-
-    LOG.assertTrue(isInFullScreen());
+  public void toggleFullScreenNow() {
     try {
       requestToggleFullScreenMethod.invoke(Application.getApplication(), myFrame);
     }
-    catch (IllegalAccessException e) {
+    catch (Exception e) {
       LOG.error(e);
     }
-    catch (InvocationTargetException e) {
-      LOG.error(e);
-    }
-
-    myDispatcher.addListener(new FSAdapter() {
-      @Override
-      public void windowExitedFullScreen(AppEvent.FullScreenEvent event) {
-        myFrame.disposeImpl();
-        myDispatcher.removeListener(this);
-      }
-    });
   }
 }

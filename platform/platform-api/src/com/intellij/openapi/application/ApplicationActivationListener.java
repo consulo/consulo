@@ -27,31 +27,38 @@ public interface ApplicationActivationListener {
   /**
    * Called when app is activated by transferring focus to it.
    */
-  void applicationActivated(IdeFrame ideFrame);
+  default void applicationActivated(IdeFrame ideFrame) {
+  }
 
   /**
    * Called when app is de-activated by transferring focus from it.
    */
-  void applicationDeactivated(IdeFrame ideFrame);
+  default void applicationDeactivated(IdeFrame ideFrame) {
+  }
 
   /**
    * This is more precise notification than {code applicationDeactivated} callback.
    * It is intended for focus subsystem and purposes where we do not want
    * to be bothered by false application deactivation events.
-   *
+   * <p>
    * The shortcoming of the method is that a notification is delivered
    * with a delay. See {code app.deactivation.timeout} key in the registry
    */
-  void delayedApplicationDeactivated(IdeFrame ideFrame);
+  default void delayedApplicationDeactivated(IdeFrame ideFrame) {
+  }
 
+  @Deprecated
   abstract class Adapter implements ApplicationActivationListener {
     @Override
-    public void applicationActivated(IdeFrame ideFrame) { }
+    public void applicationActivated(IdeFrame ideFrame) {
+    }
 
     @Override
-    public void applicationDeactivated(IdeFrame ideFrame) { }
+    public void applicationDeactivated(IdeFrame ideFrame) {
+    }
 
     @Override
-    public void delayedApplicationDeactivated(IdeFrame ideFrame) { }
+    public void delayedApplicationDeactivated(IdeFrame ideFrame) {
+    }
   }
 }

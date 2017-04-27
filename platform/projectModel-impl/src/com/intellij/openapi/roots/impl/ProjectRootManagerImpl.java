@@ -33,11 +33,11 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import consulo.annotations.RequiredWriteAction;
+import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredWriteAction;
-import consulo.roots.ContentFolderScopes;
 
 import java.util.*;
 
@@ -349,6 +349,9 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   }
 
   protected void doSynchronizeRoots() {
+  }
+
+  public void markRootsForRefresh() {
   }
 
   public static String extractLocalPath(final String url) {
