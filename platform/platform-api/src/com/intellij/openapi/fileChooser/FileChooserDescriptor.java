@@ -47,12 +47,13 @@ public class FileChooserDescriptor implements Cloneable {
   private String myDescription;
 
   private boolean myHideIgnored = true;
-  private final List<VirtualFile> myRoots = new ArrayList<VirtualFile>();
+  private final List<VirtualFile> myRoots = new ArrayList<>();
   private boolean myShowFileSystemRoots = true;
   private boolean myTreeRootVisible = false;
   private boolean myShowHiddenFiles = false;
+  private boolean myForcedToUseIdeaFileChooser = false;
 
-  private final Map<String, Object> myUserData = new HashMap<String, Object>();
+  private final Map<String, Object> myUserData = new HashMap<>();
 
   /**
    * Creates new instance. Use methods from {@link FileChooserDescriptorFactory} for most used descriptors.
@@ -290,6 +291,14 @@ public class FileChooserDescriptor implements Cloneable {
   private boolean acceptAsGeneralFile(VirtualFile file) {
     if (FileElement.isArchive(file)) return false; // should be handle by acceptsAsJarFile
     return !file.isDirectory() && myChooseFiles;
+  }
+
+  public boolean isForcedToUseIdeaFileChooser() {
+    return myForcedToUseIdeaFileChooser;
+  }
+
+  public void setForcedToUseIdeaFileChooser(boolean forcedToUseIdeaFileChooser) {
+    myForcedToUseIdeaFileChooser = forcedToUseIdeaFileChooser;
   }
 
   private boolean acceptAsJarFile(VirtualFile file) {

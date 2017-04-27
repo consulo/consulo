@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,13 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.GuiUtils;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.ui.UIUtil;
@@ -111,6 +113,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
 
   public void setButtonIcon(Icon icon) {
     myBrowseButton.setIcon(icon);
+    myBrowseButton.setDisabledIcon(IconLoader.getDisabledIcon(icon));
   }
 
   /**
@@ -300,7 +303,9 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
 
   @Override
   public final void requestFocus() {
-    myComponent.requestFocus();
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+      IdeFocusManager.getGlobalInstance().requestFocus(myComponent, true);
+    });
   }
 
   @SuppressWarnings("deprecation")

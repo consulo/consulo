@@ -57,8 +57,8 @@ public abstract class JBPopupFactory {
   /**
    * Creates a popup with the specified title and two options, Yes and No.
    *
-   * @param title the title of the popup.
-   * @param onYes the runnable which is executed when the Yes option is selected.
+   * @param title              the title of the popup.
+   * @param onYes              the runnable which is executed when the Yes option is selected.
    * @param defaultOptionIndex the index of the option which is selected by default.
    * @return the popup instance.
    */
@@ -68,10 +68,10 @@ public abstract class JBPopupFactory {
   /**
    * Creates a popup allowing to choose one of two specified options and execute code when one of them is selected.
    *
-   * @param title the title of the popup.
-   * @param yesText the title for the Yes option.
-   * @param noText the title for the No option.
-   * @param onYes the runnable which is executed when the Yes option is selected.
+   * @param title              the title of the popup.
+   * @param yesText            the title for the Yes option.
+   * @param noText             the title for the No option.
+   * @param onYes              the runnable which is executed when the Yes option is selected.
    * @param defaultOptionIndex the index of the option which is selected by default.
    * @return the popup instance.
    */
@@ -81,21 +81,16 @@ public abstract class JBPopupFactory {
   /**
    * Creates a popup allowing to choose one of two specified options and execute code when either of them is selected.
    *
-   * @param title the title of the popup.
-   * @param yesText the title for the Yes option.
-   * @param noText the title for the No option.
-   * @param onYes the runnable which is executed when the Yes option is selected.
-   * @param onNo the runnable which is executed when the No option is selected.
+   * @param title              the title of the popup.
+   * @param yesText            the title for the Yes option.
+   * @param noText             the title for the No option.
+   * @param onYes              the runnable which is executed when the Yes option is selected.
+   * @param onNo               the runnable which is executed when the No option is selected.
    * @param defaultOptionIndex the index of the option which is selected by default.
    * @return the popup instance.
    */
   @NotNull
-  public abstract ListPopup createConfirmation(String title,
-                                               String yesText,
-                                               String noText,
-                                               Runnable onYes,
-                                               Runnable onNo,
-                                               int defaultOptionIndex);
+  public abstract ListPopup createConfirmation(String title, String yesText, String noText, Runnable onYes, Runnable onNo, int defaultOptionIndex);
 
   @NotNull
   public abstract ListPopupStep createActionsStep(@NotNull ActionGroup actionGroup,
@@ -114,7 +109,8 @@ public abstract class JBPopupFactory {
                                                   String title,
                                                   Component component,
                                                   boolean honorActionMnemonics,
-                                                  int defaultOptionIndex, final boolean autoSelectionEnabled);
+                                                  int defaultOptionIndex,
+                                                  final boolean autoSelectionEnabled);
 
   @NotNull
   public abstract RelativePoint guessBestPopupLocation(@NotNull JComponent component);
@@ -165,10 +161,10 @@ public abstract class JBPopupFactory {
   /**
    * Creates a popup allowing to choose one of the actions from the specified action group.
    *
-   * @param title the title of the popup.
-   * @param actionGroup the action group from which the popup is built.
-   * @param dataContext the data context which provides the data for the selected action
-   * @param selectionAidMethod keyboard selection mode for actions in the popup.
+   * @param title               the title of the popup.
+   * @param actionGroup         the action group from which the popup is built.
+   * @param dataContext         the data context which provides the data for the selected action
+   * @param selectionAidMethod  keyboard selection mode for actions in the popup.
    * @param showDisabledActions if true, disabled actions are shown as disabled; if false, disabled actions are not shown
    * @return the popup instance.
    */
@@ -182,12 +178,12 @@ public abstract class JBPopupFactory {
   /**
    * Creates a popup allowing to choose one of the actions from the specified action group.
    *
-   * @param title the title of the popup.
-   * @param actionGroup the action group from which the popup is built.
-   * @param dataContext the data context which provides the data for the selected action
-   * @param selectionAidMethod keyboard selection mode for actions in the popup.
+   * @param title               the title of the popup.
+   * @param actionGroup         the action group from which the popup is built.
+   * @param dataContext         the data context which provides the data for the selected action
+   * @param selectionAidMethod  keyboard selection mode for actions in the popup.
    * @param showDisabledActions if true, disabled actions are shown as disabled; if false, disabled actions are not shown
-   * @param actionPlace action place for ActionManager to use when creating the popup
+   * @param actionPlace         action place for ActionManager to use when creating the popup
    * @return the popup instance.
    */
   @NotNull
@@ -198,17 +194,28 @@ public abstract class JBPopupFactory {
                                                    boolean showDisabledActions,
                                                    @Nullable String actionPlace);
 
+  @NotNull
+  public ListPopup createActionGroupPopup(@Nls(capitalization = Nls.Capitalization.Title) String title,
+                                          @NotNull ActionGroup actionGroup,
+                                          @NotNull DataContext dataContext,
+                                          boolean showDisabledActions,
+                                          @Nullable Runnable disposeCallback,
+                                          int maxRowCount) {
+    return createActionGroupPopup(title, actionGroup, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, showDisabledActions, disposeCallback,
+                                  maxRowCount);
+  }
+
   /**
    * Creates a popup allowing to choose one of the actions from the specified action group.
    *
-   * @param title the title of the popup.
-   * @param actionGroup the action group from which the popup is built.
-   * @param dataContext the data context which provides the data for the selected action
-   * @param selectionAidMethod keyboard selection mode for actions in the popup.
+   * @param title               the title of the popup.
+   * @param actionGroup         the action group from which the popup is built.
+   * @param dataContext         the data context which provides the data for the selected action
+   * @param selectionAidMethod  keyboard selection mode for actions in the popup.
    * @param showDisabledActions if true, disabled actions are shown as disabled; if false, disabled actions are not shown
-   * @param disposeCallback method which is called when the popup is closed (either by selecting an action or by canceling)
-   * @param maxRowCount maximum number of popup rows visible at once (if there are more actions in the action group, a scrollbar
-   *                    is displayed)
+   * @param disposeCallback     method which is called when the popup is closed (either by selecting an action or by canceling)
+   * @param maxRowCount         maximum number of popup rows visible at once (if there are more actions in the action group, a scrollbar
+   *                            is displayed)
    * @return the popup instance.
    */
   @NotNull
@@ -271,6 +278,7 @@ public abstract class JBPopupFactory {
 
   @NotNull
   public abstract TreePopup createTree(JBPopup parent, @NotNull TreePopupStep step, Object parentValue);
+
   @NotNull
   public abstract TreePopup createTree(@NotNull TreePopupStep step);
 
@@ -282,10 +290,10 @@ public abstract class JBPopupFactory {
    *
    * @param dataContext the data context from which the location is determined.
    * @return location as close as possible to the action origin. Method has special handling of
-   *         the following components:<br>
-   *         - caret offset for editor<br>
-   *         - current selected node for tree<br>
-   *         - current selected row for list<br>
+   * the following components:<br>
+   * - caret offset for editor<br>
+   * - current selected node for tree<br>
+   * - current selected row for list<br>
    */
   @NotNull
   public abstract RelativePoint guessBestPopupLocation(@NotNull DataContext dataContext);
@@ -302,7 +310,7 @@ public abstract class JBPopupFactory {
   /**
    * @param editor the editor over which the popup is shown.
    * @return true if popup location is located in visible area
-   *         false if center would be suggested instead
+   * false if center would be suggested instead
    */
   public abstract boolean isBestPopupLocationVisible(@NotNull Editor editor);
 
@@ -320,7 +328,10 @@ public abstract class JBPopupFactory {
   public abstract BalloonBuilder createDialogBalloonBuilder(@NotNull JComponent content, String title);
 
   @NotNull
-  public abstract BalloonBuilder createHtmlTextBalloonBuilder(@NotNull String htmlContent, @Nullable Icon icon, Color fillColor, @Nullable HyperlinkListener listener);
+  public abstract BalloonBuilder createHtmlTextBalloonBuilder(@NotNull String htmlContent,
+                                                              @Nullable Icon icon,
+                                                              Color fillColor,
+                                                              @Nullable HyperlinkListener listener);
 
   @NotNull
   public abstract BalloonBuilder createHtmlTextBalloonBuilder(@NotNull String htmlContent, MessageType messageType, @Nullable HyperlinkListener listener);

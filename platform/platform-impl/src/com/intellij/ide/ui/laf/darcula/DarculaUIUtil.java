@@ -15,18 +15,43 @@
  */
 package com.intellij.ide.ui.laf.darcula;
 
+import com.intellij.ide.IdeEventQueue;
+import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
 
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.geom.Path2D;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class DarculaUIUtil {
+public class DarculaUIUtil implements SwingConstants {
   public static final Color GLOW_COLOR = new JBColor(new Color(96, 132, 212), new Color(96, 175, 255));
+
+  @SuppressWarnings("UseJBColor")
+  private static final Color MAC_ACTIVE_ERROR_COLOR = new Color(0x80f53b3b, true);
+  private static final JBColor DEFAULT_ACTIVE_ERROR_COLOR = new JBColor(0xe53e4d, 0x8b3c3c);
+
+  @SuppressWarnings("UseJBColor")
+  private static final Color MAC_INACTIVE_ERROR_COLOR = new Color(0x80f7bcbc, true);
+  private static final JBColor DEFAULT_INACTIVE_ERROR_COLOR = new JBColor(0xebbcbc, 0x725252);
+
+  @SuppressWarnings("UseJBColor")
+  private static final Color MAC_REGULAR_COLOR = new Color(0x80479cfc, true);
+
+  @SuppressWarnings("UseJBColor")
+  private static final Color MAC_GRAPHITE_COLOR = new Color(0x8099979d, true);
+
+  private static final Color ACTIVE_ERROR_COLOR = new JBColor(() -> UIUtil.isUnderDefaultMacTheme() ? MAC_ACTIVE_ERROR_COLOR : DEFAULT_ACTIVE_ERROR_COLOR);
+  private static final Color INACTIVE_ERROR_COLOR =
+          new JBColor(() -> UIUtil.isUnderDefaultMacTheme() ? MAC_INACTIVE_ERROR_COLOR : DEFAULT_INACTIVE_ERROR_COLOR);
 
   public static void paintFocusRing(Graphics g, int x, int y, int width, int height) {
     MacUIUtil.paintFocusRing((Graphics2D)g, getGlow(), new Rectangle(x, y, width, height));
@@ -40,17 +65,18 @@ public class DarculaUIUtil {
     return new JBColor(new Color(35, 121, 212), new Color(96, 175, 255));
   }
 
-  public static void paintSearchFocusRing(Graphics2D g, Rectangle bounds) {
-    paintSearchFocusRing(g, bounds, -1);
+  public static void paintSearchFocusRing(Graphics2D g, Rectangle bounds, Component component) {
+    paintSearchFocusRing(g, bounds, component, -1);
   }
-  public static void paintSearchFocusRing(Graphics2D g, Rectangle bounds, int maxArcSize) {
+
+  public static void paintSearchFocusRing(Graphics2D g, Rectangle bounds, Component component, int maxArcSize) {
     int correction = UIUtil.isUnderAquaLookAndFeel() ? 30 : UIUtil.isUnderDarcula() ? 50 : 0;
     final Color[] colors = new Color[]{
-            ColorUtil.toAlpha(getGlow(), 180 - correction),
-            ColorUtil.toAlpha(getGlow(), 120 - correction),
-            ColorUtil.toAlpha(getGlow(), 70  - correction),
-            ColorUtil.toAlpha(getGlow(), 100 - correction),
-            ColorUtil.toAlpha(getGlow(), 50  - correction)
+            ColorUtil.toAlpha(GLOW_COLOR, 180 - correction),
+            ColorUtil.toAlpha(GLOW_COLOR, 120 - correction),
+            ColorUtil.toAlpha(GLOW_COLOR, 70  - correction),
+            ColorUtil.toAlpha(GLOW_COLOR, 100 - correction),
+            ColorUtil.toAlpha(GLOW_COLOR, 50  - correction)
     };
 
     final Object oldAntialiasingValue = g.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
@@ -65,6 +91,9 @@ public class DarculaUIUtil {
     if (maxArcSize>0) arcSize = Math.min(maxArcSize, arcSize);
     if (arcSize %2 == 1) arcSize--;
 
+
+    g.setColor(component.getBackground());
+    g.fillRoundRect(r.x + 2, r.y + 2, r.width - 5, r.height - 5, arcSize - 4, arcSize - 4);
 
     g.setColor(colors[0]);
     g.drawRoundRect(r.x + 2, r.y + 2, r.width - 5, r.height - 5, arcSize-4, arcSize-4);
@@ -87,4 +116,74 @@ public class DarculaUIUtil {
     g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, oldStrokeControlValue);
   }
 
+  public static void paintErrorBorder(Graphics2D g, int width, int height, int arc, boolean symmetric, boolean hasFocus) {
+    g.setPaint(hasFocus ? ACTIVE_ERROR_COLOR : INACTIVE_ERROR_COLOR);
+    doPaint(g, width, height, arc, symmetric);
+  }
+
+  public static void paintFocusBorder(Graphics2D g, int width, int height, int arc, boolean symmetric) {
+    g.setPaint(IntelliJLaf.isGraphite() ? MAC_GRAPHITE_COLOR : MAC_REGULAR_COLOR);
+    doPaint(g, width, height, arc, symmetric);
+  }
+
+  @SuppressWarnings("SuspiciousNameCombination")
+  private static void doPaint(Graphics2D g, int width, int height, int arc, boolean symmetric) {
+    double bw = UIUtil.isRetina(g) ? 0.5 : 1.0;
+    double lw = JBUI.scale(UIUtil.isUnderDefaultMacTheme() ? 3 : 2);
+
+    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, MacUIUtil.USE_QUARTZ ? RenderingHints.VALUE_STROKE_PURE : RenderingHints.VALUE_STROKE_NORMALIZE);
+
+    double outerArc = arc > 0 ? arc + lw - JBUI.scale(2) : lw;
+    double rightOuterArc = symmetric ? outerArc : JBUI.scale(6);
+    Path2D outerRect = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+    outerRect.moveTo(width - rightOuterArc, 0);
+    outerRect.quadTo(width, 0, width, rightOuterArc);
+    outerRect.lineTo(width, height - rightOuterArc);
+    outerRect.quadTo(width, height, width - rightOuterArc, height);
+    outerRect.lineTo(outerArc, height);
+    outerRect.quadTo(0, height, 0, height - outerArc);
+    outerRect.lineTo(0, outerArc);
+    outerRect.quadTo(0, 0, outerArc, 0);
+    outerRect.closePath();
+
+    lw += bw;
+    double rightInnerArc = symmetric ? outerArc : JBUI.scale(7);
+    Path2D innerRect = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+    innerRect.moveTo(width - rightInnerArc, lw);
+    innerRect.quadTo(width - lw, lw, width - lw, rightInnerArc);
+    innerRect.lineTo(width - lw, height - rightInnerArc);
+    innerRect.quadTo(width - lw, height - lw, width - rightInnerArc, height - lw);
+    innerRect.lineTo(outerArc, height - lw);
+    innerRect.quadTo(lw, height - lw, lw, height - outerArc);
+    innerRect.lineTo(lw, outerArc);
+    innerRect.quadTo(lw, lw, outerArc, lw);
+    innerRect.closePath();
+
+    Path2D path = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+    path.append(outerRect, false);
+    path.append(innerRect, false);
+    g.fill(path);
+  }
+
+  public static boolean isCurrentEventShiftDownEvent() {
+    AWTEvent event = IdeEventQueue.getInstance().getTrueCurrentEvent();
+    return (event instanceof KeyEvent && ((KeyEvent)event).isShiftDown());
+  }
+
+  /**
+   * @return -1 if visual position shouldn't be patched, otherwise selection start or selection end
+   * @see javax.swing.plaf.basic.BasicTextUI#getNextVisualPositionFrom(JTextComponent, int, Position.Bias, int, Position.Bias[])
+   */
+  public static int getPatchedNextVisualPositionFrom(JTextComponent t, int pos, int direction) {
+    if (!isCurrentEventShiftDownEvent()) {
+      if (direction == WEST && t.getSelectionStart() < t.getSelectionEnd() && t.getSelectionEnd() == pos) {
+        return t.getSelectionStart();
+      }
+      if (direction == EAST && t.getSelectionStart() < t.getSelectionEnd() && t.getSelectionStart() == pos) {
+        return t.getSelectionEnd();
+      }
+    }
+    return -1;
+  }
 }

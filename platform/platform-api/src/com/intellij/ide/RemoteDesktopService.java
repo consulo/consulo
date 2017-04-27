@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.ide;
 
-/*
- * @author max
- */
-package com.intellij.ui.components;
+import com.intellij.openapi.components.ServiceManager;
 
-import com.intellij.openapi.util.Key;
+public abstract class RemoteDesktopService {
+  public static RemoteDesktopService getInstance() {
+    return ServiceManager.getService(RemoteDesktopService.class);
+  }
 
-import java.awt.*;
+  public static boolean isRemoteSession() {
+    return getInstance().isRemoteDesktopConnected();
+  }
 
-public interface Magnificator {
-  Key<Magnificator> CLIENT_PROPERTY_KEY = Key.create("MagnifiableComponent");
-
-  Point magnify(double scale, Point at);
+  public abstract boolean isRemoteDesktopConnected();
 }

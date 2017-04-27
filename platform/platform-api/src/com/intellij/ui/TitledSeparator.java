@@ -17,10 +17,7 @@
 package com.intellij.ui;
 
 import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -36,10 +33,7 @@ public class TitledSeparator extends JPanel {
   public static final int SEPARATOR_LEFT_INSET = 6;
   public static final int SEPARATOR_RIGHT_INSET = 3;
 
-  @NotNull
-  public static Border createEmptyBorder() {
-    return JBUI.Borders.empty(TOP_INSET, 0, BOTTOM_INSET, 0);
-  }
+  public static final Border EMPTY_BORDER = IdeBorderFactory.createEmptyBorder(TOP_INSET, 0, BOTTOM_INSET, 0);
 
   protected final JBLabel myLabel = new JBLabel() {
     @Override
@@ -62,10 +56,9 @@ public class TitledSeparator extends JPanel {
     super();
     setLayout(new GridBagLayout());
     add(myLabel, new GridBagConstraints(0, 0, 1, 1, 0, 1, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    add(mySeparator,
-        new GridBagConstraints(1, 0, GridBagConstraints.REMAINDER, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                               new JBInsets(2, SEPARATOR_LEFT_INSET, 0, SEPARATOR_RIGHT_INSET), 0, 0));
-    setBorder(createEmptyBorder());
+    add(mySeparator, new GridBagConstraints(1, 0, GridBagConstraints.REMAINDER, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                                            new Insets(2, SEPARATOR_LEFT_INSET, 0, SEPARATOR_RIGHT_INSET), 0, 0));
+    setBorder(EMPTY_BORDER);
 
     setText(text);
     setLabelFor(labelFor);
@@ -77,7 +70,7 @@ public class TitledSeparator extends JPanel {
 
   public void setText(String text) {
     myOriginalText = text;
-    myLabel.setText(UIUtil.replaceMnemonicAmpersand(myOriginalText));
+    myLabel.setText(text != null && text.startsWith("<html>") ? text : UIUtil.replaceMnemonicAmpersand(myOriginalText));
   }
   public void setTitleFont(Font font) {
     myLabel.setFont(font);

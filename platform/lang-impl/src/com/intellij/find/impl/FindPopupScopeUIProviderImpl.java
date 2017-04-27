@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.find.impl;
 
-/*
- * @author max
- */
-package com.intellij.ui.components;
+import org.jetbrains.annotations.NotNull;
 
-import com.intellij.openapi.util.Key;
-
-import java.awt.*;
-
-public interface Magnificator {
-  Key<Magnificator> CLIENT_PROPERTY_KEY = Key.create("MagnifiableComponent");
-
-  Point magnify(double scale, Point at);
+public class FindPopupScopeUIProviderImpl implements FindPopupScopeUIProvider {
+  @NotNull
+  @Override
+  public FindPopupScopeUI create(@NotNull FindPopupPanel findPopupPanel) {
+    return new FindPopupScopeUIImpl(findPopupPanel);
+  }
 }

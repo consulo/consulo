@@ -159,7 +159,7 @@ public class DarculaTextFieldUI extends BasicTextFieldUI {
       g.fillRoundRect(r.x, r.y, r.width, r.height - JBUI.scale(1), radius, radius);
       g.setColor(c.isEnabled() ? Gray._100 : new Color(0x535353));
       if (c.hasFocus() && c.getClientProperty("JTextField.Search.noFocusRing") != Boolean.TRUE) {
-        DarculaUIUtil.paintSearchFocusRing(g, r);
+        DarculaUIUtil.paintSearchFocusRing(g, r, c);
       }
       else {
         g.drawRoundRect(r.x, r.y, r.width, r.height - 1, radius, radius);

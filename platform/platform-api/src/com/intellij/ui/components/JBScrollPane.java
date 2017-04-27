@@ -36,6 +36,54 @@ import java.awt.event.MouseWheelEvent;
 
 public class JBScrollPane extends JScrollPane {
   /**
+   * These client properties show a component position on a scroll pane.
+   * It is set by internal layout manager of the scroll pane.
+   */
+  public enum Alignment {
+    TOP,
+    LEFT,
+    RIGHT,
+    BOTTOM;
+
+    public static Alignment get(JComponent component) {
+      if (component != null) {
+        Object property = component.getClientProperty(Alignment.class);
+        if (property instanceof Alignment) return (Alignment)property;
+
+        Container parent = component.getParent();
+        if (parent instanceof JScrollPane) {
+          JScrollPane pane = (JScrollPane)parent;
+          if (component == pane.getColumnHeader()) {
+            return TOP;
+          }
+          if (component == pane.getHorizontalScrollBar()) {
+            return BOTTOM;
+          }
+          boolean ltr = pane.getComponentOrientation().isLeftToRight();
+          if (component == pane.getVerticalScrollBar()) {
+            return ltr ? RIGHT : LEFT;
+          }
+          if (component == pane.getRowHeader()) {
+            return ltr ? LEFT : RIGHT;
+          }
+        }
+        // assume alignment for a scroll bar,
+        // which is not contained in a scroll pane
+        if (component instanceof JScrollBar) {
+          JScrollBar bar = (JScrollBar)component;
+          switch (bar.getOrientation()) {
+            case Adjustable.HORIZONTAL:
+              return BOTTOM;
+            case Adjustable.VERTICAL:
+              return bar.getComponentOrientation().isLeftToRight() ? RIGHT : LEFT;
+          }
+        }
+      }
+      return null;
+    }
+  }
+
+  /**
    * Indicates whether the specified event is not consumed and does not have unexpected modifiers.
    *
    * @param event a mouse wheel event to check for validity

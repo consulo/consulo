@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Condition;
 import com.intellij.packageDependencies.ChangeListsScopesProvider;
 import com.intellij.packageDependencies.DependencyValidationManager;
@@ -33,13 +34,12 @@ import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.util.ui.JBUI;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.annotations.RequiredReadAction;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +54,8 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
   private boolean myCurrentSelection = true;
   private boolean myUsageView = true;
   private Condition<ScopeDescriptor> myScopeFilter;
+  private boolean myShowEmptyScopes;
+  private BrowseListener myBrowseListener = null;
 
   public ScopeChooserCombo() {
     super(new IgnoringComboBox(){
@@ -77,7 +79,6 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     init(project, suggestSearchInLibs, prevSearchWholeFiles, preselect, null);
   }
 
-  @RequiredReadAction
   public void init(final Project project,
                    final boolean suggestSearchInLibs,
                    final boolean prevSearchWholeFiles,
@@ -86,14 +87,11 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     mySuggestSearchInLibs = suggestSearchInLibs;
     myPrevSearchFiles = prevSearchWholeFiles;
     myProject = project;
-    myScopeListener = new NamedScopesHolder.ScopeListener() {
-      @Override
-      public void scopesChanged() {
-        final SearchScope selectedScope = getSelectedScope();
-        rebuildModel();
-        if (selectedScope != null) {
-          selectScope(selectedScope.getDisplayName());
-        }
+    myScopeListener = () -> {
+      final SearchScope selectedScope = getSelectedScope();
+      rebuildModel();
+      if (selectedScope != null) {
+        selectScope(selectedScope.getDisplayName());
       }
     };
     myScopeFilter = scopeFilter;
@@ -103,7 +101,8 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     myValidationManager.addScopeListener(myScopeListener);
     addActionListener(createScopeChooserListener());
 
-    final JComboBox combo = getComboBox();
+    final ComboBox<ScopeDescriptor> combo = (ComboBox<ScopeDescriptor>)getComboBox();
+    combo.setMinimumAndPreferredWidth(JBUI.scale(300));
     combo.setRenderer(new ScopeDescriptionWithDelimiterRenderer());
 
     rebuildModel();
@@ -119,6 +118,10 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
         return null;
       }
     };
+  }
+
+  public void setBrowseListener(BrowseListener browseListener) {
+    myBrowseListener = browseListener;
   }
 
   public void setCurrentSelection(boolean currentSelection) {
@@ -158,31 +161,28 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
   }
 
   private ActionListener createScopeChooserListener() {
-    return new ActionListener() {
-      @Override
-      @RequiredDispatchThread
-      public void actionPerformed(ActionEvent e) {
-        final String selection = getSelectedScopeName();
-        final EditScopesDialog dlg = EditScopesDialog.showDialog(myProject, selection);
-        if (dlg.isOK()){
-          rebuildModel();
-          final NamedScope namedScope = dlg.getSelectedScope();
-          if (namedScope != null) {
-            selectScope(namedScope.getName());
-          }
+    return e -> {
+      final String selection = getSelectedScopeName();
+      if (myBrowseListener != null) myBrowseListener.onBeforeBrowseStarted();
+      final EditScopesDialog dlg = EditScopesDialog.showDialog(myProject, selection);
+      if (dlg.isOK()){
+        rebuildModel();
+        final NamedScope namedScope = dlg.getSelectedScope();
+        if (namedScope != null) {
+          selectScope(namedScope.getName());
         }
       }
+      if (myBrowseListener != null) myBrowseListener.onAfterBrowseFinished();
     };
   }
 
-  @RequiredReadAction
   private void rebuildModel() {
     getComboBox().setModel(createModel());
   }
 
-  @RequiredReadAction
-  private DefaultComboBoxModel createModel() {
-    final DefaultComboBoxModel model = new DefaultComboBoxModel();
+  @NotNull
+  private DefaultComboBoxModel<ScopeDescriptor> createModel() {
+    final DefaultComboBoxModel<ScopeDescriptor> model = new DefaultComboBoxModel<>();
 
     createPredefinedScopeDescriptors(model);
 
@@ -195,7 +195,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
       }
     }
 
-    final List<ScopeDescriptor> customScopes = new ArrayList<ScopeDescriptor>();
+    final List<ScopeDescriptor> customScopes = new ArrayList<>();
     final NamedScopesHolder[] holders = NamedScopesHolder.getAllNamedScopeHolders(myProject);
     for (NamedScopesHolder holder : holders) {
       final NamedScope[] scopes = holder.getEditableScopes();  // predefined scopes already included
@@ -232,12 +232,11 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     return new Dimension(Math.min(200, minimumSize.width), minimumSize.height);
   }
 
-  @RequiredReadAction
-  private void createPredefinedScopeDescriptors(DefaultComboBoxModel model) {
+  private void createPredefinedScopeDescriptors(@NotNull DefaultComboBoxModel<ScopeDescriptor> model) {
     @SuppressWarnings("deprecation") final DataContext context = DataManager.getInstance().getDataContext();
     for (SearchScope scope : PredefinedSearchScopeProvider.getInstance().getPredefinedScopes(myProject, context, mySuggestSearchInLibs,
                                                                                              myPrevSearchFiles, myCurrentSelection,
-                                                                                             myUsageView)) {
+                                                                                             myUsageView, myShowEmptyScopes)) {
       addScopeDescriptor(model, new ScopeDescriptor(scope));
     }
     for (ScopeDescriptorProvider provider : Extensions.getExtensions(ScopeDescriptorProvider.EP_NAME)) {
@@ -249,10 +248,14 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     }
   }
 
-  private void addScopeDescriptor(DefaultComboBoxModel model, ScopeDescriptor scopeDescriptor) {
+  private void addScopeDescriptor(DefaultComboBoxModel<ScopeDescriptor> model, ScopeDescriptor scopeDescriptor) {
     if (myScopeFilter == null || myScopeFilter.value(scopeDescriptor)) {
       model.addElement(scopeDescriptor);
     }
+  }
+
+  public void setShowEmptyScopes(boolean showEmptyScopes) {
+    myShowEmptyScopes = showEmptyScopes;
   }
 
   @Nullable
@@ -272,7 +275,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
   private static class ScopeSeparator extends ScopeDescriptor {
     private final String myText;
 
-    public ScopeSeparator(final String text) {
+    ScopeSeparator(@NotNull String text) {
       super(null);
       myText = text;
     }
@@ -291,5 +294,10 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
         setSeparator();
       }
     }
+  }
+
+  public interface BrowseListener {
+    void onBeforeBrowseStarted();
+    void onAfterBrowseFinished();
   }
 }

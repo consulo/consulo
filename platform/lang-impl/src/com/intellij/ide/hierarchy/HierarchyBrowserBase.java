@@ -42,9 +42,12 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author yole
@@ -97,7 +100,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
   protected void appendActions(@NotNull DefaultActionGroup actionGroup, @Nullable String helpID) {
     actionGroup.add(myAutoScrollToSourceHandler.createToggleAction());
     actionGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EXPAND_ALL));
-    actionGroup.add(new PinToolwindowTabAction(){
+    actionGroup.add(new PinToolwindowTabAction() {
       @Override
       public void update(AnActionEvent event) {
         super.update(event);
@@ -112,6 +115,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
   }
 
   protected abstract JTree getCurrentTree();
+
   protected abstract HierarchyTreeBuilder getCurrentBuilder();
 
   @Nullable
@@ -126,6 +130,43 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
     final Object lastPathComponent = path.getLastPathComponent();
     if (!(lastPathComponent instanceof DefaultMutableTreeNode)) return null;
     return (DefaultMutableTreeNode)lastPathComponent;
+  }
+
+  public PsiElement[] getAvailableElements() {
+    final JTree tree = getCurrentTree();
+    if (tree == null) {
+      return PsiElement.EMPTY_ARRAY;
+    }
+    final TreeModel model = tree.getModel();
+    final Object root = model.getRoot();
+    if (!(root instanceof DefaultMutableTreeNode)) {
+      return PsiElement.EMPTY_ARRAY;
+    }
+    final DefaultMutableTreeNode node = (DefaultMutableTreeNode)root;
+    final HierarchyNodeDescriptor descriptor = getDescriptor(node);
+    final Set<PsiElement> result = new HashSet<>();
+    collectElements(descriptor, result);
+    return result.toArray(PsiElement.EMPTY_ARRAY);
+  }
+
+  private void collectElements(HierarchyNodeDescriptor descriptor, Set<PsiElement> out) {
+    if (descriptor == null) {
+      return;
+    }
+    final PsiElement element = getElementFromDescriptor(descriptor);
+    if (element != null) {
+      out.add(element.getNavigationElement());
+    }
+    final Object[] children = descriptor.getCachedChildren();
+    if (children == null) {
+      return;
+    }
+    for (Object child : children) {
+      if (child instanceof HierarchyNodeDescriptor) {
+        final HierarchyNodeDescriptor childDescriptor = (HierarchyNodeDescriptor)child;
+        collectElements(childDescriptor, out);
+      }
+    }
   }
 
   @Nullable

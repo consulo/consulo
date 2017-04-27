@@ -275,23 +275,42 @@ public class UIUtil {
     return new JBTreeTraverser<Component>(COMPONENT_CHILDREN).withRoot(component);
   }
 
-  public enum FontSize {BIGGER, NORMAL, SMALL, MINI}
+  public enum FontSize {
+    BIGGER,
+    NORMAL,
+    SMALL,
+    MINI
+  }
 
-  public enum ComponentStyle {REGULAR, SMALL, MINI}
+  public enum ComponentStyle {
+    REGULAR,
+    SMALL,
+    MINI
+  }
 
-  public enum FontColor {NORMAL, BRIGHTER}
+  public enum FontColor {
+    NORMAL,
+    BRIGHTER
+  }
 
   public static final char MNEMONIC = BundleBase.MNEMONIC;
-  @NonNls public static final String HTML_MIME = "text/html";
-  @NonNls public static final String JSLIDER_ISFILLED = "JSlider.isFilled";
-  @NonNls public static final String ARIAL_FONT_NAME = "Arial";
-  @NonNls public static final String TABLE_FOCUS_CELL_BACKGROUND_PROPERTY = "Table.focusCellBackground";
-  @NonNls public static final String CENTER_TOOLTIP_DEFAULT = "ToCenterTooltip";
-  @NonNls public static final String CENTER_TOOLTIP_STRICT = "ToCenterTooltip.default";
+  @NonNls
+  public static final String HTML_MIME = "text/html";
+  @NonNls
+  public static final String JSLIDER_ISFILLED = "JSlider.isFilled";
+  @NonNls
+  public static final String ARIAL_FONT_NAME = "Arial";
+  @NonNls
+  public static final String TABLE_FOCUS_CELL_BACKGROUND_PROPERTY = "Table.focusCellBackground";
+  @NonNls
+  public static final String CENTER_TOOLTIP_DEFAULT = "ToCenterTooltip";
+  @NonNls
+  public static final String CENTER_TOOLTIP_STRICT = "ToCenterTooltip.default";
 
   public static final Pattern CLOSE_TAG_PATTERN = Pattern.compile("<\\s*([^<>/ ]+)([^<>]*)/\\s*>", Pattern.CASE_INSENSITIVE);
 
-  @NonNls public static final String FOCUS_PROXY_KEY = "isFocusProxy";
+  @NonNls
+  public static final String FOCUS_PROXY_KEY = "isFocusProxy";
 
   public static Key<Integer> KEEP_BORDER_SIDES = Key.create("keepBorderSides");
 
@@ -345,71 +364,12 @@ public class UIUtil {
   public static final float DEF_SYSTEM_FONT_SIZE = 12f; // TODO: consider 12 * 1.33 to compensate JDK's 72dpi font scale
   private static volatile Pair<String, Integer> ourSystemFontData = null;
 
-  @NonNls private static final String ROOT_PANE = "JRootPane.future";
+  @NonNls
+  private static final String ROOT_PANE = "JRootPane.future";
 
   private static final Ref<Boolean> ourRetina = Ref.create(SystemInfo.isMac ? null : false);
-  private static final Ref<Float> ourJava9HiDPI = Ref.create(null);
 
   private UIUtil() {
-  }
-
-  /**
-   * Returns whether the JDK-managed HiDPI mode is enabled and the default monitor device is HiDPI.
-   * (Equivalent of {@link #isRetina()} on macOS)
-   */
-  public static boolean isJDKManagedHiDPIScreen() {
-    return isJDKManagedHiDPI() && JBUI.sysScale() > 1.0f;
-  }
-
-  /**
-   * Returns whether the JDK-managed HiDPI mode is enabled and the graphics device is HiDPI.
-   * (Equivalent of {@link #isRetina(Graphics2D)} on macOS)
-   */
-  public static boolean isJDKManagedHiDPIScreen(Graphics2D g) {
-    return isJDKManagedHiDPI() && JBUI.sysScale(g) > 1.0f;
-  }
-
-  private static Boolean jdkManagedHiDPI;
-  private static boolean jdkManagedHiDPI_earlierVersion;
-
-  /**
-   * Returns whether the JDK-managed HiDPI mode is enabled.
-   * (True for macOS JDK >= 7.10 versions)
-   *
-   * @see JBUI.ScaleType
-   */
-  public static boolean isJDKManagedHiDPI() {
-    if (jdkManagedHiDPI != null) {
-      return jdkManagedHiDPI;
-    }
-    jdkManagedHiDPI = false;
-    jdkManagedHiDPI_earlierVersion = true;
-    if (SystemInfo.isLinux) {
-      return false; // pending support
-    }
-    try {
-      GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-      if (ge instanceof SunGraphicsEnvironment) {
-        Method m = ReflectionUtil.getDeclaredMethod(SunGraphicsEnvironment.class, "isUIScaleOn");
-        jdkManagedHiDPI = (Boolean)m.invoke(ge);
-        jdkManagedHiDPI_earlierVersion = false;
-      }
-    } catch (Throwable ignore) {
-    }
-    if (SystemInfo.isMac) {
-      return jdkManagedHiDPI = (SystemInfo.isAppleJvm ? false : true);
-    }
-    return jdkManagedHiDPI;
-  }
-
-  /**
-   * Indicates earlier JBSDK version, not containing HiDPI changes.
-   * On macOS that JBSDK supports jdkManagedHiDPI, but it's not capable to provide device scale
-   * via GraphicsDevice transform matrix (the scale should be retrieved via DetectRetinaKit).
-   */
-  static boolean isJDKManagedHiDPI_earlierVersion() {
-    isJDKManagedHiDPI();
-    return jdkManagedHiDPI_earlierVersion;
   }
 
   /**
@@ -529,17 +489,88 @@ public class UIUtil {
     }
   }
 
+  /**
+   * Returns whether the JRE-managed HiDPI mode is enabled and the default monitor device is HiDPI.
+   * (analogue of {@link #isRetina()} on macOS)
+   */
+  public static boolean isJreHiDPI() {
+    return isJreHiDPI((GraphicsConfiguration)null);
+  }
+
+  /**
+   * Returns whether the JRE-managed HiDPI mode is enabled and the graphics configuration represents a HiDPI device.
+   * (analogue of {@link #isRetina(Graphics2D)} on macOS)
+   */
+  public static boolean isJreHiDPI(@Nullable GraphicsConfiguration gc) {
+    return isJreHiDPIEnabled() && JBUI.isHiDPI(JBUI.sysScale(gc));
+  }
+
+  /**
+   * Returns whether the JRE-managed HiDPI mode is enabled and the graphics represents a HiDPI device.
+   * (analogue of {@link #isRetina(Graphics2D)} on macOS)
+   */
+  public static boolean isJreHiDPI(@Nullable Graphics2D g) {
+    return isJreHiDPIEnabled() && JBUI.isHiDPI(JBUI.sysScale(g));
+  }
+
+  /**
+   * Returns whether the JRE-managed HiDPI mode is enabled and the provided component is tied to a HiDPI device.
+   */
+  public static boolean isJreHiDPI(@Nullable Component comp) {
+    return isJreHiDPI(comp != null ? comp.getGraphicsConfiguration() : null);
+  }
+
+  private static Boolean jreHiDPI;
+  private static boolean jreHiDPI_earlierVersion;
+
+  /**
+   * Returns whether the JRE-managed HiDPI mode is enabled.
+   * (True for macOS JDK >= 7.10 versions)
+   *
+   * @see JBUI.ScaleType
+   */
+  public static boolean isJreHiDPIEnabled() {
+    if (jreHiDPI != null) {
+      return jreHiDPI;
+    }
+    jreHiDPI = false;
+    jreHiDPI_earlierVersion = true;
+    if (SystemInfo.isLinux) {
+      return false; // pending support
+    }
+    try {
+      GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+      if (ge instanceof SunGraphicsEnvironment) {
+        Method m = ReflectionUtil.getDeclaredMethod(SunGraphicsEnvironment.class, "isUIScaleOn");
+        jreHiDPI = (Boolean)m.invoke(ge);
+        jreHiDPI_earlierVersion = false;
+      }
+    }
+    catch (Throwable ignore) {
+    }
+    if (SystemInfo.isMac) {
+      return jreHiDPI = (!SystemInfo.isAppleJvm);
+    }
+    return jreHiDPI;
+  }
+
+  /**
+   * Indicates earlier JBSDK version, not containing HiDPI changes.
+   * On macOS such JBSDK supports jreHiDPI, but it's not capable to provide device scale
+   * via GraphicsDevice transform matrix (the scale should be retrieved via DetectRetinaKit).
+   */
+  static boolean isJreHiDPI_earlierVersion() {
+    isJreHiDPIEnabled();
+    return jreHiDPI_earlierVersion;
+  }
+
   public static boolean isRetina(Graphics2D graphics) {
     if (SystemInfo.isMac && SystemInfo.isJavaVersionAtLeast("1.7")) {
       return DetectRetinaKit.isMacRetina(graphics);
     }
     else {
-      return isHiDPIRender();
+      return isRetina();
     }
-  }
-
-  public static boolean isHiDPIRender() {
-    return isRetina() || getJava9HiDPIScale() >= 2f;
   }
 
   public static boolean isRetina() {
@@ -585,34 +616,6 @@ public class UIUtil {
         return ourRetina.get();
       }
     }
-  }
-
-  public static float getJava9HiDPIScale() {
-    synchronized (ourJava9HiDPI) {
-      if (ourJava9HiDPI.isNull()) {
-        ourJava9HiDPI.set(0f);
-
-        if (SystemInfo.isJavaVersionAtLeast("1.9")) {
-          try {
-            GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            final GraphicsDevice device = env.getDefaultScreenDevice();
-            Float scale = ReflectionUtil.getField(device.getClass(), device, float.class, "scaleX");
-            if (scale != null && scale >= 2) {
-              ourJava9HiDPI.set(scale);
-              return scale;
-            }
-          }
-          catch (AWTError ignore) {
-          }
-          catch (Exception ignore) {
-          }
-        }
-        ourJava9HiDPI.set(0f);
-      }
-
-      return ourJava9HiDPI.get();
-    }
-
   }
 
   public static boolean hasLeakingAppleListeners() {
@@ -663,7 +666,7 @@ public class UIUtil {
 
   /**
    * @param component a Swing component that may hold a client property value
-   * @param type       the client property key that specifies a return type
+   * @param type      the client property key that specifies a return type
    * @return the property value from the specified component or {@code null}
    */
   public static <T> T getClientProperty(Object component, @NotNull Class<T> type) {
@@ -749,8 +752,8 @@ public class UIUtil {
   }
 
   /**
-   * @param string {@code String} to examine
-   * @param font {@code Font} that is used to render the string
+   * @param string   {@code String} to examine
+   * @param font     {@code Font} that is used to render the string
    * @param graphics {@link Graphics} that should be used to render the string
    * @return height of the tallest glyph in a string. If string is empty, returns 0
    */
@@ -758,7 +761,7 @@ public class UIUtil {
     FontRenderContext frc = ((Graphics2D)graphics).getFontRenderContext();
     GlyphVector gv = font.createGlyphVector(frc, string);
     int maxHeight = 0;
-    for (int i = 0; i < string.length(); i ++) {
+    for (int i = 0; i < string.length(); i++) {
       maxHeight = Math.max(maxHeight, (int)gv.getGlyphMetrics(i).getBounds2D().getHeight());
     }
     return maxHeight;
@@ -1438,6 +1441,10 @@ public class UIUtil {
     return !isUnderDarkBuildInLaf();
   }
 
+  public static boolean isUnderDefaultMacTheme() {
+    return SystemInfo.isMac && isUnderIntelliJLaF();
+  }
+
   public static boolean isUnderDarkBuildInLaf() {
     LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
     return lookAndFeel instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)lookAndFeel).isDark();
@@ -1565,12 +1572,7 @@ public class UIUtil {
 
   public static boolean isValidFont(@NotNull Font font) {
     try {
-      return font.canDisplay('a') &&
-             font.canDisplay('z') &&
-             font.canDisplay('A') &&
-             font.canDisplay('Z') &&
-             font.canDisplay('0') &&
-             font.canDisplay('1');
+      return font.canDisplay('a') && font.canDisplay('z') && font.canDisplay('A') && font.canDisplay('Z') && font.canDisplay('0') && font.canDisplay('1');
     }
     catch (Exception e) {
       // JRE has problems working with the font. Just skip.
@@ -1839,8 +1841,27 @@ public class UIUtil {
    */
   @NotNull
   public static BufferedImage createImage(int width, int height, int type) {
-    if (isJDKManagedHiDPIScreen()) {
+    if (isJreHiDPI()) {
       return RetinaImage.create(width, height, type);
+    }
+    //noinspection UndesirableClassUsage
+    return new BufferedImage(width, height, type);
+  }
+
+  /**
+   * Creates a HiDPI-aware BufferedImage in the graphics config scale.
+   *
+   * @param gc the graphics config
+   * @param width the width in user coordinate space
+   * @param height the height in user coordinate space
+   * @param type the type of the image
+   *
+   * @return a HiDPI-aware BufferedImage in the graphics scale
+   */
+  @NotNull
+  public static BufferedImage createImage(GraphicsConfiguration gc, int width, int height, int type) {
+    if (isJreHiDPI(gc)) {
+      return RetinaImage.create(gc, width, height, type);
     }
     //noinspection UndesirableClassUsage
     return new BufferedImage(width, height, type);
@@ -1860,14 +1881,13 @@ public class UIUtil {
   public static BufferedImage createImage(Graphics g, int width, int height, int type) {
     if (g instanceof Graphics2D) {
       Graphics2D g2d = (Graphics2D)g;
-      if (isJDKManagedHiDPIScreen(g2d)) {
+      if (isJreHiDPI(g2d)) {
         return RetinaImage.create(g2d, width, height, type);
       }
       //noinspection UndesirableClassUsage
       return new BufferedImage(width, height, type);
     }
-    return createImage(width, height, type);
-  }
+    return createImage(width, height, type);  }
 
   /**
    * Creates a HiDPI-aware BufferedImage in the component scale.
@@ -1882,16 +1902,8 @@ public class UIUtil {
   @NotNull
   public static BufferedImage createImage(Component comp, int width, int height, int type) {
     return comp != null ?
-           createImage(GraphicsUtil.safelyGetGraphics(comp), width, height, type) :
+           createImage(comp != null ? comp.getGraphicsConfiguration() : null, width, height, type) :
            createImage(width, height, type);
-  }
-
-  /**
-   * @deprecated use {@link #createImage(Graphics2D, int, int, int)}
-   */
-  @NotNull
-  public static BufferedImage createImageForGraphics(Graphics2D g, int width, int height, int type) {
-    return createImage(g, width, height, type);
   }
 
   public static void drawImage(Graphics g, Image image, int x, int y, ImageObserver observer) {
@@ -1934,7 +1946,8 @@ public class UIUtil {
       newG.drawImage((BufferedImage)img, op, 0, 0);
       //newG.scale(1, 1);
       newG.dispose();
-    } else {
+    }
+    else {
       ((Graphics2D)g).drawImage(image, op, x, y);
     }
   }
@@ -1973,7 +1986,7 @@ public class UIUtil {
 
   /**
    * Configures composite to use for drawing text with the given graphics container.
-   * <p/>
+   * <p>
    * The whole idea is that <a href="http://en.wikipedia.org/wiki/X_Rendering_Extension">XRender-based</a> pipeline doesn't support
    * {@link AlphaComposite#SRC} and we should use {@link AlphaComposite#SRC_OVER} instead.
    *
@@ -2168,10 +2181,7 @@ public class UIUtil {
   }
 
   public static boolean isStandardMenuLAF() {
-    return isWinLafOnVista() ||
-           isUnderNimbusLookAndFeel() ||
-           isUnderGTKLookAndFeel() ||
-           isUnderBuildInLaF();
+    return isWinLafOnVista() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF();
   }
 
   public static Color getFocusedFillColor() {
@@ -2604,14 +2614,25 @@ public class UIUtil {
     int dpi = 96;
     try {
       dpi = Toolkit.getDefaultToolkit().getScreenResolution();
-    } catch (HeadlessException e) {
+    }
+    catch (HeadlessException e) {
     }
     float scale = 1f;
-    if (dpi < 120) scale = 1f;
-    else if (dpi < 144) scale = 1.25f;
-    else if (dpi < 168) scale = 1.5f;
-    else if (dpi < 192) scale = 1.75f;
-    else scale = 2f;
+    if (dpi < 120) {
+      scale = 1f;
+    }
+    else if (dpi < 144) {
+      scale = 1.25f;
+    }
+    else if (dpi < 168) {
+      scale = 1.5f;
+    }
+    else if (dpi < 192) {
+      scale = 1.75f;
+    }
+    else {
+      scale = 2f;
+    }
 
     return scale;
   }
@@ -2747,7 +2768,8 @@ public class UIUtil {
     }
   }
 
-  @Deprecated @DeprecationInfo("Use #getListFixedCellHeight()")
+  @Deprecated
+  @DeprecationInfo("Use #getListFixedCellHeight()")
   public static final int LIST_FIXED_CELL_HEIGHT = 20;
 
   public static int getListFixedCellHeight() {
@@ -3412,6 +3434,10 @@ public class UIUtil {
     }
   }
 
+  public static int getLineHeight(@NotNull JTextComponent textComponent) {
+    return textComponent.getFontMetrics(textComponent.getFont()).getHeight();
+  }
+
   public static void addUndoRedoActions(@NotNull final JTextComponent textComponent) {
     UndoManager undoManager = new UndoManager();
     textComponent.putClientProperty(UNDO_MANAGER, undoManager);
@@ -3422,5 +3448,38 @@ public class UIUtil {
             .put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, (SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK),
                  "redoKeystroke");
     textComponent.getActionMap().put("redoKeystroke", REDO_ACTION);
+  }
+
+  /**
+   * KeyEvents for specified keystrokes would be redispatched to target component
+   */
+  public static void redirectKeystrokes(@NotNull Disposable disposable,
+                                        @NotNull final JComponent source,
+                                        @NotNull final JComponent target,
+                                        @NotNull final KeyStroke... keyStrokes) {
+    final KeyAdapter keyAdapter = new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        KeyStroke keyStrokeForEvent = KeyStroke.getKeyStrokeForEvent(e);
+        for (KeyStroke stroke : keyStrokes) {
+          if (!stroke.isOnKeyRelease() && stroke.equals(keyStrokeForEvent)) target.dispatchEvent(e);
+        }
+      }
+
+      @Override
+      public void keyReleased(KeyEvent e) {
+        KeyStroke keyStrokeForEvent = KeyStroke.getKeyStrokeForEvent(e);
+        for (KeyStroke stroke : keyStrokes) {
+          if (stroke.isOnKeyRelease() && stroke.equals(keyStrokeForEvent)) target.dispatchEvent(e);
+        }
+      }
+    };
+    source.addKeyListener(keyAdapter);
+    Disposer.register(disposable, new Disposable() {
+      @Override
+      public void dispose() {
+        source.removeKeyListener(keyAdapter);
+      }
+    });
   }
 }

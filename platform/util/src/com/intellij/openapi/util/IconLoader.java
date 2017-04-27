@@ -285,7 +285,7 @@ public final class IconLoader {
       if (icon instanceof CachedImageIcon) {
         disabledIcon = ((CachedImageIcon)icon).asDisabledIcon();
       } else {
-        final float scale = UIUtil.isJDKManagedHiDPIScreen() ? JBUI.sysScale() : 1f;  // [tav] todo: no screen available
+        final float scale = UIUtil.isJreHiDPI() ? JBUI.sysScale() : 1f;  // [tav] todo: no screen available
         @SuppressWarnings("UndesirableClassUsage")
         BufferedImage image = new BufferedImage((int)(scale * icon.getIconWidth()), (int)(scale * icon.getIconHeight()), BufferedImage.TYPE_INT_ARGB);
         final Graphics2D graphics = image.createGraphics();
@@ -298,7 +298,7 @@ public final class IconLoader {
         graphics.dispose();
 
         Image img = ImageUtil.filter(image, UIUtil.getGrayFilter());
-        if (UIUtil.isJDKManagedHiDPIScreen()) img = RetinaImage.createFrom(img, scale, null);
+        if (UIUtil.isJreHiDPI()) img = RetinaImage.createFrom(img, scale, null);
 
         disabledIcon = new JBImageIcon(img);
       }

@@ -46,6 +46,11 @@ public class IntelliJLaf extends DarculaLaf {
     return new IdeaBlueMetalTheme();
   }
 
+  @Deprecated
+  public static boolean isWindowsNativeLook() {
+    return false;
+  }
+
   public static boolean isGraphite() {
     if (!SystemInfo.isMac) return false;
     try {

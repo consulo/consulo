@@ -24,7 +24,6 @@ import com.intellij.openapi.fileChooser.ex.FileSaverDialogImpl;
 import com.intellij.openapi.fileChooser.ex.FileTextFieldImpl;
 import com.intellij.openapi.fileChooser.ex.LocalFsFinder;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.mac.MacFileChooserDialogImpl;
@@ -70,10 +69,10 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
 
   private static boolean useNativeMacChooser(final FileChooserDescriptor descriptor) {
     return SystemInfo.isMac &&
-           !descriptor.isChooseJarContents() &&
+           !descriptor.isForcedToUseIdeaFileChooser() &&
            SystemProperties.getBooleanProperty("native.mac.file.chooser.enabled", true) &&
            Registry.is("ide.mac.file.chooser.native") &&
-           !DialogWrapper.isMultipleModalDialogs();
+           SystemInfo.isJetbrainsJvm;
   }
 
   @NotNull

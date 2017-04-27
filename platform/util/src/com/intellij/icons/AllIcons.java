@@ -39,6 +39,7 @@ public class AllIcons {
     public static final SwingImageRef Checked_small_selected = IconLoader.getIcon("/actions/checked_small_selected.png"); // 11x11
     public static final SwingImageRef CheckMulticaret = IconLoader.getIcon("/actions/CheckMulticaret.png"); // 16x16
     public static final SwingImageRef CheckOut = IconLoader.getIcon("/actions/checkOut.png"); // 16x16
+    public static final SwingImageRef Clear = IconLoader.getIcon("/actions/clear.png"); // 16x16
     public static final SwingImageRef Clean = IconLoader.getIcon("/actions/clean.png"); // 16x16
     public static final SwingImageRef CleanLight = IconLoader.getIcon("/actions/cleanLight.png"); // 16x16
     public static final SwingImageRef Close = IconLoader.getIcon("/actions/close.png"); // 16x16
@@ -135,6 +136,8 @@ public class AllIcons {
     public static final SwingImageRef RunToCursor = IconLoader.getIcon("/actions/runToCursor.png"); // 16x16
     public static final SwingImageRef Scratch = IconLoader.getIcon("/actions/scratch.png"); // 16x16
     public static final SwingImageRef Search = IconLoader.getIcon("/actions/search.png"); // 16x16
+    public static final SwingImageRef SearchNewLine = IconLoader.getIcon("/actions/searchNewLine.png"); // 16x16
+    public static final SwingImageRef SearchNewLineHover = IconLoader.getIcon("/actions/searchNewLineHover.png"); // 16x16
     public static final SwingImageRef Selectall = IconLoader.getIcon("/actions/selectall.png"); // 16x16
     public static final SwingImageRef Share = IconLoader.getIcon("/actions/share.png"); // 14x14
     public static final SwingImageRef ShortcutFilter = IconLoader.getIcon("/actions/shortcutFilter.png"); // 16x16
@@ -451,6 +454,7 @@ public class AllIcons {
     public static final SwingImageRef QuestionDialog = IconLoader.getIcon("/general/questionDialog.png"); // 32x32
     public static final SwingImageRef ReadHelp = IconLoader.getIcon("/general/readHelp.png"); // 32x32
     public static final SwingImageRef Remove = IconLoader.getIcon("/general/remove.png"); // 16x16
+    public static final SwingImageRef Recursive = IconLoader.getIcon("/general/recursive.png"); // 16x16
     public static final SwingImageRef Reset = IconLoader.getIcon("/general/reset.png"); // 16x16
     public static final SwingImageRef Run = IconLoader.getIcon("/general/run.png"); // 7x10
     public static final SwingImageRef RunWithCoverage = IconLoader.getIcon("/general/runWithCoverage.png"); // 16x16

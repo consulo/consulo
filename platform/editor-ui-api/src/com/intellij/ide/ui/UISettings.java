@@ -36,6 +36,7 @@ import consulo.annotations.DeprecationInfo;
 import consulo.util.ui.AntialiasingUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,8 +67,17 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return settings == null ? new UISettings() : settings;
   }
 
-  @Property(filter = FontFilter.class) public String FONT_FACE;
-  @Property(filter = FontFilter.class) public int FONT_SIZE;
+  @Nullable
+  public static UISettings getInstanceOrNull() {
+    Application application = ApplicationManager.getApplication();
+    UISettings settings = application == null ? null : application.getComponent(UISettings.class);
+    return settings == null ? null : settings;
+  }
+
+  @Property(filter = FontFilter.class)
+  public String FONT_FACE;
+  @Property(filter = FontFilter.class)
+  public int FONT_SIZE;
   public int RECENT_FILES_LIMIT = 50;
   public int CONSOLE_COMMAND_HISTORY_LIMIT = 300;
   public boolean OVERRIDE_CONSOLE_CYCLE_BUFFER_SIZE = false;
@@ -119,12 +129,14 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean DND_WITH_PRESSED_ALT_ONLY = false;
   public boolean FILE_COLORS_IN_PROJECT_VIEW = false;
   public boolean DEFAULT_AUTOSCROLL_TO_SOURCE = false;
-  @Transient public boolean PRESENTATION_MODE = false;
+  @Transient
+  public boolean PRESENTATION_MODE = false;
   public int PRESENTATION_MODE_FONT_SIZE = 24;
   public boolean MARK_MODIFIED_TABS_WITH_ASTERISK = false;
   public boolean SHOW_TABS_TOOLTIPS = true;
   public boolean SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES = true;
   public boolean NAVIGATE_TO_PREVIEW = false;
+  public boolean SMOOTH_SCROLLING = SystemInfo.isMac && (SystemInfo.isJetbrainsJvm || SystemInfo.isJavaVersionAtLeast("9"));
 
   private final EventDispatcher<UISettingsListener> myDispatcher = EventDispatcher.create(UISettingsListener.class);
 

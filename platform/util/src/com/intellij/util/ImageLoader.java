@@ -225,7 +225,7 @@ public class ImageLoader implements Serializable {
       return with(new ImageConverter() {
         @Override
         public Image convert(Image source, ImageDesc desc) {
-          if (source != null && UIUtil.isJDKManagedHiDPI() && desc.scale > 1) {
+          if (source != null && UIUtil.isJreHiDPIEnabled() && desc.scale > 1) {
             return RetinaImage.createFrom(source, (int)desc.scale, ourComponent);
           }
           return source;
@@ -291,7 +291,7 @@ public class ImageLoader implements Serializable {
     // (scaleFactor > 1.0) != isJDKManagedHiDPI() => we should scale images manually.
     // Note we never scale images on JDKManagedHiDPI displays because scaling is handled by the system.
 
-    final boolean scaleImages = (scaleFactor > 1.0f && !UIUtil.isJDKManagedHiDPI());
+    final boolean scaleImages = (scaleFactor > 1.0f && !UIUtil.isJreHiDPIEnabled());
 
     // For any scale factor > 1.0, always prefer retina images, because downscaling
     // retina images provides a better result than upscaling non-retina images.

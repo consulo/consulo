@@ -32,10 +32,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 public class FindUIHelper implements Disposable {
-  @NotNull private final Project myProject;
-  @NotNull private  FindModel myModel;
+  @NotNull
+  private final Project myProject;
+  @NotNull
+  private FindModel myModel;
   FindModel myPreviousModel;
-  @NotNull private Runnable myOkHandler;
+  @NotNull
+  private Runnable myOkHandler;
 
   private FindUI myUI;
 
@@ -47,14 +50,14 @@ public class FindUIHelper implements Disposable {
   }
 
   protected FindUI getOrCreateUI() {
-    boolean newInstanceRequired = /*(myUI instanceof FindPopupPanel && !Registry.is("ide.find.as.popup")) ||  */
+    boolean newInstanceRequired = (myUI instanceof FindPopupPanel && !Registry.is("ide.find.as.popup")) ||
                                   (myUI instanceof FindDialog && Registry.is("ide.find.as.popup")) ||
                                   (myUI == null);
     if (newInstanceRequired) {
-     /* if (Registry.is("ide.find.as.popup")) {
+      if (Registry.is("ide.find.as.popup")) {
         myUI = new FindPopupPanel(this);
       }
-      else*/ {
+      else {
         FindDialog findDialog = new FindDialog(this);
         registerAction("ReplaceInPath", true, findDialog);
         registerAction("FindInPath", false, findDialog);
@@ -97,7 +100,8 @@ public class FindUIHelper implements Disposable {
 
 
   boolean canSearchThisString() {
-    return myUI != null && (!StringUtil.isEmpty(myUI.getStringToFind()) || !myModel.isReplaceState() && !myModel.isFindAllEnabled() && myUI.getFileTypeMask() != null);
+    return myUI != null &&
+           (!StringUtil.isEmpty(myUI.getStringToFind()) || !myModel.isReplaceState() && !myModel.isFindAllEnabled() && myUI.getFileTypeMask() != null);
   }
 
 
@@ -147,12 +151,13 @@ public class FindUIHelper implements Disposable {
     findSettings.setExceptCommentsAndLiterals(saveContextBetweenRestarts && myModel.isExceptCommentsAndStringLiterals());
 
     findSettings.setRegularExpressions(myModel.isRegularExpressions());
-    if (!myModel.isMultipleFiles()){
+    if (!myModel.isMultipleFiles()) {
       findSettings.setForward(myModel.isForward());
       findSettings.setFromCursor(myModel.isFromCursor());
 
       findSettings.setGlobal(myModel.isGlobal());
-    } else{
+    }
+    else {
       String directoryName = myModel.getDirectoryName();
       if (directoryName != null && !directoryName.isEmpty()) {
         findSettings.setWithSubdirectories(myModel.isWithSubdirectories());
@@ -190,19 +195,19 @@ public class FindUIHelper implements Disposable {
   }
 
   String getTitle() {
-    if (myModel.isReplaceState()){
-      if (myModel.isMultipleFiles()){
+    if (myModel.isReplaceState()) {
+      if (myModel.isMultipleFiles()) {
         return FindBundle.message("find.replace.in.project.dialog.title");
       }
-      else{
+      else {
         return FindBundle.message("find.replace.text.dialog.title");
       }
     }
-    else{
-      if (myModel.isMultipleFiles()){
+    else {
+      if (myModel.isMultipleFiles()) {
         return FindBundle.message("find.in.path.dialog.title");
       }
-      else{
+      else {
         return FindBundle.message("find.text.dialog.title");
       }
     }
