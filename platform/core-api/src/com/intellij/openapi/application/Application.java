@@ -26,7 +26,6 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
@@ -112,8 +111,8 @@ public interface Application extends ComponentManager {
    * @param actionClass the class of the write action to return.
    * @return true if the action is running, or false if no action of the specified class is currently executing.
    */
-  @RequiredDispatchThread
-  boolean hasWriteAction(@Nullable Class<?> actionClass);
+  @RequiredReadAction
+  boolean hasWriteAction(@NotNull Class<?> actionClass);
 
   /**
    * Asserts whether the read access is allowed.

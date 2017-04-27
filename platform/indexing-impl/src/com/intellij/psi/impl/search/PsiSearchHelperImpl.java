@@ -54,7 +54,6 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.text.StringSearcher;
-import consulo.annotations.RequiredReadAction;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
@@ -68,6 +67,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PsiSearchHelperImpl implements PsiSearchHelper {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.search.PsiSearchHelperImpl");
   private final PsiManagerEx myManager;
+  private final DumbService myDumbService;
 
   public enum Options {
     PROCESS_INJECTED_PSI, CASE_SENSITIVE_SEARCH, PROCESS_ONLY_JAVA_IDENTIFIERS_IF_POSSIBLE
@@ -88,6 +88,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
 
   public PsiSearchHelperImpl(@NotNull PsiManagerEx manager) {
     myManager = manager;
+    myDumbService = DumbService.getInstance(myManager.getProject());
   }
 
   @Override
@@ -184,7 +185,6 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
                                                        searchContext == UsageSearchContext.IN_STRINGS,
                                                        options.contains(Options.PROCESS_ONLY_JAVA_IDENTIFIERS_IF_POSSIBLE));
     ReadActionProcessor<PsiElement> localProcessor = new ReadActionProcessor<PsiElement>() {
-      @RequiredReadAction
       @Override
       public boolean processInReadAction(PsiElement scopeElement) {
         if (!scopeElement.isValid()) return true;
@@ -227,7 +227,6 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
                                                       @NotNull final ProgressIndicator progress,
                                                       @NotNull final StringSearcher searcher) {
     return new ReadActionProcessor<PsiElement>() {
-      @RequiredReadAction
       @Override
       public boolean processInReadAction(PsiElement scopeElement) {
         if (scopeElement instanceof PsiCompiledElement) {
@@ -483,7 +482,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
       }
       return initialScope;
     });
-    PsiFile[] files = ReadAction.compute(() -> CacheManager.getInstance(myManager.getProject()).getFilesWithWord(wordToSearch, UsageSearchContext.IN_PLAIN_TEXT, theSearchScope, true));
+    PsiFile[] files = myDumbService.runReadActionInSmartMode(() -> CacheManager.getInstance(myManager.getProject()).getFilesWithWord(wordToSearch, UsageSearchContext.IN_PLAIN_TEXT, theSearchScope, true));
 
     final StringSearcher searcher = new StringSearcher(qName, true, true, false);
 
@@ -492,7 +491,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     try {
       progress.setText(PsiBundle.message("psi.search.in.non.java.files.progress"));
 
-      final SearchScope useScope = originalElement == null ? null : ReadAction.compute(() -> getUseScope(originalElement));
+      final SearchScope useScope = originalElement == null ? null : myDumbService.runReadActionInSmartMode(() -> getUseScope(originalElement));
 
       final int patternLength = qName.length();
       for (int i = 0; i < files.length; i++) {
@@ -503,7 +502,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
         final CharSequence text = ReadAction.compute(() -> psiFile.getViewProvider().getContents());
 
         LowLevelSearchUtil.processTextOccurrences(text, 0, text.length(), searcher, progress, index -> {
-          boolean isReferenceOK = ReadAction.compute(() -> {
+          boolean isReferenceOK = myDumbService.runReadActionInSmartMode(() -> {
             PsiReference referenceAt = psiFile.findReferenceAt(index);
             return referenceAt == null || useScope == null || !PsiSearchScopeUtil.isInScope(useScope.intersectWith(initialScope), psiFile);
           });
@@ -782,7 +781,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
       for (final VirtualFile file : result) {
         progress.checkCanceled();
         for (final IdIndexEntry indexEntry : keys) {
-          DumbService.getInstance(myManager.getProject()).runReadActionInSmartMode(
+          myDumbService.runReadActionInSmartMode(
                   () -> FileBasedIndex.getInstance().processValues(IdIndex.NAME, indexEntry, file, (file1, value) -> {
                     int mask = value.intValue();
                     for (RequestWithProcessor single : processors) {

@@ -20,6 +20,7 @@ import com.intellij.ide.util.DirectoryChooserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Computable;
@@ -63,8 +64,10 @@ public class MoveFilesOrDirectoriesUtil {
       aDirectory.getVirtualFile().move(manager, destDirectory.getVirtualFile());
     }
     catch (IOException e) {
-      throw new IncorrectOperationException(e.toString(),e);
+      throw new IncorrectOperationException(e);
     }
+
+    DumbService.getInstance(manager.getProject()).completeJustSubmittedTasks();
   }
 
   /**
@@ -87,7 +90,7 @@ public class MoveFilesOrDirectoriesUtil {
         virtualFile.move(manager, newDirectory.getVirtualFile());
       }
       catch (IOException e) {
-        throw new IncorrectOperationException(e.toString(),e);
+        throw new IncorrectOperationException(e);
       }
     }
   }

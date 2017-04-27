@@ -110,11 +110,6 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
   }
 
   @Override
-  public void runEdtSafeAction(@NotNull Runnable runnable) {
-    runnable.run();
-  }
-
-  @Override
   public boolean tryRunReadAction(@NotNull Runnable runnable) {
     runReadAction(runnable);
     return true;

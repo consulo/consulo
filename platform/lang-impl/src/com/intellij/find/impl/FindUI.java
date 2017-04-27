@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.project;
+package com.intellij.find.impl;
 
+import com.intellij.openapi.Disposable;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * A helper class for {@link DumbService}
- */
-interface DumbPermissionService {
-  void allowStartingDumbModeInside(@NotNull final DumbModePermission permission, @NotNull Runnable runnable);
+public interface FindUI {
+  void showUI();
+
+  String getStringToFind();
+
+  String getFileTypeMask();
+
+  void initByModel();
+
+  void updateReplaceVisibility();
+
+  @NotNull
+  Disposable getDisposable();
 }

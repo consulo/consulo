@@ -53,8 +53,7 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
 
   @Override
   @NotNull
-  public PsiComment createLineCommentFromText(@NotNull final LanguageFileType fileType,
-                                              @NotNull final String text) throws IncorrectOperationException {
+  public PsiComment createLineCommentFromText(@NotNull final LanguageFileType fileType, @NotNull final String text) throws IncorrectOperationException {
     Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(fileType.getLanguage());
     assert commenter != null;
     String prefix = commenter.getLineCommentPrefix();
@@ -63,29 +62,38 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
     }
 
     PsiFile aFile = createDummyFile(prefix + text, fileType);
-    PsiElement[] children = aFile.getChildren();
-    for (PsiElement aChildren : children) {
-      if (aChildren instanceof PsiComment) {
-        PsiComment comment = (PsiComment)aChildren;
-        DummyHolderFactory.createHolder(myManager, (TreeElement)SourceTreeToPsiMap.psiElementToTree(comment), null);
-        return comment;
-      }
-    }
-    throw new IncorrectOperationException("Incorrect comment \"" + text + "\".");
+    return findPsiCommentChild(aFile);
+  }
+
+  @NotNull
+  @Override
+  public PsiComment createBlockCommentFromText(@NotNull Language language, @NotNull String text) throws IncorrectOperationException {
+    Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(language);
+    assert commenter != null : language;
+    final String blockCommentPrefix = commenter.getBlockCommentPrefix();
+    final String blockCommentSuffix = commenter.getBlockCommentSuffix();
+
+    PsiFile aFile =
+            PsiFileFactory.getInstance(myManager.getProject()).createFileFromText("_Dummy_", language, (blockCommentPrefix + text + blockCommentSuffix));
+    return findPsiCommentChild(aFile);
   }
 
   @Override
   @NotNull
-  public PsiComment createLineOrBlockCommentFromText(@NotNull Language lang, @NotNull String text)
-    throws IncorrectOperationException {
+  public PsiComment createLineOrBlockCommentFromText(@NotNull Language lang, @NotNull String text) throws IncorrectOperationException {
     Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(lang);
-    assert commenter != null;
+    assert commenter != null : lang;
     String prefix = commenter.getLineCommentPrefix();
     final String blockCommentPrefix = commenter.getBlockCommentPrefix();
     final String blockCommentSuffix = commenter.getBlockCommentSuffix();
     assert prefix != null || (blockCommentPrefix != null && blockCommentSuffix != null);
 
-    PsiFile aFile = PsiFileFactory.getInstance(myManager.getProject()).createFileFromText("_Dummy_", lang, prefix != null ? (prefix + text) : (blockCommentPrefix + text + blockCommentSuffix));
+    PsiFile aFile = PsiFileFactory.getInstance(myManager.getProject())
+            .createFileFromText("_Dummy_", lang, prefix != null ? (prefix + text) : (blockCommentPrefix + text + blockCommentSuffix));
+    return findPsiCommentChild(aFile);
+  }
+
+  private PsiComment findPsiCommentChild(PsiFile aFile) {
     PsiElement[] children = aFile.getChildren();
     for (PsiElement aChildren : children) {
       if (aChildren instanceof PsiComment) {
@@ -94,7 +102,7 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
         return comment;
       }
     }
-    throw new IncorrectOperationException("Incorrect comment \"" + text + "\".");
+    throw new IncorrectOperationException("Incorrect comment \"" + aFile.getText() + "\".");
   }
 
   protected PsiFile createDummyFile(String text, final LanguageFileType fileType) {

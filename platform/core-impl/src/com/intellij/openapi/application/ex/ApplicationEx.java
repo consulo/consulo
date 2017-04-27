@@ -111,8 +111,6 @@ public interface ApplicationEx extends Application {
 
   void assertTimeConsuming();
 
-  void runEdtSafeAction(@NotNull Runnable runnable);
-
   /**
    * Grab the lock and run the action, in a non-blocking fashion
    *

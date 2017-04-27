@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.impl.softwrap;
+package com.intellij.openapi.progress.util;
 
 /**
- * Enumerates distinct places where soft wraps may be used.
- * <p/>
- * The general idea is that we may want to allow configure distinct soft wrap settings for distinct use-cases. E.g. we may want
- * to use soft wraps at console editor but avoid using them at the main editor etc.
- *
- * @author Denis Zhdanov
- * @since 9/30/10 7:32 PM
+ * An interface that can be implemented by the ProgressIndicator to be called from CheckCanceledHook interface.
  */
-public enum SoftWrapAppliancePlaces {
-  MAIN_EDITOR, CONSOLE, PREVIEW
+public interface PingProgress {
+  void interact();
 }

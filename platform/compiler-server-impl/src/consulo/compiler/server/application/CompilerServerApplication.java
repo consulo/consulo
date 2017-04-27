@@ -593,11 +593,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public void runEdtSafeAction(@NotNull Runnable runnable) {
-    runnable.run();
-  }
-
-  @Override
   public boolean tryRunReadAction(@NotNull Runnable action) {
     action.run();
     return true;

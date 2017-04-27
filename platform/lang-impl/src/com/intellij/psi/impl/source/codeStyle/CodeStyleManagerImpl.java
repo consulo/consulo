@@ -719,6 +719,20 @@ public class CodeStyleManagerImpl extends CodeStyleManager {
     });
   }
 
+  @Override
+  public int getSpacing(@NotNull PsiFile file, int offset) {
+    FormattingModel model = createFormattingModel(file);
+    return model == null ? -1 : FormatterEx.getInstance().getSpacingForBlockAtOffset(model, offset);
+  }
+
+  @Nullable
+  private static FormattingModel createFormattingModel(@NotNull PsiFile file) {
+    FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(file);
+    if (builder == null) return null;
+    CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(file.getProject());
+    return builder.createModel(file, settings);
+  }
+  
   private static class RangeFormatInfo{
     private final SmartPsiElementPointer startPointer;
     private final SmartPsiElementPointer endPointer;

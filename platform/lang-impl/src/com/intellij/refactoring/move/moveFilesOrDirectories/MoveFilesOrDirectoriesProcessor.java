@@ -19,6 +19,7 @@ package com.intellij.refactoring.move.moveFilesOrDirectories;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.paths.PsiDynaReference;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDirectory;
@@ -33,6 +34,7 @@ import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.move.FileReferenceContextUtil;
 import com.intellij.refactoring.move.MoveCallback;
 import com.intellij.refactoring.rename.RenameUtil;
+import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.refactoring.util.NonCodeUsageInfo;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewDescriptor;
@@ -43,8 +45,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
-  private static final Logger LOG = Logger.getInstance(
-    "#com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesProcessor");
+  private static final Logger LOG = Logger.getInstance("#com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesProcessor");
 
   protected final PsiElement[] myElementsToMove;
   private final boolean mySearchForReferences;
@@ -55,25 +56,24 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
   private NonCodeUsageInfo[] myNonCodeUsages;
   private final Map<PsiFile, List<UsageInfo>> myFoundUsages = new HashMap<PsiFile, List<UsageInfo>>();
 
-  public MoveFilesOrDirectoriesProcessor(
-    Project project,
-    PsiElement[] elements,
-    PsiDirectory newParent,
-    boolean searchInComments,
-    boolean searchInNonJavaFiles,
-    MoveCallback moveCallback,
-    Runnable prepareSuccessfulCallback) {
+  public MoveFilesOrDirectoriesProcessor(Project project,
+                                         PsiElement[] elements,
+                                         PsiDirectory newParent,
+                                         boolean searchInComments,
+                                         boolean searchInNonJavaFiles,
+                                         MoveCallback moveCallback,
+                                         Runnable prepareSuccessfulCallback) {
     this(project, elements, newParent, true, searchInComments, searchInNonJavaFiles, moveCallback, prepareSuccessfulCallback);
   }
 
-  public MoveFilesOrDirectoriesProcessor(
-    Project project,
-    PsiElement[] elements,
-    PsiDirectory newParent,
-    final boolean searchForReferences, boolean searchInComments,
-    boolean searchInNonJavaFiles,
-    MoveCallback moveCallback,
-    Runnable prepareSuccessfulCallback) {
+  public MoveFilesOrDirectoriesProcessor(Project project,
+                                         PsiElement[] elements,
+                                         PsiDirectory newParent,
+                                         final boolean searchForReferences,
+                                         boolean searchInComments,
+                                         boolean searchInNonJavaFiles,
+                                         MoveCallback moveCallback,
+                                         Runnable prepareSuccessfulCallback) {
     super(project, prepareSuccessfulCallback);
     myElementsToMove = elements;
     myNewParent = newParent;
@@ -111,8 +111,8 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
       return;
     }
     if (element instanceof PsiFile) {
-      final List<UsageInfo> usages = MoveFileHandler.forElement((PsiFile)element)
-        .findUsages(((PsiFile)element), myNewParent, mySearchInComments, mySearchInNonJavaFiles);
+      final List<UsageInfo> usages =
+              MoveFileHandler.forElement((PsiFile)element).findUsages(((PsiFile)element), myNewParent, mySearchInComments, mySearchInNonJavaFiles);
       if (usages != null) {
         result.addAll(usages);
         myFoundUsages.put((PsiFile)element, usages);
@@ -183,6 +183,11 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
         }
       });
 
+      // sort by offset descending to process correctly several usages in one PsiElement [IDEADEV-33013]
+      CommonRefactoringUtil.sortDepthFirstRightLeftOrder(usages);
+
+      DumbService.getInstance(myProject).completeJustSubmittedTasks();
+
       // fix references in moved files to outer files
       for (PsiFile movedFile : movedFiles) {
         MoveFileHandler.forElement(movedFile).updateMovedFile(movedFile);
@@ -203,13 +208,12 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
       final int index = message != null ? message.indexOf("java.io.IOException") : -1;
       if (index >= 0) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
-              @Override
-              public void run() {
-                Messages.showMessageDialog(myProject, message.substring(index + "java.io.IOException".length()),
-                                           RefactoringBundle.message("error.title"),
-                                           Messages.getErrorIcon());
-              }
-            });
+          @Override
+          public void run() {
+            Messages.showMessageDialog(myProject, message.substring(index + "java.io.IOException".length()), RefactoringBundle.message("error.title"),
+                                       Messages.getErrorIcon());
+          }
+        });
       }
       else {
         LOG.error(e);
@@ -252,7 +256,8 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
         if (refElement != null && refElement.isValid()) {
           info.myReference.bindToElement(element);
         }
-      } else if (usageInfo instanceof NonCodeUsageInfo) {
+      }
+      else if (usageInfo instanceof NonCodeUsageInfo) {
         nonCodeUsages.add((NonCodeUsageInfo)usageInfo);
       }
     }

@@ -26,6 +26,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
@@ -49,10 +50,10 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import consulo.psi.PsiDirectoryMethodProxy;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.psi.PsiDirectoryMethodProxy;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -407,6 +408,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         copyVFile = VfsUtilCore.copyFile(this, vFile, parent, newName);
       }
       LOG.assertTrue(copyVFile != null, "File was not copied: " + vFile);
+      DumbService.getInstance(getProject()).completeJustSubmittedTasks();
       final PsiFile copyPsi = myManager.findFile(copyVFile);
       if (copyPsi == null) {
         LOG.error("Could not find file '" + copyVFile + "' after copying '" + vFile + "'");
@@ -415,7 +417,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
       return copyPsi;
     }
     catch (IOException e) {
-      throw new IncorrectOperationException(e.toString(), e);
+      throw new IncorrectOperationException(e);
     }
   }
 

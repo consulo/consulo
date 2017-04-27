@@ -55,7 +55,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
                                      @Nullable final List<Pair<HighlightInfo.IntentionActionDescriptor, TextRange>> intentions,
                                      @NotNull final Project project,
                                      @NotNull final PsiFile psiFile,
-                                     @NotNull final Editor editor) {
+                                     @NotNull final Editor editor, @Nullable String tooltip) {
     super(getColor(project, severity));
     myProject = project;
 
@@ -70,17 +70,15 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
           continue;
         }
         final String text = action.getText();
-        createActionLabel(text, new Runnable() {
-          @Override
-          public void run() {
-            PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-            ShowIntentionActionsHandler.chooseActionAndInvoke(psiFile, editor, action, text);
-          }
+        createActionLabel(text, () -> {
+          PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+          ShowIntentionActionsHandler.chooseActionAndInvoke(psiFile, editor, action, text);
         });
       }
     }
 
     myLabel.setText(description);
+    myLabel.setToolTipText(tooltip);
     if (gutterMark != null) {
       myLabel.setIcon(gutterMark.getIcon());
     }
@@ -108,7 +106,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
   }
 
   @NotNull
-  private static Color getColor(@Nullable Project project, @NotNull HighlightSeverity severity) {
+  private static Color getColor(@NotNull Project project, @NotNull HighlightSeverity severity) {
     if (SeverityRegistrar.getSeverityRegistrar(project).compare(severity, HighlightSeverity.ERROR) >= 0) {
       return LightColors.RED;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.application.ex;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -30,16 +31,9 @@ import java.util.concurrent.*;
 public class ApplicationUtil {
   // throws exception if can't grab read action right now
   public static <T> T tryRunReadAction(@NotNull final Computable<T> computable) throws CannotRunReadActionException {
-    final Ref<T> result = new Ref<T>();
-    if (((ApplicationEx)ApplicationManager.getApplication()).tryRunReadAction(new Runnable() {
-      @Override
-      public void run() {
-        result.set(computable.compute());
-      }
-    })) {
-      return result.get();
-    }
-    throw new CannotRunReadActionException();
+    final Ref<T> result = new Ref<>();
+    tryRunReadAction(() -> result.set(computable.compute()));
+    return result.get();
   }
 
   public static void tryRunReadAction(@NotNull final Runnable computable) throws CannotRunReadActionException {
@@ -52,36 +46,18 @@ public class ApplicationUtil {
    * Allows to interrupt a process which does not performs checkCancelled() calls by itself.
    * Note that the process may continue to run in background indefinitely - so <b>avoid using this method unless absolutely needed</b>.
    */
-  public static <T> T runWithCheckCanceled(@NotNull final Callable<T> callable,
-                                           @NotNull final ProgressIndicator indicator) throws Exception {
-    return runWithCheckCanceled(callable, indicator, PooledThreadExecutor.INSTANCE);
-  }
-
-  /**
-   * Allows to interrupt a process which does not performs checkCancelled() calls by itself.
-   * Note that the process may continue to run in background indefinitely - so <b>avoid using this method unless absolutely needed</b>.
-   */
-  public static <T> T runWithCheckCanceled(@NotNull final Callable<T> callable,
-                                           @NotNull final ProgressIndicator indicator, @NotNull ExecutorService executorService) throws Exception {
+  public static <T> T runWithCheckCanceled(@NotNull final Callable<T> callable, @NotNull final ProgressIndicator indicator) throws Exception {
     final Ref<T> result = Ref.create();
     final Ref<Throwable> error = Ref.create();
 
-    Future<?> future = executorService.submit(new Runnable() {
-      @Override
-      public void run() {
-        ProgressManager.getInstance().executeProcessUnderProgress(new Runnable() {
-          @Override
-          public void run() {
-            try {
-              result.set(callable.call());
-            }
-            catch (Throwable t) {
-              error.set(t);
-            }
-          }
-        }, indicator);
+    Future<?> future = PooledThreadExecutor.INSTANCE.submit(() -> ProgressManager.getInstance().executeProcessUnderProgress(() -> {
+      try {
+        result.set(callable.call());
       }
-    });
+      catch (Throwable t) {
+        error.set(t);
+      }
+    }, indicator));
 
     while (true) {
       try {
@@ -101,11 +77,16 @@ public class ApplicationUtil {
     }
   }
 
-  public static class CannotRunReadActionException extends RuntimeException {
-    @SuppressWarnings({"NullableProblems", "NonSynchronizedMethodOverridesSynchronizedMethod"})
-    @Override
-    public Throwable fillInStackTrace() {
-      return this;
+  public static void showDialogAfterWriteAction(@NotNull Runnable runnable) {
+    Application application = ApplicationManager.getApplication();
+    if (application.isWriteAccessAllowed()) {
+      application.invokeLater(runnable);
     }
+    else {
+      runnable.run();
+    }
+  }
+
+  public static class CannotRunReadActionException extends ProcessCanceledException {
   }
 }

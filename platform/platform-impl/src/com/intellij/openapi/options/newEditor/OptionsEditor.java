@@ -24,7 +24,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -431,20 +430,15 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       Runnable action = new Runnable() {
         @Override
         public void run() {
-          app.runReadAction(new Runnable() {
+          UIUtil.invokeAndWaitIfNeeded(new Runnable() {
             @Override
             public void run() {
-              ((ApplicationEx)app).runEdtSafeAction(new Runnable() {
-                @Override
-                public void run() {
-                  if (myProject.isDisposed()) {
-                    result.setRejected();
-                  }
-                  else {
-                    initConfigurable(configurable).notifyWhenDone(result);
-                  }
-                }
-              });
+              if (myProject.isDisposed()) {
+                result.setRejected();
+              }
+              else {
+                initConfigurable(configurable).notifyWhenDone(result);
+              }
             }
           });
         }

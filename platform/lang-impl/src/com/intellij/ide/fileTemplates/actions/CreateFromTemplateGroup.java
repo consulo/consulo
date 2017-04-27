@@ -63,7 +63,9 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
   @NotNull
   @RequiredDispatchThread
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    if (e == null) return EMPTY_ARRAY;
+    Project project = e.getProject();
+    if (project == null || project.isDisposed()) return EMPTY_ARRAY;
     FileTemplateManager manager = FileTemplateManager.getInstance(project);
     FileTemplate[] templates = manager.getAllTemplates();
 

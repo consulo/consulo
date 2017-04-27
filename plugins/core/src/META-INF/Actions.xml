@@ -751,8 +751,10 @@
     </group>
 
     <group id="EditorContextBarMenu">
+      <action id="EditorToggleUseSoftWrapsInPreview" class="com.intellij.openapi.editor.actions.ToggleUseSoftWrapsInPreviewAction"
+              icon="AllIcons.Actions.ToggleSoftWrap"/>
+      <separator/>
     </group>
-
     <action id="Rerun" class="com.intellij.execution.runners.FakeRerunAction" text="Rerun"/>
 
     <action id="IncrementWindowWidth" class="com.intellij.ide.actions.WindowAction$IncrementWidth" use-shortcut-of="ResizeToolWindowRight"/>

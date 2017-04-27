@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ public class LaterInvocator {
 
   private static final Stack<ModalityState> ourModalityStack = new Stack<>(ModalityState.NON_MODAL);
   private static final List<RunnableInfo> ourQueue = new ArrayList<>(); //protected by LOCK
-  private static volatile int ourQueueSkipCount; // optimization
+  private static volatile int ourQueueSkipCount; // optimization: should look for next events starting from this index
   private static final FlushQueue ourFlushQueueRunnable = new FlushQueue();
 
   private static final EventDispatcher<ModalityStateListener> ourModalityStateMulticaster = EventDispatcher.create(ModalityStateListener.class);
@@ -142,6 +142,7 @@ public class LaterInvocator {
 
   @NotNull
   static ActionCallback invokeLater(@NotNull Runnable runnable, @NotNull ModalityState modalityState, @NotNull Condition<?> expired) {
+    if (expired.value(null)) return ActionCallback.REJECTED;
     final ActionCallback callback = new ActionCallback();
     RunnableInfo runnableInfo = new RunnableInfo(runnable, modalityState, expired, callback);
     synchronized (LOCK) {
@@ -430,6 +431,23 @@ public class LaterInvocator {
   public static List<RunnableInfo> getLaterInvocatorQueue() {
     synchronized (LOCK) {
       return ContainerUtil.newArrayList(ourQueue);
+    }
+  }
+
+  public static void purgeExpiredItems() {
+    synchronized (LOCK) {
+      boolean removed = false;
+      for (int i = ourQueue.size() - 1; i >= 0; i--) {
+        RunnableInfo info = ourQueue.get(i);
+        if (info.expired.value(null)) {
+          ourQueue.remove(i);
+          info.callback.setDone();
+          removed = true;
+        }
+      }
+      if (removed) {
+        ourQueueSkipCount = 0;
+      }
     }
   }
 }

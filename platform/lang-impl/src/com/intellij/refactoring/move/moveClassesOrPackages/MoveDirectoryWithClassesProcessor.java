@@ -21,6 +21,7 @@
 package com.intellij.refactoring.move.moveClassesOrPackages;
 
 import com.intellij.CommonBundle;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Ref;
@@ -143,6 +144,8 @@ public class MoveDirectoryWithClassesProcessor extends BaseRefactoringProcessor 
       for (PsiFile psiFile : myFilesToMove.keySet()) {
         myFilesToMove.get(psiFile).findOrCreateTargetDirectory();
       }
+
+      DumbService.getInstance(myProject).completeJustSubmittedTasks();
     }
     catch (IncorrectOperationException e) {
       Messages.showErrorDialog(myProject, e.getMessage(), CommonBundle.getErrorTitle());

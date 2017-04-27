@@ -21,6 +21,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.project.NoAccessDuringPsiEvents;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Computable;
@@ -32,9 +33,9 @@ import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.*;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 import java.io.IOException;
 import java.util.List;
@@ -84,7 +85,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
   @Override
   @Nullable
   public ObjectStubTree readFromVFile(Project project, final VirtualFile vFile) {
-    if (DumbService.getInstance(project).isDumb()) {
+    if (DumbService.getInstance(project).isDumb() || NoAccessDuringPsiEvents.isInsideEventProcessing()) {
       return null;
     }
 
