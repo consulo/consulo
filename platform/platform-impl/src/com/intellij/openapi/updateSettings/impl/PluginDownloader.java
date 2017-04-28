@@ -148,6 +148,8 @@ public class PluginDownloader {
               FileUtil.createDirectory(targetFile);
             }
             else if (tempEntry.isSymbolicLink()) {
+              FileUtil.createParentDirs(targetFile);
+
               Files.createSymbolicLink(targetFile.toPath(), Paths.get(tempEntry.getLinkName()));
             }
             else {
