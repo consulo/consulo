@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -51,6 +52,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author max
  */
 public class UsageViewManagerImpl extends UsageViewManager {
+  private static final Logger LOG = Logger.getInstance(UsageViewManagerImpl.class);
   private final Project myProject;
   private static final Key<UsageView> USAGE_VIEW_KEY = Key.create("USAGE_VIEW");
 
@@ -79,6 +81,11 @@ public class UsageViewManagerImpl extends UsageViewManager {
     UsageView usageView = createUsageView(searchedFor, foundUsages, presentation, factory);
     addContent((UsageViewImpl)usageView, presentation);
     showToolWindow(true);
+    UIUtil.invokeLaterIfNeeded(() -> {
+      if (!((UsageViewImpl)usageView).isDisposed()) {
+        ((UsageViewImpl)usageView).expandRoot();
+      }
+    });
     return usageView;
   }
 
@@ -89,15 +96,9 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   void addContent(@NotNull UsageViewImpl usageView, @NotNull UsageViewPresentation presentation) {
-    Content content = com.intellij.usageView.UsageViewManager.getInstance(myProject).addContent(
-            presentation.getTabText(),
-            presentation.getTabName(),
-            presentation.getToolwindowTitle(),
-            true,
-            usageView.getComponent(),
-            presentation.isOpenInNewTab(),
-            true
-    );
+    Content content = com.intellij.usageView.UsageViewManager.getInstance(myProject)
+            .addContent(presentation.getTabText(), presentation.getTabName(), presentation.getToolwindowTitle(), true, usageView.getComponent(),
+                        presentation.isOpenInNewTab(), true);
     usageView.setContent(content);
     content.putUserData(USAGE_VIEW_KEY, usageView);
   }
@@ -122,8 +123,8 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                     @NotNull final FindUsagesProcessPresentation processPresentation,
                                     @Nullable final UsageViewStateListener listener) {
     final SearchScope searchScopeToWarnOfFallingOutOf = getMaxSearchScopeToWarnOfFallingOutOf(searchFor);
-    final AtomicReference<UsageViewImpl> usageViewRef = new AtomicReference<UsageViewImpl>();
-
+    final AtomicReference<UsageViewImpl> usageViewRef = new AtomicReference<>();
+    long start = System.currentTimeMillis();
     Task.Backgroundable task = new Task.Backgroundable(myProject, getProgressTitle(presentation), true, new SearchInBackgroundOption()) {
       @Override
       public void run(@NotNull final ProgressIndicator indicator) {
@@ -131,10 +132,13 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                     processPresentation, searchScopeToWarnOfFallingOutOf, listener).run();
       }
 
+      @NotNull
       @Override
-      @Nullable
       public NotificationInfo getNotificationInfo() {
-        String notification = usageViewRef.get() != null ? usageViewRef.get().getUsagesCount() + " Usage(s) Found" : "No Usages Found";
+        UsageViewImpl usageView = usageViewRef.get();
+        int count = usageView == null ? 0 : usageView.getUsagesCount();
+        String notification = StringUtil.capitalizeWords(UsageViewBundle.message("usages.n", count), true);
+        LOG.debug(notification + " in " + (System.currentTimeMillis() - start) + "ms.");
         return new NotificationInfo("Find Usages", "Find Usages Finished", notification);
       }
     };
@@ -144,7 +148,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   @NotNull
   SearchScope getMaxSearchScopeToWarnOfFallingOutOf(@NotNull UsageTarget[] searchFor) {
-    UsageTarget target = searchFor[0];
+    UsageTarget target = searchFor.length > 0 ? searchFor[0] : null;
     if (target instanceof TypeSafeDataProvider) {
       final SearchScope[] scope = new SearchScope[1];
       ((TypeSafeDataProvider)target).calcData(UsageView.USAGE_SCOPE, new DataSink() {
@@ -192,13 +196,10 @@ public class UsageViewManagerImpl extends UsageViewManager {
     }
   }
 
-  private static void appendUsages(@NotNull final Usage[] foundUsages, @NotNull final UsageViewImpl usageView) {
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
-      public void run() {
-        for (Usage foundUsage : foundUsages) {
-          usageView.appendUsage(foundUsage);
-        }
+  protected static void appendUsages(@NotNull final Usage[] foundUsages, @NotNull final UsageViewImpl usageView) {
+    ApplicationManager.getApplication().runReadAction(() -> {
+      for (Usage foundUsage : foundUsages) {
+        usageView.appendUsage(foundUsage);
       }
     });
   }
@@ -210,31 +211,26 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                               @NotNull final UsageViewPresentation presentation,
                                               final int usageCount,
                                               @Nullable final UsageViewImpl usageView) {
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        if (usageView != null && usageView.searchHasBeenCancelled() || indicator.isCanceled()) return;
-        String message = UsageViewBundle.message("find.excessive.usage.count.prompt", usageCount, StringUtil.pluralize(presentation.getUsagesWord()));
-        UsageLimitUtil.Result ret = UsageLimitUtil.showTooManyUsagesWarning(project, message, presentation);
-        if (ret == UsageLimitUtil.Result.ABORT) {
-          if (usageView != null) {
-            usageView.cancelCurrentSearch();
-          }
-          indicator.cancel();
+    UIUtil.invokeLaterIfNeeded(() -> {
+      if (usageView != null && usageView.searchHasBeenCancelled() || indicator.isCanceled()) return;
+      int shownUsageCount = usageView == null ? usageCount : usageView.getRoot().getRecursiveUsageCount();
+      String message = UsageViewBundle.message("find.excessive.usage.count.prompt", shownUsageCount, StringUtil.pluralize(presentation.getUsagesWord()));
+      UsageLimitUtil.Result ret = UsageLimitUtil.showTooManyUsagesWarning(project, message, presentation);
+      if (ret == UsageLimitUtil.Result.ABORT) {
+        if (usageView != null) {
+          usageView.cancelCurrentSearch();
         }
-        tooManyUsagesStatus.userResponded();
+        indicator.cancel();
       }
+      tooManyUsagesStatus.userResponded();
     });
   }
 
   public static long getFileLength(@NotNull final VirtualFile virtualFile) {
     final long[] length = {-1L};
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
-      public void run() {
-        if (!virtualFile.isValid()) return;
-        length[0] = virtualFile.getLength();
-      }
+    ApplicationManager.getApplication().runReadAction(() -> {
+      if (!virtualFile.isValid()) return;
+      length[0] = virtualFile.getLength();
     });
     return length[0];
   }
@@ -247,35 +243,26 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   public static boolean isInScope(@NotNull Usage usage, @NotNull SearchScope searchScope) {
     PsiElement element = null;
-    VirtualFile file = usage instanceof UsageInFile ? ((UsageInFile)usage).getFile() :
-                       usage instanceof PsiElementUsage ? PsiUtilCore.getVirtualFile(element = ((PsiElementUsage)usage).getElement()) : null;
+    VirtualFile file = usage instanceof UsageInFile
+                       ? ((UsageInFile)usage).getFile()
+                       : usage instanceof PsiElementUsage ? PsiUtilCore.getVirtualFile(element = ((PsiElementUsage)usage).getElement()) : null;
     if (file != null) {
       return isFileInScope(file, searchScope);
     }
-    else if(element != null) {
-      return searchScope instanceof EverythingGlobalScope ||
-             searchScope instanceof ProjectScopeImpl ||
-             searchScope instanceof ProjectAndLibrariesScope;
-    }
-    return false;
+    return element != null &&
+           (searchScope instanceof EverythingGlobalScope || searchScope instanceof ProjectScopeImpl || searchScope instanceof ProjectAndLibrariesScope);
   }
 
   private static boolean isFileInScope(@NotNull VirtualFile file, @NotNull SearchScope searchScope) {
     if (file instanceof VirtualFileWindow) {
       file = ((VirtualFileWindow)file).getDelegate();
     }
-    if (searchScope instanceof LocalSearchScope) {
-      return ((LocalSearchScope)searchScope).isInScope(file);
-    }
-    else {
-      return ((GlobalSearchScope)searchScope).contains(file);
-    }
+    return searchScope.contains(file);
   }
 
   @NotNull
   public static String outOfScopeMessage(int nUsages, @NotNull SearchScope searchScope) {
-    return (nUsages == 1 ? "One usage is" : nUsages + " usages are") +
-           " out of scope '"+ searchScope.getDisplayName()+"'";
+    return (nUsages == 1 ? "One usage is" : nUsages + " usages are") + " out of scope '" + searchScope.getDisplayName() + "'";
   }
 
 }

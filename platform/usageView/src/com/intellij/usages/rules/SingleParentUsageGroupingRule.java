@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,15 +25,26 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * @deprecated override {@link UsageGroupingRule#getParentGroupsFor(Usage, UsageTarget[])} instead.
+ * @author nik
  */
-public interface UsageGroupingRuleEx extends UsageGroupingRule {
+public abstract class SingleParentUsageGroupingRule implements UsageGroupingRule {
+  /**
+   * @return a group a specific usage should be placed into, or null, if this rule doesn't apply to this kind of usages.
+   */
   @Nullable
-  UsageGroup groupUsage(@NotNull Usage usage, @NotNull UsageTarget[] targets);
+  protected abstract UsageGroup getParentGroupFor(@NotNull Usage usage, @NotNull UsageTarget[] targets);
 
   @NotNull
   @Override
-  default List<UsageGroup> getParentGroupsFor(@NotNull Usage usage, @NotNull UsageTarget[] targets) {
-    return ContainerUtil.createMaybeSingletonList(groupUsage(usage, targets));
+  public final List<UsageGroup> getParentGroupsFor(@NotNull Usage usage, @NotNull UsageTarget[] targets) {
+    return ContainerUtil.createMaybeSingletonList(getParentGroupFor(usage, targets));
+  }
+
+  /**
+   * @deprecated override {@link #getParentGroupFor(Usage, UsageTarget[])} instead
+   */
+  @Override
+  public UsageGroup groupUsage(@NotNull Usage usage) {
+    return getParentGroupFor(usage, UsageTarget.EMPTY_ARRAY);
   }
 }

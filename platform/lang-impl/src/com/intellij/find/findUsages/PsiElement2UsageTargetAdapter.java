@@ -62,7 +62,8 @@ import java.util.Collection;
 public class PsiElement2UsageTargetAdapter
         implements PsiElementUsageTarget, TypeSafeDataProvider, PsiElementNavigationItem, ItemPresentation, ConfigurableUsageTarget {
   private final SmartPsiElementPointer myPointer;
-  @NotNull protected final FindUsagesOptions myOptions;
+  @NotNull
+  protected final FindUsagesOptions myOptions;
 
   public PsiElement2UsageTargetAdapter(@NotNull PsiElement element, @NotNull FindUsagesOptions options) {
     myOptions = options;
@@ -151,12 +152,10 @@ public class PsiElement2UsageTargetAdapter
     // in case of injected file, use host file to highlight all occurrences of the target in each injected file
     PsiFile context = InjectedLanguageManager.getInstance(project).getTopLevelFile(file);
     SearchScope searchScope = new LocalSearchScope(context);
-    Collection<PsiReference> refs = handler == null
-                                    ? ReferencesSearch.search(target, searchScope, false).findAll()
-                                    : handler.findReferencesToHighlight(target, searchScope);
+    Collection<PsiReference> refs =
+            handler == null ? ReferencesSearch.search(target, searchScope, false).findAll() : handler.findReferencesToHighlight(target, searchScope);
 
-    new HighlightUsagesHandler.DoHighlightRunnable(new ArrayList<PsiReference>(refs), project, target,
-                                                   editor, context, clearHighlights).run();
+    new HighlightUsagesHandler.DoHighlightRunnable(new ArrayList<>(refs), project, target, editor, context, clearHighlights).run();
   }
 
   @Override
@@ -190,6 +189,16 @@ public class PsiElement2UsageTargetAdapter
     return targets;
   }
 
+  @NotNull
+  public static PsiElement[] convertToPsiElements(PsiElement2UsageTargetAdapter[] adapters) {
+    PsiElement[] targets = new PsiElement[adapters.length];
+    for (int i = 0; i < targets.length; i++) {
+      targets[i] = adapters[i].getElement();
+    }
+
+    return targets;
+  }
+
   @Override
   public void calcData(final DataKey key, final DataSink sink) {
     if (key == UsageView.USAGE_INFO_KEY) {
@@ -215,11 +224,10 @@ public class PsiElement2UsageTargetAdapter
     String scopeString = searchScope.getDisplayName();
     PsiElement psiElement = getElement();
 
-    return psiElement == null ? UsageViewBundle.message("node.invalid") :
-           FindBundle.message("recent.find.usages.action.popup", StringUtil.capitalize(UsageViewUtil.getType(psiElement)),
-                              DescriptiveNameUtil.getDescriptiveName(psiElement),
-                              scopeString
-           );
+    return psiElement == null
+           ? UsageViewBundle.message("node.invalid")
+           : FindBundle.message("recent.find.usages.action.popup", StringUtil.capitalize(UsageViewUtil.getType(psiElement)),
+                                DescriptiveNameUtil.getDescriptiveName(psiElement), scopeString);
   }
 
   @Override

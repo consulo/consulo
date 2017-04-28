@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 package com.intellij.psi.search;
 
 import com.intellij.codeInsight.ContainerProvider;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;
@@ -28,6 +27,8 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,17 +51,16 @@ public class SearchRequestCollector {
   }
 
   public void searchWord(@NotNull String word, @NotNull SearchScope searchScope, boolean caseSensitive, @NotNull PsiElement searchTarget) {
-    final short searchContext = (short)(UsageSearchContext.IN_CODE | UsageSearchContext.IN_FOREIGN_LANGUAGES | UsageSearchContext.IN_COMMENTS
-                                        | (searchTarget instanceof PsiFileSystemItem ? UsageSearchContext.IN_STRINGS : 0));
+    final short searchContext = (short)(UsageSearchContext.IN_CODE |
+                                        UsageSearchContext.IN_FOREIGN_LANGUAGES |
+                                        UsageSearchContext.IN_COMMENTS |
+                                        (searchTarget instanceof PsiFileSystemItem ? UsageSearchContext.IN_STRINGS : 0));
     searchWord(word, searchScope, searchContext, caseSensitive, searchTarget);
   }
 
-  public void searchWord(@NotNull String word,
-                         @NotNull SearchScope searchScope,
-                         short searchContext,
-                         boolean caseSensitive,
-                         @NotNull PsiElement searchTarget) {
-    searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), new SingleTargetRequestResultProcessor(searchTarget));
+  public void searchWord(@NotNull String word, @NotNull SearchScope searchScope, short searchContext, boolean caseSensitive, @NotNull PsiElement searchTarget) {
+    searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), new SingleTargetRequestResultProcessor(searchTarget),
+               searchTarget);
   }
 
   private void searchWord(@NotNull String word,
@@ -68,29 +68,30 @@ public class SearchRequestCollector {
                           short searchContext,
                           boolean caseSensitive,
                           String containerName,
-                          @NotNull RequestResultProcessor processor) {
+                          @NotNull RequestResultProcessor processor,
+                          PsiElement searchTarget) {
     if (!makesSenseToSearch(word, searchScope)) return;
+
+    Collection<PsiSearchRequest> requests =
+            Collections.singleton(new PsiSearchRequest(searchScope, word, searchContext, caseSensitive, containerName, processor));
     synchronized (lock) {
-      PsiSearchRequest request = new PsiSearchRequest(searchScope, word, searchContext, caseSensitive, containerName, processor);
-      myWordRequests.add(request);
+      myWordRequests.addAll(requests);
     }
   }
+
   public void searchWord(@NotNull String word,
                          @NotNull SearchScope searchScope,
                          short searchContext,
                          boolean caseSensitive,
                          @NotNull PsiElement searchTarget,
                          @NotNull RequestResultProcessor processor) {
-    searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), processor);
+    searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), processor, searchTarget);
   }
 
   private static String getContainerName(@NotNull final PsiElement target) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-      @Override
-      public String compute() {
-        PsiElement container = getContainer(target);
-        return container instanceof PsiNamedElement ? ((PsiNamedElement)container).getName() : null;
-      }
+    return ReadAction.compute(() -> {
+      PsiElement container = getContainer(target);
+      return container instanceof PsiNamedElement ? ((PsiNamedElement)container).getName() : null;
     });
   }
 
@@ -99,29 +100,30 @@ public class SearchRequestCollector {
       final PsiElement container = provider.getContainer(refElement);
       if (container != null) return container;
     }
-    return refElement.getParent();
+    // it's assumed that in the general case of unknown language the .getParent() will lead to reparse,
+    // (all these Javascript stubbed methods under non-stubbed block statements under stubbed classes - meh)
+    // so just return null instead of refElement.getParent() here to avoid making things worse.
+    return null;
   }
 
-  @Deprecated
-  /** use {@link #searchWord(java.lang.String, com.intellij.psi.search.SearchScope, short, boolean, com.intellij.psi.PsiElement)}
+  /**
+   * use {@link #searchWord(String, SearchScope, short, boolean, PsiElement)}
    * instead
    */
+  @Deprecated
   public void searchWord(@NotNull String word,
                          @NotNull SearchScope searchScope,
                          short searchContext,
                          boolean caseSensitive,
                          @NotNull RequestResultProcessor processor) {
-    searchWord(word, searchScope, searchContext, caseSensitive, (String)null, processor);
+    searchWord(word, searchScope, searchContext, caseSensitive, null, processor, null);
   }
 
   private static boolean makesSenseToSearch(@NotNull String word, @NotNull SearchScope searchScope) {
     if (searchScope instanceof LocalSearchScope && ((LocalSearchScope)searchScope).getScope().length == 0) {
       return false;
     }
-    if (searchScope == GlobalSearchScope.EMPTY_SCOPE) {
-      return false;
-    }
-    return !StringUtil.isEmpty(word);
+    return searchScope != GlobalSearchScope.EMPTY_SCOPE && !StringUtil.isEmpty(word);
   }
 
   public void searchQuery(@NotNull QuerySearchRequest request) {
@@ -146,7 +148,7 @@ public class SearchRequestCollector {
   @NotNull
   private <T> List<T> takeRequests(@NotNull List<T> list) {
     synchronized (lock) {
-      final List<T> requests = new ArrayList<T>(list);
+      final List<T> requests = new ArrayList<>(list);
       list.clear();
       return requests;
     }

@@ -18,11 +18,14 @@ package com.intellij.testFramework;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.text.StringTokenizer;
+import com.intellij.util.ui.UIUtil;
 import junit.framework.Assert;
 
 import java.io.File;
@@ -49,10 +52,7 @@ public class VfsTestUtil {
     return createFileOrDir(root, relativePath, "", true);
   }
 
-  private static VirtualFile createFileOrDir(final VirtualFile root,
-                                            final String relativePath,
-                                            final String text,
-                                            final boolean dir) {
+  private static VirtualFile createFileOrDir(final VirtualFile root, final String relativePath, final String text, final boolean dir) {
     try {
       AccessToken token = WriteAction.start();
       try {
@@ -107,5 +107,19 @@ public class VfsTestUtil {
     catch (IOException e) {
       throw new AssertionError(e);
     }
+  }
+
+  public static void deleteFile(VirtualFile virtualFile) {
+    Ref<Exception> exceptionRef = Ref.create();
+    UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+      try {
+        WriteAction.run(() -> virtualFile.delete(null));
+      }
+      catch (IOException e) {
+        exceptionRef.set(e);
+      }
+    });
+
+    ExceptionUtil.rethrowAllAsUnchecked(exceptionRef.get());
   }
 }

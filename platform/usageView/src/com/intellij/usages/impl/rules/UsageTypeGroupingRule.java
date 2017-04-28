@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,11 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.usages.*;
 import com.intellij.usages.rules.PsiElementUsage;
-import com.intellij.usages.rules.UsageGroupingRuleEx;
+import com.intellij.usages.rules.SingleParentUsageGroupingRule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,18 +32,20 @@ import javax.swing.*;
 /**
  * @author max
  */
-public class UsageTypeGroupingRule implements UsageGroupingRuleEx {
+public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
+  @Nullable
   @Override
-  public UsageGroup groupUsage(@NotNull Usage usage) {
-    return groupUsage(usage, UsageTarget.EMPTY_ARRAY);
-  }
-
-  @Override
-  public UsageGroup groupUsage(@NotNull Usage usage, @NotNull UsageTarget[] targets) {
+  protected UsageGroup getParentGroupFor(@NotNull Usage usage, @NotNull UsageTarget[] targets) {
     if (usage instanceof PsiElementUsage) {
       PsiElementUsage elementUsage = (PsiElementUsage)usage;
 
-      UsageType usageType = getUsageType(elementUsage.getElement(), targets);
+      PsiElement element = elementUsage.getElement();
+      UsageType usageType = getUsageType(element, targets);
+
+      if (usageType == null && element instanceof PsiFile && elementUsage instanceof UsageInfo2UsageAdapter) {
+        usageType = ((UsageInfo2UsageAdapter)elementUsage).getUsageType();
+      }
+
       if (usageType != null) return new UsageTypeGroup(usageType);
 
       if (usage instanceof ReadWriteAccessUsage) {
@@ -54,7 +57,6 @@ public class UsageTypeGroupingRule implements UsageGroupingRuleEx {
       return new UsageTypeGroup(UsageType.UNCLASSIFIED);
     }
 
-
     return null;
   }
 
@@ -62,15 +64,13 @@ public class UsageTypeGroupingRule implements UsageGroupingRuleEx {
   private static UsageType getUsageType(PsiElement element, @NotNull UsageTarget[] targets) {
     if (element == null) return null;
 
-    if (PsiTreeUtil.getParentOfType(element, PsiComment.class, false) != null) {
-      return UsageType.COMMENT_USAGE;
-    }
+    if (PsiTreeUtil.getParentOfType(element, PsiComment.class, false) != null) { return UsageType.COMMENT_USAGE; }
 
     UsageTypeProvider[] providers = Extensions.getExtensions(UsageTypeProvider.EP_NAME);
-    for (UsageTypeProvider provider : providers) {
+    for(UsageTypeProvider provider: providers) {
       UsageType usageType;
       if (provider instanceof UsageTypeProviderEx) {
-        usageType = ((UsageTypeProviderEx)provider).getUsageType(element, targets);
+        usageType = ((UsageTypeProviderEx) provider).getUsageType(element, targets);
       }
       else {
         usageType = provider.getUsageType(element);
@@ -83,7 +83,7 @@ public class UsageTypeGroupingRule implements UsageGroupingRuleEx {
     return null;
   }
 
-  private class UsageTypeGroup implements UsageGroup {
+  private static class UsageTypeGroup implements UsageGroup {
     private final UsageType myUsageType;
 
     private UsageTypeGroup(@NotNull UsageType usageType) {
@@ -101,7 +101,7 @@ public class UsageTypeGroupingRule implements UsageGroupingRuleEx {
 
     @Override
     @NotNull
-    public String getText(UsageView view) {
+    public String getText(@Nullable UsageView view) {
       return view == null ? myUsageType.toString() : myUsageType.toString(view.getPresentation());
     }
 
@@ -111,18 +111,11 @@ public class UsageTypeGroupingRule implements UsageGroupingRuleEx {
     }
 
     @Override
-    public boolean isValid() {
-      return true;
-    }
-
+    public boolean isValid() { return true; }
     @Override
-    public void navigate(boolean focus) {
-    }
-
+    public void navigate(boolean focus) { }
     @Override
-    public boolean canNavigate() {
-      return false;
-    }
+    public boolean canNavigate() { return false; }
 
     @Override
     public boolean canNavigateToSource() {
@@ -138,12 +131,16 @@ public class UsageTypeGroupingRule implements UsageGroupingRuleEx {
       if (this == o) return true;
       if (!(o instanceof UsageTypeGroup)) return false;
       final UsageTypeGroup usageTypeGroup = (UsageTypeGroup)o;
-      if (!myUsageType.equals(usageTypeGroup.myUsageType)) return false;
-      return true;
+      return myUsageType.equals(usageTypeGroup.myUsageType);
     }
 
     public int hashCode() {
       return myUsageType.hashCode();
+    }
+
+    @Override
+    public String toString() {
+      return "Type:" + myUsageType.toString(new UsageViewPresentation());
     }
   }
 }

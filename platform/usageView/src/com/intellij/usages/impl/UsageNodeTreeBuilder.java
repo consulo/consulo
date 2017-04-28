@@ -21,12 +21,12 @@ import com.intellij.usages.Usage;
 import com.intellij.usages.UsageGroup;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.rules.UsageFilteringRule;
-import com.intellij.usages.rules.UsageFilteringRuleEx;
 import com.intellij.usages.rules.UsageGroupingRule;
-import com.intellij.usages.rules.UsageGroupingRuleEx;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author max
@@ -59,44 +59,25 @@ class UsageNodeTreeBuilder {
   }
 
   public boolean isVisible(@NotNull Usage usage) {
-    for (final UsageFilteringRule rule : myFilteringRules) {
-      final boolean visible;
-      if (rule instanceof UsageFilteringRuleEx) {
-        visible = ((UsageFilteringRuleEx) rule).isVisible(usage, myTargets);
-      }
-      else {
-        visible = rule.isVisible(usage);
-      }
-      if (!visible) {
-        return false;
-      }
-    }
-    return true;
+    return Arrays.stream(myFilteringRules).allMatch(rule -> rule.isVisible(usage, myTargets));
   }
 
-  @Nullable
-  UsageNode appendUsage(@NotNull Usage usage, @NotNull Consumer<Runnable> edtQueue) {
+  UsageNode appendUsage(@NotNull Usage usage, @NotNull Consumer<Node> edtInsertedUnderQueue, boolean filterDuplicateLines) {
     if (!isVisible(usage)) return null;
 
     final boolean dumb = DumbService.isDumb(myProject);
 
-    GroupNode lastGroupNode = myRoot;
+    GroupNode groupNode = myRoot;
     for (int i = 0; i < myGroupingRules.length; i++) {
-      final UsageGroupingRule rule = myGroupingRules[i];
+      UsageGroupingRule rule = myGroupingRules[i];
       if (dumb && !DumbService.isDumbAware(rule)) continue;
 
-      final UsageGroup group;
-      if (rule instanceof UsageGroupingRuleEx) {
-        group = ((UsageGroupingRuleEx) rule).groupUsage(usage, myTargets);
-      }
-      else {
-        group = rule.groupUsage(usage);
-      }
-      if (group != null) {
-        lastGroupNode = lastGroupNode.addGroup(group, i, edtQueue);
+      List<UsageGroup> groups = rule.getParentGroupsFor(usage, myTargets);
+      for (UsageGroup group : groups) {
+        groupNode = groupNode.addOrGetGroup(group, i, edtInsertedUnderQueue);
       }
     }
 
-    return lastGroupNode.addUsage(usage, edtQueue);
+    return groupNode.addUsage(usage, edtInsertedUnderQueue, filterDuplicateLines);
   }
 }

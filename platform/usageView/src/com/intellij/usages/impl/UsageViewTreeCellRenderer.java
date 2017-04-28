@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.intellij.usages.impl;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -29,9 +30,9 @@ import com.intellij.usageView.UsageTreeColors;
 import com.intellij.usageView.UsageTreeColorsScheme;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.*;
+import com.intellij.util.FontUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -43,16 +44,21 @@ import java.awt.*;
 class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
   private static final Logger LOG = Logger.getInstance("#com.intellij.usages.impl.UsageViewTreeCellRenderer");
   private static final EditorColorsScheme ourColorsScheme = UsageTreeColorsScheme.getInstance().getScheme();
-  private static final SimpleTextAttributes ourInvalidAttributes = SimpleTextAttributes.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.INVALID_PREFIX));
-  private static final SimpleTextAttributes ourReadOnlyAttributes = SimpleTextAttributes.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.READONLY_PREFIX));
-  private static final SimpleTextAttributes ourNumberOfUsagesAttribute = SimpleTextAttributes.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.NUMBER_OF_USAGES));
-  private static final SimpleTextAttributes ourInvalidAttributesDarcula = new SimpleTextAttributes(null, DarculaColors.RED, null, ourInvalidAttributes.getStyle());
-  public static final Insets STANDARD_IPAD_NOWIFI = new Insets(1, 2, 1, 2);
-  private static final Rectangle EMPTY_RECTANGLE = new Rectangle();
-  private boolean myRowBoundsCalled = false;
+  private static final SimpleTextAttributes ourInvalidAttributes =
+          SimpleTextAttributes.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.INVALID_PREFIX));
+  private static final SimpleTextAttributes ourReadOnlyAttributes =
+          SimpleTextAttributes.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.READONLY_PREFIX));
+  private static final SimpleTextAttributes ourNumberOfUsagesAttribute =
+          SimpleTextAttributes.fromTextAttributes(ourColorsScheme.getAttributes(UsageTreeColors.NUMBER_OF_USAGES));
+  private static final SimpleTextAttributes ourInvalidAttributesDarcula =
+          new SimpleTextAttributes(null, DarculaColors.RED, null, ourInvalidAttributes.getStyle());
+  private static final Insets STANDARD_IPAD_NOWIFI = new Insets(1, 2, 1, 2);
+  private boolean myRowBoundsCalled;
 
   private final UsageViewPresentation myPresentation;
   private final UsageView myView;
+  private boolean myCalculated;
+  private int myRowHeight = AllIcons.Nodes.AbstractClass.getIconHeight() + 2;
 
   UsageViewTreeCellRenderer(@NotNull UsageView view) {
     myView = view;
@@ -61,10 +67,16 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
 
   private Dimension cachedPreferredSize;
 
+  @NotNull
   @Override
-  public void customizeCellRenderer(@Nullable JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+  public Dimension getPreferredSize() {
+    return myCalculated ? super.getPreferredSize() : new Dimension(10, myRowHeight);
+  }
+
+  @Override
+  public void customizeCellRenderer(@NotNull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     boolean showAsReadOnly = false;
-    if (value instanceof Node && tree != null && value != tree.getModel().getRoot()) {
+    if (value instanceof Node && value != tree.getModel().getRoot()) {
       Node node = (Node)value;
       if (!node.isValid()) {
         append(UsageViewBundle.message("node.invalid") + " ", UIUtil.isUnderDarcula() ? ourInvalidAttributesDarcula : ourInvalidAttributes);
@@ -74,19 +86,18 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
       }
     }
 
+    myCalculated = false;
     if (value instanceof DefaultMutableTreeNode) {
       DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)value;
       Object userObject = treeNode.getUserObject();
 
-      Rectangle visibleRect = tree == null ? EMPTY_RECTANGLE : ((JViewport)tree.getParent()).getViewRect();
+      Rectangle visibleRect = ((JViewport)tree.getParent()).getViewRect();
       if (!visibleRect.isEmpty()) {
         //Protection against SOE on some OSes and JDKs IDEA-120631
         RowLocation visible = myRowBoundsCalled ? RowLocation.INSIDE_VISIBLE_RECT : isRowVisible(row, visibleRect);
         myRowBoundsCalled = false;
         if (visible != RowLocation.INSIDE_VISIBLE_RECT) {
-          // for the node outside visible rect just set its preferred size to the whole visible rect
-          // and do not compute (expensive) presentation
-          setIpad(new Insets(1,visibleRect.width, 1, 0));
+          // for the node outside visible rect do not compute (expensive) presentation
           return;
         }
         if (!getIpad().equals(STANDARD_IPAD_NOWIFI)) {
@@ -95,10 +106,16 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
         }
       }
 
+      // we can be called recursively via isRowVisible()
+      if (myCalculated) return;
+      myCalculated = true;
+
       if (userObject instanceof UsageTarget) {
         UsageTarget usageTarget = (UsageTarget)userObject;
         if (!usageTarget.isValid()) {
-          append(UsageViewBundle.message("node.invalid"), ourInvalidAttributes);
+          if (!getCharSequence(false).toString().contains(UsageViewBundle.message("node.invalid"))) {
+            append(UsageViewBundle.message("node.invalid"), ourInvalidAttributes);
+          }
           return;
         }
 
@@ -118,14 +135,14 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
           append(StringUtil.capitalize(myPresentation.getUsagesWord()), patchAttrs(node, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES));
         }
         else {
-          append(node.getGroup().getText(myView),
-                 patchAttrs(node, showAsReadOnly ? ourReadOnlyAttributes : SimpleTextAttributes.REGULAR_ATTRIBUTES));
+          append(node.getGroup().getText(myView), patchAttrs(node, showAsReadOnly ? ourReadOnlyAttributes : SimpleTextAttributes.REGULAR_ATTRIBUTES));
           setIcon(node.getGroup().getIcon(expanded));
         }
 
         int count = node.getRecursiveUsageCount();
-        append(" (" + StringUtil.pluralize(count + " " + myPresentation.getUsagesWord(), count) + ")",
-               patchAttrs(node, ourNumberOfUsagesAttribute));
+        SimpleTextAttributes attributes = patchAttrs(node, ourNumberOfUsagesAttribute);
+        append(FontUtil.spaceAndThinSpace() + StringUtil.pluralize(count + " " + myPresentation.getUsagesWord(), count),
+               SimpleTextAttributes.GRAYED_ATTRIBUTES.derive(attributes.getStyle(), null, null, null));
       }
       else if (treeNode instanceof UsageNode) {
         UsageNode node = (UsageNode)treeNode;
@@ -136,9 +153,10 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
 
         if (node.isValid()) {
           TextChunk[] text = node.getUsage().getPresentation().getText();
-          for (TextChunk textChunk : text) {
+          for (int i = 0; i < text.length; i++) {
+            TextChunk textChunk = text[i];
             SimpleTextAttributes simples = textChunk.getSimpleAttributesIgnoreBackground();
-            append(textChunk.getText(), patchAttrs(node, simples));
+            append(textChunk.getText() + (i == 0 ? " " : ""), patchAttrs(node, simples), true);
           }
         }
       }
@@ -152,20 +170,18 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
     else {
       append(value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
-    if (tree != null) {
-      SpeedSearchUtil.applySpeedSearchHighlighting(tree, this, true, mySelected);
-    }
+    SpeedSearchUtil.applySpeedSearchHighlighting(tree, this, true, mySelected);
   }
 
   // computes the node text regardless of the node visibility
   @NotNull
-  public String getPlainTextForNode(Object value) {
+  String getPlainTextForNode(Object value) {
     boolean showAsReadOnly = false;
     StringBuilder result = new StringBuilder();
     if (value instanceof Node) {
       Node node = (Node)value;
       if (!node.isValid()) {
-        result.append(UsageViewBundle.message("node.invalid") + " ");
+        result.append(UsageViewBundle.message("node.invalid")).append(" ");
       }
       if (myPresentation.isShowReadOnlyStatusAsRed() && node.isReadOnly()) {
         showAsReadOnly = true;
@@ -182,7 +198,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
           final ItemPresentation presentation = usageTarget.getPresentation();
           LOG.assertTrue(presentation != null);
           if (showAsReadOnly) {
-            result.append(UsageViewBundle.message("node.readonly") + " ");
+            result.append(UsageViewBundle.message("node.readonly")).append(" ");
           }
           final String text = presentation.getPresentableText();
           result.append(text == null ? "" : text);
@@ -202,13 +218,13 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
         }
 
         int count = node.getRecursiveUsageCount();
-        result.append(" (" + StringUtil.pluralize(count + " " + myPresentation.getUsagesWord(), count) + ")");
+        result.append(" (").append(StringUtil.pluralize(count + " " + myPresentation.getUsagesWord(), count)).append(")");
       }
       else if (treeNode instanceof UsageNode) {
         UsageNode node = (UsageNode)treeNode;
 
         if (showAsReadOnly) {
-          result.append(UsageViewBundle.message("node.readonly") + " ");
+          result.append(UsageViewBundle.message("node.readonly")).append(" ");
         }
 
         if (node.isValid()) {
@@ -232,10 +248,13 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
   }
 
   enum RowLocation {
-    BEFORE_VISIBLE_RECT, INSIDE_VISIBLE_RECT, AFTER_VISIBLE_RECT
+    BEFORE_VISIBLE_RECT,
+    INSIDE_VISIBLE_RECT,
+    AFTER_VISIBLE_RECT
   }
+
   @NotNull
-  public RowLocation isRowVisible(int row, @NotNull Rectangle visibleRect) {
+  RowLocation isRowVisible(int row, @NotNull Rectangle visibleRect) {
     Dimension pref;
     if (cachedPreferredSize == null) {
       cachedPreferredSize = pref = getPreferredSize();
@@ -248,6 +267,9 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
     JTree tree = getTree();
     final Rectangle bounds = tree == null ? null : tree.getRowBounds(row);
     myRowBoundsCalled = false;
+    if (bounds != null) {
+      myRowHeight = bounds.height;
+    }
     int y = bounds == null ? 0 : bounds.y;
     TextRange vis = TextRange.from(Math.max(0, visibleRect.y - pref.height), visibleRect.height + pref.height * 2);
     boolean inside = vis.contains(y);

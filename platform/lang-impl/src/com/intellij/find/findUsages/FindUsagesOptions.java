@@ -23,10 +23,10 @@ import com.intellij.psi.search.PredefinedSearchScopeProvider;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.search.SearchRequestCollector;
 import com.intellij.psi.search.SearchScope;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 import java.util.List;
 
@@ -36,8 +36,8 @@ public class FindUsagesOptions implements Cloneable {
 
   public boolean isSearchForTextOccurrences = true;
 
-  public boolean isUsages = false;
-  public SearchRequestCollector fastTrack = null;
+  public boolean isUsages;
+  public SearchRequestCollector fastTrack;
 
   @RequiredReadAction
   public FindUsagesOptions(@NotNull Project project) {
@@ -46,6 +46,11 @@ public class FindUsagesOptions implements Cloneable {
 
   @RequiredReadAction
   public FindUsagesOptions(@NotNull Project project, @Nullable final DataContext dataContext) {
+    this(calcScope(project, dataContext));
+  }
+
+  @NotNull
+  private static SearchScope calcScope(@NotNull Project project, @Nullable DataContext dataContext) {
     String defaultScopeName = FindSettings.getInstance().getDefaultScopeName();
     List<SearchScope> predefined = PredefinedSearchScopeProvider.getInstance().getPredefinedScopes(project, dataContext, true, false, false,
                                                                                                    false);
@@ -59,7 +64,7 @@ public class FindUsagesOptions implements Cloneable {
     if (resultScope == null) {
       resultScope = ProjectScope.getProjectScope(project);
     }
-    searchScope = resultScope;
+    return resultScope;
   }
 
   public FindUsagesOptions(@NotNull SearchScope searchScope) {

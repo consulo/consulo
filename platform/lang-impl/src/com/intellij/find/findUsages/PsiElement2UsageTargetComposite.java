@@ -23,7 +23,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.usages.UsageInfoToUsageConverter;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,19 +42,14 @@ public class PsiElement2UsageTargetComposite extends PsiElement2UsageTargetAdapt
     PsiElement element = getElement();
     if (element == null) return;
     FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(element.getProject())).getFindUsagesManager();
-    FindUsagesHandler handler = findUsagesManager.getNewFindUsagesHandler(element, false);
+    FindUsagesHandler handler = findUsagesManager.getFindUsagesHandler(element, false);
     boolean skipResultsWithOneUsage = FindSettings.getInstance().isSkipResultsWithOneUsage();
     findUsagesManager.findUsages(myDescriptor.getPrimaryElements(), myDescriptor.getAdditionalElements(), handler, myOptions, skipResultsWithOneUsage);
   }
 
   @Override
   public VirtualFile[] getFiles() {
-    Set<VirtualFile> files = ContainerUtil.map2Set(myDescriptor.getAllElements(), new Function<PsiElement, VirtualFile>() {
-      @Override
-      public VirtualFile fun(PsiElement element) {
-        return PsiUtilCore.getVirtualFile(element);
-      }
-    });
+    Set<VirtualFile> files = ContainerUtil.map2Set(myDescriptor.getAllElements(), element -> PsiUtilCore.getVirtualFile(element));
     return VfsUtilCore.toVirtualFileArray(files);
   }
 
