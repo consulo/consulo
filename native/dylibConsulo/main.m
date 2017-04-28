@@ -31,10 +31,10 @@ static void launchInNewThread(Launcher* launcher) {
 
 }
 
-int launchConsulo(int argc, char* argv[], NSString* workingDirectory, NSString* propertiesFile, NSString* vmOptionsFile) {
+int launchConsulo(int argc, char* argv[], NSString* workingDirectory, NSString* propertiesFile, NSString* vmOptionsFile, NSString* appHome) {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     if (validationJavaVersion(workingDirectory)) {
-        launchInNewThread([[[Launcher alloc] initWithArgc:argc argv:argv workDirectory:workingDirectory propertiesFile:propertiesFile vmOptionsFile:vmOptionsFile] autorelease]);
+        launchInNewThread([[[Launcher alloc] initWithArgc:argc argv:argv workDirectory:workingDirectory propertiesFile:propertiesFile vmOptionsFile:vmOptionsFile appHome: appHome] autorelease]);
         parkRunLoop();
     }
     [pool release];
