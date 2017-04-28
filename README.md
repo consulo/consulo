@@ -8,6 +8,10 @@ Current stable version is **2.0**. Sources of this version you can found at **ma
 
 Main goal - create **open** IDE where you don't need select IDE for different languages. Provide standart for language implementation inside IDE. 
 
+## Contributing
+
+If you can't describe issue, you can use our [forum](https://discuss.consulo.io/), or you can read [contributing guide](https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md)  and report issue at GitHub
+
 ## Building
 
 Please read conntribuing guide.
@@ -18,7 +22,7 @@ To run the project, use the "Consulo" shared run configuration.
 
 ## Links
 
-* [Contributing Guide] (https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md)
-* [Download] (https://github.com/consulo/consulo/wiki/Downloads)
-* [Issues] (https://github.com/consulo/consulo/issues)
-* [Forum] (https://groups.google.com/forum/#!forum/consulo)
+* [Contributing Guide](https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md)
+* [Download](https://github.com/consulo/consulo/wiki/Downloads)
+* [Issues](https://github.com/consulo/consulo/issues)
+* [Forum](https://discuss.consulo.io/)
