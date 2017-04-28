@@ -46,11 +46,12 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
-public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon implements DeferredIcon, RetrievableIcon {
+public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIconImpl<T>> implements DeferredIcon, RetrievableIcon {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.DeferredIconImpl");
   private static final int MIN_AUTO_UPDATE_MILLIS = 950;
   private static final RepaintScheduler ourRepaintScheduler = new RepaintScheduler();
-  @NotNull private final Icon myDelegateIcon;
+  @NotNull
+  private final Icon myDelegateIcon;
   private volatile Icon myScaledDelegateIcon;
   private Function<T, Icon> myEvaluator;
   private volatile boolean myIsScheduled;
@@ -67,13 +68,13 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon implements D
   private final IconListener<T> myEvalListener;
   private static final TransferToEDTQueue<Runnable> ourLaterInvocator = TransferToEDTQueue.createRunnableMerger("Deferred icon later invocator", 200);
 
-  protected DeferredIconImpl(DeferredIconImpl icon) {
+  private DeferredIconImpl(@NotNull DeferredIconImpl<T> icon) {
     super(icon);
     myDelegateIcon = icon.myDelegateIcon;
     myScaledDelegateIcon = icon.myDelegateIcon;
     myEvaluator = icon.myEvaluator;
     myIsScheduled = icon.myIsScheduled;
-    myParam = (T)icon.myParam;
+    myParam = icon.myParam;
     myNeedReadAction = icon.myNeedReadAction;
     myDone = icon.myDone;
     myAutoUpdatable = icon.myAutoUpdatable;
@@ -82,9 +83,10 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon implements D
     myEvalListener = icon.myEvalListener;
   }
 
+  @NotNull
   @Override
-  protected DeferredIconImpl copy() {
-    return new DeferredIconImpl(this);
+  protected DeferredIconImpl<T> copy() {
+    return new DeferredIconImpl<>(this);
   }
 
   @Override
@@ -92,7 +94,6 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon implements D
     if (getScale() != scale && myDelegateIcon instanceof ScalableIcon) {
       myScaledDelegateIcon = ((ScalableIcon)myDelegateIcon).scale(scale);
       super.setScale(scale);
-      return;
     }
   }
 
@@ -100,7 +101,7 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon implements D
     private static final boolean CHECK_CONSISTENCY = ApplicationManager.getApplication().isUnitTestMode();
   }
 
-  public DeferredIconImpl(Icon baseIcon, T param, @NotNull Function<T, Icon> evaluator, @NotNull IconListener<T> listener, boolean autoUpdatable) {
+  DeferredIconImpl(Icon baseIcon, T param, @NotNull Function<T, Icon> evaluator, @NotNull IconListener<T> listener, boolean autoUpdatable) {
     this(baseIcon, param, true, evaluator, listener, autoUpdatable);
   }
 
@@ -377,6 +378,7 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon implements D
     }
   }
 
+  @FunctionalInterface
   interface IconListener<T> {
     void evalDone(DeferredIconImpl<T> source, T key, @NotNull Icon result);
   }
