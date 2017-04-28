@@ -50,6 +50,7 @@ public class PathManager {
   public static final String PROPERTY_PLUGINS_PATH = "idea.plugins.path";
   public static final String PROPERTY_HOME_PATH = "idea.home.path";
   public static final String PROPERTY_LOG_PATH = "idea.log.path";
+  public static final String MAC_APP_HOME_PATH = "consulo.mac.app.home.path";
 
   private static final String PLATFORM_FOLDER = "platform";
   private static final String LIB_FOLDER = "lib";
@@ -107,6 +108,11 @@ public class PathManager {
 
   @NotNull
   public static File getDistributionDirectory() {
+    String macAppHomePath = System.getProperty(MAC_APP_HOME_PATH);
+    if (macAppHomePath != null) {
+      return new File(macAppHomePath, "Contents");
+    }
+
     File homeDir = new File(getHomePath());
 
     // 'platform' directory
