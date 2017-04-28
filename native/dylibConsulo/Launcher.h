@@ -15,8 +15,9 @@
     NSString* myPropertiesFile;
     NSString* myVmOptionsFile;
     NSString* myWorkingDirectory;
+    NSString* myAppHome;
 }
-- (id)initWithArgc:(int)anArgc argv:(char**)anArgv workDirectory:(NSString*)anWorkDirectory propertiesFile:(NSString*)anPropertiesFile vmOptionsFile:(NSString*)anVmOptionsFile;
+- (id)initWithArgc:(int)anArgc argv:(char**)anArgv workDirectory:(NSString*)anWorkDirectory propertiesFile:(NSString*)anPropertiesFile vmOptionsFile:(NSString*)anVmOptionsFile appHome:(NSString*)anAppHome;
 
 BOOL validationJavaVersion(NSString* workingDirectory);
 

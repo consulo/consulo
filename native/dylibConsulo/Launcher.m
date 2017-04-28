@@ -59,7 +59,7 @@ NSString* ourBootclasspath = @"$CONSULO_HOME/lib/bootstrap.jar:$CONSULO_HOME/lib
 
 @implementation Launcher
 
-- (id)initWithArgc:(int)anArgc argv:(char**)anArgv workDirectory:(NSString*)anWorkDirectory propertiesFile:(NSString*)anPropertiesFile vmOptionsFile:(NSString*)anVmOptionsFile {
+- (id)initWithArgc:(int)anArgc argv:(char**)anArgv workDirectory:(NSString*)anWorkDirectory propertiesFile:(NSString*)anPropertiesFile vmOptionsFile:(NSString*)anVmOptionsFile appHome:(NSString*)anAppHome {
     self = [super init];
     if (self) {
         argc = anArgc;
@@ -67,6 +67,7 @@ NSString* ourBootclasspath = @"$CONSULO_HOME/lib/bootstrap.jar:$CONSULO_HOME/lib
         myWorkingDirectory = anWorkDirectory;
         myPropertiesFile = anPropertiesFile;
         myVmOptionsFile = anVmOptionsFile;
+        myAppHome = anAppHome;
     }
 
     return self;
@@ -261,6 +262,7 @@ NSArray* parseVMOptions(NSString* vmOptionsFile) {
     [args_array addObjectsFromArray:[@"-Dfile.encoding=UTF-8 -XX:+UseConcMarkSweepGC -XX:SoftRefLRUPolicyMSPerMB=50 -ea -Dsun.io.useCanonCaches=false -Djava.net.preferIPv4Stack=true -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -XX:MaxJavaStackTraceDepth=-1 -Xverify:none -Xbootclasspath/a:$CONSULO_HOME/lib/boot.jar" componentsSeparatedByString:@" "]];
     [args_array addObject:[NSString stringWithFormat:@"-Didea.properties.file=%@", myPropertiesFile]];
     [args_array addObject:[NSString stringWithFormat:@"-Didea.home.path=%@", myWorkingDirectory]];
+    [args_array addObject:[NSString stringWithFormat:@"-consulo.mac.app.home.path=%@", myAppHome]];
 
     JavaVMInitArgs args;
     args.version = JNI_VERSION_1_6;

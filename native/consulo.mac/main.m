@@ -1,6 +1,6 @@
 #import <dlfcn.h>
 
-typedef int (launchConsulo)(int argc, char* argv[], NSString* workingDirectory, NSString* propertiesFile, NSString* vmOptionsFile);
+typedef int (launchConsulo)(int argc, char* argv[], NSString* workingDirectory, NSString* propertiesFile, NSString* vmOptionsFile, NSString* appHome);
 
 void error(NSString* message) {
     NSAlert* alert = [[NSAlert alloc] init];
@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
             return 3;
         }
 
-        return main(argc, argv, selectedBuild, propertiesFile, vmOptionsFile);
+        return main(argc, argv, selectedBuild, propertiesFile, vmOptionsFile, appPath);
     }
     else {
         error(@"Failed load launcher library");
