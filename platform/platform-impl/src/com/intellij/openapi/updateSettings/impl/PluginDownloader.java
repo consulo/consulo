@@ -43,6 +43,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * @author anna
@@ -145,6 +147,9 @@ public class PluginDownloader {
             if (tempEntry.isDirectory()) {
               FileUtil.createDirectory(targetFile);
             }
+            else if (tempEntry.isSymbolicLink()) {
+              Files.createSymbolicLink(targetFile.toPath(), Paths.get(tempEntry.getLinkName()));
+            }
             else {
               FileUtil.createParentDirs(targetFile);
 
@@ -166,7 +171,7 @@ public class PluginDownloader {
       // at start - delete old version, after restart. On mac - we can't delete boot build
       String buildNumber = ApplicationInfo.getInstance().getBuild().asString();
       File oldBuild = new File(platformDirectory, "build" + buildNumber);
-      if(oldBuild.exists()) {
+      if (oldBuild.exists()) {
         StartupActionScriptManager.ActionCommand deleteTemp = new StartupActionScriptManager.DeleteCommand(oldBuild);
         StartupActionScriptManager.addActionCommand(deleteTemp);
       }
