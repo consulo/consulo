@@ -30,9 +30,9 @@ import java.util.Set;
  * @author stathik
  * @since Nov 29, 2003
  */
-public class PluginInstaller {
+public class PluginInstallUtil {
 
-  private PluginInstaller() {
+  private PluginInstallUtil() {
   }
 
   @NotNull

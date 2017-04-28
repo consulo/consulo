@@ -175,7 +175,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
                                                @NotNull final List<IdeaPluginDescriptor> toInstall,
                                                @NotNull final List<IdeaPluginDescriptor> allPlugins,
                                                @Nullable final Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
-    Set<IdeaPluginDescriptor> pluginsForInstallWithDependencies = PluginInstaller.getPluginsForInstall(toInstall, allPlugins);
+    Set<IdeaPluginDescriptor> pluginsForInstallWithDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
 
     PlatformOrPluginUpdateResult result = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL,
                                                                            pluginsForInstallWithDependencies.stream().map(x -> Couple.of(x, x))
