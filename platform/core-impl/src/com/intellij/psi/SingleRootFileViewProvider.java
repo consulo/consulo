@@ -68,23 +68,25 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   private static final Key<Boolean> OUR_NO_SIZE_LIMIT_KEY = Key.create("no.size.limit");
   private static final Logger LOG = Logger.getInstance("#" + SingleRootFileViewProvider.class.getCanonicalName());
   public static final Key<Object> FREE_THREADED = Key.create("FREE_THREADED");
-  @NotNull private final PsiManager myManager;
-  @NotNull private final VirtualFile myVirtualFile;
+  @NotNull
+  private final PsiManager myManager;
+  @NotNull
+  private final VirtualFile myVirtualFile;
   private final boolean myEventSystemEnabled;
   private final boolean myPhysical;
   private final AtomicReference<PsiFile> myPsiFile = Atomics.newReference();
   private volatile Content myContent;
   private volatile Reference<Document> myDocument;
-  @NotNull private final Language myBaseLanguage;
-  @NotNull private final FileType myFileType;
+  @NotNull
+  private final Language myBaseLanguage;
+  @NotNull
+  private final FileType myFileType;
 
   public SingleRootFileViewProvider(@NotNull PsiManager manager, @NotNull VirtualFile file) {
     this(manager, file, true);
   }
 
-  public SingleRootFileViewProvider(@NotNull PsiManager manager,
-                                    @NotNull VirtualFile virtualFile,
-                                    final boolean eventSystemEnabled) {
+  public SingleRootFileViewProvider(@NotNull PsiManager manager, @NotNull VirtualFile virtualFile, final boolean eventSystemEnabled) {
     this(manager, virtualFile, eventSystemEnabled, virtualFile.getFileType());
   }
 
@@ -112,13 +114,15 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     myEventSystemEnabled = eventSystemEnabled;
     myBaseLanguage = language;
     setContent(new VirtualFileContent());
-    myPhysical = isEventSystemEnabled() &&
-                 !(virtualFile instanceof LightVirtualFile) &&
-                 !(virtualFile.getFileSystem() instanceof NonPhysicalFileSystem);
+    myPhysical = isEventSystemEnabled() && !(virtualFile instanceof LightVirtualFile) && !(virtualFile.getFileSystem() instanceof NonPhysicalFileSystem);
     if (virtualFile instanceof LightVirtualFile && !isEventSystemEnabled()) {
       virtualFile.putUserData(FREE_THREADED, true);
     }
     myFileType = type;
+  }
+
+  public static boolean isFreeThreaded(@NotNull FileViewProvider provider) {
+    return provider.getVirtualFile() instanceof LightVirtualFile && !provider.isEventSystemEnabled();
   }
 
   @Override
@@ -374,6 +378,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   private static boolean checkFileSizeLimit(@NotNull VirtualFile vFile) {
     return !Boolean.TRUE.equals(vFile.getUserData(OUR_NO_SIZE_LIMIT_KEY));
   }
+
   public static void doNotCheckFileSizeLimit(@NotNull VirtualFile vFile) {
     vFile.putUserData(OUR_NO_SIZE_LIMIT_KEY, Boolean.TRUE);
   }
@@ -393,7 +398,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
       // This is optimization in order to avoid conversion of [large] file contents to bytes
       final int lengthInChars = ((LightVirtualFile)vFile).getContent().length();
       if (lengthInChars < maxBytes / 2) return false;
-      if (lengthInChars > maxBytes ) return true;
+      if (lengthInChars > maxBytes) return true;
     }
 
     return vFile.getLength() > maxBytes;
@@ -547,8 +552,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     if (document instanceof DocumentWindow) {
       return;
     }
-    if (document != null &&
-        ((PsiDocumentManagerBase)PsiDocumentManager.getInstance(myManager.getProject())).getSynchronizer().isInSynchronization(document)) {
+    if (document != null && ((PsiDocumentManagerBase)PsiDocumentManager.getInstance(myManager.getProject())).getSynchronizer().isInSynchronization(document)) {
       return;
     }
 
@@ -580,6 +584,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
 
   private interface Content {
     CharSequence getText();
+
     int getTextLength();
 
     long getModificationStamp();
@@ -626,6 +631,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   private CharSequence getLastCommittedText(Document document) {
     return PsiDocumentManager.getInstance(myManager.getProject()).getLastCommittedText(document);
   }
+
   private long getLastCommittedStamp(Document document) {
     return PsiDocumentManager.getInstance(myManager.getProject()).getLastCommittedStamp(document);
   }

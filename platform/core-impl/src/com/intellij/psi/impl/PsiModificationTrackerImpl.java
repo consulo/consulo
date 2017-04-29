@@ -24,6 +24,7 @@ import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiTreeChangeEvent;
 import com.intellij.psi.util.PsiModificationTracker;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,12 +48,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     myPublisher = bus.syncPublisher(TOPIC);
     bus.connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
       private void doIncCounter() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            incCounter();
-          }
-        });
+        ApplicationManager.getApplication().runWriteAction(() -> incCounter());
       }
 
       @Override

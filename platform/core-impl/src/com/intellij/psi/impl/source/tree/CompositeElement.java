@@ -18,7 +18,8 @@ package com.intellij.psi.impl.source.tree;
 
 import com.intellij.diagnostic.ThreadDumper;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
-import com.intellij.lang.*;
+import com.intellij.lang.ASTFactory;
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
@@ -29,8 +30,6 @@ import com.intellij.pom.tree.events.TreeChangeEvent;
 import com.intellij.pom.tree.events.impl.ChangeInfoImpl;
 import com.intellij.pom.tree.events.impl.ReplaceChangeInfoImpl;
 import com.intellij.psi.PsiElement;
-import consulo.annotations.RequiredReadAction;
-import consulo.psi.PsiElementWithSubtreeChangeNotifier;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLock;
 import com.intellij.psi.impl.DebugUtil;
@@ -44,6 +43,8 @@ import com.intellij.util.ArrayFactory;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.text.StringFactory;
+import consulo.annotations.RequiredReadAction;
+import consulo.psi.PsiElementWithSubtreeChangeNotifier;
 import consulo.psi.tree.PsiElementFactory;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -77,33 +78,29 @@ public class CompositeElement extends TreeElement {
   public CompositeElement clone() {
     CompositeElement clone = (CompositeElement)super.clone();
 
-    synchronized (PsiLock.LOCK) {
-      clone.firstChild = null;
-      clone.lastChild = null;
-      clone.myModificationsCount = 0;
-      clone.myWrapper = null;
-      for (ASTNode child = rawFirstChild(); child != null; child = child.getTreeNext()) {
-        clone.rawAddChildrenWithoutNotifications((TreeElement)child.clone());
-      }
-      clone.clearCaches();
+    clone.firstChild = null;
+    clone.lastChild = null;
+    clone.myModificationsCount = 0;
+    clone.myWrapper = null;
+    for (ASTNode child = rawFirstChild(); child != null; child = child.getTreeNext()) {
+      clone.rawAddChildrenWithoutNotifications((TreeElement)child.clone());
     }
+    clone.clearCaches();
     return clone;
   }
 
   public void subtreeChanged() {
-    synchronized (PsiLock.LOCK) {
-      CompositeElement compositeElement = this;
-      while(compositeElement != null) {
-        compositeElement.clearCaches();
-        if (!(compositeElement instanceof PsiElement)) {
-          final PsiElement psi = compositeElement.myWrapper;
-          if (psi instanceof PsiElementWithSubtreeChangeNotifier) {
-            ((PsiElementWithSubtreeChangeNotifier)psi).subtreeChanged();
-          }
+    CompositeElement compositeElement = this;
+    while(compositeElement != null) {
+      compositeElement.clearCaches();
+      if (!(compositeElement instanceof PsiElement)) {
+        final PsiElement psi = compositeElement.myWrapper;
+        if (psi instanceof PsiElementWithSubtreeChangeNotifier) {
+          ((PsiElementWithSubtreeChangeNotifier)psi).subtreeChanged();
         }
-
-        compositeElement = compositeElement.getTreeParent();
       }
+
+      compositeElement = compositeElement.getTreeParent();
     }
   }
 
@@ -922,7 +919,6 @@ public class CompositeElement extends TreeElement {
       first.rawRemoveUpTo(last);
     }
   }
-
 
   public TreeElement rawFirstChild() {
     return firstChild;

@@ -42,6 +42,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.*;
 import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl;
+import com.intellij.psi.impl.source.DummyHolder;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.text.BlockSupportImpl;
 import com.intellij.psi.impl.source.text.DiffLog;
@@ -53,6 +54,7 @@ import com.intellij.psi.text.BlockSupport;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IReparseableLeafElementType;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
@@ -66,9 +68,9 @@ import java.util.*;
 public class PomModelImpl extends UserDataHolderBase implements PomModel {
   private static final Logger LOG = Logger.getInstance("#com.intellij.pom.core.impl.PomModelImpl");
   private final Project myProject;
-  private final Map<Class<? extends PomModelAspect>, PomModelAspect> myAspects = new HashMap<Class<? extends PomModelAspect>, PomModelAspect>();
-  private final Map<PomModelAspect, List<PomModelAspect>> myIncidence = new HashMap<PomModelAspect, List<PomModelAspect>>();
-  private final Map<PomModelAspect, List<PomModelAspect>> myInvertedIncidence = new HashMap<PomModelAspect, List<PomModelAspect>>();
+  private final Map<Class<? extends PomModelAspect>, PomModelAspect> myAspects = new HashMap<>();
+  private final Map<PomModelAspect, List<PomModelAspect>> myIncidence = new HashMap<>();
+  private final Map<PomModelAspect, List<PomModelAspect>> myInvertedIncidence = new HashMap<>();
   private final Collection<PomModelListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   public PomModelImpl(Project project) {
@@ -85,7 +87,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
   public void registerAspect(@NotNull Class<? extends PomModelAspect> aClass, @NotNull PomModelAspect aspect, @NotNull Set<PomModelAspect> dependencies) {
     myAspects.put(aClass, aspect);
     final Iterator<PomModelAspect> iterator = dependencies.iterator();
-    final List<PomModelAspect> deps = new ArrayList<PomModelAspect>();
+    final List<PomModelAspect> deps = new ArrayList<>();
     // todo: reorder dependencies
     while (iterator.hasNext()) {
       final PomModelAspect depend = iterator.next();
@@ -98,7 +100,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
         pomModelAspects.add(aspect);
       }
       else {
-        myInvertedIncidence.put(pomModelAspect, new ArrayList<PomModelAspect>(Collections.singletonList(aspect)));
+        myInvertedIncidence.put(pomModelAspect, new ArrayList<>(Collections.singletonList(aspect)));
       }
     }
     myIncidence.put(aspect, deps);
@@ -136,7 +138,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
     myListeners.remove(listener);
   }
 
-  private final Stack<Pair<PomModelAspect, PomTransaction>> myBlockedAspects = new Stack<Pair<PomModelAspect, PomTransaction>>();
+  private final Stack<Pair<PomModelAspect, PomTransaction>> myBlockedAspects = new Stack<>();
 
   @Override
   public void runTransaction(@NotNull PomTransaction transaction) throws IncorrectOperationException{
@@ -144,7 +146,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
       throw new IncorrectOperationException("Must not modify PSI inside save listener");
     }
     synchronized(PsiLock.LOCK){
-      List<Throwable> throwables = new ArrayList<Throwable>(0);
+      List<Throwable> throwables = new ArrayList<>(0);
       final PomModelAspect aspect = transaction.getTransactionAspect();
       startTransaction(transaction);
       try{
@@ -175,7 +177,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
 
         { // update
           final Set<PomModelAspect> changedAspects = event.getChangedAspects();
-          final Collection<PomModelAspect> dependants = new LinkedHashSet<PomModelAspect>();
+          final Collection<PomModelAspect> dependants = new LinkedHashSet<>();
           for (final PomModelAspect pomModelAspect : changedAspects) {
             dependants.addAll(getAllDependants(pomModelAspect));
           }
@@ -298,18 +300,13 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
 
     final DiffLog log = BlockSupport.getInstance(myProject).reparseRange(file, treeElement, changedPsiRange, newText, new EmptyProgressIndicator(),
                                                                          treeElement.getText());
-    return new Runnable() {
+    return () -> runTransaction(new PomTransactionBase(file, getModelAspect(TreeAspect.class)) {
+      @Nullable
       @Override
-      public void run() {
-        runTransaction(new PomTransactionBase(file, getModelAspect(TreeAspect.class)) {
-          @Nullable
-          @Override
-          public PomModelEvent runInner() throws IncorrectOperationException {
-            return new TreeAspectEvent(PomModelImpl.this, log.performActualPsiChange(file));
-          }
-        });
+      public PomModelEvent runInner() throws IncorrectOperationException {
+        return new TreeAspectEvent(PomModelImpl.this, log.performActualPsiChange(file));
       }
-    };
+    });
   }
 
   @Nullable
@@ -321,12 +318,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
     CharSequence newLeafText = getLeafChangedText(leaf, treeElement, newText, changedPsiRange);
     //noinspection unchecked
     final ASTNode copy = newLeafText == null ? null : ((IReparseableLeafElementType)leafType).reparseLeaf(leaf, newLeafText);
-    return copy == null ? null : new Runnable() {
-      @Override
-      public void run() {
-        leaf.getTreeParent().replaceChild(leaf, copy);
-      }
-    };
+    return copy == null ? null : () -> leaf.getTreeParent().replaceChild(leaf, copy);
   }
 
   private static CharSequence getLeafChangedText(LeafElement leaf, FileElement treeElement, CharSequence newFileText, TextRange changedPsiRange) {
@@ -348,6 +340,10 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
     final PsiElement changeScope = transaction.getChangeScope();
 
     final PsiFile containingFileByTree = getContainingFileByTree(changeScope);
+    if (containingFileByTree != null && !(containingFileByTree instanceof DummyHolder) && !manager.isCommitInProgress()) {
+      PsiUtilCore.ensureValid(containingFileByTree);
+    }
+
     boolean physical = changeScope.isPhysical();
     if (physical && synchronizer.toProcessPsiEvent()) {
       // fail-fast to prevent any psi modifications that would cause psi/document text mismatch

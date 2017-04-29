@@ -21,7 +21,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
@@ -48,7 +47,6 @@ import com.intellij.psi.impl.source.tree.ForeignLeafPsiElement;
 import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.text.BlockSupport;
 import com.intellij.util.ExceptionUtil;
-import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.concurrency.BoundedTaskExecutor;
@@ -76,11 +74,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class DocumentCommitThread implements Runnable, Disposable, DocumentCommitProcessor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.DocumentCommitThread");
+  private static final String SYNC_COMMIT_REASON = "Sync commit";
 
   private final ExecutorService executor = new BoundedTaskExecutor("Document committing pool", PooledThreadExecutor.INSTANCE, 1, this);
   private final Object lock = new Object();
-  private final HashSetQueue<CommitTask> documentsToCommit = new HashSetQueue<CommitTask>();      // guarded by lock
-  private final HashSetQueue<CommitTask> documentsToApplyInEDT = new HashSetQueue<CommitTask>();  // guarded by lock
+  private final HashSetQueue<CommitTask> documentsToCommit = new HashSetQueue<>();      // guarded by lock
+  private final HashSetQueue<CommitTask> documentsToApplyInEDT = new HashSetQueue<>();  // guarded by lock
   private final ApplicationEx myApplication;
   private volatile boolean isDisposed;
   private CommitTask currentTask; // guarded by lock
@@ -92,26 +91,23 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   public DocumentCommitThread(final ApplicationEx application) {
     myApplication = application;
     // install listener in EDT to avoid missing events in case we are inside write action right now
-    application.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (application.isDisposed()) return;
-        assert !application.isWriteAccessAllowed() || application.isUnitTestMode(); // crazy stuff happens in tests, e.g. UIUtil.dispatchInvocationEvents() inside write action
-        application.addApplicationListener(new ApplicationAdapter() {
-          @Override
-          public void beforeWriteActionStart(@NotNull Object action) {
-            disable("Write action started: " + action);
-          }
+    application.invokeLater(() -> {
+      if (application.isDisposed()) return;
+      assert !application.isWriteAccessAllowed() || application.isUnitTestMode(); // crazy stuff happens in tests, e.g. UIUtil.dispatchInvocationEvents() inside write action
+      application.addApplicationListener(new ApplicationAdapter() {
+        @Override
+        public void beforeWriteActionStart(@NotNull Object action) {
+          disable("Write action started: " + action);
+        }
 
-          @Override
-          public void afterWriteActionFinished(@NotNull Object action) {
-            // crazy things happen when running tests, like starting write action in one thread but firing its end in the other
-            enable("Write action finished: " + action);
-          }
-        }, DocumentCommitThread.this);
+        @Override
+        public void afterWriteActionFinished(@NotNull Object action) {
+          // crazy things happen when running tests, like starting write action in one thread but firing its end in the other
+          enable("Write action finished: " + action);
+        }
+      }, this);
 
-        enable("Listener installed, started");
-      }
+      enable("Listener installed, started");
     });
   }
 
@@ -156,33 +152,31 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   public void commitAsynchronously(@NotNull final Project project,
                                    @NotNull final Document document,
                                    @NonNls @NotNull Object reason,
-                                   @NotNull ModalityState currentModalityState) {
+                                   @Nullable TransactionId context) {
     assert !isDisposed : "already disposed";
 
     if (!project.isInitialized()) return;
     PsiFile psiFile = PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
     if (psiFile == null) return;
-    if (psiFile instanceof PsiCompiledFile) {
-      throw new IllegalArgumentException("Can't commit ClsFile: "+psiFile);
-    }
-
-    doQueue(project, document, getAllFileNodes(psiFile), reason, currentModalityState);
+    doQueue(project, document, getAllFileNodes(psiFile), reason, context,
+            PsiDocumentManager.getInstance(project).getLastCommittedText(document));
   }
 
-  @NotNull
-  private CommitTask doQueue(@NotNull Project project,
-                             @NotNull Document document,
-                             @NotNull List<Pair<PsiFileImpl, FileASTNode>> oldFileNodes,
-                             @NotNull Object reason,
-                             @NotNull ModalityState currentModalityState) {
+  private void doQueue(@NotNull Project project,
+                       @NotNull Document document,
+                       @NotNull List<Pair<PsiFileImpl, FileASTNode>> oldFileNodes,
+                       @NotNull Object reason,
+                       @Nullable TransactionId context,
+                       @NotNull CharSequence lastCommittedText) {
     synchronized (lock) {
-      CommitTask newTask = createNewTaskAndCancelSimilar(project, document, oldFileNodes, reason, currentModalityState);
+      if (!project.isInitialized()) return;  // check the project is disposed under lock.
+      CommitTask newTask = createNewTaskAndCancelSimilar(project, document, oldFileNodes, reason, context,
+                                                         lastCommittedText);
 
       documentsToCommit.offer(newTask);
       log(project, "Queued", newTask, reason);
 
       wakeUpQueue();
-      return newTask;
     }
   }
 
@@ -191,12 +185,14 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
                                                    @NotNull Document document,
                                                    @NotNull List<Pair<PsiFileImpl, FileASTNode>> oldFileNodes,
                                                    @NotNull Object reason,
-                                                   @NotNull ModalityState currentModalityState) {
+                                                   @Nullable TransactionId context,
+                                                   @NotNull CharSequence lastCommittedText) {
     synchronized (lock) {
       for (Pair<PsiFileImpl, FileASTNode> pair : oldFileNodes) {
         assert pair.first.getProject() == project;
       }
-      CommitTask newTask = new CommitTask(project, document, oldFileNodes, createProgressIndicator(), reason, currentModalityState);
+      CommitTask newTask = new CommitTask(project, document, oldFileNodes, createProgressIndicator(), reason, context,
+                                          lastCommittedText);
       cancelAndRemoveFromDocsToCommit(newTask, reason);
       cancelAndRemoveCurrentTask(newTask, reason);
       cancelAndRemoveFromDocsToApplyInEDT(newTask, reason);
@@ -204,8 +200,6 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
       return newTask;
     }
   }
-
-  final StringBuilder log = new StringBuilder();
 
   @SuppressWarnings({"NonConstantStringShouldBeStringBuffer", "StringConcatenationInLoop"})
   public void log(Project project, @NonNls String msg, @Nullable CommitTask task, @NonNls Object... args) {
@@ -259,14 +253,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
       }
     }
 
-    System.out.println(s);
-
-    synchronized (log) {
-      log.append(s).append("\n");
-      if (log.length() > 100000) {
-        log.delete(0, log.length()-50000);
-      }
-    }
+    LOG.debug(s);
   }
 
 
@@ -297,14 +284,8 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   public void clearQueue() {
     synchronized (lock) {
       cancelAll();
-      clearLog();
       wakeUpQueue();
     }
-  }
-
-  @TestOnly // under lock
-  private void clearLog() {
-    log.setLength(0);
   }
 
   private void cancelAndRemoveCurrentTask(@NotNull CommitTask newTask, @NotNull Object reason) {
@@ -385,37 +366,22 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
         documentsToApplyInEDT.add(task);
       }
 
-      Runnable finishRunnable = null;
       if (indicator.isCanceled()) {
         success = false;
       }
       else {
         final CommitTask commitTask = task;
-        final Ref<Pair<Runnable, Object>> result = new Ref<Pair<Runnable, Object>>();
-        ProgressManager.getInstance().executeProcessUnderProgress(new Runnable() {
-          @Override
-          public void run() {
-            result.set(commitUnderProgress(commitTask, false));
-          }
-        }, indicator);
-        finishRunnable = result.get().first;
+        final Ref<Pair<Runnable, Object>> result = new Ref<>();
+        ProgressManager.getInstance().executeProcessUnderProgress(() -> result.set(commitUnderProgress(commitTask, false)), indicator);
+        final Runnable finishRunnable = result.get().first;
         success = finishRunnable != null;
         failureReason = result.get().second;
-      }
 
-      if (success) {
-        assert !myApplication.isDispatchThread();
-        final Runnable finalFinishRunnable = finishRunnable;
-        final Project finalProject = project;
-        final TransactionGuardImpl guard = (TransactionGuardImpl)TransactionGuard.getInstance();
-        final TransactionId transaction = guard.getModalityTransaction(task.myCreationModalityState);
-        // invokeLater can be removed once transactions are enforced
-        myApplication.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            guard.submitTransaction(finalProject, transaction, finalFinishRunnable);
-          }
-        }, task.myCreationModalityState);
+        if (success) {
+          assert !myApplication.isDispatchThread();
+          TransactionGuardImpl guard = (TransactionGuardImpl)TransactionGuard.getInstance();
+          guard.submitTransaction(project, task.myCreationContext, finishRunnable);
+        }
       }
     }
     catch (ProcessCanceledException e) {
@@ -424,26 +390,28 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
       failureReason = e;
     }
     catch (Throwable e) {
-      LOG.error(log.toString(), e);
       cancel(e);
       failureReason = ExceptionUtil.getThrowableText(e);
     }
 
-    final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-    if (!success && task != null && documentManager.isUncommited(document)) { // sync commit has not intervened
-      final Document finalDocument = document;
+    if (!success && task != null) {
       final Project finalProject = project;
-      List<Pair<PsiFileImpl, FileASTNode>> oldFileNodes =
-              ApplicationManager.getApplication().runReadAction(new Computable<List<Pair<PsiFileImpl, FileASTNode>>>() {
-                @Override
-                public List<Pair<PsiFileImpl, FileASTNode>> compute() {
-                  PsiFile file = finalProject.isDisposed() ? null : documentManager.getPsiFile(finalDocument);
-                  return file == null ? null : getAllFileNodes(file);
-                }
-              });
-      if (oldFileNodes != null) {
-        doQueue(project, document, oldFileNodes, "re-added on failure: "+failureReason, task.myCreationModalityState);
-      }
+      final Document finalDocument = document;
+      Object finalFailureReason = failureReason;
+      CommitTask finalTask = task;
+      ReadAction.run(() -> {
+        if (finalProject.isDisposed()) return;
+        PsiDocumentManager documentManager = PsiDocumentManager.getInstance(finalProject);
+        if (documentManager.isCommitted(finalDocument)) return; // sync commit hasn't intervened
+        CharSequence lastCommittedText = documentManager.getLastCommittedText(finalDocument);
+        PsiFile file = documentManager.getPsiFile(finalDocument);
+        List<Pair<PsiFileImpl, FileASTNode>> oldFileNodes = file == null ? null : getAllFileNodes(file);
+        if (oldFileNodes != null) {
+          doQueue(finalProject, finalDocument, oldFileNodes, "re-added on failure: " + finalFailureReason,
+                  finalTask.myCreationContext,
+                  lastCommittedText);
+        }
+      });
     }
     synchronized (lock) {
       currentTask = null; // do not cancel, it's being invokeLatered
@@ -474,7 +442,8 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     CommitTask task;
     synchronized (lock) {
       // synchronized to ensure no new similar tasks can start before we hold the document's lock
-      task = createNewTaskAndCancelSimilar(project, document, allFileNodes, "Sync commit", ModalityState.current());
+      task = createNewTaskAndCancelSimilar(project, document, allFileNodes, SYNC_COMMIT_REASON, TransactionGuard.getInstance().getContextTransaction(),
+                                           PsiDocumentManager.getInstance(project).getLastCommittedText(document));
       documentLock.lock();
     }
 
@@ -496,12 +465,14 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
 
   @NotNull
   private static List<Pair<PsiFileImpl, FileASTNode>> getAllFileNodes(@NotNull PsiFile file) {
-    return ContainerUtil.map(file.getViewProvider().getAllFiles(), new Function<PsiFile, Pair<PsiFileImpl, FileASTNode>>() {
-      @Override
-      public Pair<PsiFileImpl, FileASTNode> fun(PsiFile root) {
-        return Pair.create((PsiFileImpl)root, root.getNode());
-      }
-    });
+    if (!file.isValid()) {
+      throw new PsiInvalidElementAccessException(file, "File " + file + " is invalid, can't commit");
+    }
+    if (file instanceof PsiCompiledFile) {
+      throw new IllegalArgumentException("Can't commit ClsFile: "+file);
+    }
+
+    return ContainerUtil.map(file.getViewProvider().getAllFiles(), root -> Pair.create((PsiFileImpl)root, root.getNode()));
   }
 
   @NotNull
@@ -529,50 +500,55 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     final Document document = task.getDocument();
     final Project project = task.project;
     final PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(project);
-    final List<Processor<Document>> finishProcessors = new SmartList<Processor<Document>>();
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        myApplication.assertReadAccessAllowed();
-        if (project.isDisposed()) return;
+    final List<Processor<Document>> finishProcessors = new SmartList<>();
+    Runnable runnable = () -> {
+      myApplication.assertReadAccessAllowed();
+      if (project.isDisposed()) return;
 
-        Lock lock = getDocumentLock(document);
-        if (!lock.tryLock()) {
-          task.cancel("Can't obtain document lock", DocumentCommitThread.this);
+      Lock lock = getDocumentLock(document);
+      if (!lock.tryLock()) {
+        task.cancel("Can't obtain document lock", this);
+        return;
+      }
+
+      boolean canceled = false;
+      try {
+        if (documentManager.isCommitted(document)) return;
+
+        if (!task.isStillValid()) {
+          canceled = true;
           return;
         }
 
-        boolean canceled = false;
-        try {
-          if (documentManager.isCommitted(document)) return;
+        FileViewProvider viewProvider = documentManager.getCachedViewProvider(document);
+        if (viewProvider == null) {
+          finishProcessors.add(handleCommitWithoutPsi(documentManager, task));
+          return;
+        }
 
-          if (!task.isStillValid()) {
-            canceled = true;
-            return;
-          }
-
-          FileViewProvider viewProvider = documentManager.getCachedViewProvider(document);
-          if (viewProvider == null) {
-            finishProcessors.add(handleCommitWithoutPsi(documentManager, task));
-            return;
-          }
-
-          for (Pair<PsiFileImpl, FileASTNode> pair : task.myOldFileNodes) {
-            PsiFileImpl file = pair.first;
-            if (file.isValid()) {
-              FileASTNode oldFileNode = pair.second;
-              Processor<Document> finishProcessor = doCommit(task, file, oldFileNode);
-              if (finishProcessor != null) {
-                finishProcessors.add(finishProcessor);
-              }
+        for (Pair<PsiFileImpl, FileASTNode> pair : task.myOldFileNodes) {
+          PsiFileImpl file = pair.first;
+          if (file.isValid()) {
+            FileASTNode oldFileNode = pair.second;
+            Processor<Document> finishProcessor = doCommit(task, file, oldFileNode);
+            if (finishProcessor != null) {
+              finishProcessors.add(finishProcessor);
             }
           }
-        }
-        finally {
-          lock.unlock();
-          if (canceled) {
-            task.cancel("Task invalidated", DocumentCommitThread.this);
+          else {
+            // file became invalid while sitting in the queue
+            if (task.reason.equals(SYNC_COMMIT_REASON)) {
+              throw new PsiInvalidElementAccessException(file, "File " + file + " invalidated during sync commit");
+            }
+            commitAsynchronously(project, document, "File " + file + " invalidated during background commit; task: "+task,
+                                 task.myCreationContext);
           }
+        }
+      }
+      finally {
+        lock.unlock();
+        if (canceled) {
+          task.cancel("Task invalidated", this);
         }
       }
     };
@@ -581,13 +557,13 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     }
     else if (!myApplication.tryRunReadAction(runnable)) {
       log(project, "Could not start read action", task, myApplication.isReadAccessAllowed(), Thread.currentThread());
-      return new Pair<Runnable, Object>(null, "Could not start read action");
+      return new Pair<>(null, "Could not start read action");
     }
 
     boolean canceled = task.indicator.isCanceled();
     assert !synchronously || !canceled;
     if (canceled) {
-      return new Pair<Runnable, Object>(null, "Indicator was canceled");
+      return new Pair<>(null, "Indicator was canceled");
     }
 
     Runnable result = createEdtRunnable(task, synchronously, finishProcessors);
@@ -598,47 +574,38 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   private Runnable createEdtRunnable(@NotNull final CommitTask task,
                                      final boolean synchronously,
                                      @NotNull final List<Processor<Document>> finishProcessors) {
-    return new Runnable() {
-      @Override
-      public void run() {
-        myApplication.assertIsDispatchThread();
-        Document document = task.getDocument();
-        Project project = task.project;
-        PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(project);
-        boolean committed = project.isDisposed() || documentManager.isCommitted(document);
-        synchronized (lock) {
-          documentsToApplyInEDT.remove(task);
-          if (committed) {
-            log(project, "Marked as already committed in EDT apply queue, return", task);
-            return;
-          }
+    return () -> {
+      myApplication.assertIsDispatchThread();
+      Document document = task.getDocument();
+      Project project = task.project;
+      PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(project);
+      boolean committed = project.isDisposed() || documentManager.isCommitted(document);
+      synchronized (lock) {
+        documentsToApplyInEDT.remove(task);
+        if (committed) {
+          log(project, "Marked as already committed in EDT apply queue, return", task);
+          return;
         }
+      }
 
-        try {
-          boolean changeStillValid = task.isStillValid();
-          boolean success = changeStillValid && documentManager.finishCommit(document, finishProcessors, synchronously, task.reason);
-          if (synchronously) {
-            assert success;
-          }
-          if (!changeStillValid) {
-            log(project, "document changed; ignore", task);
-            return;
-          }
-          if (synchronously || success) {
-            assert !documentManager.isInUncommittedSet(document);
-          }
-          if (success) {
-            log(project, "Commit finished", task);
-          }
-          else {
-            // add document back to the queue
-            commitAsynchronously(project, document, "Re-added back", task.myCreationModalityState);
-          }
-        }
-        catch (Error e) {
-          System.err.println("Log:" + log);
-          throw e;
-        }
+      boolean changeStillValid = task.isStillValid();
+      boolean success = changeStillValid && documentManager.finishCommit(document, finishProcessors, synchronously, task.reason);
+      if (synchronously) {
+        assert success;
+      }
+      if (!changeStillValid) {
+        log(project, "document changed; ignore", task);
+        return;
+      }
+      if (synchronously || success) {
+        assert !documentManager.isInUncommittedSet(document);
+      }
+      if (success) {
+        log(project, "Commit finished", task);
+      }
+      else {
+        // add document back to the queue
+        commitAsynchronously(project, document, "Re-added back", task.myCreationContext);
       }
     };
   }
@@ -646,17 +613,14 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   @NotNull
   private Processor<Document> handleCommitWithoutPsi(@NotNull final PsiDocumentManagerBase documentManager,
                                                      @NotNull final CommitTask task) {
-    return new Processor<Document>() {
-      @Override
-      public boolean process(Document document) {
-        log(task.project, "Finishing without PSI", task);
-        if (!task.isStillValid() || documentManager.getCachedViewProvider(document) != null) {
-          return false;
-        }
-
-        documentManager.handleCommitWithoutPsi(document);
-        return true;
+    return document -> {
+      log(task.project, "Finishing without PSI", task);
+      if (!task.isStillValid() || documentManager.getCachedViewProvider(document) != null) {
+        return false;
       }
+
+      documentManager.handleCommitWithoutPsi(document);
+      return true;
     };
   }
 
@@ -691,7 +655,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     // when failed it's canceled
     @NotNull final ProgressIndicator indicator; // progress to commit this doc under.
     @NotNull final Object reason;
-    @NotNull final ModalityState myCreationModalityState;
+    @Nullable final TransactionId myCreationContext;
     private final CharSequence myLastCommittedText;
     @NotNull final List<Pair<PsiFileImpl, FileASTNode>> myOldFileNodes;
 
@@ -700,13 +664,14 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
                @NotNull final List<Pair<PsiFileImpl, FileASTNode>> oldFileNodes,
                @NotNull ProgressIndicator indicator,
                @NotNull Object reason,
-               @NotNull ModalityState currentModalityState) {
+               @Nullable TransactionId context,
+               @NotNull CharSequence lastCommittedText) {
       this.document = document;
       this.project = project;
       this.indicator = indicator;
       this.reason = reason;
-      myCreationModalityState = currentModalityState;
-      myLastCommittedText = PsiDocumentManager.getInstance(project).getLastCommittedText(document);
+      myCreationContext = context;
+      myLastCommittedText = lastCommittedText;
       myOldFileNodes = oldFileNodes;
       modificationSequence = ((DocumentEx)document).getModificationSequence();
     }
@@ -740,7 +705,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
       return result;
     }
 
-    public boolean isStillValid() {
+    boolean isStillValid() {
       Document document = getDocument();
       return ((DocumentEx)document).getModificationSequence() == modificationSequence;
     }
@@ -786,34 +751,31 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     BlockSupport blockSupport = BlockSupport.getInstance(file.getProject());
     final DiffLog diffLog = blockSupport.reparseRange(file, oldFileNode, changedPsiRange, newDocumentText, task.indicator, task.myLastCommittedText);
 
-    return new Processor<Document>() {
-      @Override
-      public boolean process(Document document) {
-        FileViewProvider viewProvider = file.getViewProvider();
-        if (!task.isStillValid() ||
-            ((PsiDocumentManagerBase)PsiDocumentManager.getInstance(file.getProject())).getCachedViewProvider(document) != viewProvider) {
-          return false; // optimistic locking failed
-        }
-
-        if (file.isPhysical() && !ApplicationManager.getApplication().isWriteAccessAllowed()) {
-          VirtualFile vFile = viewProvider.getVirtualFile();
-          LOG.error("Write action expected" +
-                    "; document=" + document +
-                    "; file=" + file + " of " + file.getClass() +
-                    "; file.valid=" + file.isValid() +
-                    "; file.eventSystemEnabled=" + viewProvider.isEventSystemEnabled() +
-                    "; viewProvider=" + viewProvider + " of " + viewProvider.getClass() +
-                    "; language=" + file.getLanguage() +
-                    "; vFile=" + vFile + " of " + vFile.getClass() +
-                    "; free-threaded=" + PsiDocumentManagerBase.isFreeThreaded(vFile));
-        }
-
-        doActualPsiChange(file, diffLog);
-
-        assertAfterCommit(document, file, (FileElement)oldFileNode);
-
-        return true;
+    return document1 -> {
+      FileViewProvider viewProvider = file.getViewProvider();
+      if (!task.isStillValid() ||
+          ((PsiDocumentManagerBase)PsiDocumentManager.getInstance(file.getProject())).getCachedViewProvider(document1) != viewProvider) {
+        return false; // optimistic locking failed
       }
+
+      if (file.isPhysical() && !ApplicationManager.getApplication().isWriteAccessAllowed()) {
+        VirtualFile vFile = viewProvider.getVirtualFile();
+        LOG.error("Write action expected" +
+                  "; document=" + document1 +
+                  "; file=" + file + " of " + file.getClass() +
+                  "; file.valid=" + file.isValid() +
+                  "; file.eventSystemEnabled=" + viewProvider.isEventSystemEnabled() +
+                  "; viewProvider=" + viewProvider + " of " + viewProvider.getClass() +
+                  "; language=" + file.getLanguage() +
+                  "; vFile=" + vFile + " of " + vFile.getClass() +
+                  "; free-threaded=" + SingleRootFileViewProvider.isFreeThreaded(viewProvider));
+      }
+
+      doActualPsiChange(file, diffLog);
+
+      assertAfterCommit(document1, file, (FileElement)oldFileNode);
+
+      return true;
     };
   }
 
@@ -890,31 +852,28 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   }
 
   public static void doActualPsiChange(@NotNull final PsiFile file, @NotNull final DiffLog diffLog) {
-    CodeStyleManager.getInstance(file.getProject()).performActionWithFormatterDisabled(new Runnable() {
-      @Override
-      public void run() {
-        synchronized (PsiLock.LOCK) {
-          file.getViewProvider().beforeContentsSynchronized();
+    CodeStyleManager.getInstance(file.getProject()).performActionWithFormatterDisabled((Runnable)() -> {
+      synchronized (PsiLock.LOCK) {
+        file.getViewProvider().beforeContentsSynchronized();
 
-          final Document document = file.getViewProvider().getDocument();
-          PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(file.getProject());
-          PsiToDocumentSynchronizer.DocumentChangeTransaction transaction = documentManager.getSynchronizer().getTransaction(document);
+        final Document document = file.getViewProvider().getDocument();
+        PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(file.getProject());
+        PsiToDocumentSynchronizer.DocumentChangeTransaction transaction = documentManager.getSynchronizer().getTransaction(document);
 
-          final PsiFileImpl fileImpl = (PsiFileImpl)file;
+        final PsiFileImpl fileImpl = (PsiFileImpl)file;
 
-          if (transaction == null) {
-            final PomModel model = PomManager.getModel(fileImpl.getProject());
+        if (transaction == null) {
+          final PomModel model = PomManager.getModel(fileImpl.getProject());
 
-            model.runTransaction(new PomTransactionBase(fileImpl, model.getModelAspect(TreeAspect.class)) {
-              @Override
-              public PomModelEvent runInner() {
-                return new TreeAspectEvent(model, diffLog.performActualPsiChange(file));
-              }
-            });
-          }
-          else {
-            diffLog.performActualPsiChange(file);
-          }
+          model.runTransaction(new PomTransactionBase(fileImpl, model.getModelAspect(TreeAspect.class)) {
+            @Override
+            public PomModelEvent runInner() {
+              return new TreeAspectEvent(model, diffLog.performActualPsiChange(file));
+            }
+          });
+        }
+        else {
+          diffLog.performActualPsiChange(file);
         }
       }
     });
@@ -927,9 +886,11 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
       boolean sameText = Comparing.equal(fileText, documentText);
       LOG.error("commitDocument() left PSI inconsistent: " + DebugUtil.diagnosePsiDocumentInconsistency(file, document) +
                 "; node.length=" + oldFileNode.getTextLength() +
-                "; doc.text" + (sameText ? "==" : "!=") + "file.text",
-                new Attachment("file psi text", fileText),
-                new Attachment("old text", documentText));
+                "; doc.text" + (sameText ? "==" : "!=") + "file.text" +
+                "; file name:" + file.getName()+
+                "; type:"+file.getFileType()+
+                "; lang:"+file.getLanguage()
+      );
 
       file.putUserData(BlockSupport.DO_NOT_REPARSE_INCREMENTALLY, Boolean.TRUE);
       try {
@@ -957,12 +918,20 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   }
   private static final Key<Lock> DOCUMENT_LOCK = Key.create("DOCUMENT_LOCK");
 
-  @TestOnly
-  int documentsToCommit() {
-    return documentsToCommit.size();
+  void cancelTasksOnProjectDispose(@NotNull final Project project) {
+    synchronized (lock) {
+      cancelTasksOnProjectDispose(project, documentsToCommit);
+      cancelTasksOnProjectDispose(project, documentsToApplyInEDT);
+    }
   }
-  @TestOnly
-  int documentsToApplyInEDT() {
-    return documentsToApplyInEDT.size();
+
+  private void cancelTasksOnProjectDispose(@NotNull Project project, @NotNull HashSetQueue<CommitTask> queue) {
+    for (HashSetQueue.PositionalIterator<CommitTask> iterator = queue.iterator(); iterator.hasNext(); ) {
+      CommitTask commitTask = iterator.next();
+      if (commitTask.project == project) {
+        iterator.remove();
+        commitTask.cancel("project is disposed", this);
+      }
+    }
   }
 }

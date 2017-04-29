@@ -20,8 +20,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
@@ -40,7 +38,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class TransactionGuardImpl extends TransactionGuard {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.TransactionGuardImpl");
-  private final Queue<Transaction> myQueue = new LinkedBlockingQueue<Transaction>();
+  private final Queue<Transaction> myQueue = new LinkedBlockingQueue<>();
   private final Map<ModalityState, TransactionIdImpl> myModality2Transaction = ContainerUtil.createConcurrentWeakMap();
 
   /**
@@ -66,15 +64,12 @@ public class TransactionGuardImpl extends TransactionGuard {
   }
 
   private void pollQueueLater() {
-    invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        Queue<Transaction> queue = getQueue(myCurrentTransaction);
-        Transaction next = queue.peek();
-        if (next != null && canRunTransactionNow(next, false)) {
-          queue.remove();
-          runSyncTransaction(next);
-        }
+    invokeLater(() -> {
+      Queue<Transaction> queue = getQueue(myCurrentTransaction);
+      Transaction next = queue.peek();
+      if (next != null && canRunTransactionNow(next, false)) {
+        queue.remove();
+        runSyncTransaction(next);
       }
     });
   }
@@ -109,16 +104,13 @@ public class TransactionGuardImpl extends TransactionGuard {
     final Transaction transaction = new Transaction(_transaction, expectedId, parentDisposable);
     final Application app = ApplicationManager.getApplication();
     final boolean isDispatchThread = app.isDispatchThread();
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        if (canRunTransactionNow(transaction, isDispatchThread)) {
-          runSyncTransaction(transaction);
-        }
-        else {
-          getQueue(expectedId).offer(transaction);
-          pollQueueLater();
-        }
+    Runnable runnable = () -> {
+      if (canRunTransactionNow(transaction, isDispatchThread)) {
+        runSyncTransaction(transaction);
+      }
+      else {
+        getQueue(expectedId).offer(transaction);
+        pollQueueLater();
       }
     };
 
@@ -166,18 +158,15 @@ public class TransactionGuardImpl extends TransactionGuard {
     final Semaphore semaphore = new Semaphore();
     semaphore.down();
     final Throwable[] exception = {null};
-    submitTransaction(Disposer.newDisposable("never disposed"), getContextTransaction(), new Runnable() {
-      @Override
-      public void run() {
-        try {
-          runnable.run();
-        }
-        catch (Throwable e) {
-          exception[0] = e;
-        }
-        finally {
-          semaphore.up();
-        }
+    submitTransaction(Disposer.newDisposable("never disposed"), getContextTransaction(), () -> {
+      try {
+        runnable.run();
+      }
+      catch (Throwable e) {
+        exception[0] = e;
+      }
+      finally {
+        semaphore.up();
       }
     });
     semaphore.waitFor();
@@ -237,14 +226,25 @@ public class TransactionGuardImpl extends TransactionGuard {
   public void assertWriteActionAllowed() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (areAssertionsEnabled() && !myWritingAllowed && !myErrorReported) {
-      String message = "Write access is allowed from write-safe contexts only. " +
-                       "Please ensure you're using invokeLater/invokeAndWait with a correct modality state (not \"any\"). " +
-                       "See TransactionGuard documentation for details." +
-                       "\n  current modality=" + ModalityState.current() +
-                       "\n  known modalities=" + myWriteSafeModalities;
       // please assign exceptions here to Peter
-      LOG.error(message);
+      LOG.error(reportWriteUnsafeContext(ModalityState.current()));
       myErrorReported = true;
+    }
+  }
+
+  private String reportWriteUnsafeContext(@NotNull ModalityState modality) {
+    return "Write-unsafe context! Model changes are allowed from write-safe contexts only. " +
+           "Please ensure you're using invokeLater/invokeAndWait with a correct modality state (not \"any\"). " +
+           "See TransactionGuard documentation for details." +
+           "\n  current modality=" + modality +
+           "\n  known modalities=" + myWriteSafeModalities;
+  }
+
+  @Override
+  public void assertWriteSafeContext(@NotNull ModalityState modality) {
+    if (!isWriteSafeModality(modality) && areAssertionsEnabled()) {
+      // please assign exceptions here to Peter
+      LOG.error(reportWriteUnsafeContext(modality));
     }
   }
 
@@ -262,13 +262,17 @@ public class TransactionGuardImpl extends TransactionGuard {
   @Override
   public void submitTransactionLater(@NotNull final Disposable parentDisposable, @NotNull final Runnable transaction) {
     final TransactionIdImpl id = getContextTransaction();
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
+    final ModalityState startModality = ModalityState.defaultModalityState();
+    invokeLater(() -> {
+      boolean allowWriting = ModalityState.current() == startModality;
+      AccessToken token = startActivity(allowWriting);
+      try {
         submitTransaction(parentDisposable, id, transaction);
       }
-    };
-    invokeLater(runnable);
+      finally {
+        token.finish();
+      }
+    });
   }
 
   private static void invokeLater(Runnable runnable) {
@@ -278,8 +282,7 @@ public class TransactionGuardImpl extends TransactionGuard {
   @Override
   public TransactionIdImpl getContextTransaction() {
     if (!ApplicationManager.getApplication().isDispatchThread()) {
-      ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
-      return indicator != null ? myModality2Transaction.get(indicator.getModalityState()) : null;
+      return myModality2Transaction.get(ModalityState.defaultModalityState());
     }
 
     return myWritingAllowed ? myCurrentTransaction : null;
@@ -351,7 +354,7 @@ public class TransactionGuardImpl extends TransactionGuard {
   private static class TransactionIdImpl implements TransactionId {
     private static final AtomicLong ourTransactionCounter = new AtomicLong();
     final long myStartCounter = ourTransactionCounter.getAndIncrement();
-    final Queue<Transaction> myQueue = new LinkedBlockingQueue<Transaction>();
+    final Queue<Transaction> myQueue = new LinkedBlockingQueue<>();
     boolean myFinished;
     final TransactionIdImpl myParent;
 

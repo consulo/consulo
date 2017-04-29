@@ -128,7 +128,6 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     }
   }
 
-  @RequiredDispatchThread
   public void postponeFormattingInside(@NotNull final Runnable runnable) {
     postponeFormattingInside((NullableComputable<Object>)() -> {
       runnable.run();
