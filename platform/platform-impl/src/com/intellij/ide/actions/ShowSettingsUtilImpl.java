@@ -30,6 +30,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
@@ -249,10 +250,12 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     return editor.isOK();
   }
 
-  public static String createDimensionKey(Configurable configurable) {
+  public static String createDimensionKey(@NotNull Configurable configurable) {
     String displayName = configurable.getDisplayName();
-    displayName = displayName.replaceAll("\n", "_").replaceAll(" ", "_");
-    return "#" + displayName;
+    if (displayName == null) {
+      displayName = configurable.getClass().getName();
+    }
+    return '#' + StringUtil.replaceChar(StringUtil.replaceChar(displayName, '\n', '_'), ' ', '_');
   }
 
   @Override
