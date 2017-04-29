@@ -2228,10 +2228,9 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
       myWindowedDecorator = getWindowedDecorator(info.getId());
       myId2WindowedDecorator.remove(info.getId());
 
-      JRootPane rootPane = ((RootPaneContainer)myWindowedDecorator.getFrame()).getRootPane();
-      Rectangle bounds = rootPane.getBounds();
-      Point location = rootPane.getLocationOnScreen();
-      bounds.setBounds(location.x - DIVIDER_WIDTH, location.y - DIVIDER_WIDTH, bounds.width + 2 * DIVIDER_WIDTH, bounds.height + 2 * DIVIDER_WIDTH);
+      Window frame = myWindowedDecorator.getFrame();
+      if (!frame.isShowing()) return;
+      Rectangle bounds = getRootBounds((JFrame)frame);
       info.setFloatingBounds(bounds);
     }
 

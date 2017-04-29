@@ -24,7 +24,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.ide.RemoteDesktopDetector;
+import com.intellij.ide.RemoteDesktopService;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
@@ -348,7 +348,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
     VisibleEditorsTracker editorsTracker = VisibleEditorsTracker.getInstance();
     boolean useAnimation;
     //System.out.println("myCurrentCommandStart - myLastCommandFinish = " + (myCurrentCommandStart - myLastCommandFinish));
-    if (!myEditor.getSettings().isAnimatedScrolling() || myAnimationDisabled || RemoteDesktopDetector.isRemoteSession()) {
+    if (!myEditor.getSettings().isAnimatedScrolling() || myAnimationDisabled || RemoteDesktopService.isRemoteSession()) {
       useAnimation = false;
     }
     else if (CommandProcessor.getInstance().getCurrentCommand() == null) {

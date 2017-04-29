@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.ide.RemoteDesktopDetector;
+import com.intellij.ide.RemoteDesktopService;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
@@ -173,16 +173,15 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
 
       myTopStripe.setBounds(0, 0, size.width, topSize.height);
       myLeftStripe.setBounds(0, topSize.height, leftSize.width, size.height - topSize.height - bottomSize.height);
-      myRightStripe
-              .setBounds(size.width - rightSize.width, topSize.height, rightSize.width, size.height - topSize.height - bottomSize.height);
+      myRightStripe.setBounds(size.width - rightSize.width, topSize.height, rightSize.width, size.height - topSize.height - bottomSize.height);
       myBottomStripe.setBounds(0, size.height - bottomSize.height, size.width, bottomSize.height);
 
       if (UISettings.getInstance().HIDE_TOOL_STRIPES || UISettings.getInstance().PRESENTATION_MODE) {
         myLayeredPane.setBounds(0, 0, size.width, size.height);
       }
       else {
-        myLayeredPane.setBounds(leftSize.width, topSize.height, size.width - leftSize.width - rightSize.width,
-                                size.height - topSize.height - bottomSize.height);
+        myLayeredPane
+                .setBounds(leftSize.width, topSize.height, size.width - leftSize.width - rightSize.width, size.height - topSize.height - bottomSize.height);
       }
     }
   }
@@ -244,12 +243,10 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
    * @param dirtyMode if <code>true</code> then JRootPane will not be validated and repainted after adding
    *                  the decorator. Moreover in this (dirty) mode animation doesn't work.
    */
-  final FinalizableCommand createAddDecoratorCmd(
-          final InternalDecorator decorator,
-          final WindowInfoImpl info,
-          final boolean dirtyMode,
-          final Runnable finishCallBack
-  ) {
+  final FinalizableCommand createAddDecoratorCmd(final InternalDecorator decorator,
+                                                 final WindowInfoImpl info,
+                                                 final boolean dirtyMode,
+                                                 final Runnable finishCallBack) {
     final WindowInfoImpl copiedInfo = info.copy();
     final String id = copiedInfo.getId();
 
@@ -520,9 +517,10 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
 
     boolean vertical = wnd.getAnchor() == ToolWindowAnchor.TOP || wnd.getAnchor() == ToolWindowAnchor.BOTTOM;
     int actualSize = (vertical ? pair.second.getHeight() : pair.second.getWidth()) + value;
-    boolean first = wnd.getAnchor() == ToolWindowAnchor.LEFT  || wnd.getAnchor() == ToolWindowAnchor.TOP;
+    boolean first = wnd.getAnchor() == ToolWindowAnchor.LEFT || wnd.getAnchor() == ToolWindowAnchor.TOP;
     int maxValue = vertical ? myVerticalSplitter.getMaxSize(first) : myHorizontalSplitter.getMaxSize(first);
-    int minValue = vertical ? myVerticalSplitter.getMinSize(first) : myHorizontalSplitter.getMinSize(first);;
+    int minValue = vertical ? myVerticalSplitter.getMinSize(first) : myHorizontalSplitter.getMinSize(first);
+    ;
 
     pair.first.setSize(Math.max(minValue, Math.min(maxValue, actualSize)));
   }
@@ -631,7 +629,8 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
       assert maximizedWindow == wnd;
       resizerAndComponent.first.setSize(myMaximizedProportion.second);
       myMaximizedProportion = null;
-    } else {
+    }
+    else {
       int size = wnd.getAnchor().isHorizontal() ? resizerAndComponent.second.getHeight() : resizerAndComponent.second.getWidth();
       stretch(wnd, Short.MAX_VALUE);
       myMaximizedProportion = Pair.create(wnd, size);
@@ -753,10 +752,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public AddDockedComponentCmd(final JComponent component,
-                                 final WindowInfoImpl info,
-                                 final boolean dirtyMode,
-                                 final Runnable finishCallBack) {
+    public AddDockedComponentCmd(final JComponent component, final WindowInfoImpl info, final boolean dirtyMode, final Runnable finishCallBack) {
       super(finishCallBack);
       myComponent = component;
       myInfo = info;
@@ -784,8 +780,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    private AddAndSplitDockedComponentCmd(final JComponent newComponent,
-                                          final WindowInfoImpl info, final boolean dirtyMode, final Runnable finishCallBack) {
+    private AddAndSplitDockedComponentCmd(final JComponent newComponent, final WindowInfoImpl info, final boolean dirtyMode, final Runnable finishCallBack) {
       super(finishCallBack);
       myNewComponent = newComponent;
       myInfo = info;
@@ -850,10 +845,8 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
           if (myInfo.isSplit()) {
             splitter.setFirstComponent(oldComponent);
             splitter.setSecondComponent(myNewComponent);
-            float proportion = getPreferredSplitProportion(oldComponent.getWindowInfo().getId(),
-                                                           normalizeWeigh(oldComponent.getWindowInfo().getSideWeight() /
-                                                                          (oldComponent.getWindowInfo().getSideWeight() +
-                                                                           myInfo.getSideWeight())));
+            float proportion = getPreferredSplitProportion(oldComponent.getWindowInfo().getId(), normalizeWeigh(
+                    oldComponent.getWindowInfo().getSideWeight() / (oldComponent.getWindowInfo().getSideWeight() + myInfo.getSideWeight())));
             splitter.setProportion(proportion);
             if (!anchor.isHorizontal() && !anchor.isSplitVertically()) {
               newWeight = normalizeWeigh(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
@@ -873,7 +866,8 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
               newWeight = normalizeWeigh(myInfo.getWeight());
             }
           }
-        } else {
+        }
+        else {
           newWeight = normalizeWeigh(myInfo.getWeight());
         }
         setComponent(splitter, anchor, newWeight);
@@ -894,21 +888,19 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public AddSlidingComponentCmd(final Component component,
-                                  final WindowInfoImpl info,
-                                  final boolean dirtyMode,
-                                  final Runnable finishCallBack) {
+    public AddSlidingComponentCmd(final Component component, final WindowInfoImpl info, final boolean dirtyMode, final Runnable finishCallBack) {
       super(finishCallBack);
       myComponent = component;
       myInfo = info;
       myDirtyMode = dirtyMode;
     }
+
     @Override
     public final void run() {
       try {
         // Show component.
         final UISettings uiSettings = UISettings.getInstance();
-        if (!myDirtyMode && uiSettings.ANIMATE_WINDOWS && !RemoteDesktopDetector.isRemoteSession()) {
+        if (!myDirtyMode && uiSettings.ANIMATE_WINDOWS && !RemoteDesktopService.isRemoteSession()) {
           // Prepare top image. This image is scrolling over bottom image.
           final Image topImage = myLayeredPane.getTopImage();
           final Graphics topGraphics = topImage.getGraphics();
@@ -1073,9 +1065,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    private RemoveSplitAndDockedComponentCmd(final WindowInfoImpl info,
-                                             boolean dirtyMode,
-                                             final Runnable finishCallBack) {
+    private RemoveSplitAndDockedComponentCmd(@NotNull WindowInfoImpl info, boolean dirtyMode, @NotNull Runnable finishCallBack) {
       super(finishCallBack);
       myInfo = info;
       myDirtyMode = dirtyMode;
@@ -1084,20 +1074,19 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     @Override
     public void run() {
       try {
-        JComponent c = getComponentAt(myInfo.getAnchor());
+        ToolWindowAnchor anchor = myInfo.getAnchor();
+        JComponent c = getComponentAt(anchor);
         if (c instanceof Splitter) {
           Splitter splitter = (Splitter)c;
-          if (myInfo.isSplit()) {
-            InternalDecorator component = (InternalDecorator)splitter.getFirstComponent();
+          final InternalDecorator component =
+                  myInfo.isSplit() ? (InternalDecorator)splitter.getFirstComponent() : (InternalDecorator)splitter.getSecondComponent();
+          if (myInfo.isSplit() && component != null) {
             myId2SplitProportion.put(component.getWindowInfo().getId(), splitter.getProportion());
-            setComponent(component, myInfo.getAnchor(), component.getWindowInfo().getWeight());
           }
-          else {
-            InternalDecorator component = (InternalDecorator)splitter.getSecondComponent();
-            setComponent(component, myInfo.getAnchor(), component.getWindowInfo().getWeight());
-          }
-        } else {
-          setComponent(null, myInfo.getAnchor(), 0);
+          setComponent(component, anchor, component != null ? component.getWindowInfo().getWeight() : 0);
+        }
+        else {
+          setComponent(null, anchor, 0);
         }
         if (!myDirtyMode) {
           myLayeredPane.validate();
@@ -1115,17 +1104,18 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public RemoveSlidingComponentCmd(Component component, WindowInfoImpl info, boolean dirtyMode, Runnable finishCallBack) {
+    public RemoveSlidingComponentCmd(Component component, @NotNull WindowInfoImpl info, boolean dirtyMode, @NotNull Runnable finishCallBack) {
       super(finishCallBack);
       myComponent = component;
       myInfo = info;
       myDirtyMode = dirtyMode;
     }
+
     @Override
     public final void run() {
       try {
         final UISettings uiSettings = UISettings.getInstance();
-        if (!myDirtyMode && uiSettings.ANIMATE_WINDOWS && !RemoteDesktopDetector.isRemoteSession()) {
+        if (!myDirtyMode && uiSettings.ANIMATE_WINDOWS && !RemoteDesktopService.isRemoteSession()) {
           final Rectangle bounds = myComponent.getBounds();
           // Prepare top image. This image is scrolling over bottom image. It contains
           // picture of component is being removed.
@@ -1243,6 +1233,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
       updateLayout();
     }
   }
+
   private final class MyLayeredPane extends JBLayeredPane {
     /*
      * These images are used to perform animated showing and hiding of components.
@@ -1273,10 +1264,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     private Pair<BufferedImage, SoftReference<BufferedImage>> getImage(SoftReference<BufferedImage> imageRef) {
       LOG.assertTrue(UISettings.getInstance().ANIMATE_WINDOWS);
       BufferedImage image = imageRef.get();
-      if (
-              image == null ||
-              image.getWidth(null) < getWidth() || image.getHeight(null) < getHeight()
-              ) {
+      if (image == null || image.getWidth(null) < getWidth() || image.getHeight(null) < getHeight()) {
         final int width = Math.max(Math.max(1, getWidth()), myFrame.getWidth());
         final int height = Math.max(Math.max(1, getHeight()), myFrame.getHeight());
         if (SystemInfo.isWindows) {

@@ -1950,7 +1950,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
   }
 
   public boolean isAnimationEnabled() {
-    return myAnimationEnabled && myAnimationCycle > 0 && !RemoteDesktopDetector.isRemoteSession();
+    return myAnimationEnabled && myAnimationCycle > 0 && !RemoteDesktopService.isRemoteSession();
   }
 
   public boolean isBlockClicks() {

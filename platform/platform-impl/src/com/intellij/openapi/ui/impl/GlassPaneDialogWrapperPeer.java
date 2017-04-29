@@ -16,7 +16,7 @@
 package com.intellij.openapi.ui.impl;
 
 import com.intellij.ide.DataManager;
-import com.intellij.ide.RemoteDesktopDetector;
+import com.intellij.ide.RemoteDesktopService;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
@@ -593,7 +593,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     }
 
     private void createShadow() {
-      if (!RemoteDesktopDetector.isRemoteSession() && !JBUI.isHiDPI()) {
+      if (!RemoteDesktopService.isRemoteSession() && !JBUI.isHiDPI()) {
         shadow = ShadowBorderPainter.createShadow(this, getWidth(), getHeight());
       }
     }
