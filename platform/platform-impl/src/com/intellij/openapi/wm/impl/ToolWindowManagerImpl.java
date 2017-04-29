@@ -842,22 +842,14 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
    * @param id         <code>id</code> of the tool window to be deactivated.
    * @param shouldHide if <code>true</code> then also hides specified tool window.
    */
-  private void deactivateToolWindowImpl(final String id, final boolean shouldHide, final List<FinalizableCommand> commandsList) {
+  private void deactivateToolWindowImpl(@NotNull String id, final boolean shouldHide, @NotNull List<FinalizableCommand> commandsList) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("enter: deactivateToolWindowImpl(" + id + "," + shouldHide + ")");
     }
-    final WindowInfoImpl info = getInfo(id);
+
+    WindowInfoImpl info = getInfo(id);
     if (shouldHide && info.isVisible()) {
-      info.setVisible(false);
-      if (info.isFloating()) {
-        appendRemoveFloatingDecoratorCmd(info, commandsList);
-      }
-      else if (info.isWindowed()) {
-        appendRemoveWindowedDecoratorCmd(info, commandsList);
-      }
-      else { // docked and sliding windows
-        appendRemoveDecoratorCmd(id, false, commandsList);
-      }
+      applyInfo(id, info, commandsList);
     }
     info.setActive(false);
     appendApplyWindowInfoCmd(info, commandsList);
@@ -1299,29 +1291,21 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     // Save recent appearance of tool window
     myLayout.unregister(id);
     // Remove decorator and tool button from the screen
-    final ArrayList<FinalizableCommand> commandsList = new ArrayList<>();
+    List<FinalizableCommand> commandsList = new ArrayList<>();
     if (info.isVisible()) {
-      info.setVisible(false);
-      if (info.isFloating()) {
-        appendRemoveFloatingDecoratorCmd(info, commandsList);
-      }
-      else if (info.isWindowed()) {
-        appendRemoveWindowedDecoratorCmd(info, commandsList);
-      }
-      else { // floating and sliding windows
-        appendRemoveDecoratorCmd(id, false, commandsList);
-      }
+      applyInfo(id, info, commandsList);
     }
     appendRemoveButtonCmd(id, commandsList);
     appendApplyWindowInfoCmd(info, commandsList);
     execute(commandsList);
     // Remove all references on tool window and save its last properties
+    assert toolWindow != null;
     toolWindow.removePropertyChangeListener(myToolWindowPropertyChangeListener);
     myActiveStack.remove(id, true);
     mySideStack.remove(id);
     // Destroy stripe button
     final StripeButton button = getStripeButton(id);
-    button.dispose();
+    Disposer.dispose(button);
     myId2StripeButton.remove(id);
     //
     ToolWindowFocusWatcher watcher = (ToolWindowFocusWatcher)myId2FocusWatcher.remove(id);
@@ -1332,6 +1316,19 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     decorator.dispose();
     decorator.removeInternalDecoratorListener(myInternalDecoratorListener);
     myId2InternalDecorator.remove(id);
+  }
+
+  private void applyInfo(@NotNull String id, WindowInfoImpl info, List<FinalizableCommand> commandsList) {
+    info.setVisible(false);
+    if (info.isFloating()) {
+      appendRemoveFloatingDecoratorCmd(info, commandsList);
+    }
+    else  if (info.isWindowed()) {
+      appendRemoveWindowedDecoratorCmd(info, commandsList);
+    }
+    else { // floating and sliding windows
+      appendRemoveDecoratorCmd(id, false, commandsList);
+    }
   }
 
   @Override
