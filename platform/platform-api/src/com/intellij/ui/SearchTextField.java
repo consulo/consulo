@@ -27,6 +27,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.JBInsets;
@@ -315,7 +316,7 @@ public class SearchTextField extends JPanel {
 
   @Override
   public void requestFocus() {
-    getTextEditor().requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(getTextEditor());
   }
 
   public class MyModel extends AbstractListModel {

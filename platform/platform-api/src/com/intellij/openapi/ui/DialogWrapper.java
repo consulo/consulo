@@ -1730,10 +1730,10 @@ public abstract class DialogWrapper {
     for (int i = 0; i < myButtons.length; i++) {
       if (myButtons[i].hasFocus()) {
         if (i == myButtons.length - 1) {
-          myButtons[0].requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myButtons[0]);
           return;
         }
-        myButtons[i + 1].requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myButtons[i + 1]);
         return;
       }
     }

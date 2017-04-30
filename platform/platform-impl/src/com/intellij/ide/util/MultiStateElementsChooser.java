@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.util;
 
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.containers.ContainerUtil;
@@ -283,7 +284,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
         myTable.getSelectionModel().clearSelection();
       }
     }
-    myTable.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTable);
   }
 
   public void removeAllElements() {
@@ -320,7 +321,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     myTableModel.addElement(element, markState);
     myElementToPropertiesMap.put(element, elementProperties);
     selectRow(myTableModel.getRowCount() - 1);
-    myTable.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTable);
   }
 
   public void setElementProperties(T element, ElementProperties properties) {
@@ -363,7 +364,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     final int[] rows = getElementsRows(elements);
     TableUtil.selectRows(myTable, rows);
     TableUtil.scrollSelectionToVisible(myTable);
-    myTable.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTable);
   }
 
   private int[] getElementsRows(final Collection<? extends T> elements) {

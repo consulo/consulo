@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.ListTableModel;
@@ -126,7 +127,7 @@ class TableToolbarDecorator extends ToolbarDecorator {
             if (editorComponent != null) {
               final Rectangle bounds = editorComponent.getBounds();
               table.scrollRectToVisible(bounds);
-              editorComponent.requestFocus();
+              IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(editorComponent);
             }
           }
         });
@@ -153,7 +154,7 @@ class TableToolbarDecorator extends ToolbarDecorator {
           updateButtons();
         }
 
-        table.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
 
         updateScroller(table, false);
       }
@@ -172,7 +173,7 @@ class TableToolbarDecorator extends ToolbarDecorator {
             table.setRowSelectionInterval(index - 1, index - 1);
           }
         }
-        table.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
         if (row > 0 && col != -1) {
           table.editCellAt(row - 1, col);
         }
@@ -193,7 +194,7 @@ class TableToolbarDecorator extends ToolbarDecorator {
             table.setRowSelectionInterval(index + 1, index + 1);
           }
         }
-        table.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
         if (row < table.getRowCount() - 1 && col != -1) {
           table.editCellAt(row + 1, col);
         }

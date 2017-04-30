@@ -22,6 +22,7 @@ package com.intellij.codeInsight.intention.impl.config;
 import com.intellij.codeInsight.intention.IntentionManager;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.packageDependencies.ui.TreeExpansionMonitor;
 import com.intellij.ui.*;
 import com.intellij.util.ArrayUtil;
@@ -364,7 +365,7 @@ public abstract class IntentionSettingsTree {
         @Override
         public void run() {
           myTree.setSelectionRow(0);
-          myTree.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
         }
       });
       TreeUtil.expandAll(myTree);

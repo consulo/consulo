@@ -15,6 +15,7 @@
  */
 package com.intellij.ui.components;
 
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.panels.ValidatingComponent;
 
@@ -51,7 +52,7 @@ public class ValidatingTextField extends ValidatingComponent<JTextField> {
   }
 
   public void requestFocus() {
-    getMainComponent().requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(getMainComponent());
   }
 
   public boolean requestFocusInWindow() {

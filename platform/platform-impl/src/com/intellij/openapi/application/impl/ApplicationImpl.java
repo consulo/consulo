@@ -58,8 +58,10 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.psi.PsiLock;
+import com.intellij.ui.AppIcon;
 import com.intellij.ui.Splash;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.AppExecutorUtil;
@@ -212,32 +214,21 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     if (!isUnitTestMode && !isHeadless) {
       Disposer.register(this, Disposer.newDisposable(), "ui");
 
-      StartupUtil.addExternalInstanceListener(new Consumer<CommandLineArgs>() {
-        @Override
-        public void accept(CommandLineArgs commandLineArgs) {
-          LOG.info("ApplicationImpl.externalInstanceListener invocation");
-          final Project project = CommandLineProcessor.processExternalCommandLine(commandLineArgs, null);
-          final JFrame frame;
-          if (project != null) {
-            frame = (JFrame)WindowManager.getInstance().getIdeFrame(project);
-          }
-          else {
-            frame = WindowManager.getInstance().findVisibleFrame();
-          }
-          if (frame != null) frame.requestFocus();
-        }
+      StartupUtil.addExternalInstanceListener(commandLineArgs -> {
+        LOG.info("ApplicationImpl.externalInstanceListener invocation");
+        final Project project = CommandLineProcessor.processExternalCommandLine(commandLineArgs, null);
+        final IdeFrame  frame = WindowManager.getInstance().getIdeFrame(project);
+
+        if (frame != null) AppIcon.getInstance().requestFocus(frame);
       });
 
-      WindowsCommandLineProcessor.LISTENER = new WindowsCommandLineListener() {
-        @Override
-        public void processWindowsLauncherCommandLine(final String currentDirectory, final String commandLine) {
-          LOG.info("Received external Windows command line: current directory " + currentDirectory + ", command line " + commandLine);
-          invokeLater(() -> {
-            final List<String> args = StringUtil.splitHonorQuotes(commandLine, ' ');
-            args.remove(0);   // process name
-            CommandLineProcessor.processExternalCommandLine(CommandLineArgs.parse(ArrayUtil.toStringArray(args)), currentDirectory);
-          });
-        }
+      WindowsCommandLineProcessor.LISTENER = (currentDirectory, commandLine) -> {
+        LOG.info("Received external Windows command line: current directory " + currentDirectory + ", command line " + commandLine);
+        invokeLater(() -> {
+          final List<String> args = StringUtil.splitHonorQuotes(commandLine, ' ');
+          args.remove(0);   // process name
+          CommandLineProcessor.processExternalCommandLine(CommandLineArgs.parse(ArrayUtil.toStringArray(args)), currentDirectory);
+        });
       };
     }
 

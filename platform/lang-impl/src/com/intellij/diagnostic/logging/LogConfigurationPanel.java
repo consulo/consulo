@@ -29,6 +29,7 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.table.TableView;
@@ -124,7 +125,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
           if (selection >= 0) {
             myFilesTable.setRowSelectionInterval(selection, selection);
           }
-          myFilesTable.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myFilesTable);
         }
       }).setEditAction(new AnActionButtonRunnable() {
         @Override
@@ -426,7 +427,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
           showEditorDialog(myLogFileOptions);
           JTextField textField = getChildComponent();
           textField.setText(myLogFileOptions.getName());
-          textField.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(textField);
           myModel.fireTableDataChanged();
         }
       });

@@ -26,6 +26,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.ShadowAction;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.UIUtil;
@@ -182,14 +183,9 @@ public class RegistryUi implements Disposable {
 
   private void startEditingAtSelection() {
     myTable.editCellAt(myTable.getSelectedRow(), 2);
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (myTable.isEditing()) {
-          myTable.getEditorComponent().requestFocus();
-        }
-      }
-    });
+    if (myTable.isEditing()) {
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTable.getEditorComponent());
+    }
   }
 
   private static class MyTableModel extends AbstractTableModel {

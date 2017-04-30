@@ -15,6 +15,8 @@
  */
 package com.intellij.ui;
 
+import com.intellij.openapi.wm.IdeFocusManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -96,10 +98,10 @@ public class DialogButtonGroup extends JPanel {
     for (int i = 0; i < components.length; i++) {
       if (components[i].hasFocus()) {
         if (i == 0) {
-          components[components.length - 1].requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(components[components.length - 1]);
           return;
         }
-        components[i - 1].requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(components[i - 1]);
         return;
       }
     }
@@ -110,10 +112,10 @@ public class DialogButtonGroup extends JPanel {
     for (int i = 0; i < components.length; i++) {
       if (components[i].hasFocus()) {
         if (i == components.length - 1) {
-          components[0].requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(components[0]);
           return;
         }
-        components[i + 1].requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(components[i + 1]);
         return;
       }
     }

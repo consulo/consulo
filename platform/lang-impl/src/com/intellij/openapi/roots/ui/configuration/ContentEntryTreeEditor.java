@@ -41,6 +41,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
@@ -202,7 +203,7 @@ public class ContentEntryTreeEditor {
   }
 
   public void requestFocus() {
-    myTree.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
   }
 
   public void update() {

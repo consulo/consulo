@@ -21,6 +21,7 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.JBCardLayout;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.MultiMap;
@@ -85,7 +86,8 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
       mySteps.add(new CustomizeKeyboardSchemeStepPanel());
     }
 
-    CustomizeSelectTemplateStepPanel templateStepPanel = myPredefinedTemplateSets.isEmpty() ? null : new CustomizeSelectTemplateStepPanel(myPredefinedTemplateSets);
+    CustomizeSelectTemplateStepPanel templateStepPanel =
+            myPredefinedTemplateSets.isEmpty() ? null : new CustomizeSelectTemplateStepPanel(myPredefinedTemplateSets);
     CustomizePluginsStepPanel pluginsStepPanel = null;
     if (!myPluginDescriptors.isEmpty()) {
 
@@ -179,7 +181,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
       public void run() {
         Component component = myCurrentStep.getDefaultFocusedComponent();
         if (component != null) {
-          component.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(component);
         }
       }
     });

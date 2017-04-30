@@ -16,6 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.containers.ContainerUtil;
 
@@ -112,7 +113,7 @@ public abstract class OrderPanel<T> extends JPanel{
   }
 
   public void moveSelectedItemsUp() {
-    myEntryTable.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myEntryTable);
     try {
       myInsideMove++;
       TableUtil.moveSelectedItemsUp(myEntryTable);
@@ -126,7 +127,7 @@ public abstract class OrderPanel<T> extends JPanel{
   }
 
   public void moveSelectedItemsDown() {
-    myEntryTable.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myEntryTable);
     try {
       myInsideMove++;
       TableUtil.moveSelectedItemsDown(myEntryTable);

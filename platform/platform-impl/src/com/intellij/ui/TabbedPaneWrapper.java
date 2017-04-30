@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.util.IJSwingUtilities;
@@ -173,7 +174,7 @@ public class TabbedPaneWrapper  {
     final boolean hadFocus = IJSwingUtilities.hasFocus2(myTabbedPaneHolder);
     myTabbedPane.setSelectedIndex(index);
     if (hadFocus && requestFocus) {
-      myTabbedPaneHolder.requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTabbedPaneHolder);
     }
   }
 
@@ -199,7 +200,7 @@ public class TabbedPaneWrapper  {
         myTabbedPane.revalidate();
       }
       if (hadFocus) {
-        myTabbedPaneHolder.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTabbedPaneHolder);
       }
     }
     finally {
@@ -378,7 +379,7 @@ public class TabbedPaneWrapper  {
       final JComponent preferredFocusedComponent = IdeFocusTraversalPolicy.getPreferredFocusedComponent(myComponent);
       if (preferredFocusedComponent != null) {
         if (!preferredFocusedComponent.requestFocusInWindow()) {
-          preferredFocusedComponent.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(preferredFocusedComponent);
         }
         return true;
       } else {
@@ -428,7 +429,7 @@ public class TabbedPaneWrapper  {
       final JComponent preferredFocusedComponent = IdeFocusTraversalPolicy.getPreferredFocusedComponent(myWrapper.myTabbedPane.getComponent());
       if (preferredFocusedComponent != null) {
         if (!preferredFocusedComponent.requestFocusInWindow()) {
-          preferredFocusedComponent.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(preferredFocusedComponent);
         }
         return true;
       } else {

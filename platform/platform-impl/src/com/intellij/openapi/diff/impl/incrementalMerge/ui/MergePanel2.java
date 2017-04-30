@@ -57,6 +57,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.util.containers.Convertor;
 import gnu.trove.TIntHashSet;
@@ -483,7 +484,7 @@ public class MergePanel2 implements DiffViewer {
       Editor centerEditor = getEditor(1);
       JComponent centerComponent = centerEditor.getContentComponent();
       if (centerComponent.isShowing()) {
-        centerComponent.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(centerComponent);
       }
       int[] toLeft = getPrimaryBeginnings(myDividers[0].getPaint());
       int[] toRight = getPrimaryBeginnings(myDividers[1].getPaint());

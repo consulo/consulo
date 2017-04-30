@@ -32,6 +32,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.templateLanguages.TemplateDataLanguagePatterns;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
@@ -318,7 +319,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
       if (index >= 0) {
         ListScrollingUtil.selectItem(myPatterns.myPatternsList, index);
       }
-      myPatterns.myPatternsList.requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myPatterns.myPatternsList);
     }
   }
 
@@ -350,7 +351,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
 
     myTempPatternsTable.addAssociation(matcher, type);
     myPatterns.addPatternAndSelect(pattern);
-    myPatterns.myPatternsList.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myPatterns.myPatternsList);
 
     return null;
   }
@@ -363,7 +364,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     FileNameMatcher matcher = FileTypeManager.parseFromString(extension);
 
     myTempPatternsTable.removeAssociation(matcher, type);
-    myPatterns.myPatternsList.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myPatterns.myPatternsList);
   }
 
   @Override
@@ -541,7 +542,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
 
     public void selectFileType(FileType fileType) {
       myFileTypesList.setSelectedValue(fileType, true);
-      myFileTypesList.requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myFileTypesList);
     }
   }
 

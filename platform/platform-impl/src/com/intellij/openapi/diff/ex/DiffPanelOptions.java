@@ -22,6 +22,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.wm.IdeFocusManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,8 +42,7 @@ public class DiffPanelOptions {
   }
 
   public void onNewContent(DiffSideView currentSide) {
-    if (myRequestFocusOnNewContent)
-      currentSide.getFocusableComponent().requestFocus();
+    if (myRequestFocusOnNewContent) IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(currentSide.getFocusableComponent());
   }
 
   public void setRequestFocusOnNewContent(boolean requestFocusOnNewContent) {
@@ -67,7 +67,8 @@ public class DiffPanelOptions {
 
     ShowSourcePolicy DONT_SHOW = new ShowSourcePolicy() {
       @Override
-      public void showSource(@NotNull OpenFileDescriptor descriptor, @NotNull DiffPanelImpl diffPanel) {}
+      public void showSource(@NotNull OpenFileDescriptor descriptor, @NotNull DiffPanelImpl diffPanel) {
+      }
     };
 
     ShowSourcePolicy OPEN_EDITOR = new ShowSourcePolicy() {
@@ -105,9 +106,15 @@ public class DiffPanelOptions {
       @Override
       public void showSource(@NotNull OpenFileDescriptor descriptor, @NotNull DiffPanelImpl diffPanel) {
         Window window = diffPanel.getOwnerWindow();
-        if (window == null) return;
-        else if (window instanceof Frame) OPEN_EDITOR.showSource(descriptor, diffPanel);
-        else OPEN_EDITOR_AND_CLOSE_DIFF.showSource(descriptor, diffPanel);
+        if (window == null) {
+          return;
+        }
+        else if (window instanceof Frame) {
+          OPEN_EDITOR.showSource(descriptor, diffPanel);
+        }
+        else {
+          OPEN_EDITOR_AND_CLOSE_DIFF.showSource(descriptor, diffPanel);
+        }
       }
     };
   }

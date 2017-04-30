@@ -25,6 +25,7 @@ import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.*;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.Nullable;
@@ -164,7 +165,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
   }
 
   public void requestFocusInMessage() {
-    myEditorField.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myEditorField);
     myEditorField.selectAll();
   }
 

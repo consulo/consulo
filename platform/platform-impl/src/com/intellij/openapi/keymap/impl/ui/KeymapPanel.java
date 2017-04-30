@@ -462,12 +462,7 @@ public class KeymapPanel extends JPanel implements SearchableConfigurable, Confi
 
     enable2Shortcut.setSelected(false);
     secondShortcut.setEnabled(false);
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        firstShortcut.requestFocus();
-      }
-    });
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(firstShortcut);
     return filterComponent;
   }
 

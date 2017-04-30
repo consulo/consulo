@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -125,7 +126,7 @@ public class ProjectWindowAction extends ToggleAction implements DumbAware {
       projectFrame.setExtendedState(frameState ^ Frame.ICONIFIED);
     }
     projectFrame.toFront();
-    projectFrame.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(projectFrame);
     //ProjectUtil.focusProjectWindow(project, true);
   }
 

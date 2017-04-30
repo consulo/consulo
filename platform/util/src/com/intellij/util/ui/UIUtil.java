@@ -2205,6 +2205,7 @@ public class UIUtil {
     return new Color(actual.getRed(), actual.getGreen(), actual.getBlue(), alpha);
   }
 
+  @Deprecated
   public static void requestFocus(@NotNull final JComponent c) {
     if (c.isShowing()) {
       c.requestFocus();

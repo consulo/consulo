@@ -81,12 +81,7 @@ public class DebuggerUIUtil {
   }
 
   public static void focusEditorOnCheck(final JCheckBox checkbox, final JComponent component) {
-    final Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        component.requestFocus();
-      }
-    };
+    final Runnable runnable = () -> IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(component);
     checkbox.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {

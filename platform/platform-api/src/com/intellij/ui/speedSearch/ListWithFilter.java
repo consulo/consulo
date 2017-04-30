@@ -24,6 +24,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.util.Function;
 import com.intellij.util.ui.ComponentWithEmptyText;
@@ -202,6 +203,8 @@ public class ListWithFilter<T> extends JPanel implements DataProvider {
 
   @Override
   public void requestFocus() {
-    myList.requestFocus();
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+      IdeFocusManager.getGlobalInstance().requestFocus(myList, true);
+    });
   }
 }

@@ -28,11 +28,11 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.*;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.ui.ListScrollingUtil;
@@ -246,8 +246,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
     if (result.myCompletionBase == null) return null;
     if (result.myCompletionBase.length() == result.myFieldText.length()) return null;
 
-    String strokeText = KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(
-      "EditorChooseLookupItemReplace"));
+    String strokeText = KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction("EditorChooseLookupItemReplace"));
     return IdeBundle.message("file.chooser.completion.ad.text", strokeText);
   }
 
@@ -291,9 +290,9 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
 
           if (file.getMacro() != null) {
             return file.getMacro();
-          } else {
-            return (myCurrentCompletion != null && myCurrentCompletion.myKidsAfterSeparator.contains(file) ? myFinder.getSeparator() : "") +
-                   file.getName();
+          }
+          else {
+            return (myCurrentCompletion != null && myCurrentCompletion.myKidsAfterSeparator.contains(file) ? myFinder.getSeparator() : "") + file.getName();
           }
 
         }
@@ -370,8 +369,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
     final PopupChooserBuilder builder = JBPopupFactory.getInstance().createListPopupBuilder(myList);
     builder.addListener(new JBPopupListener() {
       public void beforeShown(LightweightWindowEvent event) {
-        myPathTextField
-          .registerKeyboardAction(myCancelAction, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+        myPathTextField.registerKeyboardAction(myCancelAction, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
         for (Action each : myDisabledTextActions) {
           each.setEnabled(false);
         }
@@ -386,25 +384,18 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
     });
 
     myCurrentPopup =
-      builder.setRequestFocus(false).setAdText(getAdText(myCurrentCompletion)).setAutoSelectIfEmpty(false).setResizable(false).setCancelCallback(new Computable<Boolean>() {
-        public Boolean compute() {
-          final int caret = myPathTextField.getCaretPosition();
-          myPathTextField.setSelectionStart(caret);
-          myPathTextField.setSelectionEnd(caret);
-          myPathTextField.setFocusTraversalKeysEnabled(true);
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              getField().requestFocus();
-            }
-          });
-          return Boolean.TRUE;
-        }
-      }).setItemChoosenCallback(new Runnable() {
-        public void run() {
-          processChosenFromCompletion(false);
-        }
-      }).setCancelKeyEnabled(false).setAlpha(0.1f).setFocusOwners(new Component[]{myPathTextField}).
-        createPopup();
+            builder.setRequestFocus(false).setAdText(getAdText(myCurrentCompletion)).setAutoSelectIfEmpty(false).setResizable(false).setCancelCallback(() -> {
+              final int caret = myPathTextField.getCaretPosition();
+              myPathTextField.setSelectionStart(caret);
+              myPathTextField.setSelectionEnd(caret);
+              myPathTextField.setFocusTraversalKeysEnabled(true);
+              IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+                IdeFocusManager.getGlobalInstance().requestFocus(getField(), true);
+              });
+              return Boolean.TRUE;
+            }).setItemChoosenCallback(() -> processChosenFromCompletion(false)).setCancelKeyEnabled(false).setAlpha(0.1f)
+                    .setFocusOwners(new Component[]{myPathTextField}).
+                    createPopup();
 
 
     if (result.myPreselected != null) {
@@ -423,7 +414,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
 
     final JComponent message = HintUtil.createErrorLabel(IdeBundle.message("file.chooser.completion.no.suggestions"));
     final ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(message, message);
-    builder.setRequestFocus(false).setResizable(false).setAlpha(0.1f).setFocusOwners(new Component[] {myPathTextField});
+    builder.setRequestFocus(false).setResizable(false).setAlpha(0.1f).setFocusOwners(new Component[]{myPathTextField});
     myNoSuggestionsPopup = builder.createPopup();
     myNoSuggestionsPopup.showInScreenCoordinates(getField(), getLocationForCaret(myPathTextField));
   }
@@ -502,7 +493,8 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
           result.grandparentPrefix = currentParentText.substring(currentGrandparentText.length() + myFinder.getSeparator().length());
         }
       }
-    } else {
+    }
+    else {
       result.effectivePrefix = typedText;
     }
 
@@ -650,14 +642,14 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         final Document doc = myPathTextField.getDocument();
         int caretPos = myPathTextField.getCaretPosition();
         if (myFinder.getSeparator().equals(doc.getText(caretPos, 1))) {
-          for (;caretPos < doc.getLength(); caretPos++) {
+          for (; caretPos < doc.getLength(); caretPos++) {
             final String eachChar = doc.getText(caretPos, 1);
             if (!myFinder.getSeparator().equals(eachChar)) break;
           }
         }
 
         int start = caretPos > 0 ? caretPos - 1 : caretPos;
-        while(start >= 0) {
+        while (start >= 0) {
           final String each = doc.getText(start, 1);
           if (myFinder.getSeparator().equals(each)) {
             start++;
@@ -667,7 +659,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         }
 
         int end = start < caretPos ? caretPos : start;
-        while(end <= doc.getLength()) {
+        while (end <= doc.getLength()) {
           final String each = doc.getText(end, 1);
           if (myFinder.getSeparator().equals(each)) {
             break;
@@ -681,14 +673,16 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
 
         if (start > end || start < 0 || end > doc.getLength()) {
           setTextToFile(file);
-        } else {
+        }
+        else {
           replacePathComponent(file, caretPos, start, end);
         }
       }
       catch (BadLocationException e) {
         LOG.error(e);
       }
-    } else {
+    }
+    else {
       setTextToFile(file);
     }
   }
@@ -719,10 +713,12 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
       }
       if (SystemInfo.isFileSystemCaseSensitive) {
         toRemoveExistingName = name.startsWith(prefix) && prefix.length() > 0;
-      } else {
+      }
+      else {
         toRemoveExistingName = StringUtil.toUpperCase(name).startsWith(StringUtil.toUpperCase(prefix)) && prefix.length() > 0;
       }
-    } else {
+    }
+    else {
       toRemoveExistingName = true;
     }
 
@@ -731,7 +727,8 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
       doc.remove(start, end - start);
       doc.insertString(start, name, doc.getDefaultRootElement().getAttributes());
       newPos = start + name.length();
-    } else {
+    }
+    else {
       doc.insertString(caretPos, name, doc.getDefaultRootElement().getAttributes());
       newPos = caretPos + name.length();
     }
@@ -798,7 +795,9 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
       ListScrollingUtil.movePageUp(myList);
       e.consume();
     }
-    else if (getSelectedFileFromCompletionPopup() != null && (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_TAB) && e.getModifiers() == 0) {
+    else if (getSelectedFileFromCompletionPopup() != null &&
+             (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_TAB) &&
+             e.getModifiers() == 0) {
       hideCurrentPopup();
       e.consume();
       processChosenFromCompletion(e.getKeyCode() == KeyEvent.VK_TAB);
@@ -924,14 +923,11 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
 
   public static class Vfs extends FileTextFieldImpl {
 
-    public Vfs(JTextField field,
-               Map<String, String> macroMap,
-               Disposable parent, final LookupFilter chooserFilter) {
+    public Vfs(JTextField field, Map<String, String> macroMap, Disposable parent, final LookupFilter chooserFilter) {
       super(field, new LocalFsFinder(), chooserFilter, macroMap, parent);
     }
 
-    public Vfs(Map<String, String> macroMap,
-               Disposable parent, final LookupFilter chooserFilter) {
+    public Vfs(Map<String, String> macroMap, Disposable parent, final LookupFilter chooserFilter) {
       this(new JTextField(), macroMap, parent, chooserFilter);
     }
 

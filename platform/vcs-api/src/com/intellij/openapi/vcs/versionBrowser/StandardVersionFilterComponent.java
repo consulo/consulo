@@ -15,8 +15,9 @@
  */
 package com.intellij.openapi.vcs.versionBrowser;
 
-import com.intellij.ui.IdeBorderFactory;
 import com.intellij.openapi.vcs.VcsBundle;
+import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.ui.IdeBorderFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,7 +85,9 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
     if (e != null && e.getSource() instanceof JCheckBox && ((JCheckBox)e.getSource()).isSelected()) {
       final Object source = e.getSource();
       if (source == checkBox && checkBox.isSelected()) {
-        textField.requestFocus();
+        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+          IdeFocusManager.getGlobalInstance().requestFocus(textField, true);
+        });
       }
     }
 
@@ -103,7 +106,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
     myNumBefore.setText(settings.CHANGE_BEFORE);
     myNumAfter.setText(settings.CHANGE_AFTER);
   }
-  
+
   public void saveValues(T settings) {
     myDateFilterComponent.saveValues(settings);
     settings.USE_CHANGE_BEFORE_FILTER = myUseNumBeforeFilter.isSelected();
@@ -134,7 +137,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
       try {
         Long.parseLong(myNumAfter.getText());
       }
-      catch(NumberFormatException ex) {
+      catch (NumberFormatException ex) {
         return getChangeNumberTitle() + " From must be a valid number";
       }
     }
@@ -142,7 +145,7 @@ public abstract class StandardVersionFilterComponent<T extends ChangeBrowserSett
       try {
         Long.parseLong(myNumBefore.getText());
       }
-      catch(NumberFormatException ex) {
+      catch (NumberFormatException ex) {
         return getChangeNumberTitle() + " To must be a valid number";
       }
     }

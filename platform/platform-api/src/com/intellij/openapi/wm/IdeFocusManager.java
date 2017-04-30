@@ -42,7 +42,7 @@ import java.awt.event.KeyEvent;
  * <pre>
  *   comp.requestFocus();
  * </pre>
- *
+ * <p>
  * This class is also responsible for delivering key events while focus transferring is in progress.
  * <p>
  * <code>IdeFocusManager</code> instance can be received per project or the global instance. The preferred way is
@@ -59,6 +59,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
   /**
    * Finds most suitable component to request focus to. For instance you may pass a JPanel instance,
    * this method will traverse into it's children to find focusable component
+   *
    * @return suitable component to focus
    */
   @Nullable
@@ -69,6 +70,10 @@ public abstract class IdeFocusManager implements FocusRequestor {
    * Executes given runnable after all focus activities are finished
    */
   public abstract void doWhenFocusSettlesDown(@NotNull Runnable runnable);
+
+  public void doForceFocusWhenFocusSettlesDown(@NotNull Component component) {
+    doWhenFocusSettlesDown(() -> requestFocus(component, true));
+  }
 
   /**
    * Executes given runnable after all focus activities are finished, immediately or later with the given modaliy state
@@ -89,6 +94,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
 
   /**
    * Dispatches given key event. This methods should not be called by the user code
+   *
    * @return true is the event was dispatched, false - otherwise.
    */
   public abstract boolean dispatch(@NotNull KeyEvent e);
@@ -101,9 +107,11 @@ public abstract class IdeFocusManager implements FocusRequestor {
 
   /**
    * Aggregates all key events until given callback object is processed
+   *
    * @param done action callback
    */
-  public void typeAheadUntil(ActionCallback done, @NotNull String cause) {}
+  public void typeAheadUntil(ActionCallback done, @NotNull String cause) {
+  }
 
   /**
    * Reports if any focus activity is being done
@@ -119,6 +127,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
   /**
    * Reports of focus transfer is enabled right now. It can be disabled if app is inactive. In this case
    * all focus requests will be either postponed or executed only if <code>FocusCommand</code> can be executed on an inaactive app.
+   *
    * @see com.intellij.openapi.wm.FocusCommand#canExecuteOnInactiveApp()
    */
   public abstract boolean isFocusTransferEnabled();
@@ -132,6 +141,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
 
   /**
    * Returns <code>FocusRequestor</code> object which will emit focus requests unless expired.
+   *
    * @see #getTimestamp(boolean)
    */
   @NotNull
@@ -145,6 +155,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
 
   /**
    * Enables or disables typeahead
+   *
    * @see #typeAheadUntil(com.intellij.openapi.util.ActionCallback)
    */
   public abstract void setTypeaheadEnabled(boolean enabled);

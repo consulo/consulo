@@ -16,6 +16,7 @@
 package com.intellij.profile.codeInspection.ui.header;
 
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.profile.Profile;
 import com.intellij.ui.ListCellRendererWrapper;
 
@@ -68,7 +69,7 @@ public abstract class ProfilesConfigurableComboBox extends JPanel {
     mySaveListener.setDelegate(inputValidator);
     mySubmitNameComponent.setText(initialValue);
     myCardLayout.show(this, EDIT_CARD);
-    mySubmitNameComponent.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(mySubmitNameComponent);
   }
 
   public void reset(final Collection<Profile> profiles) {

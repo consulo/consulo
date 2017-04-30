@@ -29,6 +29,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.wm.IdeFocusManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,7 +89,7 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
 
     final JTree tree = getTree();
     tree.repaint();
-    tree.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(tree);
   }
 
   protected void onHidden() {
@@ -128,7 +129,7 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
 
     inplaceEditorComponent.validate();
     inplaceEditorComponent.paintImmediately(0,0,inplaceEditorComponent.getWidth(),inplaceEditorComponent.getHeight());
-    getPreferredFocusedComponent().requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(getPreferredFocusedComponent());
 
     final ComponentAdapter componentListener = new ComponentAdapter() {
       @Override

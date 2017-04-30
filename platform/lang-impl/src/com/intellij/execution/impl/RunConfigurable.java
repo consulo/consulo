@@ -390,7 +390,7 @@ class RunConfigurable extends BaseConfigurable {
     myRightPanel.repaint();
     if (isFolderCreating) {
       textField.selectAll();
-      textField.requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(textField);
     }
   }
 

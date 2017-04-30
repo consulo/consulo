@@ -26,6 +26,7 @@ import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.JBColor;
@@ -133,10 +134,10 @@ public class KeyboardShortcutDialog extends DialogWrapper {
 
         /** TODO[anton]????  */
         if (myEnableSecondKeystroke.isSelected()) {
-          mySecondStrokePanel.getShortcutTextField().requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(mySecondStrokePanel.getShortcutTextField());
         }
         else {
-          myFirstStrokePanel.getShortcutTextField().requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myFirstStrokePanel.getShortcutTextField());
         }
       }
     });

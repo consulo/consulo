@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.UIBundle;
 
 import javax.swing.*;
@@ -40,6 +41,6 @@ public class InputException extends RuntimeException{
     if (myMessage !=  null) {
       Messages.showMessageDialog(myMessage, UIBundle.message("invalid.user.input.dialog.title"), Messages.getErrorIcon());
     }
-    myComponent.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myComponent);
   }
 }

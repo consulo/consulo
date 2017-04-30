@@ -32,6 +32,7 @@ import com.intellij.openapi.ui.playback.PlaybackRunner;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.encoding.EncodingRegistry;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -207,8 +208,8 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     @Override
     public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
       if (!showHiddenFiles && FileElement.isFileHidden(file)) return false;
-      return file.getExtension() != null && file.getExtension().equalsIgnoreCase(UiScriptFileType.myExtension)
-             || super.isFileVisible(file, showHiddenFiles) && file.isDirectory();
+      return file.getExtension() != null && file.getExtension().equalsIgnoreCase(UiScriptFileType.myExtension) ||
+             super.isFileVisible(file, showHiddenFiles) && file.isDirectory();
     }
   }
 
@@ -358,9 +359,10 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     final Component c = ((WindowManagerEx)WindowManager.getInstance()).getFocusedComponent(frame);
 
     if (c != null) {
-      c.requestFocus();
-    } else {
-      frame.requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(c);
+    }
+    else {
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(frame);
     }
 
     //noinspection SSBasedInspection
@@ -423,7 +425,8 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
         try {
           sleep(1000);
         }
-        catch (InterruptedException e) {}
+        catch (InterruptedException e) {
+        }
 
 
         if (myRunner == null) {
@@ -499,12 +502,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     disposeUiResources();
   }
 
-  @State(
-      name = "PlaybackDebugger",
-      storages = {
-          @Storage(
-              file = StoragePathMacros.APP_CONFIG + "/other.xml")}
-  )
+  @State(name = "PlaybackDebugger", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
   public static class PlaybackDebuggerState implements PersistentStateComponent<Element> {
     private static final String ATTR_CURRENT_SCRIPT = "currentScript";
     public String currentScript = "";

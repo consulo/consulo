@@ -24,6 +24,7 @@ import com.intellij.execution.filters.RegexpFilter;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.PopupHandler;
 import com.intellij.CommonBundle;
 
@@ -190,7 +191,7 @@ class FilterDialog extends DialogWrapper {
         }
       } catch (BadLocationException ex) {
       }
-      myRegexpField.requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myRegexpField);
     }
   }
 

@@ -21,6 +21,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.ui.table.TableView;
@@ -119,7 +120,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
             mutator = item12 -> helper.getMutable(item12, selectedRow);
           }
           ((DialogItemEditor<T>)itemEditor).edit(item, mutator, false);
-          table.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
         }
       }
     }).setEditActionUpdater(new AnActionButtonUpdater() {
@@ -272,7 +273,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
             model.addRow(itemEditor.clone(item, false));
           }
 
-          table.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
           TableUtil.updateScroller(table);
         }
       }
@@ -345,7 +346,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     @Override
     public void run(AnActionButton button) {
       if (TableUtil.doRemoveSelectedItems(table, model, this)) {
-        table.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
         TableUtil.updateScroller(table);
       }
     }

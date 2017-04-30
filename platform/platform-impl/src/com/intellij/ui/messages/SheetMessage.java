@@ -20,7 +20,6 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.mac.MacMainFrameDecorator;
@@ -37,6 +36,8 @@ import java.awt.event.WindowEvent;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
 
 /**
  * Created by Denis Fokin
@@ -131,13 +132,14 @@ public class SheetMessage {
     Component focusCandidate = beforeShowFocusOwner.get();
 
     if (focusCandidate == null) {
-      focusCandidate = IdeFocusManager.getGlobalInstance().getLastFocusedFor(IdeFocusManager.getGlobalInstance().getLastFocusedFrame());
+      focusCandidate = getGlobalInstance().getLastFocusedFor(getGlobalInstance().getLastFocusedFrame());
     }
 
     // focusCandidate is null if a welcome screen is closed and ide frame is not opened.
     // this is ok. We set focus correctly on our frame activation.
     if (focusCandidate != null) {
-      focusCandidate.requestFocus();
+      final Component finalFocusCandidate = focusCandidate;
+      getGlobalInstance().doWhenFocusSettlesDown(() -> getGlobalInstance().requestFocus(finalFocusCandidate, true));
     }
   }
 

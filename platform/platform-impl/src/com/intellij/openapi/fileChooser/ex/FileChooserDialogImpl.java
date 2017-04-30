@@ -41,6 +41,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
@@ -614,7 +615,9 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     else {
       setErrorText(null);
     }
-    myPathTextField.getField().requestFocus();
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+      IdeFocusManager.getGlobalInstance().requestFocus(myPathTextField.getField(), true);
+    });
 
     myNorthPanel.revalidate();
     myNorthPanel.repaint();
@@ -692,12 +695,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
           myTreeIsUpdating = false;
           setErrorText(null);
           if (requestFocus) {
-            //noinspection SSBasedInspection
-            SwingUtilities.invokeLater(new Runnable() {
-              public void run() {
-                myFileSystemTree.getTree().requestFocus();
-              }
-            });
+            IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myFileSystemTree.getTree());
           }
         }
       });

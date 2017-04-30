@@ -4,6 +4,7 @@
  */
 package com.mxgraph.swing.handler;
 
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import com.mxgraph.util.mxCellRenderer;
@@ -351,7 +352,7 @@ public class mxGraphTransferHandler extends TransferHandler {
       result = true;
 
       // Requests the focus after an import
-      graphComponent.requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(graphComponent);
     }
     catch (Exception e) {
       e.printStackTrace();

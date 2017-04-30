@@ -47,6 +47,7 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.ProperTextRange;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.ui.*;
@@ -95,7 +96,8 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   private ProperTextRange myDirtyYPositions;
   private static final ProperTextRange WHOLE_DOCUMENT = new ProperTextRange(0, 0);
 
-  @NotNull private ErrorStripTooltipRendererProvider myTooltipRendererProvider = new BasicTooltipRendererProvider();
+  @NotNull
+  private ErrorStripTooltipRendererProvider myTooltipRendererProvider = new BasicTooltipRendererProvider();
 
   private int myMinMarkHeight = JBUI.scale(3);
   private static final int myPreviewLines = 5;// Actually preview has myPreviewLines * 2 + 1 lines (above + below + current one)
@@ -222,7 +224,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
   private int getOffset(int visualLine, boolean startLine) {
     int logicalLine = myEditor.visualToLogicalPosition(new VisualPosition(visualLine, 0)).line;
-    return startLine? myEditor.getDocument().getLineStartOffset(logicalLine) : myEditor.getDocument().getLineEndOffset(logicalLine);
+    return startLine ? myEditor.getDocument().getLineStartOffset(logicalLine) : myEditor.getDocument().getLineEndOffset(logicalLine);
   }
 
   private void collectRangeHighlighters(MarkupModelEx markupModel, final int visualLine, final Collection<RangeHighlighterEx> highlighters) {
@@ -693,7 +695,10 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
     @RequiredDispatchThread
     private void doMouseClicked(MouseEvent e) {
-      myEditor.getContentComponent().requestFocus();
+      IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+        IdeFocusManager.getGlobalInstance().requestFocus(myEditor.getContentComponent(), true);
+      });
+
       int lineCount = getDocument().getLineCount() + myEditor.getSettings().getAdditionalLinesCount();
       if (lineCount == 0) {
         return;
@@ -1213,8 +1218,11 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     }
 
     private void showEditorHint(HintManagerImpl hintManager, Point point, HintHint hintInfo) {
-      int flags = HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_MOUSEOVER |
-                  HintManager.HIDE_BY_ESCAPE | HintManager.HIDE_BY_SCROLLING;
+      int flags = HintManager.HIDE_BY_ANY_KEY |
+                  HintManager.HIDE_BY_TEXT_CHANGE |
+                  HintManager.HIDE_BY_MOUSEOVER |
+                  HintManager.HIDE_BY_ESCAPE |
+                  HintManager.HIDE_BY_SCROLLING;
       hintManager.showEditorHint(myEditorPreviewHint, myEditor, point, flags, 0, false, hintInfo);
     }
   }

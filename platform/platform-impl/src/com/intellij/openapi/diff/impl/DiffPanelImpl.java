@@ -758,10 +758,10 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
 
   public void focusOppositeSide() {
     if (myCurrentSide == myLeftSide) {
-      myRightSide.getEditor().getContentComponent().requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myRightSide.getEditor().getContentComponent());
     }
     else {
-      myLeftSide.getEditor().getContentComponent().requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myLeftSide.getEditor().getContentComponent());
     }
   }
 

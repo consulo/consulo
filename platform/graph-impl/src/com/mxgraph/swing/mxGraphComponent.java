@@ -5,6 +5,7 @@
 package com.mxgraph.swing;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.model.mxGraphModel;
@@ -549,7 +550,7 @@ public class mxGraphComponent extends JScrollPane implements Printable {
     graphControl.addMouseListener(new MouseAdapter() {
       public void mousePressed(MouseEvent e) {
         if (!hasFocus()) {
-          requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(mxGraphComponent.this);
         }
       }
     });

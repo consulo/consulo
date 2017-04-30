@@ -15,6 +15,7 @@
  */
 package com.intellij.ui.plaf.beg;
 
+import com.intellij.openapi.wm.IdeFocusManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -69,7 +70,7 @@ public class BegTableUI extends BasicTableUI {
         if (cellEditor != null && !cellEditor.stopCellEditing()) {
           return;
         }
-        table.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
         return;
       }
       ListSelectionModel rsm = table.getSelectionModel();
@@ -80,7 +81,7 @@ public class BegTableUI extends BasicTableUI {
       Component editorComp = table.getEditorComponent();
       if (editorComp != null) {
         editorComp.addKeyListener(myAdapter);
-        editorComp.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(editorComp);
       }
     }
   }

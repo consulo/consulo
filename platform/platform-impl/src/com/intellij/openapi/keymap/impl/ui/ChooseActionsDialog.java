@@ -29,6 +29,7 @@ import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.packageDependencies.ui.TreeExpansionMonitor;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.DoubleClickListener;
@@ -257,11 +258,7 @@ public class ChooseActionsDialog extends DialogWrapper {
 
     enable2Shortcut.setSelected(false);
     secondShortcut.setEnabled(false);
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        firstShortcut.requestFocus();
-      }
-    });
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(firstShortcut);
     return filterComponent;
   }
 

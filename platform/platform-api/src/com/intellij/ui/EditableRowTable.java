@@ -15,6 +15,8 @@
  */
 package com.intellij.ui;
 
+import com.intellij.openapi.wm.IdeFocusManager;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -85,7 +87,7 @@ public class EditableRowTable{
           if (editorComponent != null) {
             final Rectangle bounds = editorComponent.getBounds();
             table.scrollRectToVisible(bounds);
-            editorComponent.requestFocus();
+            IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(editorComponent);
           }
         }
       }
@@ -111,7 +113,7 @@ public class EditableRowTable{
           }
 
           table.getParent().repaint();
-          table.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
         }
       }
     );
@@ -126,7 +128,7 @@ public class EditableRowTable{
             tableModel.exchangeRows(index, index - 1);
             table.setRowSelectionInterval(index - 1, index - 1);
           }
-          table.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
         }
       }
     );
@@ -141,7 +143,7 @@ public class EditableRowTable{
             tableModel.exchangeRows(index, index + 1);
             table.setRowSelectionInterval(index + 1, index + 1);
           }
-          table.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(table);
         }
       }
     );

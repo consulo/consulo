@@ -35,6 +35,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.ScrollUtil;
 import org.jetbrains.annotations.NonNls;
@@ -50,6 +51,7 @@ import java.awt.event.MouseEvent;
 
 public class DiffSideView {
   private final JComponent MOCK_COMPONENT = new JPanel();
+
   {
     MOCK_COMPONENT.setFocusable(true);
   }
@@ -86,8 +88,12 @@ public class DiffSideView {
       DataManager.registerDataProvider(myPanel, new DataProvider() {
         @Override
         public Object getData(@NonNls String dataId) {
-          if (CommonDataKeys.PROJECT.is(dataId)) {return project;}
-          if (PlatformDataKeys.FILE_EDITOR.is(dataId)) {return fileEditor;}
+          if (CommonDataKeys.PROJECT.is(dataId)) {
+            return project;
+          }
+          if (PlatformDataKeys.FILE_EDITOR.is(dataId)) {
+            return fileEditor;
+          }
           return null;
         }
       });
@@ -96,7 +102,8 @@ public class DiffSideView {
         ScrollUtil.scrollHorizontally(fileEditor.getComponent(), 0);
 
       }
-    } else {
+    }
+    else {
       DataManager.removeDataProvider(myPanel);
       editor.getScrollingModel().scrollHorizontally(0);
       insertComponent(editor.getComponent());
@@ -284,12 +291,13 @@ public class DiffSideView {
 
   private class MyState {
     private final boolean isFocused;
+
     public MyState() {
       isFocused = IJSwingUtilities.hasFocus(getFocusableComponent());
     }
 
     public void restore() {
-      if (isFocused) getFocusableComponent().requestFocus();
+      if (isFocused) IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(getFocusableComponent());
       if (myIsMaster) beMaster();
     }
   }

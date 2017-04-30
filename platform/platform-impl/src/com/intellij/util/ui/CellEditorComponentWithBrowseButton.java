@@ -16,6 +16,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
+import com.intellij.openapi.wm.IdeFocusManager;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
@@ -69,7 +70,7 @@ public class CellEditorComponentWithBrowseButton<Comp extends JComponent> extend
   }
 
   public void requestFocus() {
-    myComponent.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myComponent);
   }
 
   public void setNextFocusableComponent(Component aComponent) {

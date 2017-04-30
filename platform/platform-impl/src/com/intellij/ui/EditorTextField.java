@@ -44,6 +44,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.AbstractDelegatingToRootTraversalPolicy;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
@@ -355,7 +356,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     }
     revalidate();
     if (isFocused) {
-      requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(this);
     }
   }
 
@@ -710,8 +711,10 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
   @Override
   public void requestFocus() {
     if (myEditor != null) {
-      myEditor.getContentComponent().requestFocus();
-      myEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+      IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+        IdeFocusManager.getGlobalInstance().requestFocus(myEditor.getContentComponent(), true);
+        myEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+      });
     }
     else {
       super.requestFocus();

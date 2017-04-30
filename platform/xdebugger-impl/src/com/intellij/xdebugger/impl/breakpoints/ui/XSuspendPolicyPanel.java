@@ -16,6 +16,7 @@
 package com.intellij.xdebugger.impl.breakpoints.ui;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
@@ -89,10 +90,10 @@ public class XSuspendPolicyPanel extends XBreakpointPropertiesSubPanel {
         ((XBreakpointManagerImpl)myBreakpointManager).getBreakpointDefaults(myBreakpointType).setSuspendPolicy(suspendPolicy);
         updateSuspendPolicyFont();
         if (SuspendPolicy.THREAD == suspendPolicy) {
-          mySuspendThread.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(mySuspendThread);
         }
         else {
-          mySuspendAll.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(mySuspendAll);
         }
         myMakeDefaultButton.setEnabled(false);
       }

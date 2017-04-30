@@ -755,7 +755,7 @@ public class EditorWindow {
           res.setFilePinned (nextFile, isFilePinned (file));
           if (!focusNew) {
             res.setSelectedEditor(selectedEditor, true);
-            selectedEditor.getComponent().requestFocus();
+            IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(selectedEditor.getComponent());
           }
           panel.revalidate();
         }

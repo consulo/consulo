@@ -25,6 +25,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.io.UniqueNameBuilder;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.panels.NonOpaquePanel;
@@ -116,7 +117,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               if (policy != null) {
                 Component next = policy.getComponentAfter(frame, list);
                 if (next != null) {
-                  next.requestFocus();
+                  IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(next);
                 }
               }
             }

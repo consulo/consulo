@@ -27,6 +27,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.labels.ActionLink;
@@ -280,7 +281,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
         else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
           if (focusListOnLeft) {
             if (list != null) {
-              list.requestFocus();
+              IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(list);
             }
           }
           else {
@@ -313,7 +314,9 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     if (policy != null) {
       Component prev = policy.getComponentBefore(myFlatWelcomeFrame, comp);
       if (prev != null) {
-        prev.requestFocus();
+        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+          IdeFocusManager.getGlobalInstance().requestFocus(prev, true);
+        });
       }
     }
   }
@@ -323,7 +326,9 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     if (policy != null) {
       Component next = policy.getComponentAfter(myFlatWelcomeFrame, comp);
       if (next != null) {
-        next.requestFocus();
+        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+          IdeFocusManager.getGlobalInstance().requestFocus(next, true);
+        });
       }
     }
   }

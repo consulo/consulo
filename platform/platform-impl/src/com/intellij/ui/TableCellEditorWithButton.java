@@ -16,6 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.ui.FixedSizeButton;
+import com.intellij.openapi.wm.IdeFocusManager;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -141,7 +142,7 @@ public class TableCellEditorWithButton extends AbstractCellEditor implements Tab
     }
 
     public boolean requestDefaultFocus() {
-      myTextField.requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTextField);
       return true;
     }
   }

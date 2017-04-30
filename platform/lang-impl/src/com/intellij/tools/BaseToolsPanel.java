@@ -21,6 +21,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -121,67 +122,66 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 
     setLayout(new BorderLayout());
-    add(ToolbarDecorator.createDecorator(myTree).setPanelBorder(new EmptyBorder(0, 0, 0, 0))
-                .setAddAction(new AnActionButtonRunnable() {
-                  @Override
-                  public void run(AnActionButton button) {
-                    ToolEditorDialog dlg = createToolEditorDialog(ToolsBundle.message("tools.add.title"));
-                    Tool tool = new Tool();
-                    tool.setUseConsole(true);
-                    tool.setFilesSynchronizedAfterRun(true);
-                    tool.setShownInMainMenu(true);
-                    tool.setShownInEditor(true);
-                    tool.setShownInProjectViews(true);
-                    tool.setShownInSearchResultsPopup(true);
-                    tool.setEnabled(true);
-                    dlg.setData(tool, getGroups());
-                    dlg.show();
-                    if (dlg.isOK()) {
-                      insertNewTool(dlg.getData(), true);
-                    }
-                    myTree.requestFocus();
-                  }
-                }).setRemoveAction(new AnActionButtonRunnable() {
-              @Override
-              public void run(AnActionButton button) {
-                removeSelected();
-              }
-            }).setEditAction(new AnActionButtonRunnable() {
-              @Override
-              public void run(AnActionButton button) {
-                editSelected();
-                myTree.requestFocus();
-              }
-            }).setMoveUpAction(new AnActionButtonRunnable() {
-              @Override
-              public void run(AnActionButton button) {
-                moveNode(Direction.UP);
-                myIsModified = true;
-              }
-            }).setMoveDownAction(new AnActionButtonRunnable() {
-              @Override
-              public void run(AnActionButton button) {
-                moveNode(Direction.DOWN);
-                myIsModified = true;
-              }
-            }).addExtraAction(myCopyButton = new AnActionButton(ToolsBundle.message("tools.copy.button"), AllIcons.Actions.Copy) {
-              @Override
-              public void actionPerformed(AnActionEvent e) {
-                Tool originalTool = getSelectedTool();
+    add(ToolbarDecorator.createDecorator(myTree).setPanelBorder(new EmptyBorder(0, 0, 0, 0)).setAddAction(new AnActionButtonRunnable() {
+      @Override
+      public void run(AnActionButton button) {
+        ToolEditorDialog dlg = createToolEditorDialog(ToolsBundle.message("tools.add.title"));
+        Tool tool = new Tool();
+        tool.setUseConsole(true);
+        tool.setFilesSynchronizedAfterRun(true);
+        tool.setShownInMainMenu(true);
+        tool.setShownInEditor(true);
+        tool.setShownInProjectViews(true);
+        tool.setShownInSearchResultsPopup(true);
+        tool.setEnabled(true);
+        dlg.setData(tool, getGroups());
+        dlg.show();
+        if (dlg.isOK()) {
+          insertNewTool(dlg.getData(), true);
+        }
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
+      }
+    }).setRemoveAction(new AnActionButtonRunnable() {
+      @Override
+      public void run(AnActionButton button) {
+        removeSelected();
+      }
+    }).setEditAction(new AnActionButtonRunnable() {
+      @Override
+      public void run(AnActionButton button) {
+        editSelected();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
+      }
+    }).setMoveUpAction(new AnActionButtonRunnable() {
+      @Override
+      public void run(AnActionButton button) {
+        moveNode(Direction.UP);
+        myIsModified = true;
+      }
+    }).setMoveDownAction(new AnActionButtonRunnable() {
+      @Override
+      public void run(AnActionButton button) {
+        moveNode(Direction.DOWN);
+        myIsModified = true;
+      }
+    }).addExtraAction(myCopyButton = new AnActionButton(ToolsBundle.message("tools.copy.button"), AllIcons.Actions.Copy) {
+      @Override
+      public void actionPerformed(AnActionEvent e) {
+        Tool originalTool = getSelectedTool();
 
-                if (originalTool != null) {
-                  ToolEditorDialog dlg = createToolEditorDialog(ToolsBundle.message("tools.copy.title"));
-                  Tool toolCopy = new Tool();
-                  toolCopy.copyFrom(originalTool);
-                  dlg.setData(toolCopy, getGroups());
-                  dlg.show();
-                  if (dlg.isOK()) {
-                    insertNewTool(dlg.getData(), true);
-                  }
-                  myTree.requestFocus();
-                }
-              }
-            }).setButtonComparator("Add", "Copy", "Edit", "Remove", "Up", "Down").createPanel(), BorderLayout.CENTER);
+        if (originalTool != null) {
+          ToolEditorDialog dlg = createToolEditorDialog(ToolsBundle.message("tools.copy.title"));
+          Tool toolCopy = new Tool();
+          toolCopy.copyFrom(originalTool);
+          dlg.setData(toolCopy, getGroups());
+          dlg.show();
+          if (dlg.isOK()) {
+            insertNewTool(dlg.getData(), true);
+          }
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
+        }
+      }
+    }).setButtonComparator("Add", "Copy", "Edit", "Remove", "Up", "Down").createPanel(), BorderLayout.CENTER);
 
     myAddButton = ToolbarDecorator.findAddButton(this);
     myEditButton = ToolbarDecorator.findEditButton(this);
@@ -294,7 +294,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         TreePath path = new TreePath(node.getPath());
         myTree.getSelectionModel().setSelectionPath(path);
         myTree.expandPath(path);
-        myTree.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
       }
     }
   }
@@ -426,7 +426,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         removeNodeFromParent(node);
       }
       update();
-      myTree.requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
     }
   }
 

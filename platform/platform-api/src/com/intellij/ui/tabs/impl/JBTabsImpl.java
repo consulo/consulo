@@ -59,6 +59,8 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.List;
 
+import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
+
 public class JBTabsImpl extends JComponent
   implements JBTabs, PropertyChangeListener, TimerListener, DataProvider, PopupMenuListener, Disposable, JBTabsPresentation, Queryable,
              QuickActionProvider {
@@ -190,7 +192,7 @@ public class JBTabsImpl extends JComponent
   public JBTabsImpl(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @NotNull Disposable parent) {
     myProject = project;
     myActionManager = actionManager;
-    myFocusManager = focusManager != null ? focusManager : IdeFocusManager.getGlobalInstance();
+    myFocusManager = focusManager != null ? focusManager : getGlobalInstance();
 
     setOpaque(true);
     setPaintBorder(-1, -1, -1, -1);
@@ -301,7 +303,7 @@ public class JBTabsImpl extends JComponent
           myDragHelper.start();
         }
 
-        if (myProject != null && myFocusManager == IdeFocusManager.getGlobalInstance()) {
+        if (myProject != null && myFocusManager == getGlobalInstance()) {
           myFocusManager = IdeFocusManager.getInstance(myProject);
         }
       }
@@ -660,10 +662,14 @@ public class JBTabsImpl extends JComponent
   public void requestFocus() {
     final JComponent toFocus = getToFocus();
     if (toFocus != null) {
-      toFocus.requestFocus();
+      getGlobalInstance().doWhenFocusSettlesDown(() -> {
+        getGlobalInstance().requestFocus(toFocus, true);
+      });
     }
     else {
-      super.requestFocus();
+      getGlobalInstance().doWhenFocusSettlesDown(() -> {
+        super.requestFocus();
+      });
     }
   }
 
@@ -933,7 +939,9 @@ public class JBTabsImpl extends JComponent
     if (toFocus == null) return new ActionCallback.Done();
 
     if (myTestMode) {
-      toFocus.requestFocus();
+      getGlobalInstance().doWhenFocusSettlesDown(() -> {
+        getGlobalInstance().requestFocus(toFocus, true);
+      });
       return new ActionCallback.Done();
     }
 

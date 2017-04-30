@@ -16,6 +16,7 @@
 
 package com.intellij.refactoring.ui;
 
+import com.intellij.openapi.wm.IdeFocusManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -41,7 +42,7 @@ public abstract class EnableDisableAction extends AbstractAction {
       applyValue(rows, valueToBeSet);
 //          myMyTableModel.fireTableRowsUpdated(rows[0], rows[rows.length - 1]);
     }
-    getTable().requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(getTable());
   }
 
   protected abstract JTable getTable();

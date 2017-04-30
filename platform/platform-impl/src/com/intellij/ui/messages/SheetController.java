@@ -186,7 +186,7 @@ public class SheetController {
   void requestFocus() {
     IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
       if (myFocusedComponent != null) {
-        myFocusedComponent.requestFocus();
+        IdeFocusManager.getGlobalInstance().requestFocus(myFocusedComponent, true);
       } else {
         LOG.debug("My focused component is null for the next message: " + messageTextPane.getText());
       }

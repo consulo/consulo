@@ -56,6 +56,7 @@ import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.packageDependencies.DefaultScopesProvider;
 import com.intellij.packageDependencies.DependencyValidationManager;
@@ -224,7 +225,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
             if (node != null) {
               TreeUtil.selectPath(myTree, new TreePath(node.getPath()));
               if (requestFocus) {
-                myTree.requestFocus();
+                IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myTree);
               }
             }
           }

@@ -16,10 +16,12 @@
  */
 package com.intellij.ui.plaf.beg;
 
-import java.awt.event.MouseEvent;
+import com.intellij.openapi.wm.IdeFocusManager;
+
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.basic.BasicListUI;
+import java.awt.event.MouseEvent;
 
 public class BegListUI extends BasicListUI {
   protected MouseInputListener createMouseInputListener() {
@@ -48,7 +50,7 @@ public class BegListUI extends BasicListUI {
        * synchronous (it is on Windows).  See bug 4122345
        */
       if (!myList.hasFocus()){
-        myList.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myList);
       }
 
       int row = BegListUI.this.convertYToRow(e.getY());

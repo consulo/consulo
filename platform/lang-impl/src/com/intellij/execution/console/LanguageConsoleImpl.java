@@ -51,6 +51,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -77,7 +78,7 @@ import java.util.Collections;
 
 /**
  * @author Gregory.Shrago
- * In case of REPL consider to use {@link LanguageConsoleBuilder}
+ *         In case of REPL consider to use {@link LanguageConsoleBuilder}
  */
 public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageConsoleView, DataProvider {
   private final Helper myHelper;
@@ -209,8 +210,8 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     myHistoryViewer.setCaretEnabled(false);
 
     myConsoleEditor.setContextMenuGroupId(IdeActions.GROUP_CONSOLE_EDITOR_POPUP);
-    myConsoleEditor.setHighlighter(
-            EditorHighlighterFactory.getInstance().createEditorHighlighter(getVirtualFile(), myConsoleEditor.getColorsScheme(), getProject()));
+    myConsoleEditor
+            .setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(getVirtualFile(), myConsoleEditor.getColorsScheme(), getProject()));
 
     setHistoryScrollBarVisible(false);
 
@@ -218,7 +219,9 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
       @Override
       public void keyTyped(KeyEvent event) {
         if (isConsoleEditorEnabled() && UIUtil.isReallyTypedEvent(event)) {
-          myConsoleEditor.getContentComponent().requestFocus();
+          IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+            IdeFocusManager.getGlobalInstance().requestFocus(myConsoleEditor.getContentComponent(), true);
+          });
           myConsoleEditor.processKeyTyped(event);
         }
       }
@@ -331,8 +334,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
 
     String result = addTextRangeToHistory(textRange, editor, preserveMarkup);
     if (erase) {
-      DocumentUtil.writeInRunUndoTransparentAction(
-              () -> editor.getDocument().deleteString(textRange.getStartOffset(), textRange.getEndOffset()));
+      DocumentUtil.writeInRunUndoTransparentAction(() -> editor.getDocument().deleteString(textRange.getStartOffset(), textRange.getEndOffset()));
     }
     // always scroll to end on user input
     scrollToEnd();
@@ -344,8 +346,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     EditorHighlighter highlighter;
     if (inputEditor instanceof EditorWindow) {
       PsiFile file = ((EditorWindow)inputEditor).getInjectedFile();
-      highlighter =
-              HighlighterFactory.createHighlighter(file.getVirtualFile(), EditorColorsManager.getInstance().getGlobalScheme(), console.getProject());
+      highlighter = HighlighterFactory.createHighlighter(file.getVirtualFile(), EditorColorsManager.getInstance().getGlobalScheme(), console.getProject());
       String fullText = InjectedLanguageUtil.getUnescapedText(file, null, null);
       highlighter.setText(fullText);
       text = textRange.substring(fullText);
@@ -354,8 +355,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
       text = inputEditor.getDocument().getText(textRange);
       highlighter = ((EditorEx)inputEditor).getHighlighter();
     }
-    SyntaxHighlighter syntax =
-            highlighter instanceof LexerEditorHighlighter ? ((LexerEditorHighlighter)highlighter).getSyntaxHighlighter() : null;
+    SyntaxHighlighter syntax = highlighter instanceof LexerEditorHighlighter ? ((LexerEditorHighlighter)highlighter).getSyntaxHighlighter() : null;
     ((LanguageConsoleImpl)console).doAddPromptToHistory();
     if (syntax != null) {
       ConsoleViewUtil.printWithHighlighting(console, text, syntax);

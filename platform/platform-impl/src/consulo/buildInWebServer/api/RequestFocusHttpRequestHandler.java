@@ -47,7 +47,7 @@ public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
           // fixme [vistall] dirty hack - show frame on top
           frame.setAlwaysOnTop(true);
           frame.setAlwaysOnTop(false);
-          frame.requestFocus();
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(frame);
         }
       };
       //noinspection SSBasedInspection

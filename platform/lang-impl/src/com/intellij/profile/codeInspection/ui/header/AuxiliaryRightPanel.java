@@ -16,6 +16,7 @@
 package com.intellij.profile.codeInspection.ui.header;
 
 import com.intellij.openapi.ui.ex.MultiLineLabel;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
@@ -100,7 +101,7 @@ public class AuxiliaryRightPanel extends JPanel {
     }
     myValidatedTextField.setText(startValue);
     myLayout.show(this, EDIT_DESCRIPTION_CARD);
-    myValidatedTextField.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myValidatedTextField);
   }
 
   public void showError(final @NotNull String errorText) {

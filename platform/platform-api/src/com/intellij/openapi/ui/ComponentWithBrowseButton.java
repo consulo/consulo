@@ -303,9 +303,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
 
   @Override
   public final void requestFocus() {
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-      IdeFocusManager.getGlobalInstance().requestFocus(myComponent, true);
-    });
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myComponent);
   }
 
   @SuppressWarnings("deprecation")

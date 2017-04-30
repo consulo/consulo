@@ -16,6 +16,8 @@
 
 package com.intellij.refactoring.util;
 
+import com.intellij.openapi.wm.IdeFocusManager;
+
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -73,7 +75,7 @@ public class RadioUpDownListener extends KeyAdapter {
 
   private static boolean click(final JRadioButton button) {
     if (button.isEnabled() && button.isVisible()) {
-      button.requestFocus();
+      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(button);
       button.doClick();
       return true;
     }

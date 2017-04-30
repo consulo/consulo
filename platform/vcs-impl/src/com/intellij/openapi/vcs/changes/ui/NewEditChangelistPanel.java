@@ -26,6 +26,7 @@ import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.ui.SpellCheckerCustomization;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
@@ -149,7 +150,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
   }
 
   public void requestFocus() {
-    myNameTextField.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myNameTextField);
   }
 
   public JComponent getPreferredFocusedComponent() {

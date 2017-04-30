@@ -17,6 +17,7 @@ package com.intellij.ide.navigationToolbar;
 
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ListScrollingUtil;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.UIUtil;
@@ -88,7 +89,7 @@ class NavBarListWrapper extends JBScrollPane implements DataProvider {
 
   @Override
   public void requestFocus() {
-    myList.requestFocus();
+    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myList);
   }
 
   @Override

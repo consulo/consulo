@@ -41,6 +41,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiDirectory;
@@ -300,12 +301,12 @@ public class CommanderPanel extends JPanel {
     myTitlePanel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(final MouseEvent e) {
-        myList.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myList);
       }
 
       @Override
       public void mousePressed(final MouseEvent e) {
-        myList.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myList);
       }
     });
   }
@@ -398,7 +399,7 @@ public class CommanderPanel extends JPanel {
     if (selectedIndices.length == 0 && myList.getModel().getSize() > 0) {
       myList.setSelectedIndex(0);
       if (!myList.hasFocus()) {
-        myList.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myList);
       }
     }
     else if (myList.getModel().getSize() > 0) {
@@ -418,7 +419,7 @@ public class CommanderPanel extends JPanel {
       final int popupIndex = myList.locationToIndex(new Point(x, y));
       if (popupIndex >= 0) {
         myList.setSelectedIndex(popupIndex);
-        myList.requestFocus();
+        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myList);
       }
     }
 

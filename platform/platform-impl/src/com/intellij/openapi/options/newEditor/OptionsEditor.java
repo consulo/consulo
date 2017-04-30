@@ -38,6 +38,7 @@ import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.ui.*;
 import com.intellij.ui.components.panels.NonOpaquePanel;
@@ -75,12 +76,16 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.options.newEditor.OptionsEditor");
 
-  @NonNls public static final String MAIN_SPLITTER_PROPORTION = "options.splitter.main.proportions";
-  @NonNls private static final String DETAILS_SPLITTER_PROPORTION = "options.splitter.details.proportions";
+  @NonNls
+  public static final String MAIN_SPLITTER_PROPORTION = "options.splitter.main.proportions";
+  @NonNls
+  private static final String DETAILS_SPLITTER_PROPORTION = "options.splitter.details.proportions";
 
-  @NonNls private static final String SEARCH_VISIBLE = "options.searchVisible";
+  @NonNls
+  private static final String SEARCH_VISIBLE = "options.searchVisible";
 
-  @NonNls private static final String NOT_A_NEW_COMPONENT = "component.was.already.instantiated";
+  @NonNls
+  private static final String NOT_A_NEW_COMPONENT = "component.was.already.instantiated";
 
   private final Project myProject;
 
@@ -618,7 +623,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
   public void setFilterFieldVisible(final boolean visible, boolean requestFocus, boolean checkFocus) {
     if (isFilterFieldVisible() && checkFocus && requestFocus && !isSearchFieldFocused()) {
-      UIUtil.requestFocus(mySearch);
+      IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(mySearch, true));
       return;
     }
 
@@ -628,7 +633,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     myLeftSide.repaint();
 
     if (visible && requestFocus) {
-      UIUtil.requestFocus(mySearch);
+      IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(mySearch, true));
     }
   }
 
