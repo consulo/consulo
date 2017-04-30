@@ -28,9 +28,9 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 /**
  * User: cdr
@@ -39,17 +39,20 @@ class FileElementInfo extends SmartPointerElementInfo {
   private final VirtualFile myVirtualFile;
   private final Project myProject;
   private final Language myLanguage;
+  private final Class<? extends PsiFile> myFileClass;
 
   public FileElementInfo(@NotNull final PsiFile file) {
     myVirtualFile = file.getVirtualFile();
     myProject = file.getProject();
     myLanguage = LanguageUtil.getRootLanguage(file);
+    myFileClass = file.getClass();
   }
 
   @RequiredReadAction
   @Override
   public PsiElement restoreElement() {
-    return SelfElementInfo.restoreFileFromVirtual(myVirtualFile, myProject, myLanguage);
+    PsiFile file = SelfElementInfo.restoreFileFromVirtual(myVirtualFile, myProject, myLanguage);
+    return myFileClass.isInstance(file) ? file : null;
   }
 
   @Override
@@ -65,14 +68,7 @@ class FileElementInfo extends SmartPointerElementInfo {
 
   @Override
   public boolean pointsToTheSameElementAs(@NotNull SmartPointerElementInfo other) {
-    if (other instanceof FileElementInfo) {
-      return Comparing.equal(myVirtualFile, ((FileElementInfo)other).myVirtualFile);
-    }
-    if (other instanceof SelfElementInfo || other instanceof ClsElementInfo) {
-      // optimisation: SelfElementInfo need psi (parsing) for element restoration and apriori could not reference psi file
-      return false;
-    }
-    return Comparing.equal(restoreElement(), other.restoreElement());
+    return other instanceof FileElementInfo && Comparing.equal(myVirtualFile, ((FileElementInfo)other).myVirtualFile);
   }
 
   @Override

@@ -16,14 +16,12 @@
 package com.intellij.psi.impl.smartPointers;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredReadAction;
 
 /**
  * User: cdr
@@ -39,7 +37,6 @@ class HardElementInfo extends SmartPointerElementInfo {
     myProject = project;
   }
 
-  @RequiredReadAction
   @Override
   public PsiElement restoreElement() {
     return myElement;
@@ -47,7 +44,7 @@ class HardElementInfo extends SmartPointerElementInfo {
 
   @Override
   public PsiFile restoreFile() {
-    return myElement.getContainingFile();
+    return myElement.isValid() ? myElement.getContainingFile() : null;
   }
 
   @Override
@@ -56,8 +53,8 @@ class HardElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  public boolean pointsToTheSameElementAs(@NotNull SmartPointerElementInfo other) {
-    return Comparing.equal(myElement, other.restoreElement());
+  public boolean pointsToTheSameElementAs(@NotNull final SmartPointerElementInfo other) {
+    return other instanceof HardElementInfo && myElement.equals(((HardElementInfo)other).myElement);
   }
 
   @Override

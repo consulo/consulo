@@ -33,25 +33,22 @@ import java.util.List;
  * @author peter
  */
 class MarkerCache {
-  static final Comparator<SelfElementInfo> INFO_COMPARATOR = new Comparator<SelfElementInfo>() {
-    @Override
-    public int compare(SelfElementInfo info1, SelfElementInfo info2) {
-      int o1 = info1.getPsiStartOffset();
-      int o2 = info2.getPsiStartOffset();
-      if (o1 < 0 || o2 < 0) return o1 >= 0 ? -1 : o2 >= 0 ? 1 : 0; // infos without range go after infos with range
-      if (o1 != o2) return o1 > o2 ? 1 : -1;
+  static final Comparator<SelfElementInfo> INFO_COMPARATOR = (info1, info2) -> {
+    int o1 = info1.getPsiStartOffset();
+    int o2 = info2.getPsiStartOffset();
+    if (o1 < 0 || o2 < 0) return o1 >= 0 ? -1 : o2 >= 0 ? 1 : 0; // infos without range go after infos with range
+    if (o1 != o2) return o1 > o2 ? 1 : -1;
 
-      o1 = info1.getPsiEndOffset();
-      o2 = info2.getPsiEndOffset();
-      if (o1 != o2) return o1 > o2 ? 1 : -1;
+    o1 = info1.getPsiEndOffset();
+    o2 = info2.getPsiEndOffset();
+    if (o1 != o2) return o1 > o2 ? 1 : -1;
 
-      return (info1.isForInjected() ? 1 : 0) - (info2.isForInjected() ? 1 : 0);
-    }
+    return (info1.isGreedy() ? 1 : 0) - (info2.isGreedy() ? 1 : 0);
   };
-  private final SmartPointerManagerImpl.FilePointersList myPointers;
-  private volatile UpdatedRanges myUpdatedRanges;
+  private final SmartPointerTracker myPointers;
+  private UpdatedRanges myUpdatedRanges;
 
-  MarkerCache(SmartPointerManagerImpl.FilePointersList pointers) {
+  MarkerCache(SmartPointerTracker pointers) {
     myPointers = pointers;
   }
 
@@ -62,25 +59,19 @@ class MarkerCache {
     UpdatedRanges cache = myUpdatedRanges;
     if (cache != null && cache.myEventCount == eventCount) return cache;
 
-    //noinspection SynchronizeOnThis
-    synchronized (this) {
-      cache = myUpdatedRanges;
-      if (cache != null && cache.myEventCount == eventCount) return cache;
-
-      UpdatedRanges answer;
-      if (cache != null && cache.myEventCount < eventCount) {
-        // apply only the new events
-        answer = applyEvents(events.subList(cache.myEventCount, eventCount), cache);
-      }
-      else {
-        List<SelfElementInfo> infos = myPointers.getSortedInfos();
-        ManualRangeMarker[] markers = createMarkers(infos);
-        answer = applyEvents(events, new UpdatedRanges(0, frozen, infos, markers));
-      }
-
-      myUpdatedRanges = answer;
-      return answer;
+    UpdatedRanges answer;
+    if (cache != null && cache.myEventCount < eventCount) {
+      // apply only the new events
+      answer = applyEvents(events.subList(cache.myEventCount, eventCount), cache);
     }
+    else {
+      List<SelfElementInfo> infos = myPointers.getSortedInfos();
+      ManualRangeMarker[] markers = createMarkers(infos);
+      answer = applyEvents(events, new UpdatedRanges(0, frozen, infos, markers));
+    }
+
+    myUpdatedRanges = answer;
+    return answer;
   }
 
   @NotNull
@@ -89,13 +80,13 @@ class MarkerCache {
     int i = 0;
     while (i < markers.length) {
       SelfElementInfo info = infos.get(i);
-      boolean forInjected = info.isForInjected();
+      boolean greedy = info.isGreedy();
       int start = info.getPsiStartOffset();
       int end = info.getPsiEndOffset();
-      markers[i] = new ManualRangeMarker(start, end, forInjected, forInjected, !forInjected, null);
+      markers[i] = new ManualRangeMarker(start, end, greedy, greedy, !greedy, null);
 
       i++;
-      while (i < markers.length && rangeEquals(infos.get(i), start, end, forInjected)) {
+      while (i < markers.length && rangeEquals(infos.get(i), start, end, greedy)) {
         markers[i] = markers[i - 1];
         i++;
       }
@@ -103,8 +94,8 @@ class MarkerCache {
     return markers;
   }
 
-  private static boolean rangeEquals(SelfElementInfo info, int start, int end, boolean injected) {
-    return start == info.getPsiStartOffset() && end == info.getPsiEndOffset() && injected == info.isForInjected();
+  private static boolean rangeEquals(SelfElementInfo info, int start, int end, boolean greedy) {
+    return start == info.getPsiStartOffset() && end == info.getPsiEndOffset() && greedy == info.isGreedy();
   }
 
   private static UpdatedRanges applyEvents(@NotNull List<DocumentEvent> events, final UpdatedRanges struct) {
@@ -113,15 +104,15 @@ class MarkerCache {
     for (DocumentEvent event : events) {
       final FrozenDocument before = frozen;
       final DocumentEvent corrected;
-      if ((event instanceof RetargetRangeMarkers)) {
+      if (event instanceof RetargetRangeMarkers) {
         RetargetRangeMarkers retarget = (RetargetRangeMarkers)event;
         corrected = new RetargetRangeMarkers(frozen, retarget.getStartOffset(), retarget.getEndOffset(), retarget.getMoveDestinationOffset());
       }
       else {
-        frozen = frozen.applyEvent(event, 0);
         corrected = new DocumentEventImpl(frozen, event.getOffset(), event.getOldFragment(), event.getNewFragment(), event.getOldTimeStamp(),
                                           event.isWholeTextReplaced(),
                                           ((DocumentEventImpl) event).getInitialStartOffset(), ((DocumentEventImpl) event).getInitialOldLength());
+        frozen = frozen.applyEvent(event, 0);
       }
 
       int i = 0;
@@ -143,7 +134,7 @@ class MarkerCache {
     return new UpdatedRanges(struct.myEventCount + events.size(), frozen, struct.mySortedInfos, resultMarkers);
   }
 
-  synchronized void updateMarkers(@NotNull FrozenDocument frozen, @NotNull List<DocumentEvent> events) {
+  boolean updateMarkers(@NotNull FrozenDocument frozen, @NotNull List<DocumentEvent> events) {
     UpdatedRanges updated = getUpdatedMarkers(frozen, events);
 
     boolean sorted = true;
@@ -155,11 +146,8 @@ class MarkerCache {
       }
     }
 
-    if (!sorted) {
-      myPointers.markUnsorted();
-    }
-
     myUpdatedRanges = null;
+    return sorted;
   }
 
   @Nullable
@@ -172,7 +160,6 @@ class MarkerCache {
 
   void rangeChanged() {
     myUpdatedRanges = null;
-    myPointers.markUnsorted();
   }
 
   private static class UpdatedRanges {
