@@ -21,10 +21,12 @@ import com.intellij.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
 import com.intellij.openapi.module.impl.scopes.SdkScope;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.containers.ConcurrentHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -39,16 +41,24 @@ public class LibraryScopeCache {
   }
 
   private final Project myProject;
-  private final ConcurrentMap<List<Module>, GlobalSearchScope> myLibraryScopes = new ConcurrentHashMap<List<Module>, GlobalSearchScope>();
-  private final ConcurrentMap<String, GlobalSearchScope> mySdkScopes = new ConcurrentHashMap<String, GlobalSearchScope>();
+  private final ConcurrentMap<List<Module>, GlobalSearchScope> myLibraryScopes = ContainerUtil.newConcurrentMap();
+  private final ConcurrentMap<String, GlobalSearchScope> mySdkScopes = ContainerUtil.newConcurrentMap();
+  private final LibrariesOnlyScope myLibrariesOnlyScope;
+
 
   public LibraryScopeCache(Project project) {
     myProject = project;
+    myLibrariesOnlyScope = new LibrariesOnlyScope(GlobalSearchScope.allScope(myProject), myProject);
   }
 
   public void clear() {
     myLibraryScopes.clear();
     mySdkScopes.clear();
+  }
+
+  @NotNull
+  public GlobalSearchScope getLibrariesOnlyScope() {
+    return myLibrariesOnlyScope;
   }
 
   @NotNull
@@ -58,7 +68,7 @@ public class LibraryScopeCache {
       return scope;
     }
     GlobalSearchScope newScope = modulesLibraryIsUsedIn.isEmpty()
-                                 ? new LibrariesOnlyScope(GlobalSearchScope.allScope(myProject))
+                                 ? myLibrariesOnlyScope
                                  : new LibraryRuntimeClasspathScope(myProject, modulesLibraryIsUsedIn);
     return ConcurrencyUtil.cacheOrGet(myLibraryScopes, modulesLibraryIsUsedIn, newScope);
   }
@@ -77,15 +87,17 @@ public class LibraryScopeCache {
 
   private static class LibrariesOnlyScope extends GlobalSearchScope {
     private final GlobalSearchScope myOriginal;
+    private final ProjectFileIndex myIndex;
 
-    private LibrariesOnlyScope(final GlobalSearchScope original) {
-      super(original.getProject());
+    private LibrariesOnlyScope(@NotNull GlobalSearchScope original, @NotNull Project project) {
+      super(project);
+      myIndex = ProjectRootManager.getInstance(project).getFileIndex();
       myOriginal = original;
     }
 
     @Override
     public boolean contains(@NotNull VirtualFile file) {
-      return myOriginal.contains(file);
+      return myOriginal.contains(file) && (myIndex.isInLibraryClasses(file) || myIndex.isInLibrarySource(file));
     }
 
     @Override
@@ -96,6 +108,11 @@ public class LibraryScopeCache {
     @Override
     public boolean isSearchInModuleContent(@NotNull Module aModule) {
       return false;
+    }
+
+    @Override
+    public boolean isSearchOutsideRootModel() {
+      return myOriginal.isSearchOutsideRootModel();
     }
 
     @Override
