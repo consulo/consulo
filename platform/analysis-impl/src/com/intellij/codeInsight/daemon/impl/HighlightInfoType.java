@@ -37,9 +37,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 public interface HighlightInfoType {
-  @NonNls String UNUSED_SYMBOL_SHORT_NAME = "UNUSED_SYMBOL";
+  @NonNls String UNUSED_SYMBOL_SHORT_NAME = "unused";
   @NonNls String UNUSED_SYMBOL_DISPLAY_NAME = InspectionsBundle.message("inspection.dead.code.display.name");
-  @Deprecated @NonNls String UNUSED_SYMBOL_ID = "UnusedDeclaration";
+  @Deprecated
+  @NonNls String UNUSED_SYMBOL_ID = "UnusedDeclaration";
 
   HighlightInfoType ERROR = new HighlightInfoTypeImpl(HighlightSeverity.ERROR, CodeInsightColors.ERRORS_ATTRIBUTES);
   HighlightInfoType WARNING = new HighlightInfoTypeImpl(HighlightSeverity.WARNING, CodeInsightColors.WARNINGS_ATTRIBUTES);
