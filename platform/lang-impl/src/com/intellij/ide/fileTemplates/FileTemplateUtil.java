@@ -24,7 +24,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
@@ -37,6 +36,8 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.ContainerUtil;
+import gnu.trove.TIntObjectHashMap;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.exception.VelocityException;
 import org.apache.velocity.runtime.parser.ParseException;
@@ -51,6 +52,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author MYakovlev
@@ -310,34 +312,19 @@ public class FileTemplateUtil {
 
     final Map<String, Object> props_ = propsMap;
     final String fileName_ = fileName;
-    String mergedText = ClassLoaderUtil
-            .runWithClassLoader(classLoader != null ? classLoader : FileTemplateUtil.class.getClassLoader(), new ThrowableComputable<String, IOException>() {
-              @Override
-              public String compute() throws IOException {
-                return template.getText(props_);
-              }
-            });
+    String mergedText = ClassLoaderUtil.runWithClassLoader(classLoader != null ? classLoader : FileTemplateUtil.class.getClassLoader(),
+                                                           (ThrowableComputable<String, IOException>)() -> template.getText(props_));
     final String templateText = StringUtil.convertLineSeparators(mergedText);
     final Exception[] commandException = new Exception[1];
     final PsiElement[] result = new PsiElement[1];
-    CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            try {
-              result[0] = handler.createFromTemplate(project, directory, fileName_, template, templateText, props_);
-            }
-            catch (Exception ex) {
-              commandException[0] = ex;
-            }
-          }
-        });
+    CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> {
+      try {
+        result[0] = handler.createFromTemplate(project, directory, fileName_, template, templateText, props_);
       }
-    }, template.isTemplateOfType(InternalStdFileTypes.JAVA)
-       ? IdeBundle.message("command.create.class.from.template")
-       : IdeBundle.message("command.create.file.from.template"), null);
+      catch (Exception ex) {
+        commandException[0] = ex;
+      }
+    }), handler.commandName(template), null);
     if (commandException[0] != null) {
       throw commandException[0];
     }
@@ -376,9 +363,6 @@ public class FileTemplateUtil {
   @Nullable
   public static Icon getIcon(@NotNull FileTemplate fileTemplate) {
     String extension = fileTemplate.getExtension();
-    if (fileTemplate instanceof CustomFileTemplate) {
-      extension = ((CustomFileTemplate)fileTemplate).getEditorExtension();
-    }
     return FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon();
   }
 
@@ -387,5 +371,61 @@ public class FileTemplateUtil {
       String s = (String)e.nextElement();
       props.put(s, p.getProperty(s));
     }
+  }
+
+  public static Pattern getTemplatePattern(@NotNull FileTemplate template, @NotNull Project project, @NotNull TIntObjectHashMap<String> offsetToProperty) {
+    String templateText = template.getText().trim();
+    String regex = templateToRegex(templateText, offsetToProperty, project);
+    regex = StringUtil.replace(regex, "with", "(?:with|by)");
+    regex = ".*(" + regex + ").*";
+    return Pattern.compile(regex, Pattern.DOTALL);
+  }
+
+  private static String templateToRegex(String text, TIntObjectHashMap<String> offsetToProperty, Project project) {
+    List<Object> properties = ContainerUtil.newArrayList(FileTemplateManager.getInstance(project).getDefaultProperties().keySet());
+    properties.add(FileTemplate.ATTRIBUTE_PACKAGE_NAME);
+
+    String regex = escapeRegexChars(text);
+    // first group is a whole file header
+    int groupNumber = 1;
+    for (Object property : properties) {
+      String name = property.toString();
+      String escaped = escapeRegexChars("${" + name + "}");
+      boolean first = true;
+      for (int i = regex.indexOf(escaped); i != -1 && i < regex.length(); i = regex.indexOf(escaped, i + 1)) {
+        String replacement = first ? "([^\\n]*)" : "\\" + groupNumber;
+        int delta = escaped.length() - replacement.length();
+        int[] offs = offsetToProperty.keys();
+        for (int off : offs) {
+          if (off > i) {
+            String prop = offsetToProperty.remove(off);
+            offsetToProperty.put(off - delta, prop);
+          }
+        }
+        offsetToProperty.put(i, name);
+        regex = regex.substring(0, i) + replacement + regex.substring(i + escaped.length());
+        if (first) {
+          groupNumber++;
+          first = false;
+        }
+      }
+    }
+    return regex;
+  }
+
+  private static String escapeRegexChars(String regex) {
+    regex = StringUtil.replace(regex, "|", "\\|");
+    regex = StringUtil.replace(regex, ".", "\\.");
+    regex = StringUtil.replace(regex, "*", "\\*");
+    regex = StringUtil.replace(regex, "+", "\\+");
+    regex = StringUtil.replace(regex, "?", "\\?");
+    regex = StringUtil.replace(regex, "$", "\\$");
+    regex = StringUtil.replace(regex, "(", "\\(");
+    regex = StringUtil.replace(regex, ")", "\\)");
+    regex = StringUtil.replace(regex, "[", "\\[");
+    regex = StringUtil.replace(regex, "]", "\\]");
+    regex = StringUtil.replace(regex, "{", "\\{");
+    regex = StringUtil.replace(regex, "}", "\\}");
+    return regex;
   }
 }

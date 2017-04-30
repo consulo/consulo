@@ -73,12 +73,7 @@ abstract class FileTemplateTabAsList extends FileTemplateTab {
         }
         else {
           setFont(getFont().deriveFont(Font.PLAIN));
-          if(template instanceof CustomFileTemplate) {
-            setText(((CustomFileTemplate)template).getEditorName());
-          }
-          else {
-            setText(template.getName());
-          }
+          setText(template.getName());
         }
 
         if (!template.isDefault()) {
@@ -140,7 +135,7 @@ abstract class FileTemplateTabAsList extends FileTemplateTab {
   @NotNull
   public FileTemplate[] getTemplates() {
     final int size = myModel.getSize();
-    List<FileTemplate> templates = new ArrayList<FileTemplate>(size);
+    List<FileTemplate> templates = new ArrayList<>(size);
     for (int i =0; i<size; i++) {
       templates.add((FileTemplate) myModel.getElementAt(i));
     }

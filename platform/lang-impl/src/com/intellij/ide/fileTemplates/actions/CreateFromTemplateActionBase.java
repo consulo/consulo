@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.ide.fileTemplates.actions;
 
 import com.intellij.codeInsight.template.TemplateManager;
@@ -24,7 +23,10 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.ui.CreateFromTemplateDialog;
 import com.intellij.ide.util.DirectoryChooserUtil;
 import com.intellij.ide.util.EditorHelper;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -36,30 +38,24 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static com.intellij.util.ObjectUtils.notNull;
 
 public abstract class CreateFromTemplateActionBase extends AnAction {
-
   public CreateFromTemplateActionBase(final String title, final String description, final Icon icon) {
     super(title, description, icon);
   }
 
   @RequiredDispatchThread
   @Override
-  public final void actionPerformed(@NotNull AnActionEvent e) {
+  public final void actionPerformed(@NotNull  AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-
     IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
-    if (view == null) {
-      return;
-    }
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
-
+    if (view == null) return;
     PsiDirectory dir = getTargetDirectory(dataContext, view);
     if (dir == null) return;
+    Project project = dir.getProject();
 
     FileTemplate selectedTemplate = getTemplate(project, dir);
     if (selectedTemplate != null) {
@@ -69,13 +65,17 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
       }
       else {
         FileTemplateManager.getInstance(project).addRecentName(selectedTemplate.getName());
-        final AttributesDefaults defaults = getAttributesDefaults(dataContext);
-        final CreateFromTemplateDialog dialog =
-                new CreateFromTemplateDialog(project, dir, selectedTemplate, defaults, defaults != null ? defaults.getDefaultProperties() : null);
+        AttributesDefaults defaults = getAttributesDefaults(dataContext);
+        Properties properties = defaults != null ? defaults.getDefaultProperties() : null;
+        CreateFromTemplateDialog dialog = new CreateFromTemplateDialog(project, dir, selectedTemplate, defaults, properties);
         PsiElement createdElement = dialog.create();
         if (createdElement != null) {
           elementCreated(dialog, createdElement);
           view.selectElement(createdElement);
+          if (selectedTemplate.isLiveTemplateEnabled() && createdElement instanceof PsiFile) {
+            Map<String, String> defaultValues = getLiveTemplateDefaults(dataContext, ((PsiFile)createdElement));
+            startLiveTemplate((PsiFile)createdElement, notNull(defaultValues, Collections.emptyMap()));
+          }
         }
       }
     }
@@ -116,16 +116,22 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
     return DirectoryChooserUtil.getOrChooseDirectory(view);
   }
 
-  @Nullable
-  protected abstract AnAction getReplacedAction(final FileTemplate selectedTemplate);
-
-  protected abstract FileTemplate getTemplate(final Project project, final PsiDirectory dir);
+  protected abstract FileTemplate getTemplate(Project project, PsiDirectory dir);
 
   @Nullable
-  public AttributesDefaults getAttributesDefaults(DataContext dataContext) {
+  protected AnAction getReplacedAction(FileTemplate selectedTemplate) {
     return null;
   }
 
-  protected void elementCreated(CreateFromTemplateDialog dialog, PsiElement createdElement) {
+  @Nullable
+  protected AttributesDefaults getAttributesDefaults(DataContext dataContext) {
+    return null;
+  }
+
+  protected void elementCreated(CreateFromTemplateDialog dialog, PsiElement createdElement) { }
+
+  @Nullable
+  protected Map<String, String> getLiveTemplateDefaults(DataContext dataContext, @NotNull PsiFile file) {
+    return null;
   }
 }

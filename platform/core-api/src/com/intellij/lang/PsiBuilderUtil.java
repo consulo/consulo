@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PsiBuilderUtil {
   private PsiBuilderUtil() {
@@ -74,5 +76,21 @@ public class PsiBuilderUtil {
     for (PsiBuilder.Marker marker : markers) {
       if (marker != null) marker.drop();
     }
+  }
+
+  /**
+   * Rolls the lexer back to position before given marker - if not null.
+   *
+   * @param marker marker to roll back to.
+   */
+  public static void rollbackTo(@Nullable PsiBuilder.Marker marker) {
+    if (marker != null) {
+      marker.rollbackTo();
+    }
+  }
+
+  @NotNull
+  public static CharSequence rawTokenText(PsiBuilder builder, int index) {
+    return builder.getOriginalText().subSequence(builder.rawTokenTypeStart(index), builder.rawTokenTypeStart(index + 1));
   }
 }
