@@ -40,10 +40,7 @@ import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Set;
+import java.util.*;
 
 public class TreeUtil {
   private static final Key<String> UNCLOSED_ELEMENT_PROPERTY = Key.create("UNCLOSED_ELEMENT_PROPERTY");
@@ -58,8 +55,7 @@ public class TreeUtil {
   }
 
   public static void ensureParsedRecursively(@NotNull ASTNode node) {
-    ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
-    });
+    ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() { });
   }
 
   public static void ensureParsedRecursivelyCheckingProgress(@NotNull ASTNode node, @NotNull final ProgressIndicator indicator) {
@@ -236,7 +232,7 @@ public class TreeUtil {
   public static ASTNode findCommonParent(ASTNode one, ASTNode two) {
     // optimization
     if (one == two) return one;
-    final Set<ASTNode> parents = new HashSet<ASTNode>(20);
+    final Set<ASTNode> parents = new HashSet<>(20);
     while (one != null) {
       parents.add(one);
       one = one.getTreeParent();
@@ -251,12 +247,12 @@ public class TreeUtil {
   public static Couple<ASTNode> findTopmostSiblingParents(ASTNode one, ASTNode two) {
     if (one == two) return Couple.of(null, null);
 
-    LinkedList<ASTNode> oneParents = new LinkedList<ASTNode>();
+    LinkedList<ASTNode> oneParents = new LinkedList<>();
     while (one != null) {
       oneParents.add(one);
       one = one.getTreeParent();
     }
-    LinkedList<ASTNode> twoParents = new LinkedList<ASTNode>();
+    LinkedList<ASTNode> twoParents = new LinkedList<>();
     while (two != null) {
       twoParents.add(two);
       two = two.getTreeParent();
@@ -287,7 +283,6 @@ public class TreeUtil {
   }
 
   public static final Key<FileElement> CONTAINING_FILE_KEY_AFTER_REPARSE = Key.create("CONTAINING_FILE_KEY_AFTER_REPARSE");
-
   public static FileElement getFileElement(TreeElement element) {
     TreeElement parent = element;
     while (parent != null && !(parent instanceof FileElement)) {
@@ -318,7 +313,10 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static TreeElement nextLeaf(@NotNull TreeElement start, CommonParentState commonParent, IElementType searchedType, boolean expandChameleons) {
+  public static TreeElement nextLeaf(@NotNull TreeElement start,
+                                     CommonParentState commonParent,
+                                     IElementType searchedType,
+                                     boolean expandChameleons) {
     TreeElement element = start;
     while (element != null) {
       if (commonParent != null) {
@@ -497,7 +495,7 @@ public class TreeUtil {
     while (true) {
       if (element == null) return null;
       if (!isWhitespaceOrComment(element) && !alsoSkip.contains(element.getElementType())) break;
-      element = forward ? element.getTreeNext() : element.getTreePrev();
+      element = forward ? element.getTreeNext(): element.getTreePrev();
     }
     return element;
   }

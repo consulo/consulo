@@ -31,11 +31,15 @@ public class FileEntry extends Entry {
   private boolean isReadOnly;
   private Content myContent;
 
-  public FileEntry(String name, Content content, long timestamp, boolean isReadOnly) {
-    super(name);
+  public FileEntry(int nameId, Content content, long timestamp, boolean isReadOnly) {
+    super(nameId);
     myTimestamp = timestamp;
     this.isReadOnly = isReadOnly;
     myContent = content;
+  }
+
+  public FileEntry(String name, Content content, long timestamp, boolean isReadOnly) {
+    this(toNameId(name), content, timestamp, isReadOnly);
   }
 
   public FileEntry(DataInput in, boolean dummy /* to distinguish from general constructor*/) throws IOException {
@@ -83,7 +87,7 @@ public class FileEntry extends Entry {
   @NotNull
   @Override
   public FileEntry copy() {
-    return new FileEntry(myName, myContent, myTimestamp, isReadOnly);
+    return new FileEntry(getNameId(), myContent, myTimestamp, isReadOnly);
   }
 
   @Override
@@ -97,7 +101,7 @@ public class FileEntry extends Entry {
     if (getPath().equals(e.getPath())
         && myContent.equals(e.getContent())
         && isReadOnly == e.isReadOnly()) return;
-    
+
     result.add(new Difference(true, this, e));
   }
 

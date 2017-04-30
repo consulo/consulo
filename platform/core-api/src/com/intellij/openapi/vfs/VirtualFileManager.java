@@ -31,8 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * @see VirtualFileSystem
  */
 public abstract class VirtualFileManager implements ModificationTracker {
-  public static final Topic<BulkFileListener> VFS_CHANGES =
-          new Topic<BulkFileListener>("NewVirtualFileSystem changes", BulkFileListener.class);
+  public static final Topic<BulkFileListener> VFS_CHANGES = new Topic<>("NewVirtualFileSystem changes", BulkFileListener.class);
 
   public static final ModificationTracker VFS_STRUCTURE_MODIFICATIONS = new ModificationTracker() {
     @Override
@@ -62,7 +61,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
 
   /**
    * <p>Refreshes the cached file systems information from the physical file systems synchronously.<p/>
-   *
+   * <p>
    * <p><strong>Note</strong>: this method should be only called within a write-action
    * (see {@linkplain com.intellij.openapi.application.Application#runWriteAction})</p>
    *
@@ -96,10 +95,10 @@ public abstract class VirtualFileManager implements ModificationTracker {
   /**
    * Refreshes only the part of the file system needed for searching the file by the given URL and finds file
    * by the given URL.<br>
-   * <p/>
+   * <p>
    * This method is useful when the file was created externally and you need to find <code>{@link VirtualFile}</code>
    * corresponding to it.<p>
-   * <p/>
+   * <p>
    * This method should be only called within write-action.
    * See {@link com.intellij.openapi.application.Application#runWriteAction}.
    *

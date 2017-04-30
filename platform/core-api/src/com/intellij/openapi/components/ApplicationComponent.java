@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
  * See <a href=../../../../../plugins.html>plugins.html</a> for more information.
  */
 public interface ApplicationComponent extends BaseComponent {
+  @Deprecated
   class Adapter implements ApplicationComponent {
     @Override
     public void initComponent() {

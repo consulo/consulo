@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,14 @@ package com.intellij.openapi.components;
 public interface BaseComponent extends NamedComponent {
   /**
    * Component should perform initialization and communication with other components in this method.
+   * This is called after {@link com.intellij.openapi.components.PersistentStateComponent#loadState(Object)}.
    */
-  void initComponent();
+  default void initComponent() {
+  }
 
   /**
-   * Component should dispose system resources or perform other cleanup in this method.
+   * @see {@link com.intellij.openapi.Disposable}
    */
-  void disposeComponent();
+  default void disposeComponent() {
+  }
 }

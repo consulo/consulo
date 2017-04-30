@@ -37,10 +37,4 @@ public abstract class DocumentRunnable implements Runnable {
   public Project getProject() {
     return myProject;
   }
-
-  public abstract static class IgnoreDocumentRunnable extends DocumentRunnable {
-    public IgnoreDocumentRunnable() {
-      super(null, null);
-    }
-  }
 }
