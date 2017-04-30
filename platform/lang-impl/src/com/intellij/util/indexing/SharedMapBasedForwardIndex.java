@@ -19,6 +19,7 @@ import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.indexing.impl.*;
 import com.intellij.util.io.DataExternalizer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -26,32 +27,34 @@ import java.util.Map;
 
 class SharedMapBasedForwardIndex<Key, Value> extends AbstractForwardIndex<Key,Value> {
   private final DataExternalizer<Collection<Key>> mySnapshotIndexExternalizer;
-  private MapBasedForwardIndex<Key, Value> myUnderlying;
+  private final MapBasedForwardIndex<Key, Value> myUnderlying;
 
-  public SharedMapBasedForwardIndex(MapBasedForwardIndex<Key, Value> underlying) {
-    super(underlying.getIndexExtension());
+  SharedMapBasedForwardIndex(IndexExtension<Key, Value, ?> extension, @Nullable MapBasedForwardIndex<Key, Value> underlying) {
+    super(extension);
     myUnderlying = underlying;
-    mySnapshotIndexExternalizer = VfsAwareMapReduceIndex.createInputsIndexExternalizer(underlying.getIndexExtension());
+    mySnapshotIndexExternalizer = VfsAwareMapReduceIndex.createInputsIndexExternalizer(extension);
+    assert myUnderlying != null || (SharedIndicesData.ourFileSharedIndicesEnabled && !SharedIndicesData.DO_CHECKS);
   }
 
   @NotNull
   @Override
   public InputDataDiffBuilder<Key, Value> getDiffBuilder(int inputId) throws IOException {
-    Collection<Key> keys;
     if (SharedIndicesData.ourFileSharedIndicesEnabled) {
-      keys = SharedIndicesData.recallFileData(inputId, myIndexId, mySnapshotIndexExternalizer);
-      Collection<Key> keysFromInputsIndex = myUnderlying.getInputsIndex().get(inputId);
+      Collection<Key> keys = SharedIndicesData.recallFileData(inputId, (ID<Key, ?>)myIndexId, mySnapshotIndexExternalizer);
+      if (myUnderlying != null) {
+        Collection<Key> keysFromInputsIndex = myUnderlying.getInputsIndex().get(inputId);
 
-      if ((keys == null && keysFromInputsIndex != null) ||
-          !DebugAssertions.equals(keysFromInputsIndex, keys, myKeyDescriptor)
-              ) {
-        SharedIndicesData.associateFileData(inputId, myIndexId, keysFromInputsIndex, mySnapshotIndexExternalizer);
-        if (keys != null) {
-          DebugAssertions.error(
-                  "Unexpected indexing diff " + myIndexId + ", file:" + IndexInfrastructure.findFileById(PersistentFS.getInstance(), inputId)
-                  + "," + keysFromInputsIndex + "," + keys);
+        if (keys == null && keysFromInputsIndex != null ||
+            !DebugAssertions.equals(keysFromInputsIndex, keys, myKeyDescriptor)
+                ) {
+          SharedIndicesData.associateFileData(inputId, (ID<Key, ?>)myIndexId, keysFromInputsIndex, mySnapshotIndexExternalizer);
+          if (keys != null) {
+            DebugAssertions.error(
+                    "Unexpected indexing diff " + myIndexId + ", file:" + IndexInfrastructure.findFileById(PersistentFS.getInstance(), inputId)
+                    + "," + keysFromInputsIndex + "," + keys);
+          }
+          keys = keysFromInputsIndex;
         }
-        keys = keysFromInputsIndex;
       }
       return new CollectionInputDataDiffBuilder<>(inputId, keys);
     }
@@ -62,25 +65,25 @@ class SharedMapBasedForwardIndex<Key, Value> extends AbstractForwardIndex<Key,Va
   public void putInputData(int inputId, @NotNull Map<Key, Value> data)
           throws IOException {
     Collection<Key> keySeq = data.keySet();
-    myUnderlying.putData(inputId, keySeq);
+    if (myUnderlying != null) myUnderlying.putData(inputId, keySeq);
     if (SharedIndicesData.ourFileSharedIndicesEnabled) {
-      if (keySeq.size() == 0) keySeq = null;
-      SharedIndicesData.associateFileData(inputId, myIndexId, keySeq, mySnapshotIndexExternalizer);
+      if (keySeq.isEmpty()) keySeq = null;
+      SharedIndicesData.associateFileData(inputId, (ID<Key, ?>)myIndexId, keySeq, mySnapshotIndexExternalizer);
     }
   }
 
   @Override
   public void flush() {
-    myUnderlying.flush();
+    if (myUnderlying != null) myUnderlying.flush();
   }
 
   @Override
   public void clear() throws IOException {
-    myUnderlying.clear();
+    if (myUnderlying != null) myUnderlying.clear();
   }
 
   @Override
   public void close() throws IOException {
-    myUnderlying.close();
+    if (myUnderlying != null) myUnderlying.close();
   }
 }
