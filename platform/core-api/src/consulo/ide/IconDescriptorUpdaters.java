@@ -27,9 +27,8 @@ import com.intellij.ui.IconDeferrer;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ui.EmptyIcon;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredReadAction;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -38,26 +37,15 @@ import javax.swing.*;
  * @since 0:25/19.07.13
  */
 public class IconDescriptorUpdaters {
-  private static final NotNullLazyValue<Icon> ourVisibilityIconPlaceholder = new NotNullLazyValue<Icon>() {
-    @NotNull
-    @Override
-    protected Icon compute() {
-      return EmptyIcon.create(AllIcons.Nodes.C_public);
-    }
-  };
+  private static final NotNullLazyValue<Icon> ourVisibilityIconPlaceholder = NotNullLazyValue.createValue(() -> EmptyIcon.create(AllIcons.Nodes.C_public));
 
-  private static final NullableFunction<ElementIconRequest,Icon> ourIconCompute = new NullableFunction<ElementIconRequest, Icon>() {
-    @Override
-    @RequiredReadAction
-    public Icon fun(ElementIconRequest request) {
-      final PsiElement element = request.getElement();
-      if (element == null || !element.isValid() || element.getProject().isDisposed()) return null;
+  private static final NullableFunction<ElementIconRequest, Icon> ourIconCompute = request -> {
+    final PsiElement element = request.myPointer.getElement();
+    if (element == null || !element.isValid() || element.getProject().isDisposed()) return null;
 
-      int flags = request.getFlags();
-      Icon icon = getIconWithoutCache(element, flags);
-      Iconable.LastComputedIcon.put(element, icon, flags);
-      return icon;
-    }
+    Icon icon = getIconWithoutCache(element, request.myFlags);
+    Iconable.LastComputedIcon.put(element, icon, request.myFlags);
+    return icon;
   };
 
   private static class ElementIconRequest {
@@ -68,19 +56,6 @@ public class IconDescriptorUpdaters {
     public ElementIconRequest(PsiElement element, @Iconable.IconFlags int flags) {
       myPointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
       myFlags = flags;
-    }
-
-    @Nullable
-    public PsiElement getElement() {
-      if (myPointer.getProject().isDisposed()) return null;
-      PsiElement element = myPointer.getElement();
-      SmartPointerManager.getInstance(myPointer.getProject()).removePointer(myPointer);
-      return element;
-    }
-
-    @Iconable.IconFlags
-    public int getFlags() {
-      return myFlags;
     }
 
     @Override
@@ -128,11 +103,11 @@ public class IconDescriptorUpdaters {
   @NotNull
   private static Icon computeBaseIcon(@NotNull PsiElement element) {
     PsiFile containingFile = element.getContainingFile();
-    if(containingFile != null) {
+    if (containingFile != null) {
       VirtualFile virtualFile = containingFile.getVirtualFile();
-      if(virtualFile != null) {
+      if (virtualFile != null) {
         Icon icon = virtualFile.getFileType().getIcon();
-        if(icon != null) {
+        if (icon != null) {
           return icon;
         }
       }
