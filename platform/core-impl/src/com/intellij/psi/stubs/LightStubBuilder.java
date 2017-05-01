@@ -20,6 +20,7 @@ import com.intellij.openapi.diagnostic.LogUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.source.PsiFileImpl;
@@ -36,7 +37,7 @@ import java.util.List;
 
 public class LightStubBuilder implements StubBuilder {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.LightStubBuilder");
-  public static final ThreadLocal<LighterAST> FORCED_AST = new ThreadLocal<LighterAST>();
+  public static final ThreadLocal<LighterAST> FORCED_AST = new ThreadLocal<>();
 
   @RequiredReadAction
   @Override
@@ -79,11 +80,11 @@ public class LightStubBuilder implements StubBuilder {
   }
 
   protected void buildStubTree(@NotNull LighterAST tree, @NotNull LighterASTNode root, @NotNull StubElement rootStub) {
-    final Stack<LighterASTNode> parents = new Stack<LighterASTNode>();
+    final Stack<LighterASTNode> parents = new Stack<>();
     final TIntStack childNumbers = new TIntStack();
     final BooleanStack parentsStubbed = new BooleanStack();
-    final Stack<List<LighterASTNode>> kinderGarden = new Stack<List<LighterASTNode>>();
-    final Stack<StubElement> parentStubs = new Stack<StubElement>();
+    final Stack<List<LighterASTNode>> kinderGarden = new Stack<>();
+    final Stack<StubElement> parentStubs = new Stack<>();
 
     LighterASTNode parent = null;
     LighterASTNode element = root;
@@ -94,6 +95,8 @@ public class LightStubBuilder implements StubBuilder {
 
     nextElement:
     while (element != null) {
+      ProgressManager.checkCanceled();
+
       final StubElement stub = createStub(tree, element, parentStub);
       boolean hasStub = stub != parentStub || parent == null;
       if (hasStub && !immediateParentStubbed) {

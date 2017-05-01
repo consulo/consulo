@@ -118,14 +118,6 @@
 
     <action id="EditorIndentSelection" class="com.intellij.openapi.editor.actions.LangIndentSelectionAction"/>
 
-    <group id="SwitchViewActions">
-      <action id="SwitchUp" class="com.intellij.ui.switcher.SwitchAction$Up"/>
-      <action id="SwitchDown" class="com.intellij.ui.switcher.SwitchAction$Down"/>
-      <action id="SwitchLeft" class="com.intellij.ui.switcher.SwitchAction$Left"/>
-      <action id="SwitchRight" class="com.intellij.ui.switcher.SwitchAction$Right"/>
-      <action id="SwitchApply" class="com.intellij.ui.switcher.ApplySwitchAction"/>
-    </group>
-
     <action id="ContextHelp" class="com.intellij.ide.actions.ContextHelpAction"/>
     <action id="RunGc" class="com.intellij.ide.actions.RunGcAction"/>
     <action id="ShowPopupMenu" class="com.intellij.ide.actions.ShowPopupMenuAction"/>

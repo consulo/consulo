@@ -19,6 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.LineTokenizer;
+import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Enumerator;
 import org.jetbrains.annotations.NonNls;
@@ -34,22 +35,6 @@ import java.util.BitSet;
  */
 public class Diff {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.diff.Diff");
-
-  @Nullable
-  public static <T> Change buildChangesSomehow(@NotNull T[] objects1, @NotNull T[] objects2) {
-    try {
-      return buildChanges(objects1, objects2);
-    }
-    catch (FilesTooBigForDiffException e) {
-      final int startShift = getStartShift(objects1, objects2);
-      final int endCut = getEndCut(objects1, objects2, startShift);
-
-      int trimmedLength1 = objects1.length - startShift - endCut;
-      int trimmedLength2 = objects2.length - startShift - endCut;
-
-      return new Change(startShift, startShift, trimmedLength1, trimmedLength2, null);
-    }
-  }
 
   @Nullable
   public static Change buildChanges(@NotNull CharSequence before, @NotNull CharSequence after) throws FilesTooBigForDiffException {
@@ -80,7 +65,7 @@ public class Diff {
   }
 
   @Nullable
-  public static <T> Change buildChanges(@NotNull int[] array1, @NotNull int[] array2) throws FilesTooBigForDiffException {
+  public static Change buildChanges(@NotNull int[] array1, @NotNull int[] array2) throws FilesTooBigForDiffException {
     final int startShift = getStartShift(array1, array2);
     final int endCut = getEndCut(array1, array2, startShift);
 
@@ -129,8 +114,7 @@ public class Diff {
       }
       catch (FilesTooBigForDiffException e) {
         PatienceIntLCS patienceIntLCS = new PatienceIntLCS(discarded[0], discarded[1]);
-        patienceIntLCS.failOnSmallSizeReduction();
-        patienceIntLCS.execute();
+        patienceIntLCS.execute(true);
         changes = patienceIntLCS.getChanges();
         LOG.info("Successful fallback to patience diff");
       }
@@ -140,28 +124,28 @@ public class Diff {
     return builder.getFirstChange();
   }
 
-  private static <T> int getStartShift(final T[] o1, final T[] o2) {
+  private static <T> int getStartShift(@NotNull final T[] o1, @NotNull final T[] o2) {
     final int size = Math.min(o1.length, o2.length);
     int idx = 0;
     for (int i = 0; i < size; i++) {
-      if (! o1[i].equals(o2[i])) break;
-      ++ idx;
+      if (!o1[i].equals(o2[i])) break;
+      ++idx;
     }
     return idx;
   }
 
-  private static <T> int getEndCut(final T[] o1, final T[] o2, final int startShift) {
+  private static <T> int getEndCut(@NotNull final T[] o1, @NotNull final T[] o2, int startShift) {
     final int size = Math.min(o1.length, o2.length) - startShift;
     int idx = 0;
 
     for (int i = 0; i < size; i++) {
-      if (! o1[o1.length - i - 1].equals(o2[o2.length - i - 1])) break;
-      ++ idx;
+      if (!o1[o1.length - i - 1].equals(o2[o2.length - i - 1])) break;
+      ++idx;
     }
     return idx;
   }
 
-  private static int getStartShift(final int[] o1, final int[] o2) {
+  private static int getStartShift(@NotNull final int[] o1, @NotNull final int[] o2) {
     final int size = Math.min(o1.length, o2.length);
     int idx = 0;
     for (int i = 0; i < size; i++) {
@@ -171,7 +155,7 @@ public class Diff {
     return idx;
   }
 
-  private static int getEndCut(final int[] o1, final int[] o2, final int startShift) {
+  private static int getEndCut(@NotNull final int[] o1, @NotNull final int[] o2, final int startShift) {
     final int size = Math.min(o1.length, o2.length) - startShift;
     int idx = 0;
 
@@ -196,8 +180,24 @@ public class Diff {
 
   public static int translateLine(@NotNull CharSequence before, @NotNull CharSequence after, int line, boolean approximate)
           throws FilesTooBigForDiffException {
-    Change change = buildChanges(before, after);
+    String[] strings1 = LineTokenizer.tokenize(before, false);
+    String[] strings2 = LineTokenizer.tokenize(after, false);
+    if (approximate) {
+      strings1 = trim(strings1);
+      strings2 = trim(strings2);
+    }
+    Change change = buildChanges(strings1, strings2);
     return translateLine(change, line, approximate);
+  }
+
+  @NotNull
+  private static String[] trim(@NotNull String[] lines) {
+    return ContainerUtil.map2Array(lines, String.class, new Function<String, String>() {
+      @Override
+      public String fun(String s) {
+        return s.trim();
+      }
+    });
   }
 
   /**

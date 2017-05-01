@@ -17,7 +17,10 @@ package com.intellij.lang.annotation;
 
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.codeInspection.*;
+import com.intellij.codeInspection.LocalQuickFix;
+import com.intellij.codeInspection.LocalQuickFixAsIntentionAdapter;
+import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -93,7 +96,7 @@ public final class Annotation implements Segment {
    */
   public Annotation(final int startOffset, final int endOffset, @NotNull HighlightSeverity severity, final String message, String tooltip) {
     assert startOffset <= endOffset : startOffset + ":" + endOffset;
-    assert startOffset >= 0 : "Start offset must not be negative: " +startOffset;
+    assert startOffset >= 0 : "Start offset must not be negative: " + startOffset;
     myStartOffset = startOffset;
     myEndOffset = endOffset;
     myMessage = message;
@@ -111,10 +114,12 @@ public final class Annotation implements Segment {
   }
 
   public void registerFix(@NotNull IntentionAction fix, TextRange range) {
-    registerFix(fix,range, null);
+    registerFix(fix, range, null);
   }
 
-  public void registerFix(@NotNull LocalQuickFix fix, @Nullable TextRange range, @Nullable HighlightDisplayKey key,
+  public void registerFix(@NotNull LocalQuickFix fix,
+                          @Nullable TextRange range,
+                          @Nullable HighlightDisplayKey key,
                           @NotNull ProblemDescriptor problemDescriptor) {
     if (range == null) {
       range = new TextRange(myStartOffset, myEndOffset);
@@ -160,10 +165,13 @@ public final class Annotation implements Segment {
   /**
    * Register a quickfix which would be available onTheFly and in the batch mode. Should implement both IntentionAction and LocalQuickFix.
    */
-  public <T extends IntentionAction & LocalQuickFix> void registerUniversalFix(@NotNull T fix, @Nullable TextRange range, @Nullable final HighlightDisplayKey key) {
+  public <T extends IntentionAction & LocalQuickFix> void registerUniversalFix(@NotNull T fix,
+                                                                               @Nullable TextRange range,
+                                                                               @Nullable final HighlightDisplayKey key) {
     registerBatchFix(fix, range, key);
     registerFix(fix, range, key);
   }
+
   /**
    * Sets a flag indicating what happens with the annotation when the user starts typing.
    * If the parameter is true, the annotation is removed as soon as the user starts typing
@@ -361,6 +369,7 @@ public final class Annotation implements Segment {
   /**
    * File level annotations are visualized differently than lesser range annotations by showing a title bar on top of the
    * editor rather than applying text attributes to the text range.
+   *
    * @return {@code true} if this particular annotation have been defined as file level.
    */
   public boolean isFileLevelAnnotation() {
@@ -370,6 +379,7 @@ public final class Annotation implements Segment {
   /**
    * File level annotations are visualized differently than lesser range annotations by showing a title bar on top of the
    * editor rather than applying text attributes to the text range.
+   *
    * @param isFileLevelAnnotation {@code true} if this particular annotation should be visualized at file level.
    */
   public void setFileLevelAnnotation(final boolean isFileLevelAnnotation) {
@@ -416,10 +426,6 @@ public final class Annotation implements Segment {
 
   @NonNls
   public String toString() {
-    return "Annotation(" +
-           "message='" + myMessage + "'" +
-           ", severity='" + mySeverity + "'" +
-           ", toolTip='" + myTooltip + "'" +
-           ")";
+    return "Annotation(" + "message='" + myMessage + "'" + ", severity='" + mySeverity + "'" + ", toolTip='" + myTooltip + "'" + ")";
   }
 }

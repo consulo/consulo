@@ -19,11 +19,9 @@
  */
 package com.intellij.psi.stubs;
 
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.List;
 
 public class StubTree extends ObjectStubTree<StubElement<?>> {
@@ -42,13 +40,10 @@ public class StubTree extends ObjectStubTree<StubElement<?>> {
     final PsiFileStub[] roots = getRoot().getStubRoots();
     if (roots.length == 1) return super.getPlainListFromAllRoots();
 
-    return ContainerUtil.concat(roots, new Function<PsiFileStub, Collection<? extends StubElement<?>>>() {
-      @Override
-      public Collection<? extends StubElement<?>> fun(PsiFileStub stub) {
-        final ObjectStubTree existingTree = stub.getUserData(STUB_TO_TREE_REFERENCE);
-        //noinspection unchecked
-        return existingTree != null ? existingTree.getPlainList() : new StubTree(stub, false).getPlainList();
-      }
+    return ContainerUtil.concat(roots, stub -> {
+      final ObjectStubTree existingTree = stub.getUserData(STUB_TO_TREE_REFERENCE);
+      //noinspection unchecked
+      return existingTree != null ? existingTree.getPlainList() : new StubTree(stub, false).getPlainList();
     });
   }
 

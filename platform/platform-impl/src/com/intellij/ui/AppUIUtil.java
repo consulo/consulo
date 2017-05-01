@@ -24,7 +24,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.containers.ContainerUtil;
@@ -115,16 +114,14 @@ public class AppUIUtil {
   }
 
   public static void registerBundledFonts() {
-    if (Registry.is("ide.register.bundled.fonts")) {
-      registerFont("/fonts/Inconsolata.ttf");
-      registerFont("/fonts/SourceCodePro-Regular.ttf");
-      registerFont("/fonts/SourceCodePro-Bold.ttf");
-      registerFont("/fonts/FiraCode-Bold.ttf");
-      registerFont("/fonts/FiraCode-Light.ttf");
-      registerFont("/fonts/FiraCode-Medium.ttf");
-      registerFont("/fonts/FiraCode-Regular.ttf");
-      registerFont("/fonts/FiraCode-Retina.ttf");
-    }
+    registerFont("/fonts/Inconsolata.ttf");
+    registerFont("/fonts/SourceCodePro-Regular.ttf");
+    registerFont("/fonts/SourceCodePro-Bold.ttf");
+    registerFont("/fonts/FiraCode-Bold.ttf");
+    registerFont("/fonts/FiraCode-Light.ttf");
+    registerFont("/fonts/FiraCode-Medium.ttf");
+    registerFont("/fonts/FiraCode-Regular.ttf");
+    registerFont("/fonts/FiraCode-Retina.ttf");
   }
 
   private static void registerFont(@NonNls String name) {

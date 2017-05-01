@@ -28,8 +28,8 @@ import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.FileContentImpl;
 import com.intellij.util.indexing.IndexingDataKeys;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredReadAction;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -37,7 +37,6 @@ import java.io.IOException;
  * @author yole
  */
 public class CoreStubTreeLoader extends StubTreeLoader {
-  @RequiredReadAction
   @Override
   public ObjectStubTree readOrBuild(Project project, VirtualFile vFile, @Nullable PsiFile psiFile) {
     if (!canHaveStub(vFile)) {
@@ -85,4 +84,5 @@ public class CoreStubTreeLoader extends StubTreeLoader {
     }
     return false;
   }
+
 }

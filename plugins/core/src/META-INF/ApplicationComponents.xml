@@ -197,9 +197,7 @@
     <component>
       <implementation-class>com.intellij.ide.MacOSApplicationProvider</implementation-class>
     </component>
-    <component>
-      <implementation-class>com.intellij.ui.switcher.QuickAccessSettings</implementation-class>
-    </component>
+
     <component>
       <implementation-class>com.intellij.openapi.updateSettings.impl.UpdateCheckerComponent</implementation-class>
     </component>
@@ -223,6 +221,9 @@
     </component>
     <component>
       <implementation-class>com.intellij.openapi.editor.impl.VisibleEditorsTracker</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler</implementation-class>
     </component>
     <component>
       <interface-class>com.intellij.openapi.fileEditor.impl.text.TextEditorProvider</interface-class>

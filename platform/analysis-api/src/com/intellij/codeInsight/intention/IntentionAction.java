@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInsight.intention;
 
+import com.intellij.openapi.application.WriteActionAware;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @see IntentionManager#registerIntentionAndMetaData(com.intellij.codeInsight.intention.IntentionAction, java.lang.String...)
  */
-public interface IntentionAction {
+public interface IntentionAction extends WriteActionAware {
   IntentionAction[] EMPTY_ARRAY = new IntentionAction[0];
   /**
    * Returns text to be shown in the list of available actions, if this action
