@@ -26,7 +26,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.IndexInfrastructure;
 import com.intellij.util.indexing.IndexingStamp;
@@ -49,9 +48,9 @@ class StubVersionMap {
   private static final String RECORD_SEPARATOR = "\uFFFF";
   private static final String LINE_SEPARATOR = "\n";
   private static final String ourEncoding = "utf-8";
-  private final Map<FileType, Object> fileTypeToVersionOwner = new THashMap<FileType, Object>();
-  private final TObjectLongHashMap<FileType> fileTypeToVersion = new TObjectLongHashMap<FileType>();
-  private final TLongObjectHashMap<FileType> versionToFileType = new TLongObjectHashMap<FileType>();
+  private final Map<FileType, Object> fileTypeToVersionOwner = new THashMap<>();
+  private final TObjectLongHashMap<FileType> fileTypeToVersion = new TObjectLongHashMap<>();
+  private final TLongObjectHashMap<FileType> versionToFileType = new TLongObjectHashMap<>();
   private long myStubIndexStamp;
 
   StubVersionMap() throws IOException {
@@ -69,57 +68,58 @@ class StubVersionMap {
     final long currentStubIndexStamp = IndexingStamp.getIndexCreationStamp(StubUpdatingIndex.INDEX_ID);
     File allIndexedFiles = allIndexedFilesRegistryFile();
 
-    List<String> removedFileTypes = new ArrayList<String>();
-    List<FileType> updatedFileTypes = new ArrayList<FileType>();
-    List<FileType> addedFileTypes = new ArrayList<FileType>();
+    List<String> removedFileTypes = new ArrayList<>();
+    List<FileType> updatedFileTypes = new ArrayList<>();
+    List<FileType> addedFileTypes = new ArrayList<>();
     long lastUsedCounter = currentStubIndexStamp;
 
-    if (allIndexedFiles.lastModified() == currentStubIndexStamp) {
-      FileTypeRegistry fileTypeRegistry = FileTypeRegistry.getInstance();
+    boolean canUsePreviousMappings = allIndexedFiles.exists();
+    FileTypeRegistry fileTypeRegistry = FileTypeRegistry.getInstance();
+    Set<FileType> loadedFileTypes = new THashSet<>();
 
-      Set<FileType> loadedFileTypes = new THashSet<FileType>();
+    if (canUsePreviousMappings) {
+      List<String> stringList = StringUtil.split(FileUtil.loadFile(allIndexedFiles, ourEncoding), LINE_SEPARATOR);
+      long allIndexedFilesVersion = Long.parseLong(stringList.get(0));
 
-      for(String fileTypeInfo: StringUtil.split(FileUtil.loadFile(allIndexedFiles, ourEncoding), LINE_SEPARATOR)) {
-        List<String> strings = StringUtil.split(fileTypeInfo, RECORD_SEPARATOR);
-        String fileTypeName = strings.get(0);
-        long usedTimeStamp = Long.parseLong(strings.get(2));
-        lastUsedCounter = Math.min(lastUsedCounter, usedTimeStamp);
+      if (allIndexedFilesVersion == currentStubIndexStamp) {
+        for (int i = 1, size = stringList.size(); i < size; ++i) {
+          List<String> strings = StringUtil.split(stringList.get(i), RECORD_SEPARATOR);
+          String fileTypeName = strings.get(0);
+          long usedTimeStamp = Long.parseLong(strings.get(2));
+          lastUsedCounter = Math.min(lastUsedCounter, usedTimeStamp);
 
-        FileType fileType = fileTypeRegistry.findFileTypeByName(fileTypeName);
-        if (fileType == null) removedFileTypes.add(fileTypeName);
-        else {
-          loadedFileTypes.add(fileType);
-          Object owner = getVersionOwner(fileType);
-          if (owner == null) removedFileTypes.add(fileTypeName);
+          FileType fileType = fileTypeRegistry.findFileTypeByName(fileTypeName);
+          if (fileType == null) removedFileTypes.add(fileTypeName);
           else {
-            if (!Comparing.equal(strings.get(1), typeAndVersion(owner))) {
-              updatedFileTypes.add(fileType);
-            } else {
-              registerStamp(fileType, usedTimeStamp);
+            loadedFileTypes.add(fileType);
+            Object owner = getVersionOwner(fileType);
+            if (owner == null) removedFileTypes.add(fileTypeName);
+            else {
+              if (!Comparing.equal(strings.get(1), typeAndVersion(owner))) {
+                updatedFileTypes.add(fileType);
+              }
+              else {
+                registerStamp(fileType, usedTimeStamp);
+              }
             }
           }
         }
+      } else {
+        canUsePreviousMappings = false;
       }
+    }
 
-      for(FileType fileType:fileTypeToVersionOwner.keySet()) {
-        if (!loadedFileTypes.contains(fileType)) {
-          addedFileTypes.add(fileType);
-        }
+    for(FileType fileType:fileTypeToVersionOwner.keySet()) {
+      if (!loadedFileTypes.contains(fileType)) {
+        addedFileTypes.add(fileType);
       }
+    }
 
-      if (!addedFileTypes.isEmpty() || !removedFileTypes.isEmpty()) {
-        StubUpdatingIndex.LOG.info("requesting complete stub index rebuild due to changes: " +
-                                   (addedFileTypes.isEmpty() ? "" : "added file types:" + StringUtil.join(addedFileTypes, new Function<FileType, String>() {
-                                     @Override
-                                     public String fun(FileType fileType) {
-                                       return fileType.getName();
-                                     }
-                                   }, ",") + ";") +
-                                   (removedFileTypes.isEmpty() ? "":"removed file types:" + StringUtil.join(removedFileTypes, ",")));
-        throw new IOException(); // StubVersionMap will be recreated
-      }
-    } else {
-      addedFileTypes.addAll(fileTypeToVersionOwner.keySet());
+    if (canUsePreviousMappings && (!addedFileTypes.isEmpty() || !removedFileTypes.isEmpty())) {
+      StubUpdatingIndex.LOG.info("requesting complete stub index rebuild due to changes: " +
+                                 (addedFileTypes.isEmpty() ? "" : "added file types:" + StringUtil.join(addedFileTypes, FileType::getName, ",") + ";") +
+                                 (removedFileTypes.isEmpty() ? "":"removed file types:" + StringUtil.join(removedFileTypes, ",")));
+      throw new IOException(); // StubVersionMap will be recreated
     }
 
     long counter = lastUsedCounter - 1; // important to start with value smaller and progress downwards
@@ -130,21 +130,11 @@ class StubVersionMap {
 
     if (!addedFileTypes.isEmpty() || !updatedFileTypes.isEmpty() || !removedFileTypes.isEmpty()) {
       if (!addedFileTypes.isEmpty()) {
-        StubUpdatingIndex.LOG.info("Following new file types will be indexed:" + StringUtil.join(addedFileTypes, new Function<FileType, String>() {
-          @Override
-          public String fun(FileType fileType) {
-            return fileType.getName();
-          }
-        }, ","));
+        StubUpdatingIndex.LOG.info("Following new file types will be indexed:" + StringUtil.join(addedFileTypes, FileType::getName, ","));
       }
 
       if (!updatedFileTypes.isEmpty()) {
-        StubUpdatingIndex.LOG.info("Stub version was changed for " + StringUtil.join(updatedFileTypes, new Function<FileType, String>() {
-          @Override
-          public String fun(FileType fileType) {
-            return fileType.getName();
-          }
-        }, ","));
+        StubUpdatingIndex.LOG.info("Stub version was changed for " + StringUtil.join(updatedFileTypes, FileType::getName, ","));
       }
 
       if (!removedFileTypes.isEmpty()) {
@@ -152,6 +142,7 @@ class StubVersionMap {
       }
 
       StringBuilder allFileTypes = new StringBuilder();
+      allFileTypes.append(currentStubIndexStamp).append(LINE_SEPARATOR);
 
       for (FileType fileType : fileTypeToVersionOwner.keySet()) {
         Object owner = fileTypeToVersionOwner.get(fileType);
@@ -160,7 +151,6 @@ class StubVersionMap {
                 .append(timestamp).append(LINE_SEPARATOR);
       }
       FileUtil.writeToFile(allIndexedFiles, allFileTypes.toString().getBytes(ourEncoding));
-      FileUtil.setLastModified(allIndexedFiles, currentStubIndexStamp);
     }
 
     myStubIndexStamp = currentStubIndexStamp;

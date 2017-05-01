@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 package com.intellij.formatting;
 
+import com.intellij.formatting.engine.ExpandableIndent;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
@@ -57,7 +57,7 @@ public class FormatterImpl extends FormatterEx
                    FormattingModelFactory {
   private static final Logger LOG = Logger.getInstance("#com.intellij.formatting.FormatterImpl");
 
-  private final AtomicReference<FormattingProgressTask> myProgressTask = new AtomicReference<FormattingProgressTask>();
+  private final AtomicReference<FormattingProgressTask> myProgressTask = new AtomicReference<>();
 
   private final AtomicInteger myIsDisabledCount = new AtomicInteger();
   private final IndentImpl NONE_INDENT = new IndentImpl(Indent.Type.NONE, false, false);
@@ -114,24 +114,39 @@ public class FormatterImpl extends FormatterEx
 
   @Override
   public int getSpacingForBlockAtOffset(FormattingModel model, int offset) {
+    SpacingImpl spacing = getSpacingBeforeBlockAtOffset(model, offset);
+    if (spacing != null) {
+      int minSpaces = spacing.getMinSpaces();
+      if (minSpaces >= 0) {
+        return minSpaces;
+      }
+    }
+    return -1;
+  }
+
+  @Override
+  public int getMinLineFeedsBeforeBlockAtOffset(FormattingModel model, int offset) {
+    SpacingImpl spacing = getSpacingBeforeBlockAtOffset(model, offset);
+    if (spacing != null) {
+      int minLineFeeds = spacing.getMinLineFeeds();
+      if (minLineFeeds >= 0) {
+        return minLineFeeds;
+      }
+    }
+    return -1;
+  }
+
+  private static SpacingImpl getSpacingBeforeBlockAtOffset(FormattingModel model, int offset) {
     Couple<Block> blockWithParent = getBlockAtOffset(null, model.getRootBlock(), offset);
     if (blockWithParent != null) {
       Block parentBlock = blockWithParent.first;
       Block targetBlock = blockWithParent.second;
       if (parentBlock != null && targetBlock != null) {
         Block prevBlock = findPreviousSibling(parentBlock, targetBlock);
-        if (prevBlock != null) {
-          SpacingImpl spacing = (SpacingImpl)parentBlock.getSpacing(prevBlock, targetBlock);
-          if (spacing != null) {
-            int minSpaces = spacing.getMinSpaces();
-            if (minSpaces > 0) {
-              return minSpaces;
-            }
-          }
-        }
+        if (prevBlock != null) return (SpacingImpl)parentBlock.getSpacing(prevBlock, targetBlock);
       }
     }
-    return 0;
+    return null;
   }
 
   @Nullable
@@ -181,8 +196,6 @@ public class FormatterImpl extends FormatterEx
           FormatProcessor processor = new FormatProcessor(
                   model.getDocumentModel(), model.getRootBlock(), settings, indentOptions, affectedRanges, FormattingProgressCallback.EMPTY
           );
-          processor.setJavaIndentOptions(javaIndentOptions);
-
           processor.format(model);
           return processor;
         }
@@ -306,21 +319,6 @@ public class FormatterImpl extends FormatterEx
     execute(task);
   }
 
-  /**
-   * Execute given sequential formatting task. Two approaches are possible:
-   * <pre>
-   * <ul>
-   *   <li>
-   *      <b>synchronous</b> - the task is completely executed during the current method processing;
-   *   </li>
-   *   <li>
-   *       <b>asynchronous</b> - the task is executed at background thread under the progress dialog;
-   *   </li>
-   * </ul>
-   * </pre>
-   *
-   * @param task    task to execute
-   */
   private void execute(@NotNull SequentialTask task) {
     disableFormatting();
     Application application = ApplicationManager.getApplication();
@@ -338,12 +336,7 @@ public class FormatterImpl extends FormatterEx
     }
     else {
       progressTask.setTask(task);
-      Runnable callback = new Runnable() {
-        @Override
-        public void run() {
-          enableFormatting();
-        }
-      };
+      Runnable callback = () -> enableFormatting();
       for (FormattingProgressCallback.EventType eventType : FormattingProgressCallback.EventType.values()) {
         progressTask.addCallback(eventType, callback);
       }
@@ -363,7 +356,7 @@ public class FormatterImpl extends FormatterEx
       final FormatProcessor processor = buildProcessorAndWrapBlocks(
               model, block, settings, indentOptions, new FormatTextRanges(affectedRange, true)
       );
-      final LeafBlockWrapper blockBefore = processor.getBlockAtOrAfter(affectedRange.getStartOffset());
+      final LeafBlockWrapper blockBefore = processor.getBlockRangesMap().getBlockAtOrAfter(affectedRange.getStartOffset());
       LOG.assertTrue(blockBefore != null);
       WhiteSpace whiteSpace = blockBefore.getWhiteSpace();
       LOG.assertTrue(whiteSpace != null);
@@ -414,17 +407,17 @@ public class FormatterImpl extends FormatterEx
   }
 
   @Override
-  public void formatAroundRange(final FormattingModel model,
-                                final CodeStyleSettings settings,
-                                final TextRange textRange,
-                                final FileType fileType) {
+  public void formatAroundRange(FormattingModel model,
+                                CodeStyleSettings settings,
+                                PsiFile file,
+                                TextRange textRange) {
     disableFormatting();
     try {
       validateModel(model);
       final FormattingDocumentModel documentModel = model.getDocumentModel();
       final Block block = model.getRootBlock();
       final FormatProcessor processor = buildProcessorAndWrapBlocks(
-              documentModel, block, settings, settings.getIndentOptions(fileType), null
+              documentModel, block, settings, settings.getIndentOptionsByFile(file), null
       );
       LeafBlockWrapper tokenBlock = processor.getFirstTokenBlock();
       while (tokenBlock != null) {
@@ -473,7 +466,7 @@ public class FormatterImpl extends FormatterEx
               documentModel, block, settings, indentOptions, new FormatTextRanges(affectedRange, true), offset
       );
 
-      final LeafBlockWrapper blockAfterOffset = processor.getBlockAtOrAfter(offset);
+      final LeafBlockWrapper blockAfterOffset = processor.getBlockRangesMap().getBlockAtOrAfter(offset);
 
       if (blockAfterOffset != null && blockAfterOffset.contains(offset)) {
         return offset;
@@ -492,40 +485,14 @@ public class FormatterImpl extends FormatterEx
     return offset;
   }
 
-  /**
-   * Delegates to
-   * {@link #buildProcessorAndWrapBlocks(FormattingDocumentModel, Block, CodeStyleSettings, CommonCodeStyleSettings.IndentOptions, FormatTextRanges, int)}
-   * with '-1' as an interested offset.
-   *
-   * @param docModel
-   * @param rootBlock
-   * @param settings
-   * @param indentOptions
-   * @param affectedRanges
-   * @return
-   */
   private static FormatProcessor buildProcessorAndWrapBlocks(final FormattingDocumentModel docModel,
                                                              Block rootBlock,
                                                              CodeStyleSettings settings,
                                                              CommonCodeStyleSettings.IndentOptions indentOptions,
-                                                             @Nullable FormatTextRanges affectedRanges)
-  {
+                                                             @Nullable FormatTextRanges affectedRanges) {
     return buildProcessorAndWrapBlocks(docModel, rootBlock, settings, indentOptions, affectedRanges, -1);
   }
 
-  /**
-   * Builds {@link FormatProcessor} instance and asks it to wrap all {@link Block code blocks}
-   * {@link FormattingModel#getRootBlock() derived from the given model}.
-   *
-   * @param docModel            target model
-   * @param rootBlock           root block to process
-   * @param settings            code style settings to use
-   * @param indentOptions       indent options to use
-   * @param affectedRanges      ranges to reformat
-   * @param interestingOffset   interesting offset; <code>'-1'</code> if no particular offset has a special interest
-   * @return                    format processor instance with wrapped {@link Block code blocks}
-   */
-  @SuppressWarnings({"StatementWithEmptyBody"})
   private static FormatProcessor buildProcessorAndWrapBlocks(final FormattingDocumentModel docModel,
                                                              Block rootBlock,
                                                              CodeStyleSettings settings,
@@ -584,7 +551,7 @@ public class FormatterImpl extends FormatterEx
 
   private static boolean hasContentAfterLineBreak(final FormattingDocumentModel documentModel, final int offset, final WhiteSpace whiteSpace) {
     return documentModel.getLineNumber(offset) == documentModel.getLineNumber(whiteSpace.getEndOffset()) &&
-           documentModel.getTextLength() != offset;
+           documentModel.getTextLength() != whiteSpace.getEndOffset();
   }
 
   @Override
@@ -599,13 +566,25 @@ public class FormatterImpl extends FormatterEx
     final FormatProcessor processor = buildProcessorAndWrapBlocks(
             documentModel, block, settings, indentOptions, new FormatTextRanges(affectedRange, true), offset
     );
-    final LeafBlockWrapper blockAfterOffset = processor.getBlockAtOrAfter(offset);
-
-    if (blockAfterOffset != null && !blockAfterOffset.contains(offset)) {
-      final WhiteSpace whiteSpace = blockAfterOffset.getWhiteSpace();
+    WhiteSpace whiteSpace = getWhiteSpaceAtOffset(offset, processor);
+    if (whiteSpace != null) {
       final IndentInfo indent = calcIndent(offset, documentModel, processor, whiteSpace);
-
       return indent.generateNewWhiteSpace(indentOptions);
+    }
+    return null;
+  }
+
+  @Nullable
+  private static WhiteSpace getWhiteSpaceAtOffset(int offset,
+                                                  @NotNull FormatProcessor formatProcessor) {
+    final LeafBlockWrapper blockAfterOffset = formatProcessor.getBlockRangesMap().getBlockAtOrAfter(offset);
+    if (blockAfterOffset != null) {
+      if (!blockAfterOffset.contains(offset)) return blockAfterOffset.getWhiteSpace();
+    }
+    else {
+      if (offset >= formatProcessor.getLastWhiteSpace().getStartOffset()) {
+        return formatProcessor.getLastWhiteSpace();
+      }
     }
     return null;
   }
@@ -855,7 +834,7 @@ public class FormatterImpl extends FormatterEx
     return getSpacingImpl(minSpaces, maxSpaces, minLineFeeds, false, false, keepLineBreaks, keepBlankLines, false, prefLineFeeds);
   }
 
-  private final Map<SpacingImpl,SpacingImpl> ourSharedProperties = new HashMap<SpacingImpl,SpacingImpl>();
+  private final Map<SpacingImpl,SpacingImpl> ourSharedProperties = new HashMap<>();
   private final SpacingImpl ourSharedSpacing = new SpacingImpl(-1,-1,-1,false,false,false,-1,false,0);
 
   private SpacingImpl getSpacingImpl(final int minSpaces,

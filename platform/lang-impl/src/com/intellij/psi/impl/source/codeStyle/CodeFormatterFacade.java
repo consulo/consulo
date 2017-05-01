@@ -43,6 +43,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.DocumentBasedFormattingModel;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
@@ -69,12 +70,12 @@ public class CodeFormatterFacade {
   private static final String WRAP_LINE_COMMAND_NAME = "AutoWrapLongLine";
 
   /**
-   * This key is used as a flag that indicates if <code>'wrap long line during formatting'</code> activity is performed now.
+   * This key is used as a flag that indicates if {@code 'wrap long line during formatting'} activity is performed now.
    *
    * @see CodeStyleSettings#WRAP_LONG_LINES
    */
   public static final Key<Boolean> WRAP_LONG_LINE_DURING_FORMATTING_IN_PROGRESS_KEY
-    = new Key<Boolean>("WRAP_LONG_LINE_DURING_FORMATTING_IN_PROGRESS_KEY");
+          = new Key<>("WRAP_LONG_LINE_DURING_FORMATTING_IN_PROGRESS_KEY");
 
   private final CodeStyleSettings mySettings;
   private final FormatterTagHandler myTagHandler;
@@ -114,7 +115,7 @@ public class CodeFormatterFacade {
     final Document document = file.getViewProvider().getDocument();
 
     PsiElement elementToFormat = document instanceof DocumentWindow ? InjectedLanguageManager
-          .getInstance(file.getProject()).getTopLevelFile(file) : psiElement;
+            .getInstance(file.getProject()).getTopLevelFile(file) : psiElement;
     final PsiFile fileToFormat = elementToFormat.getContainingFile();
 
     final FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(fileToFormat);
@@ -134,7 +135,7 @@ public class CodeFormatterFacade {
       if (file.getTextLength() > 0) {
         try {
           FormatterEx.getInstanceEx().format(
-            model, mySettings,mySettings.getIndentOptionsByFile(fileToFormat, range), new FormatTextRanges(range, true)
+                  model, mySettings,mySettings.getIndentOptionsByFile(fileToFormat, range), new FormatTextRanges(range, true)
           );
 
           wrapLongLinesIfNecessary(file, document, startOffset, endOffset);
@@ -167,11 +168,11 @@ public class CodeFormatterFacade {
   public void processText(PsiFile file, final FormatTextRanges ranges, boolean doPostponedFormatting) {
     final Project project = file.getProject();
     Document document = PsiDocumentManager.getInstance(project).getDocument(file);
-    final List<FormatTextRanges.FormatTextRange> textRanges = ranges.getRanges();
+    final List<FormatTextRange> textRanges = ranges.getRanges();
     if (document instanceof DocumentWindow) {
       file = InjectedLanguageManager.getInstance(file.getProject()).getTopLevelFile(file);
       final DocumentWindow documentWindow = (DocumentWindow)document;
-      for (FormatTextRanges.FormatTextRange range : textRanges) {
+      for (FormatTextRange range : textRanges) {
         range.setTextRange(documentWindow.injectedToHost(range.getTextRange()));
       }
       document = documentWindow.getDelegate();
@@ -188,7 +189,7 @@ public class CodeFormatterFacade {
           final FileViewProvider viewProvider = file.getViewProvider();
           final PsiElement startElement = viewProvider.findElementAt(textRanges.get(0).getTextRange().getStartOffset(), contextLanguage);
           final PsiElement endElement =
-            viewProvider.findElementAt(textRanges.get(textRanges.size() - 1).getTextRange().getEndOffset() - 1, contextLanguage);
+                  viewProvider.findElementAt(textRanges.get(textRanges.size() - 1).getTextRange().getEndOffset() - 1, contextLanguage);
           final PsiElement commonParent = startElement != null && endElement != null ? PsiTreeUtil.findCommonParent(startElement, endElement) : null;
           ASTNode node = null;
           if (commonParent != null) {
@@ -197,14 +198,14 @@ public class CodeFormatterFacade {
           if (node == null) {
             node = file.getNode();
           }
-          for (FormatTextRanges.FormatTextRange range : ranges.getRanges()) {
+          for (FormatTextRange range : ranges.getRanges()) {
             TextRange rangeToUse = preprocess(node, range.getTextRange());
             range.setTextRange(rangeToUse);
           }
           if (doPostponedFormatting) {
             RangeMarker[] markers = new RangeMarker[textRanges.size()];
             int i = 0;
-            for (FormatTextRanges.FormatTextRange range : textRanges) {
+            for (FormatTextRange range : textRanges) {
               TextRange textRange = range.getTextRange();
               int start = textRange.getStartOffset();
               int end = textRange.getEndOffset();
@@ -219,7 +220,7 @@ public class CodeFormatterFacade {
             FormattingProgressTask.FORMATTING_CANCELLED_FLAG.set(false);
             component.doPostponedFormatting(file.getViewProvider());
             i = 0;
-            for (FormatTextRanges.FormatTextRange range : textRanges) {
+            for (FormatTextRange range : textRanges) {
               RangeMarker marker = markers[i];
               if (marker != null) {
                 range.setTextRange(TextRange.create(marker));
@@ -243,10 +244,10 @@ public class CodeFormatterFacade {
           }
 
           CommonCodeStyleSettings.IndentOptions indentOptions =
-            mySettings.getIndentOptionsByFile(file, textRanges.size() == 1 ? textRanges.get(0).getTextRange() : null);
+                  mySettings.getIndentOptionsByFile(file, textRanges.size() == 1 ? textRanges.get(0).getTextRange() : null);
 
           formatter.format(model, mySettings, indentOptions, ranges, myReformatContext);
-          for (FormatTextRanges.FormatTextRange range : textRanges) {
+          for (FormatTextRange range : textRanges) {
             TextRange textRange = range.getTextRange();
             wrapLongLinesIfNecessary(file, document, textRange.getStartOffset(), textRange.getEndOffset());
           }
@@ -280,13 +281,10 @@ public class CodeFormatterFacade {
       }
       else {
         Collection<PsiLanguageInjectionHost> injectionHosts = collectInjectionHosts(file, range);
-        PsiLanguageInjectionHost.InjectedPsiVisitor visitor = new PsiLanguageInjectionHost.InjectedPsiVisitor() {
-          @Override
-          public void visit(@NotNull PsiFile injectedPsi, @NotNull List<PsiLanguageInjectionHost.Shred> places) {
-            for (PsiLanguageInjectionHost.Shred place : places) {
-              Segment rangeMarker = place.getHostRangeMarker();
-              injectedFileRangesSet.add(TextRange.create(rangeMarker.getStartOffset(), rangeMarker.getEndOffset()));
-            }
+        PsiLanguageInjectionHost.InjectedPsiVisitor visitor = (injectedPsi, places) -> {
+          for (PsiLanguageInjectionHost.Shred place : places) {
+            Segment rangeMarker = place.getHostRangeMarker();
+            injectedFileRangesSet.add(TextRange.create(rangeMarker.getStartOffset(), rangeMarker.getEndOffset()));
           }
         };
         for (PsiLanguageInjectionHost host : injectionHosts) {
@@ -321,8 +319,8 @@ public class CodeFormatterFacade {
                     && initialInjectedRange.getEndOffset() < injected.getTextLength()))
             {
               range = TextRange.create(
-                range.getStartOffset() + injectedRange.getStartOffset() - initialInjectedRange.getStartOffset(),
-                range.getEndOffset() + initialInjectedRange.getEndOffset() - injectedRange.getEndOffset());
+                      range.getStartOffset() + injectedRange.getStartOffset() - initialInjectedRange.getStartOffset(),
+                      range.getEndOffset() + initialInjectedRange.getEndOffset() - injectedRange.getEndOffset());
             }
           }
         }
@@ -358,7 +356,7 @@ public class CodeFormatterFacade {
 
   @NotNull
   private static Collection<PsiLanguageInjectionHost> collectInjectionHosts(@NotNull PsiFile file, @NotNull TextRange range) {
-    Stack<PsiElement> toProcess = new Stack<PsiElement>();
+    Stack<PsiElement> toProcess = new Stack<>();
     for (PsiElement e = file.findElementAt(range.getStartOffset()); e != null; e = e.getNextSibling()) {
       if (e.getTextRange().getStartOffset() >= range.getEndOffset()) {
         break;
@@ -386,12 +384,12 @@ public class CodeFormatterFacade {
         }
       }
     }
-    return result == null ? Collections.<PsiLanguageInjectionHost>emptySet() : result;
+    return result == null ? Collections.emptySet() : result;
   }
 
 
   /**
-   * Inspects all lines of the given document and wraps all of them that exceed {@link CodeStyleSettings#getRightMargin(com.intellij.lang.Language)}
+   * Inspects all lines of the given document and wraps all of them that exceed {@link CodeStyleSettings#getRightMargin(Language)}
    * right margin}.
    * <p/>
    * I.e. the algorithm is to do the following for every line:
@@ -399,7 +397,7 @@ public class CodeFormatterFacade {
    * <pre>
    * <ol>
    *   <li>
-   *      Check if the line exceeds {@link CodeStyleSettings#getRightMargin(com.intellij.lang.Language)}  right margin}. Go to the next line in the case of
+   *      Check if the line exceeds {@link CodeStyleSettings#getRightMargin(Language)}  right margin}. Go to the next line in the case of
    *      negative answer;
    *   </li>
    *   <li>Determine line wrap position; </li>
@@ -425,6 +423,9 @@ public class CodeFormatterFacade {
       return;
     }
 
+    FormatterTagHandler formatterTagHandler = new FormatterTagHandler(CodeStyleSettingsManager.getSettings(file.getProject()));
+    List<TextRange> enabledRanges = formatterTagHandler.getEnabledRanges(file.getNode(), new TextRange(startOffset, endOffset));
+
     final VirtualFile vFile = FileDocumentManager.getInstance().getFile(document);
     if ((vFile == null || vFile instanceof LightVirtualFile) && !ApplicationManager.getApplication().isUnitTestMode()) {
       // we assume that control flow reaches this place when the document is backed by a "virtual" file so any changes made by
@@ -439,20 +440,17 @@ public class CodeFormatterFacade {
         return;
       }
       editorFactory = EditorFactory.getInstance();
-      editor = editorFactory.createEditor(document, file.getProject());
+      editor = editorFactory.createEditor(document, file.getProject(), file.getVirtualFile(), false);
     }
     try {
       final Editor editorToUse = editor;
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          final CaretModel caretModel = editorToUse.getCaretModel();
-          final int caretOffset = caretModel.getOffset();
-          final RangeMarker caretMarker = editorToUse.getDocument().createRangeMarker(caretOffset, caretOffset);
-          doWrapLongLinesIfNecessary(editorToUse, file.getProject(), editorToUse.getDocument(), startOffset, endOffset);
-          if (caretMarker.isValid() && caretModel.getOffset() != caretMarker.getStartOffset()) {
-            caretModel.moveToOffset(caretMarker.getStartOffset());
-          }
+      ApplicationManager.getApplication().runWriteAction(() -> {
+        final CaretModel caretModel = editorToUse.getCaretModel();
+        final int caretOffset = caretModel.getOffset();
+        final RangeMarker caretMarker = editorToUse.getDocument().createRangeMarker(caretOffset, caretOffset);
+        doWrapLongLinesIfNecessary(editorToUse, file.getProject(), editorToUse.getDocument(), startOffset, endOffset, enabledRanges);
+        if (caretMarker.isValid() && caretModel.getOffset() != caretMarker.getStartOffset()) {
+          caretModel.moveToOffset(caretMarker.getStartOffset());
         }
       });
     }
@@ -466,7 +464,7 @@ public class CodeFormatterFacade {
   }
 
   public void doWrapLongLinesIfNecessary(@NotNull final Editor editor, @NotNull final Project project, @NotNull Document document,
-                                         int startOffset, int endOffset) {
+                                         int startOffset, int endOffset, List<TextRange> enabledRanges) {
     // Normalization.
     int startOffsetToUse = Math.min(document.getTextLength(), Math.max(0, startOffset));
     int endOffsetToUse = Math.min(document.getTextLength(), Math.max(0, endOffset));
@@ -484,12 +482,20 @@ public class CodeFormatterFacade {
     int[] shifts = new int[2];
     // shifts[0] - lines shift.
     // shift[1] - offset shift.
+    int cumulativeShift = 0;
 
     for (int line = startLine; line < maxLine; line++) {
       int startLineOffset = document.getLineStartOffset(line);
       int endLineOffset = document.getLineEndOffset(line);
+      if (!canWrapLine(Math.max(startOffsetToUse, startLineOffset),
+                       Math.min(endOffsetToUse, endLineOffset),
+                       cumulativeShift,
+                       enabledRanges)) {
+        continue;
+      }
+
       final int preferredWrapPosition
-        = calculatePreferredWrapPosition(editor, text, tabSize, spaceSize, startLineOffset, endLineOffset, endOffsetToUse);
+              = calculatePreferredWrapPosition(editor, text, tabSize, spaceSize, startLineOffset, endLineOffset, endOffsetToUse);
 
       if (preferredWrapPosition < 0 || preferredWrapPosition >= endLineOffset) {
         continue;
@@ -500,8 +506,8 @@ public class CodeFormatterFacade {
 
       // We know that current line exceeds right margin if control flow reaches this place, so, wrap it.
       int wrapOffset = strategy.calculateWrapPosition(
-        document, editor.getProject(), Math.max(startLineOffset, startOffsetToUse), Math.min(endLineOffset, endOffsetToUse),
-        preferredWrapPosition, false, false
+              document, editor.getProject(), Math.max(startLineOffset, startOffsetToUse), Math.min(endLineOffset, endOffsetToUse),
+              preferredWrapPosition, false, false
       );
       if (wrapOffset < 0 // No appropriate wrap position is found.
           // No point in splitting line when its left part contains only white spaces, example:
@@ -524,13 +530,21 @@ public class CodeFormatterFacade {
         // We know that number of lines is just increased, hence, update the data accordingly.
         maxLine += shifts[0];
         endOffsetToUse += shifts[1];
+        cumulativeShift += shifts[1];
       }
 
     }
   }
 
+  private static boolean canWrapLine(int startOffset, int endOffset, int offsetShift, @NotNull List<TextRange> enabledRanges) {
+    for (TextRange range : enabledRanges)  {
+      if (range.containsOffset(startOffset - offsetShift) && range.containsOffset(endOffset - offsetShift)) return true;
+    }
+    return false;
+  }
+
   /**
-   * Emulates pressing <code>Enter</code> at current caret position.
+   * Emulates pressing {@code Enter} at current caret position.
    *
    * @param editor       target editor
    * @param project      target project
@@ -557,12 +571,8 @@ public class CodeFormatterFacade {
     DataManager.getInstance().saveInDataContext(dataContext, WRAP_LONG_LINE_DURING_FORMATTING_IN_PROGRESS_KEY, true);
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
     try {
-      Runnable command = new Runnable() {
-        @Override
-        public void run() {
-          EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER).execute(editor, dataContext);
-        }
-      };
+      Runnable command =
+              () -> EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER).execute(editor, dataContext);
       if (commandProcessor.getCurrentCommand() == null) {
         commandProcessor.executeCommand(editor.getProject(), command, WRAP_LINE_COMMAND_NAME, null);
       }
@@ -628,20 +638,24 @@ public class CodeFormatterFacade {
       }
     }
 
+    int reservedWidthInColumns = FormatConstants.getReservedLineWrapWidthInColumns(editor);
+
     if (!hasTabs) {
-      return wrapPositionForTextWithoutTabs(startLineOffset, endLineOffset, targetRangeEndOffset);
+      return wrapPositionForTextWithoutTabs(startLineOffset, endLineOffset, targetRangeEndOffset, reservedWidthInColumns);
     }
     else if (canOptimize) {
-      return wrapPositionForTabbedTextWithOptimization(text, tabSize, startLineOffset, endLineOffset, targetRangeEndOffset);
+      return wrapPositionForTabbedTextWithOptimization(text, tabSize, startLineOffset, endLineOffset, targetRangeEndOffset,
+                                                       reservedWidthInColumns);
     }
     else {
-      return wrapPositionForTabbedTextWithoutOptimization(editor, text, spaceSize, startLineOffset, endLineOffset, targetRangeEndOffset);
+      return wrapPositionForTabbedTextWithoutOptimization(editor, text, spaceSize, startLineOffset, endLineOffset, targetRangeEndOffset,
+                                                          reservedWidthInColumns);
     }
   }
 
-  private int wrapPositionForTextWithoutTabs(int startLineOffset, int endLineOffset, int targetRangeEndOffset) {
+  private int wrapPositionForTextWithoutTabs(int startLineOffset, int endLineOffset, int targetRangeEndOffset, int reservedWidthInColumns) {
     if (Math.min(endLineOffset, targetRangeEndOffset) - startLineOffset > myRightMargin) {
-      return startLineOffset + myRightMargin - FormatConstants.RESERVED_LINE_WRAP_WIDTH_IN_COLUMNS;
+      return startLineOffset + myRightMargin - reservedWidthInColumns;
     }
     return -1;
   }
@@ -650,7 +664,8 @@ public class CodeFormatterFacade {
                                                         int tabSize,
                                                         int startLineOffset,
                                                         int endLineOffset,
-                                                        int targetRangeEndOffset)
+                                                        int targetRangeEndOffset,
+                                                        int reservedWidthInColumns)
   {
     int width = 0;
     int symbolWidth;
@@ -662,8 +677,8 @@ public class CodeFormatterFacade {
         case '\t': symbolWidth = tabSize - (width % tabSize); break;
         default: symbolWidth = 1;
       }
-      if (width + symbolWidth + FormatConstants.RESERVED_LINE_WRAP_WIDTH_IN_COLUMNS >= myRightMargin
-          && (Math.min(endLineOffset, targetRangeEndOffset) - i) >= FormatConstants.RESERVED_LINE_WRAP_WIDTH_IN_COLUMNS)
+      if (width + symbolWidth + reservedWidthInColumns >= myRightMargin
+          && (Math.min(endLineOffset, targetRangeEndOffset) - i) >= reservedWidthInColumns)
       {
         // Remember preferred position.
         result = i - 1;
@@ -682,7 +697,8 @@ public class CodeFormatterFacade {
                                                            int spaceSize,
                                                            int startLineOffset,
                                                            int endLineOffset,
-                                                           int targetRangeEndOffset)
+                                                           int targetRangeEndOffset,
+                                                           int reservedWidthInColumns)
   {
     int width = 0;
     int x = 0;
@@ -703,8 +719,8 @@ public class CodeFormatterFacade {
           break;
         default: newX = x + EditorUtil.charWidth(c, Font.PLAIN, editor); symbolWidth = 1;
       }
-      if (width + symbolWidth + FormatConstants.RESERVED_LINE_WRAP_WIDTH_IN_COLUMNS >= myRightMargin
-          && (Math.min(endLineOffset, targetRangeEndOffset) - i) >= FormatConstants.RESERVED_LINE_WRAP_WIDTH_IN_COLUMNS)
+      if (width + symbolWidth + reservedWidthInColumns >= myRightMargin
+          && (Math.min(endLineOffset, targetRangeEndOffset) - i) >= reservedWidthInColumns)
       {
         result = i - 1;
       }

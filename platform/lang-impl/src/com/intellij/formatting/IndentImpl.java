@@ -18,7 +18,7 @@ package com.intellij.formatting;
 
 import org.jetbrains.annotations.NonNls;
 
-class IndentImpl extends Indent {
+public class IndentImpl extends Indent {
   private final boolean myIsAbsolute;
   private final boolean myRelativeToDirectParent;
 
@@ -48,7 +48,7 @@ class IndentImpl extends Indent {
   }
 
   /**
-   * @return    <code>'isAbsolute'</code> property value as defined during {@link IndentImpl} object construction
+   * @return    {@code 'isAbsolute'} property value as defined during {@link IndentImpl} object construction
    */
   boolean isAbsolute(){
     return myIsAbsolute;
@@ -72,8 +72,8 @@ class IndentImpl extends Indent {
    * <p/>
    * Feel free to check {@link Indent} javadoc for the more detailed explanation of this property usage.
    *
-   * @return      <code>true</code> if current indent object is configured to enforce indent for sub-blocks of composite block
-   *              that doesn't start new line; <code>false</code> otherwise
+   * @return      {@code true} if current indent object is configured to enforce indent for sub-blocks of composite block
+   *              that doesn't start new line; {@code false} otherwise
    */
   public boolean isEnforceIndentToChildren() {
     return myEnforceIndentToChildren;

@@ -47,17 +47,19 @@ public class CommonCodeStyleSettings {
   // - A new options should be added to CodeStyleSettingsCustomizable as well.
   // - Covered by CodeStyleConfigurationsTest.
 
-  @NonNls private static final String ARRANGEMENT_ELEMENT_NAME = "arrangement";
+  @NonNls
+  private static final String ARRANGEMENT_ELEMENT_NAME = "arrangement";
 
   private final Language myLanguage;
 
   private ArrangementSettings myArrangementSettings;
-  private CodeStyleSettings   myRootSettings;
-  private IndentOptions       myIndentOptions;
+  private CodeStyleSettings myRootSettings;
+  private IndentOptions myIndentOptions;
   private final FileType myFileType;
-  private boolean             myForceArrangeMenuAvailable;
+  private boolean myForceArrangeMenuAvailable;
 
-  @NonNls private static final String INDENT_OPTIONS_TAG = "indentOptions";
+  @NonNls
+  private static final String INDENT_OPTIONS_TAG = "indentOptions";
 
   public CommonCodeStyleSettings(Language language, FileType fileType) {
     myLanguage = language;
@@ -138,14 +140,13 @@ public class CommonCodeStyleSettings {
   void copyNonDefaultValuesFrom(CommonCodeStyleSettings from) {
     CommonCodeStyleSettings defaultSettings = new CommonCodeStyleSettings(null);
     PARENT_SETTINGS_INSTALLED =
-            ReflectionUtil
-                    .copyFields(getClass().getFields(), from, this, new SupportedFieldsDiffFilter(from, getSupportedFields(), defaultSettings) {
-                      @Override
-                      public boolean isAccept(@NotNull Field field) {
-                        if ("RIGHT_MARGIN".equals(field.getName())) return false; // Never copy RIGHT_MARGIN, it is inherited automatically if -1
-                        return super.isAccept(field);
-                      }
-                    });
+            ReflectionUtil.copyFields(getClass().getFields(), from, this, new SupportedFieldsDiffFilter(from, getSupportedFields(), defaultSettings) {
+              @Override
+              public boolean isAccept(@NotNull Field field) {
+                if ("RIGHT_MARGIN".equals(field.getName())) return false; // Never copy RIGHT_MARGIN, it is inherited automatically if -1
+                return super.isAccept(field);
+              }
+            });
   }
 
   @Nullable
@@ -202,17 +203,14 @@ public class CommonCodeStyleSettings {
   private static class SupportedFieldsDiffFilter extends DifferenceFilter<CommonCodeStyleSettings> {
     private final Set<String> mySupportedFieldNames;
 
-    public SupportedFieldsDiffFilter(final CommonCodeStyleSettings object,
-                                     Set<String> supportedFiledNames,
-                                     final CommonCodeStyleSettings parentObject) {
+    public SupportedFieldsDiffFilter(final CommonCodeStyleSettings object, Set<String> supportedFiledNames, final CommonCodeStyleSettings parentObject) {
       super(object, parentObject);
       mySupportedFieldNames = supportedFiledNames;
     }
 
     @Override
     public boolean isAccept(@NotNull Field field) {
-      if (mySupportedFieldNames == null ||
-          mySupportedFieldNames.contains(field.getName())) {
+      if (mySupportedFieldNames == null || mySupportedFieldNames.contains(field.getName())) {
         return super.isAccept(field);
       }
       return false;
@@ -319,15 +317,19 @@ public class CommonCodeStyleSettings {
   public static final int NEXT_LINE_IF_WRAPPED = 5;
 
   @MagicConstant(intValues = {END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_SHIFTED2, NEXT_LINE_IF_WRAPPED})
-  public @interface BraceStyleConstant {}
+  public @interface BraceStyleConstant {
+  }
 
-  @BraceStyleConstant public int BRACE_STYLE = END_OF_LINE;
-  @BraceStyleConstant public int CLASS_BRACE_STYLE = END_OF_LINE;
-  @BraceStyleConstant public int METHOD_BRACE_STYLE = END_OF_LINE;
+  @BraceStyleConstant
+  public int BRACE_STYLE = END_OF_LINE;
+  @BraceStyleConstant
+  public int CLASS_BRACE_STYLE = END_OF_LINE;
+  @BraceStyleConstant
+  public int METHOD_BRACE_STYLE = END_OF_LINE;
 
   /**
    * Defines if 'flying geese' style should be used for curly braces formatting, e.g. if we want to format code like
-   * <p/>
+   * <p>
    * <pre>
    *     class Test {
    *         {
@@ -406,11 +408,11 @@ public class CommonCodeStyleSettings {
 
   /**
    * Indicates if long sequence of chained method calls should be aligned.
-   * <p/>
+   * <p>
    * E.g. if statement like <code>'foo.bar().bar().bar();'</code> should be reformatted to the one below if,
    * say, last <code>'bar()'</code> call exceeds right margin. The code looks as follows after reformatting
    * if this property is <code>true</code>:
-   * <p/>
+   * <p>
    * <pre>
    *     foo.bar().bar()
    *        .bar();
@@ -900,8 +902,8 @@ public class CommonCodeStyleSettings {
 
   public enum WrapOnTyping {
     DEFAULT(-1),
-    NO_WRAP (0),
-    WRAP (1);
+    NO_WRAP(0),
+    WRAP(1);
 
     public int intValue;
 
@@ -931,6 +933,7 @@ public class CommonCodeStyleSettings {
     private FileIndentOptionsProvider myFileIndentOptionsProvider;
     private static final Key<CommonCodeStyleSettings.IndentOptions> INDENT_OPTIONS_KEY = Key.create("INDENT_OPTIONS_KEY");
     private boolean myInaccurate;
+    private boolean myOverrideLanguageOptions;
 
     @Override
     public void readExternal(Element element) throws InvalidDataException {
@@ -1029,6 +1032,25 @@ public class CommonCodeStyleSettings {
     static IndentOptions retrieveFromAssociatedDocument(@NotNull PsiFile file) {
       Document document = PsiDocumentManager.getInstance(file.getProject()).getDocument(file);
       return document != null ? document.getUserData(INDENT_OPTIONS_KEY) : null;
+    }
+
+    /**
+     * @return True if the options can override the ones defined in language settings.
+     * @see CommonCodeStyleSettings.IndentOptions#setOverrideLanguageOptions(boolean)
+     */
+    public boolean isOverrideLanguageOptions() {
+      return myOverrideLanguageOptions;
+    }
+
+    /**
+     * Make the indent options override options defined for a language block if the block implements {@code BlockEx.getLanguage()}
+     * Useful when indent options provider must take a priority over any language settings for a formatter block.
+     *
+     * @param overrideLanguageOptions True if language block options should be ignored.
+     * @see FileIndentOptionsProvider
+     */
+    public void setOverrideLanguageOptions(boolean overrideLanguageOptions) {
+      myOverrideLanguageOptions = overrideLanguageOptions;
     }
 
     boolean isRecalculateForCommittedDocument() {

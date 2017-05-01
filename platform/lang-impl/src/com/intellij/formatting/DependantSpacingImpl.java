@@ -16,6 +16,7 @@
 
 package com.intellij.formatting;
 
+import com.intellij.formatting.engine.BlockRangesMap;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -26,7 +27,7 @@ import java.util.List;
 /**
  * Extends {@link SpacingImpl} in order to add notion of dependency range.
  * <p/>
- * <code>'Dependency'</code> here affect {@link #getMinLineFeeds() minLineFieeds} property value. See property contract for more details.
+ * {@code 'Dependency'} here affect {@link #getMinLineFeeds() minLineFieeds} property value. See property contract for more details.
  */
 public class DependantSpacingImpl extends SpacingImpl {
   private static final int DEPENDENCE_CONTAINS_LF_MASK      = 0x10;
@@ -60,7 +61,7 @@ public class DependantSpacingImpl extends SpacingImpl {
   }
 
   /**
-   * @return    <code>1</code> if dependency has line feeds; <code>0</code> otherwise
+   * @return    {@code 1} if dependency has line feeds; {@code 0} otherwise
    */
   @Override
   public int getMinLineFeeds() {
@@ -88,14 +89,14 @@ public class DependantSpacingImpl extends SpacingImpl {
   }
 
   @Override
-  public void refresh(FormatProcessor formatter) {
+  public void refresh(BlockRangesMap helper) {
     if (isDependentRegionLinefeedStatusChanged()) {
       return;
     }
 
     boolean atLeastOneDependencyRangeContainsLf = false;
     for (TextRange dependency : myDependentRegionRanges) {
-      atLeastOneDependencyRangeContainsLf |= formatter.containsLineFeeds(dependency);
+      atLeastOneDependencyRangeContainsLf |= helper.containsLineFeeds(dependency);
     }
 
     if (atLeastOneDependencyRangeContainsLf) myFlags |= DEPENDENCE_CONTAINS_LF_MASK;
@@ -110,8 +111,8 @@ public class DependantSpacingImpl extends SpacingImpl {
   /**
    * Allows to answer whether 'contains line feed' status has been changed for the target dependent region during formatting.
    *
-   * @return    <code>true</code> if target 'contains line feed' status has been changed for the target dependent region during formatting;
-   *            <code>false</code> otherwise
+   * @return    {@code true} if target 'contains line feed' status has been changed for the target dependent region during formatting;
+   *            {@code false} otherwise
    */
   public final boolean isDependentRegionLinefeedStatusChanged() {
     return (myFlags & DEPENDENT_REGION_LF_CHANGED_MASK) != 0;

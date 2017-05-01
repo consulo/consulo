@@ -35,12 +35,7 @@ public class DummyHolder extends PsiFileImpl {
   private final CharTable myTable;
   private final Boolean myExplicitlyValid;
   private final Language myLanguage;
-  private volatile FileElement myFileElement = null;
-
-  @SuppressWarnings("EmptyClass")
-  private static class DummyHolderTreeLock {
-  }
-
+  @SuppressWarnings("EmptyClass") private static class DummyHolderTreeLock {}
   private final DummyHolderTreeLock myTreeElementLock = new DummyHolderTreeLock();
 
   public DummyHolder(@NotNull PsiManager manager, TreeElement contentElement, PsiElement context) {
@@ -69,21 +64,16 @@ public class DummyHolder extends PsiFileImpl {
     return contextLanguage;
   }
 
-  public DummyHolder(@NotNull PsiManager manager,
-                     @Nullable TreeElement contentElement,
-                     @Nullable PsiElement context,
-                     @Nullable CharTable table,
-                     @Nullable Boolean validity,
-                     Language language) {
+  public DummyHolder(@NotNull PsiManager manager, @Nullable TreeElement contentElement, @Nullable PsiElement context, @Nullable CharTable table, @Nullable Boolean validity, Language language) {
     super(TokenType.DUMMY_HOLDER, TokenType.DUMMY_HOLDER, new DummyHolderViewProvider(manager));
     myLanguage = language;
     ((DummyHolderViewProvider)getViewProvider()).setDummyHolder(this);
     myContext = context;
     myTable = table != null ? table : IdentityCharTable.INSTANCE;
     if (contentElement instanceof FileElement) {
-      myFileElement = (FileElement)contentElement;
-      myFileElement.setPsi(this);
-      myFileElement.setCharTable(myTable);
+      ((FileElement)contentElement).setPsi(this);
+      ((FileElement)contentElement).setCharTable(myTable);
+      setTreeElementPointer((FileElement)contentElement);
     }
     else if (contentElement != null) {
       getTreeElement().rawAddChildren(contentElement);
@@ -138,17 +128,18 @@ public class DummyHolder extends PsiFileImpl {
   }
 
   @Override
+  @NotNull
   public FileElement getTreeElement() {
-    FileElement fileElement = myFileElement;
+    FileElement fileElement = super.derefTreeElement();
     if (fileElement != null) return fileElement;
 
     synchronized (myTreeElementLock) {
-      fileElement = myFileElement;
+      fileElement = super.derefTreeElement();
       if (fileElement == null) {
         fileElement = new FileElement(TokenType.DUMMY_HOLDER, null);
         fileElement.setPsi(this);
         if (myTable != null) fileElement.setCharTable(myTable);
-        myFileElement = fileElement;
+        setTreeElementPointer(fileElement);
         clearCaches();
       }
       return fileElement;
@@ -165,7 +156,7 @@ public class DummyHolder extends PsiFileImpl {
   @Override
   @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException"})
   protected PsiFileImpl clone() {
-    final PsiFileImpl psiClone = cloneImpl(myFileElement);
+    final PsiFileImpl psiClone = cloneImpl(getTreeElement());
     final DummyHolderViewProvider dummyHolderViewProvider = new DummyHolderViewProvider(getManager());
     myViewProvider = dummyHolderViewProvider;
     dummyHolderViewProvider.setDummyHolder((DummyHolder)psiClone);

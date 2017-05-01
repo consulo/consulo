@@ -16,29 +16,17 @@
 
 package com.intellij.formatting;
 
-import com.intellij.openapi.util.TextRange;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class CompositeBlockWrapper extends AbstractBlockWrapper{
   private List<AbstractBlockWrapper> myChildren;
-  //private static final CommonCodeStyleSettings.IndentOptions DEF_OPTIONS = new CommonCodeStyleSettings.IndentOptions();
+  private ProbablyIncreasingLowerboundAlgorithm<AbstractBlockWrapper> myPrevBlockCalculator = null;
 
-  /**
-   * Shortcut for calling {@link #CompositeBlockWrapper(Block, WhiteSpace, CompositeBlockWrapper, TextRange)} with
-   * {@link Block#getTextRange() text range associated with the given block}.
-   *
-   * @param block         block to wrap
-   * @param whiteSpace    white space before the block
-   * @param parent        wrapped block parent
-   */
-  public CompositeBlockWrapper(final Block block, final WhiteSpace whiteSpace, final CompositeBlockWrapper parent) {
-    super(block, whiteSpace, parent, block.getTextRange());
-  }
-
-  public CompositeBlockWrapper(final Block block, final WhiteSpace whiteSpace, final CompositeBlockWrapper parent, TextRange textRange) {
-    super(block, whiteSpace, parent, textRange);
+  public CompositeBlockWrapper(final Block block, final WhiteSpace whiteSpaceBefore, @Nullable final CompositeBlockWrapper parent) {
+    super(block, whiteSpaceBefore, parent, block.getTextRange());
   }
 
   public List<AbstractBlockWrapper> getChildren() {
@@ -47,6 +35,9 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper{
 
   public void setChildren(final List<AbstractBlockWrapper> children) {
     myChildren = children;
+    if (myPrevBlockCalculator != null) {
+      myPrevBlockCalculator.setBlocksList(myChildren);
+    }
   }
 
   @Override
@@ -71,7 +62,7 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper{
   }
 
   @Override
-  protected IndentData getNumberOfSymbolsBeforeBlock() {
+  public IndentData getNumberOfSymbolsBeforeBlock() {
     if (myChildren == null || myChildren.isEmpty()) {
       return new IndentData(0, 0);
     }
@@ -90,6 +81,7 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper{
   public void dispose() {
     super.dispose();
     myChildren = null;
+    myPrevBlockCalculator = null;
   }
 
   /**
@@ -98,10 +90,14 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper{
    *
    * @param current   block that defines right boundary for child blocks processing
    * @return          last child block that contains line feeds and starts before the given block if any;
-   *                  <code>null</code> otherwise
+   *                  {@code null} otherwise
    */
   @Nullable
-  public AbstractBlockWrapper getPrevIndentedSibling(final AbstractBlockWrapper current) {
+  public AbstractBlockWrapper getPrevIndentedSibling(@NotNull final AbstractBlockWrapper current) {
+    if (myChildren.size() > 10) {
+      return getPrevIndentedSiblingFast(current);
+    }
+
     AbstractBlockWrapper candidate = null;
     for (AbstractBlockWrapper child : myChildren) {
       if (child.getStartOffset() >= current.getStartOffset()) return candidate;
@@ -111,13 +107,19 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper{
     return candidate;
   }
 
-  /*
-  @Override
-  public String toString() {
-    StringBuilder result = new StringBuilder();
-    for (AbstractBlockWrapper child : myChildren) {
-      result.append(child.getWhiteSpace().generateWhiteSpace(DEF_OPTIONS)).append(child.toString());
+  @Nullable
+  private AbstractBlockWrapper getPrevIndentedSiblingFast(@NotNull final AbstractBlockWrapper current) {
+    if (myPrevBlockCalculator == null) {
+      myPrevBlockCalculator = new ProbablyIncreasingLowerboundAlgorithm<>(myChildren);
     }
-    return result.toString();
-  } */
+
+    final List<AbstractBlockWrapper> leftBlocks = myPrevBlockCalculator.getLeftSubList(current);
+    for (int i = leftBlocks.size() - 1; i >= 0; i--) {
+      final AbstractBlockWrapper child = leftBlocks.get(i);
+      if (child.getWhiteSpace().containsLineFeeds()) {
+        return child;
+      }
+    }
+    return null;
+  }
 }

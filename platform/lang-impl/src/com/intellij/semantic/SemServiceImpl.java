@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@ package com.intellij.semantic;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.util.RecursionGuard;
 import com.intellij.openapi.util.RecursionManager;
@@ -27,19 +25,19 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.util.PsiModificationTracker;
+import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.NullableFunction;
-import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
-import com.intellij.util.containers.*;
+import com.intellij.util.containers.ConcurrentIntObjectMap;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.ref.SoftReference;
 import java.util.*;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -47,15 +45,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @SuppressWarnings({"unchecked"})
 public class SemServiceImpl extends SemService{
-  private static final Comparator<SemKey> KEY_COMPARATOR = new Comparator<SemKey>() {
-    @Override
-    public int compare(SemKey o1, SemKey o2) {
-      return o2.getUniqueId() - o1.getUniqueId();
-    }
-  };
-  private final ConcurrentWeakHashMap<PsiElement, SoftReference<SemCacheChunk>> myCache = new ConcurrentWeakHashMap<PsiElement, SoftReference<SemCacheChunk>>();
+  private final ConcurrentMap<PsiElement, SemCacheChunk> myCache = ContainerUtil.createConcurrentWeakKeySoftValueMap();
   private volatile MultiMap<SemKey, NullableFunction<PsiElement, ? extends SemElement>> myProducers;
-  private volatile MultiMap<SemKey, SemKey> myInheritors;
   private final Project myProject;
 
   private boolean myBulkChange = false;
@@ -73,70 +64,34 @@ public class SemServiceImpl extends SemService{
       }
     });
 
-    ((PsiManagerEx)psiManager).registerRunnableToRunOnChange(new Runnable() {
-      @Override
-      public void run() {
-        if (!isInsideAtomicChange()) {
-          clearCache();
-        }
+    ((PsiManagerEx)psiManager).registerRunnableToRunOnChange(() -> {
+      if (!isInsideAtomicChange()) {
+        clearCache();
       }
     });
 
 
-    final LowMemoryWatcher watcher = LowMemoryWatcher.register(new Runnable() {
-      @Override
-      public void run() {
-        if (myCreatingSem.get() == 0) {
-          clearCache();
-        }
-        //System.out.println("SemService cache flushed");
+    LowMemoryWatcher.register(() -> {
+      if (myCreatingSem.get() == 0) {
+        clearCache();
       }
-    });
-    ProjectManager.getInstance().addProjectManagerListener(project, new ProjectManagerAdapter() {
-      @Override
-      public void projectClosing(Project project) {
-        watcher.stop();
-      }
-    });
-  }
-
-  private static MultiMap<SemKey, SemKey> cacheKeyHierarchy(Collection<SemKey> allKeys) {
-    final MultiMap<SemKey, SemKey> result = MultiMap.createSmartList();
-    ContainerUtil.process(allKeys, new Processor<SemKey>() {
-      @Override
-      public boolean process(SemKey key) {
-        result.putValue(key, key);
-        for (SemKey parent : key.getSupers()) {
-          result.putValue(parent, key);
-          process(parent);
-        }
-        return true;
-      }
-    });
-    for (final SemKey each : result.keySet()) {
-      final List<SemKey> inheritors = new ArrayList<SemKey>(new HashSet<SemKey>(result.get(each)));
-      Collections.sort(inheritors, KEY_COMPARATOR);
-      result.put(each, inheritors);
-    }
-    return result;
+      //System.out.println("SemService cache flushed");
+    }, project);
   }
 
   private MultiMap<SemKey, NullableFunction<PsiElement, ? extends SemElement>> collectProducers() {
-    final MultiMap<SemKey, NullableFunction<PsiElement, ? extends SemElement>> map = MultiMap.createSmartList();
+    final MultiMap<SemKey, NullableFunction<PsiElement, ? extends SemElement>> map = MultiMap.createSmart();
 
     final SemRegistrar registrar = new SemRegistrar() {
       @Override
       public <T extends SemElement, V extends PsiElement> void registerSemElementProvider(SemKey<T> key,
                                                                                           final ElementPattern<? extends V> place,
                                                                                           final NullableFunction<V, T> provider) {
-        map.putValue(key, new NullableFunction<PsiElement, SemElement>() {
-          @Override
-          public SemElement fun(PsiElement element) {
-            if (place.accepts(element)) {
-              return provider.fun((V)element);
-            }
-            return null;
+        map.putValue(key, element -> {
+          if (place.accepts(element)) {
+            return provider.fun((V)element);
           }
+          return null;
         });
       }
     };
@@ -187,9 +142,9 @@ public class SemServiceImpl extends SemService{
 
     RecursionGuard.StackStamp stamp = RecursionManager.createGuard("semService").markStack();
 
-    LinkedHashSet<T> result = new LinkedHashSet<T>();
-    final Map<SemKey, List<SemElement>> map = new THashMap<SemKey, List<SemElement>>();
-    for (final SemKey each : myInheritors.get(key)) {
+    LinkedHashSet<T> result = new LinkedHashSet<>();
+    final Map<SemKey, List<SemElement>> map = new THashMap<>();
+    for (final SemKey each : key.getInheritors()) {
       List<SemElement> list = createSemElements(each, psi);
       map.put(each, list);
       result.addAll((List<T>)list);
@@ -202,13 +157,12 @@ public class SemServiceImpl extends SemService{
       }
     }
 
-    return new ArrayList<T>(result);
+    return new ArrayList<>(result);
   }
 
   private void ensureInitialized() {
-    if (myInheritors == null) {
+    if (myProducers == null) {
       myProducers = collectProducers();
-      myInheritors = cacheKeyHierarchy(myProducers.keySet());
     }
   }
 
@@ -222,7 +176,7 @@ public class SemServiceImpl extends SemService{
         try {
           final SemElement element = producer.fun(psi);
           if (element != null) {
-            if (result == null) result = new SmartList<SemElement>();
+            if (result == null) result = new SmartList<>();
             result.add(element);
           }
         }
@@ -231,7 +185,7 @@ public class SemServiceImpl extends SemService{
         }
       }
     }
-    return result == null ? Collections.<SemElement>emptyList() : Collections.unmodifiableList(result);
+    return result == null ? Collections.emptyList() : Collections.unmodifiableList(result);
   }
 
   @Override
@@ -247,7 +201,7 @@ public class SemServiceImpl extends SemService{
 
     List<T> singleList = null;
     LinkedHashSet<T> result = null;
-    final List<SemKey> inheritors = (List<SemKey>)myInheritors.get(key);
+    final List<SemKey> inheritors = key.getInheritors();
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < inheritors.size(); i++) {
       List<T> cached = (List<T>)chunk.getSemElements(inheritors.get(i));
@@ -263,7 +217,7 @@ public class SemServiceImpl extends SemService{
         }
 
         if (result == null) {
-          result = new LinkedHashSet<T>(singleList);
+          result = new LinkedHashSet<>(singleList);
         }
         result.addAll(cached);
       }
@@ -278,18 +232,17 @@ public class SemServiceImpl extends SemService{
       return Collections.emptyList();
     }
 
-    return new ArrayList<T>(result);
+    return new ArrayList<>(result);
   }
 
   @Nullable
   private SemCacheChunk obtainChunk(@Nullable PsiElement root) {
-    final SoftReference<SemCacheChunk> ref = myCache.get(root);
-    return com.intellij.reference.SoftReference.dereference(ref);
+    return myCache.get(root);
   }
 
   @Override
   public <T extends SemElement> void setCachedSemElement(SemKey<T> key, @NotNull PsiElement psi, @Nullable T semElement) {
-    getOrCreateChunk(psi).putSemElements(key, ContainerUtil.<SemElement>createMaybeSingletonList(semElement));
+    getOrCreateChunk(psi).putSemElements(key, ContainerUtil.createMaybeSingletonList(semElement));
   }
 
   @Override
@@ -300,18 +253,13 @@ public class SemServiceImpl extends SemService{
   private SemCacheChunk getOrCreateChunk(final PsiElement element) {
     SemCacheChunk chunk = obtainChunk(element);
     if (chunk == null) {
-      synchronized (myCache) {
-        chunk = obtainChunk(element);
-        if (chunk == null) {
-          myCache.put(element, new SoftReference(chunk = new SemCacheChunk()));
-        }
-      }
+      chunk = ConcurrencyUtil.cacheOrGet(myCache, element, new SemCacheChunk());
     }
     return chunk;
   }
 
   private static class SemCacheChunk {
-    private final ConcurrentIntObjectMap<List<SemElement>> map = new StripedLockIntObjectConcurrentHashMap<List<SemElement>>();
+    private final ConcurrentIntObjectMap<List<SemElement>> map = ContainerUtil.createConcurrentIntObjectMap();
 
     public List<SemElement> getSemElements(SemKey<?> key) {
       return map.get(key.getUniqueId());
@@ -321,6 +269,10 @@ public class SemServiceImpl extends SemService{
       map.put(key.getUniqueId(), elements);
     }
 
+    @Override
+    public int hashCode() {
+      return 0; // ConcurrentWeakKeySoftValueHashMap.SoftValue requires hashCode, and this is faster than identityHashCode
+    }
   }
 
 }

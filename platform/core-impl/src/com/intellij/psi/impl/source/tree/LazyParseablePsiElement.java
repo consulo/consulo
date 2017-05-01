@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ package com.intellij.psi.impl.source.tree;
 import com.intellij.ide.util.PsiNavigationSupport;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import consulo.lang.LanguageVersion;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.diagnostic.Logger;
@@ -41,6 +40,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,11 +51,12 @@ import java.util.List;
 public class LazyParseablePsiElement extends LazyParseableElement implements PsiElement, NavigationItem {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.LazyParseablePsiElement");
 
-  public LazyParseablePsiElement(@NotNull IElementType type, CharSequence buffer) {
+  public LazyParseablePsiElement(@NotNull IElementType type, @Nullable CharSequence buffer) {
     super(type, buffer);
     setPsi(this);
   }
 
+  @NotNull
   @Override
   public LazyParseablePsiElement clone() {
     LazyParseablePsiElement clone = (LazyParseablePsiElement)super.clone();
@@ -79,7 +80,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
 
   @NotNull
   protected <T> T[] findChildrenByClass(Class<T> aClass) {
-    List<T> result = new ArrayList<T>();
+    List<T> result = new ArrayList<>();
     for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
       if (aClass.isInstance(cur)) result.add((T)cur);
     }
@@ -203,13 +204,13 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
 
   @Override
   public final PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor)
-    throws IncorrectOperationException {
+          throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
   }
 
   @Override
   public final PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor)
-    throws IncorrectOperationException {
+          throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
   }
 

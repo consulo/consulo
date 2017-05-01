@@ -15,6 +15,12 @@
  */
 package com.intellij.formatting;
 
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileTypes.PlainTextLanguage;
+import org.jetbrains.annotations.NotNull;
+
+import static com.intellij.psi.util.PsiUtilBase.getLanguageInEditor;
+
 /**
  * Is assumed to be a single place to hold various constants to use during formatting.
  * <p/>
@@ -50,8 +56,16 @@ public class FormatConstants {
    * This constant is assumed to hold language-agnostic number of columns to reserve on smart line wrapping.
    */
   public static final int RESERVED_LINE_WRAP_WIDTH_IN_COLUMNS = 3; // '3' is for breaking string literal: 'quote symbol',
-                                                                   // 'space' and 'plus' operator
+  // 'space' and 'plus' operator
 
   private FormatConstants() {
+  }
+
+  public static int getReservedLineWrapWidthInColumns(@NotNull Editor editor) {
+    return isPlainTextFile(editor) ? 0 : RESERVED_LINE_WRAP_WIDTH_IN_COLUMNS;
+  }
+
+  private static boolean isPlainTextFile(@NotNull Editor editor) {
+    return editor.getProject() != null && PlainTextLanguage.INSTANCE.is(getLanguageInEditor(editor, editor.getProject()));
   }
 }

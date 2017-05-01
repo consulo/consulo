@@ -216,16 +216,13 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
   private static void expandTemplate(@NotNull final PostfixTemplate template,
                                      @NotNull final Editor editor,
                                      @NotNull final PsiElement context) {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        CommandProcessor.getInstance().executeCommand(context.getProject(), new Runnable() {
-          public void run() {
-            template.expand(context, editor);
-          }
-        }, "Expand postfix template", POSTFIX_TEMPLATE_ID);
-      }
-    });
+    if (template.startInWriteAction()) {
+      ApplicationManager.getApplication().runWriteAction(() -> CommandProcessor.getInstance()
+              .executeCommand(context.getProject(), () -> template.expand(context, editor), "Expand postfix template", POSTFIX_TEMPLATE_ID));
+    }
+    else {
+      template.expand(context, editor);
+    }
   }
 
 

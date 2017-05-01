@@ -21,6 +21,7 @@ import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.application.WriteActionAware;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.diagnostic.Logger;
@@ -40,7 +41,7 @@ import java.util.List;
 /**
  * @author peter
  */
-public abstract class ElementCreator {
+public abstract class ElementCreator implements WriteActionAware {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.ElementCreator");
   private final Project myProject;
   private final String myErrorTitle;
@@ -51,12 +52,12 @@ public abstract class ElementCreator {
   }
 
   protected abstract PsiElement[] create(String newName) throws Exception;
-
   protected abstract String getActionName(String newName);
 
   public PsiElement[] tryCreate(@NotNull final String inputString) {
     if (inputString.length() == 0) {
-      Messages.showMessageDialog(myProject, IdeBundle.message("error.name.should.be.specified"), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
+      Messages.showMessageDialog(myProject, IdeBundle.message("error.name.should.be.specified"), CommonBundle.getErrorTitle(),
+                                 Messages.getErrorIcon());
       return PsiElement.EMPTY_ARRAY;
     }
 
@@ -80,7 +81,11 @@ public abstract class ElementCreator {
     CommandProcessor.getInstance().executeCommand(myProject, () -> {
       LocalHistoryAction action = LocalHistory.getInstance().startAction(commandName);
       try {
-        WriteAction.run(invokeCreate);
+        if (startInWriteAction()) {
+          WriteAction.run(invokeCreate);
+        } else {
+          invokeCreate.run();
+        }
       }
       catch (Exception ex) {
         exception[0] = ex;

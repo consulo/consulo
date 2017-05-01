@@ -69,6 +69,10 @@ public abstract class PostfixTemplate {
     return myExample;
   }
 
+  public boolean startInWriteAction() {
+    return true;
+  }
+
   public boolean isEnabled(PostfixTemplateProvider provider) {
     final PostfixTemplatesSettings settings = PostfixTemplatesSettings.getInstance();
     return settings != null && settings.isPostfixTemplatesEnabled() && settings.isTemplateEnabled(this, provider);

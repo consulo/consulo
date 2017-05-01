@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ package com.intellij.formatting;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.util.IncorrectOperationException;
@@ -113,8 +113,10 @@ public abstract class FormatterEx{
                                                  final CommonCodeStyleSettings.IndentOptions indentOptions,
                                                  final TextRange rangeToAdjust);
 
-  public abstract void formatAroundRange(final FormattingModel model, final CodeStyleSettings settings,
-                                         final TextRange textRange, final FileType fileType);
+  public abstract void formatAroundRange(final FormattingModel model,
+                                         final CodeStyleSettings settings,
+                                         final PsiFile file,
+                                         final TextRange textRange);
 
   public abstract void adjustTextRange(FormattingModel model,
                                        CodeStyleSettings settings,
@@ -126,9 +128,17 @@ public abstract class FormatterEx{
   /**
    * Calculates minimum spacing, allowed by formatting model (in columns) for a block starting at given offset,
    * relative to its previous sibling block.
-   * Returns zero, if required block cannot be found at provided offset, or spacing cannot be calculated due to some other reason.
+   * Returns <code>-1</code>, if required block cannot be found at provided offset,
+   * or spacing cannot be calculated due to some other reason.
    */
   public abstract int getSpacingForBlockAtOffset(FormattingModel model, int offset);
+
+  /**
+   * Calculates minimum number of line feeds that should precede block starting at given offset, as dictated by formatting model.
+   * Returns <code>-1</code>, if required block cannot be found at provided offset,
+   * or spacing cannot be calculated due to some other reason.
+   */
+  public abstract int getMinLineFeedsBeforeBlockAtOffset(FormattingModel model, int offset);
 
   public interface IndentInfoStorage {
     void saveIndentInfo(@Nullable IndentInfo info, int startOffset);

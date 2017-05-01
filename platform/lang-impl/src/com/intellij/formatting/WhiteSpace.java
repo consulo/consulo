@@ -16,6 +16,7 @@
 
 package com.intellij.formatting;
 
+import com.intellij.formatting.engine.BlockRangesMap;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 /**
- * Object-level representation of continuous white space at document. Either line feed or tabulation or space is considered to be <code>'white-space'</code>.
+ * Object-level representation of continuous white space at document. Either line feed or tabulation or space is considered to be {@code 'white-space'}.
  * I.e. document text fragment like {@code '\t   \t\t\n\t   \t'}  may be considered as a continuous white space and may be represented as a {@link WhiteSpace} object.
  * <p/>
  * Provides number of properties that describe encapsulated continuous white space:
@@ -45,7 +46,7 @@ import java.util.ArrayList;
  * <p/>
  * Not thread-safe.
  */
-class WhiteSpace {
+public class WhiteSpace {
 
   private static final char LINE_FEED = '\n';
 
@@ -73,8 +74,10 @@ class WhiteSpace {
   private static final int LF_COUNT_SHIFT = 7;
   private static final int MAX_LF_COUNT = 1 << 24;
 
+  private static final RangesAssert myRangesAssert = new RangesAssert();
+
   /**
-   * Creates new <code>WhiteSpace</code> object with the given start offset and a flag that shows if current white space is
+   * Creates new {@code WhiteSpace} object with the given start offset and a flag that shows if current white space is
    * the first white space.
    * <p/>
    * <b>Note:</b> {@link #getEndOffset() end offset} value is the same as the {@link #getStartOffset() start offset} for
@@ -107,15 +110,11 @@ class WhiteSpace {
    * @param model                 formatting model that is used to access to the underlying document text
    * @param options               indent formatting options
    */
-  public void append(int newEndOffset, FormattingDocumentModel model, CommonCodeStyleSettings.IndentOptions options) {
+  public void changeEndOffset(int newEndOffset, FormattingDocumentModel model, CommonCodeStyleSettings.IndentOptions options) {
     final int oldEndOffset = myEnd;
     if (newEndOffset == oldEndOffset) return;
     if (myStart >= newEndOffset) {
-      InitialInfoBuilder.assertInvalidRanges(myStart,
-                                             newEndOffset,
-                                             model,
-                                             "some block intersects with whitespace"
-      );
+      myRangesAssert.assertInvalidRanges(myStart, newEndOffset, model, "some block intersects with whitespace");
     }
 
     myEnd = newEndOffset;
@@ -124,14 +123,9 @@ class WhiteSpace {
     myInitial = model.getText(range);
 
     if (!coveredByBlock(model)) {
-      InitialInfoBuilder.assertInvalidRanges(myStart,
-                                             myEnd,
-                                             model,
-                                             "nonempty text is not covered by block"
-      );
+      myRangesAssert.assertInvalidRanges(myStart, myEnd, model, "nonempty text is not covered by block");
     }
 
-    // There is a possible case that this method is called more than once on the same object. We want to
     if (newEndOffset > oldEndOffset) {
       refreshStateOnEndOffsetIncrease(newEndOffset, oldEndOffset, options.TAB_SIZE);
     } else {
@@ -148,18 +142,18 @@ class WhiteSpace {
   }
 
   /**
-   * Allows to check if <code>'myInitial'</code> property value stands for continuous white space text.
+   * Allows to check if {@code 'myInitial'} property value stands for continuous white space text.
    * <p/>
-   * The text is considered to be continuous <code>'white space'</code> at following cases:
+   * The text is considered to be continuous {@code 'white space'} at following cases:
    * <ul>
-   *   <li><code>'myInitial'</code> is empty string or string that contains white spaces only;</li>
-   *   <li><code>'myInitial'</code> is a <code>CDATA</code> string which content is empty or consists from white spaces only;</li>
-   *   <li><code>'myInitial'</code> string belongs to the same {@link PsiWhiteSpace} element;</li>
+   *   <li>{@code 'myInitial'} is empty string or string that contains white spaces only;</li>
+   *   <li>{@code 'myInitial'} is a {@code CDATA} string which content is empty or consists from white spaces only;</li>
+   *   <li>{@code 'myInitial'} string belongs to the same {@link PsiWhiteSpace} element;</li>
    * </ul>
    *
-   * @param model     formatting model that is used to provide access to the <code>PSI API</code> if necessary
-   * @return          <code>true</code> if <code>'myInitial'</code> property value stands for white space;
-   *                  <code>false</code> otherwise
+   * @param model     formatting model that is used to provide access to the {@code PSI API} if necessary
+   * @return          {@code true} if {@code 'myInitial'} property value stands for white space;
+   *                  {@code false} otherwise
    */
   private boolean coveredByBlock(final FormattingDocumentModel model) {
     if (myInitial == null) return true;
@@ -292,13 +286,10 @@ class WhiteSpace {
    * @param indent      new value for the {@link #getIndentSpaces()}  indentSpaces} property
    */
   public void setSpaces(final int spaces, final int indent) {
-    performModification(new Runnable() {
-      @Override
-      public void run() {
-        if (!isKeepFirstColumn() || getFlag(CONTAINS_SPACES_INITIALLY_MASK)) {
-          mySpaces = spaces;
-          myIndentSpaces = indent;
-        }
+    performModification(() -> {
+      if (!isKeepFirstColumn() || getFlag(CONTAINS_SPACES_INITIALLY_MASK)) {
+        mySpaces = spaces;
+        myIndentSpaces = indent;
       }
     });
   }
@@ -318,15 +309,15 @@ class WhiteSpace {
   /**
    * Execute given action in a safe manner.
    * <p/>
-   * <code>'Safe manner'</code> here means the following:
+   * {@code 'Safe manner'} here means the following:
    * <ul>
-   *   <li>don't execute the action if {@link #isIsReadOnly() isReadOnly} property value is set to <code>true</code>;</li>
+   *   <li>don't execute the action if {@link #isIsReadOnly() isReadOnly} property value is set to {@code true};</li>
    *   <li>
    *        ensure that number of line feeds after action execution is preserved if line feeds are
    *        {@link #isLineFeedsAreReadOnly() read only};
    *   </li>
    *   <li>
-   *        ensure the following if {@link #isIsSafe() isSafe} property is set to <code>true</code>:
+   *        ensure the following if {@link #isIsSafe() isSafe} property is set to {@code true}:
    *        <ul>
    *          <li>
    *            cut all white spaces and line feeds appeared after given action execution to single white space if there
@@ -372,17 +363,14 @@ class WhiteSpace {
    * @param spaceProperty     spacing settings holder
    */
   public void arrangeSpaces(final SpacingImpl spaceProperty) {
-    performModification(new Runnable() {
-      @Override
-      public void run() {
-        if (spaceProperty != null) {
-          if (getLineFeeds() == 0) {
-            if (spaceProperty.getMinSpaces() >= 0 && getTotalSpaces() < spaceProperty.getMinSpaces()) {
-              setSpaces(spaceProperty.getMinSpaces(), 0);
-            }
-            if (spaceProperty.getMaxSpaces() >= 0 && getTotalSpaces() > spaceProperty.getMaxSpaces()) {
-              setSpaces(spaceProperty.getMaxSpaces(), 0);
-            }
+    performModification(() -> {
+      if (spaceProperty != null) {
+        if (getLineFeeds() == 0) {
+          if (spaceProperty.getMinSpaces() >= 0 && getTotalSpaces() < spaceProperty.getMinSpaces()) {
+            setSpaces(spaceProperty.getMinSpaces(), 0);
+          }
+          if (spaceProperty.getMaxSpaces() >= 0 && getTotalSpaces() > spaceProperty.getMaxSpaces()) {
+            setSpaces(spaceProperty.getMaxSpaces(), 0);
           }
         }
       }
@@ -392,50 +380,44 @@ class WhiteSpace {
   /**
    * Tries to ensure that number of line feeds managed by the current {@link WhiteSpace} is consistent to the settings
    * defined at the given spacing property.
-   *
-   * @param spaceProperty       space settings holder
-   * @param formatProcessor    format processor to use for space settings state refreshing
    */
-  public void arrangeLineFeeds(final SpacingImpl spaceProperty, final FormatProcessor formatProcessor) {
-    performModification(new Runnable() {
-      @Override
-      public void run() {
-        if (spaceProperty != null) {
-          spaceProperty.refresh(formatProcessor);
+  public void arrangeLineFeeds(final SpacingImpl spaceProperty, final BlockRangesMap helper) {
+    performModification(() -> {
+      if (spaceProperty != null) {
+        spaceProperty.refresh(helper);
 
-          if (spaceProperty.getMinLineFeeds() >= 0 && getLineFeeds() < spaceProperty.getMinLineFeeds()) {
-            setLineFeeds(spaceProperty.getMinLineFeeds());
-          }
-          if (getLineFeeds() > 0) {
-            if (spaceProperty.getKeepBlankLines() > 0) {
-              if (getLineFeeds() >= spaceProperty.getKeepBlankLines() + 1) {
-                setLineFeeds(spaceProperty.getKeepBlankLines() + 1);
-              }
-            }
-            else {
-              if (getLineFeeds() > spaceProperty.getMinLineFeeds()) {
-                if (spaceProperty.shouldKeepLineFeeds()) {
-                  setLineFeeds(Math.max(spaceProperty.getMinLineFeeds(), 1));
-                }
-                else {
-                  setLineFeeds(spaceProperty.getMinLineFeeds());
-                  if (getLineFeeds() == 0) mySpaces = 0;
-                }
-              }
-            }
-            if (getLineFeeds() == 1 && !spaceProperty.shouldKeepLineFeeds() && spaceProperty.getMinLineFeeds() == 0) {
-              setLineFeeds(0);
-              mySpaces = 0;
-            }
-
-            if (getLineFeeds() > 0 && getLineFeeds() < spaceProperty.getPrefLineFeeds()) {
-              setLineFeeds(spaceProperty.getPrefLineFeeds());
-            }
-          }
-        } else if (isFirst()) {
-          setLineFeeds(0);
-          mySpaces = 0;
+        if (spaceProperty.getMinLineFeeds() >= 0 && getLineFeeds() < spaceProperty.getMinLineFeeds()) {
+          setLineFeeds(spaceProperty.getMinLineFeeds());
         }
+        if (getLineFeeds() > 0) {
+          if (spaceProperty.getKeepBlankLines() > 0) {
+            if (getLineFeeds() >= spaceProperty.getKeepBlankLines() + 1) {
+              setLineFeeds(spaceProperty.getKeepBlankLines() + 1);
+            }
+          }
+          else {
+            if (getLineFeeds() > spaceProperty.getMinLineFeeds()) {
+              if (spaceProperty.shouldKeepLineFeeds()) {
+                setLineFeeds(Math.max(spaceProperty.getMinLineFeeds(), 1));
+              }
+              else {
+                setLineFeeds(spaceProperty.getMinLineFeeds());
+                if (getLineFeeds() == 0) mySpaces = 0;
+              }
+            }
+          }
+          if (getLineFeeds() == 1 && !spaceProperty.shouldKeepLineFeeds() && spaceProperty.getMinLineFeeds() == 0) {
+            setLineFeeds(0);
+            mySpaces = 0;
+          }
+
+          if (getLineFeeds() > 0 && getLineFeeds() < spaceProperty.getPrefLineFeeds()) {
+            setLineFeeds(spaceProperty.getPrefLineFeeds());
+          }
+        }
+      } else if (isFirst()) {
+        setLineFeeds(0);
+        mySpaces = 0;
       }
     });
 
@@ -443,7 +425,7 @@ class WhiteSpace {
 
   /**
    * There is a possible case that particular indent info is applied to the code block that is not the first block on a line.
-   * E.g. we may want to align field name during <code>'align fields in columns'</code> processing:
+   * E.g. we may want to align field name during {@code 'align fields in columns'} processing:
    *     <pre>
    *         public class Test {
    *             private Object o;
@@ -467,7 +449,7 @@ class WhiteSpace {
    * Allows to get information if target text document continuous 'white space' represented by the current object contained line feed
    * symbol(s) initially or contains line feed(s) now.
    *
-   * @return    <code>true</code> if this object contained line feeds initially or contains them now; <code>false</code> otherwise
+   * @return    {@code true} if this object contained line feeds initially or contains them now; {@code false} otherwise
    * @see #containsLineFeedsInitially()
    */
   public boolean containsLineFeeds() {
@@ -482,13 +464,10 @@ class WhiteSpace {
    * Tries to ensure that current {@link WhiteSpace} object contains at least one line feed.
    */
   public void ensureLineFeed() {
-    performModification(new Runnable() {
-      @Override
-      public void run() {
-        if (!containsLineFeeds()) {
-          setLineFeeds(1);
-          mySpaces = 0;
-        }
+    performModification(() -> {
+      if (!containsLineFeeds()) {
+        setLineFeeds(1);
+        mySpaces = 0;
       }
     });
   }
@@ -499,8 +478,8 @@ class WhiteSpace {
 
   /**
    * @param ws      char sequence to check
-   * @return        <code>true</code> if given char sequence is equal to the target document text identified by
-   *                start/end offsets managed by the current {@link WhiteSpace} object; <code>false</code> otherwise
+   * @return        {@code true} if given char sequence is equal to the target document text identified by
+   *                start/end offsets managed by the current {@link WhiteSpace} object; {@code false} otherwise
    */
   public boolean equalsToString(CharSequence ws) {
     if (myInitial == null) return ws.length() == 0;
@@ -528,7 +507,7 @@ class WhiteSpace {
    * line feeds were found at the target text document fragment after
    * new {@link #append(int, FormattingDocumentModel, CommonCodeStyleSettings.IndentOptions) end offset appliance}.
    *
-   * @return    <code>true</code> if current object contained line feeds initially; <code>false</code> otherwise
+   * @return    {@code true} if current object contained line feeds initially; {@code false} otherwise
    */
   public boolean containsLineFeedsInitially() {
     if (myInitial == null) return false;
@@ -537,24 +516,18 @@ class WhiteSpace {
 
   /**
    * Tries to ensure that number of line feeds and white spaces managed by the given {@link WhiteSpace} object is the
-   * same as the one defined by the given <code>'spacing'</code> object.
+   * same as the one defined by the given {@code 'spacing'} object.
    * <p/>
    * This method may be considered a shortcut for calling {@link #arrangeLineFeeds(SpacingImpl, FormatProcessor)} and
    * {@link #arrangeSpaces(SpacingImpl)}.
-   *
-   * @param spacing             spacing settings holder
-   * @param formatProcessor     format processor to use to refresh state of the given <code>'spacing'</code> object
    */
-  public void removeLineFeeds(final SpacingImpl spacing, final FormatProcessor formatProcessor) {
-    performModification(new Runnable() {
-      @Override
-      public void run() {
-        setLineFeeds(0);
-        mySpaces = 0;
-        myIndentSpaces = 0;
-      }
+  public void removeLineFeeds(final SpacingImpl spacing, final BlockRangesMap helper) {
+    performModification(() -> {
+      setLineFeeds(0);
+      mySpaces = 0;
+      myIndentSpaces = 0;
     });
-    arrangeLineFeeds(spacing, formatProcessor);
+    arrangeLineFeeds(spacing, helper);
     arrangeSpaces(spacing);
   }
 
@@ -566,14 +539,14 @@ class WhiteSpace {
    * Allows to get information about number of 'pure' white space symbols at the last line of continuous white space document
    * text fragment represented by the current {@link WhiteSpace} object.
    * <p/>
-   * <b>Note:</b> pay special attention to <code>'last line'</code> qualification here. Consider the following target continuous
+   * <b>Note:</b> pay special attention to {@code 'last line'} qualification here. Consider the following target continuous
    * white space document fragment:
    * <pre>
    *        ' ws<sub>11</sub>ws<sub>12</sub>
    *        'ws<sub>21</sub>'
    * </pre>
    * <p/>
-   * Here <code>'ws<sub>nm</sub>'</code> is a m-th white space symbol at the n-th line. <code>'Spaces'</code> property of
+   * Here <code>'ws<sub>nm</sub>'</code> is a m-th white space symbol at the n-th line. {@code 'Spaces'} property of
    * {@link WhiteSpace} object for such white-space text has a value not <b>2</b> or <b>3</b> but <b>1</b>.
    *
    * @return      number of white spaces at the last line of target continuous white space text document fragment
@@ -681,7 +654,7 @@ class WhiteSpace {
    */
   private CharSequence[] getInitialLines() {
     if (myInitial == null) return new CharSequence[]{""};
-    final ArrayList<CharSequence> result = new ArrayList<CharSequence>();
+    final ArrayList<CharSequence> result = new ArrayList<>();
     StringBuilder currentLine = new StringBuilder();
     for (int i = 0; i < myInitial.length(); i++) {
       final char c = myInitial.charAt(i);
@@ -701,20 +674,20 @@ class WhiteSpace {
    * Provides access to the information about indent white spaces at last line of continuous white space text document
    * fragment represented by the current {@link WhiteSpace} object.
    * <p/>
-   * <code>'Indent white space'</code> here is a white space representation of tabulation symbol. User may define that
+   * {@code 'Indent white space'} here is a white space representation of tabulation symbol. User may define that
    * he or she wants to use particular number of white spaces instead of tabulation
    * ({@link CommonCodeStyleSettings.IndentOptions#TAB_SIZE}). So, {@link WhiteSpace} object uses corresponding
    * number of 'indent white spaces' for each tabulation symbol encountered at target continuous white space text document fragment.
    * <p/>
-   * <b>Note:</b> pay special attention to <code>'last line'</code> qualification here. Consider the following target
+   * <b>Note:</b> pay special attention to {@code 'last line'} qualification here. Consider the following target
    * continuous white space document fragment:
    * <pre>
    *        ' \t\t
    *        '\t'
    * </pre>
    * <p/>
-   * Let's consider that <code>'tab size'</code> is defined as four white spaces (default setting).
-   * <code>'IndentSpaces'</code> property of {@link WhiteSpace} object for such white-space text has a value not
+   * Let's consider that {@code 'tab size'} is defined as four white spaces (default setting).
+   * {@code 'IndentSpaces'} property of {@link WhiteSpace} object for such white-space text has a value not
    * <b>8</b> or <b>12</b> but <b>4</b>, i.e. tabulation symbols from last line
    * only are counted.
    *

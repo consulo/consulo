@@ -72,6 +72,11 @@ public class IconDescriptorUpdaters {
     }
 
     @Override
+    public String toString() {
+      return myPointer.toString() + "/" + myFlags;
+    }
+
+    @Override
     public int hashCode() {
       int result = myPointer.hashCode();
       result = 31 * result + myFlags;

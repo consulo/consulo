@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.psi.impl.source.tree;
 
 import com.intellij.ide.util.PsiNavigationSupport;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import consulo.lang.LanguageVersion;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
+import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.CheckUtil;
 import com.intellij.psi.impl.ResolveScopeManager;
@@ -38,17 +37,20 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class CompositePsiElement extends CompositeElement implements PsiElement, NavigationItem {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.CompositePsiElement");
+
   protected static int ourHC = 0;
 
-  public CompositePsiElement(IElementType type) {
+  protected CompositePsiElement(IElementType type) {
     super(type);
     setPsi(this);
   }
 
+  @NotNull
   @Override
   public CompositePsiElement clone() {
     CompositePsiElement clone = (CompositePsiElement)super.clone();
@@ -162,7 +164,6 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     TreeElement elementCopy = ChangeUtil.copyToElement(element);
     TreeElement treeElement = addInternal(elementCopy, elementCopy, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
     return ChangeUtil.decodeInformation(treeElement).getPsi();
-
   }
 
   @Override
@@ -176,14 +177,12 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
   }
 
   @Override
-  public final PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor)
-    throws IncorrectOperationException {
+  public final PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
   }
 
   @Override
-  public final PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor)
-    throws IncorrectOperationException {
+  public final PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
   }
 
@@ -203,8 +202,8 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
   @Override
   public void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
-    ASTNode firstElement = SourceTreeToPsiMap.psiElementToTree(first);
-    ASTNode lastElement = SourceTreeToPsiMap.psiElementToTree(last);
+    ASTNode firstElement = first.getNode();
+    ASTNode lastElement = last.getNode();
     LOG.assertTrue(firstElement.getTreeParent() == this);
     LOG.assertTrue(lastElement.getTreeParent() == this);
     CodeEditUtil.removeChildren(this, firstElement, lastElement);
@@ -278,7 +277,8 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
 
   @Override
   public void navigate(boolean requestFocus) {
-    PsiNavigationSupport.getInstance().getDescriptor(this).navigate(requestFocus);
+    Navigatable descriptor = PsiNavigationSupport.getInstance().getDescriptor(this);
+    if (descriptor != null) descriptor.navigate(requestFocus);
   }
 
   @Override

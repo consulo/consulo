@@ -20,6 +20,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiModificationTracker;
@@ -30,23 +31,26 @@ import java.util.LinkedList;
 /**
  * @author peter
  */
-public class OffsetTranslator implements Disposable {
+class OffsetTranslator implements Disposable {
   static final Key<OffsetTranslator> RANGE_TRANSLATION = Key.create("completion.rangeTranslation");
 
+  private final PsiFile myOriginalFile;
   private final Document myCopyDocument;
-  private final LinkedList<DocumentEvent> myTranslation = new LinkedList<DocumentEvent>();
+  private final LinkedList<DocumentEvent> myTranslation = new LinkedList<>();
 
-  public OffsetTranslator(final Document originalDocument, final PsiFile originalFile, Document copyDocument) {
+  OffsetTranslator(final Document originalDocument, final PsiFile originalFile, Document copyDocument) {
+    myOriginalFile = originalFile;
     myCopyDocument = copyDocument;
     myCopyDocument.putUserData(RANGE_TRANSLATION, this);
+    Disposer.register(originalFile.getProject(), this);
 
-    final LinkedList<DocumentEvent> sinceCommit = new LinkedList<DocumentEvent>();
+    final LinkedList<DocumentEvent> sinceCommit = new LinkedList<>();
     originalDocument.addDocumentListener(new DocumentAdapter() {
       @Override
       public void documentChanged(DocumentEvent e) {
         if (isUpToDate()) {
           DocumentEventImpl inverse =
-            new DocumentEventImpl(originalDocument, e.getOffset(), e.getNewFragment(), e.getOldFragment(), 0, false);
+                  new DocumentEventImpl(originalDocument, e.getOffset(), e.getNewFragment(), e.getOldFragment(), 0, false);
           sinceCommit.addLast(inverse);
         }
       }
@@ -59,7 +63,7 @@ public class OffsetTranslator implements Disposable {
           myTranslation.addFirst(e);
         }
       }
-    });
+    }, this);
 
     originalFile.getProject().getMessageBus().connect(this).subscribe(PsiModificationTracker.TOPIC, new PsiModificationTracker.Listener() {
       long lastModCount = originalFile.getViewProvider().getModificationStamp();
@@ -75,7 +79,7 @@ public class OffsetTranslator implements Disposable {
   }
 
   private boolean isUpToDate() {
-    return this == myCopyDocument.getUserData(RANGE_TRANSLATION);
+    return this == myCopyDocument.getUserData(RANGE_TRANSLATION) && myOriginalFile.isValid();
   }
 
   @Override
@@ -86,7 +90,7 @@ public class OffsetTranslator implements Disposable {
   }
 
   @Nullable
-  public Integer translateOffset(Integer offset) {
+  Integer translateOffset(Integer offset) {
     for (DocumentEvent event : myTranslation) {
       offset = translateOffset(offset, event);
       if (offset == null) {

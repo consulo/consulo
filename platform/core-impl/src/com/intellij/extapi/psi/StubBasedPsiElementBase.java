@@ -19,11 +19,13 @@ package com.intellij.extapi.psi;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Attachment;
+import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.util.RecursionManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -41,12 +43,13 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayFactory;
-import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A base class for PSI elements that support both stub and AST substrates. The purpose of stubs is to hold the most important information
@@ -122,7 +125,6 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
    * this causes AST to be loaded for the whole file and all stub-based PSI elements in this file (including the current one)
    * to be switched from stub to AST. So, after this call {@link #getStub()} will return null.
    */
-  @RequiredReadAction
   @Override
   @NotNull
   public ASTNode getNode() {
@@ -145,25 +147,31 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     return mySubstrateRef.getNode();
   }
 
-  private ASTNode failedToBindStubToAst(@NotNull PsiFileImpl file, @NotNull FileElement fileElement) {
+  private ASTNode failedToBindStubToAst(@NotNull PsiFileImpl file, @NotNull final FileElement fileElement) {
     VirtualFile vFile = file.getVirtualFile();
     StubTree stubTree = file.getStubTree();
-    String stubString = stubTree != null ? ((PsiFileStubImpl)stubTree.getRoot()).printTree() : "is null";
-    String astString = DebugUtil.treeToString(fileElement, true);
-    if (!ourTraceStubAstBinding) {
-      stubString = StringUtil.trimLog(stubString, 1024);
-      astString = StringUtil.trimLog(astString, 1024);
+    final String stubString = stubTree != null ? ((PsiFileStubImpl)stubTree.getRoot()).printTree() : null;
+    final String astString = RecursionManager.doPreventingRecursion("failedToBindStubToAst", true,
+                                                                    () -> DebugUtil.treeToString(fileElement, true));
+
+    @NonNls final String message = "Failed to bind stub to AST for element " + getClass() + " in " +
+                                   (vFile == null ? "<unknown file>" : vFile.getPath()) +
+                                   "\nFile:\n" + file + "@" + System.identityHashCode(file);
+
+    final String creationTraces = ourTraceStubAstBinding ? dumpCreationTraces(fileElement) : null;
+
+    List<Attachment> attachments = new ArrayList<>();
+    if (stubString != null) {
+      attachments.add(new Attachment("stubTree.txt", stubString));
+    }
+    if (astString != null) {
+      attachments.add(new Attachment("ast.txt", astString));
+    }
+    if (creationTraces != null) {
+      attachments.add(new Attachment("creationTraces.txt", creationTraces));
     }
 
-    @NonNls String message = "Failed to bind stub to AST for element " + getClass() + " in " +
-                             (vFile == null ? "<unknown file>" : vFile.getPath()) +
-                             "\nFile:\n" + file + "@" + System.identityHashCode(file) +
-                             "\nFile stub tree:\n" + stubString +
-                             "\nLoaded file AST:\n" + astString;
-    if (ourTraceStubAstBinding) {
-      message += dumpCreationTraces(fileElement);
-    }
-    throw new IllegalArgumentException(message);
+    throw new RuntimeExceptionWithAttachments(message, attachments.toArray(Attachment.EMPTY_ARRAY));
   }
 
   @NotNull
@@ -242,12 +250,18 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
   /**
    * Don't invoke this method, it's public for implementation reasons.
    */
+  public int getStubIndex() {
+    return myStubIndex;
+  }
+
+  /**
+   * Don't invoke this method, it's public for implementation reasons.
+   */
   @NotNull
   public final SubstrateRef getSubstrateRef() {
     return mySubstrateRef;
   }
 
-  @RequiredReadAction
   @NotNull
   @Override
   public Language getLanguage() {
@@ -352,7 +366,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
   @NotNull
   public IStubElementType getElementType() {
     if (!(myElementType instanceof IStubElementType)) {
-      throw new AssertionError("Not a stub type: " + myElementType + " in " + getClass());
+      throw new ClassCastException("Not a stub type: " + myElementType + " in " + getClass());
     }
     return (IStubElementType)myElementType;
   }
@@ -367,7 +381,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
   public T getStub() {
     ProgressIndicatorProvider.checkCanceled(); // Hope, this is called often
     //noinspection unchecked
-    return (T)mySubstrateRef.getStub();
+    return (T)mySubstrateRef.getStub(myStubIndex);
   }
 
   /**
