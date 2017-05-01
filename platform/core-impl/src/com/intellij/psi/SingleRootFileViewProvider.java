@@ -17,12 +17,10 @@ package com.intellij.psi;
 
 import com.google.common.util.concurrent.Atomics;
 import com.intellij.injected.editor.DocumentWindow;
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.LanguageUtil;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.lang.*;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.command.undo.UndoConstants;
+import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -33,7 +31,6 @@ import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.NonPhysicalFileSystem;
@@ -42,10 +39,12 @@ import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.impl.*;
 import com.intellij.psi.impl.file.PsiBinaryFileImpl;
-import com.intellij.psi.impl.file.PsiLargeFileImpl;
+import com.intellij.psi.impl.file.PsiLargeBinaryFileImpl;
+import com.intellij.psi.impl.file.PsiLargeTextFileImpl;
 import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.PsiPlainTextFileImpl;
+import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.testFramework.LightVirtualFile;
@@ -115,9 +114,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     myBaseLanguage = language;
     setContent(new VirtualFileContent());
     myPhysical = isEventSystemEnabled() && !(virtualFile instanceof LightVirtualFile) && !(virtualFile.getFileSystem() instanceof NonPhysicalFileSystem);
-    if (virtualFile instanceof LightVirtualFile && !isEventSystemEnabled()) {
-      virtualFile.putUserData(FREE_THREADED, true);
-    }
+    virtualFile.putUserData(FREE_THREADED, isFreeThreaded(this));
     myFileType = type;
   }
 
@@ -346,7 +343,9 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   @Nullable
   protected PsiFile createFile(@NotNull Project project, @NotNull VirtualFile file, @NotNull FileType fileType) {
     if (fileType.isBinary() || file.is(VFileProperty.SPECIAL)) {
-      return new PsiBinaryFileImpl((PsiManagerImpl)getManager(), this);
+      return isTooLargeForContentLoading(file)
+             ? new PsiLargeBinaryFileImpl(((PsiManagerImpl)getManager()), this)
+             : new PsiBinaryFileImpl((PsiManagerImpl)getManager(), this);
     }
     if (!isTooLargeForIntelligence(file)) {
       final PsiFile psiFile = createFile(getBaseLanguage());
@@ -354,13 +353,12 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     }
 
     if (isTooLargeForContentLoading(file)) {
-      return new PsiLargeFileImpl((PsiManagerImpl)getManager(), this);
+      return new PsiLargeTextFileImpl(this);
     }
 
     return new PsiPlainTextFileImpl(this);
   }
 
-  @SuppressWarnings("UnusedDeclaration")
   @Deprecated
   public static boolean isTooLarge(@NotNull VirtualFile vFile) {
     return isTooLargeForIntelligence(vFile);
@@ -444,11 +442,12 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     Document document = com.intellij.reference.SoftReference.dereference(myDocument);
     if (document == null/* TODO[ik] make this change && isEventSystemEnabled()*/) {
       document = FileDocumentManager.getInstance().getDocument(getVirtualFile());
-      myDocument = document == null ? null : new SoftReference<Document>(document);
+      myDocument = document == null ? null : new SoftReference<>(document);
     }
     return document;
   }
 
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
   @Override
   public FileViewProvider clone() {
     final VirtualFile origFile = getVirtualFile();
@@ -514,20 +513,9 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   }
 
   @Nullable
-  public static PsiElement findElementAt(@Nullable final PsiElement psiFile, final int offset) {
-    if (psiFile == null) return null;
-    int offsetInElement = offset;
-    PsiElement child = psiFile.getFirstChild();
-    while (child != null) {
-      final int length = child.getTextLength();
-      if (length <= offsetInElement) {
-        offsetInElement -= length;
-        child = child.getNextSibling();
-        continue;
-      }
-      return child.findElementAt(offsetInElement);
-    }
-    return null;
+  public static PsiElement findElementAt(@Nullable PsiElement psiFile, final int offset) {
+    ASTNode node = psiFile == null ? null : psiFile.getNode();
+    return node == null ? null : SourceTreeToPsiMap.treeElementToPsi(node.findLeafElementAt(offset));
   }
 
   public void forceCachedPsi(@NotNull PsiFile psiFile) {
@@ -563,8 +551,15 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     for (FileElement fileElement : knownTreeRoots) {
       int nodeLength = fileElement.getTextLength();
       if (nodeLength != fileLength) {
+        PsiUtilCore.ensureValid(fileElement.getPsi());
+        List<Attachment> attachments = ContainerUtil.newArrayList(new Attachment(myVirtualFile.getNameWithoutExtension() + ".tree.txt", fileElement.getText()),
+                                                                  new Attachment(myVirtualFile.getNameWithoutExtension() + ".file.txt", myContent.toString()));
+        if (document != null) {
+          attachments.add(new Attachment(myVirtualFile.getNameWithoutExtension() + ".document.txt", document.getText()));
+        }
         // exceptions here should be assigned to peter
-        LOG.error("Inconsistent " + fileElement.getElementType() + " tree in " + this + "; nodeLength=" + nodeLength + "; fileLength=" + fileLength);
+        LOG.error("Inconsistent " + fileElement.getElementType() + " tree in " + this + "; nodeLength=" + nodeLength + "; fileLength=" + fileLength,
+                  attachments.toArray(Attachment.EMPTY_ARRAY));
       }
     }
   }
@@ -642,7 +637,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     private final long myModificationStamp;
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private final List<FileElement> myFileElementHardRefs = new SmartList<FileElement>();
+    private final List<FileElement> myFileElementHardRefs = new SmartList<>();
 
     private PsiFileContent(final PsiFileImpl file, final long modificationStamp) {
       myFile = file;
@@ -658,12 +653,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     public CharSequence getText() {
       String content = myContent;
       if (content == null) {
-        myContent = content = ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-          @Override
-          public String compute() {
-            return myFile.calcTreeElement().getText();
-          }
-        });
+        myContent = content = ReadAction.compute(() -> myFile.calcTreeElement().getText());
       }
       return content;
     }

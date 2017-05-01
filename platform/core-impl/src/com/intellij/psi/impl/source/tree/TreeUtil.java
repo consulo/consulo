@@ -40,7 +40,10 @@ import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.Set;
 
 public class TreeUtil {
   private static final Key<String> UNCLOSED_ELEMENT_PROPERTY = Key.create("UNCLOSED_ELEMENT_PROPERTY");
@@ -55,7 +58,8 @@ public class TreeUtil {
   }
 
   public static void ensureParsedRecursively(@NotNull ASTNode node) {
-    ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() { });
+    ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
+    });
   }
 
   public static void ensureParsedRecursivelyCheckingProgress(@NotNull ASTNode node, @NotNull final ProgressIndicator indicator) {
@@ -283,6 +287,7 @@ public class TreeUtil {
   }
 
   public static final Key<FileElement> CONTAINING_FILE_KEY_AFTER_REPARSE = Key.create("CONTAINING_FILE_KEY_AFTER_REPARSE");
+
   public static FileElement getFileElement(TreeElement element) {
     TreeElement parent = element;
     while (parent != null && !(parent instanceof FileElement)) {
@@ -313,10 +318,7 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static TreeElement nextLeaf(@NotNull TreeElement start,
-                                     CommonParentState commonParent,
-                                     IElementType searchedType,
-                                     boolean expandChameleons) {
+  public static TreeElement nextLeaf(@NotNull TreeElement start, CommonParentState commonParent, IElementType searchedType, boolean expandChameleons) {
     TreeElement element = start;
     while (element != null) {
       if (commonParent != null) {
@@ -495,7 +497,7 @@ public class TreeUtil {
     while (true) {
       if (element == null) return null;
       if (!isWhitespaceOrComment(element) && !alsoSkip.contains(element.getElementType())) break;
-      element = forward ? element.getTreeNext(): element.getTreePrev();
+      element = forward ? element.getTreeNext() : element.getTreePrev();
     }
     return element;
   }

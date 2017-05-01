@@ -54,5 +54,8 @@ public abstract class PsiBuilderFactory {
                                            @NotNull CharSequence seq);
 
   @NotNull
-  public abstract PsiBuilder createBuilder(@NotNull ParserDefinition parserDefinition, @NotNull Lexer lexer, @NotNull LanguageVersion languageVersion, @NotNull CharSequence seq);
+  public abstract PsiBuilder createBuilder(@NotNull ParserDefinition parserDefinition,
+                                           @NotNull Lexer lexer,
+                                           @NotNull LanguageVersion languageVersion,
+                                           @NotNull CharSequence seq);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * @author max
- */
 package com.intellij.psi.tree;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.util.CharTable;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public abstract class CustomParsingType extends IElementType implements ICustomParsingType {
-  public CustomParsingType(@NotNull @NonNls String debugName, @Nullable Language language) {
-    super(debugName, language);
-  }
+/**
+ * An additional interface to be implemented by {@link IElementType} instances for tokens which should be parsed lazily, but
+ * for some reasons extending {@link ILazyParseableElementType} is impossible.
+ */
+public interface ILazyParseableElementTypeBase {
 
-  public abstract ASTNode parse(CharSequence text, CharTable table);
+  /**
+   * Parses the contents of the specified chameleon node and returns the AST tree
+   * representing the parsed contents.
+   *
+   * @param chameleon the node to parse.
+   * @return the parsed contents of the node.
+   */
+  ASTNode parseContents(ASTNode chameleon);
 }

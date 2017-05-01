@@ -23,7 +23,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
-import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.tree.events.ChangeInfo;
 import com.intellij.pom.tree.events.TreeChangeEvent;
@@ -782,12 +781,7 @@ public class CompositeElement extends TreeElement {
   @Nullable
   private PsiElement obtainStubBasedPsi() {
     AstPath path = getElementType() instanceof IStubElementType ? AstPath.getNodePath(this) : null;
-    return path == null ? null : path.getContainingFile().obtainPsi(path, new Factory<StubBasedPsiElementBase<?>>() {
-      @Override
-      public StubBasedPsiElementBase<?> create() {
-        return (StubBasedPsiElementBase<?>)createPsiNoLock();
-      }
-    });
+    return path == null ? null : path.getContainingFile().obtainPsi(path, () -> (StubBasedPsiElementBase<?>)createPsiNoLock());
   }
 
   @Override

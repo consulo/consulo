@@ -45,7 +45,8 @@ public class CodeEditUtil {
 
   public static final Key<Boolean> OUTER_OK = new Key<>("OUTER_OK");
 
-  private CodeEditUtil() { }
+  private CodeEditUtil() {
+  }
 
   public static void addChild(ASTNode parent, ASTNode child, ASTNode anchorBefore) {
     addChildren(parent, child, child, anchorBefore);
@@ -167,9 +168,9 @@ public class CodeEditUtil {
   }
 
   private static boolean needToForceReformat(final ASTNode parent, final ASTNode first, final ASTNode last) {
-    return parent == null || first.getStartOffset() != parent.getStartOffset() ||
-           parent.getText().trim().length() == getTrimmedTextLength(first, last) &&
-           needToForceReformat(parent.getTreeParent(), parent, parent);
+    return parent == null ||
+           first.getStartOffset() != parent.getStartOffset() ||
+           parent.getText().trim().length() == getTrimmedTextLength(first, last) && needToForceReformat(parent.getTreeParent(), parent, parent);
   }
 
   private static int getTrimmedTextLength(ASTNode first, final ASTNode last) {
@@ -395,10 +396,10 @@ public class CodeEditUtil {
    * We allow to mark particular {@link ASTNode AST nodes} to be reformatted later (e.g. we may want method definition and calls
    * to be reformatted when we perform {@code 'change method signature'} refactoring. Hence, we mark corresponding expressions
    * to be reformatted).
-   * <p/>
+   * <p>
    * For convenience that is made automatically on AST/PSI level, i.e. every time target element change it automatically marks itself
    * to be reformatted.
-   * <p/>
+   * <p>
    * However, there is a possible case that particular element is changed because of formatting, hence, there is no need to mark
    * itself for postponed formatting one more time. This method allows to configure allowance of reformat markers processing
    * for the calling thread. I.e. this method may be called with {@code 'false'} as an argument, hence, all further attempts
@@ -429,7 +430,7 @@ public class CodeEditUtil {
    * There is a possible case that particular PSI tree node is {@link #markToReformat(ASTNode, boolean) marked for reformatting}.
    * That means that there is a big chance that the node will be re-formatted during corresponding document processing
    * (e.g. on call to {@link PsiDocumentManager#doPostponedOperationsAndUnblockDocument(Document)}).
-   * <p/>
+   * <p>
    * However, there is a possible case that particular activity that triggers such document processing is not ready to the
    * situation when the document is modified because of postponed formatting. Hence, it may ask to suspend postponed formatting
    * for a while. This method allows to do that at thread-local manner. I.e. it's expected to be called as follows:

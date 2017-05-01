@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.StaticGetter;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.ILazyParseableElementType;
+import com.intellij.psi.tree.ILazyParseableElementTypeBase;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
@@ -38,7 +38,7 @@ import org.jetbrains.annotations.TestOnly;
 
 public class LazyParseableElement extends CompositeElement {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.LazyParseableElement");
-  private static final StaticGetter<CharSequence> NO_TEXT = new StaticGetter<CharSequence>(null);
+  private static final StaticGetter<CharSequence> NO_TEXT = new StaticGetter<>(null);
 
   private static class ChameleonLock {
     private ChameleonLock() {}
@@ -68,7 +68,7 @@ public class LazyParseableElement extends CompositeElement {
         myText = NO_TEXT;
       }
       else {
-        myText = new StaticGetter<CharSequence>(ImmutableCharSequence.asImmutable(text));
+        myText = new StaticGetter<>(ImmutableCharSequence.asImmutable(text));
         setCachedLength(text.length());
       }
     }
@@ -96,7 +96,7 @@ public class LazyParseableElement extends CompositeElement {
     }
     String s = super.getText();
     synchronized (lock) {
-      myText = new SoftReference<CharSequence>(s);
+      myText = new SoftReference<>(s);
     }
     return s;
   }
@@ -188,7 +188,7 @@ public class LazyParseableElement extends CompositeElement {
 
     DebugUtil.startPsiModification("lazy-parsing");
     try {
-      ILazyParseableElementType type = (ILazyParseableElementType)getElementType();
+      ILazyParseableElementTypeBase type = (ILazyParseableElementTypeBase)getElementType();
       ASTNode parsedNode = type.parseContents(this);
 
       if (parsedNode == null && text.length() > 0) {
@@ -210,13 +210,21 @@ public class LazyParseableElement extends CompositeElement {
 
         AstPath.cacheNodePaths(this);
 
-        assert super.textMatches(text) : "Text mismatch in " + getElementType();
-        myText = new SoftReference<CharSequence>(text);
+        assertTextLengthIntact(text.length());
+        myText = new SoftReference<>(text);
       }
     }
     finally {
       DebugUtil.finishPsiModification();
     }
+  }
+
+  private void assertTextLengthIntact(int expected) {
+    int length = 0;
+    for (ASTNode node : getChildren(null)) {
+      length += node.getTextLength();
+    }
+    assert length == expected : "Text mismatch in " + getElementType();
   }
 
   @Override
