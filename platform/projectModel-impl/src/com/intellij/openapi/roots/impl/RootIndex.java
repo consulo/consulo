@@ -353,7 +353,7 @@ public class RootIndex {
           String shortName = packageName.substring(i + 1);
           String parentPackage = i > 0 ? packageName.substring(0, i) : "";
           for (VirtualFile parentDir : getDirectoriesByPackageName(parentPackage, true)) {
-            VirtualFile child = parentDir.findChild(shortName);
+            VirtualFile child = !parentDir.isValid() ? null : parentDir.findChild(shortName);
             if (child != null && child.isDirectory() && getInfoForFile(child).isInProject()
                 && packageName.equals(getPackageName(child))) {
               result.add(child);
