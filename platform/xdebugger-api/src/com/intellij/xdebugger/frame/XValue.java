@@ -20,6 +20,7 @@ import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XInstanceEvaluator;
+import consulo.concurrency.Promises;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.concurrency.Promise;
@@ -56,7 +57,7 @@ public abstract class XValue extends XValueContainer {
     String expression = getEvaluationExpression();
     XExpression res =
             expression != null ? XDebuggerUtil.getInstance().createExpression(expression, null, null, EvaluationMode.EXPRESSION) : null;
-    return Promise.resolve(res);
+    return Promises.resolve(res);
   }
 
   /**

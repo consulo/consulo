@@ -2401,6 +2401,8 @@
     <favoritesListProvider implementation="com.intellij.ide.bookmarks.BookmarksFavoriteListProvider"/>
     <applicationService serviceInterface="com.intellij.codeInsight.FileModificationService"
                         serviceImplementation="com.intellij.codeInsight.CodeInsightUtilBase"/>
+    <applicationService serviceInterface="com.intellij.ide.util.treeView.TreeAnchorizer"
+                        serviceImplementation="com.intellij.ide.projectView.impl.nodes.PsiTreeAnchorizer"/>
 
     <!--Platform-->
     <applicationService serviceInterface="com.intellij.packageDependencies.DependenciesVisitorFactory"

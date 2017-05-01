@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,9 +69,9 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
   private boolean mySkipChangeRequests;
   /**
    * Initial horizontal caret position during vertical navigation.
-   * Similar to {@link #myDesiredX}, but represents logical caret position (<code>getLogicalPosition().column</code>) rather than visual.
+   * Similar to {@link #myDesiredX}, but represents logical caret position ({@code getLogicalPosition().column}) rather than visual.
    */
-  private int myLastColumnNumber = 0;
+  private int myLastColumnNumber;
   private int myDesiredSelectionStartColumn = -1;
   private int myDesiredSelectionEndColumn = -1;
   /**
@@ -104,7 +104,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
   private volatile VisualPosition myRangeMarkerStartPosition;
   private volatile VisualPosition myRangeMarkerEndPosition;
   private volatile boolean myRangeMarkerEndPositionIsLead;
-  boolean myUnknownDirection;
+  private boolean myUnknownDirection;
 
   private int myDocumentUpdateCounter;
 
@@ -922,7 +922,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
    * That's why we allow to specify that the direction is unknown and {@link #isUnknownDirection() expose this information}
    * later.
    * <p/>
-   * <b>Note:</b> when this method is called with <code>'true'</code>, subsequent calls are guaranteed to return <code>'true'</code>
+   * <b>Note:</b> when this method is called with {@code 'true'}, subsequent calls are guaranteed to return {@code true}
    * until selection is changed. 'Unknown direction' flag is automatically reset then.
    *
    */
@@ -1374,7 +1374,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
   @Override
   public String toString() {
     return "Caret at " + (myDocumentUpdateCounter == myEditor.getCaretModel().myDocumentUpdateCounter ? myVisibleCaret : getOffset()) +
-           (mySelectionMarker == null ? "" : (", selection marker: " + mySelectionMarker.toString()));
+           (mySelectionMarker == null ? "" : ", selection marker: " + mySelectionMarker);
   }
 
   @Override
@@ -1424,7 +1424,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
   }
 
   /**
-   * Encapsulates information about target vertical range info - its <code>'y'</code> coordinate and height in pixels.
+   * Encapsulates information about target vertical range info - its {@code 'y'} coordinate and height in pixels.
    */
   private static class VerticalInfo {
     public final int y;
@@ -1452,7 +1452,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
     return myRangeMarkerEndPosition;
   }
 
-  void setRangeMarkerEndPosition(@NotNull VisualPosition endPosition) {
+  private void setRangeMarkerEndPosition(@NotNull VisualPosition endPosition) {
     myRangeMarkerEndPosition = endPosition;
   }
 
@@ -1460,7 +1460,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
     return myRangeMarkerEndPositionIsLead;
   }
 
-  void setRangeMarkerEndPositionIsLead(boolean endPositionIsLead) {
+  private void setRangeMarkerEndPositionIsLead(boolean endPositionIsLead) {
     myRangeMarkerEndPositionIsLead = endPositionIsLead;
   }
 
@@ -1521,7 +1521,9 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
         // Under certain conditions, when text is inserted at caret position, we position caret at the end of inserted text.
         // Ideally, client code should be responsible for positioning caret after document modification, but in case of
         // postponed formatting (after PSI modifications), this is hard to implement, so a heuristic below is used.
-        if (e.getOldLength() == 0 && oldOffset == e.getOffset() && needToShiftWhiteSpaces(e)) {
+        if (e.getOldLength() == 0 && oldOffset == e.getOffset() &&
+            !Boolean.TRUE.equals(myEditor.getUserData(EditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION)) &&
+            needToShiftWhiteSpaces(e)) {
           int afterInserted = e.getOffset() + e.getNewLength();
           setIntervalStart(afterInserted);
           setIntervalEnd(afterInserted);
@@ -1548,7 +1550,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
         setIntervalStart(newOffset);
         setIntervalEnd(newOffset);
       }
-      if (oldOffset >= e.getOffset() && oldOffset <= (e.getOffset() + e.getOldLength()) && e.getNewLength() == 0 &&
+      if (oldOffset >= e.getOffset() && oldOffset <= e.getOffset() + e.getOldLength() && e.getNewLength() == 0 &&
           myEditor.getInlayModel().hasInlineElementAt(e.getOffset())) {
         myLeansTowardsLargerOffsets = true;
       }
@@ -1632,7 +1634,7 @@ public class CaretImpl extends UserDataHolderBase implements Caret, Dumpable {
 
     @Override
     public String toString() {
-      return super.toString() + (hasVirtualSelection() ? (" virtual selection: " + startVirtualOffset + "-" + endVirtualOffset) : "");
+      return super.toString() + (hasVirtualSelection() ? " virtual selection: " + startVirtualOffset + "-" + endVirtualOffset : "");
     }
   }
 }

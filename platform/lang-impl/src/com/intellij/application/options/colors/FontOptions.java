@@ -24,6 +24,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.FontPreferences;
+import com.intellij.openapi.editor.colors.ModifiableFontPreferences;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
@@ -170,7 +171,7 @@ public class FontOptions extends JPanel implements OptionsPanel{
         if (myIsInSchemeChange || !SwingUtilities.isEventDispatchThread()) return;
         String selectedFont = myPrimaryCombo.getFontName();
         if (selectedFont != null) {
-          FontPreferences fontPreferences = getFontPreferences();
+          ModifiableFontPreferences fontPreferences = getFontPreferences();
           fontPreferences.register(selectedFont, getFontSizeFromField());
         }
         updateDescription(true);
@@ -248,7 +249,7 @@ public class FontOptions extends JPanel implements OptionsPanel{
     if (myIsInSchemeChange) {
       return;
     }
-    FontPreferences fontPreferences = getFontPreferences();
+    ModifiableFontPreferences fontPreferences = getFontPreferences();
     fontPreferences.clearFonts();
     String primaryFontFamily = myPrimaryCombo.getFontName();
     String secondaryFontFamily = mySecondaryCombo.isEnabled() ? mySecondaryCombo.getFontName() : null;
@@ -317,8 +318,8 @@ public class FontOptions extends JPanel implements OptionsPanel{
   }
 
   @NotNull
-  protected FontPreferences getFontPreferences() {
-    return getCurrentScheme().getFontPreferences();
+  protected ModifiableFontPreferences getFontPreferences() {
+    return (ModifiableFontPreferences)getCurrentScheme().getFontPreferences();
   }
 
   protected float getLineSpacing() {

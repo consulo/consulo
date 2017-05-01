@@ -1080,7 +1080,7 @@ public class IdeEventQueue extends EventQueue {
           if (uiSettings == null ||
               !SystemInfo.isWindows ||
               !Registry.is("actionSystem.win.suppressAlt") ||
-              !(UISettings.getInstance().HIDE_TOOL_STRIPES || UISettings.getInstance().PRESENTATION_MODE)) {
+              !(uiSettings.getHideToolStripes() || uiSettings.getPresentationMode())) {
             return false;
           }
 

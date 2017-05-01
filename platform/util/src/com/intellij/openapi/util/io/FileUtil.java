@@ -87,10 +87,7 @@ public class FileUtil extends FileUtilRt {
   }
 
   @Nullable
-  public static String getRelativePath(@NotNull String basePath,
-                                       @NotNull String filePath,
-                                       final char separator,
-                                       final boolean caseSensitive) {
+  public static String getRelativePath(@NotNull String basePath, @NotNull String filePath, final char separator, final boolean caseSensitive) {
     return FileUtilRt.getRelativePath(basePath, filePath, separator, caseSensitive);
   }
 
@@ -125,10 +122,9 @@ public class FileUtil extends FileUtilRt {
    * @param file     supposed descendant.
    * @param strict   if {@code false}, the file can be ancestor of itself,
    *                 i.e. the method returns {@code ThreeState.YES} if {@code ancestor} equals to {@code file}.
-   *
    * @return {@code ThreeState.YES} if ancestor is an immediate parent of the file,
-   *         {@code ThreeState.UNSURE} if ancestor is not immediate parent of the file,
-   *         {@code ThreeState.NO} if ancestor is not a parent of the file at all.
+   * {@code ThreeState.UNSURE} if ancestor is not immediate parent of the file,
+   * {@code ThreeState.NO} if ancestor is not a parent of the file at all.
    */
   @NotNull
   public static ThreeState isAncestorThreeState(@NotNull String ancestor, @NotNull String file, boolean strict) {
@@ -146,8 +142,7 @@ public class FileUtil extends FileUtilRt {
   }
 
   @NotNull
-  private static ThreeState startsWith(@NotNull String path, @NotNull String prefix, boolean strict, boolean caseSensitive,
-                                       boolean checkImmediateParent) {
+  private static ThreeState startsWith(@NotNull String path, @NotNull String prefix, boolean strict, boolean caseSensitive, boolean checkImmediateParent) {
     final int pathLength = path.length();
     final int prefixLength = prefix.length();
     if (prefixLength == 0) return pathLength == 0 ? ThreeState.YES : ThreeState.UNSURE;
@@ -178,9 +173,7 @@ public class FileUtil extends FileUtilRt {
   /**
    * @param removeProcessor parent, child
    */
-  public static <T> Collection<T> removeAncestors(final Collection<T> files,
-                                                  final Convertor<T, String> convertor,
-                                                  final PairProcessor<T, T> removeProcessor) {
+  public static <T> Collection<T> removeAncestors(final Collection<T> files, final Convertor<T, String> convertor, final PairProcessor<T, T> removeProcessor) {
     if (files.isEmpty()) return files;
     final TreeMap<String, T> paths = new TreeMap<String, T>();
     for (T file : files) {
@@ -253,6 +246,18 @@ public class FileUtil extends FileUtilRt {
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     copy(stream, maxLength, buffer);
     buffer.close();
+    return buffer.toByteArray();
+  }
+
+  @NotNull
+  public static byte[] loadFirstAndClose(@NotNull InputStream stream, int maxLength) throws IOException {
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    try {
+      copy(stream, maxLength, buffer);
+    }
+    finally {
+      stream.close();
+    }
     return buffer.toByteArray();
   }
 
@@ -484,7 +489,9 @@ public class FileUtil extends FileUtilRt {
       fos = openOutputStream(toFile);
     }
     catch (IOException e) {
-      if (SystemInfo.isWindows && e.getMessage() != null && e.getMessage().contains("denied") &&
+      if (SystemInfo.isWindows &&
+          e.getMessage() != null &&
+          e.getMessage().contains("denied") &&
           WinUACTemporaryFix.nativeCopy(fromFile, toFile, syncTimestamp)) {
         return;
       }
@@ -631,7 +638,7 @@ public class FileUtil extends FileUtilRt {
     return findSequentNonexistentFile(aParentFolder, aFilePrefix, aExtension).getName();
   }
 
-  public static File findSequentNonexistentFile(@NotNull File parentFolder, @NotNull  String filePrefix, @NotNull String extension) {
+  public static File findSequentNonexistentFile(@NotNull File parentFolder, @NotNull String filePrefix, @NotNull String extension) {
     int postfix = 0;
     String ext = extension.isEmpty() ? "" : '.' + extension;
     File candidate = new File(parentFolder, filePrefix + ext);
@@ -652,7 +659,9 @@ public class FileUtil extends FileUtilRt {
     return FileUtilRt.toSystemIndependentName(aFileName);
   }
 
-  /** @deprecated to be removed in IDEA 17 */
+  /**
+   * @deprecated to be removed in IDEA 17
+   */
   @SuppressWarnings({"unused", "StringToUpperCaseOrToLowerCaseWithoutLocale"})
   public static String nameToCompare(@NotNull String name) {
     return (SystemInfo.isFileSystemCaseSensitive ? name : name.toLowerCase()).replace('\\', '/');
@@ -706,10 +715,7 @@ public class FileUtil extends FileUtilRt {
   }
 
   @Contract("null, _, _, _ -> null")
-  private static String toCanonicalPath(@Nullable String path,
-                                        final char separatorChar,
-                                        final boolean removeLastSlash,
-                                        final boolean resolveSymlinks) {
+  private static String toCanonicalPath(@Nullable String path, final char separatorChar, final boolean removeLastSlash, final boolean resolveSymlinks) {
     if (path == null || path.isEmpty()) {
       return path;
     }
@@ -727,7 +733,7 @@ public class FileUtil extends FileUtilRt {
     // trying to speedup the common case when there are no "//" or "/."
     int index = -1;
     do {
-      index = path.indexOf('/', index+1);
+      index = path.indexOf('/', index + 1);
       char next = index == path.length() - 1 ? 0 : path.charAt(index + 1);
       if (next == '.' || next == '/') {
         break;
@@ -920,7 +926,7 @@ public class FileUtil extends FileUtilRt {
     final StringBuilder result = new StringBuilder(path.length());
     result.append(path, 0, prefixEnd);
     int start = prefixEnd;
-    if (start==0 && SystemInfo.isWindows && (path.startsWith("//") || path.startsWith("\\\\"))) {
+    if (start == 0 && SystemInfo.isWindows && (path.startsWith("//") || path.startsWith("\\\\"))) {
       start = 2;
       result.append("//");
       separator = true;
@@ -979,8 +985,7 @@ public class FileUtil extends FileUtilRt {
 
   public static boolean filesEqual(@Nullable File file1, @Nullable File file2) {
     // on MacOS java.io.File.equals() is incorrectly case-sensitive
-    return pathsEqual(file1 == null ? null : file1.getPath(),
-                      file2 == null ? null : file2.getPath());
+    return pathsEqual(file1 == null ? null : file1.getPath(), file2 == null ? null : file2.getPath());
   }
 
   public static boolean pathsEqual(@Nullable String path1, @Nullable String path2) {
@@ -1022,8 +1027,8 @@ public class FileUtil extends FileUtilRt {
 
   /**
    * @deprecated this method returns extension converted to lower case, this may not be correct for case-sensitive FS.
-   *             Use {@link FileUtilRt#getExtension(String)} instead to get the unchanged extension.
-   *             If you need to check whether a file has a specified extension use {@link FileUtilRt#extensionEquals(String, String)}
+   * Use {@link FileUtilRt#getExtension(String)} instead to get the unchanged extension.
+   * If you need to check whether a file has a specified extension use {@link FileUtilRt#extensionEquals(String, String)}
    */
   @SuppressWarnings("StringToUpperCaseOrToLowerCaseWithoutLocale")
   @NotNull
@@ -1048,8 +1053,7 @@ public class FileUtil extends FileUtilRt {
         // "How Windows Generates 8.3 File Names from Long File Names", https://support.microsoft.com/en-us/kb/142982
         int dot = path.lastIndexOf('.', end);
         if (dot < start) dot = end;
-        if (dot - start > 2 && dot - start <= 8 && end - dot - 1 <= 3 &&
-            path.charAt(dot - 2) == '~' && Character.isDigit(path.charAt(dot - 1))) {
+        if (dot - start > 2 && dot - start <= 8 && end - dot - 1 <= 3 && path.charAt(dot - 2) == '~' && Character.isDigit(path.charAt(dot - 1))) {
           return true;
         }
 
@@ -1064,10 +1068,7 @@ public class FileUtil extends FileUtilRt {
     collectMatchedFiles(root, root, pattern, outFiles);
   }
 
-  private static void collectMatchedFiles(@NotNull File absoluteRoot,
-                                          @NotNull File root,
-                                          @NotNull Pattern pattern,
-                                          @NotNull List<File> files) {
+  private static void collectMatchedFiles(@NotNull File absoluteRoot, @NotNull File root, @NotNull Pattern pattern, @NotNull List<File> files) {
     final File[] dirs = root.listFiles();
     if (dirs == null) return;
     for (File dir : dirs) {
@@ -1095,9 +1096,9 @@ public class FileUtil extends FileUtilRt {
   /**
    * @param antPattern ant-style path pattern
    * @return java regexp pattern.
-   *         Note that no matter whether forward or backward slashes were used in the antPattern
-   *         the returned regexp pattern will use forward slashes ('/') as file separators.
-   *         Paths containing windows-style backslashes must be converted before matching against the resulting regexp
+   * Note that no matter whether forward or backward slashes were used in the antPattern
+   * the returned regexp pattern will use forward slashes ('/') as file separators.
+   * Paths containing windows-style backslashes must be converted before matching against the resulting regexp
    * @see FileUtil#toSystemIndependentName
    */
   @RegExp
@@ -1106,8 +1107,7 @@ public class FileUtil extends FileUtilRt {
     final StringBuilder builder = new StringBuilder();
     int asteriskCount = 0;
     boolean recursive = true;
-    final int start =
-            ignoreStartingSlash && (StringUtil.startsWithChar(antPattern, '/') || StringUtil.startsWithChar(antPattern, '\\')) ? 1 : 0;
+    final int start = ignoreStartingSlash && (StringUtil.startsWithChar(antPattern, '/') || StringUtil.startsWithChar(antPattern, '\\')) ? 1 : 0;
     for (int idx = start; idx < antPattern.length(); idx++) {
       final char ch = antPattern.charAt(idx);
 
@@ -1131,17 +1131,7 @@ public class FileUtil extends FileUtilRt {
         builder.append("[^/]*?");
       }
 
-      if (ch == '(' ||
-          ch == ')' ||
-          ch == '[' ||
-          ch == ']' ||
-          ch == '^' ||
-          ch == '$' ||
-          ch == '.' ||
-          ch == '{' ||
-          ch == '}' ||
-          ch == '+' ||
-          ch == '|') {
+      if (ch == '(' || ch == ')' || ch == '[' || ch == ']' || ch == '^' || ch == '$' || ch == '.' || ch == '{' || ch == '}' || ch == '+' || ch == '|') {
         // quote regexp-specific symbols
         builder.append('\\').append(ch);
         continue;
@@ -1199,7 +1189,9 @@ public class FileUtil extends FileUtilRt {
     return sanitizeFileName(name, true);
   }
 
-  /** @deprecated use {@link #sanitizeFileName(String, boolean)} (to be removed in IDEA 17) */
+  /**
+   * @deprecated use {@link #sanitizeFileName(String, boolean)} (to be removed in IDEA 17)
+   */
   @SuppressWarnings("unused")
   public static String sanitizeName(@NotNull String name) {
     return sanitizeFileName(name, false);
@@ -1273,6 +1265,7 @@ public class FileUtil extends FileUtilRt {
   public static void writeToFile(@NotNull File file, @NotNull String text) throws IOException {
     writeToFile(file, text, false);
   }
+
   public static void writeToFile(@NotNull File file, @NotNull String text, boolean append) throws IOException {
     writeToFile(file, text.getBytes(CharsetToolkit.UTF8_CHARSET), append);
   }
@@ -1301,8 +1294,7 @@ public class FileUtil extends FileUtilRt {
     return processFilesRecursively(root, processor, null);
   }
 
-  public static boolean processFilesRecursively(@NotNull File root, @NotNull Processor<File> processor,
-                                                @Nullable final Processor<File> directoryFilter) {
+  public static boolean processFilesRecursively(@NotNull File root, @NotNull Processor<File> processor, @Nullable final Processor<File> directoryFilter) {
     final LinkedList<File> queue = new LinkedList<File>();
     queue.add(root);
     while (!queue.isEmpty()) {
@@ -1474,22 +1466,17 @@ public class FileUtil extends FileUtilRt {
   }
 
   @NotNull
-  public static File createTempDirectory(@NotNull String prefix, @Nullable String suffix, boolean deleteOnExit)
-          throws IOException {
+  public static File createTempDirectory(@NotNull String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
     return FileUtilRt.createTempDirectory(prefix, suffix, deleteOnExit);
   }
 
   @NotNull
-  public static File createTempDirectory(@NotNull File dir, @NotNull String prefix, @Nullable String suffix)
-          throws IOException {
+  public static File createTempDirectory(@NotNull File dir, @NotNull String prefix, @Nullable String suffix) throws IOException {
     return FileUtilRt.createTempDirectory(dir, prefix, suffix);
   }
 
   @NotNull
-  public static File createTempDirectory(@NotNull File dir,
-                                         @NotNull String prefix,
-                                         @Nullable String suffix,
-                                         boolean deleteOnExit) throws IOException {
+  public static File createTempDirectory(@NotNull File dir, @NotNull String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
     return FileUtilRt.createTempDirectory(dir, prefix, suffix, deleteOnExit);
   }
 
@@ -1499,8 +1486,7 @@ public class FileUtil extends FileUtilRt {
   }
 
   @NotNull
-  public static File createTempFile(@NotNull String prefix, @Nullable String suffix, boolean deleteOnExit)
-          throws IOException {
+  public static File createTempFile(@NotNull String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
     return FileUtilRt.createTempFile(prefix, suffix, deleteOnExit);
   }
 
@@ -1510,17 +1496,12 @@ public class FileUtil extends FileUtilRt {
   }
 
   @NotNull
-  public static File createTempFile(File dir, @NotNull String prefix, @Nullable String suffix, boolean create)
-          throws IOException {
+  public static File createTempFile(File dir, @NotNull String prefix, @Nullable String suffix, boolean create) throws IOException {
     return FileUtilRt.createTempFile(dir, prefix, suffix, create);
   }
 
   @NotNull
-  public static File createTempFile(File dir,
-                                    @NotNull String prefix,
-                                    @Nullable String suffix,
-                                    boolean create,
-                                    boolean deleteOnExit) throws IOException {
+  public static File createTempFile(File dir, @NotNull String prefix, @Nullable String suffix, boolean create, boolean deleteOnExit) throws IOException {
     return FileUtilRt.createTempFile(dir, prefix, suffix, create, deleteOnExit);
   }
 
@@ -1563,6 +1544,7 @@ public class FileUtil extends FileUtilRt {
   public static String loadFile(@NotNull File file, @Nullable String encoding) throws IOException {
     return FileUtilRt.loadFile(file, encoding);
   }
+
   @NotNull
   public static String loadFile(@NotNull File file, @NotNull Charset encoding) throws IOException {
     return String.valueOf(FileUtilRt.loadFileText(file, encoding));
@@ -1687,7 +1669,7 @@ public class FileUtil extends FileUtilRt {
   public static boolean deleteWithRenaming(File file) {
     File tempFileNameForDeletion = findSequentNonexistentFile(file.getParentFile(), file.getName(), "");
     boolean success = file.renameTo(tempFileNameForDeletion);
-    return delete(success ? tempFileNameForDeletion:file);
+    return delete(success ? tempFileNameForDeletion : file);
   }
 
   public static boolean isFileSystemCaseSensitive(@NotNull String path) throws FileNotFoundException {

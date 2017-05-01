@@ -54,8 +54,8 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   protected float myLineSpacing;
 
   @NotNull private final Map<EditorFontType, Font> myFonts                  = new EnumMap<EditorFontType, Font>(EditorFontType.class);
-  @NotNull private final FontPreferences           myFontPreferences        = new FontPreferences();
-  @NotNull private final FontPreferences           myConsoleFontPreferences = new FontPreferences();
+  @NotNull private final FontPreferencesImpl           myFontPreferences        = new FontPreferencesImpl();
+  @NotNull private final FontPreferencesImpl           myConsoleFontPreferences = new FontPreferencesImpl();
 
   private final ValueElementReader myValueReader = new TextAttributesReader();
   private String myFallbackFontName;
@@ -436,7 +436,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     }
   }
 
-  private static void readFontSettings(@NotNull Element element, @NotNull FontPreferences preferences) {
+  private static void readFontSettings(@NotNull Element element, @NotNull FontPreferencesImpl preferences) {
     List children = element.getChildren(OPTION_ELEMENT);
     String fontFamily = null;
     int size = -1;

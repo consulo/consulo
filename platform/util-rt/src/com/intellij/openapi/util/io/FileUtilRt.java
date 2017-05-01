@@ -44,7 +44,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class FileUtilRt {
   private static final int KILOBYTE = 1024;
   public static final int MEGABYTE = KILOBYTE * KILOBYTE;
+
+  private static final int DEFAULT_INTELLISENSE_LIMIT = 2500 * KILOBYTE;
+
   public static final int LARGE_FOR_CONTENT_LOADING = Math.max(20 * MEGABYTE, getUserFileSizeLimit());
+  public static final int LARGE_FILE_PREVIEW_SIZE = Math.min(getLargeFilePreviewSize(), LARGE_FOR_CONTENT_LOADING);
 
   private static final int MAX_FILE_IO_ATTEMPTS = 10;
   private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("idea.fs.useChannels"));
@@ -193,11 +197,12 @@ public class FileUtilRt {
     int extLen = extension.length();
     if (extLen == 0) {
       int lastSlash = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
-      return filePath.indexOf('.', lastSlash+1) == -1;
+      return filePath.indexOf('.', lastSlash + 1) == -1;
     }
     int extStart = filePath.length() - extLen;
-    return extStart >= 1 && filePath.charAt(extStart-1) == '.'
-           && filePath.regionMatches(!SystemInfoRt.isFileSystemCaseSensitive, extStart, extension, 0, extLen);
+    return extStart >= 1 &&
+           filePath.charAt(extStart - 1) == '.' &&
+           filePath.regionMatches(!SystemInfoRt.isFileSystemCaseSensitive, extStart, extension, 0, extLen);
   }
 
   @NotNull
@@ -294,15 +299,13 @@ public class FileUtilRt {
   }
 
   @NotNull
-  public static File createTempDirectory(@NotNull File dir,
-                                         @NotNull @NonNls String prefix, @Nullable @NonNls String suffix) throws IOException {
+  public static File createTempDirectory(@NotNull File dir, @NotNull @NonNls String prefix, @Nullable @NonNls String suffix) throws IOException {
     return createTempDirectory(dir, prefix, suffix, true);
   }
 
   @NotNull
-  public static File createTempDirectory(@NotNull File dir,
-                                         @NotNull @NonNls String prefix, @Nullable @NonNls String suffix,
-                                         boolean deleteOnExit) throws IOException {
+  public static File createTempDirectory(@NotNull File dir, @NotNull @NonNls String prefix, @Nullable @NonNls String suffix, boolean deleteOnExit)
+          throws IOException {
     File file = doCreateTempFile(dir, prefix, suffix, true);
     if (deleteOnExit) {
       //file.deleteOnExit();
@@ -340,29 +343,24 @@ public class FileUtilRt {
   }
 
   @NotNull
-  public static File createTempFile(@NotNull @NonNls String prefix, @Nullable @NonNls String suffix,
-                                    boolean deleteOnExit) throws IOException {
+  public static File createTempFile(@NotNull @NonNls String prefix, @Nullable @NonNls String suffix, boolean deleteOnExit) throws IOException {
     final File dir = new File(getTempDirectory());
     return createTempFile(dir, prefix, suffix, true, deleteOnExit);
   }
 
   @NotNull
-  public static File createTempFile(@NonNls File dir,
-                                    @NotNull @NonNls String prefix, @Nullable @NonNls String suffix) throws IOException {
+  public static File createTempFile(@NonNls File dir, @NotNull @NonNls String prefix, @Nullable @NonNls String suffix) throws IOException {
     return createTempFile(dir, prefix, suffix, true, true);
   }
 
   @NotNull
-  public static File createTempFile(@NonNls File dir,
-                                    @NotNull @NonNls String prefix, @Nullable @NonNls String suffix,
-                                    boolean create) throws IOException {
+  public static File createTempFile(@NonNls File dir, @NotNull @NonNls String prefix, @Nullable @NonNls String suffix, boolean create) throws IOException {
     return createTempFile(dir, prefix, suffix, create, true);
   }
 
   @NotNull
-  public static File createTempFile(@NonNls File dir,
-                                    @NotNull @NonNls String prefix, @Nullable @NonNls String suffix,
-                                    boolean create, boolean deleteOnExit) throws IOException {
+  public static File createTempFile(@NonNls File dir, @NotNull @NonNls String prefix, @Nullable @NonNls String suffix, boolean create, boolean deleteOnExit)
+          throws IOException {
     File file = doCreateTempFile(dir, prefix, suffix, false);
     if (deleteOnExit) {
       //noinspection SSBasedInspection
@@ -377,11 +375,10 @@ public class FileUtilRt {
   }
 
   private static final Random RANDOM = new Random();
+
   @NotNull
-  private static File doCreateTempFile(@NotNull File dir,
-                                       @NotNull @NonNls String prefix,
-                                       @Nullable @NonNls String suffix,
-                                       boolean isDirectory) throws IOException {
+  private static File doCreateTempFile(@NotNull File dir, @NotNull @NonNls String prefix, @Nullable @NonNls String suffix, boolean isDirectory)
+          throws IOException {
     //noinspection ResultOfMethodCallIgnored
     dir.mkdirs();
 
@@ -405,8 +402,8 @@ public class FileUtilRt {
         if (!success) {
           List<String> list = Arrays.asList(f.getParentFile().list());
           maxFileNumber = Math.max(10, list.size() * 10); // if too many files are in tmp dir, we need a bigger random range than meager 10
-          throw new IOException("Unable to create temporary file " + f + "\nDirectory '" + f.getParentFile() +
-                                "' list ("+list.size()+" children): " + list);
+          throw new IOException(
+                  "Unable to create temporary file " + f + "\nDirectory '" + f.getParentFile() + "' list (" + list.size() + " children): " + list);
         }
 
         return normalizeFile(f);
@@ -460,7 +457,8 @@ public class FileUtilRt {
         return canonical;
       }
     }
-    catch (IOException ignore) { }
+    catch (IOException ignore) {
+    }
     return file.getAbsolutePath();
   }
 
@@ -498,7 +496,8 @@ public class FileUtilRt {
         logger().warn("Can't set executable attribute of '" + path + "' to " + executableFlag);
       }
     }
-    catch (LinkageError ignored) { }
+    catch (LinkageError ignored) {
+    }
   }
 
   @NotNull
@@ -530,8 +529,8 @@ public class FileUtilRt {
   @NotNull
   public static char[] loadFileText(@NotNull File file, @Nullable @NonNls String encoding) throws IOException {
     InputStream stream = new FileInputStream(file);
-    @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
-    Reader reader = encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding);
+    @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") Reader reader =
+            encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding);
     try {
       return loadText(reader, (int)file.length());
     }
@@ -539,6 +538,7 @@ public class FileUtilRt {
       reader.close();
     }
   }
+
   @NotNull
   public static char[] loadFileText(@NotNull File file, @NotNull @NonNls Charset encoding) throws IOException {
     Reader reader = new InputStreamReader(new FileInputStream(file), encoding);
@@ -588,8 +588,8 @@ public class FileUtilRt {
   public static List<String> loadLines(@NotNull String path, @Nullable @NonNls String encoding) throws IOException {
     InputStream stream = new FileInputStream(path);
     try {
-      @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
-      InputStreamReader in = encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding);
+      @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") InputStreamReader in =
+              encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding);
       BufferedReader reader = new BufferedReader(in);
       try {
         return loadLines(reader);
@@ -673,6 +673,7 @@ public class FileUtilRt {
 
   /**
    * Warning! this method is _not_ symlinks-aware. Consider using com.intellij.openapi.util.io.FileUtil.delete()
+   *
    * @param file file or directory to delete
    * @return true if the file did not exist or was successfully deleted
    */
@@ -729,7 +730,8 @@ public class FileUtilRt {
   }
 
   public interface RepeatableIOOperation<T, E extends Throwable> {
-    @Nullable T execute(boolean lastAttempt) throws E;
+    @Nullable
+    T execute(boolean lastAttempt) throws E;
   }
 
   @Nullable
@@ -742,7 +744,8 @@ public class FileUtilRt {
         //noinspection BusyWait
         Thread.sleep(10);
       }
-      catch (InterruptedException ignored) { }
+      catch (InterruptedException ignored) {
+      }
     }
     return null;
   }
@@ -751,9 +754,15 @@ public class FileUtilRt {
     Boolean result = doIOOperation(new RepeatableIOOperation<Boolean, RuntimeException>() {
       @Override
       public Boolean execute(boolean lastAttempt) {
-        if (file.delete() || !file.exists()) return Boolean.TRUE;
-        else if (lastAttempt) return Boolean.FALSE;
-        else return null;
+        if (file.delete() || !file.exists()) {
+          return Boolean.TRUE;
+        }
+        else if (lastAttempt) {
+          return Boolean.FALSE;
+        }
+        else {
+          return null;
+        }
       }
     });
     return Boolean.TRUE.equals(result);
@@ -861,6 +870,15 @@ public class FileUtilRt {
     }
     catch (NumberFormatException e) {
       return 2500 * KILOBYTE;
+    }
+  }
+
+  private static int getLargeFilePreviewSize() {
+    try {
+      return Integer.parseInt(System.getProperty("idea.max.content.load.large.preview.size")) * KILOBYTE;
+    }
+    catch (NumberFormatException e) {
+      return DEFAULT_INTELLISENSE_LIMIT;
     }
   }
 

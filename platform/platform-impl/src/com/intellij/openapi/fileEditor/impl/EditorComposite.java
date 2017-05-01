@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,13 +46,13 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -86,7 +86,7 @@ public abstract class EditorComposite implements Disposable {
    * "close non modified editors first" feature.
    */
   private final long myInitialFileTimeStamp;
-  protected TabbedPaneWrapper myTabbedPaneWrapper;
+  TabbedPaneWrapper myTabbedPaneWrapper;
   private final MyComponent myComponent;
   private final FocusWatcher myFocusWatcher;
   /**
@@ -99,12 +99,12 @@ public abstract class EditorComposite implements Disposable {
   private final Map<FileEditor, String> myDisplayNames = ContainerUtil.newHashMap();
 
   /**
-   * @param file <code>file</code> for which composite is being constructed
+   * @param file {@code file} for which composite is being constructed
    *
-   * @param editors <code>edittors</code> that should be placed into the composite
+   * @param editors {@code edittors} that should be placed into the composite
    *
-   * @exception java.lang.IllegalArgumentException if <code>editors</code>
-   * is <code>null</code> or <code>providers</code> is <code>null</code> or <code>myEditor</code> arrays is empty
+   * @exception IllegalArgumentException if {@code editors}
+   * is {@code null} or {@code providers} is {@code null} or {@code myEditor} arrays is empty
    */
   EditorComposite(@NotNull final VirtualFile file,
                   @NotNull final FileEditor[] editors,
@@ -135,7 +135,7 @@ public abstract class EditorComposite implements Disposable {
     myFocusWatcher = new FocusWatcher();
     myFocusWatcher.install(myComponent);
 
-    myFileEditorManager.addFileEditorManagerListener(new FileEditorManagerAdapter() {
+    myFileEditorManager.addFileEditorManagerListener(new FileEditorManagerListener() {
       @Override
       public void selectionChanged(@NotNull final FileEditorManagerEvent event) {
         final VirtualFile oldFile = event.getOldFile();
@@ -164,14 +164,9 @@ public abstract class EditorComposite implements Disposable {
   private TabbedPaneWrapper.AsJBTabs createTabbedPaneWrapper(FileEditor[] editors) {
     PrevNextActionsDescriptor descriptor = new PrevNextActionsDescriptor(IdeActions.ACTION_NEXT_EDITOR_TAB, IdeActions.ACTION_PREVIOUS_EDITOR_TAB);
     final TabbedPaneWrapper.AsJBTabs wrapper = new TabbedPaneWrapper.AsJBTabs(myFileEditorManager.getProject(), SwingConstants.BOTTOM, descriptor, this);
-    wrapper.getTabs().getPresentation().setPaintBorder(0, 0, 0, 0).setTabSidePaintBorder(1).setGhostsAlwaysVisible(true).setUiDecorator(new UiDecorator() {
-      @Override
-      @NotNull
-      public UiDecoration getDecoration() {
-        return new UiDecoration(null, JBUI.insets(0, 8, 0, 8));
-      }
-    });
-    wrapper.getTabs().getComponent().setBorder(JBUI.Borders.empty(0, 0, 1, 0));
+    wrapper.getTabs().getPresentation().setPaintBorder(0, 0, 0, 0).setTabSidePaintBorder(1).setGhostsAlwaysVisible(true).setUiDecorator(
+            () -> new UiDecorator.UiDecoration(null, new Insets(0, 8, 0, 8)));
+    wrapper.getTabs().getComponent().setBorder(new EmptyBorder(0, 0, 1, 0));
 
     boolean firstEditor = true;
     for (FileEditor editor : editors) {
@@ -279,7 +274,7 @@ public abstract class EditorComposite implements Disposable {
   }
 
   @NotNull
-  public List<JComponent> getTopComponents(@NotNull FileEditor editor) {
+  List<JComponent> getTopComponents(@NotNull FileEditor editor) {
     return getTopBottomComponents(editor, true);
   }
 
@@ -399,7 +394,7 @@ public abstract class EditorComposite implements Disposable {
   }
 
   /**
-   * @return <code>true</code> if the composite contains at least one
+   * @return {@code true} if the composite contains at least one
    * modified myEditor
    */
   public boolean isModified(){
@@ -443,19 +438,21 @@ public abstract class EditorComposite implements Disposable {
 
     @Override
     public boolean requestFocusInWindow() {
-      return myFocusComponent == null ? false : myFocusComponent.requestFocusInWindow();
+      return myFocusComponent != null && myFocusComponent.requestFocusInWindow();
     }
 
     @Override
     public void requestFocus() {
       if (myFocusComponent != null) {
-        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myFocusComponent);
+        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+          IdeFocusManager.getGlobalInstance().requestFocus(myFocusComponent, true);
+        });
       }
     }
 
     @Override
     public boolean requestDefaultFocus() {
-      return myFocusComponent == null ? false : myFocusComponent.requestDefaultFocus();
+      return myFocusComponent != null && myFocusComponent.requestDefaultFocus();
     }
 
     @Override
@@ -474,9 +471,7 @@ public abstract class EditorComposite implements Disposable {
         if(component instanceof DataProvider && component != this){
           return ((DataProvider)component).getData(dataId);
         }
-        else{
-          return null;
-        }
+        return null;
       }
     }
   }

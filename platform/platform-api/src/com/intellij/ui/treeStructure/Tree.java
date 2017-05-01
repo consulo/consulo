@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.intellij.ui.treeStructure;
 
-import com.intellij.Patches;
 import com.intellij.ide.util.treeView.*;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.Queryable;
@@ -26,6 +25,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.*;
+import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,13 +77,12 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     myExpandableItemsHandler = ExpandableItemsHandlerFactory.install(this);
 
     addMouseListener(new MyMouseListener());
-    if (Patches.SUN_BUG_ID_4893787) {
-      addFocusListener(new MyFocusListener());
-    }
+    addFocusListener(new MyFocusListener());
 
     setCellRenderer(new NodeRenderer());
 
     setSelectionModel(mySelectionModel);
+    setOpaque(false);
   }
 
   @Override
@@ -95,6 +94,11 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
       }
     }
     super.setUI(actualUI);
+  }
+
+  @Override
+  protected Graphics getComponentGraphics(Graphics graphics) {
+    return JBSwingUtilities.runGlobalCGTransform(this, super.getComponentGraphics(graphics));
   }
 
   public boolean isEmpty() {
@@ -280,12 +284,9 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         myBusyIcon.suspend();
         myBusyIcon.setToolTipText(null);
         //noinspection SSBasedInspection
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            if (myBusyIcon != null) {
-              repaint();
-            }
+        SwingUtilities.invokeLater(() -> {
+          if (myBusyIcon != null) {
+            repaint();
           }
         });
       }
@@ -298,7 +299,6 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     return hasFocus();
   }
 
-  @Deprecated
   protected boolean paintNodes() {
     return false;
   }
@@ -339,7 +339,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
           component = pathObjects[pathObjects.length - 2];
         }
 
-        Color color = getFileColorFor((DefaultMutableTreeNode)component);
+        Color color = getFileColorFor(TreeUtil.getUserObject(component));
         if (color != null) {
           g.setColor(color);
           g.fillRect(0, bounds.y, getWidth(), bounds.height);
@@ -410,6 +410,18 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
     super.processMouseEvent(e2);
   }
+
+  /**
+   * Returns true if <code>mouseX</code> falls
+   * in the area of row that is used to expand/collapse the node and
+   * the node at <code>row</code> does not represent a leaf.
+   */
+  protected boolean isLocationInExpandControl(@Nullable TreePath path, int mouseX) {
+    if (path == null) return false;
+    Rectangle bounds = getRowBounds(getRowForPath(path));
+    return isLocationInExpandControl(path, mouseX, bounds.y + bounds.height / 2);
+  }
+
 
   private boolean isLocationInExpandControl(final TreePath path, final int x, final int y) {
     final TreeUI ui = getUI();
@@ -659,21 +671,24 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
   private class MyMouseListener extends MouseAdapter {
     @Override
-    public void mousePressed(MouseEvent mouseevent) {
-      if (!JBSwingUtilities.isLeftMouseButton(mouseevent) &&
-          (JBSwingUtilities.isRightMouseButton(mouseevent) || JBSwingUtilities.isMiddleMouseButton(mouseevent))) {
-        TreePath treepath = getPathForLocation(mouseevent.getX(), mouseevent.getY());
-        if (treepath != null) {
-          if (getSelectionModel().getSelectionMode() != TreeSelectionModel.SINGLE_TREE_SELECTION) {
-            TreePath[] selectionPaths = getSelectionModel().getSelectionPaths();
-            if (selectionPaths != null) {
-              for (TreePath selectionPath : selectionPaths) {
-                if (selectionPath != null && selectionPath.equals(treepath)) return;
-              }
+    public void mousePressed(MouseEvent event) {
+      if (!JBSwingUtilities.isLeftMouseButton(event) &&
+          (JBSwingUtilities.isRightMouseButton(event) || JBSwingUtilities.isMiddleMouseButton(event))) {
+        TreePath path = getClosestPathForLocation(event.getX(), event.getY());
+        if (path == null) return;
+
+        Rectangle bounds = getPathBounds(path);
+        if (bounds != null && bounds.y + bounds.height < event.getY()) return;
+
+        if (getSelectionModel().getSelectionMode() != TreeSelectionModel.SINGLE_TREE_SELECTION) {
+          TreePath[] selectionPaths = getSelectionModel().getSelectionPaths();
+          if (selectionPaths != null) {
+            for (TreePath selectionPath : selectionPaths) {
+              if (selectionPath != null && selectionPath.equals(path)) return;
             }
           }
-          getSelectionModel().setSelectionPath(treepath);
         }
+        getSelectionModel().setSelectionPath(path);
       }
     }
 
@@ -683,32 +698,6 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         e.consume();
       }
     }
-    /**
-     * Returns true if <code>mouseX</code> falls
-     * in the area of row that is used to expand/collapse the node and
-     * the node at <code>row</code> does not represent a leaf.
-     */
-  }
-
-  protected boolean isLocationInExpandControl(@Nullable TreePath path, int mouseX) {
-    if (path == null) return false;
-    TreeUI ui = getUI();
-    if (!(ui instanceof BasicTreeUI)) return false;
-    BasicTreeUI treeUI = (BasicTreeUI)ui;
-    if (!treeModel.isLeaf(path.getLastPathComponent())) {
-      Insets insets = this.getInsets();
-      int boxWidth = treeUI.getExpandedIcon() != null ? treeUI.getExpandedIcon().getIconWidth() : 8;
-      int boxLeftX = treeUI.getLeftChildIndent() + treeUI.getRightChildIndent() * (path.getPathCount() - 1);
-      if (getComponentOrientation().isLeftToRight()) {
-        boxLeftX = boxLeftX + insets.left - treeUI.getRightChildIndent() + 1;
-      }
-      else {
-        boxLeftX = getWidth() - boxLeftX - insets.right + treeUI.getRightChildIndent() - 1;
-      }
-      boxLeftX -= getComponentOrientation().isLeftToRight() ? (int)Math.ceil(boxWidth / 2.0) : (int)Math.floor(boxWidth / 2.0);
-      return mouseX >= boxLeftX && mouseX < boxLeftX + boxWidth;
-    }
-    return false;
   }
 
   /**
@@ -749,7 +738,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     TreePath[] paths = getSelectionPaths();
     if (paths == null) return (T[])Array.newInstance(nodeType, 0);
 
-    ArrayList<T> nodes = new ArrayList<T>();
+    ArrayList<T> nodes = new ArrayList<>();
     for (TreePath path : paths) {
       Object last = path.getLastPathComponent();
       if (nodeType.isAssignableFrom(last.getClass())) {

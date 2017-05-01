@@ -23,6 +23,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
+import com.intellij.openapi.fileEditor.impl.MemoryDiskConflictResolver;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.IoTestUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
@@ -34,7 +35,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.PlatformLangTestCase;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
-import com.intellij.util.PairProcessor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
@@ -47,14 +47,15 @@ public class FileDocumentManagerImplTest extends PlatformLangTestCase {
   private FileDocumentManagerImpl myDocumentManager;
 
   public Boolean myReloadFromDisk;
+
   @Override
   protected void setUp() throws Exception {
     super.setUp();
     myReloadFromDisk = Boolean.TRUE;
     FileDocumentManagerImpl impl = (FileDocumentManagerImpl)FileDocumentManager.getInstance();
-    impl.setAskReloadFromDisk(getTestRootDisposable(), new PairProcessor<VirtualFile, Document>() {
+    impl.setAskReloadFromDisk(getTestRootDisposable(), new MemoryDiskConflictResolver() {
       @Override
-      public boolean process(VirtualFile file, Document document) {
+      public boolean askReloadFromDisk(VirtualFile file, Document document) {
         if (myReloadFromDisk == null) {
           fail();
           return false;
@@ -356,9 +357,11 @@ public class FileDocumentManagerImplTest extends PlatformLangTestCase {
     assertNotNull(virtualFile);
     return virtualFile;
   }
+
   VirtualFile createFile() throws IOException {
     return createFile("test.txt", "test");
   }
+
   void setContent(VirtualFile file, String content) throws IOException {
     file.setBinaryContent(content.getBytes(CharsetToolkit.UTF8_CHARSET));
   }
@@ -375,7 +378,7 @@ public class FileDocumentManagerImplTest extends PlatformLangTestCase {
   public void testContentChanged_ignoreEventsFromSelf() throws Exception {
     final VirtualFile file = createFile("test.txt", "test\rtest");
     Document document = myDocumentManager.getDocument(file);
-    file.setBinaryContent("xxx".getBytes(CharsetToolkit.UTF8_CHARSET), -1,-1,myDocumentManager);
+    file.setBinaryContent("xxx".getBytes(CharsetToolkit.UTF8_CHARSET), -1, -1, myDocumentManager);
     assertNotNull(file.toString(), document);
     assertEquals("test\ntest", document.getText());
   }
@@ -503,15 +506,14 @@ public class FileDocumentManagerImplTest extends PlatformLangTestCase {
   }
 
   public void testContentChanged_doNotReloadChangedDocumentOnSave() throws Exception {
-    final MockVirtualFile file =
-            new MockVirtualFile("test.txt", "test") {
-              @Override
-              public void refresh(boolean asynchronous, boolean recursive, Runnable postRunnable) {
-                long oldStamp = getModificationStamp();
-                setModificationStamp(LocalTimeCounter.currentTime());
-                myDocumentManager.contentsChanged(new VirtualFileEvent(null, this, null, oldStamp, getModificationStamp()));
-              }
-            };
+    final MockVirtualFile file = new MockVirtualFile("test.txt", "test") {
+      @Override
+      public void refresh(boolean asynchronous, boolean recursive, Runnable postRunnable) {
+        long oldStamp = getModificationStamp();
+        setModificationStamp(LocalTimeCounter.currentTime());
+        myDocumentManager.contentsChanged(new VirtualFileEvent(null, this, null, oldStamp, getModificationStamp()));
+      }
+    };
 
     myReloadFromDisk = Boolean.FALSE;
     final Document document = myDocumentManager.getDocument(file);
@@ -548,13 +550,12 @@ public class FileDocumentManagerImplTest extends PlatformLangTestCase {
         assertTrue(myDocumentManager.isDocumentUnsaved(document));
         myDocumentManager.saveDocument(document);
 
-        getProject().getMessageBus().connect(getTestRootDisposable())
-                .subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
-                  @Override
-                  public void beforeDocumentSaving(@NotNull Document documentToSave) {
-                    assertNotSame(document, documentToSave);
-                  }
-                });
+        getProject().getMessageBus().connect(getTestRootDisposable()).subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
+          @Override
+          public void beforeDocumentSaving(@NotNull Document documentToSave) {
+            assertNotSame(document, documentToSave);
+          }
+        });
 
         final long modificationStamp = document.getModificationStamp();
 
@@ -653,7 +654,7 @@ public class FileDocumentManagerImplTest extends PlatformLangTestCase {
     WriteCommandAction.runWriteCommandAction(getProject(), new Runnable() {
       @Override
       public void run() {
-        document.insertString(1,"y");
+        document.insertString(1, "y");
       }
     });
 

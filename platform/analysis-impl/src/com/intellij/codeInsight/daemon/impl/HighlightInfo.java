@@ -155,6 +155,10 @@ public class HighlightInfo implements Segment {
     setFlag(BIJECTIVE_MASK, bijective);
   }
 
+  public RangeHighlighterEx getHighlighter() {
+    return highlighter;
+  }
+
   @NotNull
   public HighlightSeverity getSeverity() {
     return severity;

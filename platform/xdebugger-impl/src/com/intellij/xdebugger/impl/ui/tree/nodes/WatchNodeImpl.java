@@ -27,6 +27,7 @@ import com.intellij.xdebugger.frame.presentation.XErrorValuePresentation;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
+import consulo.concurrency.Promises;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.concurrency.Promise;
@@ -147,7 +148,7 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
     @Override
     @NotNull
     public Promise<XExpression> calculateEvaluationExpression() {
-      return Promise.resolve(myExpression);
+      return Promises.resolve(myExpression);
     }
 
     @Override

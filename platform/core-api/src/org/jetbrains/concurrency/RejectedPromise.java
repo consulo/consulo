@@ -19,7 +19,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
 
-class RejectedPromise<T> extends Promise<T> {
+public class RejectedPromise<T> extends Promise<T> {
   private final Throwable error;
 
   public RejectedPromise(@NotNull Throwable error) {
@@ -75,7 +75,7 @@ class RejectedPromise<T> extends Promise<T> {
   }
 
   @Override
-  void notify(@NotNull AsyncPromise<T> child) {
+  public void notify(@NotNull AsyncPromise<T> child) {
     child.setError(error);
   }
 }

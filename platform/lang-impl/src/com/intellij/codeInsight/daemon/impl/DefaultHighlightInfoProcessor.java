@@ -17,7 +17,6 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -33,8 +32,6 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.Alarm;
-import com.intellij.util.Processor;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,24 +52,21 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     final TextRange priorityIntersection = priorityRange.intersection(restrictRange);
 
     final Editor editor = session.getEditor();
-    TransactionGuard.submitTransaction(project, new Runnable() {
-      @Override
-      public void run() {
-        if (modificationStamp != document.getModificationStamp()) return;
-        if (priorityIntersection != null) {
-          MarkupModel markupModel = DocumentMarkupModel.forDocument(document, project, true);
+    ((HighlightingSessionImpl)session).applyInEDT(() -> {
+      if (modificationStamp != document.getModificationStamp()) return;
+      if (priorityIntersection != null) {
+        MarkupModel markupModel = DocumentMarkupModel.forDocument(document, project, true);
 
-          EditorColorsScheme scheme = session.getColorsScheme();
-          UpdateHighlightersUtil.setHighlightersInRange(project, document, priorityIntersection, scheme, infos, (MarkupModelEx)markupModel, groupId);
+        EditorColorsScheme scheme = session.getColorsScheme();
+        UpdateHighlightersUtil.setHighlightersInRange(project, document, priorityIntersection, scheme, infos, (MarkupModelEx)markupModel, groupId);
+      }
+      if (editor != null && !editor.isDisposed()) {
+        // usability: show auto import popup as soon as possible
+        if (!DumbService.isDumb(project)) {
+          new ShowAutoImportPass(project, psiFile, editor).doApplyInformationToEditor();
         }
-        if (editor != null && !editor.isDisposed()) {
-          // usability: show auto import popup as soon as possible
-          if (!DumbService.isDumb(project)) {
-            new ShowAutoImportPass(project, psiFile, editor).addImports();
-          }
 
-          DaemonListeners.repaintErrorStripeRenderer(editor, project);
-        }
+        DaemonListeners.repaintErrorStripeRenderer(editor, project);
       }
     });
   }
@@ -81,35 +75,31 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
   public void highlightsOutsideVisiblePartAreProduced(@NotNull final HighlightingSession session,
                                                       @NotNull final List<HighlightInfo> infos,
                                                       @NotNull final TextRange priorityRange,
-                                                      @NotNull final TextRange restrictedRange, final int groupId) {
+                                                      @NotNull final TextRange restrictedRange,
+                                                      final int groupId) {
     final PsiFile psiFile = session.getPsiFile();
     final Project project = psiFile.getProject();
     final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
     if (document == null) return;
     final long modificationStamp = document.getModificationStamp();
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        if (project.isDisposed() || modificationStamp != document.getModificationStamp()) return;
+    ((HighlightingSessionImpl)session).applyInEDT(() -> {
+      if (project.isDisposed() || modificationStamp != document.getModificationStamp()) return;
 
-        EditorColorsScheme scheme = session.getColorsScheme();
+      EditorColorsScheme scheme = session.getColorsScheme();
 
-        UpdateHighlightersUtil
-                .setHighlightersOutsideRange(project, document, psiFile, infos, scheme, restrictedRange.getStartOffset(), restrictedRange.getEndOffset(),
-                                             ProperTextRange.create(priorityRange), groupId);
-        Editor editor = session.getEditor();
-        if (editor != null) {
-          DaemonListeners.repaintErrorStripeRenderer(editor, project);
-        }
+      UpdateHighlightersUtil
+              .setHighlightersOutsideRange(project, document, psiFile, infos, scheme, restrictedRange.getStartOffset(), restrictedRange.getEndOffset(),
+                                           ProperTextRange.create(priorityRange), groupId);
+      Editor editor = session.getEditor();
+      if (editor != null) {
+        DaemonListeners.repaintErrorStripeRenderer(editor, project);
       }
     });
 
   }
 
   @Override
-  public void allHighlightsForRangeAreProduced(@NotNull HighlightingSession session,
-                                               @NotNull TextRange elementRange,
-                                               @Nullable List<HighlightInfo> infos) {
+  public void allHighlightsForRangeAreProduced(@NotNull HighlightingSession session, @NotNull TextRange elementRange, @Nullable List<HighlightInfo> infos) {
     PsiFile psiFile = session.getPsiFile();
     killAbandonedHighlightsUnder(psiFile, elementRange, infos, session);
   }
@@ -121,25 +111,21 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
     final Project project = psiFile.getProject();
     final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
     if (document == null) return;
-    DaemonCodeAnalyzerEx
-            .processHighlights(document, project, null, range.getStartOffset(), range.getEndOffset(), new Processor<HighlightInfo>() {
-              @Override
-              public boolean process(HighlightInfo existing) {
-                if (existing.isBijective() &&
-                    existing.getGroup() == Pass.UPDATE_ALL &&
-                    range.equalsToRange(existing.getActualStartOffset(), existing.getActualEndOffset())) {
-                  if (infos != null) {
-                    for (HighlightInfo created : infos) {
-                      if (existing.equalsByActualOffset(created)) return true;
-                    }
-                  }
-                  // seems that highlight info "existing" is going to disappear
-                  // remove it earlier
-                  ((HighlightingSessionImpl)highlightingSession).queueDisposeHighlighter(existing.highlighter);
-                }
-                return true;
-              }
-            });
+    DaemonCodeAnalyzerEx.processHighlights(document, project, null, range.getStartOffset(), range.getEndOffset(), existing -> {
+      if (existing.isBijective() &&
+          existing.getGroup() == Pass.UPDATE_ALL &&
+          range.equalsToRange(existing.getActualStartOffset(), existing.getActualEndOffset())) {
+        if (infos != null) {
+          for (HighlightInfo created : infos) {
+            if (existing.equalsByActualOffset(created)) return true;
+          }
+        }
+        // seems that highlight info "existing" is going to disappear
+        // remove it earlier
+        ((HighlightingSessionImpl)highlightingSession).queueDisposeHighlighterFor(existing);
+      }
+      return true;
+    });
   }
 
   @Override
@@ -149,7 +135,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
                               @NotNull TextRange restrictedRange,
                               int groupId) {
     HighlightingSessionImpl impl = (HighlightingSessionImpl)session;
-    impl.queueHighlightInfo(info, priorityRange, restrictedRange, groupId);
+    impl.queueHighlightInfo(info, restrictedRange, groupId);
   }
 
   @Override
@@ -160,24 +146,22 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
   }
 
   private final Alarm repaintIconAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
+
   private void repaintTrafficIcon(@NotNull final PsiFile file, final Editor editor, double progress) {
     if (ApplicationManager.getApplication().isCommandLine()) return;
 
     if (repaintIconAlarm.isEmpty() || progress >= 1) {
-      repaintIconAlarm.addRequest(new Runnable() {
-        @Override
-        public void run() {
-          Project myProject = file.getProject();
-          if (myProject.isDisposed()) return;
-          Editor myeditor = editor;
-          if (myeditor == null) {
-            myeditor = PsiUtilBase.findEditor(file);
-          }
-          if (myeditor == null || myeditor.isDisposed()) return;
-          EditorMarkupModelImpl markup = (EditorMarkupModelImpl)myeditor.getMarkupModel();
-          markup.repaintTrafficLightIcon();
-          DaemonListeners.repaintErrorStripeRenderer(myeditor, myProject);
+      repaintIconAlarm.addRequest(() -> {
+        Project myProject = file.getProject();
+        if (myProject.isDisposed()) return;
+        Editor myeditor = editor;
+        if (myeditor == null) {
+          myeditor = PsiUtilBase.findEditor(file);
         }
+        if (myeditor == null || myeditor.isDisposed()) return;
+        EditorMarkupModelImpl markup = (EditorMarkupModelImpl)myeditor.getMarkupModel();
+        markup.repaintTrafficLightIcon();
+        DaemonListeners.repaintErrorStripeRenderer(myeditor, myProject);
       }, 50, null);
     }
   }

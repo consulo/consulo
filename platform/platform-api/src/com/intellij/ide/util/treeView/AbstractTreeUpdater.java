@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,9 +38,9 @@ import java.util.*;
 public class AbstractTreeUpdater implements Disposable, Activatable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.util.treeView.AbstractTreeUpdater");
 
-  private final LinkedList<TreeUpdatePass> myNodeQueue = new LinkedList<TreeUpdatePass>();
+  private final LinkedList<TreeUpdatePass> myNodeQueue = new LinkedList<>();
   private final AbstractTreeBuilder myTreeBuilder;
-  private final List<Runnable> myRunAfterUpdate = new ArrayList<Runnable>();
+  private final List<Runnable> myRunAfterUpdate = new ArrayList<>();
   private Runnable myRunBeforeUpdate;
   private final MergingUpdateQueue myUpdateQueue;
 
@@ -51,7 +51,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
     myTreeBuilder = treeBuilder;
     final JTree tree = myTreeBuilder.getTree();
     final JComponent component = tree instanceof TreeTableTree ? ((TreeTableTree)tree).getTreeTable() : tree;
-    myUpdateQueue = new MergingUpdateQueue("UpdateQueue", 300, component.isShowing(), component) {
+    myUpdateQueue = new MergingUpdateQueue("UpdateQueue", 100, component.isShowing(), component) {
       @Override
       protected Alarm createAlarm(@NotNull Alarm.ThreadToUse thread, Disposable parent) {
         return new Alarm(thread, parent) {
@@ -127,7 +127,9 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
       for (Iterator<TreeUpdatePass> iterator = myNodeQueue.iterator(); iterator.hasNext();) {
         final TreeUpdatePass passInQueue = iterator.next();
 
-        if (toAdd.isUpdateStructure() == passInQueue.isUpdateStructure()) {
+        boolean isMatchingPass =
+                toAdd.isUpdateStructure() == passInQueue.isUpdateStructure() && toAdd.isUpdateChildren() == passInQueue.isUpdateChildren();
+        if (isMatchingPass) {
           if (passInQueue == toAdd) {
             toAdd.expire();
             break;
@@ -203,9 +205,9 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
       public void run() {
         AbstractTreeStructure structure = myTreeBuilder.getTreeStructure();
         if (structure.hasSomethingToCommit()) {
-          structure.asyncCommit().doWhenDone(new Runnable() {
+          structure.asyncCommit().doWhenDone(new TreeRunnable("AbstractTreeUpdater.reQueueViewUpdate") {
             @Override
-            public void run() {
+            public void perform() {
               reQueueViewUpdateIfNeeded();
             }
           });
@@ -251,9 +253,9 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
 
       final TreeUpdatePass eachPass = myNodeQueue.removeFirst();
 
-      beforeUpdate(eachPass).doWhenDone(new Runnable() {
+      beforeUpdate(eachPass).doWhenDone(new TreeRunnable("AbstractTreeUpdater.performUpdate") {
         @Override
-        public void run() {
+        public void perform() {
           try {
             myTreeBuilder.getUi().updateSubtreeNow(eachPass, false);
           }
@@ -272,13 +274,13 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
 
   private void maybeRunAfterUpdate() {
     if (myRunAfterUpdate != null) {
-      final Runnable runnable = new Runnable() {
+      final Runnable runnable = new TreeRunnable("AbstractTreeUpdater.maybeRunAfterUpdate") {
         @Override
-        public void run() {
+        public void perform() {
           List<Runnable> runAfterUpdate = null;
           synchronized (myRunAfterUpdate) {
             if (!myRunAfterUpdate.isEmpty()) {
-              runAfterUpdate = new ArrayList<Runnable>(myRunAfterUpdate);
+              runAfterUpdate = new ArrayList<>(myRunAfterUpdate);
               myRunAfterUpdate.clear();
             }
           }
@@ -299,7 +301,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
   }
 
   protected ActionCallback beforeUpdate(TreeUpdatePass pass) {
-    return new ActionCallback.Done();
+    return ActionCallback.DONE;
   }
 
   /**

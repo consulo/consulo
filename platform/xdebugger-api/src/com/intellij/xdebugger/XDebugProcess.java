@@ -28,6 +28,7 @@ import com.intellij.xdebugger.frame.XSuspendContext;
 import com.intellij.xdebugger.frame.XValueMarkerProvider;
 import com.intellij.xdebugger.stepping.XSmartStepIntoHandler;
 import com.intellij.xdebugger.ui.XDebugTabLayouter;
+import consulo.concurrency.Promises;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.concurrency.Promise;
@@ -182,7 +183,7 @@ public abstract class XDebugProcess {
   @NotNull
   public Promise stopAsync() {
     stop();
-    return Promise.DONE;
+    return Promises.resolvedPromise();
   }
 
   /**

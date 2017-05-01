@@ -322,14 +322,69 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return "UISettings";
   }
 
-  @Override
-  public void initComponent() {
+  public int getEditorTabLimit() {
+    return EDITOR_TAB_LIMIT;
   }
 
-  @Override
-  public void disposeComponent() {
+  public int getEditorTabPlacement() {
+    return EDITOR_TAB_PLACEMENT;
   }
 
+  public boolean getShowTabsTooltips() {
+    return SHOW_TABS_TOOLTIPS;
+  }
+
+  public boolean getHideTabsIfNeed() {
+    return HIDE_TABS_IF_NEED;
+  }
+
+  public boolean getMarkModifiedTabsWithAsterisk() {
+    return MARK_MODIFIED_TABS_WITH_ASTERISK;
+  }
+
+  public boolean getActiveMruEditorOnClose() {
+    return ACTIVATE_MRU_EDITOR_ON_CLOSE;
+  }
+
+  public boolean getActiveRigtEditorOnClose() {
+    return ACTIVATE_RIGHT_EDITOR_ON_CLOSE;
+  }
+
+  public boolean getCloseNonModifiedFilesFirst() {
+    return CLOSE_NON_MODIFIED_FILES_FIRST;
+  }
+
+  public boolean getPresentationMode() {
+    return PRESENTATION_MODE;
+  }
+
+  public boolean getReuseNotModifiedTabs() {
+    return REUSE_NOT_MODIFIED_TABS;
+  }
+
+  public boolean getScrollTabLayoutInEditor() {
+    return SCROLL_TAB_LAYOUT_IN_EDITOR;
+  }
+
+  public boolean getHideToolStripes() {
+    return HIDE_TOOL_STRIPES;
+  }
+
+  public boolean getShowCloseButton() {
+    return SHOW_CLOSE_BUTTON;
+  }
+
+  public boolean getShowMainToolbar() {
+    return SHOW_MAIN_TOOLBAR;
+  }
+
+  public boolean getShowNavigationBar() {
+    return SHOW_MAIN_TOOLBAR;
+  }
+
+  public int getPresentationModeFontSize() {
+    return PRESENTATION_MODE_FONT_SIZE;
+  }
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

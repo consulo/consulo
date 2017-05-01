@@ -127,6 +127,24 @@ public class KeymapUtil {
     }
   }
 
+  /**
+   * Creates shortcut corresponding to a single-click event
+   */
+  public static MouseShortcut createMouseShortcut(@NotNull MouseEvent e) {
+    int button = MouseShortcut.getButton(e);
+    int modifiers = e.getModifiersEx();
+    if (button == MouseEvent.NOBUTTON && e.getID() == MouseEvent.MOUSE_DRAGGED) {
+      // mouse drag events don't have button field set due to some reason
+      if ((modifiers & InputEvent.BUTTON1_DOWN_MASK) != 0) {
+        button = MouseEvent.BUTTON1;
+      }
+      else if ((modifiers & InputEvent.BUTTON2_DOWN_MASK) != 0) {
+        button = MouseEvent.BUTTON2;
+      }
+    }
+    return new MouseShortcut(button, modifiers, 1);
+  }
+
   @JdkConstants.InputEventMask
   private static int mapNewModifiers(@JdkConstants.InputEventMask int modifiers) {
     if ((modifiers & InputEvent.SHIFT_DOWN_MASK) != 0) {

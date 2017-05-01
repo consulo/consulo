@@ -23,7 +23,6 @@ package com.intellij.profile.codeInspection.ui;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
-import com.intellij.profile.codeInspection.InspectionProfileManagerImpl;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.ui.header.InspectionToolsConfigurable;
 
@@ -46,6 +45,5 @@ public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigura
       myProfileManager.setRootProfile(name);
       myProjectProfileManager.setProjectProfile(null);
     }
-    InspectionProfileManagerImpl.onProfilesChanged();
   }
 }

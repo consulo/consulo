@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options.colors;
 
-import com.intellij.openapi.editor.colors.FontPreferences;
+import com.intellij.openapi.editor.colors.ModifiableFontPreferences;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,8 +28,8 @@ public class ConsoleFontOptions extends FontOptions {
 
   @NotNull
   @Override
-  protected FontPreferences getFontPreferences() {
-    return getCurrentScheme().getConsoleFontPreferences();
+  protected ModifiableFontPreferences getFontPreferences() {
+    return (ModifiableFontPreferences)getCurrentScheme().getConsoleFontPreferences();
   }
 
   @Override

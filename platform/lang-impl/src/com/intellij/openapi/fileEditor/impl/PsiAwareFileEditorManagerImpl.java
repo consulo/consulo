@@ -18,9 +18,6 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.PowerSaveMode;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -45,7 +42,6 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author yole
  */
-@State(name = "PsiAwareFileEditorManagerImpl", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.PsiAwareFileEditorManagerImpl");
 

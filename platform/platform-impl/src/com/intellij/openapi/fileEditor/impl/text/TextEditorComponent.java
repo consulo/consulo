@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.fileEditor.impl.text;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.IdeActions;
@@ -27,8 +28,6 @@ import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -40,9 +39,10 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFilePropertyEvent;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
@@ -60,20 +60,20 @@ import java.awt.*;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-class TextEditorComponent extends JBLoadingPanel implements DataProvider {
+class TextEditorComponent extends JBLoadingPanel implements DataProvider, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.TextEditorComponent");
 
   private final Project myProject;
-  @NotNull private final VirtualFile myFile;
+  @NotNull
+  private final VirtualFile myFile;
   private final TextEditorImpl myTextEditor;
   /**
    * Document to be edited
    */
   private final Document myDocument;
 
-  private final MyDocumentListener myDocumentListener;
-  private final MyVirtualFileListener myVirtualFileListener;
-  @NotNull private final Editor myEditor;
+  @NotNull
+  private final Editor myEditor;
 
   /**
    * Whether the editor's document is modified or not
@@ -83,7 +83,6 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider {
    * Whether the editor is valid or not
    */
   private boolean myValid;
-  private final MessageBusConnection myConnection;
 
   TextEditorComponent(@NotNull final Project project, @NotNull final VirtualFile file, @NotNull final TextEditorImpl textEditor) {
     super(new BorderLayout(), textEditor);
@@ -93,9 +92,8 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider {
     myTextEditor = textEditor;
 
     myDocument = FileDocumentManager.getInstance().getDocument(myFile);
-    LOG.assertTrue(myDocument!=null);
-    myDocumentListener = new MyDocumentListener();
-    myDocument.addDocumentListener(myDocumentListener);
+    LOG.assertTrue(myDocument != null);
+    myDocument.addDocumentListener(new MyDocumentListener(), this);
 
     myEditor = createEditor();
     add(myEditor.getComponent(), BorderLayout.CENTER);
@@ -103,9 +101,10 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider {
     myValid = isEditorValidImpl();
     LOG.assertTrue(myValid);
 
-    myVirtualFileListener = new MyVirtualFileListener();
+    MyVirtualFileListener myVirtualFileListener = new MyVirtualFileListener();
     myFile.getFileSystem().addVirtualFileListener(myVirtualFileListener);
-    myConnection = project.getMessageBus().connect();
+    Disposer.register(this, () -> myFile.getFileSystem().removeVirtualFileListener(myVirtualFileListener));
+    MessageBusConnection myConnection = project.getMessageBus().connect(this);
     myConnection.subscribe(FileTypeManager.TOPIC, new MyFileTypeListener());
     myConnection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
       @Override
@@ -121,20 +120,19 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider {
   }
 
   private volatile boolean myDisposed;
+
   /**
    * Disposes all resources allocated be the TextEditorComponent. It disposes all created
    * editors, unregisters listeners. The behaviour of the splitter after disposing is
    * unpredictable.
    */
-  void dispose(){
-    myDocument.removeDocumentListener(myDocumentListener);
+  @Override
+  public void dispose() {
     if (!myProject.isDefault()) { // There's no EditorHistoryManager for default project (which is used in diff command-line application)
       EditorHistoryManager.getInstance(myProject).updateHistoryEntry(myFile, false);
     }
     disposeEditor();
-    myConnection.disconnect();
 
-    myFile.getFileSystem().removeVirtualFileListener(myVirtualFileListener);
     myDisposed = true;
     //myFocusWatcher.deinstall(this);
     //removePropertyChangeListener(mySplitterPropertyChangeListener);
@@ -150,11 +148,11 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider {
    * Should be invoked when the corresponding {@code TextEditorImpl}
    * is selected. Updates the status bar.
    */
-  void selectNotify(){
+  void selectNotify() {
     updateStatusBar();
   }
 
-  private static void assertThread(){
+  private static void assertThread() {
     ApplicationManager.getApplication().assertIsDispatchThread();
   }
 
@@ -162,34 +160,34 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider {
    * @return most recently used editor. This method never returns {@code null}.
    */
   @NotNull
-  Editor getEditor(){
+  Editor getEditor() {
     return myEditor;
   }
 
   @NotNull
-  private Editor createEditor(){
+  private Editor createEditor() {
     Editor editor = EditorFactory.getInstance().createEditor(myDocument, myProject);
-    ((EditorMarkupModel) editor.getMarkupModel()).setErrorStripeVisible(true);
-    ((EditorEx) editor).getGutterComponentEx().setForceShowRightFreePaintersArea(true);
+    ((EditorMarkupModel)editor.getMarkupModel()).setErrorStripeVisible(true);
+    ((EditorEx)editor).getGutterComponentEx().setForceShowRightFreePaintersArea(true);
 
-    ((EditorEx) editor).setFile(myFile);
+    ((EditorEx)editor).setFile(myFile);
 
     ((EditorEx)editor).setContextMenuGroupId(IdeActions.GROUP_EDITOR_POPUP);
 
-    ((EditorImpl) editor).setDropHandler(new FileDropHandler(editor));
+    ((EditorImpl)editor).setDropHandler(new FileDropHandler(editor));
 
     TextEditorProvider.putTextEditor(editor, myTextEditor);
     return editor;
   }
 
-  private void disposeEditor(){
+  private void disposeEditor() {
     EditorFactory.getInstance().releaseEditor(myEditor);
   }
 
   /**
    * @return whether the editor's document is modified or not
    */
-  boolean isModified(){
+  boolean isModified() {
     assertThread();
     return myModified;
   }
@@ -197,15 +195,15 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider {
   /**
    * Just calculates "modified" property
    */
-  private boolean isModifiedImpl(){
+  private boolean isModifiedImpl() {
     return FileDocumentManager.getInstance().isFileModified(myFile);
   }
 
   /**
    * Updates "modified" property and fires event if necessary
    */
-  void updateModifiedProperty(){
-    Boolean oldModified= myModified;
+  void updateModifiedProperty() {
+    Boolean oldModified = myModified;
     myModified = isModifiedImpl();
     myTextEditor.firePropertyChange(FileEditor.PROP_MODIFIED, oldModified, myModified);
   }
@@ -216,18 +214,18 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider {
    *
    * @return whether the editor is valid or not
    */
-  boolean isEditorValid(){
+  boolean isEditorValid() {
     return myValid && !myEditor.isDisposed();
   }
 
   /**
    * Just calculates
    */
-  private boolean isEditorValidImpl(){
+  private boolean isEditorValidImpl() {
     return FileDocumentManager.getInstance().getDocument(myFile) != null;
   }
 
-  private void updateValidProperty(){
+  private void updateValidProperty() {
     Boolean oldValid = myValid;
     myValid = isEditorValidImpl();
     myTextEditor.firePropertyChange(FileEditor.PROP_VALID, oldValid, myValid);
@@ -237,17 +235,16 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider {
    * Updates editors' highlighters. This should be done when the opened file
    * changes its file type.
    */
-  private void updateHighlighters(){
+  private void updateHighlighters() {
     if (!myProject.isDisposed() && !myEditor.isDisposed()) {
-      final EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(myProject, myFile);
-      ((EditorEx)myEditor).setHighlighter(highlighter);
+      AsyncHighlighterUpdater.updateHighlighters(myProject, myEditor, myFile);
     }
   }
 
   /**
    * Updates frame's status bar: insert/overwrite mode, caret position
    */
-  private void updateStatusBar(){
+  private void updateStatusBar() {
     final StatusBarEx statusBar = (StatusBarEx)WindowManager.getInstance().getStatusBar(myProject);
     if (statusBar == null) return;
     statusBar.updateWidgets(); // TODO: do we need this?!
@@ -279,7 +276,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider {
       return e;
     }
     if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {
-      return myFile.isValid()? myFile : null;  // fix for SCR 40329
+      return myFile.isValid() ? myFile : null;  // fix for SCR 40329
     }
     return null;
   }
@@ -329,28 +326,27 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider {
   /**
    * Updates "valid" property and highlighters (if necessary)
    */
-  private final class MyVirtualFileListener extends VirtualFileAdapter{
+  private final class MyVirtualFileListener implements VirtualFileListener {
     @Override
     public void propertyChanged(@NotNull final VirtualFilePropertyEvent e) {
-      if(VirtualFile.PROP_NAME.equals(e.getPropertyName())){
+      if (VirtualFile.PROP_NAME.equals(e.getPropertyName())) {
         // File can be invalidated after file changes name (extension also
         // can changes). The editor should be removed if it's invalid.
         updateValidProperty();
         if (Comparing.equal(e.getFile(), myFile) &&
-            (FileContentUtilCore.FORCE_RELOAD_REQUESTOR.equals(e.getRequestor()) ||
-             !Comparing.equal(e.getOldValue(), e.getNewValue()))) {
+            (FileContentUtilCore.FORCE_RELOAD_REQUESTOR.equals(e.getRequestor()) || !Comparing.equal(e.getOldValue(), e.getNewValue()))) {
           updateHighlighters();
         }
       }
     }
 
     @Override
-    public void contentsChanged(@NotNull VirtualFileEvent event){
-      if (event.isFromSave()){ // commit
+    public void contentsChanged(@NotNull VirtualFileEvent event) {
+      if (event.isFromSave()) { // commit
         assertThread();
         VirtualFile file = event.getFile();
         LOG.assertTrue(file.isValid());
-        if(myFile.equals(file)){
+        if (myFile.equals(file)) {
           updateModifiedProperty();
         }
       }

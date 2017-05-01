@@ -17,11 +17,9 @@ package com.intellij.profile.codeInspection;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.InspectionProfileConvertor;
-import com.intellij.codeInsight.daemon.impl.DaemonListeners;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
-import com.intellij.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.InspectionToolRegistrar;
@@ -44,7 +42,6 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.profile.Profile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.messages.MessageBus;
-import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
@@ -119,12 +116,10 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
       public void onSchemeAdded(@NotNull final InspectionProfileImpl scheme) {
         updateProfileImpl(scheme);
         fireProfileChanged(scheme);
-        onProfilesChanged();
       }
 
       @Override
       public void onSchemeDeleted(@NotNull final InspectionProfileImpl scheme) {
-        onProfilesChanged();
       }
 
       @Override
@@ -133,7 +128,6 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         if (current != null) {
           fireProfileChanged((Profile)oldCurrentScheme, current, null);
         }
-        onProfilesChanged();
       }
     }, RoamingType.PER_USER);
     mySeverityRegistrar = new SeverityRegistrar(messageBus);
@@ -333,23 +327,5 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   @Override
   public Profile getProfile(@NotNull final String name) {
     return getProfile(name, true);
-  }
-
-  public static void onProfilesChanged() {
-    //cleanup caches blindly for all projects in case ide profile was modified
-    for (final Project project : ProjectManager.getInstance().getOpenProjects()) {
-      //noinspection EmptySynchronizedStatement
-      synchronized (HighlightingSettingsPerFile.getInstance(project)) {
-      }
-
-      UIUtil.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          if (!project.isDisposed()) {
-            DaemonListeners.getInstance(project).updateStatusBar();
-          }
-        }
-      });
-    }
   }
 }

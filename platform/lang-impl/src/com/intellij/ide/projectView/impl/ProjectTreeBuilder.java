@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -62,7 +62,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
 
     final MessageBusConnection connection = project.getMessageBus().connect(this);
 
-    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         queueUpdate();
@@ -146,7 +146,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
 
     @Override
     public void fileStatusChanged(@NotNull VirtualFile vFile) {
-       queueUpdate(false);
+      queueUpdate(false);
     }
   }
 
@@ -158,7 +158,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
 
   private class MyProblemListener extends WolfTheProblemSolver.ProblemListener {
     private final Alarm myUpdateProblemAlarm = new Alarm();
-    private final Collection<VirtualFile> myFilesToRefresh = new THashSet<VirtualFile>();
+    private final Collection<VirtualFile> myFilesToRefresh = new THashSet<>();
 
     @Override
     public void problemsAppeared(@NotNull VirtualFile file) {
@@ -174,21 +174,18 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
       synchronized (myFilesToRefresh) {
         if (myFilesToRefresh.add(fileToRefresh)) {
           myUpdateProblemAlarm.cancelAllRequests();
-          myUpdateProblemAlarm.addRequest(new Runnable() {
-            @Override
-            public void run() {
-              if (!myProject.isOpen()) return;
-              Set<VirtualFile> filesToRefresh;
-              synchronized (myFilesToRefresh) {
-                filesToRefresh = new THashSet<VirtualFile>(myFilesToRefresh);
-              }
-              final DefaultMutableTreeNode rootNode = getRootNode();
-              if (rootNode != null) {
-                updateNodesContaining(filesToRefresh, rootNode);
-              }
-              synchronized (myFilesToRefresh) {
-                myFilesToRefresh.removeAll(filesToRefresh);
-              }
+          myUpdateProblemAlarm.addRequest(() -> {
+            if (!myProject.isOpen()) return;
+            Set<VirtualFile> filesToRefresh;
+            synchronized (myFilesToRefresh) {
+              filesToRefresh = new THashSet<>(myFilesToRefresh);
+            }
+            final DefaultMutableTreeNode rootNode = getRootNode();
+            if (rootNode != null) {
+              updateNodesContaining(filesToRefresh, rootNode);
+            }
+            synchronized (myFilesToRefresh) {
+              myFilesToRefresh.removeAll(filesToRefresh);
             }
           }, 200, ModalityState.NON_MODAL);
         }
@@ -206,7 +203,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
         return;
       }
       if (node.contains(virtualFile)) {
-        if (containingFiles == null) containingFiles = new SmartList<VirtualFile>();
+        if (containingFiles == null) containingFiles = new SmartList<>();
         containingFiles.add(virtualFile);
       }
     }

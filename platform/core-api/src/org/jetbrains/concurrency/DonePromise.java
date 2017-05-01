@@ -18,9 +18,10 @@ package org.jetbrains.concurrency;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
+import consulo.concurrency.Promises;
 import org.jetbrains.annotations.NotNull;
 
-class DonePromise<T> extends Promise<T> implements Getter<T> {
+public class DonePromise<T> extends Promise<T> implements Getter<T> {
   private final T result;
 
   public DonePromise(T result) {
@@ -59,10 +60,10 @@ class DonePromise<T> extends Promise<T> implements Getter<T> {
   @Override
   public <SUB_RESULT> Promise<SUB_RESULT> then(@NotNull Function<T, SUB_RESULT> done) {
     if (done instanceof Obsolescent && ((Obsolescent)done).isObsolete()) {
-      return Promise.reject("obsolete");
+      return Promises.reject("obsolete");
     }
     else {
-      return Promise.resolve(done.fun(result));
+      return Promises.resolve(done.fun(result));
     }
   }
 
@@ -84,7 +85,7 @@ class DonePromise<T> extends Promise<T> implements Getter<T> {
   }
 
   @Override
-  void notify(@NotNull AsyncPromise<T> child) {
+  public void notify(@NotNull AsyncPromise<T> child) {
     child.setResult(result);
   }
 }

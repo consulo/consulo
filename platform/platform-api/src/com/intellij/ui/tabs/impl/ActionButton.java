@@ -63,13 +63,13 @@ class ActionButton extends IconButton implements ActionListener {
   public InplaceButton getComponent() {
     return myButton;
   }
-  
+
   protected void repaintComponent(Component c) {
     c.repaint();
   }
 
   public void setMouseDeadZone(TimedDeadzone.Length deadZone) {
-    myButton.setMouseDeadzone(deadZone);    
+    myButton.setMouseDeadzone(deadZone);
   }
 
   public boolean update() {
@@ -99,11 +99,11 @@ class ActionButton extends IconButton implements ActionListener {
   private static boolean areEqual(Presentation p1, Presentation p2) {
     if (p1 == null || p2 == null) return false;
 
-    return Comparing.equal(p1.getText(), p2.getText())
-           && Comparing.equal(p1.getIcon(), p2.getIcon())
-           && Comparing.equal(p1.getHoveredIcon(), p2.getHoveredIcon())
-           && p1.isEnabled() == p2.isEnabled()
-           && p1.isVisible() == p2.isVisible();
+    return Comparing.equal(p1.getText(), p2.getText()) &&
+           Comparing.equal(p1.getIcon(), p2.getIcon()) &&
+           Comparing.equal(p1.getHoveredIcon(), p2.getHoveredIcon()) &&
+           p1.isEnabled() == p2.isEnabled() &&
+           p1.isVisible() == p2.isVisible();
 
   }
 
@@ -131,7 +131,8 @@ class ActionButton extends IconButton implements ActionListener {
   public void toggleShowActions(boolean show) {
     if (myAutoHide) {
       myButton.setPainting(show);
-    } else {
+    }
+    else {
       myButton.setPainting(true);
     }
 

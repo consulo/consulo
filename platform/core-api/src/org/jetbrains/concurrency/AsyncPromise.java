@@ -19,6 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
+import consulo.concurrency.Promises;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -168,7 +169,7 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
   }
 
   @Override
-  void notify(@NotNull final AsyncPromise<T> child) {
+  public void notify(@NotNull final AsyncPromise<T> child) {
     LOG.assertTrue(child != this);
 
     switch (state) {
@@ -211,7 +212,7 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
         //noinspection unchecked
         return fulfilled.fun((T)result);
       case REJECTED:
-        return Promise.reject((Throwable)result);
+        return Promises.reject((Throwable)result);
     }
 
     final AsyncPromise<SUB_RESULT> promise = new AsyncPromise<SUB_RESULT>();
