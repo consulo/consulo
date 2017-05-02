@@ -56,7 +56,6 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
   private JTextField myBlinkIntervalField;
   private JPanel myAddonPanel;
   private JCheckBox myCbShowMethodSeparators;
-  private JCheckBox myCbShowIconsInGutter;
   private JCheckBox myShowVerticalIndentGuidesCheckBox;
   private JBCheckBox myShowParameterNameHints;
   private JButton myConfigureParameterHintsButton;
@@ -97,7 +96,6 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     myCbBlockCursor.setSelected(editorSettings.isBlockCursor());
     myCbShowWhitespaces.setSelected(editorSettings.isWhitespacesShown());
     myShowVerticalIndentGuidesCheckBox.setSelected(editorSettings.isIndentGuidesShown());
-    myCbShowIconsInGutter.setSelected(DaemonCodeAnalyzerSettings.getInstance().SHOW_SMALL_ICONS_IN_GUTTER);
 
     myShowParameterNameHints.setSelected(editorSettings.isShowParameterNameHints());
 
@@ -124,7 +122,6 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     EditorOptionsPanel.reinitAllEditors();
 
     DaemonCodeAnalyzerSettings.getInstance().SHOW_METHOD_SEPARATORS = myCbShowMethodSeparators.isSelected();
-    DaemonCodeAnalyzerSettings.getInstance().SHOW_SMALL_ICONS_IN_GUTTER = myCbShowIconsInGutter.isSelected();
 
     EditorOptionsPanel.restartDaemons();
 
@@ -148,7 +145,6 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     isModified |= isModified(myCbShowWhitespaces, editorSettings.isWhitespacesShown());
     isModified |= isModified(myShowVerticalIndentGuidesCheckBox, editorSettings.isIndentGuidesShown());
     isModified |= isModified(myCbShowMethodSeparators, DaemonCodeAnalyzerSettings.getInstance().SHOW_METHOD_SEPARATORS);
-    isModified |= isModified(myCbShowIconsInGutter, DaemonCodeAnalyzerSettings.getInstance().SHOW_SMALL_ICONS_IN_GUTTER);
     isModified |= myShowParameterNameHints.isSelected() != editorSettings.isShowParameterNameHints();
 
     return isModified;

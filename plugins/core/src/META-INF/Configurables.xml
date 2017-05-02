@@ -140,7 +140,13 @@
     <applicationConfigurable instance="com.intellij.application.options.editor.EditorAppearanceConfigurable"
                              id="editor.preferences.appearance"
                              parentId="editor"
-                             displayName="Gutters"/>
+                             displayName="Appearance"/>
+
+    <applicationConfigurable instance="com.intellij.application.options.editor.GutterIconsConfigurable"
+                             id="editor.preferences.gutterIcons"
+                             parentId="editor"
+                             displayName="Gutter Icons"/>
+
     <projectConfigurable key="file.encodings.configurable"
                          bundle="messages.IdeBundle"
                          parentId="editor"

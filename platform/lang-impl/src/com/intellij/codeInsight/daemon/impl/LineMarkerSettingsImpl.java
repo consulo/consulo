@@ -20,7 +20,6 @@ import com.intellij.codeInsight.daemon.LineMarkerSettings;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,24 +29,29 @@ import java.util.Map;
 /**
  * @author Dmitry Avdeev
  */
-@State(
-        name = "LineMarkerSettings",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/gutter.xml"))
+@State(name = "LineMarkerSettings", storages = @Storage("gutter.xml"))
 public class LineMarkerSettingsImpl extends LineMarkerSettings implements PersistentStateComponent<LineMarkerSettingsImpl> {
+  @MapAnnotation
+  public Map<String, Boolean> providers = new HashMap<>();
 
   @Override
   public boolean isEnabled(GutterIconDescriptor descriptor) {
     Boolean aBoolean = providers.get(descriptor.getId());
-    return aBoolean == null || aBoolean;
+    if (aBoolean != null) {
+      return aBoolean;
+    }
+    return descriptor.isEnabledByDefault();
   }
 
   @Override
   public void setEnabled(GutterIconDescriptor descriptor, boolean selected) {
-    providers.put(descriptor.getId(), selected);
+    if (descriptor.isEnabledByDefault() == selected) {
+      providers.remove(descriptor.getId());
+    }
+    else {
+      providers.put(descriptor.getId(), selected);
+    }
   }
-
-  @MapAnnotation
-  public Map<String, Boolean> providers = new HashMap<String, Boolean>();
 
   @Nullable
   @Override

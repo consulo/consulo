@@ -63,7 +63,6 @@ public class EditorOptionsTopHitProvider extends OptionsTopHitProvider {
           editorApp("Appearance: Show inner whitespaces", "IS_INNER_WHITESPACES_SHOWN"),
           editorApp("Appearance: Show trailing whitespaces", "IS_TRAILING_WHITESPACES_SHOWN"),
           editorApp("Appearance: Show vertical indent guides", "IS_INDENT_GUIDES_SHOWN"),
-          editorCode("Appearance: " + messageApp("checkbox.show.small.icons.in.gutter"), "SHOW_SMALL_ICONS_IN_GUTTER"),
           option("Appearance: " + messageApp("checkbox.show.code.folding.outline"), "IS_FOLDING_OUTLINE_SHOWN", "editor.preferences.folding"),
           editorTabs("Tabs: " + messageApp("checkbox.editor.tabs.in.single.row"), "SCROLL_TAB_LAYOUT_IN_EDITOR"),
           editorTabs("Tabs: " + messageApp("checkbox.hide.file.extension.in.editor.tabs"), "HIDE_KNOWN_EXTENSION_IN_TABS"),

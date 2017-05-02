@@ -85,7 +85,6 @@ public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings i
     settings.SHOW_ADD_IMPORT_HINTS = SHOW_ADD_IMPORT_HINTS;
     settings.SHOW_METHOD_SEPARATORS = SHOW_METHOD_SEPARATORS;
     settings.NO_AUTO_IMPORT_PATTERN = NO_AUTO_IMPORT_PATTERN;
-    settings.SHOW_SMALL_ICONS_IN_GUTTER = SHOW_SMALL_ICONS_IN_GUTTER;
     return settings;
   }
 

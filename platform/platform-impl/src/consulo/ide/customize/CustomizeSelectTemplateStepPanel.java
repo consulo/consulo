@@ -18,12 +18,12 @@ package consulo.ide.customize;
 import com.intellij.ide.customize.AbstractCustomizeWizardStep;
 import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.util.Function;
 import com.intellij.util.containers.MultiMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -39,22 +39,17 @@ public class CustomizeSelectTemplateStepPanel extends AbstractCustomizeWizardSte
     myPredefinedTemplates = predefinedTemplates;
     setLayout(new BorderLayout());
 
-    myCheckBoxList = new CheckBoxList<String>();
+    myCheckBoxList = new CheckBoxList<>();
 
-    myCheckBoxList.setItems(predefinedTemplates.keySet(), new Function<String, String>() {
-      @Override
-      public String fun(String s) {
-        return s;
-      }
-    });
+    myCheckBoxList.setItems(new ArrayList<>(predefinedTemplates.keySet()), s -> s);
     add(ScrollPaneFactory.createScrollPane(myCheckBoxList, true), BorderLayout.CENTER);
   }
 
   @NotNull
   public Set<String> getEnablePluginSet() {
-    Set<String> set = new THashSet<String>();
+    Set<String> set = new THashSet<>();
     for (int i = 0; i < myCheckBoxList.getItemsCount(); i++) {
-      String name = (String)myCheckBoxList.getItemAt(i);
+      String name = myCheckBoxList.getItemAt(i);
       if(!myCheckBoxList.isItemSelected(i)) {
         continue;
       }

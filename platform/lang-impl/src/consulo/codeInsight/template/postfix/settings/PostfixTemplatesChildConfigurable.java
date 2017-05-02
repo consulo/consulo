@@ -28,7 +28,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.util.Function;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +36,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.util.ArrayList;
 
 /**
  * @author VISTALL
@@ -70,6 +71,7 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     return null;
   }
 
+  @RequiredDispatchThread
   @Nullable
   @Override
   public JComponent createComponent() {
@@ -81,7 +83,7 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     OnePixelSplitter splitter = new OnePixelSplitter();
     splitter.setSplitterProportionKey("PostfixTemplatesChildConfigurable.splitter");
 
-    myCheckBoxList = new CheckBoxList<PostfixTemplate>();
+    myCheckBoxList = new CheckBoxList<>();
 
     splitter.setFirstComponent(ScrollPaneFactory.createScrollPane(myCheckBoxList, true));
 
@@ -90,23 +92,12 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     component.setBorder(new EmptyBorder(0, 8, 0, 0));
     splitter.setSecondComponent(component);
 
-    myCheckBoxList.setItems(postfixTemplateProvider.getTemplates(), new Function<PostfixTemplate, String>() {
-                              @Override
-                              public String fun(PostfixTemplate postfixTemplate) {
-                                return postfixTemplate.getPresentableName();
-                              }
-                            }, new Function<PostfixTemplate, Boolean>() {
-                              @Override
-                              public Boolean fun(PostfixTemplate postfixTemplate) {
-                                return Boolean.TRUE;
-                              }
-                            }
-    );
+    myCheckBoxList.setItems(new ArrayList<>(postfixTemplateProvider.getTemplates()), PostfixTemplate::getPresentableName, postfixTemplate -> Boolean.TRUE);
 
     myCheckBoxList.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
-        PostfixTemplate itemAt = (PostfixTemplate)myCheckBoxList.getItemAt(myCheckBoxList.getSelectedIndex());
+        PostfixTemplate itemAt = myCheckBoxList.getItemAt(myCheckBoxList.getSelectedIndex());
 
         myPostfixDescriptionPanel.reset(PostfixTemplateMetaData.createMetaData(itemAt));
       }
@@ -114,11 +105,12 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     return splitter;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     int size = myCheckBoxList.getItemsCount();
     for (int i = 0; i < size; i++) {
-      PostfixTemplate itemAt = (PostfixTemplate)myCheckBoxList.getItemAt(i);
+      PostfixTemplate itemAt = myCheckBoxList.getItemAt(i);
 
       if (myTemplatesSettings.isTemplateEnabled(itemAt, myExtensionPoint.getInstance()) != myCheckBoxList.isItemSelected(i)) {
         return true;
@@ -127,11 +119,12 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     return false;
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     int size = myCheckBoxList.getItemsCount();
     for (int i = 0; i < size; i++) {
-      PostfixTemplate itemAt = (PostfixTemplate)myCheckBoxList.getItemAt(i);
+      PostfixTemplate itemAt = myCheckBoxList.getItemAt(i);
 
       if (myCheckBoxList.isItemSelected(i)) {
         myTemplatesSettings.enableTemplate(itemAt, myExtensionPoint.getInstance());
@@ -142,17 +135,19 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     int size = myCheckBoxList.getItemsCount();
 
     for (int i = 0; i < size; i++) {
-      PostfixTemplate itemAt = (PostfixTemplate)myCheckBoxList.getItemAt(i);
+      PostfixTemplate itemAt = myCheckBoxList.getItemAt(i);
 
       myCheckBoxList.setItemSelected(itemAt, myTemplatesSettings.isTemplateEnabled(itemAt, myExtensionPoint.getInstance()));
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
     Disposer.dispose(myPostfixDescriptionPanel);

@@ -17,6 +17,7 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.openapi.components.ServiceManager;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 
 public class DaemonCodeAnalyzerSettings {
@@ -31,6 +32,8 @@ public class DaemonCodeAnalyzerSettings {
   public boolean SUPPRESS_WARNINGS = true;
   public boolean SHOW_METHOD_SEPARATORS = false;
   public int ERROR_STRIPE_MARK_MIN_HEIGHT = 3;
+  @Deprecated
+  @DeprecationInfo("Use LineMarkerProviderDescriptor")
   public boolean SHOW_SMALL_ICONS_IN_GUTTER = true;
 
   public boolean isCodeHighlightingChanged(DaemonCodeAnalyzerSettings oldSettings) {
