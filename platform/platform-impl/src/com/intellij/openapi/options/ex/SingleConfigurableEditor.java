@@ -29,8 +29,10 @@ import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.util.Alarm;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.options.ConfigurableUIMigrationUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -52,15 +54,26 @@ public class SingleConfigurableEditor extends DialogWrapper {
   private final boolean myShowApplyButton;
   private boolean myChangesWereApplied;
 
+  @RequiredDispatchThread
   public SingleConfigurableEditor(@Nullable Project project,
                                   Configurable configurable,
+                                  @NonNls String dimensionKey,
+                                  final boolean showApplyButton,
+                                  final IdeModalityType ideModalityType) {
+    this(project, configurable, null, dimensionKey, showApplyButton, ideModalityType);
+  }
+
+  @RequiredDispatchThread
+  public SingleConfigurableEditor(@Nullable Project project,
+                                  Configurable configurable,
+                                  @Nullable String title,
                                   @NonNls String dimensionKey,
                                   final boolean showApplyButton,
                                   final IdeModalityType ideModalityType) {
     super(project, true, ideModalityType);
     myDimensionKey = dimensionKey;
     myShowApplyButton = showApplyButton;
-    setTitle(createTitleString(configurable));
+    setTitle(title);
 
     myProject = project;
     myConfigurable = configurable;
@@ -68,15 +81,27 @@ public class SingleConfigurableEditor extends DialogWrapper {
     myConfigurable.reset();
   }
 
+  @RequiredDispatchThread
   public SingleConfigurableEditor(Component parent,
                                   Configurable configurable,
+                                  String dimensionServiceKey,
+                                  final boolean showApplyButton,
+                                  final IdeModalityType ideModalityType) {
+    this(parent, configurable, null, dimensionServiceKey, showApplyButton, ideModalityType);
+
+  }
+
+  @RequiredDispatchThread
+  public SingleConfigurableEditor(Component parent,
+                                  Configurable configurable,
+                                  @Nullable String title,
                                   String dimensionServiceKey,
                                   final boolean showApplyButton,
                                   final IdeModalityType ideModalityType) {
     super(parent, true);
     myDimensionKey = dimensionServiceKey;
     myShowApplyButton = showApplyButton;
-    setTitle(createTitleString(configurable));
+    setTitle(StringUtil.notNullize(title, createTitleString(configurable)));
 
     myParentComponent = parent;
     myConfigurable = configurable;
@@ -84,17 +109,11 @@ public class SingleConfigurableEditor extends DialogWrapper {
     myConfigurable.reset();
   }
 
-  public SingleConfigurableEditor(@Nullable Project project,
-                                  Configurable configurable,
-                                  @NonNls String dimensionKey,
-                                  final boolean showApplyButton) {
+  public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, final boolean showApplyButton) {
     this(project, configurable, dimensionKey, showApplyButton, IdeModalityType.IDE);
   }
 
-  public SingleConfigurableEditor(Component parent,
-                                  Configurable configurable,
-                                  String dimensionServiceKey,
-                                  final boolean showApplyButton) {
+  public SingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, final boolean showApplyButton) {
     this(parent, configurable, dimensionServiceKey, showApplyButton, IdeModalityType.IDE);
   }
 
@@ -248,10 +267,10 @@ public class SingleConfigurableEditor extends DialogWrapper {
           Messages.showMessageDialog(myProject, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
         }
         else {
-          Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitle(),
-                                     Messages.getErrorIcon());
+          Messages.showMessageDialog(myParentComponent, e.getMessage(), e.getTitle(), Messages.getErrorIcon());
         }
-      } finally {
+      }
+      finally {
         myPerformAction = false;
       }
     }

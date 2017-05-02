@@ -28,12 +28,13 @@ import com.intellij.openapi.options.newEditor.OptionsEditor;
 import com.intellij.openapi.options.newEditor.OptionsEditorDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +48,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author max
  */
 public class ShowSettingsUtilImpl extends ShowSettingsUtil {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.ShowSettingsUtilImpl");
+  private static final Logger LOG = Logger.getInstance(ShowSettingsUtilImpl.class);
   private AtomicBoolean myShown = new AtomicBoolean(false);
 
   @Override
@@ -149,16 +150,12 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
 
     final Project tempProject = project;
 
-    List<ConfigurableEP<Configurable>> configurableEPs = new ArrayList<ConfigurableEP<Configurable>>();
+    List<ConfigurableEP<Configurable>> configurableEPs = new ArrayList<>();
     Collections.addAll(configurableEPs, ApplicationManager.getApplication().getExtensions(Configurable.APPLICATION_CONFIGURABLE));
     Collections.addAll(configurableEPs, project.getExtensions(Configurable.PROJECT_CONFIGURABLE));
 
-    List<Configurable> result = ConfigurableExtensionPointUtil.buildConfigurablesList(configurableEPs, new Condition<Configurable>() {
-      @Override
-      public boolean value(final Configurable configurable) {
-        return !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable);
-      }
-    });
+    List<Configurable> result = ConfigurableExtensionPointUtil
+            .buildConfigurablesList(configurableEPs, configurable -> !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable));
 
     return ContainerUtil.toArray(result, Configurable.ARRAY_FACTORY);
   }
@@ -191,9 +188,10 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     _showSettingsDialog(project, buildConfigurables(project), toSelect);
   }
 
+  @RequiredDispatchThread
   @Override
-  public boolean editConfigurable(Project project, Configurable configurable) {
-    return editConfigurable(project, createDimensionKey(configurable), configurable);
+  public boolean editConfigurable(@Nullable String title, Project project, Configurable configurable) {
+    return editConfigurable(title, project, createDimensionKey(configurable), configurable);
   }
 
   @Override
@@ -206,37 +204,43 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     return ConfigurableExtensionPointUtil.findProjectConfigurable(project, confClass);
   }
 
+  @RequiredDispatchThread
   @Override
-  public boolean editConfigurable(Project project, String dimensionServiceKey, @NotNull Configurable configurable) {
-    return editConfigurable(null, project, configurable, dimensionServiceKey, null);
+  public boolean editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, @NotNull Configurable configurable) {
+    return editConfigurable(null, project, configurable, title, dimensionServiceKey, null);
   }
 
   @Override
-  public boolean editConfigurable(Project project, Configurable configurable, Runnable advancedInitialization) {
-    return editConfigurable(null, project, configurable, createDimensionKey(configurable), advancedInitialization);
+  @RequiredDispatchThread
+  public boolean editConfigurable(String title, Project project, Configurable configurable, Runnable advancedInitialization) {
+    return editConfigurable(null, project, configurable, title, createDimensionKey(configurable), advancedInitialization);
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean editConfigurable(Component parent, Configurable configurable) {
     return editConfigurable(parent, configurable, null);
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean editConfigurable(final Component parent, final Configurable configurable, @Nullable final Runnable advancedInitialization) {
-    return editConfigurable(parent, null, configurable, createDimensionKey(configurable), advancedInitialization);
+    return editConfigurable(parent, null, configurable, null, createDimensionKey(configurable), advancedInitialization);
   }
 
-  private static boolean editConfigurable(final @Nullable Component parent,
+  @RequiredDispatchThread
+  private static boolean editConfigurable(@Nullable Component parent,
                                           @Nullable Project project,
-                                          final Configurable configurable,
-                                          final String dimensionKey,
+                                          Configurable configurable,
+                                          String title,
+                                          String dimensionKey,
                                           @Nullable final Runnable advancedInitialization) {
     SingleConfigurableEditor editor;
     if (parent != null) {
-      editor = new SingleConfigurableEditor(parent, configurable, dimensionKey);
+      editor = new SingleConfigurableEditor(parent, configurable, title, dimensionKey, true, DialogWrapper.IdeModalityType.IDE);
     }
     else {
-      editor = new SingleConfigurableEditor(project, configurable, dimensionKey);
+      editor = new SingleConfigurableEditor(project, configurable, title, dimensionKey, true, DialogWrapper.IdeModalityType.IDE);
     }
     if (advancedInitialization != null) {
       new UiNotifyConnector.Once(editor.getContentPane(), new Activatable.Adapter() {
@@ -258,9 +262,10 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     return '#' + StringUtil.replaceChar(StringUtil.replaceChar(displayName, '\n', '_'), ' ', '_');
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable) {
-    return editConfigurable(parent, null, configurable, dimensionServiceKey, null);
+    return editConfigurable(parent, null, configurable, null, dimensionServiceKey, null);
   }
 
   public boolean isAlreadyShown() {

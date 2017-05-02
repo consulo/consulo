@@ -18,6 +18,7 @@ package com.intellij.openapi.options;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,16 +38,37 @@ public abstract class ShowSettingsUtil {
 
   public abstract void showSettingsDialog(@NotNull final Project project, final Configurable toSelect);
 
-  public abstract boolean editConfigurable(Project project, Configurable configurable);
+  @RequiredDispatchThread
+  public boolean editConfigurable(Project project, Configurable configurable) {
+    return editConfigurable(null, project, configurable);
+  }
 
-  public abstract boolean editConfigurable(Project project, Configurable configurable, Runnable advancedInitialization);
+  @RequiredDispatchThread
+  public abstract boolean editConfigurable(@Nullable String title, Project project, Configurable configurable);
 
+  @RequiredDispatchThread
+  public boolean editConfigurable(Project project, Configurable configurable, Runnable advancedInitialization) {
+    return editConfigurable(null, project, configurable, advancedInitialization);
+  }
+
+  @RequiredDispatchThread
+  public abstract boolean editConfigurable(@Nullable String title, Project project, Configurable configurable, Runnable advancedInitialization);
+
+  @RequiredDispatchThread
   public abstract boolean editConfigurable(Component parent, Configurable configurable);
 
+  @RequiredDispatchThread
   public abstract boolean editConfigurable(Component parent, Configurable configurable, Runnable advancedInitialization);
 
-  public abstract boolean editConfigurable(Project project, @NonNls String dimensionServiceKey, Configurable configurable);
+  @RequiredDispatchThread
+  public boolean editConfigurable(Project project, @NonNls String dimensionServiceKey, Configurable configurable) {
+    return editConfigurable(null, project, dimensionServiceKey, configurable);
+  }
 
+  @RequiredDispatchThread
+  public abstract boolean editConfigurable(@Nullable String title, Project project, @NonNls String dimensionServiceKey, Configurable configurable);
+
+  @RequiredDispatchThread
   public abstract boolean editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable);
 
   /**
