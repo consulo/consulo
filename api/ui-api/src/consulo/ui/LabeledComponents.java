@@ -15,15 +15,20 @@
  */
 package consulo.ui;
 
+import com.intellij.openapi.util.text.StringUtilRt;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 05-Nov-16
  */
-public class Labels {
+public class LabeledComponents {
   @RequiredUIAccess
   public static Component left(@NotNull String text, @NotNull Component component) {
+    if (!StringUtilRt.endsWithChar(text, ':')) {
+      text += ": ";
+    }
+
     HorizontalLayout horizontal = Layouts.horizontal();
     horizontal.add(Components.label(text));
     horizontal.add(component);
@@ -32,6 +37,10 @@ public class Labels {
 
   @RequiredUIAccess
   public static Component leftFilled(@NotNull String text, @NotNull Component component) {
+    if (!StringUtilRt.endsWithChar(text, ':')) {
+      text += ": ";
+    }
+
     DockLayout dock = Layouts.dock();
     dock.left(Components.label(text));
     dock.center(component);

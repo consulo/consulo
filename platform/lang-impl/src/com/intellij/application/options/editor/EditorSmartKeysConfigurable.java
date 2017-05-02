@@ -83,7 +83,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
       reformatOnPasteBuilder.add(CodeInsightSettings.INDENT_EACH_LINE, ApplicationBundle.message("combobox.paste.reformat.indent.each.line"));
       reformatOnPasteBuilder.add(CodeInsightSettings.REFORMAT_BLOCK, ApplicationBundle.message("combobox.paste.reformat.reformat.block"));
 
-      myWholeLayout.add(Labels.left(ApplicationBundle.message("combobox.paste.reformat"), myReformatOnPasteCombo = reformatOnPasteBuilder.build()));
+      myWholeLayout.add(LabeledComponents.left(ApplicationBundle.message("combobox.paste.reformat"), myReformatOnPasteCombo = reformatOnPasteBuilder.build()));
 
       VerticalLayout enterLayout = Layouts.vertical();
       myWholeLayout.add(Layouts.labeled("Enter").set(enterLayout));
@@ -100,7 +100,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
       smartIndentBuilder.add(SmartBackspaceMode.OFF, ApplicationBundle.message("combobox.smart.backspace.off"));
       smartIndentBuilder.add(SmartBackspaceMode.INDENT, ApplicationBundle.message("combobox.smart.backspace.simple"));
       smartIndentBuilder.add(SmartBackspaceMode.AUTOINDENT, ApplicationBundle.message("combobox.smart.backspace.smart"));
-      backspaceLayout.add(Labels.left(ApplicationBundle.message("combobox.smart.backspace"), myCbIndentingBackspace = smartIndentBuilder.build()));
+      backspaceLayout.add(LabeledComponents.left(ApplicationBundle.message("combobox.smart.backspace"), myCbIndentingBackspace = smartIndentBuilder.build()));
     }
 
     private static boolean hasAnyDocAwareCommenters() {

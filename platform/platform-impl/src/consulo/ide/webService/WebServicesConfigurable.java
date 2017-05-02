@@ -47,7 +47,7 @@ public class WebServicesConfigurable extends SimpleConfigurableByProperties impl
     enableUpdates.addValueListener(event -> channelComboBox.setEnabled(event.getValue()));
 
     repoLayout.add(Layouts.horizontal().add(enableUpdates));
-    repoLayout.add(Labels.left("Channel: ", channelComboBox));
+    repoLayout.add(LabeledComponents.left("Channel", channelComboBox));
 
     WebServicesConfiguration webServicesConfiguration = WebServicesConfiguration.getInstance();
     for (WebServiceApi api : WebServiceApi.values()) {
@@ -58,7 +58,7 @@ public class WebServicesConfigurable extends SimpleConfigurableByProperties impl
 
       TextField textField = Components.textField();
 
-      layout.add(Layouts.labeled(description).set(Labels.leftFilled("OAuth Key: ", textField)));
+      layout.add(Layouts.labeled(description).set(LabeledComponents.leftFilled("OAuth Key", textField)));
       propertyBuilder.add(textField, () -> webServicesConfiguration.getOAuthKey(api), text -> webServicesConfiguration.setOAuthKey(api, text));
     }
     return layout;
