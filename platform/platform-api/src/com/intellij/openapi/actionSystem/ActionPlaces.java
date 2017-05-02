@@ -70,7 +70,6 @@ public abstract class ActionPlaces {
   public static final String STRUCTURE_VIEW_POPUP = "StructureViewPopup";
   public static final String STRUCTURE_VIEW_TOOLBAR = "StructureViewToolbar";
   public static final String NAVIGATION_BAR_POPUP = "NavBar";
-  @Deprecated public static final String NAVIGATION_BAR = NAVIGATION_BAR_POPUP;
   public static final String NAVIGATION_BAR_TOOLBAR = "NavBarToolbar";
 
   public static final String TODO_VIEW_POPUP = "TodoViewPopup";

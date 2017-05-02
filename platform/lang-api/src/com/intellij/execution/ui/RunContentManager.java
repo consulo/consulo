@@ -29,15 +29,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public interface RunContentManager {
-  Topic<RunContentWithExecutorListener> TOPIC =
-          Topic.create("Run Content", RunContentWithExecutorListener.class);
+  Topic<RunContentWithExecutorListener> TOPIC = Topic.create("Run Content", RunContentWithExecutorListener.class);
 
   @SuppressWarnings("UnusedDeclaration")
   @Deprecated
   /**
    * @deprecated Use {@link LangDataKeys#RUN_CONTENT_DESCRIPTOR} instead
    */
-          DataKey<RunContentDescriptor> RUN_CONTENT_DESCRIPTOR = LangDataKeys.RUN_CONTENT_DESCRIPTOR;
+  DataKey<RunContentDescriptor> RUN_CONTENT_DESCRIPTOR = LangDataKeys.RUN_CONTENT_DESCRIPTOR;
 
   @Nullable
   RunContentDescriptor getSelectedContent();
