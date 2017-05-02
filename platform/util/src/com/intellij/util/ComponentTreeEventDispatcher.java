@@ -15,7 +15,6 @@
  */
 package com.intellij.util;
 
-import com.intellij.openapi.util.Getter;
 import com.intellij.util.containers.JBTreeTraverser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +31,6 @@ import static com.intellij.util.ui.UIUtil.uiTraverser;
  * @author gregsh
  */
 public class ComponentTreeEventDispatcher<T extends EventListener> {
-
   private final Class<T> myListenerClass;
   private final T myMulticaster;
 
@@ -46,13 +44,10 @@ public class ComponentTreeEventDispatcher<T extends EventListener> {
 
   private ComponentTreeEventDispatcher(@Nullable final Component root, @NotNull Class<T> listenerClass) {
     myListenerClass = listenerClass;
-    myMulticaster = EventDispatcher.createMulticaster(listenerClass, new Getter<Iterable<T>>() {
-      @Override
-      public Iterable<T> get() {
-        JBTreeTraverser<Component> traverser = uiTraverser(root);
-        if (root == null) traverser = traverser.withRoots(Arrays.asList(Window.getWindows()));
-        return traverser.postOrderDfsTraversal().filter(myListenerClass);
-      }
+    myMulticaster = EventDispatcher.createMulticaster(listenerClass, () -> {
+      JBTreeTraverser<Component> traverser = uiTraverser(root);
+      if (root == null) traverser = traverser.withRoots(Arrays.asList(Window.getWindows()));
+      return traverser.postOrderDfsTraversal().filter(myListenerClass);
     });
   }
 
@@ -60,5 +55,4 @@ public class ComponentTreeEventDispatcher<T extends EventListener> {
   public T getMulticaster() {
     return myMulticaster;
   }
-
 }

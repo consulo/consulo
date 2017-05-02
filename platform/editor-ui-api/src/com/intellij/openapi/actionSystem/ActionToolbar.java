@@ -17,11 +17,13 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.ui.switcher.SwitchProvider;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+
 
 /**
  * Represents a toolbar with a visual presentation.
@@ -47,7 +49,9 @@ public interface ActionToolbar extends SwitchProvider, QuickActionProvider {
    */
   int AUTO_LAYOUT_POLICY = 2;
 
-  /** This is default minimum size of the toolbar button, without scaling */
+  /**
+   * This is default minimum size of the toolbar button, without scaling
+   */
   Dimension DEFAULT_MINIMUM_BUTTON_SIZE = new Dimension(25, 25);
 
   Dimension NAVBAR_MINIMUM_BUTTON_SIZE = new Dimension(20, 20);
@@ -82,9 +86,8 @@ public interface ActionToolbar extends SwitchProvider, QuickActionProvider {
    * Sets minimum size of toolbar button. By default all buttons
    * at toolbar has 25x25 pixels size.
    *
-   * @throws IllegalArgumentException
-   *          if <code>size</code>
-   *          is <code>null</code>
+   * @throws IllegalArgumentException if <code>size</code>
+   *                                  is <code>null</code>
    */
   void setMinimumButtonSize(@NotNull Dimension size);
 
@@ -108,7 +111,7 @@ public interface ActionToolbar extends SwitchProvider, QuickActionProvider {
   void updateActionsImmediately();
 
   boolean hasVisibleActions();
-  
+
   /**
    * @param component will be used for datacontext computations
    */
@@ -121,4 +124,7 @@ public interface ActionToolbar extends SwitchProvider, QuickActionProvider {
   void setMiniMode(boolean minimalMode);
 
   DataContext getToolbarDataContext();
+
+  @NotNull
+  List<AnAction> getActions();
 }

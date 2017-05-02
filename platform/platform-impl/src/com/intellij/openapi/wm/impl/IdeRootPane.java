@@ -51,8 +51,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseMotionAdapter;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,12 +99,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
       menuBar = new IdeMenuBar(actionManager, dataManager);
       getLayeredPane().add(menuBar, new Integer(JLayeredPane.DEFAULT_LAYER - 1));
       if (frame instanceof IdeFrameEx) {
-        addPropertyChangeListener(WindowManagerImpl.FULL_SCREEN, new PropertyChangeListener() {
-          @Override
-          public void propertyChange(PropertyChangeEvent evt) {
-            myFullScreen = ((IdeFrameEx)frame).isInFullScreen();
-          }
-        });
+        addPropertyChangeListener(WindowManagerImpl.FULL_SCREEN, __ -> myFullScreen = ((IdeFrameEx)frame).isInFullScreen());
       }
     }
     else {
@@ -240,7 +233,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     myStatusBar.addWidget(myMemoryWidget);
     myStatusBar.addWidget(new IdeMessagePanel(frame, MessagePool.getInstance()), "before " + MemoryUsagePanel.WIDGET_ID);
 
-    setMemoryIndicatorVisible(UISettings.getInstance().SHOW_MEMORY_INDICATOR);
+    setMemoryIndicatorVisible(UISettings.getInstance().getShowMemoryIndicator());
   }
 
   private void setMemoryIndicatorVisible(final boolean visible) {
@@ -262,11 +255,11 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
   }
 
   private void updateToolbarVisibility(){
-    myToolbar.setVisible(UISettings.getInstance().SHOW_MAIN_TOOLBAR && !UISettings.getInstance().PRESENTATION_MODE);
+    myToolbar.setVisible(UISettings.getInstance().getShowMainToolbar() && !UISettings.getInstance().getPresentationMode());
   }
 
   private void updateStatusBarVisibility(){
-    myStatusBar.setVisible(UISettings.getInstance().SHOW_STATUS_BAR && !UISettings.getInstance().PRESENTATION_MODE);
+    myStatusBar.setVisible(UISettings.getInstance().getShowStatusBar() && !UISettings.getInstance().getPresentationMode());
   }
 
   void installNorthComponents(final Project project) {
@@ -296,7 +289,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
 
   @Override
   public void uiSettingsChanged(UISettings uiSettings) {
-    setMemoryIndicatorVisible(uiSettings.SHOW_MEMORY_INDICATOR);
+    setMemoryIndicatorVisible(uiSettings.getShowMemoryIndicator());
     updateToolbarVisibility();
     updateStatusBarVisibility();
     for (IdeRootPaneNorthExtension component : myNorthComponents) {

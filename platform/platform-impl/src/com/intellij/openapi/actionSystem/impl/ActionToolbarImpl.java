@@ -527,7 +527,8 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
           boolean inside;
           if (isLast) {
             inside = eachX + eachBound.width <= widthToFit;
-          } else {
+          }
+          else {
             inside = eachX + eachBound.width + autoButtonSize <= widthToFit;
           }
 
@@ -541,7 +542,8 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
               else {
                 eachBound.x = insets.left + eachX;
               }
-            } else {
+            }
+            else {
               eachBound.x = insets.left + eachX;
               eachX += eachBound.width;
             }
@@ -1288,6 +1290,13 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
 
   @Override
   public List<AnAction> getActions(boolean originalProvider) {
+    return getActions();
+  }
+
+
+  @NotNull
+  @Override
+  public List<AnAction> getActions() {
     ArrayList<AnAction> result = new ArrayList<>();
 
     ArrayList<AnAction> secondary = new ArrayList<>();

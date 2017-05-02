@@ -24,7 +24,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.EventDispatcher;
+import com.intellij.util.ComponentTreeEventDispatcher;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.Accessor;
@@ -138,21 +138,22 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean NAVIGATE_TO_PREVIEW = false;
   public boolean SMOOTH_SCROLLING = SystemInfo.isMac && (SystemInfo.isJetbrainsJvm || SystemInfo.isJavaVersionAtLeast("9"));
 
-  private final EventDispatcher<UISettingsListener> myDispatcher = EventDispatcher.create(UISettingsListener.class);
+  private final ComponentTreeEventDispatcher<UISettingsListener> myDispatcher = ComponentTreeEventDispatcher.create(UISettingsListener.class);
 
   public UISettings() {
     setSystemFontFaceAndSize();
   }
 
-  /**
-   * @deprecated use {@link UISettings#addUISettingsListener(com.intellij.ide.ui.UISettingsListener, Disposable disposable)} instead.
-   */
+  @Deprecated
+  @DeprecationInfo("Use UISettingsListener#TOPIC")
   public void addUISettingsListener(UISettingsListener listener) {
-    myDispatcher.addListener(listener);
+    ApplicationManager.getApplication().getMessageBus().connect().subscribe(UISettingsListener.TOPIC, listener);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use UISettingsListener#TOPIC")
   public void addUISettingsListener(@NotNull final UISettingsListener listener, @NotNull Disposable parentDisposable) {
-    myDispatcher.addListener(listener, parentDisposable);
+    ApplicationManager.getApplication().getMessageBus().connect(parentDisposable).subscribe(UISettingsListener.TOPIC, listener);
   }
 
   /**
@@ -162,10 +163,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     incModificationCount();
     myDispatcher.getMulticaster().uiSettingsChanged(this);
     ApplicationManager.getApplication().getMessageBus().syncPublisher(UISettingsListener.TOPIC).uiSettingsChanged(this);
-  }
-
-  public void removeUISettingsListener(UISettingsListener listener) {
-    myDispatcher.removeListener(listener);
   }
 
   private void setSystemFontFaceAndSize() {
@@ -376,6 +373,18 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public boolean getShowMainToolbar() {
     return SHOW_MAIN_TOOLBAR;
+  }
+
+  public void setShowMainToolbar(boolean value) {
+    SHOW_MAIN_TOOLBAR = value;
+  }
+
+  public boolean getShowMemoryIndicator() {
+    return SHOW_MEMORY_INDICATOR;
+  }
+
+  public boolean getShowStatusBar() {
+    return SHOW_STATUS_BAR;
   }
 
   public boolean getShowNavigationBar() {
