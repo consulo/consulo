@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,14 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class EnterBetweenBracesHandler extends EnterHandlerDelegateAdapter {
@@ -44,22 +47,31 @@ public class EnterBetweenBracesHandler extends EnterHandlerDelegateAdapter {
     if (!CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
       return Result.Continue;
     }
-    
-    if (caretOffset <= 0 || caretOffset >= text.length() || !isBracePair(text.charAt(caretOffset - 1), text.charAt(caretOffset))) {
+
+    int prevCharOffset = CharArrayUtil.shiftBackward(text, caretOffset - 1, " \t");
+    int nextCharOffset = CharArrayUtil.shiftForward(text, caretOffset, " \t");
+
+    if (!isValidOffset(prevCharOffset, text) || !isValidOffset(nextCharOffset, text) ||
+        !isBracePair(text.charAt(prevCharOffset), text.charAt(nextCharOffset))) {
+      return Result.Continue;
+    }
+
+    PsiDocumentManager.getInstance(file.getProject()).commitDocument(editor.getDocument());
+    if (file.findElementAt(prevCharOffset) == file.findElementAt(nextCharOffset)) {
       return Result.Continue;
     }
 
     final int line = document.getLineNumber(caretOffset);
     final int start = document.getLineStartOffset(line);
     final CodeDocumentationUtil.CommentContext commentContext =
-      CodeDocumentationUtil.tryParseCommentContext(file, text, caretOffset, start);
+            CodeDocumentationUtil.tryParseCommentContext(file, text, caretOffset, start);
 
     // special case: enter inside "()" or "{}"
-    String indentInsideJavadoc = commentContext.docAsterisk
+    String indentInsideJavadoc = isInComment(caretOffset, file) && commentContext.docAsterisk
                                  ? CodeDocumentationUtil.getIndentInsideJavadoc(document, caretOffset)
                                  : null;
 
-    originalHandler.execute(editor, dataContext);
+    originalHandler.execute(editor, editor.getCaretModel().getCurrentCaret(), dataContext);
 
     Project project = editor.getProject();
     if (indentInsideJavadoc != null && project != null && CodeStyleSettingsManager.getSettings(project).JD_LEADING_ASTERISKS_ARE_ENABLED) {
@@ -74,6 +86,14 @@ public class EnterBetweenBracesHandler extends EnterHandlerDelegateAdapter {
       LOG.error(e);
     }
     return indentInsideJavadoc == null ? Result.Continue : Result.DefaultForceIndent;
+  }
+
+  private static boolean isInComment(int offset, PsiFile file) {
+    return PsiTreeUtil.getParentOfType(file.findElementAt(offset), PsiComment.class)!=null;
+  }
+
+  private static boolean isValidOffset(int offset, CharSequence text) {
+    return offset >= 0 && offset < text.length();
   }
 
   protected boolean isBracePair(char c1, char c2) {

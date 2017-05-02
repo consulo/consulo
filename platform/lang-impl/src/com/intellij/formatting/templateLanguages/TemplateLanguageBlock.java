@@ -61,12 +61,12 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
     if (isLeaf()) {
       return EMPTY;
     }
-    final ArrayList<TemplateLanguageBlock> tlChildren = new ArrayList<TemplateLanguageBlock>(5);
+    final ArrayList<TemplateLanguageBlock> tlChildren = new ArrayList<>(5);
     for (ASTNode childNode = getNode().getFirstChildNode(); childNode != null; childNode = childNode.getTreeNext()) {
       if (FormatterUtil.containsWhiteSpacesOnly(childNode)) continue;
       if (shouldBuildBlockFor(childNode)) {
         final TemplateLanguageBlock childBlock = myBlockFactory
-          .createTemplateLanguageBlock(childNode, createChildWrap(childNode), createChildAlignment(childNode), null, mySettings);
+                .createTemplateLanguageBlock(childNode, createChildWrap(childNode), createChildAlignment(childNode), null, mySettings);
         childBlock.setParent(this);
         tlChildren.add(childBlock);
       }
@@ -97,7 +97,7 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
   private void initForeignChildren() {
     assert !myChildrenBuilt;
     if (myForeignChildren == null) {
-      myForeignChildren = new ArrayList<DataLanguageBlockWrapper>(5);
+      myForeignChildren = new ArrayList<>(5);
     }
   }
 
@@ -107,6 +107,18 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
     if (child1 instanceof DataLanguageBlockWrapper && child2 instanceof DataLanguageBlockWrapper) {
       return ((DataLanguageBlockWrapper)child1).getRightHandSpacing((DataLanguageBlockWrapper)child2);
     }
+    return null;
+  }
+
+  /**
+   * Invoked when the current base language block is located inside a template data language block to determine the spacing after the current block.
+   * @param rightNeighbor the block to the right of the current one
+   * @param parent the parent block
+   * @param thisBlockIndex the index of the current block in the parent block subblocks
+   * @return the spacing between the current block and its right neighbor
+   */
+  @Nullable
+  public Spacing getRightNeighborSpacing(@NotNull Block rightNeighbor, @NotNull DataLanguageBlockWrapper parent, int thisBlockIndex) {
     return null;
   }
 
@@ -137,7 +149,7 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
   }
 
   protected Wrap createChildWrap(ASTNode child) {
-    return Wrap.createWrap(Wrap.NONE, false);
+    return Wrap.createWrap(WrapType.NONE, false);
   }
 
   protected Alignment createChildAlignment(ASTNode child) {
@@ -152,5 +164,9 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
     return myForeignChildren;
   }
 
+  @Nullable
+  public Wrap substituteTemplateChildWrap(@NotNull DataLanguageBlockWrapper child, @Nullable Wrap childWrap) {
+    return childWrap;
+  }
 }
 

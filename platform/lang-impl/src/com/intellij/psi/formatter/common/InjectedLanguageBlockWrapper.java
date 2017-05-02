@@ -18,7 +18,6 @@ package com.intellij.psi.formatter.common;
 import com.intellij.formatting.*;
 import com.intellij.lang.Language;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,13 +34,14 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
   private                 List<Block> myBlocks;
 
   /**
-   *  main code                  prefix    injected code        suffix
-   *     |                         |            |                 |
-   *     |                       xxx!!!!!!!!!!!!!!!!!!!!!!!!!!!!xxx
-   * ...............................!!!!!!!!!!!!!!!!!!!!!!!!!!!!....................
-   *                                ^
-   *                              offset
-   *
+   * <pre>
+   *  main code     prefix    injected code        suffix
+   *     |            |            |                 |
+   *     |          xxx!!!!!!!!!!!!!!!!!!!!!!!!!!!!xxx
+   * ..................!!!!!!!!!!!!!!!!!!!!!!!!!!!!..........
+   *                   ^
+   *                 offset
+   * </pre>
    * @param original block inside injected code
    * @param offset start offset of injected code inside the main document
    * @param range range of code inside injected document which is really placed in the main document
@@ -107,7 +107,7 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
     if (list.isEmpty()) return AbstractBlock.EMPTY;
     if (myOffset == 0 && myRange == null) return list;
 
-    final ArrayList<Block> result = new ArrayList<Block>(list.size());
+    final ArrayList<Block> result = new ArrayList<>(list.size());
     if (myRange == null) {
       for (Block block : list) {
         result.add(new InjectedLanguageBlockWrapper(block, myOffset, myRange, null, myLanguage));
@@ -122,6 +122,9 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
   private void collectBlocksIntersectingRange(final List<Block> list, final List<Block> result, @NotNull final TextRange range) {
     for (Block block : list) {
       final TextRange textRange = block.getTextRange();
+      if (block instanceof InjectedLanguageBlockWrapper && block.getTextRange().equals(range)) {
+        continue;
+      }
       if (range.contains(textRange)) {
         result.add(new InjectedLanguageBlockWrapper(block, myOffset, range, null, myLanguage));
       }
@@ -151,12 +154,7 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
     if (spacing instanceof DependantSpacingImpl && shift != 0) {
       DependantSpacingImpl hostSpacing = (DependantSpacingImpl)spacing;
       final int finalShift = shift;
-      List<TextRange> shiftedRanges = ContainerUtil.map(hostSpacing.getDependentRegionRanges(), new Function<TextRange, TextRange>() {
-        @Override
-        public TextRange fun(TextRange range) {
-          return range.shiftRight(finalShift);
-        }
-      });
+      List<TextRange> shiftedRanges = ContainerUtil.map(hostSpacing.getDependentRegionRanges(), range -> range.shiftRight(finalShift));
       return new DependantSpacingImpl(
               hostSpacing.getMinSpaces(), hostSpacing.getMaxSpaces(), shiftedRanges,
               hostSpacing.shouldKeepLineFeeds(), hostSpacing.getKeepBlankLines(), DependentSpacingRule.DEFAULT
@@ -184,5 +182,9 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
   @Override
   public String toString() {
     return myOriginal.toString();
+  }
+
+  public Block getOriginal() {
+    return myOriginal;
   }
 }

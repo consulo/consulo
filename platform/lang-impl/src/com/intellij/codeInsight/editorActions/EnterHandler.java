@@ -54,7 +54,6 @@ import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
-import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,7 +73,6 @@ public class EnterHandler extends BaseEnterHandler {
     return myOriginalHandler.isEnabled(editor, caret, dataContext);
   }
 
-  @RequiredWriteAction
   @Override
   public void executeWriteAction(final Editor editor, final Caret caret, final DataContext dataContext) {
     final Project project = CommonDataKeys.PROJECT.getData(dataContext);
