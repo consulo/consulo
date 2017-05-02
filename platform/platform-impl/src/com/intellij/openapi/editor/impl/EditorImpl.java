@@ -1521,7 +1521,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
       ApplicationManager.getApplication().invokeLater(() -> {
         try {
           if (!isDisposed()) {
-            myGutterComponent.updateSize();
+            myGutterComponent.updateSizeOnShowNotify();
           }
         }
         finally {
