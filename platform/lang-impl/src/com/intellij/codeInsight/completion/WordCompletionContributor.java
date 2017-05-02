@@ -23,15 +23,15 @@ import com.intellij.lang.LanguageWordCompletion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.cache.impl.id.IdTableBuilding;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredReadAction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -47,21 +47,21 @@ public class WordCompletionContributor extends CompletionContributor implements 
 
   @RequiredReadAction
   @Override
-  public void fillCompletionVariants(final CompletionParameters parameters, final CompletionResultSet result) {
+  public void fillCompletionVariants(@NotNull final CompletionParameters parameters, @NotNull final CompletionResultSet result) {
     if (parameters.getCompletionType() == CompletionType.BASIC && shouldPerformWordCompletion(parameters)) {
-      addWordCompletionVariants(result, parameters, Collections.<String>emptySet());
+      addWordCompletionVariants(result, parameters, Collections.emptySet());
     }
   }
 
   public static void addWordCompletionVariants(CompletionResultSet result, final CompletionParameters parameters, Set<String> excludes) {
-    final Set<String> realExcludes = new HashSet<String>(excludes);
+    final Set<String> realExcludes = new HashSet<>(excludes);
     for (String exclude : excludes) {
       String[] words = exclude.split("[ \\.-]");
       if (words.length > 0 && StringUtil.isNotEmpty(words[0])) {
         realExcludes.add(words[0]);
       }
     }
-    
+
     int startOffset = parameters.getOffset();
     final PsiElement position = parameters.getPosition();
     final CompletionResultSet javaResultSet = result.withPrefixMatcher(CompletionUtil.findJavaIdentifierPrefix(parameters));
@@ -85,12 +85,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
       return;
     }
     final ElementPattern<PsiElement> pattern = psiElement().withElementType(definition.getStringLiteralElements(position.getLanguageVersion()));
-    final PsiElement localString = PsiTreeUtil.findFirstParent(position, false, new Condition<PsiElement>() {
-      @Override
-      public boolean value(PsiElement element) {
-        return pattern.accepts(element);
-      }
-    });
+    final PsiElement localString = PsiTreeUtil.findFirstParent(position, false, element -> pattern.accepts(element));
     if (localString == null) {
       return;
     }
@@ -141,7 +136,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
     final PsiFile file = insertedElement.getContainingFile();
     final CompletionData data = CompletionUtil.getCompletionDataByElement(insertedElement, file);
     if (data != null) {
-      Set<CompletionVariant> toAdd = new HashSet<CompletionVariant>();
+      Set<CompletionVariant> toAdd = new HashSet<>();
       data.addKeywordVariants(toAdd, insertedElement, file);
       for (CompletionVariant completionVariant : toAdd) {
         if (completionVariant.hasKeywordCompletions()) {
@@ -171,7 +166,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
   }
 
   public static Set<String> getAllWords(final PsiElement context, final int offset) {
-    final Set<String> words = new LinkedHashSet<String>();
+    final Set<String> words = new LinkedHashSet<>();
     if (StringUtil.isEmpty(CompletionUtil.findJavaIdentifierPrefix(context, offset))) {
       return words;
     }

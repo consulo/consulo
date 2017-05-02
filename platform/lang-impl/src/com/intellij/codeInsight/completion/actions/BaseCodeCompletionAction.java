@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,33 +18,41 @@ package com.intellij.codeInsight.completion.actions;
 import com.intellij.codeInsight.completion.CodeCompletionHandlerBase;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.InputEvent;
 
 /**
  * @author peter
  */
-public abstract class BaseCodeCompletionAction extends AnAction implements HintManagerImpl.ActionToIgnore, DumbAware {
+public abstract class BaseCodeCompletionAction extends DumbAwareAction implements HintManagerImpl.ActionToIgnore {
 
   protected BaseCodeCompletionAction() {
     setEnabledInModalContext(true);
     setInjectedContext(true);
   }
 
-  protected static void invokeCompletion(AnActionEvent e, CompletionType type, int time) {
+  protected void invokeCompletion(AnActionEvent e, CompletionType type, int time) {
     Project project = e.getData(CommonDataKeys.PROJECT);
-    Editor editor = e.getData(PlatformDataKeys.EDITOR);
+    Editor editor = e.getData(CommonDataKeys.EDITOR);
     assert project != null;
     assert editor != null;
     InputEvent inputEvent = e.getInputEvent();
-    new CodeCompletionHandlerBase(type).invokeCompletion(project, editor, time, inputEvent != null && inputEvent.getModifiers() != 0, false);
+    createHandler(type, true, false, true).invokeCompletion(project, editor, time, inputEvent != null && inputEvent.getModifiers() != 0, false);
+  }
+
+  @NotNull
+  public CodeCompletionHandlerBase createHandler(@NotNull CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous) {
+    return new CodeCompletionHandlerBase(completionType, invokedExplicitly, autopopup, synchronous);
   }
 
   @Override
@@ -54,7 +62,7 @@ public abstract class BaseCodeCompletionAction extends AnAction implements HintM
     Project project = CommonDataKeys.PROJECT.getData(dataContext);
     if (project == null) return;
 
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
     if (editor == null) return;
 
     final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);

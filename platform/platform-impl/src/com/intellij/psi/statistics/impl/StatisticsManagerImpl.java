@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.*;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 public class StatisticsManagerImpl extends StatisticsManager {
   private static final int UNIT_COUNT = 997;
@@ -43,8 +44,8 @@ public class StatisticsManagerImpl extends StatisticsManager {
 
   @NonNls private static final String STORE_PATH = PathManager.getSystemPath() + File.separator + "stat";
 
-  private final SoftReference[] myUnits = new SoftReference[UNIT_COUNT];
-  private final HashSet<StatisticsUnit> myModifiedUnits = new HashSet<StatisticsUnit>();
+  private final List<SoftReference<StatisticsUnit>> myUnits = ContainerUtil.newArrayList(Collections.nCopies(UNIT_COUNT, null));
+  private final HashSet<StatisticsUnit> myModifiedUnits = new HashSet<>();
   private boolean myTestingStatistics;
 
   public int getUseCount(@NotNull final StatisticsInfo info) {
@@ -116,12 +117,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
     synchronized (LOCK) {
       strings = getUnit(getUnitNumber(context)).getKeys2(context);
     }
-    return ContainerUtil.map2Array(strings, StatisticsInfo.class, new NotNullFunction<String, StatisticsInfo>() {
-      @NotNull
-      public StatisticsInfo fun(final String s) {
-        return new StatisticsInfo(context, s);
-      }
-    });
+    return ContainerUtil.map2Array(strings, StatisticsInfo.class, (NotNullFunction<String, StatisticsInfo>)s -> new StatisticsInfo(context, s));
   }
 
   public void save() {
@@ -137,16 +133,13 @@ public class StatisticsManagerImpl extends StatisticsManager {
   }
 
   private StatisticsUnit getUnit(int unitNumber) {
-    SoftReference ref = myUnits[unitNumber];
-    if (ref != null){
-      StatisticsUnit unit = (StatisticsUnit)ref.get();
-      if (unit != null) return unit;
-    }
-    StatisticsUnit unit = loadUnit(unitNumber);
+    StatisticsUnit unit = SoftReference.dereference(myUnits.get(unitNumber));
+    if (unit != null) return unit;
+    unit = loadUnit(unitNumber);
     if (unit == null){
       unit = new StatisticsUnit(unitNumber);
     }
-    myUnits[unitNumber] = new SoftReference<StatisticsUnit>(unit);
+    myUnits.set(unitNumber, new SoftReference<>(unit));
     return unit;
   }
 
@@ -154,19 +147,10 @@ public class StatisticsManagerImpl extends StatisticsManager {
     StatisticsUnit unit = new StatisticsUnit(unitNumber);
     if (!ApplicationManager.getApplication().isUnitTestMode()){
       String path = getPathToUnit(unitNumber);
-      try{
-        InputStream in = new BufferedInputStream(new FileInputStream(path));
-        in = new ScrambledInputStream(in);
-        try{
-          unit.read(in);
-        }
-        finally{
-          in.close();
-        }
+      try (InputStream in = new ScrambledInputStream(new BufferedInputStream(new FileInputStream(path)))) {
+        unit.read(in);
       }
-      catch(IOException e){
-      }
-      catch(WrongFormatException e){
+      catch(IOException | WrongFormatException ignored){
       }
     }
     return unit;
@@ -188,15 +172,15 @@ public class StatisticsManagerImpl extends StatisticsManager {
     }
     catch(IOException e){
       Messages.showMessageDialog(
-        IdeBundle.message("error.saving.statistics", e.getLocalizedMessage()),
-        CommonBundle.getErrorTitle(),
-        Messages.getErrorIcon()
+              IdeBundle.message("error.saving.statistics", e.getLocalizedMessage()),
+              CommonBundle.getErrorTitle(),
+              Messages.getErrorIcon()
       );
     }
   }
 
   private static int getUnitNumber(String key1) {
-    return Math.abs(key1.hashCode()) % UNIT_COUNT;
+    return Math.abs(key1.hashCode() % UNIT_COUNT);
   }
 
   private static boolean createStoreFolder(){
@@ -204,9 +188,9 @@ public class StatisticsManagerImpl extends StatisticsManager {
     if (!homeFile.exists()){
       if (!homeFile.mkdirs()){
         Messages.showMessageDialog(
-          IdeBundle.message("error.saving.statistic.failed.to.create.folder", STORE_PATH),
-          CommonBundle.getErrorTitle(),
-          Messages.getErrorIcon()
+                IdeBundle.message("error.saving.statistic.failed.to.create.folder", STORE_PATH),
+                CommonBundle.getErrorTitle(),
+                Messages.getErrorIcon()
         );
         return false;
       }
@@ -226,7 +210,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
       @Override
       public void dispose() {
         synchronized (LOCK) {
-          Arrays.fill(myUnits, null);
+          Collections.fill(myUnits, null);
         }
         myTestingStatistics = false;
       }

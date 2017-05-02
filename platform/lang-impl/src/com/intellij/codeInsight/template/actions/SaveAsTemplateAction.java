@@ -24,6 +24,9 @@
  */
 package com.intellij.codeInsight.template.actions;
 
+import com.intellij.codeInsight.completion.CompletionUtil;
+import com.intellij.codeInsight.completion.OffsetKey;
+import com.intellij.codeInsight.completion.OffsetsInFile;
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.codeInsight.template.impl.*;
 import com.intellij.lang.Language;
@@ -31,8 +34,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -49,25 +50,25 @@ import com.intellij.util.containers.HashMap;
 import consulo.lang.LanguagePointerUtil;
 import consulo.util.pointers.NamedPointer;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SaveAsTemplateAction extends AnAction {
 
-  private static final Logger LOG = Logger.getInstance("#" + SaveAsTemplateAction.class.getName());
+  private static final Logger LOG = Logger.getInstance(SaveAsTemplateAction.class);
   //FIXME [VISTALL] how remove this depend?
   private static final NamedPointer<Language> ourXmlLanguagePointer = LanguagePointerUtil.createPointer("XML");
 
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
-    PsiFile file = CommonDataKeys.PSI_FILE.getData(dataContext);
+    Editor editor = Objects.requireNonNull(CommonDataKeys.EDITOR.getData(dataContext));
+    PsiFile file = Objects.requireNonNull(CommonDataKeys.PSI_FILE.getData(dataContext));
 
     final Project project = file.getProject();
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    final TextRange selection = new TextRange(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd());
+    final TextRange selection = new TextRange(editor.getSelectionModel().getSelectionStart(),
+                                              editor.getSelectionModel().getSelectionEnd());
     PsiElement current = file.findElementAt(selection.getStartOffset());
     int startOffset = selection.getStartOffset();
     while (current instanceof PsiWhiteSpace) {
@@ -98,7 +99,6 @@ public class SaveAsTemplateAction extends AnAction {
           for (PsiReference reference : element.getReferences()) {
             if (!(reference instanceof PsiQualifiedReference) || ((PsiQualifiedReference)reference).getQualifier() == null) {
               String canonicalText = reference.getCanonicalText();
-              LOG.assertTrue(canonicalText != null, reference.getClass());
               TextRange referenceRange = reference.getRangeInElement();
               final TextRange elementTextRange = element.getTextRange();
               LOG.assertTrue(elementTextRange != null, elementTextRange);
@@ -123,8 +123,24 @@ public class SaveAsTemplateAction extends AnAction {
           }
         }
 
-        for (Map.Entry<RangeMarker, String> entry : rangeToText.entrySet()) {
-          document.replaceString(entry.getKey().getStartOffset(), entry.getKey().getEndOffset(), entry.getValue());
+        List<RangeMarker> markers = new ArrayList<>();
+        for (RangeMarker m1 : rangeToText.keySet()) {
+          boolean nested = false;
+          for (RangeMarker m2 : rangeToText.keySet()) {
+            if (m1 != m2 && m2.getStartOffset() <= m1.getStartOffset() && m1.getEndOffset() <= m2.getEndOffset()) {
+              nested = true;
+              break;
+            }
+          }
+
+          if (!nested) {
+            markers.add(m1);
+          }
+        }
+
+        for (RangeMarker marker : markers) {
+          final String value = rangeToText.get(marker);
+          document.replaceString(marker.getStartOffset(), marker.getEndOffset(), value);
         }
       }
     }.execute();
@@ -132,15 +148,16 @@ public class SaveAsTemplateAction extends AnAction {
     final TemplateImpl template = new TemplateImpl(TemplateListPanel.ABBREVIATION, document.getText(), TemplateSettings.USER_GROUP_NAME);
     template.setToReformat(true);
 
-    PsiFile copy;
-    AccessToken token = WriteAction.start();
-    try {
-      copy = TemplateManagerImpl.insertDummyIdentifier(editor, file);
-    }
-    finally {
-      token.finish();
-    }
-    Set<TemplateContextType> applicable = TemplateManagerImpl.getApplicableContextTypes(copy, startOffset);
+    OffsetKey startKey = OffsetKey.create("pivot");
+    OffsetsInFile offsets = new OffsetsInFile(file);
+    offsets.getOffsets().addOffset(startKey, startOffset);
+    OffsetsInFile copy = TemplateManagerImpl.copyWithDummyIdentifier(offsets,
+                                                                     editor.getSelectionModel().getSelectionStart(),
+                                                                     editor.getSelectionModel().getSelectionEnd(),
+                                                                     CompletionUtil.DUMMY_IDENTIFIER_TRIMMED);
+
+    Set<TemplateContextType> applicable = TemplateManagerImpl.getApplicableContextTypes(copy.getFile(),
+                                                                                        copy.getOffsets().getOffset(startKey));
 
     for (TemplateContextType contextType : TemplateManagerImpl.getAllContextTypes()) {
       template.getTemplateContext().setEnabled(contextType, applicable.contains(contextType));

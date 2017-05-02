@@ -34,7 +34,7 @@ public class CompletionCharFilter extends CharFilter {
     if (!lookup.isCompletion()) return null;
 
     if (Character.isJavaIdentifierPart(c)) return Result.ADD_TO_PREFIX;
-    switch(c){
+    switch (c) {
       case '.':
       case ',':
       case ';':

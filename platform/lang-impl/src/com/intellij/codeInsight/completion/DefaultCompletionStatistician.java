@@ -21,7 +21,7 @@ import com.intellij.psi.statistics.StatisticsInfo;
 /**
  * @author peter
  */
-public class DefaultCompletionStatistician extends CompletionStatistician{
+public class DefaultCompletionStatistician extends CompletionStatistician {
 
   @Override
   public StatisticsInfo serialize(final LookupElement element, final CompletionLocation location) {

@@ -385,6 +385,15 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public int getPresentationModeFontSize() {
     return PRESENTATION_MODE_FONT_SIZE;
   }
+
+  public boolean getSortLookupElementsLexicographically() {
+    return SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY;
+  }
+
+  public int getMaxLookupListHeight() {
+    return MAX_LOOKUP_LIST_HEIGHT;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

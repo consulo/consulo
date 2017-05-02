@@ -23,7 +23,6 @@ import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -34,7 +33,6 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredDispatchThread;
 
 /**
  * @author peter
@@ -45,22 +43,18 @@ public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
 
   @Override
   public Result checkAutoPopup(char charTyped, final Project project, final Editor editor, final PsiFile file) {
-    CompletionPhase oldPhase = CompletionServiceImpl.getCompletionPhase();
+    LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
 
-    if (oldPhase instanceof CompletionPhase.CommittingDocuments && ((CompletionPhase.CommittingDocuments)oldPhase).isRestartingCompletion()) {
-      oldPhase.indicator.scheduleRestart();
-      return Result.STOP;
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("checkAutoPopup: character=" + charTyped + ";");
+      LOG.debug("phase=" + CompletionServiceImpl.getCompletionPhase());
+      LOG.debug("lookup=" + lookup);
+      LOG.debug("currentCompletion=" + CompletionServiceImpl.getCompletionService().getCurrentCompletion());
     }
 
-    LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
     if (lookup != null) {
       if (editor.getSelectionModel().hasSelection()) {
-        lookup.performGuardedChange(new Runnable() {
-          @Override
-          public void run() {
-            EditorModificationUtil.deleteSelectedText(editor);
-          }
-        });
+        lookup.performGuardedChange(() -> EditorModificationUtil.deleteSelectedText(editor));
       }
       return Result.STOP;
     }
@@ -70,9 +64,6 @@ public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
       return Result.STOP;
     }
 
-    if (CompletionServiceImpl.isPhase(CompletionPhase.CommittingDocuments.class)) {
-      CompletionServiceImpl.setCompletionPhase(CompletionPhase.NoCompletion);
-    }
     return Result.CONTINUE;
   }
 
@@ -99,34 +90,18 @@ public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
     }
     Editor newEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(topLevelEditor, topLevelFile);
     try {
-      new CodeCompletionHandlerBase(completionType, false, autopopup, false).invokeCompletion(project, newEditor, time, false, restart);
+      CodeCompletionHandlerBase.createHandler(completionType, false, autopopup, false).invokeCompletion(project, newEditor, time, false, restart);
     }
     catch (IndexNotReadyException ignored) {
     }
   }
 
-  @RequiredDispatchThread
-  public static void runLaterWithCommitted(@NotNull final Project project,
-                                           @NotNull final Document document,
-                                           @NotNull final Runnable runnable) {
-    final long beforeStamp = document.getModificationStamp();
-    PsiDocumentManager.getInstance(project).performWhenAllCommitted(new Runnable() {
-      @Override
-      public void run() {
-        // later because we may end up in write action here if there was a synchronous commit
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            if (beforeStamp != document.getModificationStamp()) {
-              // no luck, will try later
-              runLaterWithCommitted(project, document, runnable);
-            }
-            else {
-              runnable.run();
-            }
-          }
-        }, project.getDisposed());
-      }
-    });
+  /**
+   * @deprecated
+   * @see AutoPopupController#runTransactionWithEverythingCommitted(Project, Runnable)
+   */
+  @Deprecated
+  public static void runLaterWithCommitted(@NotNull final Project project, final Document document, @NotNull final Runnable runnable) {
+    AutoPopupController.runTransactionWithEverythingCommitted(project, runnable);
   }
 }

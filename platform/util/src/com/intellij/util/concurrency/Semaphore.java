@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,27 +21,48 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
 public class Semaphore {
+  /**
+   * Creates Semaphore in an up state
+   */
+  public Semaphore() { }
+
+  /**
+   * Creates a semaphore and immediately puts it down the specified number of times
+   */
+  public Semaphore(int downs) {
+    assert downs >= 0 : "A nonnegative amount of 'downs' expected, found " + downs;
+    for (int i = 0; i < downs; i++) {
+      down();
+    }
+  }
+
   private static final class Sync extends AbstractQueuedSynchronizer {
+    @Override
     public int tryAcquireShared(int acquires) {
       return getState() == 0 ? 1 : -1;
     }
 
+    @Override
     public boolean tryReleaseShared(int releases) {
       // Decrement count; signal when transition to zero
       while (true) {
         int c = getState();
         if (c == 0) return false;
-        int nextc = c - 1;
-        if (compareAndSetState(c, nextc)) return nextc == 0;
+        int next = c - 1;
+        if (compareAndSetState(c, next)) return next == 0;
       }
     }
 
-    final void down() {
+    private void down() {
       while (true) {
         int current = getState();
         int next = current + 1;
         if (compareAndSetState(current, next)) return;
       }
+    }
+
+    private boolean isAcquired() {
+      return getState() != 0;
     }
   }
 
@@ -72,7 +93,8 @@ public class Semaphore {
     sync.acquireSharedInterruptibly(1);
   }
 
-  public boolean waitFor(final long msTimeout)  {
+  // true if semaphore became free
+  public boolean waitFor(final long msTimeout) {
     try {
       return waitForUnsafe(msTimeout);
     }
@@ -81,9 +103,9 @@ public class Semaphore {
     }
   }
 
+  // true if semaphore became free
   public boolean waitForUnsafe(long msTimeout) throws InterruptedException {
     if (sync.tryAcquireShared(1) >= 0) return true;
     return sync.tryAcquireSharedNanos(1, TimeUnit.MILLISECONDS.toNanos(msTimeout));
   }
-
 }
