@@ -40,7 +40,8 @@ import java.util.*;
 
 public abstract class GlobalSearchScope extends SearchScope implements ProjectAwareFileFilter {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.search.GlobalSearchScope");
-  @Nullable private final Project myProject;
+  @Nullable
+  private final Project myProject;
 
   protected GlobalSearchScope(@Nullable Project project) {
     myProject = project;
@@ -58,8 +59,8 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
 
   /**
    * @return a positive integer (+1), if file1 is located in the classpath before file2,
-   *         a negative integer (-1), if file1 is located in the classpath after file2
-   *         zero - otherwise or when the files are not comparable.
+   * a negative integer (-1), if file1 is located in the classpath after file2
+   * zero - otherwise or when the files are not comparable.
    */
   public abstract int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2);
 
@@ -193,6 +194,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
   public static GlobalSearchScope notScope(@NotNull final GlobalSearchScope scope) {
     return new NotScope(scope);
   }
+
   private static class NotScope extends DelegatingGlobalSearchScope {
     private NotScope(@NotNull GlobalSearchScope scope) {
       super(scope);
@@ -225,7 +227,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
 
     @Override
     public String toString() {
-      return "NOT: "+myBaseScope;
+      return "NOT: " + myBaseScope;
     }
   }
 
@@ -316,13 +318,31 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
   @NotNull
   public static GlobalSearchScope filesScope(@NotNull Project project, @NotNull Collection<VirtualFile> files, @Nullable final String displayName) {
     if (files.isEmpty()) return EMPTY_SCOPE;
-    return files.size() == 1? fileScope(project, files.iterator().next(), displayName) : new FilesScope(project, files) {
+    return files.size() == 1 ? fileScope(project, files.iterator().next(), displayName) : new FilesScope(project, files) {
       @NotNull
       @Override
       public String getDisplayName() {
         return displayName == null ? super.getDisplayName() : displayName;
       }
     };
+  }
+
+  /**
+   * Optimization. By default FilesScope makes a decision about searching in libraries by checking that
+   * at least one file is placed out of module roots. So if you're sure about files placement you can explicitly say FilesScope whether
+   * it should include libraries or not in order to avoid checking each file.
+   * Also, if you have a lot of files it might be faster to always search in libraries.
+   */
+  @NotNull
+  public static GlobalSearchScope filesWithoutLibrariesScope(@NotNull Project project, @NotNull Collection<VirtualFile> files) {
+    if (files.isEmpty()) return EMPTY_SCOPE;
+    return new FilesScope(project, files, false);
+  }
+
+  @NotNull
+  public static GlobalSearchScope filesWithLibrariesScope(@NotNull Project project, @NotNull Collection<VirtualFile> files) {
+    if (files.isEmpty()) return EMPTY_SCOPE;
+    return new FilesScope(project, files, true);
   }
 
   private static class IntersectionScope extends GlobalSearchScope {
@@ -632,7 +652,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
 
     @Override
     public String toString() {
-      return "(" + myBaseScope + " restricted by file types: "+Arrays.asList(myFileTypes)+")";
+      return "(" + myBaseScope + " restricted by file types: " + Arrays.asList(myFileTypes) + ")";
     }
   }
 
@@ -709,7 +729,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
 
     @Override
     public String toString() {
-      return "File :"+myVirtualFile;
+      return "File :" + myVirtualFile;
     }
 
     @Override
@@ -719,11 +739,21 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
   }
 
   public static class FilesScope extends GlobalSearchScope implements Iterable<VirtualFile> {
-    private final Collection<VirtualFile> myFiles; // files can be out of project roots
+    private final Collection<VirtualFile> myFiles;
+    private volatile Boolean myHasFilesOutOfProjectRoots;
 
-    public FilesScope(final Project project, @NotNull Collection<VirtualFile> files) {
+    /**
+     * @deprecated use {@link GlobalSearchScope#filesScope(Project, Collection)}
+     */
+    public FilesScope(@Nullable Project project, @NotNull Collection<VirtualFile> files) {
+      this(project, files, null);
+    }
+
+    // Optimization
+    private FilesScope(@Nullable Project project, @NotNull Collection<VirtualFile> files, @Nullable Boolean hasFilesOutOfProjectRoots) {
       super(project);
       myFiles = files;
+      myHasFilesOutOfProjectRoots = hasFilesOutOfProjectRoots;
     }
 
     @Override
@@ -743,7 +773,7 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
 
     @Override
     public boolean isSearchInLibraries() {
-      return false;
+      return hasFilesOutOfProjectRoots();
     }
 
     @Override
@@ -756,12 +786,24 @@ public abstract class GlobalSearchScope extends SearchScope implements ProjectAw
       return myFiles.hashCode();
     }
 
-    @Override
-    public String toString() {
-      List<VirtualFile> files = myFiles.size() <= 20 ? new ArrayList<VirtualFile>(myFiles) : new ArrayList<VirtualFile>(myFiles).subList(0,20);
-      return "Files: ("+ files +")";
+    private boolean hasFilesOutOfProjectRoots() {
+      Boolean result = myHasFilesOutOfProjectRoots;
+      if (result == null) {
+        Project project = getProject();
+        myHasFilesOutOfProjectRoots = result = project != null &&
+                                               !project.isDefault() &&
+                                               myFiles.stream().anyMatch(file -> FileIndexFacade.getInstance(project).getModuleForFile(file) == null);
+      }
+      return result;
     }
 
+    @Override
+    public String toString() {
+      List<VirtualFile> files = myFiles.size() <= 20 ? new ArrayList<>(myFiles) : new ArrayList<>(myFiles).subList(0, 20);
+      return "Files: (" + files + "); search in libraries: " + (myHasFilesOutOfProjectRoots != null ? myHasFilesOutOfProjectRoots : "unknown");
+    }
+
+    @NotNull
     @Override
     public Iterator<VirtualFile> iterator() {
       return myFiles.iterator();

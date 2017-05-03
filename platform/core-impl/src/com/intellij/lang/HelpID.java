@@ -13,24 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.usages;
+package com.intellij.lang;
 
-import com.intellij.navigation.NavigationItem;
-import com.intellij.psi.PsiNamedElement;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NonNls;
 
-import javax.swing.*;
-
-/**
- * @author Maxim.Mossienko
- */
-public class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem> extends PsiElementUsageGroupBase<T> {
-
-  public PsiNamedElementUsageGroupBase(@NotNull T element, Icon icon) {
-    super(element, icon);
-  }
-
-  public PsiNamedElementUsageGroupBase(@NotNull T element) {
-    super(element);
-  }
+public class HelpID {
+  @NonNls public static final String FIND_OTHER_USAGES = "reference.dialogs.findUsages.other";
 }

@@ -18,6 +18,7 @@ package com.intellij.openapi.fileChooser;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -51,6 +52,7 @@ public class FileChooserDescriptor implements Cloneable {
   private boolean myShowFileSystemRoots = true;
   private boolean myTreeRootVisible = false;
   private boolean myShowHiddenFiles = false;
+  private Condition<VirtualFile> myFileFilter = null;
   private boolean myForcedToUseIdeaFileChooser = false;
 
   private final Map<String, Object> myUserData = new HashMap<>();
@@ -114,7 +116,9 @@ public class FileChooserDescriptor implements Cloneable {
     return myChooseMultiple;
   }
 
-  /** @deprecated use {@link #isChooseMultiple()} (to be removed in IDEA 15) */
+  /**
+   * @deprecated use {@link #isChooseMultiple()} (to be removed in IDEA 15)
+   */
   @SuppressWarnings("UnusedDeclaration")
   public boolean getChooseMultiple() {
     return isChooseMultiple();
@@ -203,7 +207,9 @@ public class FileChooserDescriptor implements Cloneable {
     return this;
   }
 
-  /** @deprecated use {@link #withTreeRootVisible(boolean)} (to be removed in IDEA 15) */
+  /**
+   * @deprecated use {@link #withTreeRootVisible(boolean)} (to be removed in IDEA 15)
+   */
   @SuppressWarnings("UnusedDeclaration")
   public FileChooserDescriptor setIsTreeRootVisible(boolean treeRootVisible) {
     return withTreeRootVisible(treeRootVisible);
@@ -224,39 +230,58 @@ public class FileChooserDescriptor implements Cloneable {
   @RequiredDispatchThread
   public boolean isFileSelectable(VirtualFile file) {
     if (file == null) return false;
-    if (file.isDirectory() && myChooseFolders) return true;
-    if (acceptAsJarFile(file)) return true;
-    if (acceptAsGeneralFile(file)) return true;
-    return false;
+
+    if (file.is(VFileProperty.SYMLINK) && file.getCanonicalPath() == null) {
+      return false;
+    }
+    if (file.isDirectory() && myChooseFolders) {
+      return true;
+    }
+
+    if (myFileFilter != null && !file.isDirectory()) {
+      return myFileFilter.value(file);
+    }
+
+    return acceptAsJarFile(file) || acceptAsGeneralFile(file);
+  }
+
+  /**
+   * Sets simple boolean condition for use in {@link #isFileVisible(VirtualFile, boolean)} and {@link #isFileSelectable(VirtualFile)}.
+   */
+  public FileChooserDescriptor withFileFilter(@Nullable Condition<VirtualFile> filter) {
+    myFileFilter = filter;
+    return this;
   }
 
   /**
    * Defines whether file is visible in the tree
    */
   public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
+    if (file.is(VFileProperty.SYMLINK) && file.getCanonicalPath() == null) {
+      return false;
+    }
+
     if (!file.isDirectory()) {
       if (FileElement.isArchive(file)) {
         if (!myChooseJars && !myChooseJarContents) {
           return false;
         }
       }
-      else {
-        if (!myChooseFiles) {
-          return false;
-        }
+      else if (!myChooseFiles) {
+        return false;
+      }
+
+      if (myFileFilter != null && !myFileFilter.value(file)) {
+        return false;
       }
     }
 
-    // do not include ignored files
     if (isHideIgnored() && FileTypeManager.getInstance().isFileIgnored(file)) {
       return false;
     }
 
-    // do not include hidden files
-    if (!showHiddenFiles) {
-      if (FileElement.isFileHidden(file)) {
-        return false;
-      }
+    if (!showHiddenFiles && FileElement.isFileHidden(file)) {
+      return false;
     }
 
     return true;
@@ -282,6 +307,7 @@ public class FileChooserDescriptor implements Cloneable {
   /**
    * the method is called upon pressing Ok in the FileChooserDialog
    * Override the method in order to customize validation of user input
+   *
    * @param files - selected files to be checked
    * @throws Exception if the the files cannot be accepted
    */
