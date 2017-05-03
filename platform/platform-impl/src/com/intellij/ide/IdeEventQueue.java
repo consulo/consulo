@@ -26,6 +26,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.keymap.KeyboardSettingsExternalizable;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;
 import com.intellij.openapi.keymap.impl.KeyState;
@@ -350,6 +351,8 @@ public class IdeEventQueue extends EventQueue {
       return;
     }
 
+    e = fixNonEnglishKeyboardLayouts(e);
+
     e = mapEvent(e);
     if (Registry.is("keymap.windows.as.meta")) {
       e = mapMetaState(e);
@@ -426,6 +429,9 @@ public class IdeEventQueue extends EventQueue {
   @NotNull
   private static AWTEvent fixNonEnglishKeyboardLayouts(@NotNull AWTEvent e) {
     if (!(e instanceof KeyEvent)) return e;
+
+    KeyboardSettingsExternalizable externalizable = KeyboardSettingsExternalizable.getInstance();
+    if (!Registry.is("ide.non.english.keyboard.layout.fix") || externalizable == null || !externalizable.isNonEnglishKeyboardSupportEnabled()) return e;
 
     KeyEvent ke = (KeyEvent)e;
 

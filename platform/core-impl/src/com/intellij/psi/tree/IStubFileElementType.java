@@ -62,7 +62,7 @@ public class IStubFileElementType<T extends PsiFileStub> extends StubFileElement
   }
 
   @Override
-  public void indexStub(@NotNull final PsiFileStub stub, @NotNull final IndexSink sink) {
+  public void indexStub(@NotNull final T stub, @NotNull final IndexSink sink) {
   }
 
   public boolean shouldBuildStubFor(final VirtualFile file) {
