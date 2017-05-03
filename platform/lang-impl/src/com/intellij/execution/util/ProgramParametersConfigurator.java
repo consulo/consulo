@@ -23,6 +23,7 @@ import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,14 +41,14 @@ public class ProgramParametersConfigurator {
 
     parameters.setWorkingDirectory(getWorkingDir(configuration, project, module));
 
-    parameters.setupEnvs(configuration.getEnvs(), configuration.isPassParentEnvs());
-    if (parameters.getEnv() != null) {
-      Map<String, String> expanded = new HashMap<String, String>();
-      for (Map.Entry<String, String> each : parameters.getEnv().entrySet()) {
-        expanded.put(each.getKey(), expandPath(each.getValue(), module, project));
-      }
-      parameters.setEnv(expanded);
+    Map<String, String> envs = new HashMap<>(configuration.getEnvs());
+    EnvironmentUtil.inlineParentOccurrences(envs);
+    for (Map.Entry<String, String> each : envs.entrySet()) {
+      each.setValue(expandPath(each.getValue(), module, project));
     }
+
+    parameters.setEnv(envs);
+    parameters.setPassParentEnvs(configuration.isPassParentEnvs());
   }
 
   @Nullable
@@ -58,8 +59,7 @@ public class ProgramParametersConfigurator {
     if (workingDirectory == null || workingDirectory.trim().length() == 0) {
       workingDirectory = defaultWorkingDir;
     }
-    if (workingDirectory == null)
-      return null;
+    if (workingDirectory == null) return null;
     workingDirectory = expandPath(workingDirectory, module, project);
     if (!FileUtil.isAbsolute(workingDirectory) && defaultWorkingDir != null) {
       workingDirectory = defaultWorkingDir + "/" + workingDirectory;
@@ -73,12 +73,20 @@ public class ProgramParametersConfigurator {
   }
 
   public void checkWorkingDirectoryExist(CommonProgramRunConfigurationParameters configuration, Project project, Module module)
-    throws RuntimeConfigurationWarning {
+          throws RuntimeConfigurationWarning {
     final String workingDir = getWorkingDir(configuration, project, module);
     if (workingDir == null) {
-      throw new RuntimeConfigurationWarning("Working directory is null for "+
-                                            "project '" + project.getName() + "' ("+project.getBasePath()+")"
-                                            + ", module '" + module.getName() + "' (" + module.getModuleDirPath() + ")");
+      throw new RuntimeConfigurationWarning("Working directory is null for " +
+                                            "project '" +
+                                            project.getName() +
+                                            "' (" +
+                                            project.getBasePath() +
+                                            ")" +
+                                            ", module '" +
+                                            module.getName() +
+                                            "' (" +
+                                            module.getModuleDirPath() +
+                                            ")");
     }
     if (!new File(workingDir).exists()) {
       throw new RuntimeConfigurationWarning("Working directory '" + workingDir + "' doesn't exist");

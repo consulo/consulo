@@ -24,6 +24,7 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.execution.ParametersListUtil;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.Document;
@@ -32,7 +33,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class RawCommandLineEditor extends JPanel {
+public class RawCommandLineEditor extends JPanel implements TextAccessor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.RawCommandLineEditor");
 
   private final TextFieldWithBrowseButton myTextField;
@@ -75,10 +76,12 @@ public class RawCommandLineEditor extends JPanel {
     myDialogCaption = dialogCaption != null ? dialogCaption : "";
   }
 
-  public void setText(String text) {
+  @Override
+  public void setText(@Nullable String text) {
     myTextField.setText(text);
   }
 
+  @Override
   public String getText() {
     return myTextField.getText();
   }

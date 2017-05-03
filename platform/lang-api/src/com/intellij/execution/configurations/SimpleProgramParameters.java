@@ -16,7 +16,7 @@
 
 package com.intellij.execution.configurations;
 
-import com.intellij.execution.configuration.EnvironmentVariablesComponent;
+import com.intellij.util.EnvironmentUtil;
 import gnu.trove.THashMap;
 
 import java.io.File;
@@ -51,7 +51,7 @@ public class SimpleProgramParameters {
 
   public String addEnv(String name, String value) {
     if (myEnv == null) {
-      myEnv = new THashMap<String, String>();
+      myEnv = new THashMap<>();
     }
 
     return myEnv.put(name, value);
@@ -69,12 +69,16 @@ public class SimpleProgramParameters {
     myPassParentEnvs = passDefaultEnvs;
   }
 
+  /**
+   * @deprecated Use {@link #setEnv(Map)} and {@link #setPassParentEnvs(boolean)} instead with already preprocessed variables.
+   */
+  @Deprecated
   public void setupEnvs(Map<String, String> envs, boolean passDefault) {
     if (!envs.isEmpty()) {
-      final HashMap<String, String> map = new HashMap<String, String>(envs);
-      EnvironmentVariablesComponent.inlineParentOccurrences(map);
-      setEnv(map);
-      setPassParentEnvs(passDefault);
+      envs = new HashMap<>(envs);
+      EnvironmentUtil.inlineParentOccurrences(envs);
     }
+    setEnv(envs);
+    setPassParentEnvs(passDefault);
   }
 }
