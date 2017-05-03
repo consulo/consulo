@@ -47,6 +47,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  ValueGroup<Boolean> _ValueGroups_boolGroup() {
+    return new DesktopBoolValueGroup();
+  }
+
+  @Override
   MenuBar _MenuItems_menuBar() {
     return new DesktopMenuBarImpl();
   }

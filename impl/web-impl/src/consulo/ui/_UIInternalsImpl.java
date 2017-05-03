@@ -69,7 +69,7 @@ class _UIInternalsImpl extends _UIInternals {
 
   @Override
   TableLayout _Layouts_table(int rows, int columns) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -89,7 +89,7 @@ class _UIInternalsImpl extends _UIInternals {
 
   @Override
   TextField _Components_TextField(String text) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -120,6 +120,11 @@ class _UIInternalsImpl extends _UIInternals {
   @Override
   Menu _MenuItems_menu(String text) {
     return new WGwtMenuImpl(text);
+  }
+
+  @Override
+  ValueGroup<Boolean> _ValueGroups_boolGroup() {
+    throw new UnsupportedOperationException();
   }
 
   @Override

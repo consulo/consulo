@@ -82,7 +82,10 @@ abstract class _UIInternals {
 
   abstract Menu _MenuItems_menu(String text);
 
+  abstract ValueGroup<Boolean> _ValueGroups_boolGroup();
+
   abstract MenuBar _MenuItems_menuBar();
+
   @RequiredUIAccess
   @NotNull
   abstract UIAccess _UIAccess_get();

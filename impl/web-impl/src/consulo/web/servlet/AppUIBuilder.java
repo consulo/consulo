@@ -133,7 +133,7 @@ public class AppUIBuilder extends UIBuilder {
 
     final VerticalLayout vertical = Layouts.vertical();
 
-    BooleanValueGroup group = new BooleanValueGroup();
+    ValueGroup<Boolean> group = ValueGroups.boolGroup();
 
     final RadioButton component = Components.radioButton("Test 1", true);
     vertical.add(component);
