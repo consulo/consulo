@@ -24,6 +24,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.content.Content;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +32,9 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 public class RunContentDescriptor implements Disposable {
+  // Should be used in com.intellij.ui.content.Content
+  public static final Key<RunContentDescriptor> DESCRIPTOR_KEY = Key.create("Descriptor");
+
   private ExecutionConsole myExecutionConsole;
   private ProcessHandler myProcessHandler;
   private JComponent myComponent;
@@ -46,6 +50,7 @@ public class RunContentDescriptor implements Disposable {
   private boolean myAutoFocusContent = false;
 
   private Content myContent;
+  private String myContentToolWindowId;
   @NotNull
   private final AnAction[] myRestartActions;
 
@@ -98,12 +103,7 @@ public class RunContentDescriptor implements Disposable {
   }
 
   public RunContentDescriptor(@NotNull RunProfile profile, @NotNull ExecutionResult executionResult, @NotNull RunnerLayoutUi ui) {
-    this(executionResult.getExecutionConsole(),
-         executionResult.getProcessHandler(),
-         ui.getComponent(),
-         profile.getName(),
-         profile.getIcon(),
-         null,
+    this(executionResult.getExecutionConsole(), executionResult.getProcessHandler(), ui.getComponent(), profile.getName(), profile.getIcon(), null,
          executionResult instanceof DefaultExecutionResult ? ((DefaultExecutionResult)executionResult).getRestartActions() : null);
     myRunnerLayoutUi = ui;
   }
@@ -176,6 +176,18 @@ public class RunContentDescriptor implements Disposable {
     myContent = content;
   }
 
+  /**
+   * @return Tool window id where content should be shown. Null if content tool window is determined by executor.
+   */
+  @Nullable
+  public String getContentToolWindowId() {
+    return myContentToolWindowId;
+  }
+
+  public void setContentToolWindowId(String contentToolWindowId) {
+    myContentToolWindowId = contentToolWindowId;
+  }
+
   public boolean isActivateToolWindowWhenAdded() {
     return myActivateToolWindowWhenAdded;
   }
@@ -226,8 +238,8 @@ public class RunContentDescriptor implements Disposable {
    * (The runner layout UI is used, for example, by debugger tabs which have multiple sub-tabs, but is not used by other tabs
    * which only display a single piece of content.
    *
-   * @since 14.1
    * @return the RunnerLayoutUi instance or null if this tab does not use RunnerLayoutUi for managing its contents.
+   * @since 14.1
    */
   @Nullable
   public RunnerLayoutUi getRunnerLayoutUi() {

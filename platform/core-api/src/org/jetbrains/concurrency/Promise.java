@@ -56,9 +56,6 @@ public abstract class Promise<T> {
   public abstract <SUB_RESULT> Promise<SUB_RESULT> then(@NotNull Function<T, SUB_RESULT> done);
 
   @NotNull
-  public abstract <SUB_RESULT> Promise<SUB_RESULT> then(@NotNull AsyncFunction<T, SUB_RESULT> done);
-
-  @NotNull
   public abstract State getState();
 
   @SuppressWarnings("ExceptionClassNameDoesntEndWithException")

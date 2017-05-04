@@ -779,6 +779,12 @@
 
     <extensionPoint name="hectorComponentProvider" interface="com.intellij.openapi.editor.HectorComponentPanelsProvider"
                     area="PROJECT"/>
+
+    <extensionPoint name="runDashboardContributor"
+                    interface="com.intellij.execution.dashboard.RunDashboardContributor"/>
+    <extensionPoint name="runDashboardGroupingRule"
+                    interface="com.intellij.execution.dashboard.DashboardGroupingRule"/>
+
     <extensionPoint name="scopeTreeExpander" interface="com.intellij.ide.scopeView.ScopeTreeStructureExpander" area="PROJECT"/>
 
     <extensionPoint name="ui.suitableFontProvider" interface="com.intellij.ui.SuitableFontProvider"/>
@@ -1175,6 +1181,8 @@
     <applicationService serviceImplementation="com.intellij.codeInsight.hints.settings.ParameterNameHintsSettings"/>
     <applicationService serviceImplementation="com.intellij.codeInsight.daemon.impl.ParameterHintsPresentationManager"/>
     <applicationService serviceImplementation="com.intellij.openapi.keymap.KeyboardSettingsExternalizable"/>
+
+    <applicationService serviceImplementation="com.intellij.ide.GeneralSettings"/>
 
     <applicationService serviceInterface="com.intellij.ide.util.PropertiesComponent"
                         serviceImplementation="com.intellij.ide.util.AppPropertiesComponentImpl"/>
@@ -2289,6 +2297,9 @@
                 factoryClass="com.intellij.ide.structureView.impl.StructureViewToolWindowFactory"/>
     <toolWindow id="Favorites" anchor="left" icon="AllIcons.Toolwindows.ToolWindowFavorites" secondary="true"
                 factoryClass="com.intellij.ide.projectView.impl.FavoritesViewToolWindowFactory"/>
+    <toolWindow id="Run Dashboard" anchor="bottom" icon="AllIcons.Toolwindows.ToolWindowRun"
+                factoryClass="com.intellij.execution.dashboard.RunDashboardToolWindowFactory"
+                conditionClass="com.intellij.execution.dashboard.RunDashboardToolWindowFactory" />
 
     <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReferenceHelper"/>
     <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.JarFileReferenceHelper"/>
@@ -2575,5 +2586,13 @@
     <lineIndentProvider
         implementation="com.intellij.psi.impl.source.codeStyle.lineIndent.FormatterBasedLineIndentProvider"
         order="last"/>
+
+    <projectService serviceInterface="com.intellij.execution.dashboard.RunDashboardManager"
+                    serviceImplementation="com.intellij.execution.dashboard.RunDashboardManagerImpl"/>
+    <runDashboardGroupingRule implementation="com.intellij.execution.dashboard.tree.ConfigurationTypeDashboardGroupingRule"/>
+    <runDashboardGroupingRule implementation="com.intellij.execution.dashboard.tree.StatusDashboardGroupingRule"/>
+    <runDashboardGroupingRule implementation="com.intellij.execution.dashboard.tree.FolderDashboardGroupingRule"/>
+    <runDashboardGroupingRule implementation="com.intellij.execution.dashboard.tree.RunConfigurationDashboardGroupingRule"/>
+
   </extensions>
 </idea-plugin>

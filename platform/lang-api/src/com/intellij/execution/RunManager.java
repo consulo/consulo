@@ -191,7 +191,7 @@ public abstract class RunManager {
    * {@link #addConfiguration(RunnerAndConfigurationSettings, boolean)} if you want the configuration to be persisted in the project.
    *
    * @param runConfiguration the run configuration
-   * @param factory the factory instance.
+   * @param factory          the factory instance.
    * @return the configuration settings object.
    */
   @NotNull
@@ -222,6 +222,8 @@ public abstract class RunManager {
    */
   public abstract void refreshUsagesList(RunProfile profile);
 
+  public abstract boolean hasSettings(RunnerAndConfigurationSettings settings);
+
   @NotNull
   public static String suggestUniqueName(@NotNull String str, @NotNull Collection<String> currentNames) {
     if (!currentNames.contains(str)) return str;
@@ -246,6 +248,7 @@ public abstract class RunManager {
    * Sets unique name if existing one is not 'unique'
    * If settings type is not null (for example settings may be provided by plugin that is unavailable after IDE restart, so type would be suddenly null)
    * name will be chosen unique for certain type otherwise name will be unique among all configurations
+   *
    * @return <code>true</code> if name was changed
    */
   public boolean setUniqueNameIfNeed(@NotNull RunnerAndConfigurationSettings settings) {
@@ -256,6 +259,7 @@ public abstract class RunManager {
 
   /**
    * Sets unique name if existing one is not 'unique' for corresponding configuration type
+   *
    * @return <code>true</code> if name was changed
    */
   public boolean setUniqueNameIfNeed(@NotNull RunConfiguration configuration) {

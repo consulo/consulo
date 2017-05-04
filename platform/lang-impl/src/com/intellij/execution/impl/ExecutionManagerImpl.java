@@ -31,13 +31,17 @@ import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunContentManagerImpl;
+import com.intellij.execution.ui.RunnerLayoutUi;
+import com.intellij.ide.SaveAndSyncHandler;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -47,9 +51,11 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.util.Alarm;
+import com.intellij.util.Consumer;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
@@ -60,6 +66,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ExecutionManagerImpl extends ExecutionManager implements Disposable {
   public static final Key<Object> EXECUTION_SESSION_ID_KEY = Key.create("EXECUTION_SESSION_ID_KEY");
@@ -211,51 +218,82 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   @Override
   public void startRunProfile(@NotNull final RunProfileStarter starter, @NotNull final RunProfileState state, @NotNull final ExecutionEnvironment environment) {
     final Project project = environment.getProject();
-    final RunContentDescriptor reuseContent = getContentManager().getReuseContent(environment);
+    RunContentDescriptor reuseContent = getContentManager().getReuseContent(environment);
     if (reuseContent != null) {
       reuseContent.setExecutionId(environment.getExecutionId());
+      environment.setContentToReuse(reuseContent);
     }
 
     final Executor executor = environment.getExecutor();
     project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processStartScheduled(executor.getId(), environment);
 
-    final Runnable startRunnable = () -> {
+    Runnable startRunnable;
+    startRunnable = () -> {
       if (project.isDisposed()) {
         return;
       }
 
       RunProfile profile = environment.getRunProfile();
-      boolean started = false;
-      try {
-        project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processStarting(executor.getId(), environment);
+      project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processStarting(executor.getId(), environment);
 
-        final RunContentDescriptor descriptor = starter.execute(state, environment);
-        if (descriptor != null) {
-          environment.setContentToReuse(descriptor);
-          final Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity =
-                  Trinity.create(descriptor, environment.getRunnerAndConfigurationSettings(), executor);
-          myRunningConfigurations.add(trinity);
-          Disposer.register(descriptor, () -> myRunningConfigurations.remove(trinity));
-          getContentManager().showRunContent(executor, descriptor, reuseContent);
-          final ProcessHandler processHandler = descriptor.getProcessHandler();
-          if (processHandler != null) {
-            if (!processHandler.isStartNotified()) {
-              processHandler.startNotify();
-            }
-            project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processStarted(executor.getId(), environment, processHandler);
-            started = true;
-            processHandler.addProcessListener(new ProcessExecutionListener(project, profile, processHandler));
-          }
+      Consumer<Throwable> errorHandler = e -> {
+        if (!(e instanceof ProcessCanceledException)) {
+          ExecutionException error = e instanceof ExecutionException ? (ExecutionException)e : new ExecutionException(e);
+          ExecutionUtil
+                  .handleExecutionError(project, ExecutionManager.getInstance(project).getContentManager().getToolWindowIdByEnvironment(environment), profile,
+                                        error);
         }
+        LOG.info(e);
+        project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
+      };
+
+      try {
+
+        starter.executeAsync(state, environment).done(descriptor -> AppUIUtil.invokeOnEdt(() -> {
+          if (descriptor != null) {
+            final Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity =
+                    Trinity.create(descriptor, environment.getRunnerAndConfigurationSettings(), executor);
+            myRunningConfigurations.add(trinity);
+            Disposer.register(descriptor, () -> myRunningConfigurations.remove(trinity));
+            getContentManager().showRunContent(executor, descriptor, environment.getContentToReuse());
+            final ProcessHandler processHandler = descriptor.getProcessHandler();
+            if (processHandler != null) {
+              if (!processHandler.isStartNotified()) {
+                processHandler.startNotify();
+              }
+              project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processStarted(executor.getId(), environment, processHandler);
+
+              ProcessExecutionListener listener = new ProcessExecutionListener(project, executor.getId(), environment, processHandler, descriptor);
+              processHandler.addProcessListener(listener);
+
+              // Since we cannot guarantee that the listener is added before process handled is start notified,
+              // we have to make sure the process termination events are delivered to the clients.
+              // Here we check the current process state and manually deliver events, while
+              // the ProcessExecutionListener guarantees each such event is only delivered once
+              // either by this code, or by the ProcessHandler.
+
+              boolean terminating = processHandler.isProcessTerminating();
+              boolean terminated = processHandler.isProcessTerminated();
+              if (terminating || terminated) {
+                listener.processWillTerminate(new ProcessEvent(processHandler), false /*doesn't matter*/);
+
+                if (terminated) {
+                  //noinspection ConstantConditions
+                  Integer exitCode = processHandler.getExitCode();
+                  listener.processTerminated(
+                          new ProcessEvent(processHandler, processHandler.isStartNotified() ? ObjectUtil.notNull(processHandler.getExitCode(), -1) : -1));
+                }
+              }
+            }
+            environment.setContentToReuse(descriptor);
+          }
+          else {
+            project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
+          }
+        }, o -> project.isDisposed())).rejected(errorHandler);
       }
       catch (ExecutionException e) {
-        ExecutionUtil.handleExecutionError(project, executor.getToolWindowId(), profile, e);
-        LOG.info(e);
-      }
-      finally {
-        if (!started) {
-          project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
-        }
+        errorHandler.consume(e);
       }
     };
 
@@ -264,10 +302,10 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     }
     else {
       compileAndRun(() -> TransactionGuard.submitTransaction(project, startRunnable), environment, state, () -> {
-                      if (!project.isDisposed()) {
-                        project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
-                      }
-                    });
+        if (!project.isDisposed()) {
+          project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
+        }
+      });
     }
   }
 
@@ -354,7 +392,8 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     List<RunContentDescriptor> runningToStop = ContainerUtil.concat(runningOfTheSameType, runningIncompatible);
     if (!runningToStop.isEmpty()) {
       if (configuration != null) {
-        if (!runningOfTheSameType.isEmpty() && (runningOfTheSameType.size() > 1 || contentToReuse == null || runningOfTheSameType.get(0) != contentToReuse) &&
+        if (!runningOfTheSameType.isEmpty() &&
+            (runningOfTheSameType.size() > 1 || contentToReuse == null || runningOfTheSameType.get(0) != contentToReuse) &&
             !userApprovesStopForSameTypeConfigurations(environment.getProject(), configuration.getName(), runningOfTheSameType.size())) {
           return;
         }
@@ -477,7 +516,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
 
     //noinspection DialogTitleCapitalization
     return Messages.showOkCancelDialog(project, ExecutionBundle
-            .message("stop.incompatible.confirmation.message", configName, names.toString(), runningIncompatibleDescriptors.size()),
+                                               .message("stop.incompatible.confirmation.message", configName, names.toString(), runningIncompatibleDescriptors.size()),
                                        ExecutionBundle.message("incompatible.configuration.is.running.dialog.title", runningIncompatibleDescriptors.size()),
                                        ExecutionBundle.message("stop.incompatible.confirmation.button.text"), CommonBundle.message("button.cancel"),
                                        Messages.getQuestionIcon(), option) == Messages.OK;
@@ -515,6 +554,17 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @NotNull
+  public List<RunContentDescriptor> getDescriptors(@NotNull Condition<RunnerAndConfigurationSettings> condition) {
+    List<RunContentDescriptor> result = new SmartList<>();
+    for (Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity : myRunningConfigurations) {
+      if (trinity.getSecond() != null && condition.value(trinity.getSecond())) {
+        result.add(trinity.getFirst());
+      }
+    }
+    return result;
+  }
+
+  @NotNull
   public Set<Executor> getExecutors(RunContentDescriptor descriptor) {
     Set<Executor> result = new HashSet<>();
     for (Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity : myRunningConfigurations) {
@@ -523,30 +573,69 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     return result;
   }
 
-private static class ProcessExecutionListener extends ProcessAdapter {
-  private final Project myProject;
-  private final RunProfile myProfile;
-  private final ProcessHandler myProcessHandler;
-
-  public ProcessExecutionListener(Project project, RunProfile profile, ProcessHandler processHandler) {
-    myProject = project;
-    myProfile = profile;
-    myProcessHandler = processHandler;
+  @NotNull
+  public Set<RunnerAndConfigurationSettings> getConfigurations(RunContentDescriptor descriptor) {
+    Set<RunnerAndConfigurationSettings> result = new HashSet<>();
+    for (Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity : myRunningConfigurations) {
+      if (descriptor == trinity.first) result.add(trinity.second);
+    }
+    return result;
   }
 
-  @Override
-  public void processTerminated(ProcessEvent event) {
-    if (myProject.isDisposed()) return;
+  private static class ProcessExecutionListener extends ProcessAdapter {
+    @NotNull
+    private final Project myProject;
+    @NotNull
+    private final String myExecutorId;
+    @NotNull
+    private final ExecutionEnvironment myEnvironment;
+    @NotNull
+    private final ProcessHandler myProcessHandler;
+    @NotNull
+    private final RunContentDescriptor myDescriptor;
+    @NotNull
+    private final AtomicBoolean myWillTerminateNotified = new AtomicBoolean();
+    @NotNull
+    private final AtomicBoolean myTerminateNotified = new AtomicBoolean();
 
-    myProject.getMessageBus().syncPublisher(EXECUTION_TOPIC).processTerminated(myProfile, myProcessHandler);
-    VirtualFileManager.getInstance().asyncRefresh(null);
+    public ProcessExecutionListener(@NotNull Project project,
+                                    @NotNull String executorId,
+                                    @NotNull ExecutionEnvironment environment,
+                                    @NotNull ProcessHandler processHandler,
+                                    @NotNull RunContentDescriptor descriptor) {
+      myProject = project;
+      myExecutorId = executorId;
+      myEnvironment = environment;
+      myProcessHandler = processHandler;
+      myDescriptor = descriptor;
+    }
+
+    @Override
+    public void processTerminated(ProcessEvent event) {
+      if (myProject.isDisposed()) return;
+      if (!myTerminateNotified.compareAndSet(false, true)) return;
+
+      ApplicationManager.getApplication().invokeLater(() -> {
+        RunnerLayoutUi ui = myDescriptor.getRunnerLayoutUi();
+        if (ui != null && !ui.isDisposed()) {
+          ui.updateActionsNow();
+        }
+      }, ModalityState.any());
+
+      myProject.getMessageBus().syncPublisher(EXECUTION_TOPIC).processTerminated(myExecutorId, myEnvironment, myProcessHandler, event.getExitCode());
+
+      SaveAndSyncHandler saveAndSyncHandler = SaveAndSyncHandler.getInstance();
+      if (saveAndSyncHandler != null) {
+        saveAndSyncHandler.scheduleRefresh();
+      }
+    }
+
+    @Override
+    public void processWillTerminate(ProcessEvent event, boolean shouldNotBeUsed) {
+      if (myProject.isDisposed()) return;
+      if (!myWillTerminateNotified.compareAndSet(false, true)) return;
+
+      myProject.getMessageBus().syncPublisher(EXECUTION_TOPIC).processTerminating(myExecutorId, myEnvironment, myProcessHandler);
+    }
   }
-
-  @Override
-  public void processWillTerminate(ProcessEvent event, boolean willBeDestroyed) {
-    if (myProject.isDisposed()) return;
-
-    myProject.getMessageBus().syncPublisher(EXECUTION_TOPIC).processTerminating(myProfile, myProcessHandler);
-  }
-}
 }

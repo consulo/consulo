@@ -25,6 +25,7 @@ import com.intellij.execution.runners.RunTab;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.execution.ui.ObservableConsoleView;
+import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.layout.LayoutAttractionPolicy;
 import com.intellij.execution.ui.layout.LayoutViewOptions;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
@@ -34,8 +35,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebuggerBundle;
 import org.jetbrains.annotations.NotNull;
@@ -50,8 +49,7 @@ public abstract class DebuggerSessionTabBase extends RunTab {
   public DebuggerSessionTabBase(@NotNull Project project, @NotNull String runnerId, @NotNull String sessionName, @NotNull GlobalSearchScope searchScope) {
     super(project, searchScope, runnerId, XDebuggerBundle.message("xdebugger.default.content.title"), sessionName);
 
-    myUi.getDefaults()
-            .initTabDefaults(0, XDebuggerBundle.message("xdebugger.debugger.tab.title"), null)
+    myUi.getDefaults().initTabDefaults(0, XDebuggerBundle.message("xdebugger.debugger.tab.title"), null)
             .initFocusContent(DebuggerContentInfo.FRAME_CONTENT, XDebuggerUIConstants.LAYOUT_VIEW_BREAKPOINT_CONDITION)
             .initFocusContent(DebuggerContentInfo.CONSOLE_CONTENT, LayoutViewOptions.STARTUP, new LayoutAttractionPolicy.FocusOnce(false));
   }
@@ -70,12 +68,9 @@ public abstract class DebuggerSessionTabBase extends RunTab {
       }, content);
       RunProfile profile = getRunProfile();
       if (profile instanceof RunConfigurationBase && !ApplicationManager.getApplication().isUnitTestMode()) {
-        observable.addChangeListener(new RunContentBuilder.ConsoleToFrontListener((RunConfigurationBase)profile,
-                                                                                  myProject,
-                                                                                  DefaultDebugExecutor.getDebugExecutorInstance(),
-                                                                                  myRunContentDescriptor,
-                                                                                  myUi),
-                                     content);
+        observable.addChangeListener(
+                new RunContentBuilder.ConsoleToFrontListener((RunConfigurationBase)profile, myProject, DefaultDebugExecutor.getDebugExecutorInstance(),
+                                                             myRunContentDescriptor, myUi), content);
       }
     }
   }
@@ -91,14 +86,11 @@ public abstract class DebuggerSessionTabBase extends RunTab {
 
     UIUtil.invokeLaterIfNeeded(() -> {
       if (myRunContentDescriptor != null) {
-        ToolWindow toolWindow = ExecutionManager.getInstance(myProject).getContentManager()
-                .getToolWindowByDescriptor(myRunContentDescriptor);
+        RunContentManager manager = ExecutionManager.getInstance(myProject).getContentManager();
+        ToolWindow toolWindow = manager.getToolWindowByDescriptor(myRunContentDescriptor);
         Content content = myRunContentDescriptor.getAttachedContent();
         if (toolWindow == null || content == null) return;
-        ContentManager manager = toolWindow.getContentManager();
-        if (ArrayUtil.contains(content, manager.getContents()) && !manager.isSelected(content)) {
-          manager.setSelectedContent(content);
-        }
+        manager.selectRunContent(myRunContentDescriptor);
       }
     });
   }

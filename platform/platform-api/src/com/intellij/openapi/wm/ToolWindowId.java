@@ -38,4 +38,5 @@ public interface ToolWindowId {
   String DOCUMENTATION = UIBundle.message("tool.window.name.documentation");
   String TASKS = UIBundle.message("tool.window.name.tasks");
   String PREVIEW = UIBundle.message("tool.window.name.preview");
+  String RUN_DASHBOARD = UIBundle.message("tool.window.name.run.dashboard");
 }

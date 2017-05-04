@@ -372,6 +372,11 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
   }
 
+  @Override
+  public boolean hasSettings(RunnerAndConfigurationSettings settings) {
+    return myConfigurations.get(settings.getUniqueID()) != null;
+  }
+
   private void trimUsagesListToLimit() {
     while(myRecentlyUsedTemporaries.size() > getConfig().getRecentsLimit()) {
       myRecentlyUsedTemporaries.remove(myRecentlyUsedTemporaries.size() - 1);
@@ -425,7 +430,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     for (Iterator<RunnerAndConfigurationSettings> it = getSortedConfigurations().iterator(); it.hasNext(); ) {
       final RunnerAndConfigurationSettings configuration = it.next();
       if (configuration.equals(settings)) {
-        if (mySelectedConfigurationId != null && mySelectedConfigurationId == settings.getUniqueID()) {
+        if (mySelectedConfigurationId != null && mySelectedConfigurationId.equals(settings.getUniqueID())) {
           setSelectedConfiguration(null);
         }
 

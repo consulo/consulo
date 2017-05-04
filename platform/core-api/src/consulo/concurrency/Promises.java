@@ -48,7 +48,7 @@ public class Promises {
   }
 
   @NotNull
-  public static <T> Promise<T> reject(@Nullable Throwable error) {
+  public static <T> Promise<T> rejectedPromise(@Nullable Throwable error) {
     if (error == null) {
       //noinspection unchecked
       return rejectedPromise();
@@ -59,8 +59,20 @@ public class Promises {
   }
 
   @NotNull
+  public static <T> Promise<T> rejectedPromise(@NotNull String error) {
+    return rejectedPromise(Promise.createError(error));
+  }
+
+  @NotNull
+  @Deprecated
+  public static <T> Promise<T> reject(@Nullable Throwable error) {
+    return rejectedPromise(error);
+  }
+
+  @NotNull
+  @Deprecated
   public static <T> Promise<T> reject(@NotNull String error) {
-    return Promises.reject(Promise.createError(error));
+    return rejectedPromise(error);
   }
 
   @NotNull

@@ -63,13 +63,6 @@ public class RejectedPromise<T> extends Promise<T> {
 
   @NotNull
   @Override
-  public <SUB_RESULT> Promise<SUB_RESULT> then(@NotNull AsyncFunction<T, SUB_RESULT> done) {
-    //noinspection unchecked
-    return (Promise<SUB_RESULT>)this;
-  }
-
-  @NotNull
-  @Override
   public State getState() {
     return State.REJECTED;
   }

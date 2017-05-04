@@ -69,12 +69,6 @@ public class DonePromise<T> extends Promise<T> implements Getter<T> {
 
   @NotNull
   @Override
-  public <SUB_RESULT> Promise<SUB_RESULT> then(@NotNull AsyncFunction<T, SUB_RESULT> done) {
-    return done.fun(result);
-  }
-
-  @NotNull
-  @Override
   public State getState() {
     return State.FULFILLED;
   }

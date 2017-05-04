@@ -56,7 +56,7 @@ public abstract class ProcessHandler extends UserDataHolderBase {
   private final ProcessListener myEventMulticaster;
   private final TasksRunner myAfterStartNotifiedRunner;
 
-  private volatile int myExitCode = -1;
+  @Nullable private volatile Integer myExitCode = null;
 
   protected ProcessHandler() {
     myEventMulticaster = createEventMulticaster();
@@ -138,9 +138,10 @@ public abstract class ProcessHandler extends UserDataHolderBase {
   }
 
   /**
-   * @return exit code if the process has already finished, -1 otherwise
+   * @return exit code if the process has already finished, null otherwise
    */
-  public int getExitCode() {
+  @Nullable
+  public Integer getExitCode() {
     return myExitCode;
   }
 

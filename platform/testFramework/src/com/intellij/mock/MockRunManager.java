@@ -208,4 +208,9 @@ public class MockRunManager extends RunManagerEx {
   @Override
   public void refreshUsagesList(RunProfile profile) {
   }
+
+  @Override
+  public boolean hasSettings(RunnerAndConfigurationSettings settings) {
+    return false;
+  }
 }

@@ -19,7 +19,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
-import consulo.concurrency.Promises;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -202,51 +201,6 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
                 });
   }
 
-  @Override
-  @NotNull
-  public <SUB_RESULT> Promise<SUB_RESULT> then(@NotNull final AsyncFunction<T, SUB_RESULT> fulfilled) {
-    switch (state) {
-      case PENDING:
-        break;
-      case FULFILLED:
-        //noinspection unchecked
-        return fulfilled.fun((T)result);
-      case REJECTED:
-        return Promises.reject((Throwable)result);
-    }
-
-    final AsyncPromise<SUB_RESULT> promise = new AsyncPromise<SUB_RESULT>();
-    final Consumer<Throwable> rejectedHandler = new Consumer<Throwable>() {
-      @Override
-      public void consume(Throwable error) {
-        promise.setError(error);
-      }
-    };
-    addHandlers(new Consumer<T>() {
-      @Override
-      public void consume(T result) {
-        try {
-          fulfilled.fun(result)
-                  .done(new Consumer<SUB_RESULT>() {
-                    @Override
-                    public void consume(SUB_RESULT result) {
-                      try {
-                        promise.setResult(result);
-                      }
-                      catch (Throwable e) {
-                        promise.setError(e);
-                      }
-                    }
-                  })
-                  .rejected(rejectedHandler);
-        }
-        catch (Throwable e) {
-          promise.setError(e);
-        }
-      }
-    }, rejectedHandler);
-    return promise;
-  }
 
   @Override
   @NotNull
