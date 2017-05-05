@@ -33,16 +33,30 @@ public interface ToolWindowFactory {
 
   /**
    * Perform additional initialisation routine here
+   *
    * @param window Tool Window
    */
-  default void init(ToolWindow window) {}
+  default void init(ToolWindow window) {
+  }
 
   /**
    * Tool Window saves its state on project close and restore on when project opens
    * In some cases, it is useful to postpone Tool Window activation until user explicitly activates it.
    * Example: Tool Window initialisation takes huge amount of time and makes project loading slower.
+   *
    * @return {@code true} if Tool Window should not be activated on start even if was opened previously.
-   *         {@code false} otherwise.
+   * {@code false} otherwise.
    */
-  default boolean isDoNotActivateOnStart() {return false;}
+  default boolean isDoNotActivateOnStart() {
+    return false;
+  }
+
+  /**
+   * Check if toolwindow (and its stripe button) should be visible after startup.
+   *
+   * @see ToolWindow#isAvailable()
+   */
+  default boolean shouldBeAvailable(@NotNull Project project) {
+    return true;
+  }
 }

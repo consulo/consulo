@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  * User: max
  * Date: May 15, 2002
  * Time: 9:58:27 PM
- * To change template for new class use 
+ * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
 package com.intellij.openapi.actionSystem.ex;
@@ -33,27 +33,25 @@ import com.intellij.openapi.actionSystem.DataContext;
  * @author Konstantin Bulenkov
  */
 public interface AnActionListener {
-  default void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-  }
+  void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event);
 
+  /**
+   * Note that using <code>dataContext</code> in implementing methods is unsafe - it could have been invalidated by the performed action.
+   */
   default void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
   }
 
   default void beforeEditorTyping(char c, DataContext dataContext) {
   }
 
-  @Deprecated
-  class Adapter implements AnActionListener {
+  abstract class Adapter implements AnActionListener {
     @Override
-    public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-    }
+    public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {}
 
     @Override
-    public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-    }
+    public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {}
 
     @Override
-    public void beforeEditorTyping(char c, DataContext dataContext) {
-    }
+    public void beforeEditorTyping(char c, DataContext dataContext) {}
   }
 }

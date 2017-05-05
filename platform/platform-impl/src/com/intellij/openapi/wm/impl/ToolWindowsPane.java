@@ -961,9 +961,9 @@ public final class ToolWindowsPane extends JBLayeredPane implements Disposable {
     private final Comparator<StripeButton> myComparator;
 
     public AddToolStripeButtonCmd(final StripeButton button,
-                                  final WindowInfoImpl info,
-                                  final Comparator<StripeButton> comparator,
-                                  final Runnable finishCallBack) {
+                                  @NotNull WindowInfoImpl info,
+                                  @NotNull Comparator<StripeButton> comparator,
+                                  @NotNull Runnable finishCallBack) {
       super(finishCallBack);
       myButton = button;
       myInfo = info;

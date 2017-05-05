@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-/**
- * @author Vladimir Kondratyev
- */
 package com.intellij.openapi.wm.impl.commands;
 
 import com.intellij.openapi.wm.impl.InternalDecorator;
@@ -28,28 +25,28 @@ import org.jetbrains.annotations.NotNull;
  * Apply <code>info</code> to the corresponded tool button and decarator.
  * Command uses freezed copy of passed <code>info</code> object.
  */
-public final class ApplyWindowInfoCmd extends FinalizableCommand{
+public final class ApplyWindowInfoCmd extends FinalizableCommand {
   private final WindowInfoImpl myInfo;
   private final StripeButton myButton;
   private final InternalDecorator myDecorator;
 
-  public ApplyWindowInfoCmd(
-    @NotNull final WindowInfoImpl info,
-    @NotNull final StripeButton button,
-    @NotNull final InternalDecorator decorator,
-    final Runnable finishCallBack
-  ){
+  public ApplyWindowInfoCmd(@NotNull final WindowInfoImpl info,
+                            @NotNull final StripeButton button,
+                            @NotNull final InternalDecorator decorator,
+                            @NotNull Runnable finishCallBack) {
     super(finishCallBack);
-    myInfo=info.copy();
-    myButton=button;
-    myDecorator=decorator;
+    myInfo = info.copy();
+    myButton = button;
+    myDecorator = decorator;
   }
 
-  public final void run(){
-    try{
+  @Override
+  public final void run() {
+    try {
       myButton.apply(myInfo);
       myDecorator.apply(myInfo);
-    }finally{
+    }
+    finally {
       finish();
     }
   }
