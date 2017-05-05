@@ -30,6 +30,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.PluginsAdvertiserHolder;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
@@ -171,6 +172,7 @@ public class PlatformOrPluginUpdateChecker {
     UpdateChannel channel = UpdateSettings.getInstance().getChannel();
     try {
       remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel);
+      PluginsAdvertiserHolder.update(remotePlugins);
     }
     catch (ProcessCanceledException e) {
       return PlatformOrPluginUpdateResult.CANCELED;

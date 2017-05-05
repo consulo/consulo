@@ -17,14 +17,12 @@ package com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.fileTypes.FileNameMatcher;
 import com.intellij.openapi.fileTypes.FileNameMatcherFactory;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.Couple;
@@ -40,13 +38,6 @@ import java.util.stream.Collectors;
 public class PluginsAdvertiser implements StartupActivity {
   private static NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
 
-  private static List<IdeaPluginDescriptor> ourLoadedPluginDescriptors = Collections.emptyList();
-
-  @NotNull
-  public static List<IdeaPluginDescriptor> getLoadedPluginDescriptors() {
-    return ourLoadedPluginDescriptors;
-  }
-
   @Override
   public void runActivity(@NotNull final Project project) {
     consulo.ide.updateSettings.UpdateSettings updateSettings = consulo.ide.updateSettings.UpdateSettings.getInstance();
@@ -54,20 +45,7 @@ public class PluginsAdvertiser implements StartupActivity {
       return;
     }
 
-    Task.Backgroundable.queue(project, "Loading plugin list", false, indicator -> {
-      List<IdeaPluginDescriptor> pluginDescriptors = Collections.emptyList();
-      try {
-        pluginDescriptors = RepositoryHelper.loadPluginsFromRepository(indicator, updateSettings.getChannel());
-      }
-      catch (Exception ignored) {
-      }
-
-      ourLoadedPluginDescriptors = pluginDescriptors;
-
-      if (pluginDescriptors.isEmpty()) {
-        return;
-      }
-
+    PluginsAdvertiserHolder.initiaze(project, pluginDescriptors -> {
       UIUtil.invokeLaterIfNeeded(() -> {
         if (!project.isDisposed()) {
           EditorNotifications.getInstance(project).updateAllNotifications();
@@ -114,7 +92,7 @@ public class PluginsAdvertiser implements StartupActivity {
           else if ("configure".equals(description)) {
             notification.expire();
 
-            new PluginsAdvertiserDialog(project, ids.stream().map(x -> Couple.of(x, x)).collect(Collectors.toList()), ourLoadedPluginDescriptors).show();
+            new PluginsAdvertiserDialog(project, ids.stream().map(x -> Couple.of(x, x)).collect(Collectors.toList()), pluginDescriptors).show();
           }
         }
       }).notify(project);

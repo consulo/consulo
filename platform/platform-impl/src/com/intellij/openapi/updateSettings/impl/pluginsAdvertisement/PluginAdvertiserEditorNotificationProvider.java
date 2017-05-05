@@ -78,7 +78,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
 
     UnknownExtension fileFeatureForChecking = new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP.getName(), file.getName());
 
-    List<IdeaPluginDescriptor> allPlugins = PluginsAdvertiser.getLoadedPluginDescriptors();
+    List<IdeaPluginDescriptor> allPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
 
     Set<IdeaPluginDescriptor> byFeature = PluginsAdvertiser.findByFeature(allPlugins, fileFeatureForChecking);
     if (!byFeature.isEmpty()) {
