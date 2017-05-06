@@ -32,7 +32,7 @@ public class Main {
   public static final int USAGE_INFO = 0;
   public static final int VERSION_INFO = 0;
   public static final int STARTUP_EXCEPTION = 1;
-  public static final int STARTUP_IMPOSSIBLE = 2;
+  public static final int INSTANCE_CHECK_FAILED = 2;
   public static final int PLUGIN_ERROR = 3;
   public static final int UNSUPPORTED_JAVA_VERSION = 4;
 
@@ -103,8 +103,8 @@ public class Main {
       t = awtError;
     }
     else {
-      message.append("Internal error. Please report to ");
-      message.append("https://github.com/consulo/consulo/issues");
+      message.append("Internal error. Please post to ");
+      message.append("https://discuss.consulo.io");
       message.append("\n\n");
     }
 

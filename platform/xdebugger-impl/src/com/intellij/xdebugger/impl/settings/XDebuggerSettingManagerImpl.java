@@ -112,8 +112,8 @@ public class XDebuggerSettingManagerImpl extends com.intellij.xdebugger.settings
   private void initSettings() {
     if (mySettingsById == null) {
       XDebuggerSettings[] extensions = XDebuggerSettings.EXTENSION_POINT.getExtensions();
-      mySettingsById = new TreeMap<String, XDebuggerSettings<?>>();
-      mySettingsByClass = new THashMap<Class<? extends XDebuggerSettings>, XDebuggerSettings<?>>(extensions.length);
+      mySettingsById = new TreeMap<>();
+      mySettingsByClass = new THashMap<>(extensions.length);
       for (XDebuggerSettings settings : extensions) {
         mySettingsById.put(settings.getId(), settings);
         mySettingsByClass.put(settings.getClass(), settings);
@@ -130,7 +130,7 @@ public class XDebuggerSettingManagerImpl extends com.intellij.xdebugger.settings
   public static class SettingsState {
     @Tag("debuggers")
     @AbstractCollection(surroundWithTag = false)
-    public List<SpecificSettingsState> specificStates = new SmartList<SpecificSettingsState>();
+    public List<SpecificSettingsState> specificStates = new SmartList<>();
     private XDebuggerDataViewSettings myDataViewSettings = new XDebuggerDataViewSettings();
     private XDebuggerGeneralSettings myGeneralSettings = new XDebuggerGeneralSettings();
 

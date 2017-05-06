@@ -66,6 +66,7 @@
         <element id="module-production-resource-output" name="remote-servers-impl" />
         <element id="module-output" name="usageView" />
         <element id="module-output" name="testFramework" />
+        <element id="module-output" name="buildin-server-impl" />
       </element>
       <element id="zip-archive" name="consulo-external-system-api.jar">
         <element id="module-output" name="external-system-api" />

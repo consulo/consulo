@@ -17,8 +17,11 @@ package org.jetbrains.ide;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.util.Url;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.net.URLConnection;
 
 public abstract class BuiltInServerManager {
   @NotNull
@@ -28,6 +31,14 @@ public abstract class BuiltInServerManager {
 
   public abstract int getPort();
 
+  public abstract BuiltInServerManager waitForStart();
+
   @Nullable
   public abstract Disposable getServerDisposable();
+
+  public abstract boolean isOnBuiltInWebServer(@Nullable Url url);
+
+  public abstract void configureRequestToWebServer(@NotNull URLConnection connection);
+
+  public abstract Url addAuthToken(@NotNull Url url);
 }

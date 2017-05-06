@@ -21,6 +21,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
@@ -28,11 +29,17 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
+import com.intellij.util.Consumer;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import com.sun.jna.Native;
 import consulo.start.CommandLineArgs;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.PatternLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.io.BuiltInServer;
 
 import javax.swing.*;
 import java.io.File;
@@ -40,23 +47,23 @@ import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Consumer;
 
 /**
  * @author yole
  */
 public class StartupUtil {
-  private static SocketLock ourLock;
+  private static SocketLock ourSocketLock;
 
   private StartupUtil() {
   }
 
   public synchronized static void addExternalInstanceListener(@NotNull Consumer<CommandLineArgs> consumer) {
-    ourLock.setActivateListener(consumer);
+    ourSocketLock.setExternalInstanceListener(consumer);
   }
 
-  public synchronized static int getAcquiredPort() {
-    return ourLock.getAcquiredPort();
+  @Nullable
+  public synchronized static BuiltInServer getServer() {
+    return ourSocketLock == null ? null : ourSocketLock.getServer();
   }
 
   public static void prepareAndStart(String[] args, Consumer<CommandLineArgs> appStarter) {
@@ -67,7 +74,7 @@ public class StartupUtil {
       System.exit(Main.USAGE_INFO);
     }
 
-    if(commandLineArgs.isShowVersion()) {
+    if (commandLineArgs.isShowVersion()) {
       ApplicationInfoEx infoEx = ApplicationInfoImpl.getShadowInstance();
       System.out.println(infoEx.getFullApplicationName());
       System.exit(Main.VERSION_INFO);
@@ -77,9 +84,26 @@ public class StartupUtil {
       AppUIUtil.updateFrameClass();
     }
 
-    boolean canStart = checkSystemFolders() && lockSystemFolders(args);  // note: uses config folder!
-    if (!canStart) {
-      System.exit(Main.STARTUP_IMPOSSIBLE);
+    // avoiding "log4j:WARN No appenders could be found"
+    System.setProperty("log4j.defaultInitOverride", "true");
+    try {
+      org.apache.log4j.Logger root = org.apache.log4j.Logger.getRootLogger();
+      if (!root.getAllAppenders().hasMoreElements()) {
+        root.setLevel(Level.WARN);
+        root.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.DEFAULT_CONVERSION_PATTERN)));
+      }
+    }
+    catch (Throwable e) {
+      //noinspection CallToPrintStackTrace
+      e.printStackTrace();
+    }
+
+    ActivationResult result = lockSystemFolders(args);
+    if (result == ActivationResult.ACTIVATED) {
+      System.exit(0);
+    }
+    else if (result != ActivationResult.STARTED) {
+      System.exit(Main.INSTANCE_CHECK_FAILED);
     }
 
     Logger.setFactory(LoggerFactory.class);
@@ -93,15 +117,19 @@ public class StartupUtil {
       AppUIUtil.registerBundledFonts();
     }
 
-    appStarter.accept(commandLineArgs);
+    appStarter.consume(commandLineArgs);
   }
 
   private synchronized static boolean checkSystemFolders() {
     String configPath = PathManager.getConfigPath();
     PathManager.ensureConfigFolderExists();
     if (!new File(configPath).isDirectory()) {
-      String message = "Config path '" + configPath + "' is invalid.\n" +
-                       "If you have modified the '" + PathManager.PROPERTY_CONFIG_PATH + "' property please make sure it is correct,\n" +
+      String message = "Config path '" +
+                       configPath +
+                       "' is invalid.\n" +
+                       "If you have modified the '" +
+                       PathManager.PROPERTY_CONFIG_PATH +
+                       "' property please make sure it is correct,\n" +
                        "otherwise please re-install the IDE.";
       Main.showMessage("Invalid Config Path", message, true);
       return false;
@@ -109,8 +137,12 @@ public class StartupUtil {
 
     String systemPath = PathManager.getSystemPath();
     if (!new File(systemPath).isDirectory()) {
-      String message = "System path '" + systemPath + "' is invalid.\n" +
-                       "If you have modified the '" + PathManager.PROPERTY_SYSTEM_PATH + "' property please make sure it is correct,\n" +
+      String message = "System path '" +
+                       systemPath +
+                       "' is invalid.\n" +
+                       "If you have modified the '" +
+                       PathManager.PROPERTY_SYSTEM_PATH +
+                       "' property please make sure it is correct,\n" +
                        "otherwise please re-install the IDE.";
       Main.showMessage("Invalid System Path", message, true);
       return false;
@@ -147,9 +179,14 @@ public class StartupUtil {
     }
 
     if (tempInaccessible != null) {
-      String message = "Temp directory '" + ideTempDir + "' is inaccessible.\n" +
-                       "If you have modified the '" + PathManager.PROPERTY_SYSTEM_PATH + "' property please make sure it is correct,\n" +
-                       "otherwise please re-install the IDE.\n\nDetails: " + tempInaccessible;
+      String message = "Temp directory '" +
+                       ideTempDir +
+                       "' is inaccessible.\n" +
+                       "If you have modified the '" +
+                       PathManager.PROPERTY_SYSTEM_PATH +
+                       "' property please make sure it is correct,\n" +
+                       "otherwise please re-install the IDE.\n\nDetails: " +
+                       tempInaccessible;
       Main.showMessage("Invalid System Path", message, true);
       return false;
     }
@@ -157,25 +194,50 @@ public class StartupUtil {
     return true;
   }
 
-  private synchronized static boolean lockSystemFolders(String[] args) {
-    if (ourLock == null) {
-      ourLock = new SocketLock();
+  private enum ActivationResult {
+    STARTED,
+    ACTIVATED,
+    FAILED
+  }
+
+  @NotNull
+  private synchronized static ActivationResult lockSystemFolders(String[] args) {
+    if (ourSocketLock != null) {
+      throw new AssertionError();
     }
 
-    SocketLock.ActivateStatus activateStatus = ourLock.lock(PathManager.getConfigPath(), true, args);
-    if (activateStatus == SocketLock.ActivateStatus.NO_INSTANCE) {
-      activateStatus = ourLock.lock(PathManager.getSystemPath(), false);
+    ourSocketLock = new SocketLock(PathManager.getConfigPath(), PathManager.getSystemPath());
+
+    SocketLock.ActivateStatus status;
+    try {
+      status = ourSocketLock.lock(args);
+    }
+    catch (Exception e) {
+      Main.showMessage("Cannot Lock System Folders", e);
+      return ActivationResult.FAILED;
     }
 
-    if (activateStatus != SocketLock.ActivateStatus.NO_INSTANCE) {
-      if (Main.isHeadless() || activateStatus == SocketLock.ActivateStatus.CANNOT_ACTIVATE) {
-        String message = "Only one instance of " + ApplicationNamesInfo.getInstance().getFullProductName() + " can be run at a time.";
-        Main.showMessage("Too Many Instances", message, true);
-      }
-      return false;
+    if (status == SocketLock.ActivateStatus.NO_INSTANCE) {
+      ShutDownTracker.getInstance().registerShutdownTask(() -> {
+        //noinspection SynchronizeOnThis
+        synchronized (StartupUtil.class) {
+          ourSocketLock.dispose();
+          ourSocketLock = null;
+        }
+      });
+      return ActivationResult.STARTED;
+    }
+    else if (status == SocketLock.ActivateStatus.ACTIVATED) {
+      //noinspection UseOfSystemOutOrSystemErr
+      System.out.println("Already running");
+      return ActivationResult.ACTIVATED;
+    }
+    else if (Main.isHeadless() || status == SocketLock.ActivateStatus.CANNOT_ACTIVATE) {
+      String message = "Only one instance of " + ApplicationNamesInfo.getInstance().getFullProductName() + " can be run at a time.";
+      Main.showMessage("Too Many Instances", message, true);
     }
 
-    return true;
+    return ActivationResult.FAILED;
   }
 
   private static void fixProcessEnvironment(Logger log) {

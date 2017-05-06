@@ -1077,6 +1077,20 @@
           <orderEntry type="module" module-name="util" />
         </module-layer>
       </module>
+      <module name="impl/buildin-server-impl" dirurl="file://$PROJECT_DIR$/platform/buildin-server-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" language-level-name="JDK_1_8" bytecode-version="1.8" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="xdebugger-impl" />
+          <orderEntry type="library" name="Netty" level="project" />
+          <orderEntry type="library" name="XmlRPC" level="project" />
+        </module-layer>
+      </module>
     </modules>
   </component>
 </project>

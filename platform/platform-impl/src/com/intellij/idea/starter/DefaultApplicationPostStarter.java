@@ -17,6 +17,7 @@ package com.intellij.idea.starter;
 
 import com.intellij.ide.CommandLineProcessor;
 import com.intellij.ide.IdeEventQueue;
+import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.RecentProjectsManagerBase;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
@@ -87,6 +88,9 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
   @Override
   public void main(@NotNull CommandLineArgs args) {
     SystemDock.updateMenu();
+
+    // if OS has dock, RecentProjectsManager will be already created, but not all OS have dock, so, we trigger creation here to ensure that RecentProjectsManager app listener will be added
+    RecentProjectsManager.getInstance();
 
     // Event queue should not be changed during initialization of application components.
     // It also cannot be changed before initialization of application components because IdeEventQueue uses other

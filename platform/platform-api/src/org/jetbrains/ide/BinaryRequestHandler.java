@@ -16,19 +16,21 @@
 package org.jetbrains.ide;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.http.HttpMethod;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.QueryStringDecoder;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import java.util.UUID;
 
-public abstract class HttpRequestHandler {
-  public static final ExtensionPointName<HttpRequestHandler> EP_NAME = ExtensionPointName.create("com.intellij.httpRequestHandler");
+public abstract class BinaryRequestHandler {
+  public static final ExtensionPointName<BinaryRequestHandler> EP_NAME = ExtensionPointName.create("org.jetbrains.binaryRequestHandler");
 
-  public boolean isSupported(HttpRequest request) {
-    return request.getMethod() == HttpMethod.GET;
-  }
+  /**
+   * uuidgen on Mac OS X could be used to generate UUID
+   */
+  @NotNull
+  public abstract UUID getId();
 
-  public abstract boolean process(QueryStringDecoder urlDecoder, HttpRequest request, ChannelHandlerContext context) throws IOException;
+  @NotNull
+  public abstract ChannelHandler getInboundHandler(@NotNull ChannelHandlerContext context);
 }

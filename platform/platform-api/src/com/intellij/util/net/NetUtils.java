@@ -35,6 +35,14 @@ public class NetUtils {
   private NetUtils() {
   }
 
+  public static InetSocketAddress loopbackSocketAddress() throws IOException {
+    return loopbackSocketAddress(-1);
+  }
+
+  public static InetSocketAddress loopbackSocketAddress(int port) throws IOException {
+    return new InetSocketAddress(InetAddress.getLoopbackAddress(), port == -1 ? NetUtils.findAvailableSocketPort() : port);
+  }
+
   public static boolean canConnectToSocket(String host, int port) {
     return canConnectToSocket(host, port, false);
   }
@@ -173,8 +181,7 @@ public class NetUtils {
     String localHostString = "localhost";
     try {
       final InetAddress localHost = InetAddress.getByName(localHostString);
-      if ((localHost.getAddress().length != 4 && SystemInfo.isWindows) ||
-          (localHost.getAddress().length == 4 && SystemInfo.isMac)) {
+      if ((localHost.getAddress().length != 4 && SystemInfo.isWindows) || (localHost.getAddress().length == 4 && SystemInfo.isMac)) {
         localHostString = "127.0.0.1";
       }
     }

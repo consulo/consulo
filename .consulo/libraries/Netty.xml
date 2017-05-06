@@ -1,10 +1,10 @@
 <component name="libraryTable">
   <library name="Netty">
     <binaries>
-      <root url="jar://$PROJECT_DIR$/lib/netty-3.6.6.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/netty-all-4.1.9.Final.jar!/" />
     </binaries>
     <sources>
-      <root url="jar://$PROJECT_DIR$/libSrc/netty-3.6.6.Final-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libSrc/netty-all-4.1.9.Final-sources.jar!/" />
     </sources>
   </library>
 </component>

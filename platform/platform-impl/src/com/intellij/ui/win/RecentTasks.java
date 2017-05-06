@@ -15,19 +15,19 @@
  */
 package com.intellij.ui.win;
 
+import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.application.ex.ApplicationInfoEx;
+import com.intellij.util.lang.UrlClassLoader;
+
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.intellij.idea.StartupUtil;
-import com.intellij.util.lang.UrlClassLoader;
-
 public class RecentTasks {
+  private static AtomicBoolean initialized = new AtomicBoolean(false);
 
-  private static AtomicBoolean initialized =
-    new AtomicBoolean(false);
+  private final static WeakReference<Thread> openerThread = new WeakReference<>(Thread.currentThread());
 
-  private final static WeakReference<Thread> openerThread =
-    new WeakReference<Thread>(Thread.currentThread());
+  private final static String openerThreadName = Thread.currentThread().getName();
 
   static {
     UrlClassLoader.loadPlatformLibrary("jumpListBridge");
@@ -35,19 +35,22 @@ public class RecentTasks {
 
   private synchronized static void init() {
     if (initialized.get()) return;
-
-    initialize("ConsuloAppID." + StartupUtil.getAcquiredPort());
+    initialize(ApplicationInfoEx.getInstanceEx().getVersionName() + "." + PathManager.getConfigPath().hashCode());
     initialized.set(true);
   }
 
   /**
    * Com initialization should be invoked once per process.
    * All invocation should be made from the same thread.
+   *
    * @param applicationId
    */
-  native private static void initialize (String applicationId);
-  native private static void addTasksNativeForCategory (String category, Task [] tasks);
+  native private static void initialize(String applicationId);
+
+  native private static void addTasksNativeForCategory(String category, Task[] tasks);
+
   native static String getShortenPath(String paths);
+
   native private static void clearNative();
 
   public synchronized static void clear() {
@@ -58,6 +61,7 @@ public class RecentTasks {
 
   /**
    * Use #clearNative method instead of passing empty array of tasks.
+   *
    * @param tasks
    */
   public synchronized static void addTasks(final Task[] tasks) {
@@ -69,7 +73,8 @@ public class RecentTasks {
 
   private static void checkThread() {
     Thread t = openerThread.get();
-    if (t == null || !t.equals(Thread.currentThread()))
-      throw new RuntimeException("This class has to be used from the same thread");
+    if (t == null || !t.equals(Thread.currentThread())) {
+      throw new RuntimeException("Current thread is " + Thread.currentThread().getName() + "This class has to be used from " + openerThreadName + " thread");
+    }
   }
 }

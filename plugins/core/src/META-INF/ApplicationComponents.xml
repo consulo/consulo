@@ -24,10 +24,6 @@
     <component>
       <implementation-class>com.intellij.openapi.util.registry.RegistryState</implementation-class>
     </component>
-    <component>
-      <interface-class>org.jetbrains.ide.BuiltInServerManager</interface-class>
-      <implementation-class>com.intellij.ide.BuiltInServerManagerImpl</implementation-class>
-    </component>
 
     <component>
       <interface-class>com.intellij.openapi.project.ProjectManager</interface-class>

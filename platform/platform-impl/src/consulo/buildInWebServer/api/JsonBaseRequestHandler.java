@@ -15,13 +15,14 @@
  */
 package consulo.buildInWebServer.api;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.intellij.openapi.vfs.CharsetToolkit;
-import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.http.HttpMethod;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpResponse;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpRequest;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.ide.HttpRequestHandler;
@@ -65,18 +66,18 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
   }
 
   @Override
-  public boolean isSupported(HttpRequest request) {
-    return getMethod() == request.getMethod() && myApiUrl.equals(request.getUri());
+  public boolean isSupported(FullHttpRequest request) {
+    return getMethod() == request.method() && myApiUrl.equals(request.uri());
   }
 
   protected boolean writeResponse(@NotNull Object responseObject, HttpRequest request, ChannelHandlerContext context) throws IOException {
-    HttpResponse response = Responses.create("application/json; charset=utf-8");
+    FullHttpResponse response = Responses.response("application/json; charset=utf-8", null);
 
-    String jsonResponse = new Gson().toJson(responseObject);
+    String jsonResponse = new GsonBuilder().setPrettyPrinting().create().toJson(responseObject);
 
-    response.setContent(ChannelBuffers.copiedBuffer(jsonResponse, CharsetToolkit.UTF8_CHARSET));
+    response.content().writeBytes(Unpooled.copiedBuffer(jsonResponse, CharsetToolkit.UTF8_CHARSET));
 
-    Responses.send(response, request, context);
+    Responses.send(response, context.channel(), request);
     return true;
   }
 

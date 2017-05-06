@@ -18,10 +18,10 @@ package consulo.buildInWebServer.api;
 import com.google.gson.Gson;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.ExceptionUtil;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.http.HttpMethod;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.QueryStringDecoder;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.QueryStringDecoder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -48,10 +48,10 @@ public abstract class JsonPostRequestHandler<Request> extends JsonBaseRequestHan
   public abstract JsonResponse handle(@NotNull Request request);
 
   @Override
-  public boolean process(QueryStringDecoder urlDecoder, HttpRequest request, ChannelHandlerContext context) throws IOException {
+  public boolean process(@NotNull QueryStringDecoder urlDecoder, @NotNull FullHttpRequest request, @NotNull ChannelHandlerContext context) throws IOException {
     Object handle = null;
     try {
-      String json = request.getContent().toString(CharsetToolkit.UTF8_CHARSET);
+      String json = request.content().toString(CharsetToolkit.UTF8_CHARSET);
 
       final Request body = new Gson().fromJson(json, myRequestClass);
 
