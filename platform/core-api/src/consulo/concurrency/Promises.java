@@ -32,19 +32,27 @@ import java.util.Collection;
  * from kotlin intellij-community\platform\projectModel-api\src\org\jetbrains\concurrency\promise.kt
  */
 public class Promises {
-  private static final NotNullLazyValue<Promise> ourRejectedPromise = NotNullLazyValue.createValue(() -> Promise.REJECTED);
-  private static final NotNullLazyValue<Promise> ourResolvedPromise = NotNullLazyValue.createValue(() -> Promise.DONE);
+  private static final NotNullLazyValue<Promise> REJECTED = NotNullLazyValue.createValue(() -> Promise.REJECTED);
+  private static final NotNullLazyValue<Promise> DONE = NotNullLazyValue.createValue(() -> Promise.DONE);
+  private static final NotNullLazyValue<RuntimeException> OBSOLETE_ERROR = NotNullLazyValue.createValue(() -> Promise.createError("Obsolete"));
+  private static final NotNullLazyValue<Promise> CANCELLED_PROMISE = NotNullLazyValue.createValue(() -> new RejectedPromise(OBSOLETE_ERROR.getValue()));
 
   @NotNull
   @SuppressWarnings("unchecked")
   public static <T> Promise<T> rejectedPromise() {
-    return ourRejectedPromise.getValue();
+    return REJECTED.getValue();
   }
 
   @NotNull
   @SuppressWarnings("unchecked")
   public static <T> Promise<T> resolvedPromise() {
-    return ourResolvedPromise.getValue();
+    return DONE.getValue();
+  }
+
+  @NotNull
+  @SuppressWarnings("unchecked")
+  public static <T> Promise<T> cancelledPromise() {
+    return CANCELLED_PROMISE.getValue();
   }
 
   @NotNull
