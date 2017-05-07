@@ -607,7 +607,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
     }
     if (directoryName != null) {
       String path = FileUtil.toSystemIndependentName(directoryName);
-      if (path.endsWith("/.idea") || path.contains("/.idea/")) {
+      if (path.endsWith("/.consulo") || path.contains("/.consulo/")) {
         setSearchInProjectFiles(true);
       }
     }
