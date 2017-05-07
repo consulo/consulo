@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vcs.checkin;
 
-import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.todo.*;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -33,6 +32,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
@@ -48,15 +48,17 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.text.DateFormatUtil;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.util.Collection;
+
+import static com.intellij.CommonBundle.getCancelButtonText;
+import static com.intellij.openapi.ui.Messages.*;
+import static com.intellij.util.ui.UIUtil.getWarningIcon;
 
 /**
  * @author irengrig
@@ -77,27 +79,24 @@ public class TodoCheckinHandler extends CheckinHandler {
 
   @Override
   public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-    final JCheckBox checkBox = new JCheckBox(VcsBundle.message("before.checkin.new.todo.check", ""));
+    JCheckBox checkBox = new JCheckBox(VcsBundle.message("before.checkin.new.todo.check", ""));
     return new RefreshableOnComponent() {
       @Override
       public JComponent getComponent() {
         JPanel panel = new JPanel(new BorderLayout(4, 0));
         panel.add(checkBox, BorderLayout.WEST);
-        setFilterText(myConfiguration.myTodoPanelSettings.getTodoFilterName());
-        if (myConfiguration.myTodoPanelSettings.getTodoFilterName() != null) {
-          myTodoFilter = TodoConfiguration.getInstance().getTodoFilter(myConfiguration.myTodoPanelSettings.getTodoFilterName());
+        setFilterText(myConfiguration.myTodoPanelSettings.todoFilterName);
+        if (myConfiguration.myTodoPanelSettings.todoFilterName != null) {
+          myTodoFilter = TodoConfiguration.getInstance().getTodoFilter(myConfiguration.myTodoPanelSettings.todoFilterName);
         }
 
-        final Consumer<TodoFilter> consumer = new Consumer<TodoFilter>() {
-          @Override
-          public void consume(TodoFilter todoFilter) {
-            myTodoFilter = todoFilter;
-            final String name = todoFilter == null ? null : todoFilter.getName();
-            myConfiguration.myTodoPanelSettings.setTodoFilterName(name);
-            setFilterText(name);
-          }
+        Consumer<TodoFilter> consumer = todoFilter -> {
+          myTodoFilter = todoFilter;
+          String name = todoFilter == null ? null : todoFilter.getName();
+          myConfiguration.myTodoPanelSettings.todoFilterName = name;
+          setFilterText(name);
         };
-        final LinkLabel linkLabel = new LinkLabel("Configure", null);
+        LinkLabel linkLabel = new LinkLabel("Configure", null);
         linkLabel.setListener(new LinkListener() {
           @Override
           public void linkSelected(LinkLabel aSource, Object aLinkData) {
@@ -112,7 +111,7 @@ public class TodoCheckinHandler extends CheckinHandler {
         return panel;
       }
 
-      private void setFilterText(final String filterName) {
+      private void setFilterText(String filterName) {
         if (filterName == null) {
           checkBox.setText(VcsBundle.message("before.checkin.new.todo.check", IdeBundle.message("action.todo.show.all")));
         } else {
@@ -140,7 +139,7 @@ public class TodoCheckinHandler extends CheckinHandler {
   public ReturnResult beforeCheckin(@Nullable CommitExecutor executor, PairConsumer<Object, Object> additionalDataConsumer) {
     if (! myConfiguration.CHECK_NEW_TODO) return ReturnResult.COMMIT;
     if (DumbService.getInstance(myProject).isDumb()) {
-      final String todoName = VcsBundle.message("before.checkin.new.todo.check.title");
+      String todoName = VcsBundle.message("before.checkin.new.todo.check.title");
       if (Messages.showOkCancelDialog(myProject,
                                       todoName +
                                       " can't be performed while " + ApplicationNamesInfo.getInstance().getFullProductName() + " updates the indices in background.\n" +
@@ -151,18 +150,17 @@ public class TodoCheckinHandler extends CheckinHandler {
       }
       return ReturnResult.COMMIT;
     }
-    final Collection<Change> changes = myCheckinProjectPanel.getSelectedChanges();
-    final TodoCheckinHandlerWorker worker = new TodoCheckinHandlerWorker(myProject, changes, myTodoFilter, true);
+    Collection<Change> changes = myCheckinProjectPanel.getSelectedChanges();
+    TodoCheckinHandlerWorker worker = new TodoCheckinHandlerWorker(myProject, changes, myTodoFilter, true);
 
-    final Ref<Boolean> completed = Ref.create(Boolean.FALSE);
-    ProgressManager.getInstance().run(new Task.Modal(myProject, "Looking for new and edited TODO items...", true) {
+    Ref<Boolean> completed = Ref.create(Boolean.FALSE);
+    ProgressManager.getInstance().run(new Task.Modal(myProject, "Looking for New and Edited TODO Items...", true) {
       @Override
       public void run(@NotNull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
         worker.execute();
       }
 
-      @RequiredDispatchThread
       @Override
       public void onSuccess() {
         completed.set(Boolean.TRUE);
@@ -174,72 +172,68 @@ public class TodoCheckinHandler extends CheckinHandler {
     return showResults(worker, executor);
   }
 
-  private ReturnResult showResults(final TodoCheckinHandlerWorker worker, CommitExecutor executor) {
+  private ReturnResult showResults(TodoCheckinHandlerWorker worker, CommitExecutor executor) {
     String commitButtonText = executor != null ? executor.getActionText() : myCheckinProjectPanel.getCommitActionName();
-    if (commitButtonText.endsWith("...")) {
-      commitButtonText = commitButtonText.substring(0, commitButtonText.length()-3);
-    }
+    commitButtonText = StringUtil.trimEnd(commitButtonText, "...");
 
-    final String text = createMessage(worker);
-    final String[] buttons;
-    final boolean thereAreTodoFound = worker.getAddedOrEditedTodos().size() + worker.getInChangedTodos().size() > 0;
-    int commitOption;
+    String text = createMessage(worker);
+    boolean thereAreTodoFound = worker.getAddedOrEditedTodos().size() + worker.getInChangedTodos().size() > 0;
+    String title = "TODO";
     if (thereAreTodoFound) {
-      buttons = new String[]{VcsBundle.message("todo.in.new.review.button"), commitButtonText, CommonBundle.getCancelButtonText()};
-      commitOption = 1;
+      return askReviewOrCommit(worker, commitButtonText, text, title);
     }
-    else {
-      buttons = new String[]{commitButtonText, CommonBundle.getCancelButtonText()};
-      commitOption = 0;
-    }
-    final int answer = Messages.showDialog(myProject, text, "TODO", null, buttons, 0, 1, UIUtil.getWarningIcon());
-    if (thereAreTodoFound && answer == Messages.OK) {
-      showTodo(worker);
-      return ReturnResult.CLOSE_WINDOW;
-    }
-    if (answer == commitOption) {
+    else if (YES == showYesNoDialog(myProject, text, title, commitButtonText, getCancelButtonText(), getWarningIcon())) {
       return ReturnResult.COMMIT;
     }
     return ReturnResult.CANCEL;
   }
 
-  private void showTodo(final TodoCheckinHandlerWorker worker) {
-    TodoView todoView = ServiceManager.getService(myProject, TodoView.class);
-    final String title = "For commit (" + DateFormatUtil.formatDateTime(System.currentTimeMillis()) + ")";
-    todoView.addCustomTodoView(new TodoTreeBuilderFactory() {
+  @NotNull
+  private ReturnResult askReviewOrCommit(@NotNull TodoCheckinHandlerWorker worker,
+                                         @NotNull String commitButton,
+                                         @NotNull String text,
+                                         @NotNull String title) {
+    String yesButton = VcsBundle.message("todo.in.new.review.button");
+    switch (showYesNoCancelDialog(myProject, text, title, yesButton, commitButton, getCancelButtonText(), getWarningIcon())) {
+      case YES:
+        showTodo(worker);
+        return ReturnResult.CLOSE_WINDOW;
+      case NO:
+        return ReturnResult.COMMIT;
+    }
+    return ReturnResult.CANCEL;
+  }
+
+  private void showTodo(TodoCheckinHandlerWorker worker) {
+    String title = "For commit (" + DateFormatUtil.formatDateTime(System.currentTimeMillis()) + ")";
+    ServiceManager.getService(myProject, TodoView.class).addCustomTodoView(new TodoTreeBuilderFactory() {
       @Override
       public TodoTreeBuilder createTreeBuilder(JTree tree, DefaultTreeModel treeModel, Project project) {
         return new CustomChangelistTodosTreeBuilder(tree, treeModel, myProject, title, worker.inOneList());
       }
     }, title, new TodoPanelSettings(myConfiguration.myTodoPanelSettings));
 
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final ToolWindowManager manager = ToolWindowManager.getInstance(myProject);
-        if (manager != null) {
-          final ToolWindow window = manager.getToolWindow("TODO");
-          if (window != null) {
-            window.show(new Runnable() {
-              @Override
-              public void run() {
-                final ContentManager cm = window.getContentManager();
-                final Content[] contents = cm.getContents();
-                if (contents.length > 0) {
-                  cm.setSelectedContent(contents[contents.length - 1], true);
-                }
-              }
-            });
-          }
+    ApplicationManager.getApplication().invokeLater(() -> {
+      ToolWindowManager manager = ToolWindowManager.getInstance(myProject);
+      if (manager != null) {
+        ToolWindow window = manager.getToolWindow("TODO");
+        if (window != null) {
+          window.show(() -> {
+            ContentManager cm = window.getContentManager();
+            Content[] contents = cm.getContents();
+            if (contents.length > 0) {
+              cm.setSelectedContent(contents[contents.length - 1], true);
+            }
+          });
         }
       }
     }, ModalityState.NON_MODAL, myProject.getDisposed());
   }
 
   private static String createMessage(TodoCheckinHandlerWorker worker) {
-    final int added = worker.getAddedOrEditedTodos().size();
-    final int changed = worker.getInChangedTodos().size();
-    final int skipped = worker.getSkipped().size();
+    int added = worker.getAddedOrEditedTodos().size();
+    int changed = worker.getInChangedTodos().size();
+    int skipped = worker.getSkipped().size();
     if (added == 0 && changed == 0) {
       return VcsBundle.message("todo.handler.only.skipped", skipped);
     } else if (changed == 0) {

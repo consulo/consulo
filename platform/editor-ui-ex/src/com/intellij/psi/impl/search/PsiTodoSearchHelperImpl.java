@@ -18,11 +18,9 @@ package com.intellij.psi.impl.search;
 
 import com.intellij.ide.todo.TodoIndexPatternProvider;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.cache.TodoCacheManager;
-import com.intellij.psi.impl.cache.impl.id.IdIndexEntry;
 import com.intellij.psi.search.IndexPatternOccurrence;
 import com.intellij.psi.search.PsiTodoSearchHelper;
 import com.intellij.psi.search.TodoItem;
@@ -65,8 +63,9 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
     return processTodoOccurences(startOffset, endOffset, occurrences);
   }
 
-  private TodoItem[] processTodoOccurences(int startOffset, int endOffset, Collection<IndexPatternOccurrence> occurrences) {
-    List<TodoItem> items = new ArrayList<TodoItem>(occurrences.size());
+  @NotNull
+  private static TodoItem[] processTodoOccurences(int startOffset, int endOffset, Collection<IndexPatternOccurrence> occurrences) {
+    List<TodoItem> items = new ArrayList<>(occurrences.size());
     TextRange textRange = new TextRange(startOffset, endOffset);
     final TodoItemsCreator todoItemsCreator = new TodoItemsCreator();
     for(IndexPatternOccurrence occurrence: occurrences) {
@@ -89,7 +88,7 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
   @Override
   public TodoItem[] findTodoItemsLight(@NotNull PsiFile file, int startOffset, int endOffset) {
     final Collection<IndexPatternOccurrence> occurrences =
-      LightIndexPatternSearch.SEARCH.createQuery(new IndexPatternSearch.SearchParameters(file, TodoIndexPatternProvider.getInstance())).findAll();
+            LightIndexPatternSearch.SEARCH.createQuery(new IndexPatternSearch.SearchParameters(file, TodoIndexPatternProvider.getInstance())).findAll();
 
     if (occurrences.isEmpty()) {
       return EMPTY_TODO_ITEMS;
@@ -117,12 +116,14 @@ public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
     return count;
   }
 
-  private static ArrayList<IdIndexEntry> getWordEntries(String name, boolean caseSensitively) {
-    List<String> words = StringUtil.getWordsInStringLongestFirst(name);
-    final ArrayList<IdIndexEntry> keys = new ArrayList<IdIndexEntry>();
-    for (String word : words) {
-      keys.add(new IdIndexEntry(word, caseSensitively));
-    }
-    return keys;
+
+  /**
+   * Returns if td items should be highlighted in editor
+   *
+   * @param file    the file to return the to do count for.
+   * @return if td items should be highlighted in editor. True by default
+   */
+  public boolean shouldHighlightInEditor(@NotNull PsiFile file) {
+    return true;
   }
 }

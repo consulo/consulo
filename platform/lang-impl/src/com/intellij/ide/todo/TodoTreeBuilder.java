@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.PsiTodoSearchHelper;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.usageView.UsageTreeColorsScheme;
+import com.intellij.util.Processor;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -71,7 +72,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
    * This set contains "dirty" files. File is "dirty" if it's currently not unknown
    * whether the file contains T.O.D.O item or not. To determine this it's necessary
    * to perform some (perhaps, CPU expensive) operation. These "dirty" files are
-   * validated in <code>validateCache()</code> method.
+   * validated in {@code validateCache()} method.
    */
   protected final HashSet<VirtualFile> myDirtyFileSet;
 
@@ -79,7 +80,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
 
   protected final PsiTodoSearchHelper mySearchHelper;
   /**
-   * If this flag is false then the updateTree() method does nothing. But when
+   * If this flag is false then the refresh() method does nothing. But when
    * the flag becomes true and myDirtyFileSet isn't empty the update is invoked.
    * This is done for optimization reasons: if TodoPane is not visible then
    * updates isn't invoked.
@@ -94,9 +95,9 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
     myProject = project;
 
     myFileTree = new FileTree();
-    myDirtyFileSet = new HashSet<VirtualFile>();
+    myDirtyFileSet = new HashSet<>();
 
-    myFile2Highlighter = new HashMap<VirtualFile, EditorHighlighter>();
+    myFile2Highlighter = new HashMap<>();
 
     PsiManager psiManager = PsiManager.getInstance(myProject);
     mySearchHelper = PsiTodoSearchHelper.getInstance(myProject);
@@ -151,12 +152,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
     if (myUpdatable != updatable) {
       myUpdatable = updatable;
       if (updatable) {
-        DumbService.getInstance(myProject).runWhenSmart(new Runnable() {
-          @Override
-          public void run() {
-            updateTree(false);
-          }
-        });
+        DumbService.getInstance(myProject).runWhenSmart(() -> updateTree(false));
       }
     }
   }
@@ -187,31 +183,28 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
       protected ActionCallback beforeUpdate(final TreeUpdatePass pass) {
         if (!myDirtyFileSet.isEmpty()) { // suppress redundant cache validations
           final AsyncResult callback = new AsyncResult();
-          DumbService.getInstance(myProject).runWhenSmart(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                validateCache();
-                getTodoTreeStructure().validateCache();
-              }
-              finally {
-                callback.setDone();
-              }
+          DumbService.getInstance(myProject).runWhenSmart(() -> {
+            try {
+              validateCache();
+              getTodoTreeStructure().validateCache();
+            }
+            finally {
+              callback.setDone();
             }
           });
           return callback;
         }
 
-        return new ActionCallback.Done();
+        return ActionCallback.DONE;
       }
     };
   }
 
   /**
    * @return read-only iterator of all current PSI files that can contain TODOs.
-   *         Don't invoke its <code>remove</code> method. For "removing" use <code>markFileAsDirty</code> method.
-   *         <b>Note, that <code>next()</code> method of iterator can return <code>null</code> elements.</b>
-   *         These <code>null</code> elements correspond to the invalid PSI files (PSI file cannot be found by
+   *         Don't invoke its {@code remove} method. For "removing" use {@code markFileAsDirty} method.
+   *         <b>Note, that {@code next()} method of iterator can return {@code null} elements.</b>
+   *         These {@code null} elements correspond to the invalid PSI files (PSI file cannot be found by
    *         virtual file, or virtual file is invalid).
    *         The reason why we return such "dirty" iterator is the performance.
    */
@@ -245,7 +238,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
 
   /**
    * @return read-only iterator of all valid PSI files that can have T.O.D.O items
-   *         and which are located under specified <code>psiDirectory</code>.
+   *         and which are located under specified {@code psiDirectory}.
    * @see com.intellij.ide.todo.FileTree#getFiles(com.intellij.openapi.vfs.VirtualFile)
    */
   public Iterator<PsiFile> getFiles(PsiDirectory psiDirectory) {
@@ -254,12 +247,12 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
 
   /**
    * @return read-only iterator of all valid PSI files that can have T.O.D.O items
-   *         and which are located under specified <code>psiDirectory</code>.
+   *         and which are located under specified {@code psiDirectory}.
    * @see FileTree#getFiles(VirtualFile)
    */
   public Iterator<PsiFile> getFiles(PsiDirectory psiDirectory, final boolean skip) {
     List<VirtualFile> files = myFileTree.getFiles(psiDirectory.getVirtualFile());
-    List<PsiFile> psiFileList = new ArrayList<PsiFile>(files.size());
+    List<PsiFile> psiFileList = new ArrayList<>(files.size());
     PsiManager psiManager = PsiManager.getInstance(myProject);
     for (VirtualFile file : files) {
       final Module module = ModuleUtilCore.findModuleForPsiElement(psiDirectory);
@@ -282,12 +275,12 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
 
   /**
    * @return read-only iterator of all valid PSI files that can have T.O.D.O items
-   *         and which are located under specified <code>psiDirectory</code>.
+   *         and which are located under specified {@code psiDirectory}.
    * @see FileTree#getFiles(VirtualFile)
    */
   public Iterator<PsiFile> getFilesUnderDirectory(PsiDirectory psiDirectory) {
     List<VirtualFile> files = myFileTree.getFilesUnderDirectory(psiDirectory.getVirtualFile());
-    List<PsiFile> psiFileList = new ArrayList<PsiFile>(files.size());
+    List<PsiFile> psiFileList = new ArrayList<>(files.size());
     PsiManager psiManager = PsiManager.getInstance(myProject);
     for (VirtualFile file : files) {
       final Module module = ModuleUtilCore.findModuleForPsiElement(psiDirectory);
@@ -308,13 +301,13 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
 
 
   /**
-    * @return read-only iterator of all valid PSI files that can have T.O.D.O items
-    *         and which in specified <code>module</code>.
-    * @see FileTree#getFiles(VirtualFile)
-    */
-   public Iterator<PsiFile> getFiles(Module module) {
+   * @return read-only iterator of all valid PSI files that can have T.O.D.O items
+   *         and which in specified {@code module}.
+   * @see FileTree#getFiles(VirtualFile)
+   */
+  public Iterator<PsiFile> getFiles(Module module) {
     if (module.isDisposed()) return Collections.<PsiFile>emptyList().iterator();
-    ArrayList<PsiFile> psiFileList = new ArrayList<PsiFile>();
+    ArrayList<PsiFile> psiFileList = new ArrayList<>();
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
     final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
     for (VirtualFile virtualFile : contentRoots) {
@@ -331,11 +324,11 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
       }
     }
     return psiFileList.iterator();
-   }
+  }
 
 
   /**
-   * @return <code>true</code> if specified <code>psiFile</code> can contains too items.
+   * @return {@code true} if specified {@code psiFile} can contains too items.
    *         It means that file is in "dirty" file set or in "current" file set.
    */
   private boolean canContainTodoItems(PsiFile psiFile) {
@@ -352,7 +345,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
   private void markFileAsDirty(@NotNull PsiFile psiFile) {
     VirtualFile vFile = psiFile.getVirtualFile();
     if (vFile != null) { // If PSI file isn't valid then its VirtualFile can be null
-        myDirtyFileSet.add(vFile);
+      myDirtyFileSet.add(vFile);
     }
   }
 
@@ -361,15 +354,33 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
     myDirtyFileSet.clear();
     myFile2Highlighter.clear();
 
+    collectFiles(virtualFile -> {
+      myFileTree.add(virtualFile);
+      return true;
+    });
+    getTodoTreeStructure().validateCache();
+  }
+
+  void collectFiles(Processor<VirtualFile> collector) {
     TodoTreeStructure treeStructure=getTodoTreeStructure();
     PsiFile[] psiFiles= mySearchHelper.findFilesWithTodoItems();
     for (PsiFile psiFile : psiFiles) {
       if (mySearchHelper.getTodoItemsCount(psiFile) > 0 && treeStructure.accept(psiFile)) {
-        myFileTree.add(psiFile.getVirtualFile());
+        collector.process(psiFile.getVirtualFile());
       }
     }
+  }
 
-    treeStructure.validateCache();
+  void rebuildCache(Set<VirtualFile> files){
+    myFileTree.clear();
+    myDirtyFileSet.clear();
+    myFile2Highlighter.clear();
+
+    for (VirtualFile virtualFile : files) {
+      myFileTree.add(virtualFile);
+    }
+
+    getTodoTreeStructure().validateCache();
   }
 
   private void validateCache() {
@@ -423,12 +434,15 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
   }
 
   /**
-   * @return first <code>SmartTodoItemPointer</code> that is the children (in depth) of the specified <code>element</code>.
-   *         If <code>element</code> itself is a <code>TodoItem</code> then the method returns the <code>element</code>.
+   * @return first {@code SmartTodoItemPointer} that is the children (in depth) of the specified {@code element}.
+   *         If {@code element} itself is a {@code TodoItem} then the method returns the {@code element}.
    */
-  public TodoItemNode getFirstPointerForElement(Object element) {
+  public TodoItemNode getFirstPointerForElement(@Nullable Object element) {
     if (element instanceof TodoItemNode) {
       return (TodoItemNode)element;
+    }
+    else if (element == null) {
+      return null;
     }
     else {
       Object[] children = getTreeStructure().getChildElements(element);
@@ -446,8 +460,8 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
   }
 
   /**
-   * @return last <code>SmartTodoItemPointer</code> that is the children (in depth) of the specified <code>element</code>.
-   *         If <code>element</code> itself is a <code>TodoItem</code> then the method returns the <code>element</code>.
+   * @return last {@code SmartTodoItemPointer} that is the children (in depth) of the specified {@code element}.
+   *         If {@code element} itself is a {@code TodoItem} then the method returns the {@code element}.
    */
   public TodoItemNode getLastPointerForElement(Object element) {
     if (element instanceof TodoItemNode) {
@@ -502,8 +516,8 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
    */
   void setShowPackages(boolean state) {
     getTodoTreeStructure().setShownPackages(state);
-    ArrayList<Object> pathsToExpand = new ArrayList<Object>();
-    ArrayList<Object> pathsToSelect = new ArrayList<Object>();
+    ArrayList<Object> pathsToExpand = new ArrayList<>();
+    ArrayList<Object> pathsToSelect = new ArrayList<>();
     TreeBuilderUtil.storePaths(this, getRootNode(), pathsToExpand, pathsToSelect, true);
     getTree().clearSelection();
     getTodoTreeStructure().validateCache();
@@ -512,11 +526,11 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
   }
 
   /**
-   * @param state if <code>true</code> then view is in "flatten packages" mode.
+   * @param state if {@code true} then view is in "flatten packages" mode.
    */
   void setFlattenPackages(boolean state) {
-    ArrayList<Object> pathsToExpand = new ArrayList<Object>();
-    ArrayList<Object> pathsToSelect = new ArrayList<Object>();
+    ArrayList<Object> pathsToExpand = new ArrayList<>();
+    ArrayList<Object> pathsToSelect = new ArrayList<>();
     TreeBuilderUtil.storePaths(this, getRootNode(), pathsToExpand, pathsToSelect, true);
     getTree().clearSelection();
     TodoTreeStructure todoTreeStructure = getTodoTreeStructure();
@@ -527,19 +541,22 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
   }
 
   /**
-   * Sets new <code>TodoFilter</code>, rebuild whole the caches and immediately update the tree.
+   * Sets new {@code TodoFilter}, rebuild whole the caches and immediately update the tree.
    *
    * @see TodoTreeStructure#setTodoFilter
    */
   void setTodoFilter(TodoFilter filter) {
     getTodoTreeStructure().setTodoFilter(filter);
-    rebuildCache();
+    try {
+      rebuildCache();
+    }
+    catch (IndexNotReadyException ignored) {}
     updateTree(false);
   }
 
   /**
-   * @return next <code>TodoItem</code> for the passed <code>pointer</code>. Returns <code>null</code>
-   *         if the <code>pointer</code> is the last t.o.d.o item in the tree.
+   * @return next {@code TodoItem} for the passed {@code pointer}. Returns {@code null}
+   *         if the {@code pointer} is the last t.o.d.o item in the tree.
    */
   public TodoItemNode getNextPointer(TodoItemNode pointer) {
     Object sibling = getNextSibling(pointer);
@@ -556,7 +573,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
 
   /**
    * @return next sibling of the passed element. If there is no sibling then
-   *         returns <code>null</code>.
+   *         returns {@code null}.
    */
   Object getNextSibling(Object obj) {
     Object parent = getTreeStructure().getParentElement(obj);
@@ -584,8 +601,8 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
   }
 
   /**
-   * @return next <code>SmartTodoItemPointer</code> for the passed <code>pointer</code>. Returns <code>null</code>
-   *         if the <code>pointer</code> is the last t.o.d.o item in the tree.
+   * @return next {@code SmartTodoItemPointer} for the passed {@code pointer}. Returns {@code null}
+   *         if the {@code pointer} is the last t.o.d.o item in the tree.
    */
   public TodoItemNode getPreviousPointer(TodoItemNode pointer) {
     Object sibling = getPreviousSibling(pointer);
@@ -602,7 +619,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
 
   /**
    * @return previous sibling of the element of passed type. If there is no sibling then
-   *         returns <code>null</code>.
+   *         returns {@code null}.
    */
   Object getPreviousSibling(Object obj) {
     Object parent = getTreeStructure().getParentElement(obj);
@@ -631,7 +648,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
   }
 
   /**
-   * @return <code>SelectInEditorManager</code> for the specified <code>psiFile</code>. Highlighters are
+   * @return {@code SelectInEditorManager} for the specified {@code psiFile}. Highlighters are
    *         lazy created and initialized.
    */
   public EditorHighlighter getHighlighter(PsiFile psiFile, Document document) {
@@ -649,8 +666,8 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
 
   void setShowModules(boolean state) {
     getTodoTreeStructure().setShownModules(state);
-    ArrayList<Object> pathsToExpand = new ArrayList<Object>();
-    ArrayList<Object> pathsToSelect = new ArrayList<Object>();
+    ArrayList<Object> pathsToExpand = new ArrayList<>();
+    ArrayList<Object> pathsToSelect = new ArrayList<>();
     TreeBuilderUtil.storePaths(this, getRootNode(), pathsToExpand, pathsToSelect, true);
     getTree().clearSelection();
     getTodoTreeStructure().validateCache();
@@ -794,17 +811,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
       String propertyName = e.getPropertyName();
       if (propertyName.equals(PsiTreeChangeEvent.PROP_ROOTS)) { // rebuild all tree when source roots were changed
         getUpdater().runBeforeUpdate(
-          new Runnable() {
-            @Override
-            public void run() {
-              DumbService.getInstance(myProject).runWhenSmart(new Runnable() {
-                @Override
-                public void run() {
-                  rebuildCache();
-                }
-              });
-            }
-          }
+                () -> DumbService.getInstance(myProject).runWhenSmart(() -> rebuildCache())
         );
         updateTree(true);
       }
