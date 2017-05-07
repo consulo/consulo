@@ -55,6 +55,8 @@ import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.OpenSourceUtil;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.psi.PsiPackageSupportProviders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -603,6 +605,15 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
       super(IdeBundle.message("action.group.by.packages"), null, PlatformIcons.GROUP_BY_PACKAGES);
     }
 
+    @RequiredDispatchThread
+    @Override
+    public void update(AnActionEvent e) {
+      super.update(e);
+      Presentation presentation = e.getPresentation();
+
+      presentation.setVisible(PsiPackageSupportProviders.isPackageSupported(myProject));
+    }
+
     @Override
     public boolean isSelected(AnActionEvent e) {
       return mySettings.arePackagesShown;
@@ -637,11 +648,14 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
       super(IdeBundle.message("action.flatten.packages"), null, PlatformIcons.FLATTEN_PACKAGES_ICON);
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(@NotNull AnActionEvent e) {
       super.update(e);
 
-      e.getPresentation().setEnabled(mySettings.arePackagesShown);
+      Presentation presentation = e.getPresentation();
+      presentation.setVisible(PsiPackageSupportProviders.isPackageSupported(myProject));
+      presentation.setEnabled(mySettings.arePackagesShown);
     }
 
     @Override

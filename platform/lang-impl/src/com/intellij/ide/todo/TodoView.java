@@ -15,10 +15,12 @@
  */
 package com.intellij.ide.todo;
 
+import com.intellij.ProjectTopics;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -30,6 +32,8 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsListener;
@@ -41,6 +45,8 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.annotations.RequiredReadAction;
+import consulo.psi.PsiPackageSupportProviders;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -65,10 +71,10 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
 
   private final MyVcsListener myVcsListener = new MyVcsListener();
 
+  @RequiredReadAction
   public TodoView(@NotNull Project project) {
     myProject = project;
 
-    state.all.arePackagesShown = true;
     state.all.isAutoScrollToSource = true;
 
     state.current.isAutoScrollToSource = true;
@@ -78,6 +84,30 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     MessageBusConnection connection = project.getMessageBus().connect(this);
     connection.subscribe(FileTypeManager.TOPIC, new MyFileTypeListener());
     connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, myVcsListener);
+    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+      @Override
+      @RequiredReadAction
+      public void rootsChanged(ModuleRootEvent event) {
+        validateSettings();
+      }
+    });
+  }
+
+  @RequiredReadAction
+  private void validateSettings() {
+    boolean packageSupported = PsiPackageSupportProviders.isPackageSupported(myProject);
+    if (state.all.arePackagesShown && !packageSupported) {
+      state.all.arePackagesShown = false;
+      state.all.areModulesShown = true;
+    }
+
+    if (state.current.arePackagesShown && !packageSupported) {
+      state.current.arePackagesShown = false;
+    }
+
+    if (state.changeList.arePackagesShown && !packageSupported) {
+      state.changeList.arePackagesShown = false;
+    }
   }
 
   static class State {
@@ -97,6 +127,8 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
   @Override
   public void loadState(State state) {
     this.state = state;
+
+    ReadAction.run(this::validateSettings);
   }
 
   @Override
@@ -141,9 +173,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     currentFileTodosContent.setComponent(currentFileTodos);
 
     myChangeListTodosContent = contentFactory
-            .createContent(null, IdeBundle.message("changelist.todo.title",
-                                                   ChangeListManager.getInstance(myProject).getDefaultChangeList().getName()),
-                           false);
+            .createContent(null, IdeBundle.message("changelist.todo.title", ChangeListManager.getInstance(myProject).getDefaultChangeList().getName()), false);
     ChangeListTodosPanel changeListTodos = new ChangeListTodosPanel(myProject, state.current, myChangeListTodosContent) {
       @Override
       protected TodoTreeBuilder createTreeBuilder(JTree tree, DefaultTreeModel treeModel, Project project) {
@@ -231,7 +261,8 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
           return;
         }
       }
-      catch (ProcessCanceledException ignore) { }
+      catch (ProcessCanceledException ignore) {
+      }
       DumbService.getInstance(myProject).smartInvokeLater(this::_updateFilters);
     }
 
@@ -253,11 +284,10 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
         }
 
         ApplicationManager.getApplication().runReadAction(() -> {
-                                                            for (TodoPanel panel : myPanels) {
-                                                              panel.rebuildCache();
-                                                            }
-                                                          }
-        );
+          for (TodoPanel panel : myPanels) {
+            panel.rebuildCache();
+          }
+        });
         ApplicationManager.getApplication().invokeLater(() -> {
           for (TodoPanel panel : myPanels) {
             panel.updateTree();
@@ -269,11 +299,10 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
 
   public void refresh() {
     ApplicationManager.getApplication().runReadAction(() -> {
-                                                        for (TodoPanel panel : myPanels) {
-                                                          panel.rebuildCache();
-                                                        }
-                                                      }
-    );
+      for (TodoPanel panel : myPanels) {
+        panel.rebuildCache();
+      }
+    });
     ApplicationManager.getApplication().invokeLater(() -> {
       for (TodoPanel panel : myPanels) {
         panel.updateTree();
