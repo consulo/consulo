@@ -42,4 +42,7 @@ Here you can found more information for each repository.
     * [consulo-nodejs](http://github.com/consulo/consulo-nodejs) - contains **NodeJS**, **Mocha** framework implementations.
     
 ## Python Platform
- * [consulo-python](http://github.com/consulo/consulo-python) - contains **Python** language implementation, and **Jython**, **IronPython** framworks. Here you can report problems with **Python** language, debugger, etc.
+ * [consulo-python](http://github.com/consulo/consulo-python) - contains **Python** language implementation, and **Jython**, **IronPython** frameworks. Here you can report problems with **Python** language, debugger, etc.
+
+## Go Platform
+ * [consulo-google-go](http://github.com/consulo/consulo-google-go) - contains **Go** language implementation. Here you can report problems with **Go** language,debugger, etc.
