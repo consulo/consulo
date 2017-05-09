@@ -69,10 +69,6 @@ public class ResourceCompiler implements TranslatingCompiler {
   }
 
   @Override
-  public void init(@NotNull CompilerManager compilerManager) {
-  }
-
-  @Override
   public boolean isCompilableFile(VirtualFile file, CompileContext context) {
     final Module module = context.getModuleByFile(file);
     if (module == null) {

@@ -67,9 +67,4 @@ public class SandCompiler implements TranslatingCompiler {
   public boolean validateConfiguration(CompileScope scope) {
     return true;
   }
-
-  @Override
-  public void init(@NotNull CompilerManager compilerManager) {
-
-  }
 }

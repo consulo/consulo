@@ -146,7 +146,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     }
     else {
       VirtualFilePointer virtualFilePointer = myVirtualFilePointers.get(contentFolderType.getId());
-      if(virtualFilePointer != null) {
+      if (virtualFilePointer != null) {
         return virtualFilePointer;
       }
       return new LightFilePointer(myCompilerConfiguration.getCompilerOutputUrl() + "/" + contentFolderType.getId().toLowerCase() + "/" + myModule.getName());
@@ -162,7 +162,9 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
 
     Element moduleElement = new Element(MODULE_OUTPUT_TAG);
     moduleElement.setAttribute(NAME, myModule.getName());
-    moduleElement.setAttribute(EXCLUDE, String.valueOf(isExcludeOutput()));
+    if (!isExcludeOutput()) {
+      moduleElement.setAttribute(EXCLUDE, String.valueOf(isExcludeOutput()));
+    }
 
     for (Map.Entry<String, VirtualFilePointer> tempEntry : myVirtualFilePointers.entrySet()) {
       final Element elementForOutput = createElementForOutput(tempEntry.getValue());
@@ -183,7 +185,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
   @Override
   public void loadState(Element element) {
     myInheritOutput = false;
-    myExcludeOutput = Boolean.valueOf(element.getAttributeValue(EXCLUDE));
+    myExcludeOutput = Boolean.valueOf(element.getAttributeValue(EXCLUDE, "true"));
     for (Element child2 : element.getChildren()) {
       final String moduleUrl = child2.getAttributeValue(URL);
       final String type = child2.getAttributeValue(TYPE);

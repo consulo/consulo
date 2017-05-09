@@ -72,6 +72,7 @@ public class GraphGenerator<Node> implements Graph<Node> {
   }
 
   //<editor-fold desc="Deprecated stuff.">
+  @Deprecated
   public interface SemiGraph<Node> extends InboundSemiGraph<Node> {
     Collection<Node> getNodes();
 

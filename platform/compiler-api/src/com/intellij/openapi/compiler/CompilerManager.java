@@ -79,27 +79,13 @@ public abstract class CompilerManager {
   public abstract <T  extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass, Condition<Compiler> filter);
 
   /**
-   * Registers the type as a compilable type so that Compile action will be enabled on files of this type.
-   *
-   * @param type the type for which the Compile action is enabled.
-   */
-  public abstract void addCompilableFileType(@NotNull FileType type);
-
-  /**
-   * Unregisters the type as a compilable type so that Compile action will be disabled on files of this type.
-   *
-   * @param type the type for which the Compile action is disabled.
-   */
-  public abstract void removeCompilableFileType(@NotNull FileType type);
-
-  /**
    * Checks if files of the specified type can be compiled by one of registered compilers.
    * If the compiler can process files of certain type, it should register this file type within
    * the CompilerManager as a compilable file type.
    *
    * @param type the type to check.
    * @return true if the file type is compilable, false otherwise.
-   * @see com.intellij.openapi.compiler.CompilerManager#addCompilableFileType(FileType)
+   * @see Compiler#registerCompilableFileTypes(java.util.function.Consumer)
    */
   public abstract boolean isCompilableFileType(@NotNull FileType type);
 

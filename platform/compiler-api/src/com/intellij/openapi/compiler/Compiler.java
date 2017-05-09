@@ -15,8 +15,11 @@
  */
 package com.intellij.openapi.compiler;
 
+import com.intellij.openapi.fileTypes.FileType;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.extensions.ExtensionPointName;
+
+import java.util.function.Consumer;
 
 /**
  * Base interface for a custom compiler which participates in the IDEA build process.
@@ -43,5 +46,6 @@ public interface Compiler {
    */
   boolean validateConfiguration(CompileScope scope);
 
-  void init(@NotNull CompilerManager compilerManager);
+  default void registerCompilableFileTypes(@NotNull Consumer<FileType> fileTypeConsumer) {
+  }
 }

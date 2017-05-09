@@ -97,10 +97,6 @@ public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersis
     return "Artifacts Packaging Compiler";
   }
 
-  @Override
-  public void init(@NotNull CompilerManager compilerManager) {
-  }
-
   @Nullable
   public static Set<Artifact> getChangedArtifacts(final CompileContext compileContext) {
     return compileContext.getUserData(CHANGED_ARTIFACTS);

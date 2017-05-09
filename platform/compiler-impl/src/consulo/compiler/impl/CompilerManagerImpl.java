@@ -22,7 +22,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
@@ -36,12 +38,15 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphGenerator;
+import com.intellij.util.graph.InboundSemiGraph;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredReadAction;
+import consulo.compiler.CompilerConfiguration;
+import consulo.compiler.CompilerConfigurationImpl;
+import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,15 +56,13 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-@State(
-  name = "CompilerManager",
-  storages = {
-    @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml")})
+@State(name = "CompilerManager", storages = @Storage(value = "compiler.xml"))
 public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element> {
-  public static final Logger LOGGER = Logger.getInstance(CompilerManagerImpl.class);
+  private static final Logger LOGGER = Logger.getInstance(CompilerManagerImpl.class);
 
   private class ListenerNotificator implements CompileStatusNotification {
-    private final @Nullable CompileStatusNotification myDelegate;
+    @Nullable
+    private final CompileStatusNotification myDelegate;
 
     private ListenerNotificator(@Nullable CompileStatusNotification delegate) {
       myDelegate = delegate;
@@ -77,34 +80,35 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   private final Project myProject;
 
   private final ExcludedEntriesConfiguration myExcludedEntriesConfiguration = new ExcludedEntriesConfiguration();
-  private final List<TranslatingCompiler> myTranslatingCompilers = new ArrayList<TranslatingCompiler>();
-  private final List<Compiler> myCompilers = new ArrayList<Compiler>();
-  private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerInputFileTypes = new HashMap<TranslatingCompiler, Collection<FileType>>();
-  private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerOutputFileTypes = new HashMap<TranslatingCompiler, Collection<FileType>>();
+  private final List<TranslatingCompiler> myTranslatingCompilers = new ArrayList<>();
+  private final List<Compiler> myCompilers = new ArrayList<>();
+  private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerInputFileTypes = new HashMap<>();
+  private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerOutputFileTypes = new HashMap<>();
 
   private CompilationStatusListener myEventPublisher;
   private Set<LocalFileSystem.WatchRequest> myWatchRoots;
-  private final List<CompileTask> myBeforeTasks = new ArrayList<CompileTask>();
-  private final List<CompileTask> myAfterTasks = new ArrayList<CompileTask>();
+  private final List<CompileTask> myBeforeTasks = new ArrayList<>();
+  private final List<CompileTask> myAfterTasks = new ArrayList<>();
   private final Semaphore myCompilationSemaphore = new Semaphore(1, true);
 
-  private final List<FileType> myCompilableFileTypes = new ArrayList<FileType>();
+  private final Set<FileType> myCompilableFileTypes = new THashSet<>();
 
   private Compiler[] myAllCompilers;
 
   public CompilerManagerImpl(final Project project, final MessageBus messageBus) {
     myProject = project;
 
-    if(myProject.isDefault()) {
+    if (myProject.isDefault()) {
       return;
     }
+
     myEventPublisher = messageBus.syncPublisher(CompilerTopics.COMPILATION_STATUS);
 
-    List<TranslatingCompiler> translatingCompilers = new ArrayList<TranslatingCompiler>();
+    List<TranslatingCompiler> translatingCompilers = new ArrayList<>();
     for (Compiler compiler : Compiler.EP_NAME.getExtensions(project)) {
-      compiler.init(this);
+      compiler.registerCompilableFileTypes(myCompilableFileTypes::add);
 
-      if(compiler instanceof TranslatingCompiler) {
+      if (compiler instanceof TranslatingCompiler) {
         TranslatingCompiler translatingCompiler = (TranslatingCompiler)compiler;
 
         translatingCompilers.add(translatingCompiler);
@@ -127,14 +131,10 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     projectGeneratedSrcRoot.mkdirs();
     final LocalFileSystem lfs = LocalFileSystem.getInstance();
     myWatchRoots = lfs.addRootsToWatch(Collections.singletonList(FileUtil.toCanonicalPath(projectGeneratedSrcRoot.getPath())), true);
-    Disposer.register(project, new Disposable() {
-      @Override
-      public void dispose() {
-        lfs.removeWatchedRoots(myWatchRoots);
-        if (ApplicationManager.getApplication()
-          .isUnitTestMode()) {    // force cleanup for created compiler system directory with generated sources
-          FileUtil.delete(CompilerPaths.getCompilerSystemDirectory(project));
-        }
+    Disposer.register(project, () -> {
+      lfs.removeWatchedRoots(myWatchRoots);
+      if (ApplicationManager.getApplication().isUnitTestMode()) {    // force cleanup for created compiler system directory with generated sources
+        FileUtil.delete(CompilerPaths.getCompilerSystemDirectory(project));
       }
     });
   }
@@ -156,8 +156,8 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @NotNull
   @Override
   public Compiler[] getAllCompilers() {
-    if(myAllCompilers == null) {
-      List<Compiler> list = new ArrayList<Compiler>(myCompilers.size() + myTranslatingCompilers.size());
+    if (myAllCompilers == null) {
+      List<Compiler> list = new ArrayList<>(myCompilers.size() + myTranslatingCompilers.size());
       list.addAll(myCompilers);
       list.addAll(myTranslatingCompilers);
       myAllCompilers = list.toArray(new Compiler[list.size()]);
@@ -173,8 +173,9 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @Override
   @NotNull
+  @SuppressWarnings("unchecked")
   public <T extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass, Condition<Compiler> filter) {
-    final List<T> compilers = new ArrayList<T>(myCompilers.size());
+    final List<T> compilers = new ArrayList<>(myCompilers.size());
     for (final Compiler item : myCompilers) {
       if (compilerClass.isAssignableFrom(item.getClass()) && filter.value(item)) {
         compilers.add((T)item);
@@ -190,7 +191,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   private Graph<TranslatingCompiler> createCompilerGraph(final List<TranslatingCompiler> compilers) {
-    return GraphGenerator.create(CachingSemiGraph.create(new GraphGenerator.SemiGraph<TranslatingCompiler>() {
+    return GraphGenerator.generate(new InboundSemiGraph<TranslatingCompiler>() {
       @Override
       public Collection<TranslatingCompiler> getNodes() {
         return compilers;
@@ -203,7 +204,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
           return Collections.<TranslatingCompiler>emptySet().iterator();
         }
 
-        final Set<TranslatingCompiler> inCompilers = new HashSet<TranslatingCompiler>();
+        final Set<TranslatingCompiler> inCompilers = new HashSet<>();
 
         for (Map.Entry<TranslatingCompiler, Collection<FileType>> entry : myTranslatingCompilerOutputFileTypes.entrySet()) {
           final Collection<FileType> outputs = entry.getValue();
@@ -214,17 +215,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
         }
         return inCompilers.iterator();
       }
-    }));
-  }
-
-  @Override
-  public void addCompilableFileType(@NotNull FileType type) {
-    myCompilableFileTypes.add(type);
-  }
-
-  @Override
-  public void removeCompilableFileType(@NotNull FileType type) {
-    myCompilableFileTypes.remove(type);
+    });
   }
 
   @Override
@@ -313,8 +304,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     compileDriver.executeCompileTask(task, scope, contentName, onTaskFinished);
   }
 
-  private final Map<CompilationStatusListener, MessageBusConnection> myListenerAdapters =
-    new HashMap<CompilationStatusListener, MessageBusConnection>();
+  private final Map<CompilationStatusListener, MessageBusConnection> myListenerAdapters = new HashMap<>();
 
   @Override
   public void addCompilationStatusListener(@NotNull final CompilationStatusListener listener) {
@@ -370,7 +360,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   public CompileScope createModuleCompileScope(@NotNull final Module module, final boolean includeDependentModules) {
     for (CompileModuleScopeFactory compileModuleScopeFactory : CompileModuleScopeFactory.EP_NAME.getExtensions()) {
       FileIndexCompileScope scope = compileModuleScopeFactory.createScope(module, includeDependentModules);
-      if(scope != null) {
+      if (scope != null) {
         return scope;
       }
     }
@@ -380,7 +370,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Override
   @NotNull
   public CompileScope createModulesCompileScope(@NotNull final Module[] modules, final boolean includeDependentModules) {
-    List<CompileScope> list = new ArrayList<CompileScope>(modules.length);
+    List<CompileScope> list = new ArrayList<>(modules.length);
     for (Module module : modules) {
       list.add(createModuleCompileScope(module, includeDependentModules));
     }
@@ -389,10 +379,8 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @Override
   @NotNull
-  public CompileScope createModuleGroupCompileScope(@NotNull final Project project,
-                                                    @NotNull final Module[] modules,
-                                                    final boolean includeDependentModules) {
-    List<CompileScope> list = new ArrayList<CompileScope>(modules.length);
+  public CompileScope createModuleGroupCompileScope(@NotNull final Project project, @NotNull final Module[] modules, final boolean includeDependentModules) {
+    List<CompileScope> list = new ArrayList<>(modules.length);
     for (Module module : modules) {
       list.add(createModuleCompileScope(module, includeDependentModules));
     }
@@ -408,7 +396,10 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Override
   public Element getState() {
     final Element state = new Element("state");
-    if(!myExcludedEntriesConfiguration.isEmpty()) {
+    CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject);
+    configuration.getState(state);
+
+    if (!myExcludedEntriesConfiguration.isEmpty()) {
       Element element = new Element("exclude-from-compilation");
       myExcludedEntriesConfiguration.writeExternal(element);
       state.addContent(element);
@@ -418,10 +409,17 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @Override
   public void loadState(Element state) {
+    if (myProject.isInitialized()) {
+      throw new IllegalArgumentException("Project is not initialized yet. Please do not call CompilerManager inside #initCompoment()");
+    }
+
     Element exclude = state.getChild("exclude-from-compilation");
-    if(exclude != null) {
+    if (exclude != null) {
       myExcludedEntriesConfiguration.readExternal(exclude);
     }
+
+    CompilerConfigurationImpl configuration = (CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject);
+    configuration.loadState(state);
   }
 
   public Semaphore getCompilationSemaphore() {

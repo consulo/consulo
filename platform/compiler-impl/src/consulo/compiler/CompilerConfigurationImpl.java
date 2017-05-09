@@ -15,7 +15,6 @@
  */
 package consulo.compiler;
 
-import com.intellij.openapi.components.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -41,11 +40,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 13:05/10.06.13
  */
-@State(
-        name = "CompilerConfiguration",
-        storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml")}
-)
-public class CompilerConfigurationImpl extends CompilerConfiguration implements PersistentStateComponent<Element> {
+public class CompilerConfigurationImpl extends CompilerConfiguration {
   public static class MyWatchedRootsProvider implements WatchedRootsProvider {
     private final Project myProject;
 
@@ -92,7 +87,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
 
   @NotNull
   private Set<String> getRootsToWatch() {
-    final Set<String> rootsToWatch = new HashSet<String>();
+    final Set<String> rootsToWatch = new HashSet<>();
     ModuleManager moduleManager = ModuleManager.getInstance(myProject);
     for (Module module : moduleManager.getModules()) {
       ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
@@ -136,31 +131,26 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
     myCompilerOutputWatchRequest = LocalFileSystem.getInstance().replaceWatchedRoot(myCompilerOutputWatchRequest, compilerOutputUrl, true);
   }
 
-  @Nullable
-  @Override
-  public Element getState() {
-    if (myOutputDirPointer == null) {
-      return null;
+  public void getState(Element stateElement) {
+    if (myOutputDirPointer != null) {
+      stateElement.setAttribute(URL, myOutputDirPointer.getUrl());
     }
-    Element element = new Element("state");
-    element.setAttribute(URL, myOutputDirPointer.getUrl());
+
     for (Module module : myModuleManager.getModules()) {
       ModuleCompilerPathsManagerImpl moduleCompilerPathsManager = (ModuleCompilerPathsManagerImpl)ModuleCompilerPathsManager.getInstance(module);
       Element state = moduleCompilerPathsManager.getState();
       if (state != null) {
-        element.addContent(state);
+        stateElement.addContent(state);
       }
     }
-    return element;
   }
 
-  @Override
   public void loadState(Element element) {
     String url = element.getAttributeValue(URL);
-    if (url == null) {
-      return;
+    if (url != null) {
+      setCompilerOutputUrl(url);
     }
-    setCompilerOutputUrl(url);
+
     for (Element moduleElement : element.getChildren("module")) {
       String name = moduleElement.getAttributeValue("name");
       if (name == null) {
