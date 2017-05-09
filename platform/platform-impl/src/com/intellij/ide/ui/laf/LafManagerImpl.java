@@ -60,6 +60,7 @@ import consulo.ide.ui.laf.intellij.ActionButtonUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
+import consulo.ui.laf.MacButtonlessScrollbarUI;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -449,7 +450,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
 
     if (UIUtil.isUnderAquaLookAndFeel()) {
       uiDefaults.put("Panel.opaque", Boolean.TRUE);
-      uiDefaults.put("ScrollBarUI", IntelliJButtonlessScrollBarUI.class.getName());
+      uiDefaults.put("ScrollBarUI", MacButtonlessScrollbarUI.class.getName());
       uiDefaults.put("ComboBoxButtonUI", ComboBoxButtonUI.class.getName());
       uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
     }
