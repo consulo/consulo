@@ -16,13 +16,18 @@
 package com.intellij.util.io;
 
 import com.google.common.net.InetAddresses;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableNotNullFunction;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Url;
 import com.intellij.util.Urls;
 import com.intellij.util.net.NetUtils;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.bootstrap.BootstrapUtil;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -35,12 +40,15 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.resolver.HostsFileEntriesResolver;
 import io.netty.resolver.ResolvedAddressTypes;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.concurrency.AsyncPromise;
+import org.jetbrains.concurrency.Promise;
 import org.jetbrains.ide.PooledThreadExecutor;
+import org.jetbrains.io.NettyUtil;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author VISTALL
@@ -177,6 +185,133 @@ public class NettyKt {
     return Comparing.equal(url.getScheme(), "chrome-extension") &&  (Comparing.equal(url.getAuthority(), "hmhgeddbohgjknpmjagkdomcpobmllji") || Comparing
             .equal(url.getAuthority(), "offnedcbhjldheanlbojaefbfbllddna"));
             */
+    return false;
+  }
+
+  public static String readUtf8(ByteBuf buf) {
+    return buf.toString(StandardCharsets.UTF_8);
+  }
+
+  public static int writeUtf8(ByteBuf buf, CharSequence data) {
+    return buf.writeCharSequence(data, StandardCharsets.UTF_8);
+  }
+
+  public static Channel connect(Bootstrap bootstrap,
+                                InetSocketAddress remoteAddress,
+                                AsyncPromise<?> promise,
+                                int maxAttemptCount,
+                                Condition<Void> stopCondition) {
+    try {
+      return doConnect(bootstrap, remoteAddress, promise, maxAttemptCount, stopCondition);
+    }
+    catch (Throwable e) {
+      if (promise != null) {
+        promise.setError(e);
+      }
+      return null;
+    }
+  }
+
+  private static Channel doConnect(Bootstrap bootstrap,
+                                   InetSocketAddress remoteAddress,
+                                   AsyncPromise<?> promise,
+                                   int maxAttemptCount,
+                                   @Nullable Condition<Void> stopCondition) throws Throwable {
+    int attemptCount = 0;
+    if (bootstrap.config().group() instanceof NioEventLoopGroup) {
+      return connectNio(bootstrap, remoteAddress, promise, maxAttemptCount, stopCondition, attemptCount);
+    }
+
+    bootstrap.validate();
+
+    while (true) {
+      try {
+        OioSocketChannel channel = new OioSocketChannel(new Socket(remoteAddress.getAddress(), remoteAddress.getPort()));
+        BootstrapUtil.initAndRegister(channel, bootstrap).sync();
+        return channel;
+      }
+      catch (IOException e) {
+        if (stopCondition != null && stopCondition.value(null) || promise != null && promise.getState() != Promise.State.PENDING) {
+          return null;
+        }
+        else if (maxAttemptCount == -1) {
+          if (sleep(promise, 300)) {
+            return null;
+          }
+          attemptCount++;
+        }
+        else if (++attemptCount < maxAttemptCount) {
+          if (sleep(promise, attemptCount * NettyUtil.MIN_START_TIME)) {
+            return null;
+          }
+        }
+        else {
+          if (promise != null) {
+            promise.setError(e);
+          }
+          return null;
+        }
+      }
+    }
+  }
+
+  private static Channel connectNio(Bootstrap bootstrap,
+                                    InetSocketAddress remoteAddress,
+                                    AsyncPromise<?> promise,
+                                    int maxAttemptCount,
+                                    @Nullable Condition<Void> stopCondition,
+                                    int _attemptCount) {
+    int attemptCount = _attemptCount;
+    while (true) {
+      ChannelFuture future = bootstrap.connect(remoteAddress).awaitUninterruptibly();
+      if (future.isSuccess()) {
+        if (!future.channel().isOpen()) {
+          continue;
+        }
+        return future.channel();
+      }
+      else if (stopCondition != null && stopCondition.value(null) || promise != null && promise.getState() == Promise.State.REJECTED) {
+        return null;
+      }
+      else if (maxAttemptCount == -1) {
+        if (sleep(promise, 300)) {
+          return null;
+        }
+        attemptCount++;
+      }
+      else if (++attemptCount < maxAttemptCount) {
+        if (sleep(promise, attemptCount * NettyUtil.MIN_START_TIME)) {
+          return null;
+        }
+      }
+      else {
+        Throwable cause = future.cause();
+        if (promise != null) {
+          if (cause == null) {
+            promise.setError("Cannot connect: unknown error");
+          }
+          else {
+            promise.setError(cause);
+          }
+        }
+        return null;
+      }
+    }
+  }
+
+
+  public static boolean sleep(AsyncPromise<?> promise, int time) {
+    try {
+      //noinspection BusyWait
+      Thread.sleep(time);
+    }
+    catch (InterruptedException ignored) {
+      if (promise != null) {
+        promise.setError("Interrupted");
+      }
+      return true;
+    }
+
     return false;
   }
 }

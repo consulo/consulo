@@ -19,20 +19,26 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
+import com.intellij.util.ThreeState;
 import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class Promise<T> {
   @Deprecated
   @DeprecationInfo("Use Promises.resolvedPromise()")
-  public static final Promise<Void> DONE = new DonePromise<Void>(null);
+  public static final Promise<Void> DONE = new DonePromise<>(null);
   @Deprecated
   @DeprecationInfo("Use Promises.rejectedPromise()")
-  public static final Promise<Void> REJECTED = new RejectedPromise<Void>(createError("rejected"));
+  public static final Promise<Void> REJECTED = new RejectedPromise<>(createError("rejected"));
+
+  @NotNull
+  public static RuntimeException createError(@NotNull String error, boolean log) {
+    return new MessageError(error, log);
+  }
 
   @NotNull
   public static RuntimeException createError(@NotNull String error) {
-    return new MessageError(error);
+    return createError(error, false);
   }
 
   public enum State {
@@ -58,10 +64,17 @@ public abstract class Promise<T> {
   @NotNull
   public abstract State getState();
 
-  @SuppressWarnings("ExceptionClassNameDoesntEndWithException")
-  static class MessageError extends RuntimeException {
-    public MessageError(@NotNull String error) {
+  public static class MessageError extends RuntimeException {
+    private boolean myLog;
+
+    public MessageError(@NotNull String error, boolean log) {
       super(error);
+      myLog = log;
+    }
+
+    @NotNull
+    public ThreeState getLog() {
+      return ThreeState.fromBoolean(myLog);
     }
 
     @NotNull

@@ -15,10 +15,14 @@
  */
 package consulo.concurrency;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.Consumer;
+import com.intellij.util.ThreeState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.concurrency.*;
@@ -36,6 +40,18 @@ public class Promises {
   private static final NotNullLazyValue<Promise> DONE = NotNullLazyValue.createValue(() -> Promise.DONE);
   private static final NotNullLazyValue<RuntimeException> OBSOLETE_ERROR = NotNullLazyValue.createValue(() -> Promise.createError("Obsolete"));
   private static final NotNullLazyValue<Promise> CANCELLED_PROMISE = NotNullLazyValue.createValue(() -> new RejectedPromise(OBSOLETE_ERROR.getValue()));
+
+  public static boolean isFulfilled(@Nullable  Promise<?> promise) {
+    return promise != null && promise.getState() == Promise.State.FULFILLED;
+  }
+
+  public static boolean isRejected(@Nullable  Promise<?> promise) {
+    return promise != null && promise.getState() == Promise.State.REJECTED;
+  }
+
+  public static boolean isPending(@Nullable  Promise<?> promise) {
+    return promise != null && promise.getState() == Promise.State.PENDING;
+  }
 
   @NotNull
   @SuppressWarnings("unchecked")
@@ -62,7 +78,7 @@ public class Promises {
       return rejectedPromise();
     }
     else {
-      return new RejectedPromise<T>(error);
+      return new RejectedPromise<>(error);
     }
   }
 
@@ -92,17 +108,14 @@ public class Promises {
   public static <T> Promise<T> all(@NotNull Collection<Promise<?>> promises, @Nullable T totalResult) {
     if (promises.isEmpty()) {
       //noinspection unchecked
-      return (Promise<T>)Promise.DONE;
+      return (Promise<T>)DONE.getValue();
     }
 
-    final AsyncPromise<T> totalPromise = new AsyncPromise<T>();
-    Consumer done = new CountDownConsumer<T>(promises.size(), totalPromise, totalResult);
-    Consumer<Throwable> rejected = new Consumer<Throwable>() {
-      @Override
-      public void consume(Throwable error) {
-        if (totalPromise.getState() == AsyncPromise.State.PENDING) {
-          totalPromise.setError(error);
-        }
+    final AsyncPromise<T> totalPromise = new AsyncPromise<>();
+    Consumer done = new CountDownConsumer<>(promises.size(), totalPromise, totalResult);
+    Consumer<Throwable> rejected = error -> {
+      if (totalPromise.getState() == AsyncPromise.State.PENDING) {
+        totalPromise.setError(error);
       }
     };
 
@@ -116,35 +129,16 @@ public class Promises {
 
   @NotNull
   public static Promise<Void> wrapAsVoid(@NotNull ActionCallback asyncResult) {
-    final AsyncPromise<Void> promise = new AsyncPromise<Void>();
-    asyncResult.doWhenDone(new Runnable() {
-      @Override
-      public void run() {
-        promise.setResult(null);
-      }
-    }).doWhenRejected(new Consumer<String>() {
-      @Override
-      public void consume(String error) {
-        promise.setError(Promise.createError(error == null ? "Internal error" : error));
-      }
-    });
+    final AsyncPromise<Void> promise = new AsyncPromise<>();
+    asyncResult.doWhenDone(() -> promise.setResult(null))
+            .doWhenRejected(error -> promise.setError(Promise.createError(error == null ? "Internal error" : error)));
     return promise;
   }
 
   @NotNull
   public static <T> Promise<T> wrap(@NotNull AsyncResult<T> asyncResult) {
-    final AsyncPromise<T> promise = new AsyncPromise<T>();
-    asyncResult.doWhenDone(new Consumer<T>() {
-      @Override
-      public void consume(T result) {
-        promise.setResult(result);
-      }
-    }).doWhenRejected(new Consumer<String>() {
-      @Override
-      public void consume(String error) {
-        promise.setError(Promise.createError(error));
-      }
-    });
+    final AsyncPromise<T> promise = new AsyncPromise<>();
+    asyncResult.doWhenDone(promise::setResult).doWhenRejected(error -> promise.setError(Promise.createError(error)));
     return promise;
   }
 
@@ -155,7 +149,24 @@ public class Promises {
       return (Promise<T>)Promise.DONE;
     }
     else {
-      return new DonePromise<T>(result);
+      return new DonePromise<>(result);
     }
   }
+
+  public static boolean errorIfNotMessage(Logger logger, Throwable e) {
+    if (e instanceof Promise.MessageError) {
+      ThreeState log = ((Promise.MessageError)e).getLog();
+      if (log == ThreeState.YES || (log == ThreeState.UNSURE && (ApplicationManager.getApplication().isUnitTestMode()))) {
+        logger.error(e);
+        return true;
+      }
+    }
+    else if (!(e instanceof ProcessCanceledException)) {
+      logger.error(e);
+      return true;
+    }
+
+    return false;
+  }
+
 }
