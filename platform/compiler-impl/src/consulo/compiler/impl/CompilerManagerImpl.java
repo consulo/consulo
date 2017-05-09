@@ -25,7 +25,6 @@ import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -42,7 +41,6 @@ import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphGenerator;
 import com.intellij.util.graph.InboundSemiGraph;
 import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredReadAction;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.CompilerConfigurationImpl;
@@ -58,8 +56,6 @@ import java.util.concurrent.Semaphore;
 
 @State(name = "CompilerManager", storages = @Storage(value = "compiler.xml"))
 public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element> {
-  private static final Logger LOGGER = Logger.getInstance(CompilerManagerImpl.class);
-
   private class ListenerNotificator implements CompileStatusNotification {
     @Nullable
     private final CompileStatusNotification myDelegate;
@@ -87,12 +83,9 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   private CompilationStatusListener myEventPublisher;
   private Set<LocalFileSystem.WatchRequest> myWatchRoots;
-  private final List<CompileTask> myBeforeTasks = new ArrayList<>();
-  private final List<CompileTask> myAfterTasks = new ArrayList<>();
   private final Semaphore myCompilationSemaphore = new Semaphore(1, true);
 
   private final Set<FileType> myCompilableFileTypes = new THashSet<>();
-
   private Compiler[] myAllCompilers;
 
   public CompilerManagerImpl(final Project project, final MessageBus messageBus) {
@@ -224,25 +217,15 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   @Override
-  public final void addBeforeTask(@NotNull CompileTask task) {
-    myBeforeTasks.add(task);
-  }
-
-  @Override
-  public final void addAfterTask(@NotNull CompileTask task) {
-    myAfterTasks.add(task);
-  }
-
-  @Override
   @NotNull
   public CompileTask[] getBeforeTasks() {
-    return myBeforeTasks.toArray(new CompileTask[myBeforeTasks.size()]);
+    return CompileTask.BEFORE_EP_NAME.getExtensions();
   }
 
   @Override
   @NotNull
   public CompileTask[] getAfterTasks() {
-    return myAfterTasks.toArray(new CompileTask[myAfterTasks.size()]);
+    return CompileTask.AFTER_EP_NAME.getExtensions();
   }
 
   @Override
@@ -304,27 +287,18 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     compileDriver.executeCompileTask(task, scope, contentName, onTaskFinished);
   }
 
-  private final Map<CompilationStatusListener, MessageBusConnection> myListenerAdapters = new HashMap<>();
-
   @Override
   public void addCompilationStatusListener(@NotNull final CompilationStatusListener listener) {
-    final MessageBusConnection connection = myProject.getMessageBus().connect();
-    myListenerAdapters.put(listener, connection);
-    connection.subscribe(CompilerTopics.COMPILATION_STATUS, listener);
+    myProject.getMessageBus().connect().subscribe(CompilerTopics.COMPILATION_STATUS, listener);
   }
 
   @Override
   public void addCompilationStatusListener(@NotNull CompilationStatusListener listener, @NotNull Disposable parentDisposable) {
-    final MessageBusConnection connection = myProject.getMessageBus().connect(parentDisposable);
-    connection.subscribe(CompilerTopics.COMPILATION_STATUS, listener);
+    myProject.getMessageBus().connect(parentDisposable).subscribe(CompilerTopics.COMPILATION_STATUS, listener);
   }
 
   @Override
   public void removeCompilationStatusListener(@NotNull final CompilationStatusListener listener) {
-    final MessageBusConnection connection = myListenerAdapters.remove(listener);
-    if (connection != null) {
-      connection.disconnect();
-    }
   }
 
   @Override

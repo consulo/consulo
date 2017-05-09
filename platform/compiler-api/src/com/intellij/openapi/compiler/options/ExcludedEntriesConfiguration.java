@@ -19,7 +19,6 @@ package com.intellij.openapi.compiler.options;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jdom.Element;
@@ -31,7 +30,7 @@ import java.util.LinkedHashSet;
 /**
  * @author nik
  */
-public class ExcludedEntriesConfiguration implements PersistentStateComponent<ExcludedEntriesConfiguration>, JDOMExternalizable, Disposable {
+public class ExcludedEntriesConfiguration implements PersistentStateComponent<ExcludedEntriesConfiguration>, Disposable {
   @NonNls private static final String FILE = "file";
   @NonNls private static final String DIRECTORY = "directory";
   @NonNls private static final String URL = "url";
@@ -69,7 +68,6 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
     return myExcludeEntryDescriptions.contains(description);
   }
 
-  @Override
   public void readExternal(final Element node) {
     for (final Element element : node.getChildren()) {
       String url = element.getAttributeValue(URL);
@@ -86,7 +84,6 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
     }
   }
 
-  @Override
   public void writeExternal(final Element element) {
     for (final ExcludeEntryDescription description : getExcludeEntryDescriptions()) {
       if (description.isFile()) {
@@ -131,16 +128,19 @@ public class ExcludedEntriesConfiguration implements PersistentStateComponent<Ex
     return false;
   }
 
+  @Override
   public void dispose() {
     for (ExcludeEntryDescription description : myExcludeEntryDescriptions) {
       Disposer.dispose(description);
     }
   }
 
+  @Override
   public ExcludedEntriesConfiguration getState() {
     return this;
   }
 
+  @Override
   public void loadState(final ExcludedEntriesConfiguration state) {
     for (ExcludeEntryDescription description : state.getExcludeEntryDescriptions()) {
       addExcludeEntryDescription(description.copy(this));

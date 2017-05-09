@@ -25,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Immutable;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
@@ -88,20 +89,6 @@ public abstract class CompilerManager {
    * @see Compiler#registerCompilableFileTypes(java.util.function.Consumer)
    */
   public abstract boolean isCompilableFileType(@NotNull FileType type);
-
-  /**
-   * Registers a compiler task that will be executed before the compilation.
-   *
-   * @param task the task to register.
-   */
-  public abstract void addBeforeTask(@NotNull CompileTask task);
-
-  /**
-   * Registers a compiler task  that will be executed after the compilation.
-   *
-   * @param task the task to register.
-   */
-  public abstract void addAfterTask(@NotNull CompileTask task);
 
   /**
    * Returns the list of all tasks to be executed before compilation.
@@ -220,7 +207,12 @@ public abstract class CompilerManager {
    *
    * @param listener the listener to be registered.
    */
+  @Deprecated
+  @DeprecationInfo("See CompilerTopics.COMPILATION_STATUS")
   public abstract void addCompilationStatusListener(@NotNull CompilationStatusListener listener);
+
+  @Deprecated
+  @DeprecationInfo("See CompilerTopics.COMPILATION_STATUS")
   public abstract void addCompilationStatusListener(@NotNull CompilationStatusListener listener, @NotNull Disposable parentDisposable);
 
   /**
@@ -228,6 +220,8 @@ public abstract class CompilerManager {
    *
    * @param listener the listener to be unregistered.
    */
+  @Deprecated
+  @DeprecationInfo("See CompilerTopics.COMPILATION_STATUS")
   public abstract void removeCompilationStatusListener(@NotNull CompilationStatusListener listener);
 
   /**

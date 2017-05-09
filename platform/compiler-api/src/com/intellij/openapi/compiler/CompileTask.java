@@ -15,20 +15,23 @@
  */
 package com.intellij.openapi.compiler;
 
+import com.intellij.openapi.extensions.ExtensionPointName;
+
 /**
  * Describes a task to be executed before or after compilation.
- *
- * @see CompilerManager#addAfterTask(CompileTask)
- * @see CompilerManager#addBeforeTask(CompileTask)
  */
+@FunctionalInterface
 public interface CompileTask {
+  ExtensionPointName<CompileTask> BEFORE_EP_NAME = ExtensionPointName.create("com.intellij.compiler.beforeTask");
+  ExtensionPointName<CompileTask> AFTER_EP_NAME = ExtensionPointName.create("com.intellij.compiler.afterTask");
+
   /**
    * Executes the task.
    *
    * @param context current compile context
    * @return true if execution succeeded, false otherwise. If the task returns false, the compilation
-   *         is aborted, and it's expected that the task adds a message defining the reason for the failure
-   *         to the compile context.
+   * is aborted, and it's expected that the task adds a message defining the reason for the failure
+   * to the compile context.
    */
   boolean execute(CompileContext context);
 }
