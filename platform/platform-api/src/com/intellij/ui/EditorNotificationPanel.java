@@ -15,29 +15,42 @@
  */
 package com.intellij.ui;
 
+import com.intellij.codeInsight.intention.*;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorBundle;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiFile;
+import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
-public class EditorNotificationPanel extends JPanel {
+public class EditorNotificationPanel extends JPanel implements IntentionActionProvider {
   protected final JLabel myLabel = new JLabel();
   protected final JLabel myGearLabel = new JLabel();
   protected final JPanel myLinksPanel;
@@ -83,7 +96,7 @@ public class EditorNotificationPanel extends JPanel {
 
   @Override
   public final Color getBackground() {
-    if(myBackgroundColor != null) {
+    if (myBackgroundColor != null) {
       return myBackgroundColor;
     }
     Color color = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.NOTIFICATION_BACKGROUND);
@@ -109,9 +122,8 @@ public class EditorNotificationPanel extends JPanel {
   @RequiredDispatchThread
   protected void executeAction(final String actionId) {
     final AnAction action = ActionManager.getInstance().getAction(actionId);
-    final AnActionEvent event = new AnActionEvent(null, DataManager.getInstance().getDataContext(this), ActionPlaces.UNKNOWN,
-                                                  action.getTemplatePresentation(), ActionManager.getInstance(),
-                                                  0);
+    final AnActionEvent event = new AnActionEvent(null, DataManager.getInstance().getDataContext(this), ActionPlaces.UNKNOWN, action.getTemplatePresentation(),
+                                                  ActionManager.getInstance(), 0);
     action.beforeActionPerformedUpdate(event);
     action.update(event);
 
@@ -123,5 +135,139 @@ public class EditorNotificationPanel extends JPanel {
   @Override
   public Dimension getMinimumSize() {
     return new Dimension(0, 0);
+  }
+
+  @Nullable
+  @Override
+  public IntentionActionWithOptions getIntentionAction() {
+    MyIntentionAction action = new MyIntentionAction();
+    return action.getOptions().isEmpty() ? null : action;
+  }
+
+  private class MyIntentionAction extends AbstractEmptyIntentionAction implements IntentionActionWithOptions, Iconable {
+    private final List<IntentionAction> myOptions = new ArrayList<>();
+
+    private MyIntentionAction() {
+      for (Component component : myLinksPanel.getComponents()) {
+        if (component instanceof HyperlinkLabel) {
+          myOptions.add(new MyLinkOption(((HyperlinkLabel)component)));
+        }
+      }
+      if (myGearLabel.getIcon() != null) {
+        myOptions.add(new MySettingsOption(myGearLabel));
+      }
+    }
+
+    @NotNull
+    @Override
+    public List<IntentionAction> getOptions() {
+      return myOptions;
+    }
+
+    @Nls
+    @NotNull
+    @Override
+    public String getText() {
+      String text = myLabel.getText();
+      return StringUtil.isEmpty(text) ? EditorBundle.message("editor.notification.default.action.name") : StringUtil.shortenTextWithEllipsis(text, 50, 0);
+    }
+
+    @Nls
+    @NotNull
+    @Override
+    public String getFamilyName() {
+      return "Editor notification";
+    }
+
+    @Override
+    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+      return true;
+    }
+
+    @Override
+    public Icon getIcon(@IconFlags int flags) {
+      return AllIcons.Actions.IntentionBulb;
+    }
+  }
+
+  private static class MyLinkOption implements IntentionAction {
+    private final HyperlinkLabel myLabel;
+
+    private MyLinkOption(HyperlinkLabel label) {
+      myLabel = label;
+    }
+
+    @Nls
+    @NotNull
+    @Override
+    public String getText() {
+      return myLabel.getText();
+    }
+
+    @Nls
+    @NotNull
+    @Override
+    public String getFamilyName() {
+      return "Editor notification option";
+    }
+
+    @Override
+    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+      return true;
+    }
+
+    @Override
+    public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+      myLabel.doClick();
+    }
+
+    @Override
+    public boolean startInWriteAction() {
+      return false;
+    }
+  }
+
+  private static class MySettingsOption implements IntentionAction, Iconable, LowPriorityAction {
+    private final JLabel myLabel;
+
+    private MySettingsOption(JLabel label) {
+      myLabel = label;
+    }
+
+    @Nls
+    @NotNull
+    @Override
+    public String getText() {
+      return EditorBundle.message("editor.notification.settings.option.name");
+    }
+
+    @Nls
+    @NotNull
+    @Override
+    public String getFamilyName() {
+      return "Editor notification settings";
+    }
+
+    @Override
+    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+      return true;
+    }
+
+    @Override
+    public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+      myLabel.dispatchEvent(new MouseEvent(myLabel, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, 0, 0, 1, false));
+      myLabel.dispatchEvent(new MouseEvent(myLabel, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, 0, 0, 1, false));
+      myLabel.dispatchEvent(new MouseEvent(myLabel, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false));
+    }
+
+    @Override
+    public boolean startInWriteAction() {
+      return false;
+    }
+
+    @Override
+    public Icon getIcon(@IconFlags int flags) {
+      return myLabel.getIcon();
+    }
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,18 @@
 package com.intellij.codeInspection;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.codeInsight.intention.IntentionActionDelegate;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 4/20/11
  * Time: 9:27 PM
  */
-public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionClassHolder {
+public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionClassHolder, IntentionActionDelegate {
   private final IntentionAction myAction;
   private final PsiFile myFile;
 
@@ -68,6 +71,11 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
   public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     myAction.invoke(project, editor, file);
   }
+  @Nullable
+  @Override
+  public PsiElement getElementToMakeWritable(@NotNull PsiFile file) {
+    return myAction.getElementToMakeWritable(file);
+  }
 
   @Override
   public boolean startInWriteAction() {
@@ -93,6 +101,12 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
   @Override
   public Class getActionClass() {
     return getAction().getClass();
+  }
+
+  @NotNull
+  @Override
+  public IntentionAction getDelegate() {
+    return myAction;
   }
 }
 

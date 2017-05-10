@@ -28,17 +28,15 @@ public class EditKeymapsDialog extends SingleConfigurableEditor {
     myActionToSelect = actionToSelect;
   }
 
+  @Override
   public void show() {
     if (myActionToSelect != null) {
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          ((KeymapPanel)getConfigurable()).selectAction(myActionToSelect);
-        }
-      });
+      SwingUtilities.invokeLater(() -> ((KeymapPanel)getConfigurable()).selectAction(myActionToSelect));
     }
     super.show();
   }
 
+  @Override
   protected String getDimensionServiceKey(){
     return "#com.intellij.openapi.keymap.impl.ui.EditKeymapsDialog";
   }

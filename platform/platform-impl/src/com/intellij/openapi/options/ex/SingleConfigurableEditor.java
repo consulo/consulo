@@ -19,6 +19,7 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.Configurable;
@@ -189,6 +190,11 @@ public class SingleConfigurableEditor extends DialogWrapper {
       ApplicationManager.getApplication().saveAll();
     }
     super.doCancelAction();
+  }
+
+  @Override
+  public void show() {
+    TransactionGuard.getInstance().submitTransactionAndWait(super::show);
   }
 
   @Override
