@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,14 @@ package com.intellij.openapi.command.impl;
 
 import com.intellij.CommonBundle;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.command.undo.DocumentReference;
+import com.intellij.openapi.command.undo.UndoableAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
@@ -69,7 +70,7 @@ abstract class UndoRedo {
   }
 
   private Set<DocumentReference> getDecRefs() {
-    return myEditor == null ? Collections.<DocumentReference>emptySet() : UndoManagerImpl.getDocumentReferences(myEditor);
+    return myEditor == null ? Collections.emptySet() : UndoManagerImpl.getDocumentReferences(myEditor);
   }
 
   protected abstract UndoRedoStacksHolder getStackHolder();
@@ -106,7 +107,7 @@ abstract class UndoRedo {
       if (!askUser()) return false;
     }
     else {
-      if (restore(getBeforeState())) {
+      if (restore(getBeforeState(), true)) {
         setBeforeState(new EditorAndState(myEditor, myEditor.getState(FileEditorStateLevel.UNDO)));
         return true;
       }
@@ -142,7 +143,7 @@ abstract class UndoRedo {
 
     performAction();
 
-    restore(getAfterState());
+    restore(getAfterState(), false);
 
     return true;
   }
@@ -150,24 +151,36 @@ abstract class UndoRedo {
   protected abstract boolean isRedo();
 
   private Collection<Document> collectReadOnlyDocuments() {
-    Collection<DocumentReference> affectedDocument = myUndoableGroup.getAffectedDocuments();
-    Collection<Document> readOnlyDocs = new ArrayList<Document>();
-    for (DocumentReference ref : affectedDocument) {
-      if (ref instanceof DocumentReferenceByDocument) {
-        Document doc = ref.getDocument();
-        if (doc != null && !doc.isWritable()) readOnlyDocs.add(doc);
+    Collection<Document> readOnlyDocs = new ArrayList<>();
+    for (UndoableAction action : myUndoableGroup.getActions()) {
+      if (action instanceof MentionOnlyUndoableAction) continue;
+
+      DocumentReference[] refs = action.getAffectedDocuments();
+      if (refs == null) continue;
+
+      for (DocumentReference ref : refs) {
+        if (ref instanceof DocumentReferenceByDocument) {
+          Document doc = ref.getDocument();
+          if (doc != null && !doc.isWritable()) readOnlyDocs.add(doc);
+        }
       }
     }
     return readOnlyDocs;
   }
 
   private Collection<VirtualFile> collectReadOnlyAffectedFiles() {
-    Collection<DocumentReference> affectedDocument = myUndoableGroup.getAffectedDocuments();
-    Collection<VirtualFile> readOnlyFiles = new ArrayList<VirtualFile>();
-    for (DocumentReference documentReference : affectedDocument) {
-      VirtualFile file = documentReference.getFile();
-      if ((file != null) && file.isValid() && !file.isWritable()) {
-        readOnlyFiles.add(file);
+    Collection<VirtualFile> readOnlyFiles = new ArrayList<>();
+    for (UndoableAction action : myUndoableGroup.getActions()) {
+      if (action instanceof MentionOnlyUndoableAction) continue;
+
+      DocumentReference[] refs = action.getAffectedDocuments();
+      if (refs == null) continue;
+
+      for (DocumentReference ref : refs) {
+        VirtualFile file = ref.getFile();
+        if ((file != null) && file.isValid() && !file.isWritable()) {
+          readOnlyFiles.add(file);
+        }
       }
     }
     return readOnlyFiles;
@@ -176,24 +189,30 @@ abstract class UndoRedo {
   private void reportCannotUndo(String message, Collection<DocumentReference> problemFiles) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       throw new RuntimeException(
-        message + "\n" + StringUtil.join(problemFiles, StringUtil.createToStringFunction(DocumentReference.class), "\n"));
+              message + "\n" + StringUtil.join(problemFiles, StringUtil.createToStringFunction(DocumentReference.class), "\n"));
     }
     new CannotUndoReportDialog(myManager.getProject(), message, problemFiles).show();
   }
 
   private boolean askUser() {
-    String actionText = getActionName(myUndoableGroup.getCommandName());
+    final boolean[] isOk = new boolean[1];
+    TransactionGuard.getInstance().submitTransactionAndWait(() -> {
+      String actionText = getActionName(myUndoableGroup.getCommandName());
 
-    if (actionText.length() > 80) {
-      actionText = actionText.substring(0, 80) + "... ";
-    }
+      if (actionText.length() > 80) {
+        actionText = actionText.substring(0, 80) + "... ";
+      }
 
-    return Messages.showOkCancelDialog(myManager.getProject(), actionText + "?", getActionName(),
-                                       Messages.getQuestionIcon()) == DialogWrapper.OK_EXIT_CODE;
+      isOk[0] = Messages.showOkCancelDialog(myManager.getProject(), actionText + "?", getActionName(),
+                                            Messages.getQuestionIcon()) == Messages.OK;
+    });
+    return isOk[0];
   }
 
-  private boolean restore(EditorAndState pair) {
-    if (myEditor == null || pair == null || pair.getEditor() == null) {
+  private boolean restore(EditorAndState pair, boolean onlyIfDiffers) {
+    if (myEditor == null ||
+        !myEditor.isValid() || // editor can be invalid if underlying file is deleted during undo (e.g. after undoing scratch file creation)
+        pair == null || pair.getEditor() == null) {
       return false;
     }
 
@@ -212,7 +231,7 @@ abstract class UndoRedo {
     // not possible to restore it. For example, it's not possible to
     // restore scroll proportion if editor doesn not have scrolling any more.
     FileEditorState currentState = myEditor.getState(FileEditorStateLevel.UNDO);
-    if (currentState.equals(pair.getState())) {
+    if (onlyIfDiffers && currentState.equals(pair.getState())) {
       return false;
     }
 
