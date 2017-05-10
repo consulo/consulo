@@ -20,6 +20,7 @@ import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -201,6 +202,11 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   @Override
   protected String getDimensionServiceKey() {
     return DIMENSION_KEY;
+  }
+
+  @Override
+  public void show() {
+    TransactionGuard.getInstance().submitTransactionAndWait(super::show);
   }
 
   @Override
