@@ -22,8 +22,6 @@ import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
-import com.intellij.openapi.project.DumbModePermission;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -150,19 +148,15 @@ public class MacFileChooserDialogImpl implements PathChooserDialog {
           ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-              DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_MODAL, new Runnable() {
-                @Override
-                public void run() {
-                  final List<VirtualFile> files = getChosenFiles(resultPaths);
-                  if (files.size() > 0) {
-                    FileChooserUtil.setLastOpenedFile(impl.myProject, files.get(files.size() - 1));
-                    impl.myCallback.consume(files);
-                  }
-                }
-              });
+              final List<VirtualFile> files = getChosenFiles(resultPaths);
+              if (files.size() > 0) {
+                FileChooserUtil.setLastOpenedFile(impl.myProject, files.get(files.size() - 1));
+                impl.myCallback.consume(files);
+              }
             }
           }, impl.myModalityState);
-        } else if (impl.myCallback instanceof FileChooser.FileChooserConsumer) {
+        }
+        else if (impl.myCallback instanceof FileChooser.FileChooserConsumer) {
           ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -291,8 +285,8 @@ public class MacFileChooserDialogImpl implements PathChooserDialog {
 
         final ID focusedWindow = MacUtil.findWindowForTitle(activeWindowTitle);
         if (focusedWindow != null) {
-          invoke(chooser, "beginSheetForDirectory:file:types:modalForWindow:modalDelegate:didEndSelector:contextInfo:",
-                 directory, file, types, focusedWindow, self, Foundation.createSelector("openPanelDidEnd:returnCode:contextInfo:"), chooser);
+          invoke(chooser, "beginSheetForDirectory:file:types:modalForWindow:modalDelegate:didEndSelector:contextInfo:", directory, file, types, focusedWindow,
+                 self, Foundation.createSelector("openPanelDidEnd:returnCode:contextInfo:"), chooser);
         }
       }
     }
@@ -378,10 +372,15 @@ public class MacFileChooserDialogImpl implements PathChooserDialog {
     return Foundation.invoke(id, Foundation.createSelector(selector), args);
   }
 
-  /** This class is intended to force extensions initialization on EDT thread (IDEA-107271) */
+  /**
+   * This class is intended to force extensions initialization on EDT thread (IDEA-107271)
+   */
   private static class ExtensionsInitializer {
-    private ExtensionsInitializer() {}
+    private ExtensionsInitializer() {
+    }
+
     private static boolean initialized;
+
     private static void initialize() {
       if (initialized) return;
       UIUtil.invokeAndWaitIfNeeded(new Runnable() {

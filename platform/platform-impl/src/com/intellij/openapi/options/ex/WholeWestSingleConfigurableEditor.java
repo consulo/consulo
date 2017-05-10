@@ -23,19 +23,17 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.DumbModePermission;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import consulo.options.ConfigurableUIMigrationUtil;
-import consulo.ui.WholeWestDialogWrapper;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.util.Alarm;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.ui.WholeWestDialogWrapper;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -289,15 +287,5 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     super.dispose();
     myConfigurable.disposeUIResources();
     myConfigurable = null;
-  }
-
-  @Override
-  public void show() {
-    DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
-      @Override
-      public void run() {
-        WholeWestSingleConfigurableEditor.super.show();
-      }
-    });
   }
 }

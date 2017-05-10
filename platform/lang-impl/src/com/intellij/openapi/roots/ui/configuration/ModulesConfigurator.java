@@ -28,8 +28,6 @@ import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.DumbModePermission;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -377,29 +375,23 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       }
 
       final NewProjectDialog dialog = new NewProjectDialog(myProject, moduleDir);
-      final com.intellij.openapi.util.Ref<Module> moduleRef = com.intellij.openapi.util.Ref.create();
+      Module newModule;
 
       if (dialog.showAndGet()) {
-        DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
-          @Override
-          public void run() {
-            moduleRef.set(NewProjectAction.doCreate(dialog.getProjectPanel(), myModuleModel, moduleDir, false));
-          }
-        });
+        newModule = NewProjectAction.doCreate(dialog.getProjectPanel(), myModuleModel, moduleDir, false);
+      }
+      else {
+        newModule = null;
       }
 
-      final Module newModule = moduleRef.get();
       if (newModule == null) {
         return null;
       }
 
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          getOrCreateModuleEditor(newModule);
+      ApplicationManager.getApplication().runWriteAction(() -> {
+        getOrCreateModuleEditor(newModule);
 
-          Collections.sort(myModuleEditors, myModuleEditorComparator);
-        }
+        Collections.sort(myModuleEditors, myModuleEditorComparator);
       });
       processModuleCountChanged();
 

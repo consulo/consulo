@@ -21,8 +21,6 @@ import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.*;
-import com.intellij.openapi.project.DumbModePermission;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
@@ -66,9 +64,7 @@ public class RollbackWorker {
     final Runnable notifier = changeListManager.prepareForChangeDeletion(changes);
     final Runnable afterRefresh = new Runnable() {
       public void run() {
-        InvokeAfterUpdateMode updateMode = myInvokedFromModalContext ?
-                                           InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE :
-                                           InvokeAfterUpdateMode.SILENT;
+        InvokeAfterUpdateMode updateMode = myInvokedFromModalContext ? InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE : InvokeAfterUpdateMode.SILENT;
         changeListManager.invokeAfterUpdate(new Runnable() {
           public void run() {
             notifier.run();
@@ -83,16 +79,15 @@ public class RollbackWorker {
     final Runnable rollbackAction = new MyRollbackRunnable(changes, deleteLocallyAddedFiles, afterRefresh, localHistoryActionName);
 
     if (ApplicationManager.getApplication().isDispatchThread() && !myInvokedFromModalContext) {
-      ProgressManager.getInstance().run(new Task.Backgroundable(myProject, myOperationName, true,
-                                                                new PerformInBackgroundOption() {
-                                                                  public boolean shouldStartInBackground() {
-                                                                    return VcsConfiguration.getInstance(myProject).PERFORM_ROLLBACK_IN_BACKGROUND;
-                                                                  }
+      ProgressManager.getInstance().run(new Task.Backgroundable(myProject, myOperationName, true, new PerformInBackgroundOption() {
+        public boolean shouldStartInBackground() {
+          return VcsConfiguration.getInstance(myProject).PERFORM_ROLLBACK_IN_BACKGROUND;
+        }
 
-                                                                  public void processSentToBackground() {
-                                                                    VcsConfiguration.getInstance(myProject).PERFORM_ROLLBACK_IN_BACKGROUND = true;
-                                                                  }
-                                                                }) {
+        public void processSentToBackground() {
+          VcsConfiguration.getInstance(myProject).PERFORM_ROLLBACK_IN_BACKGROUND = true;
+        }
+      }) {
         public void run(@NotNull ProgressIndicator indicator) {
           rollbackAction.run();
         }
@@ -102,14 +97,14 @@ public class RollbackWorker {
       ProgressManager.getInstance().run(new Task.Modal(myProject, myOperationName, true) {
         @Override
         public void run(@NotNull ProgressIndicator indicator) {
-          DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, rollbackAction);
+          rollbackAction.run();
         }
       });
     }
     else {
       rollbackAction.run();
     }
-    ((ChangeListManagerImpl) changeListManager).showLocalChangesInvalidated();
+    ((ChangeListManagerImpl)changeListManager).showLocalChangesInvalidated();
   }
 
   private class MyRollbackRunnable implements Runnable {
@@ -189,8 +184,7 @@ public class RollbackWorker {
       final Runnable forAwtThread = new Runnable() {
         public void run() {
           action.finish();
-          LocalHistory.getInstance().putSystemLabel(myProject, (myLocalHistoryActionName == null) ?
-                                                               myOperationName : myLocalHistoryActionName, -1);
+          LocalHistory.getInstance().putSystemLabel(myProject, (myLocalHistoryActionName == null) ? myOperationName : myLocalHistoryActionName, -1);
           final VcsDirtyScopeManager manager = PeriodicalTasksCloser.getInstance().safeGetComponent(project, VcsDirtyScopeManager.class);
           VcsGuess vcsGuess = new VcsGuess(myProject);
 
@@ -245,7 +239,7 @@ public class RollbackWorker {
           final File ioFile = rev.getFile().getIOFile();
           if (myIndicator != null) {
             myIndicator.setText2(ioFile.getAbsolutePath());
-            myIndicator.setFraction(((double) i) / changesSize);
+            myIndicator.setFraction(((double)i) / changesSize);
           }
           FileUtil.delete(ioFile);
         }

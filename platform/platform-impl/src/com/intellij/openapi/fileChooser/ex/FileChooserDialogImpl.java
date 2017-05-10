@@ -28,8 +28,6 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
-import com.intellij.openapi.project.DumbModePermission;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -77,10 +75,10 @@ import java.util.List;
 import java.util.Map;
 
 public class FileChooserDialogImpl extends DialogWrapper implements FileChooserDialog, PathChooserDialog, FileLookup {
-  @NonNls public static final String FILE_CHOOSER_SHOW_PATH_PROPERTY = "FileChooser.ShowPath";
+  @NonNls
+  public static final String FILE_CHOOSER_SHOW_PATH_PROPERTY = "FileChooser.ShowPath";
   public static final String RECENT_FILES_KEY = "file.chooser.recent.files";
-  public static final String DRAG_N_DROP_HINT =
-          "Drag and drop a file into the space above to quickly locate it in the tree";
+  public static final String DRAG_N_DROP_HINT = "Drag and drop a file into the space above to quickly locate it in the tree";
   private final FileChooserDescriptor myChooserDescriptor;
   protected FileSystemTreeImpl myFileSystemTree;
   private Project myProject;
@@ -260,14 +258,12 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
       }
     });
-    JBPopupFactory.getInstance()
-            .createListPopupBuilder(files)
-            .setItemChoosenCallback(new Runnable() {
-              @Override
-              public void run() {
-                myPathTextField.getField().setText(files.getSelectedValue().toString());
-              }
-            }).createPopup().showUnderneathOf(myPathTextField.getField());
+    JBPopupFactory.getInstance().createListPopupBuilder(files).setItemChoosenCallback(new Runnable() {
+      @Override
+      public void run() {
+        myPathTextField.getField().setText(files.getSelectedValue().toString());
+      }
+    }).createPopup().showUnderneathOf(myPathTextField.getField());
   }
 
 
@@ -292,9 +288,8 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     if (StringUtil.isEmptyOrSpaces(description)) return null;
 
     final JLabel label = new JLabel(description);
-    label.setBorder(BorderFactory.createCompoundBorder(
-            new SideBorder(UIUtil.getPanelBackground().darker(), SideBorder.BOTTOM),
-            JBUI.Borders.empty(0, 5, 10, 5)));
+    label.setBorder(
+            BorderFactory.createCompoundBorder(new SideBorder(UIUtil.getPanelBackground().darker(), SideBorder.BOTTOM), JBUI.Borders.empty(0, 5, 10, 5)));
     return label;
   }
 
@@ -323,15 +318,14 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     };
     toolbarPanel.add(myTextFieldAction, BorderLayout.EAST);
     JPanel extraToolbarPanel = createExtraToolbarPanel();
-    if(extraToolbarPanel != null){
+    if (extraToolbarPanel != null) {
       toolbarPanel.add(extraToolbarPanel, BorderLayout.SOUTH);
     }
 
     myPathTextFieldWrapper = new JPanel(new BorderLayout());
     myPathTextFieldWrapper.setBorder(JBUI.Borders.emptyBottom(2));
-    myPathTextField = new FileTextFieldImpl.Vfs(
-            FileChooserFactoryImpl.getMacroMap(), getDisposable(),
-            new LocalFsFinder.FileChooserFilter(myChooserDescriptor, myFileSystemTree)) {
+    myPathTextField = new FileTextFieldImpl.Vfs(FileChooserFactoryImpl.getMacroMap(), getDisposable(),
+                                                new LocalFsFinder.FileChooserFilter(myChooserDescriptor, myFileSystemTree)) {
       protected void onTextChanged(final String newValue) {
         myUiUpdater.cancelAllUpdates();
         updateTreeFromPath(newValue);
@@ -365,15 +359,10 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     panel.add(hintLabel, BorderLayout.SOUTH);
 
     ApplicationManager.getApplication().getMessageBus().connect(getDisposable())
-            .subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener.Adapter() {
+            .subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener() {
               @Override
               public void applicationActivated(IdeFrame ideFrame) {
-                DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_MODAL, new Runnable() {
-                  @Override
-                  public void run() {
-                    ((SaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(ModalityState.current());
-                  }
-                });
+                ((SaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(ModalityState.current());
               }
             });
 

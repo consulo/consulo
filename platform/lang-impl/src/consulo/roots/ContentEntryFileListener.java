@@ -21,8 +21,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.DumbModePermission;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -105,7 +103,7 @@ public class ContentEntryFileListener extends AbstractProjectComponent {
           }
         }
 
-        if(toRemove != null) {
+        if (toRemove != null) {
           processed = true;
           modifiableModuleRootLayer.removeContentEntry(toRemove);
         }
@@ -120,16 +118,11 @@ public class ContentEntryFileListener extends AbstractProjectComponent {
     }
 
     private void commitViaDumbService(final ModifiableRootModel model) {
-      DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
+      //noinspection RequiredXAction
+      ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override
         public void run() {
-          //noinspection RequiredXAction
-          ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-              model.commit();
-            }
-          });
+          model.commit();
         }
       });
     }

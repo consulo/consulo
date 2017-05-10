@@ -24,8 +24,6 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.DumbModePermission;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.InputValidatorEx;
 import com.intellij.openapi.ui.Messages;
@@ -231,16 +229,9 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
       final PsiDirectory psiDirectory = getDirectory();
 
       final Project project = psiDirectory.getProject();
-      final boolean[] result = {false};
-      DumbService.allowStartingDumbModeInside(DumbModePermission.MAY_START_BACKGROUND, new Runnable() {
-        @Override
-        public void run() {
-          final FileType type = FileTypeChooser.getKnownFileTypeOrAssociate(new FakeVirtualFile(psiDirectory.getVirtualFile(), getFileName(inputString)),
-                                                                            project);
-          result[0] = type != null && MyValidator.super.canClose(getFileName(inputString));
-        }
-      });
-      return result[0];
+      final FileType type = FileTypeChooser.getKnownFileTypeOrAssociate(new FakeVirtualFile(psiDirectory.getVirtualFile(), getFileName(inputString)),
+                                                                        project);
+      return type != null && MyValidator.super.canClose(getFileName(inputString));
     }
   }
 }
