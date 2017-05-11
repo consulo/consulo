@@ -15,35 +15,80 @@
  */
 package consulo.spash;
 
-import com.intellij.util.TimeoutUtil;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
  * @since 11-Dec-16.
  */
 public class AnimatedLogoLabel extends JComponent {
+  private static class MyComponentUI extends ComponentUI {
+    @Override
+    public Dimension getPreferredSize(JComponent c) {
+      AnimatedLogoLabel logoLabel = (AnimatedLogoLabel)c;
+      return new Dimension(JBUI.scale(logoLabel.myData.length * logoLabel.myLetterHeight), JBUI.scale(logoLabel.myData[0].length * logoLabel.myLetterHeight));
+    }
+
+    @Override
+    public Dimension getMinimumSize(JComponent c) {
+      return getPreferredSize(c);
+    }
+
+    @Override
+    public Dimension getMaximumSize(JComponent c) {
+      return getPreferredSize(c);
+    }
+
+    @Override
+    public void paint(Graphics g, JComponent c) {
+      AnimatedLogoLabel logoLabel = (AnimatedLogoLabel)c;
+      g.setColor(Color.LIGHT_GRAY);
+      g.fillRect(0, 0, c.getWidth(), c.getHeight());
+
+      for (int y = 0; y < logoLabel.myData.length; y++) {
+        int[] ints = logoLabel.myData[y];
+
+        for (int x = 0; x < ints.length; x++) {
+          int a = ints[x];
+
+          if (a > 0) {
+            int size = JBUI.scale(logoLabel.myLetterHeight);
+            g.setColor(Color.BLACK);
+            g.fillRect(y * size, x * size, size, size);
+          }
+        }
+      }
+    }
+  }
+
   private static final int[] ourOffsets = new int[]{1, 7, 13, 19, 25, 31, 37};
-  private final static String ourName = "CONSULO";
 
   private int[][] myData = new int[43][7];
 
-  private volatile int myLastPosition;
+  private int myValue;
 
-  private volatile int myValue;
+  private Runnable myTask;
 
-  private Thread myThread;
-
-  private final int mySize;
+  private final int myLetterHeight;
   private final boolean myAnimated;
 
-  public AnimatedLogoLabel(int size, boolean animated) {
-    mySize = size;
+  private boolean[] myStates = new boolean[Names.ourName.length()];
+
+  private Future<?> myFuture;
+
+  private final Object lock = new Object();
+
+  public AnimatedLogoLabel(int letterHeightInPixels, boolean animated) {
+    myLetterHeight = letterHeightInPixels;
     myAnimated = animated;
 
     Random random = new Random();
@@ -52,18 +97,23 @@ public class AnimatedLogoLabel extends JComponent {
 
     char[] str;
     if (myAnimated) {
-      str = new char[ourName.length()];
-      for (int i = 0; i < str.length; i++) {
-        while (true) {
-          str[i] = abc[random.nextInt(abc.length)];
-          if (str[i] != ourName.charAt(i)) {
-            break;
+      if (random.nextInt(100_000) < 100) {
+        str = Names.ourEasterNames[random.nextInt(Names.ourEasterNames.length)].toCharArray();
+      }
+      else {
+        str = new char[Names.ourName.length()];
+        for (int i = 0; i < str.length; i++) {
+          while (true) {
+            str[i] = abc[random.nextInt(abc.length)];
+            if (str[i] != Names.ourName.charAt(i)) {
+              break;
+            }
           }
         }
       }
     }
     else {
-      str = ourName.toCharArray();
+      str = Names.ourName.toCharArray();
     }
 
     for (int i = 0; i < ourOffsets.length; i++) {
@@ -76,59 +126,64 @@ public class AnimatedLogoLabel extends JComponent {
     }
 
     if (myAnimated) {
-      myThread = new Thread(() -> {
-        while (true) {
-          try {
-            int per = 100 / ourName.length();
+      myTask = () -> {
+        synchronized (lock) {
+          float per = 100f / Names.ourName.length();
 
-            int k = myValue / per;
+          boolean end = myValue >= 90;
+          int letterPosition = (int)(myValue / per);
 
-            int l = myLastPosition;
-
-            myLastPosition = k;
-
-            // last pos
-            if (k >= ourName.length()) {
-              fillAtOffset(characterDraws, ourName.charAt(ourName.length() - 1), ourName.length() - 1);
-
-              break;
-            }
-            else {
-              int randomIndex = -1;
-              while (true) {
-                randomIndex = random.nextInt(abc.length);
-                if (abc[randomIndex] != ourName.charAt(k)) {
-                  break;
-                }
-              }
-
-              fillAtOffset(characterDraws, abc[randomIndex], k);
-
-              if (l != myLastPosition) {
-                for (int i = 0; i < k; i++) {
-                  fillAtOffset(characterDraws, ourName.charAt(i), i);
-                }
-              }
-            }
-
-            repaint();
+          if (end) {
+            letterPosition = Names.ourName.length();
           }
-          catch (Exception e) {
-            e.printStackTrace();
+
+          for (int i = 0; i < letterPosition; i++) {
+            boolean state = myStates[i];
+            if (!state) {
+              myStates[i] = true;
+              fillAtOffset(characterDraws, Names.ourName.charAt(i), i);
+            }
           }
-          finally {
-            TimeoutUtil.sleep(50L);
+
+          // last pos
+          if (end) {
+            repaintAll();
+
+            stop();
+          }
+          else {
+            int randomIndex = -1;
+            while (true) {
+              randomIndex = random.nextInt(abc.length);
+              if (abc[randomIndex] != Names.ourName.charAt(letterPosition)) {
+                break;
+              }
+            }
+
+            fillAtOffset(characterDraws, abc[randomIndex], letterPosition);
+
+            repaintAll();
           }
         }
-      });
-      myThread.setName("Splash thread");
-      myThread.setPriority(Thread.MAX_PRIORITY);
+      };
     }
+
+    updateUI();
+  }
+
+  private void repaintAll() {
+    paint(getGraphics());
   }
 
   public void start() {
     if (myAnimated) {
-      myThread.start();
+      myFuture = AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(myTask, 50, 10, TimeUnit.MILLISECONDS);
+    }
+  }
+
+  public void stop() {
+    if (myFuture != null) {
+      myFuture.cancel(false);
     }
   }
 
@@ -145,38 +200,13 @@ public class AnimatedLogoLabel extends JComponent {
   }
 
   public void setValue(int value) {
-    myValue = value;
-  }
-
-  @Override
-  public Dimension getPreferredSize() {
-    return new Dimension(JBUI.scale(myData.length * mySize), JBUI.scale(myData[0].length * mySize));
-  }
-
-  @Override
-  public Dimension getMinimumSize() {
-    return getPreferredSize();
-  }
-
-  @Override
-  public Dimension getMaximumSize() {
-    return getPreferredSize();
-  }
-
-  @Override
-  public void paint(Graphics g) {
-    for (int y = 0; y < myData.length; y++) {
-      int[] ints = myData[y];
-
-      for (int x = 0; x < ints.length; x++) {
-        int a = ints[x];
-
-        if (a > 0) {
-          int size = JBUI.scale(mySize);
-          g.setColor(getForeground());
-          g.fillRect(y * size, x * size, size, size);
-        }
-      }
+    synchronized (lock) {
+      myValue = value;
     }
+  }
+
+  @Override
+  public void updateUI() {
+    setUI(new MyComponentUI());
   }
 }

@@ -185,7 +185,7 @@ public class JBUI {
       }
       catch (HeadlessException ignore) {
       }
-      if (gd != null) {
+      if (gd != null && gd.getDefaultConfiguration() != null) {
         return sysScale(gd.getDefaultConfiguration());
       }
       return 1.0f;

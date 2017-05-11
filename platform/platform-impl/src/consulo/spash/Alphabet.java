@@ -151,7 +151,7 @@ class Alphabet {
       void draw(int offset, int[][] data) {
         vertical(data, offset);
         horizonalTop(data, offset);
-        horizontal(data, 17, offset);
+        horizontal(data, 3, offset);
         data[offset + 4][2] = 1;
         data[offset + 3][4] = 1;
         data[offset + 3][5] = 1;

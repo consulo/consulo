@@ -23,6 +23,7 @@ import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.*;
+import java.util.concurrent.Future;
 
 /**
  * @author Konstantin Bulenkov
@@ -32,45 +33,42 @@ public class ShowSplashAction extends AnAction {
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
     final Splash splash = new Splash();
-    final SplashListener listener = new SplashListener(splash);
-    splash.addFocusListener(listener);
-    splash.addKeyListener(listener);
-    splash.addMouseListener(listener);
-    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-      @Override
-      public void run() {
-        for(int i = 0; i <= 100; i++) {
-          if(!splash.isVisible()) {
-            break;
-          }
-          final float progress = i / 100f;
-          UIUtil.invokeLaterIfNeeded(new Runnable() {
-            @Override
-            public void run() {
-              splash.showProgress("", progress);
-            }
-          });
-          try {
-            Thread.sleep(100L);
-          }
-          catch (InterruptedException e1) {
-            ///
-          }
+
+    Future<?> task = ApplicationManager.getApplication().executeOnPooledThread((Runnable)() -> {
+      for (int i = 0; i <= 100; i++) {
+        final float progress = i / 100f;
+        UIUtil.invokeLaterIfNeeded(() -> splash.showProgress("", progress));
+
+        try {
+          Thread.sleep(10L);
+        }
+        catch (InterruptedException e1) {
+          break;
         }
       }
     });
+
+    final SplashListener listener = new SplashListener(splash, task);
+    splash.addFocusListener(listener);
+    splash.addKeyListener(listener);
+    splash.addMouseListener(listener);
+
     splash.show();
   }
 
   private static class SplashListener implements KeyListener, MouseListener, FocusListener {
     private final Splash mySplash;
+    private Future<?> myTask;
 
-    private SplashListener(Splash splash) {
+    private SplashListener(Splash splash, Future<?> task) {
       mySplash = splash;
+      myTask = task;
     }
 
     private void close() {
       if (mySplash.isVisible()) {
+        mySplash.stopAnimation();
+        myTask.cancel(false);
         mySplash.setVisible(false);
       }
     }

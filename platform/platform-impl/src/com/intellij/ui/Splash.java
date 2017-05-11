@@ -54,7 +54,7 @@ public class Splash extends JDialog implements StartupProgress {
     }
     setFocusableWindowState(false);
 
-    myLabel = new AnimatedLogoLabel(14, false); //TODO [VISTALL] restore animation
+    myLabel = new AnimatedLogoLabel(14, true);
 
     Container contentPane = getContentPane();
     contentPane.setBackground(Color.LIGHT_GRAY);
@@ -88,6 +88,10 @@ public class Splash extends JDialog implements StartupProgress {
     super.show();
     toFront();
     BOUNDS = getBounds();
+  }
+
+  public void stopAnimation() {
+    myLabel.stop();
   }
 
   @Override
