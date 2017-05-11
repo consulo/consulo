@@ -55,6 +55,7 @@ public class Splash extends JDialog implements StartupProgress {
     setFocusableWindowState(false);
 
     myLabel = new AnimatedLogoLabel(14, true);
+    myLabel.setForeground(Color.BLACK);
 
     Container contentPane = getContentPane();
     contentPane.setBackground(Color.LIGHT_GRAY);

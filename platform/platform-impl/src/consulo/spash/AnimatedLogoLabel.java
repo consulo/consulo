@@ -32,6 +32,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class AnimatedLogoLabel extends JComponent {
   private static class MyComponentUI extends ComponentUI {
+    private final int[][] myEmptyData = new int[43][7];
+
+    private MyComponentUI() {
+      for (int i = 0; i < ourOffsets.length; i++) {
+        fillAtOffset(Alphabet.validCharacters, ' ', i, myEmptyData);
+      }
+    }
+
     @Override
     public Dimension getPreferredSize(JComponent c) {
       AnimatedLogoLabel logoLabel = (AnimatedLogoLabel)c;
@@ -51,18 +59,21 @@ public class AnimatedLogoLabel extends JComponent {
     @Override
     public void paint(Graphics g, JComponent c) {
       AnimatedLogoLabel logoLabel = (AnimatedLogoLabel)c;
-      g.setColor(Color.LIGHT_GRAY);
-      g.fillRect(0, 0, c.getWidth(), c.getHeight());
 
-      for (int y = 0; y < logoLabel.myData.length; y++) {
-        int[] ints = logoLabel.myData[y];
+      paint(g, logoLabel, myEmptyData, c.getBackground());
+      paint(g, logoLabel, logoLabel.myData, c.getForeground());
+    }
+
+    private void paint(Graphics g, AnimatedLogoLabel c, int[][] data, Color color) {
+      for (int y = 0; y < data.length; y++) {
+        int[] ints = data[y];
 
         for (int x = 0; x < ints.length; x++) {
           int a = ints[x];
 
           if (a > 0) {
-            int size = JBUI.scale(logoLabel.myLetterHeight);
-            g.setColor(Color.BLACK);
+            int size = JBUI.scale(c.myLetterHeight);
+            g.setColor(color);
             g.fillRect(y * size, x * size, size, size);
           }
         }
@@ -118,10 +129,7 @@ public class AnimatedLogoLabel extends JComponent {
 
     for (int i = 0; i < ourOffsets.length; i++) {
       int offset = ourOffsets[i];
-
       char c = str[i];
-
-
       characterDraws.get(c).draw(offset, myData);
     }
 
@@ -188,15 +196,19 @@ public class AnimatedLogoLabel extends JComponent {
   }
 
   private void fillAtOffset(Map<Character, AlphabetDraw> characterDraws, char c, int pos) {
+    fillAtOffset(characterDraws, c, pos, myData);
+  }
+
+  private static void fillAtOffset(Map<Character, AlphabetDraw> characterDraws, char c, int pos, int[][] data) {
     int offset = ourOffsets[pos];
     for (int i = 0; i < 5; i++) {
-      int[] ints = myData[i + offset];
+      int[] ints = data[i + offset];
       for (int j = 0; j < ints.length; j++) {
         ints[j] = 0;
       }
     }
 
-    characterDraws.get(c).draw(offset, myData);
+    characterDraws.get(c).draw(offset, data);
   }
 
   public void setValue(int value) {

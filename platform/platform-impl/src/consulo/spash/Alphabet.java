@@ -337,6 +337,18 @@ class Alphabet {
       }
     });
 
+    // dummy
+    validCharacters.put(' ', new AlphabetDraw() {
+      @Override
+      void draw(int offset, int[][] data) {
+        vertical(data, offset);
+        vertical(data, offset + 1);
+        vertical(data, offset + 2);
+        vertical(data, offset + 3);
+        vertical(data, offset + 4);
+      }
+    });
+
     Set<Character> list = new TreeSet<>(validCharacters.keySet());
     list.remove('_');
     list.remove('.');
