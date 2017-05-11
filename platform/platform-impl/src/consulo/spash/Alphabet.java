@@ -352,6 +352,7 @@ class Alphabet {
     Set<Character> list = new TreeSet<>(validCharacters.keySet());
     list.remove('_');
     list.remove('.');
+    list.remove(' ');
     alphabet = list.toArray(new Character[list.size()]);
   }
 }

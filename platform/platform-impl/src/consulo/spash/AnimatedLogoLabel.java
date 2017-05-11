@@ -17,10 +17,12 @@ package consulo.spash;
 
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Future;
@@ -60,8 +62,13 @@ public class AnimatedLogoLabel extends JComponent {
     public void paint(Graphics g, JComponent c) {
       AnimatedLogoLabel logoLabel = (AnimatedLogoLabel)c;
 
-      paint(g, logoLabel, myEmptyData, c.getBackground());
-      paint(g, logoLabel, logoLabel.myData, c.getForeground());
+      BufferedImage  image = UIUtil.createImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
+      Graphics graphics = image.getGraphics();
+      paint(graphics, logoLabel, myEmptyData, c.getBackground());
+      paint(graphics, logoLabel, logoLabel.myData, c.getForeground());
+      graphics.dispose();
+
+      g.drawImage(image, 0, 0, c.getWidth(), c.getHeight(), c);
     }
 
     private void paint(Graphics g, AnimatedLogoLabel c, int[][] data, Color color) {
@@ -180,12 +187,12 @@ public class AnimatedLogoLabel extends JComponent {
   }
 
   private void repaintAll() {
-    paint(getGraphics());
+    update(getGraphics());
   }
 
   public void start() {
     if (myAnimated) {
-      myFuture = AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(myTask, 50, 10, TimeUnit.MILLISECONDS);
+      myFuture = AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(myTask, 50, 20, TimeUnit.MILLISECONDS);
     }
   }
 
