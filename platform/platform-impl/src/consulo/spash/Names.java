@@ -20,7 +20,7 @@ package consulo.spash;
  * @since 11-May-17
  */
 class Names {
-  final static String[] ourEasterNames = {"VISTALL", "IJ_IDEA"};
+  final static String[] ourEasterNames = {"VISTALL", "IJ_IDEA", ".WORMIX"};
 
   final static String ourName = "CONSULO";
 
