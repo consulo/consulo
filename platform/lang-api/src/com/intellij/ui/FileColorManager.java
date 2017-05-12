@@ -56,6 +56,9 @@ public abstract class FileColorManager {
 
   public abstract Color getFileColor(@NotNull final VirtualFile file);
 
+  @Nullable
+  public abstract Color getScopeColor(@NotNull String scopeName);
+
   public abstract boolean isShared(@NotNull final String scopeName);
 
   public abstract boolean isColored(@NotNull String scopeName, final boolean shared);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,39 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.popup.ListItemDescriptorAdapter;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.search.scope.NonProjectFilesScope;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.FileColorManager;
 import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.ui.popup.list.GroupedItemsListRenderer;
+import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.TextTransferable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.frame.XStackFrame;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
+import java.util.Map;
 
 /**
  * @author nik
  */
 public class XDebuggerFramesList extends DebuggerFramesList {
+  private final Project myProject;
+  private final Map<VirtualFile, Color> myFileColors = new HashMap<>();
+
   private static final TransferHandler DEFAULT_TRANSFER_HANDLER = new TransferHandler() {
     @Override
     protected Transferable createTransferable(JComponent c) {
@@ -78,7 +89,7 @@ public class XDebuggerFramesList extends DebuggerFramesList {
     }
 
     @Override
-    public int getSourceActions(JComponent c) {
+    public int getSourceActions(@NotNull JComponent c) {
       return COPY;
     }
   };
@@ -86,26 +97,51 @@ public class XDebuggerFramesList extends DebuggerFramesList {
   private XStackFrame mySelectedFrame;
 
   public XDebuggerFramesList(@NotNull Project project) {
-    super(project);
+    myProject = project;
 
     doInit();
     setTransferHandler(DEFAULT_TRANSFER_HANDLER);
+    setDataProvider(new DataProvider() {
+      @Nullable
+      @Override
+      public Object getData(@NonNls String dataId) {
+        if (mySelectedFrame != null) {
+          if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {
+            return getFile(mySelectedFrame);
+          }
+          else if (CommonDataKeys.PSI_FILE.is(dataId)) {
+            VirtualFile file = getFile(mySelectedFrame);
+            if (file != null && file.isValid()) {
+              return PsiManager.getInstance(myProject).findFile(file);
+            }
+          }
+        }
+        return null;
+      }
+    });
+  }
+
+  @Override
+  public void clear() {
+    super.clear();
+    myFileColors.clear();
+  }
+
+  @Nullable
+  private static VirtualFile getFile(XStackFrame frame) {
+    XSourcePosition position = frame.getSourcePosition();
+    return position != null ? position.getFile() : null;
   }
 
   @Override
   protected ListCellRenderer createListRenderer() {
-    return new XDebuggerFrameListRenderer(myProject);
+    return new XDebuggerGroupedFrameListRenderer();
   }
 
   @Override
   protected void onFrameChanged(final Object selectedValue) {
     if (mySelectedFrame != selectedValue) {
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          repaint();
-        }
-      });
+      SwingUtilities.invokeLater(() -> repaint());
       if (selectedValue instanceof XStackFrame) {
         mySelectedFrame = (XStackFrame)selectedValue;
       }
@@ -115,17 +151,55 @@ public class XDebuggerFramesList extends DebuggerFramesList {
     }
   }
 
-  private static class XDebuggerFrameListRenderer extends ColoredListCellRenderer {
-    private final FileColorManager myColorsManager;
-    private final PsiManager myPsiManager;
+  private class XDebuggerGroupedFrameListRenderer extends GroupedItemsListRenderer {
+    private final XDebuggerFrameListRenderer myOriginalRenderer = new XDebuggerFrameListRenderer(myProject);
 
-    public XDebuggerFrameListRenderer(Project project) {
-      myPsiManager = PsiManager.getInstance(project);
+    public XDebuggerGroupedFrameListRenderer() {
+      super(new ListItemDescriptorAdapter() {
+        @Nullable
+        @Override
+        public String getTextFor(Object value) {
+          return null;
+        }
+
+        @Override
+        public boolean hasSeparatorAboveOf(Object value) {
+          if (value instanceof ItemWithSeparatorAbove) {
+            return ((ItemWithSeparatorAbove)value).hasSeparatorAbove();
+          }
+          return false;
+        }
+      });
+    }
+
+    @Override
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+      if (myDescriptor.hasSeparatorAboveOf(value)) {
+        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        ((XDebuggerFrameListRenderer)myComponent).getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        return component;
+      }
+      else {
+        return myOriginalRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+      }
+    }
+
+    @Override
+    protected JComponent createItemComponent() {
+      createLabel();
+      return new XDebuggerFrameListRenderer(myProject);
+    }
+  }
+
+  private class XDebuggerFrameListRenderer extends ColoredListCellRenderer {
+    private final FileColorManager myColorsManager;
+
+    public XDebuggerFrameListRenderer(@NotNull Project project) {
       myColorsManager = FileColorManager.getInstance(project);
     }
 
     @Override
-    protected void customizeCellRenderer(final JList list,
+    protected void customizeCellRenderer(@NotNull final JList list,
                                          final Object value,
                                          final int index,
                                          final boolean selected,
@@ -146,19 +220,35 @@ public class XDebuggerFramesList extends DebuggerFramesList {
 
       XStackFrame stackFrame = (XStackFrame)value;
       if (!selected) {
-        XSourcePosition position = stackFrame.getSourcePosition();
-        if (position != null) {
-          final VirtualFile virtualFile = position.getFile();
-          if (virtualFile.isValid()) {
-            PsiFile f = myPsiManager.findFile(virtualFile);
-            if (f != null) {
-              Color c = myColorsManager.getFileColor(f);
-              if (c != null) setBackground(c);
-            }
-          }
+        Color c = getFrameBgColor(stackFrame);
+        if (c != null) {
+          setBackground(c);
         }
       }
       stackFrame.customizePresentation(this);
     }
+
+    Color getFrameBgColor(XStackFrame stackFrame) {
+      VirtualFile virtualFile = getFile(stackFrame);
+      if (virtualFile != null) {
+        // handle null value
+        if (myFileColors.containsKey(virtualFile)) {
+          return myFileColors.get(virtualFile);
+        }
+        else if (virtualFile.isValid()) {
+          Color color = myColorsManager.getFileColor(virtualFile);
+          myFileColors.put(virtualFile, color);
+          return color;
+        }
+      }
+      else {
+        return myColorsManager.getScopeColor(NonProjectFilesScope.NAME);
+      }
+      return null;
+    }
+  }
+
+  public interface ItemWithSeparatorAbove {
+    boolean hasSeparatorAbove();
   }
 }
