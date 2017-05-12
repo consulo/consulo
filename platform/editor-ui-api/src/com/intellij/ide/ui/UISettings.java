@@ -51,6 +51,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
    * Not tabbed pane.
    */
   public static final int TABS_NONE = 0;
+  public static final int ANIMATION_DURATION = 300; // Milliseconds
 
   public static UISettings getInstance() {
     return ApplicationManager.getApplication().getComponent(UISettings.class);
@@ -85,7 +86,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public int EDITOR_TAB_LIMIT = 10;
   public boolean REUSE_NOT_MODIFIED_TABS = false;
   public boolean ANIMATE_WINDOWS = true;
-  public int ANIMATION_DURATION = 300; // Milliseconds
   public boolean SHOW_TOOL_WINDOW_NUMBERS = true;
   public boolean HIDE_TOOL_STRIPES = true;
   public boolean WIDESCREEN_SUPPORT = false;
@@ -405,6 +405,30 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public void setHideToolStripes(boolean value) {
     HIDE_TOOL_STRIPES = value;
+  }
+
+  public boolean getWideScreenSupport() {
+    return WIDESCREEN_SUPPORT;
+  }
+
+  public boolean getAnimateWindows() {
+    return ANIMATE_WINDOWS;
+  }
+
+  public boolean getLeftHorizontalSplit() {
+    return LEFT_HORIZONTAL_SPLIT;
+  }
+
+  public void setLeftHorizontalSplit(boolean value) {
+    LEFT_HORIZONTAL_SPLIT = value;
+  }
+
+  public boolean getRightHorizontalSplit() {
+    return RIGHT_HORIZONTAL_SPLIT;
+  }
+
+  public void setRightHorizontalSplit(boolean value) {
+    RIGHT_HORIZONTAL_SPLIT = value;
   }
 
   /**
