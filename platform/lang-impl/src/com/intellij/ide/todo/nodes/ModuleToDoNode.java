@@ -36,6 +36,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.HighlightedRegion;
 import com.intellij.usageView.UsageTreeColors;
 import com.intellij.usageView.UsageTreeColorsScheme;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -114,11 +115,10 @@ public class ModuleToDoNode extends BaseToDoNode<Module> implements HighlightedR
   }
 
   @Override
+  @RequiredReadAction
   public int getFileCount(Module module) {
-    Iterator<PsiFile> iterator = myBuilder.getFiles(module);
     int count = 0;
-    while (iterator.hasNext()) {
-      PsiFile psiFile = iterator.next();
+    for(PsiFile psiFile : myBuilder.getFiles(module)) {
       if (getStructure().accept(psiFile)) {
         count++;
       }
@@ -127,17 +127,11 @@ public class ModuleToDoNode extends BaseToDoNode<Module> implements HighlightedR
   }
 
   @Override
-  public int getTodoItemCount(final Module val) {
-    Iterator<PsiFile> iterator = myBuilder.getFiles(val);
+  @RequiredReadAction
+  public int getTodoItemCount(final Module module) {
     int count = 0;
-    while (iterator.hasNext()) {
-      final PsiFile psiFile = iterator.next();
-      count += ApplicationManager.getApplication().runReadAction(new Computable<Integer>() {
-        @Override
-        public Integer compute() {
-          return getTreeStructure().getTodoItemCount(psiFile);
-        }
-      });
+    for(PsiFile psiFile : myBuilder.getFiles(module)) {
+      count += ApplicationManager.getApplication().runReadAction((Computable<Integer>)() -> getTreeStructure().getTodoItemCount(psiFile));
     }
     return count;
   }

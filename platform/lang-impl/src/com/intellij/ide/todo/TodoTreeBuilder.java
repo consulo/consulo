@@ -47,6 +47,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.usageView.UsageTreeColorsScheme;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.HashMap;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -305,13 +306,14 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
    *         and which in specified {@code module}.
    * @see FileTree#getFiles(VirtualFile)
    */
-  public Iterator<PsiFile> getFiles(Module module) {
-    if (module.isDisposed()) return Collections.<PsiFile>emptyList().iterator();
+  @RequiredReadAction
+  public Iterable<PsiFile> getFiles(Module module) {
+    if (module.isDisposed()) return Collections.<PsiFile>emptyList();
     ArrayList<PsiFile> psiFileList = new ArrayList<>();
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
     final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
     for (VirtualFile virtualFile : contentRoots) {
-      List<VirtualFile> files = myFileTree.getFiles(virtualFile);
+      List<VirtualFile> files = virtualFile.isDirectory() ? myFileTree.getFiles(virtualFile) : Arrays.asList(virtualFile);
       PsiManager psiManager = PsiManager.getInstance(myProject);
       for (VirtualFile file : files) {
         if (fileIndex.getModuleForFile(file) != module) continue;
@@ -323,7 +325,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
         }
       }
     }
-    return psiFileList.iterator();
+    return psiFileList;
   }
 
 
