@@ -145,7 +145,7 @@ public class AnimatedLogoLabel extends JComponent {
         synchronized (lock) {
           float per = 100f / Names.ourName.length();
 
-          boolean end = myValue >= 90;
+          boolean end = myValue >= 95;
           int letterPosition = (int)(myValue / per);
 
           if (end) {
