@@ -75,7 +75,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
    * Source position for line breakpoint is determined by its file and line
    */
   @Override
-  public final XSourcePosition getSourcePosition(@NotNull XBreakpoint<P> breakpoint) {
+  public XSourcePosition getSourcePosition(@NotNull XBreakpoint<P> breakpoint) {
     return null;
   }
 
