@@ -250,10 +250,18 @@ public class AllIcons {
     public static final SwingImageRef EvaluateExpression = IconLoader.getIcon("/debugger/evaluateExpression.png"); // 16x16
     public static final SwingImageRef Frame = IconLoader.getIcon("/debugger/frame.png"); // 16x16
     public static final SwingImageRef KillProcess = IconLoader.getIcon("/debugger/killProcess.png"); // 16x16
+    public static final SwingImageRef LambdaBreakpoint = IconLoader.getIcon("/debugger/LambdaBreakpoint.png"); // 12x12
+
+    public static class MemoryView {
+      public static final SwingImageRef Active = IconLoader.getIcon("/debugger/memoryView/active.png"); // 13x13
+      public static final SwingImageRef ClassTracked = IconLoader.getIcon("/debugger/memoryView/classTracked.png"); // 16x16
+    }
+
     public static final SwingImageRef MuteBreakpoints = IconLoader.getIcon("/debugger/muteBreakpoints.png"); // 16x16
     public static final SwingImageRef NewWatch = IconLoader.getIcon("/debugger/newWatch.png"); // 16x16
     public static final SwingImageRef Question_badge = IconLoader.getIcon("/debugger/question_badge.png"); // 6x9
     public static final SwingImageRef RestoreLayout = IconLoader.getIcon("/debugger/restoreLayout.png"); // 16x16
+    public static final SwingImageRef Selfreference = IconLoader.getIcon("/debugger/selfreference.png"); // 16x16
     public static final SwingImageRef ShowCurrentFrame = IconLoader.getIcon("/debugger/showCurrentFrame.png"); // 16x16
     public static final SwingImageRef StackFrame = IconLoader.getIcon("/debugger/stackFrame.png"); // 16x16
     public static final SwingImageRef ThreadAtBreakpoint = IconLoader.getIcon("/debugger/threadAtBreakpoint.png"); // 16x16
@@ -525,6 +533,7 @@ public class AllIcons {
     public static final SwingImageRef OverridenMethod = IconLoader.getIcon("/gutter/overridenMethod.png"); // 12x12
     public static final SwingImageRef OverridingMethod = IconLoader.getIcon("/gutter/overridingMethod.png"); // 12x12
     public static final SwingImageRef RecursiveMethod = IconLoader.getIcon("/gutter/recursiveMethod.png"); // 12x12
+    public static final SwingImageRef SiblingInheritedMethod = IconLoader.getIcon("/gutter/siblingInheritedMethod.png"); // 12x12
     public static final SwingImageRef Unique = IconLoader.getIcon("/gutter/unique.png"); // 8x8
 
   }

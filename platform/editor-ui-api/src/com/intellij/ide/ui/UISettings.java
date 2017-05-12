@@ -403,6 +403,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return MAX_LOOKUP_LIST_HEIGHT;
   }
 
+  public void setHideToolStripes(boolean value) {
+    HIDE_TOOL_STRIPES = value;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

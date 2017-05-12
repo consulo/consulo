@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,25 +19,28 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.ui.EditorTextField;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class EditorBasedWidget extends FileEditorManagerAdapter implements StatusBarWidget {
+public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorManagerListener {
   protected StatusBar myStatusBar;
   protected Project myProject;
 
   protected MessageBusConnection myConnection;
-  private boolean myDisposed;
+  private volatile boolean myDisposed;
 
   protected EditorBasedWidget(@NotNull Project project) {
     myProject = project;
     myConnection = myProject.getMessageBus().connect(this);
     myConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
+    Disposer.register(project, this);
   }
 
   @Nullable
@@ -62,9 +65,10 @@ public abstract class EditorBasedWidget extends FileEditorManagerAdapter impleme
     return result;
   }
 
-  protected boolean isOurEditor(Editor editor) {
+  boolean isOurEditor(Editor editor) {
     return editor != null &&
            editor.getComponent().isShowing() &&
+           !Boolean.TRUE.equals(editor.getUserData(EditorTextField.SUPPLEMENTARY_KEY)) &&
            WindowManager.getInstance().getStatusBar(editor.getComponent(), editor.getProject()) == myStatusBar;
   }
 

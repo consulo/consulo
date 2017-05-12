@@ -37,6 +37,7 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueContainer;
+import com.intellij.xdebugger.impl.XDebuggerInlayUtil;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import com.intellij.xdebugger.impl.evaluate.quick.XValueHint;
 import com.intellij.xdebugger.impl.evaluate.quick.common.ValueHintType;
@@ -64,8 +65,9 @@ public abstract class XVariablesViewBase extends XDebugView {
   private MySelectionListener mySelectionListener;
 
   protected XVariablesViewBase(@NotNull Project project, @NotNull XDebuggerEditorsProvider editorsProvider, @Nullable XValueMarkers<?, ?> markers) {
-    myTreePanel = new XDebuggerTreePanel(
-            project, editorsProvider, this, null, this instanceof XWatchesView ? XDebuggerActions.WATCHES_TREE_POPUP_GROUP : XDebuggerActions.VARIABLES_TREE_POPUP_GROUP, markers);
+    myTreePanel = new XDebuggerTreePanel(project, editorsProvider, this, null,
+                                         this instanceof XWatchesView ? XDebuggerActions.WATCHES_TREE_POPUP_GROUP : XDebuggerActions.VARIABLES_TREE_POPUP_GROUP,
+                                         markers);
     getTree().getEmptyText().setText(XDebuggerBundle.message("debugger.variables.not.available"));
     DnDManager.getInstance().registerSource(myTreePanel, getTree());
   }
@@ -78,9 +80,9 @@ public abstract class XVariablesViewBase extends XDebugView {
     final Project project = tree.getProject();
     project.putUserData(XVariablesView.DEBUG_VARIABLES, new XVariablesView.InlineVariablesInfo());
     project.putUserData(XVariablesView.DEBUG_VARIABLES_TIMESTAMPS, new ObjectLongHashMap<>());
+    clearInlays(tree);
     Object newEqualityObject = stackFrame.getEqualityObject();
-    if (myFrameEqualityObject != null && newEqualityObject != null && myFrameEqualityObject.equals(newEqualityObject)
-        && myTreeState != null) {
+    if (myFrameEqualityObject != null && newEqualityObject != null && myFrameEqualityObject.equals(newEqualityObject) && myTreeState != null) {
       disposeTreeRestorer();
       myTreeRestorer = myTreeState.restoreState(tree);
     }
@@ -89,10 +91,16 @@ public abstract class XVariablesViewBase extends XDebugView {
     }
   }
 
+  protected static void clearInlays(XDebuggerTree tree) {
+    if (Registry.is("debugger.show.values.inplace")) XDebuggerInlayUtil.clearInlays(tree.getProject());
+  }
+
   protected XValueContainerNode createNewRootNode(@Nullable XStackFrame stackFrame) {
     XValueContainerNode root;
     if (stackFrame == null) {
-      root = new XValueContainerNode<XValueContainer>(getTree(), null, new XValueContainer() {}) {};
+      root = new XValueContainerNode<XValueContainer>(getTree(), null, new XValueContainer() {
+      }) {
+      };
     }
     else {
       root = new XStackFrameNode(getTree(), stackFrame);
@@ -101,9 +109,7 @@ public abstract class XVariablesViewBase extends XDebugView {
     return root;
   }
 
-  private void registerInlineEvaluator(final XStackFrame stackFrame,
-                                       final XSourcePosition position,
-                                       final Project project) {
+  private void registerInlineEvaluator(final XStackFrame stackFrame, final XSourcePosition position, final Project project) {
     final VirtualFile file = position.getFile();
     final FileEditor fileEditor = FileEditorManagerEx.getInstanceEx(project).getSelectedEditor(file);
     if (fileEditor instanceof PsiAwareTextEditorImpl) {
