@@ -41,6 +41,7 @@ import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.spash.AnimatedLogoLabel;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,7 +99,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     JPanel logoPanel = new JPanel(new BorderLayout());
     logoPanel.setBorder(JBUI.Borders.empty(53, 66, 45, 0));
     AnimatedLogoLabel animatedLogoLabel = new AnimatedLogoLabel(8, false);
-    animatedLogoLabel.setForeground(JBColor.GRAY);
+    animatedLogoLabel.setForeground(SandboxUtil.isInsideSandbox() ? JBColor.WHITE : JBColor.GRAY);
     logoPanel.add(animatedLogoLabel, BorderLayout.CENTER);
 
     panel.add(logoPanel, BorderLayout.NORTH);
