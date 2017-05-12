@@ -249,7 +249,7 @@ public final class IconLoader {
 
   @Nullable
   private static ImageIcon checkIcon(final Image image, @NotNull URL url) {
-    if (image == null || image.getHeight(LabelHolder.ourFakeComponent) < 1) { // image wasn't loaded or broken
+    if (image == null || image.getHeight(null) < 1) { // image wasn't loaded or broken
       return null;
     }
 
