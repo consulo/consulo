@@ -28,6 +28,11 @@ public abstract class EarlyAccessProgramDescriptor {
   @NotNull
   public abstract String getName();
 
+  @NotNull
+  public String getGroupName() {
+    return "Platform";
+  }
+
   public boolean getDefaultState() {
     return false;
   }
@@ -41,5 +46,7 @@ public abstract class EarlyAccessProgramDescriptor {
   }
 
   @NotNull
-  public abstract String getDescription();
+  public String getDescription() {
+    return "";
+  }
 }

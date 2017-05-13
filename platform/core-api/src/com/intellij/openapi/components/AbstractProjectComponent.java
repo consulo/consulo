@@ -17,8 +17,6 @@
 package com.intellij.openapi.components;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Dmitry Avdeev
@@ -28,32 +26,5 @@ public abstract class AbstractProjectComponent implements ProjectComponent {
 
   protected AbstractProjectComponent(Project project) {
     myProject = project;
-  }
-
-  @Override
-  @NonNls
-  @NotNull
-  public String getComponentName() {
-    return getClass().getName();
-  }
-
-  @Override
-  public void initComponent() {
-
-  }
-
-  @Override
-  public void disposeComponent() {
-
-  }
-
-  @Override
-  public void projectOpened() {
-
-  }
-
-  @Override
-  public void projectClosed() {
-
   }
 }

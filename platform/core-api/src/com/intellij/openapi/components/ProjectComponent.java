@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,15 @@
 package com.intellij.openapi.components;
 
 /**
- * Project-level component's implementation class should implement the <code>ProjectComponent</code> interface.
+ * Project-level component's implementation class should implement the {@code ProjectComponent} interface.
  * It should have constructor with a single parameter of {@link com.intellij.openapi.project.Project}
  * type or with no parameters.
  * <p>
- * See <a href=../../../../../plugins.html>plugins.html</a> for more information.
+ * <strong>Note that if you register a class as a project component it will be loaded, its instance will be created and
+ * {@link #initComponent()} and {@link #projectOpened()} methods will be called for each project even if user doesn't use any feature of your
+ * plugin. So consider using specific extensions instead to ensure that the plugin will not impact IDE performance until user calls its
+ * actions explicitly.</strong>
+ *
  * @see AbstractProjectComponent
  */
 public interface ProjectComponent extends BaseComponent {
@@ -29,12 +33,14 @@ public interface ProjectComponent extends BaseComponent {
    * Note that components may be created for even unopened projects and this method can be never
    * invoked for a particular component instance (for example for default project).
    */
-  void projectOpened();
+  default void projectOpened() {
+  }
 
   /**
    * Invoked when the project corresponding to this component instance is closed.<p>
    * Note that components may be created for even unopened projects and this method can be never
    * invoked for a particular component instance (for example for default project).
    */
-  void projectClosed();
+  default void projectClosed() {
+  }
 }
