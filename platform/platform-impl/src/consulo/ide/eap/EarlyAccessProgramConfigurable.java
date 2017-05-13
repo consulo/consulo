@@ -21,23 +21,22 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.*;
+import com.intellij.ui.CheckBoxList;
+import com.intellij.ui.JBColor;
+import com.intellij.ui.LightColors;
+import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.border.CustomLineBorder;
-import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.util.ui.components.VerticalLayoutPanel;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.Arrays;
 
 /**
@@ -48,17 +47,19 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   public static class EarlyAccessCellRender implements ListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-      EarlyAccessProgramDescriptor earlyAccessProgramDescriptor = (EarlyAccessProgramDescriptor)value;
+      CheckBoxList checkBoxList = (CheckBoxList)list;
+      EarlyAccessProgramDescriptor earlyAccessProgramDescriptor = (EarlyAccessProgramDescriptor)checkBoxList.getItemAt(index);
+
+      JCheckBox checkbox = (JCheckBox)value;
+
+      checkbox.setEnabled(list.isEnabled());
+      checkbox.setFocusPainted(false);
+      checkbox.setBorderPainted(true);
+
       if (earlyAccessProgramDescriptor == null) {
-        return null;
+        return checkbox;
       }
       else {
-        JCheckBox checkbox = new JBCheckBox(earlyAccessProgramDescriptor.getName());
-        checkbox.setOpaque(true);
-        checkbox.setEnabled(list.isEnabled());
-        checkbox.setFocusPainted(false);
-        checkbox.setBorderPainted(true);
-
         checkbox.setEnabled(earlyAccessProgramDescriptor.isAvailable());
 
         JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, true)) {
@@ -95,7 +96,7 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
     }
   }
 
-  private JBList<Object> myList;
+  private CheckBoxList<EarlyAccessProgramDescriptor> myList;
 
   @Nls
   @Override
@@ -113,19 +114,8 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   @Nullable
   @Override
   public JComponent createComponent() {
-    CollectionListModel<Object> model = new CollectionListModel<>();
-    myList = new JBList<>(model);
+    myList = new CheckBoxList<>();
     myList.setBorder(null);
-    EarlyAccessCellRender cellRenderer = new EarlyAccessCellRender();
-    myList.setCellRenderer(cellRenderer);
-
-    new ClickListener() {
-      @Override
-      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
-
-        return false;
-      }
-    }.installOn(myList);
 
     EarlyAccessProgramDescriptor[] extensions = EarlyAccessProgramDescriptor.EP_NAME.getExtensions();
     Arrays.sort(extensions, (o1, o2) -> {
@@ -137,11 +127,8 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
       }
       return o1.getName().compareToIgnoreCase(o2.getName());
     });
-
-    for (EarlyAccessProgramDescriptor extension : extensions) {
-      model.add(extension);
-    }
-    //myList.setItems(Arrays.asList(extensions), EarlyAccessProgramDescriptor::getName, desc -> EarlyAccessProgramManager.is(desc.getClass()));
+    myList.setItems(Arrays.asList(extensions), EarlyAccessProgramDescriptor::getName, desc -> EarlyAccessProgramManager.is(desc.getClass()));
+    myList.setCellRenderer(new EarlyAccessCellRender());
 
     return JBUI.Panels.simplePanel().addToTop(createWarningPanel()).addToCenter(ScrollPaneFactory.createScrollPane(myList, true));
   }
@@ -168,11 +155,11 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   public boolean isModified() {
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
 
-   /* for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
+    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
       if (myList.isItemSelected(descriptor) != manager.getState(descriptor.getClass())) {
         return true;
       }
-    } */
+    }
     return false;
   }
 
@@ -180,10 +167,10 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   @Override
   public void apply() throws ConfigurationException {
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
-   /*
+
     for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
       manager.setState(descriptor.getClass(), myList.isItemSelected(descriptor));
-    }    */
+    }
   }
 
   @RequiredDispatchThread
@@ -191,8 +178,8 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   public void reset() {
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
 
-    /*for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
+    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
       myList.setItemSelected(descriptor, manager.getState(descriptor.getClass()));
-    }*/
+    }
   }
 }
