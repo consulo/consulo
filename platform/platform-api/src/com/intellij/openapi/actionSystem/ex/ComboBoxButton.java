@@ -164,7 +164,8 @@ public class ComboBoxButton extends JButton implements UserActivityProviderCompo
 
     Insets margins = getMargin();
     setMargin(JBUI.insets(margins == null ? 0 : margins.top, 2, margins == null ? 0 : margins.bottom, 2));
-    setFont(SystemInfo.isMac && myComboBoxAction.isSmallVariant() ? UIUtil.getLabelFont(UIUtil.FontSize.SMALL) : UIUtil.getLabelFont());
+    boolean smallVariant = myComboBoxAction != null && myComboBoxAction.isSmallVariant();
+    setFont(SystemInfo.isMac && smallVariant ? UIUtil.getLabelFont(UIUtil.FontSize.SMALL) : UIUtil.getLabelFont());
   }
 
   protected class MyButtonModel extends DefaultButtonModel {
