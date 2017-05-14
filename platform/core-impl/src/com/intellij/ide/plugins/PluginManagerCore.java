@@ -38,6 +38,7 @@ import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphGenerator;
+import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.xmlb.XmlSerializationException;
 import consulo.application.ApplicationProperties;
 import gnu.trove.THashMap;
@@ -219,13 +220,35 @@ public class PluginManagerCore {
     return true;
   }
 
-  public static void addPluginClass(@NotNull String className, PluginId pluginId, boolean loaded) {
-    ourPluginClasses.addPluginClass(className, pluginId, loaded);
+  public static void addPluginClass(PluginId pluginId) {
+    ourPluginClasses.addPluginClass(pluginId);
   }
 
   @Nullable
   public static PluginId getPluginByClassName(@NotNull String className) {
-    return ourPluginClasses.getPluginByClassName(className);
+    if (className.startsWith("java.") || className.startsWith("javax.") || className.startsWith("kotlin.") || className.startsWith("groovy.")) {
+      return null;
+    }
+
+    for (IdeaPluginDescriptor descriptor : getPlugins()) {
+      if (hasLoadedClass(className, descriptor.getPluginClassLoader())) {
+        PluginId id = descriptor.getPluginId();
+        return CORE_PLUGIN_ID.equals(id.getIdString()) ? null : id;
+      }
+    }
+    return null;
+  }
+
+  private static boolean hasLoadedClass(@NotNull String className, ClassLoader loader) {
+    if (loader instanceof UrlClassLoader) return ((UrlClassLoader)loader).hasLoadedClass(className);
+
+    // it can be an UrlClassLoader loaded by another class loader, so instanceof doesn't work
+    try {
+      return ((Boolean) loader.getClass().getMethod("hasLoadedClass", String.class).invoke(loader, className)).booleanValue();
+    }
+    catch (Exception e) {
+      return false;
+    }
   }
 
   @Nullable

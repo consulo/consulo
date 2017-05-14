@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,36 +16,23 @@
 package com.intellij.util.lang;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * An object responsible for loading classes and resources from a particular classpath element: a jar or a directory.
- *
- * @see JarLoader
- * @see FileLoader
+ * @author peter
  */
-abstract class Loader {
-  private final URL myURL;
-  private final int myIndex;
+class CachePoolImpl implements UrlClassLoader.CachePool {
+  private final Map<URL, ClasspathCache.LoaderData> myLoaderIndexCache = new ConcurrentHashMap<URL, ClasspathCache.LoaderData>();
 
-  Loader(URL url, int index) {
-    myURL = url;
-    myIndex = index;
+  void cacheData(@NotNull URL url, @NotNull ClasspathCache.LoaderData data) {
+    myLoaderIndexCache.put(url, data);
   }
 
-  URL getBaseURL() {
-    return myURL;
+  ClasspathCache.LoaderData getCachedData(@NotNull URL url) {
+    return myLoaderIndexCache.get(url);
   }
 
-  @Nullable
-  abstract Resource getResource(String name, boolean flag);
-
-  @NotNull abstract ClasspathCache.LoaderData buildData() throws IOException;
-
-  int getIndex() {
-    return myIndex;
-  }
 }

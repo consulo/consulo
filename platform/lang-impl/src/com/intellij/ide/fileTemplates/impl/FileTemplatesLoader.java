@@ -26,6 +26,7 @@ import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.util.UriUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -72,18 +73,13 @@ public class FileTemplatesLoader {
     myTypeManager = typeManager;
     File configDir = project == null || project.isDefault()
                      ? new File(PathManager.getConfigPath(), TEMPLATES_DIR)
-                     : new File(StorageUtil.getStoreDir(project) + "/" + TEMPLATES_DIR);
+                     : new File(UriUtil.trimTrailingSlashes(StorageUtil.getStoreDir(project) + "/" + TEMPLATES_DIR));
     myDefaultTemplatesManager = new FTManager(FileTemplateManager.DEFAULT_TEMPLATES_CATEGORY, configDir);
     myInternalTemplatesManager = new FTManager(FileTemplateManager.INTERNAL_TEMPLATES_CATEGORY, new File(configDir, INTERNAL_DIR), true);
     myPatternsManager = new FTManager(FileTemplateManager.INCLUDES_TEMPLATES_CATEGORY, new File(configDir, INCLUDES_DIR));
     myCodeTemplatesManager = new FTManager(FileTemplateManager.CODE_TEMPLATES_CATEGORY, new File(configDir, CODE_TEMPLATES_DIR));
     myJ2eeTemplatesManager = new FTManager(FileTemplateManager.J2EE_TEMPLATES_CATEGORY, new File(configDir, J2EE_TEMPLATES_DIR));
-    myAllManagers = new FTManager[]{
-            myDefaultTemplatesManager,
-            myInternalTemplatesManager,
-            myPatternsManager,
-            myCodeTemplatesManager,
-            myJ2eeTemplatesManager};
+    myAllManagers = new FTManager[]{myDefaultTemplatesManager, myInternalTemplatesManager, myPatternsManager, myCodeTemplatesManager, myJ2eeTemplatesManager};
 
     myDirToManagerMap.put("", myDefaultTemplatesManager);
     myDirToManagerMap.put(INTERNAL_DIR + "/", myInternalTemplatesManager);
@@ -168,10 +164,10 @@ public class FileTemplatesLoader {
     final Set<String> descriptionPaths = new HashSet<>();
     for (String path : children) {
       if (path.equals("default.html")) {
-        myDefaultTemplateDescription = UrlClassLoader.internProtocol(new URL(root.toExternalForm() + "/" + path));
+        myDefaultTemplateDescription = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm() + "/" + path)));
       }
       else if (path.equals("includes/default.html")) {
-        myDefaultIncludeDescription = UrlClassLoader.internProtocol(new URL(root.toExternalForm() + "/" + path));
+        myDefaultIncludeDescription = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm() + "/" + path)));
       }
       else if (path.endsWith(DESCRIPTION_EXTENSION_SUFFIX)) {
         descriptionPaths.add(path);
@@ -185,9 +181,11 @@ public class FileTemplatesLoader {
             final String filename = path.substring(prefix.length(), path.length() - FTManager.TEMPLATE_EXTENSION_SUFFIX.length());
             final String extension = myTypeManager.getExtension(filename);
             final String templateName = filename.substring(0, filename.length() - extension.length() - 1);
-            final URL templateUrl = UrlClassLoader.internProtocol(new URL(root.toExternalForm() + "/" + path));
+            final URL templateUrl = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm() + "/" + path)));
             final String descriptionPath = getDescriptionPath(prefix, templateName, extension, descriptionPaths);
-            final URL descriptionUrl = descriptionPath != null ? UrlClassLoader.internProtocol(new URL(root.toExternalForm() + "/" + descriptionPath)) : null;
+            final URL descriptionUrl = descriptionPath != null
+                                       ? UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm() + "/" + descriptionPath)))
+                                       : null;
             assert templateUrl != null;
             entry.getValue().addDefaultTemplate(new DefaultTemplate(templateName, extension, templateUrl, descriptionUrl));
           }
@@ -209,9 +207,8 @@ public class FileTemplatesLoader {
   private static String getDescriptionPath(String pathPrefix, String templateName, String templateExtension, Set<String> descriptionPaths) {
     final Locale locale = Locale.getDefault();
 
-    String descName = MessageFormat
-            .format("{0}.{1}_{2}_{3}" + DESCRIPTION_EXTENSION_SUFFIX, templateName, templateExtension,
-                    locale.getLanguage(), locale.getCountry());
+    String descName =
+            MessageFormat.format("{0}.{1}_{2}_{3}" + DESCRIPTION_EXTENSION_SUFFIX, templateName, templateExtension, locale.getLanguage(), locale.getCountry());
     String descPath = pathPrefix.length() > 0 ? pathPrefix + descName : descName;
     if (descriptionPaths.contains(descPath)) {
       return descPath;

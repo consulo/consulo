@@ -15,37 +15,27 @@
  */
 package com.intellij.util.lang;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
-/**
- * An object responsible for loading classes and resources from a particular classpath element: a jar or a directory.
- *
- * @see JarLoader
- * @see FileLoader
- */
-abstract class Loader {
-  private final URL myURL;
-  private final int myIndex;
-
-  Loader(URL url, int index) {
-    myURL = url;
-    myIndex = index;
+abstract class Resource {
+  public enum Attribute {
+    SPEC_TITLE, SPEC_VERSION, SPEC_VENDOR, IMPL_TITLE, IMPL_VERSION, IMPL_VENDOR
   }
 
-  URL getBaseURL() {
-    return myURL;
+  public abstract URL getURL();
+
+  public abstract InputStream getInputStream() throws IOException;
+
+  public abstract byte[] getBytes() throws IOException;
+
+  public String getValue(Attribute key) {
+    return null;
   }
 
-  @Nullable
-  abstract Resource getResource(String name, boolean flag);
-
-  @NotNull abstract ClasspathCache.LoaderData buildData() throws IOException;
-
-  int getIndex() {
-    return myIndex;
+  @Override
+  public String toString() {
+    return getURL().toString();
   }
 }

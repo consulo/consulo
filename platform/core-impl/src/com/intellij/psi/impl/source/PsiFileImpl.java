@@ -1137,8 +1137,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   private void rebuildStub() {
     ApplicationManager.getApplication().invokeLater(() -> {
       if (!myManager.isDisposed()) {
-        myManager.dropResolveCaches();
-        ((PsiModificationTrackerImpl)myManager.getModificationTracker()).incCounter();
+        myManager.dropPsiCaches();
       }
 
       final VirtualFile vFile = getVirtualFile();

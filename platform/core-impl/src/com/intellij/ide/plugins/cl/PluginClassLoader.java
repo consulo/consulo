@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.lang.UrlClassLoader;
-import consulo.internal.sun.misc.CompoundEnumeration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,10 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * @author Eugene Zhuravlev
@@ -63,7 +60,7 @@ public class PluginClassLoader extends UrlClassLoader {
 
   @Override
   public Class loadClass(@NotNull String name, final boolean resolve) throws ClassNotFoundException {
-    Class c = tryLoadingClass(name, resolve);
+    Class c = tryLoadingClass(name, resolve, null);
     if (c == null) {
       throw new ClassNotFoundException(name + " " + this);
     }
@@ -73,11 +70,14 @@ public class PluginClassLoader extends UrlClassLoader {
   // Changed sequence in which classes are searched, this is essential if plugin uses library,
   // a different version of which is used in IDEA.
   @Nullable
-  private Class tryLoadingClass(@NotNull String name, final boolean resolve) {
-    Class c = loadClassInsideSelf(name);
+  private Class tryLoadingClass(@NotNull String name, final boolean resolve, @Nullable Set<ClassLoader> visited) {
+    Class c = null;
+    if (!mustBeLoadedByPlatform(name)) {
+      c = loadClassInsideSelf(name);
+    }
 
     if (c == null) {
-      c = loadClassFromParents(name);
+      c = loadClassFromParents(name, visited);
     }
 
     if (c != null) {
@@ -87,15 +87,26 @@ public class PluginClassLoader extends UrlClassLoader {
       return c;
     }
 
-    PluginManagerCore.addPluginClass(name, myPluginId, false);
     return null;
   }
 
+  private static boolean mustBeLoadedByPlatform(String className) {
+    //FunctionX interfaces from kotlin-runtime must be loaded by the platform classloader. Otherwise if a plugin bundles its own version
+    // of kotlin-runtime.jar it won't be possible to call platform's methods with Kotlin functional types in signatures from such a plugin.
+    //We assume that FunctionX interfaces don't change between Kotlin versions so it's safe to always load them from platform's kotlin-runtime.
+    return className.startsWith("kotlin.jvm.functions.");
+  }
+
   @Nullable
-  private Class loadClassFromParents(final String name) {
+  private Class loadClassFromParents(final String name, Set<ClassLoader> visited) {
     for (ClassLoader parent : myParents) {
+      if (visited == null) visited = ContainerUtilRt.newHashSet(this);
+      if (!visited.add(parent)) {
+        continue;
+      }
+
       if (parent instanceof PluginClassLoader) {
-        Class c = ((PluginClassLoader)parent).tryLoadingClass(name, false);
+        Class c = ((PluginClassLoader)parent).tryLoadingClass(name, false, visited);
         if (c != null) {
           return c;
         }
@@ -123,22 +134,14 @@ public class PluginClassLoader extends UrlClassLoader {
     try {
       c = _findClass(name);
     }
-    catch (IncompatibleClassChangeError e) {
-      throw new PluginException(e, myPluginId);
-    }
-    catch (UnsupportedClassVersionError e) {
-      throw new PluginException(e, myPluginId);
+    catch (IncompatibleClassChangeError | UnsupportedClassVersionError e) {
+      throw new PluginException("While loading class " + name + ": " + e.getMessage(), e, myPluginId);
     }
     if (c != null) {
-      PluginManagerCore.addPluginClass(c.getName(), myPluginId, true);
+      PluginManagerCore.addPluginClass(myPluginId);
     }
 
     return c;
-  }
-
-  public boolean hasLoadedClass(String name) {
-    Class<?> aClass = findLoadedClass(name);
-    return aClass != null && aClass.getClassLoader() == this;
   }
 
   @Override
@@ -170,12 +173,12 @@ public class PluginClassLoader extends UrlClassLoader {
 
   @Override
   public Enumeration<URL> findResources(final String name) throws IOException {
-    final Enumeration[] resources = new Enumeration[myParents.length + 1];
+    @SuppressWarnings("unchecked") Enumeration<URL>[] resources = new Enumeration[myParents.length + 1];
     resources[0] = super.findResources(name);
     for (int idx = 0; idx < myParents.length; idx++) {
       resources[idx + 1] = fetchResources(myParents[idx], name);
     }
-    return new CompoundEnumeration<URL>(resources);
+    return new DeepEnumeration(resources);
   }
 
   @SuppressWarnings("UnusedDeclaration")
@@ -201,8 +204,8 @@ public class PluginClassLoader extends UrlClassLoader {
 
   private static URL fetchResource(ClassLoader cl, String resourceName) {
     try {
-      final Method findResourceMethod = getFindResourceMethod(cl.getClass(), "findResource");
-      return (URL)findResourceMethod.invoke(cl, resourceName);
+      Method findResource = getFindResourceMethod(cl.getClass(), "findResource");
+      return findResource != null ? (URL)findResource.invoke(cl, resourceName) : null;
     }
     catch (Exception e) {
       Logger.getInstance(PluginClassLoader.class).error(e);
@@ -210,10 +213,11 @@ public class PluginClassLoader extends UrlClassLoader {
     }
   }
 
-  private static Enumeration fetchResources(ClassLoader cl, String resourceName) {
+  private static Enumeration<URL> fetchResources(ClassLoader cl, String resourceName) {
     try {
-      final Method findResourceMethod = getFindResourceMethod(cl.getClass(), "findResources");
-      return findResourceMethod == null ? null : (Enumeration)findResourceMethod.invoke(cl, resourceName);
+      Method findResources = getFindResourceMethod(cl.getClass(), "findResources");
+      @SuppressWarnings("unchecked") Enumeration<URL> e = findResources == null ? null : (Enumeration)findResources.invoke(cl, resourceName);
+      return e;
     }
     catch (Exception e) {
       Logger.getInstance(PluginClassLoader.class).error(e);
@@ -242,6 +246,33 @@ public class PluginClassLoader extends UrlClassLoader {
 
   @Override
   public String toString() {
-    return "PluginClassLoader[" + myPluginId + ", " + myPluginVersion + "]";
+    return "PluginClassLoader[" + myPluginId + ", " + myPluginVersion + "] "+super.toString();
+  }
+
+  private static class DeepEnumeration implements Enumeration<URL> {
+    private final Enumeration<URL>[] myEnumerations;
+    private int myIndex;
+
+    DeepEnumeration(@NotNull Enumeration<URL>[] enumerations) {
+      myEnumerations = enumerations;
+    }
+
+    @Override
+    public boolean hasMoreElements() {
+      while (myIndex < myEnumerations.length) {
+        Enumeration<URL> e = myEnumerations[myIndex];
+        if (e != null && e.hasMoreElements()) return true;
+        myIndex++;
+      }
+      return false;
+    }
+
+    @Override
+    public URL nextElement() {
+      if (!hasMoreElements()) {
+        throw new NoSuchElementException();
+      }
+      return myEnumerations[myIndex].nextElement();
+    }
   }
 }

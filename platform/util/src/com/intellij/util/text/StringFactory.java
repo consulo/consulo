@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,25 +20,25 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Constructor;
 
 public class StringFactory {
-  // String(char[], boolean). Works since JDK1.7
-  private static Constructor<String> ourConstructor;
+  // String(char[], boolean). Works since JDK1.7, earlier JDKs have too slow reflection anyway
+  private static final Constructor<String> ourConstructor;
 
   static {
+    Constructor<String> constructor;
     try {
-      Constructor<String> constructor = String.class.getDeclaredConstructor(char[].class, boolean.class);
+      constructor = String.class.getDeclaredConstructor(char[].class, boolean.class);
       constructor.setAccessible(true);
-      ourConstructor = constructor;
     }
     catch (Throwable ignored) {
+      constructor = null; // setAccessible fails without explicit permission on Java 9
     }
+    ourConstructor = constructor;
   }
 
-
   /**
-   * @return new instance of String which backed by chars array.
+   * @return new instance of String which backed by given char array.
    *
-   * CAUTION. EXTREMELY DANGEROUS.
-   * DO NOT USE THIS METHOD UNLESS YOU ARE TOO DESPERATE
+   * CAUTION! EXTREMELY DANGEROUS!! DO NOT USE THIS METHOD UNLESS YOU ARE REALLY DESPERATE!!!
    */
   @NotNull
   public static String createShared(@NotNull char[] chars) {
@@ -50,6 +50,7 @@ public class StringFactory {
         throw new RuntimeException(e);
       }
     }
+
     return new String(chars);
   }
 }

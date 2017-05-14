@@ -28,7 +28,7 @@ import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.lang.UrlClassLoader;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.NetUtils;
 import com.intellij.util.net.ssl.CertificateManager;
@@ -380,7 +380,7 @@ public final class HttpRequests {
                    "Network shouldn't be accessed in EDT or inside read action");
 
     ClassLoader contextLoader = Thread.currentThread().getContextClassLoader();
-    if (Patches.JDK_BUG_ID_8032832 && !UrlClassLoader.isRegisteredAsParallelCapable(contextLoader)) {
+    if (contextLoader != null && shouldOverrideContextClassLoader()) {
       // hack-around for class loader lock in sun.net.www.protocol.http.NegotiateAuthentication (IDEA-131621)
       try (URLClassLoader cl = new URLClassLoader(new URL[0], contextLoader)) {
         Thread.currentThread().setContextClassLoader(cl);
@@ -393,6 +393,11 @@ public final class HttpRequests {
     else {
       return doProcess(builder, processor);
     }
+  }
+
+  private static boolean shouldOverrideContextClassLoader() {
+    return Patches.JDK_BUG_ID_8032832 &&
+           SystemProperties.getBooleanProperty("http.requests.override.context.classloader", true);
   }
 
   private static <T> T doProcess(RequestBuilderImpl builder, RequestProcessor<T> processor) throws IOException {

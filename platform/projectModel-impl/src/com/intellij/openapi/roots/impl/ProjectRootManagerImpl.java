@@ -30,7 +30,6 @@ import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import consulo.annotations.RequiredWriteAction;
@@ -325,9 +324,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
 
     incModificationCount();
 
-    PsiManager psiManager = PsiManager.getInstance(myProject);
-    psiManager.dropResolveCaches();
-    ((PsiModificationTrackerImpl)psiManager.getModificationTracker()).incCounter();
+    PsiManager.getInstance(myProject).dropPsiCaches();
 
     fireRootsChangedEvent(filetypes);
 
