@@ -42,11 +42,7 @@ public class PluginClassLoader extends UrlClassLoader {
   private final String myPluginVersion;
   private final List<String> myLibDirectories;
 
-  public PluginClassLoader(@NotNull List<URL> urls,
-                           @NotNull ClassLoader[] parents,
-                           PluginId pluginId,
-                           String version,
-                           File pluginRoot) {
+  public PluginClassLoader(@NotNull List<URL> urls, @NotNull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
     super(build().urls(urls).allowLock().useCache());
     myParents = parents;
     myPluginId = pluginId;
@@ -71,10 +67,7 @@ public class PluginClassLoader extends UrlClassLoader {
   // a different version of which is used in IDEA.
   @Nullable
   private Class tryLoadingClass(@NotNull String name, final boolean resolve, @Nullable Set<ClassLoader> visited) {
-    Class c = null;
-    if (!mustBeLoadedByPlatform(name)) {
-      c = loadClassInsideSelf(name);
-    }
+    Class c = loadClassInsideSelf(name);
 
     if (c == null) {
       c = loadClassFromParents(name, visited);
@@ -88,13 +81,6 @@ public class PluginClassLoader extends UrlClassLoader {
     }
 
     return null;
-  }
-
-  private static boolean mustBeLoadedByPlatform(String className) {
-    //FunctionX interfaces from kotlin-runtime must be loaded by the platform classloader. Otherwise if a plugin bundles its own version
-    // of kotlin-runtime.jar it won't be possible to call platform's methods with Kotlin functional types in signatures from such a plugin.
-    //We assume that FunctionX interfaces don't change between Kotlin versions so it's safe to always load them from platform's kotlin-runtime.
-    return className.startsWith("kotlin.jvm.functions.");
   }
 
   @Nullable
@@ -246,7 +232,7 @@ public class PluginClassLoader extends UrlClassLoader {
 
   @Override
   public String toString() {
-    return "PluginClassLoader[" + myPluginId + ", " + myPluginVersion + "] "+super.toString();
+    return "PluginClassLoader[" + myPluginId + ", " + myPluginVersion + "] " + super.toString();
   }
 
   private static class DeepEnumeration implements Enumeration<URL> {
