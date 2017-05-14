@@ -55,15 +55,14 @@ public class ComboBoxButton extends JButton implements UserActivityProviderCompo
     setModel(new MyButtonModel());
     setHorizontalAlignment(LEFT);
     setFocusable(false);
-    Insets margins = getMargin();
-    setMargin(JBUI.insets(margins.top, 2, margins.bottom, 2));
-    setFont(SystemInfo.isMac && myComboBoxAction.isSmallVariant() ? UIUtil.getLabelFont(UIUtil.FontSize.SMALL) : UIUtil.getLabelFont());
 
     addActionListener(e -> {
       if (!myForcePressed) {
         IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(this::showPopup);
       }
     });
+
+    updateUI();
   }
 
   @Override
@@ -162,6 +161,10 @@ public class ComboBoxButton extends JButton implements UserActivityProviderCompo
   @Override
   public void updateUI() {
     setUI(UIManager.getUI(this));
+
+    Insets margins = getMargin();
+    setMargin(JBUI.insets(margins == null ? 0 : margins.top, 2, margins == null ? 0 : margins.bottom, 2));
+    setFont(SystemInfo.isMac && myComboBoxAction.isSmallVariant() ? UIUtil.getLabelFont(UIUtil.FontSize.SMALL) : UIUtil.getLabelFont());
   }
 
   protected class MyButtonModel extends DefaultButtonModel {
