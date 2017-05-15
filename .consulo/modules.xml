@@ -1050,18 +1050,6 @@
           <orderEntry type="module" module-name="util-rt" />
         </module-layer>
       </module>
-      <module name="impl/desktop-impl" dirurl="file://$PROJECT_DIR$/impl/desktop-impl" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="platform-impl" />
-          <orderEntry type="module" module-name="ui-api" />
-        </module-layer>
-      </module>
       <module name="impl/external-storage-impl" dirurl="file://$PROJECT_DIR$/impl/external-storage-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
@@ -1089,6 +1077,18 @@
           <orderEntry type="module" module-name="xdebugger-impl" />
           <orderEntry type="library" name="Netty" level="project" />
           <orderEntry type="library" name="XmlRPC" level="project" />
+        </module-layer>
+      </module>
+      <module name="impl/desktop-ui-impl" dirurl="file://$PROJECT_DIR$/impl/desktop-ui-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="ui-api" />
         </module-layer>
       </module>
     </modules>
