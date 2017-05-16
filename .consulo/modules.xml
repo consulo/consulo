@@ -537,8 +537,6 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="lvcs-impl" exported="" />
-          <orderEntry type="module" module-name="util" />
         </module-layer>
       </module>
       <module name="impl/platform-resources-en" dirurl="file://$PROJECT_DIR$/platform/platform-resources-en" current-layer="Default">
@@ -711,7 +709,6 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="platform-api" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="xdebugger-api" />
