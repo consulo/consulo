@@ -44,14 +44,12 @@ import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
-import com.intellij.ui.DottedBorder;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.PositionTracker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -98,30 +96,10 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     myExprText = getExpressionText(expr);
     myLocalName = localVariable != null ? localVariable.getName() : null;
 
-    myPreview =
-      (EditorEx)EditorFactory.getInstance().createEditor(EditorFactory.getInstance().createDocument(""), project, languageFileType, true);
-    myPreview.setOneLineMode(true);
-    final EditorSettings settings = myPreview.getSettings();
-    settings.setAdditionalLinesCount(0);
-    settings.setAdditionalColumnsCount(1);
-    settings.setRightMarginShown(false);
-    settings.setFoldingOutlineShown(false);
-    settings.setLineNumbersShown(false);
-    settings.setLineMarkerAreaShown(false);
-    settings.setIndentGuidesShown(false);
-    settings.setVirtualSpace(false);
-    myPreview.setHorizontalScrollbarVisible(false);
-    myPreview.setVerticalScrollbarVisible(false);
-    myPreview.setCaretEnabled(false);
-    settings.setLineCursorWidth(1);
-
-    final Color bg = myPreview.getColorsScheme().getColor(EditorColors.CARET_ROW_COLOR);
-    myPreview.setBackgroundColor(bg);
-    myPreview.setBorder(BorderFactory.createCompoundBorder(new DottedBorder(Color.gray), new LineBorder(bg, 2)));
-
+    myPreview = createPreviewComponent(project, languageFileType);
     myPreviewComponent = new JPanel(new BorderLayout());
     myPreviewComponent.add(myPreview.getComponent(), BorderLayout.CENTER);
-    myPreviewComponent.setBorder(new EmptyBorder(2, 2, 6, 2));
+    myPreviewComponent.setBorder(JBUI.Borders.empty(2, 2, 6, 2));
 
     myWholePanel = new JPanel(new GridBagLayout());
     myWholePanel.setBorder(null);
