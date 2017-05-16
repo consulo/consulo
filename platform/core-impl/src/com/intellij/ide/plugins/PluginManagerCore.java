@@ -51,7 +51,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
@@ -141,15 +140,11 @@ public class PluginManagerCore {
     if (!plugins.isFile()) {
       FileUtil.ensureCanCreateFile(plugins);
     }
-    PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(plugins, append)));
-    try {
+    try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(plugins, append)))) {
       for (String id : ids) {
         printWriter.println(id);
       }
       printWriter.flush();
-    }
-    finally {
-      printWriter.close();
     }
   }
 
@@ -315,9 +310,6 @@ public class PluginManagerCore {
       }
       return new PluginClassLoader(urls, parentLoaders, pluginId, pluginDescriptor.getVersion(), pluginRoot);
     }
-    catch (MalformedURLException e) {
-      e.printStackTrace();
-    }
     catch (IOException e) {
       e.printStackTrace();
     }
@@ -402,11 +394,7 @@ public class PluginManagerCore {
       @SuppressWarnings("unchecked") List<URL> urls = (List<URL>)aClass.getMethod("getUrls").invoke(classLoader);
       return urls;
     }
-    catch (IllegalAccessException ignored) {
-    }
-    catch (InvocationTargetException ignored) {
-    }
-    catch (NoSuchMethodException ignored) {
+    catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) {
     }
 
     if (classLoader instanceof URLClassLoader) {
@@ -442,24 +430,14 @@ public class PluginManagerCore {
     }
     */
     final Comparator<PluginId> idComparator = builder.comparator();
-    return new Comparator<IdeaPluginDescriptor>() {
-      @Override
-      public int compare(IdeaPluginDescriptor o1, IdeaPluginDescriptor o2) {
-        return idComparator.compare(o1.getPluginId(), o2.getPluginId());
-      }
-    };
+    return (o1, o2) -> idComparator.compare(o1.getPluginId(), o2.getPluginId());
   }
 
   private static Graph<PluginId> createPluginIdGraph(final Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap) {
     final List<PluginId> ids = new ArrayList<>(idToDescriptorMap.keySet());
     // this magic ensures that the dependent plugins always follow their dependencies in lexicographic order
     // needed to make sure that extensions are always in the same order
-    Collections.sort(ids, new Comparator<PluginId>() {
-      @Override
-      public int compare(PluginId o1, PluginId o2) {
-        return o2.getIdString().compareTo(o1.getIdString());
-      }
-    });
+    Collections.sort(ids, (o1, o2) -> o2.getIdString().compareTo(o1.getIdString()));
     return GraphGenerator.create(CachingSemiGraph.create(new GraphGenerator.SemiGraph<PluginId>() {
       @Override
       public Collection<PluginId> getNodes() {
@@ -479,15 +457,6 @@ public class PluginManagerCore {
         return plugins.iterator();
       }
     }));
-  }
-
-  static IdeaPluginDescriptorImpl[] findCorePlugin(IdeaPluginDescriptorImpl[] pluginDescriptors) {
-    for (IdeaPluginDescriptorImpl descriptor : pluginDescriptors) {
-      if (CORE_PLUGIN_ID.equals(descriptor.getPluginId().getIdString())) {
-        return new IdeaPluginDescriptorImpl[]{descriptor};
-      }
-    }
-    return IdeaPluginDescriptorImpl.EMPTY_ARRAY;
   }
 
   @Nullable
@@ -569,15 +538,12 @@ public class PluginManagerCore {
         if (files == null || files.length == 0) {
           return null;
         }
-        Arrays.sort(files, new Comparator<File>() {
-          @Override
-          public int compare(@NotNull File o1, @NotNull File o2) {
-            if (o2.getName().startsWith(file.getName())) return Integer.MAX_VALUE;
-            if (o1.getName().startsWith(file.getName())) return -Integer.MAX_VALUE;
-            if (o2.getName().startsWith("resources")) return -Integer.MAX_VALUE;
-            if (o1.getName().startsWith("resources")) return Integer.MAX_VALUE;
-            return 0;
-          }
+        Arrays.sort(files, (o1, o2) -> {
+          if (o2.getName().startsWith(file.getName())) return Integer.MAX_VALUE;
+          if (o1.getName().startsWith(file.getName())) return -Integer.MAX_VALUE;
+          if (o2.getName().startsWith("resources")) return -Integer.MAX_VALUE;
+          if (o1.getName().startsWith("resources")) return Integer.MAX_VALUE;
+          return 0;
         });
         for (final File f : files) {
           if (FileUtil.isJarOrZip(f)) {
@@ -690,40 +656,32 @@ public class PluginManagerCore {
     final LinkedHashSet<String> faultyDescriptors = new LinkedHashSet<>();
     for (final Iterator<? extends IdeaPluginDescriptor> it = result.iterator(); it.hasNext(); ) {
       final IdeaPluginDescriptor pluginDescriptor = it.next();
-      checkDependants(pluginDescriptor, new Function<PluginId, IdeaPluginDescriptor>() {
-        @Override
-        public IdeaPluginDescriptor fun(final PluginId pluginId) {
-          return idToDescriptorMap.get(pluginId);
-        }
-      }, new Condition<PluginId>() {
-        @Override
-        public boolean value(final PluginId pluginId) {
-          if (!idToDescriptorMap.containsKey(pluginId)) {
-            pluginDescriptor.setEnabled(false);
-            faultyDescriptors.add(pluginId.getIdString());
-            disabledPluginIds.add(pluginDescriptor.getPluginId().getIdString());
-            message.append("<br>");
-            final String name = pluginDescriptor.getName();
-            final IdeaPluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
-            String pluginName;
-            if (descriptor == null) {
-              pluginName = pluginId.getIdString();
-              if (disabledPluginNames.containsKey(pluginName)) {
-                pluginName = disabledPluginNames.get(pluginName);
-              }
+      checkDependants(pluginDescriptor, idToDescriptorMap::get, pluginId -> {
+        if (!idToDescriptorMap.containsKey(pluginId)) {
+          pluginDescriptor.setEnabled(false);
+          faultyDescriptors.add(pluginId.getIdString());
+          disabledPluginIds.add(pluginDescriptor.getPluginId().getIdString());
+          message.append("<br>");
+          final String name = pluginDescriptor.getName();
+          final IdeaPluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
+          String pluginName;
+          if (descriptor == null) {
+            pluginName = pluginId.getIdString();
+            if (disabledPluginNames.containsKey(pluginName)) {
+              pluginName = disabledPluginNames.get(pluginName);
             }
-            else {
-              pluginName = descriptor.getName();
-            }
-
-            message.append(getDisabledPlugins().contains(pluginId.getIdString())
-                           ? IdeBundle.message("error.required.plugin.disabled", name, pluginName)
-                           : IdeBundle.message("error.required.plugin.not.installed", name, pluginName));
-            it.remove();
-            return false;
           }
-          return true;
+          else {
+            pluginName = descriptor.getName();
+          }
+
+          message.append(getDisabledPlugins().contains(pluginId.getIdString())
+                         ? IdeBundle.message("error.required.plugin.disabled", name, pluginName)
+                         : IdeBundle.message("error.required.plugin.not.installed", name, pluginName));
+          it.remove();
+          return false;
         }
+        return true;
       });
     }
     if (!disabledPluginIds.isEmpty()) {
@@ -906,7 +864,7 @@ public class PluginManagerCore {
       IdeaPluginDescriptorImpl descriptorImpl = (IdeaPluginDescriptorImpl)descriptor;
       Boolean skipped = descriptorImpl.getSkipped();
       if (skipped != null) {
-        return skipped.booleanValue();
+        return skipped;
       }
       boolean result = shouldSkipPlugin(descriptor, ourPlugins);
       descriptorImpl.setSkipped(result);
@@ -997,12 +955,7 @@ public class PluginManagerCore {
 
     final Comparator<PluginId> idComparator = builder.comparator();
     // sort descriptors according to plugin dependencies
-    Collections.sort(result, new Comparator<IdeaPluginDescriptor>() {
-      @Override
-      public int compare(@NotNull IdeaPluginDescriptor o1, @NotNull IdeaPluginDescriptor o2) {
-        return idComparator.compare(o1.getPluginId(), o2.getPluginId());
-      }
-    });
+    Collections.sort(result, (o1, o2) -> idComparator.compare(o1.getPluginId(), o2.getPluginId()));
 
     for (int i = 0; i < result.size(); i++) {
       ourId2Index.put(result.get(i).getPluginId(), i);
