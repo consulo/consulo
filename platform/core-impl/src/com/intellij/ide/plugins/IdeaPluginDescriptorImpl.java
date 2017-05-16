@@ -36,6 +36,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.StringInterner;
 import com.intellij.util.xmlb.JDOMXIncluder;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.Platform;
 import gnu.trove.THashMap;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -79,15 +80,18 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   private PluginId[] myOptionalDependencies = PluginId.EMPTY_ARRAY;
   private Map<PluginId, String> myOptionalConfigs;
   private Map<PluginId, IdeaPluginDescriptorImpl> myOptionalDescriptors;
-  @Nullable private List<Element> myActionsElements;
+  @Nullable
+  private List<Element> myActionsElements;
   private ComponentConfig[] myAppComponents = ComponentConfig.EMPTY_ARRAY;
   private ComponentConfig[] myProjectComponents = ComponentConfig.EMPTY_ARRAY;
   private ComponentConfig[] myModuleComponents = ComponentConfig.EMPTY_ARRAY;
   private boolean myDeleted = false;
   private ClassLoader myLoader;
   private HelpSetPath[] myHelpSets;
-  @Nullable private MultiMap<String, Element> myExtensions;
-  @Nullable private MultiMap<String, Element> myExtensionsPoints;
+  @Nullable
+  private MultiMap<String, Element> myExtensions;
+  @Nullable
+  private MultiMap<String, Element> myExtensionsPoints;
   private String myDescriptionChildText;
   private String myDownloadCounter;
   private long myDate;
@@ -139,6 +143,10 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     myPath = path;
   }
 
+  public void setName(String name) {
+    myName = name;
+  }
+
   public void readExternal(@NotNull Document document, @NotNull URL url) throws InvalidDataException, FileNotFoundException {
     Application application = ApplicationManager.getApplication();
     readExternal(document, url, application != null && application.isUnitTestMode());
@@ -166,7 +174,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
 
   private void readExternal(@NotNull Element element) {
     final PluginBean pluginBean = XmlSerializer.deserialize(element, PluginBean.class);
-
+    assert pluginBean != null;
     url = pluginBean.url;
     myName = pluginBean.name;
     String idString = pluginBean.id;
@@ -251,16 +259,16 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
       myExtensionsPoints = MultiMap.createSmart();
       for (Element extensionPoint : extensionPoints) {
         String areaId = StringUtil.notNullize(extensionPoint.getAttributeValue(ExtensionsAreaImpl.ATTRIBUTE_AREA), ExtensionAreas.APPLICATION);
-        if("CONSULO_PROJECT".equals(areaId)) {
+        if ("CONSULO_PROJECT".equals(areaId)) {
           LOG.warn("Deprecated areaId '" + areaId + "' for extensionPoint: " + buildEpId(extensionPoint));
           areaId = ExtensionAreas.PROJECT;
         }
-        else if("CONSULO_MODULE".equals(areaId)) {
+        else if ("CONSULO_MODULE".equals(areaId)) {
           LOG.warn("Deprecated areaId '" + areaId + "' for extensionPoint: " + buildEpId(extensionPoint));
           areaId = ExtensionAreas.MODULE;
         }
 
-        if(!ArrayUtil.contains(areaId, ExtensionAreas.ourAllowedAres)) {
+        if (!ArrayUtil.contains(areaId, ExtensionAreas.ourAllowedAres)) {
           LOG.error("Bad areaId for extensionPoint: " + buildEpId(extensionPoint));
           continue;
         }
@@ -383,8 +391,12 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   @SuppressWarnings({"HardCodedStringLiteral"})
   @NotNull
   public List<File> getClassPath() {
+    if (getPluginId().equals(Platform.get().getPluginId())) {
+      return Collections.emptyList();
+    }
+
     // special hack for unit test loader
-    if(PluginManagerCore.UNIT_TEST_PLUGIN.equals(getPluginId())) {
+    if (PluginManagerCore.UNIT_TEST_PLUGIN.equals(getPluginId())) {
       final List<File> result = new ArrayList<>();
       String testClasspath = System.getProperty("consulo.test.classpath");
       if (!StringUtil.isEmpty(testClasspath)) {

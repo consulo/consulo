@@ -40,6 +40,7 @@ import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphGenerator;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.xmlb.XmlSerializationException;
+import consulo.Platform;
 import consulo.application.ApplicationProperties;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
@@ -741,6 +742,9 @@ public class PluginManagerCore {
     loadDescriptors(PathManager.getPreInstalledPluginsPath(), result, progress, pluginsCount);
     loadDescriptorsFromProperty(result);
 
+    // insert dummy platform code
+    insertPlatformPlugin(result);
+
     // insert consulo unit dummy plugin
     if (Boolean.getBoolean(ApplicationProperties.CONSULO_IN_UNIT_TEST)) {
       IdeaPluginDescriptorImpl pluginDescriptor = new IdeaPluginDescriptorImpl(new File(PathManager.getPreInstalledPluginsPath(), "unittest"));
@@ -758,6 +762,18 @@ public class PluginManagerCore {
 
     Arrays.sort(pluginDescriptors, getPluginDescriptorComparator(idToDescriptorMap));
     return pluginDescriptors;
+  }
+
+  private static void insertPlatformPlugin(List<IdeaPluginDescriptorImpl> result) {
+    Platform platform = Platform.get();
+
+    PluginId pluginId = platform.getPluginId();
+
+    IdeaPluginDescriptorImpl pluginDescriptor = new IdeaPluginDescriptorImpl(new File(PathManager.getPreInstalledPluginsPath(), pluginId.getIdString()));
+    pluginDescriptor.setName(StringUtil.capitalize(platform.name().toLowerCase(Locale.US)));
+    pluginDescriptor.setId(pluginId);
+
+    result.add(pluginDescriptor);
   }
 
   static void mergeOptionalConfigs(Map<PluginId, IdeaPluginDescriptorImpl> descriptors) {
