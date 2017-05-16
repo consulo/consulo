@@ -68,6 +68,15 @@ public class SystemProperties {
   }
 
   /**
+   * Returns the value of the os.version system property.
+   *
+   * @return the property value
+   */
+  public static String getOsVersion() {
+    return System.getProperty("os.version");
+  }
+
+  /**
    * Returns the value of the java.version system property. If you need to compare java version with some value use
    * {@link com.intellij.openapi.util.SystemInfo#isJavaVersionAtLeast(String)} instead
    *

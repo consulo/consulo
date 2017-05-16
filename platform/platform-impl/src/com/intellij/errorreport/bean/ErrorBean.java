@@ -16,18 +16,16 @@
 package com.intellij.errorreport.bean;
 
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.SystemProperties;
 import consulo.ide.updateSettings.UpdateChannel;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.*;
 
 @SuppressWarnings("unused")
@@ -60,8 +58,10 @@ public class ErrorBean {
   }
 
   private final String osName = SystemProperties.getOsName();
+  private final String osVersion = SystemProperties.getOsVersion();
   private final String javaVersion = SystemProperties.getJavaVersion();
   private final String javaVmVendor = SystemProperties.getJavaVmVendor();
+  private final String locale = Locale.getDefault().toString();
 
   private final String appName = ApplicationNamesInfo.getInstance().getFullProductName();
   private final UpdateChannel appUpdateChannel;
@@ -69,7 +69,6 @@ public class ErrorBean {
   private final String appVersionMajor;
   private final String appVersionMinor;
   private final String appBuildDate;
-  private final boolean appIsInternal;
 
   private String lastAction;
   private String previousException;
@@ -83,7 +82,6 @@ public class ErrorBean {
   private List<AttachmentBean> attachments = Collections.emptyList();
 
   public ErrorBean(Throwable throwable, String lastAction) {
-    appIsInternal = ApplicationManager.getApplication().isInternal();
     appUpdateChannel = consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel();
 
     ApplicationInfoEx appInfo = (ApplicationInfoEx)ApplicationInfo.getInstance();
@@ -94,11 +92,7 @@ public class ErrorBean {
 
     if (throwable != null) {
       message = throwable.getMessage();
-
-      ByteArrayOutputStream stream = new ByteArrayOutputStream();
-      //noinspection IOResourceOpenedButNotSafelyClosed
-      throwable.printStackTrace(new PrintStream(stream, true));
-      stackTrace = stream.toString();
+      stackTrace = ExceptionUtil.getThrowableText(throwable);
     }
     this.lastAction = lastAction;
   }
