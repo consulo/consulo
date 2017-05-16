@@ -49,8 +49,9 @@ public class UIWebSocketHandler {
   }
 
   private static UIClientEvent decode(String data) {
+    ClassLoader classLoader = UIWebSocketHandler.class.getClassLoader();
     final ServerSerializationStreamReader streamReader =
-            new ServerSerializationStreamReader(Thread.currentThread().getContextClassLoader(), new CustomSerializationPolicyProvider());
+            new ServerSerializationStreamReader(classLoader, new CustomSerializationPolicyProvider(classLoader));
     try {
       streamReader.prepareToRead(data);
       return (UIClientEvent)streamReader.readObject();

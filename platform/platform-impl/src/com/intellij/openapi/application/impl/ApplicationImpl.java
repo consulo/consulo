@@ -72,7 +72,6 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
-import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
 import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.NonNls;
@@ -198,7 +197,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     mySplash = splash;
 
     myIsInternal = isInternal;
-    myTestModeFlag = isUnitTestMode || Boolean.getBoolean(ApplicationProperties.CONSULO_AS_WEB_APP);
+    myTestModeFlag = isUnitTestMode;
     myHeadlessMode = isHeadless;
     myCommandLineMode = isCommandLine;
 

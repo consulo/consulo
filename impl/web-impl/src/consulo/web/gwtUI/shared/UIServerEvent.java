@@ -16,7 +16,7 @@
 package consulo.web.gwtUI.shared;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ import java.util.List;
 public class UIServerEvent implements Serializable {
   private UIServerEventType myType;
   private String myId;
-  private ArrayList<UIComponent> myComponents;
+  private LinkedList<UIComponent> myComponents;
 
   public void setType(UIServerEventType type) {
     myType = type;
@@ -49,6 +49,6 @@ public class UIServerEvent implements Serializable {
   }
 
   public void setComponents(List<UIComponent> components) {
-    myComponents = new ArrayList<UIComponent>(components);
+    myComponents = new LinkedList<>(components);
   }
 }

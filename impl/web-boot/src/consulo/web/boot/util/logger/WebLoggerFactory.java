@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.shared;
+package consulo.web.boot.util.logger;
 
-
-import com.google.gwt.user.client.rpc.IsSerializable;
-
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.intellij.openapi.diagnostic.Logger;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 16-May-17
  */
-public class UIVariablesOwner implements Serializable, IsSerializable {
-  private LinkedHashMap<String, Serializable> myVariables;
-
-  public Map<String, Serializable> getVariables() {
-    return myVariables;
-  }
-
-  public void setVariables(Map<String, Serializable> map) {
-    myVariables = new LinkedHashMap<>(map);
+public class WebLoggerFactory implements Logger.Factory {
+  @Override
+  public Logger getLoggerInstance(String category) {
+    return new WebLogger();
   }
 }

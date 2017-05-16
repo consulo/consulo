@@ -16,6 +16,7 @@
 package consulo.web.gwt.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.gwt.user.server.rpc.SerializationPolicy;
 import com.intellij.codeInsight.daemon.impl.*;
 import com.intellij.codeInsight.navigation.CtrlMouseHandler;
 import com.intellij.ide.highlighter.HighlighterFactory;
@@ -53,13 +54,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.*;
 import com.intellij.util.BitUtil;
-import consulo.web.AppInit;
+import consulo.annotations.RequiredReadAction;
 import consulo.web.gwt.shared.GwtTransportService;
 import consulo.web.gwt.shared.transport.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -70,6 +72,7 @@ import java.util.List;
  * @author VISTALL
  * @since 15-May-16
  */
+@WebServlet(urlPatterns = "/consulo/transport")
 public class GwtTransportServiceImpl extends RemoteServiceServlet implements GwtTransportService {
 
   private Project getProject() {
@@ -98,9 +101,13 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   }
 
   @Override
-  public boolean getApplicationStatus() {
-    AppInit.initApplication();
+  protected SerializationPolicy doGetSerializationPolicy(HttpServletRequest request, String moduleBaseURL, String strongName) {
 
+    return super.doGetSerializationPolicy(request, moduleBaseURL, strongName);
+  }
+
+  @Override
+  public boolean getApplicationStatus() {
     Application application = ApplicationManager.getApplication();
     return application instanceof ApplicationEx && ((ApplicationEx)application).isLoaded();
   }

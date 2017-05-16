@@ -15,16 +15,63 @@
  */
 package consulo.web.servlet.ui;
 
+import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.SerializationPolicy;
+import com.google.gwt.user.server.rpc.SerializationPolicyLoader;
 import com.google.gwt.user.server.rpc.SerializationPolicyProvider;
+
+import java.io.InputStream;
+import java.util.Set;
 
 /**
  * @author VISTALL
  * @since 15-Jun-16
  */
 public class CustomSerializationPolicyProvider implements SerializationPolicyProvider {
+  private ClassLoader myClassLoader;
+
+  public CustomSerializationPolicyProvider(ClassLoader classLoader) {
+    myClassLoader = classLoader;
+  }
+
   @Override
   public SerializationPolicy getSerializationPolicy(String moduleBaseURL, String serializationPolicyStrongName) {
-    return new SimpleSerializationPolicy();
+    try {
+      String rpc = "/webResources/consulo.web.gwtUI.impl/" + serializationPolicyStrongName + ".gwt.rpc";
+
+      InputStream resourceAsStream = myClassLoader.getResourceAsStream(rpc);
+      SerializationPolicy serializationPolicy = SerializationPolicyLoader.loadFromStream(resourceAsStream, null);
+
+      return new SerializationPolicy() {
+        @Override
+        public boolean shouldDeserializeFields(Class<?> clazz) {
+          return serializationPolicy.shouldDeserializeFields(clazz);
+        }
+
+        @Override
+        public Set<String> getClientFieldNamesForEnhancedClass(Class<?> clazz) {
+          return serializationPolicy.getClientFieldNamesForEnhancedClass(clazz);
+        }
+
+        @Override
+        public boolean shouldSerializeFields(Class<?> clazz) {
+          return serializationPolicy.shouldSerializeFields(clazz);
+        }
+
+        @Override
+        public void validateDeserialize(Class<?> clazz) throws SerializationException {
+
+        }
+
+        @Override
+        public void validateSerialize(Class<?> clazz) throws SerializationException {
+
+        }
+      };
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 }

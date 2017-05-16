@@ -124,7 +124,19 @@ class _UIInternalsImpl extends _UIInternals {
 
   @Override
   ValueGroup<Boolean> _ValueGroups_boolGroup() {
-    throw new UnsupportedOperationException();
+    return new ValueGroup<Boolean>() {
+      @RequiredUIAccess
+      @Override
+      public void clearValues() {
+
+      }
+
+      @NotNull
+      @Override
+      public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
+        return this;
+      }
+    };
   }
 
   @Override

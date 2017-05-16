@@ -17,22 +17,18 @@ package consulo.web.servlet;
 
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode;
-import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
-import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.KeyWithDefaultValue;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.*;
 import consulo.ui.internal.WGwtTreeImpl;
-import consulo.web.AppInit;
 import consulo.web.servlet.ui.UIBuilder;
 import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
@@ -84,27 +80,20 @@ public class AppUIBuilder extends UIBuilder {
     }
   };
 
-  @WebServlet("/app")
+  @WebServlet(urlPatterns = "/app")
   public static class Servlet extends UIServlet {
     public Servlet() {
       super(AppUIBuilder.class);
     }
   }
 
+  @RequiredUIAccess
   @Override
   protected void build(@NotNull final Window window) {
     ApplicationEx application = ApplicationManagerEx.getApplicationEx();
     if (application == null || !application.isLoaded()) {
-      AppInit.initApplication();
-
-      while (true) {
-        application = ApplicationManagerEx.getApplicationEx();
-        if (application != null && application.isLoaded()) {
-          break;
-        }
-
-        TimeoutUtil.sleep(500L);
-      }
+      window.setContent(Components.label("Not loaded"));
+      return;
     }
 
     final Project project = UIUtil.invokeAndWaitIfNeeded(new Computable<Project>() {
@@ -120,6 +109,7 @@ public class AppUIBuilder extends UIBuilder {
     buildContent(window, project);
   }
 
+  @RequiredUIAccess
   private void buildContent(@NotNull Window window, @NotNull Project project) {
     final Menu file = MenuItems.menu("File");
     file.add(MenuItems.menu("New").add(MenuItems.item("Class")));
@@ -164,29 +154,22 @@ public class AppUIBuilder extends UIBuilder {
     if (fileByPath == null) {
       return null;
     }
-    try {
-      final Project project;
-      ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
-      Project[] openProjects = projectManager.getOpenProjects();
-      for (Project temp : openProjects) {
-        if (fileByPath.equals(temp.getBaseDir())) {
-          return temp;
-        }
+    ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
+    Project[] openProjects = projectManager.getOpenProjects();
+    for (Project temp : openProjects) {
+      if (fileByPath.equals(temp.getBaseDir())) {
+        return temp;
       }
+    }
 
-      project = projectManager.loadProject(path);
-      if (project == null) {
-        return null;
+    UIUtil.invokeLaterIfNeeded(() -> {
+      try {
+         projectManager.loadAndOpenProject(path);
       }
-      projectManager.openTestProject(project);
-      final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
-      startupManager.runStartupActivities();
-      startupManager.startCacheUpdate();
-      return project;
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
+      catch (Exception e) {
+        e.printStackTrace();
+      }
+    });
     return null;
   }
 }

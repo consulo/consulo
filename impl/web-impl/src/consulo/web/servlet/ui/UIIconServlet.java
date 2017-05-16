@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +36,7 @@ import java.net.URL;
  * @author VISTALL
  * @since 13-Jun-16
  */
+@WebServlet(urlPatterns = "/icon/")
 public class UIIconServlet extends HttpServlet {
   private static ConcurrentFactoryMap<URL, byte[]> ourCache = new ConcurrentFactoryMap<URL, byte[]>() {
     @Nullable

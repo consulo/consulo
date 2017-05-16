@@ -24,8 +24,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
@@ -120,80 +118,6 @@ public class StartupUtil {
     appStarter.consume(commandLineArgs);
   }
 
-  private synchronized static boolean checkSystemFolders() {
-    String configPath = PathManager.getConfigPath();
-    PathManager.ensureConfigFolderExists();
-    if (!new File(configPath).isDirectory()) {
-      String message = "Config path '" +
-                       configPath +
-                       "' is invalid.\n" +
-                       "If you have modified the '" +
-                       PathManager.PROPERTY_CONFIG_PATH +
-                       "' property please make sure it is correct,\n" +
-                       "otherwise please re-install the IDE.";
-      Main.showMessage("Invalid Config Path", message, true);
-      return false;
-    }
-
-    String systemPath = PathManager.getSystemPath();
-    if (!new File(systemPath).isDirectory()) {
-      String message = "System path '" +
-                       systemPath +
-                       "' is invalid.\n" +
-                       "If you have modified the '" +
-                       PathManager.PROPERTY_SYSTEM_PATH +
-                       "' property please make sure it is correct,\n" +
-                       "otherwise please re-install the IDE.";
-      Main.showMessage("Invalid System Path", message, true);
-      return false;
-    }
-
-    File ideTempDir = new File(PathManager.getTempPath());
-    String tempInaccessible = null;
-
-    if (!ideTempDir.isDirectory() && !ideTempDir.mkdirs()) {
-      tempInaccessible = "unable to create the directory";
-    }
-    else {
-      try {
-        File ideTempFile = new File(ideTempDir, "idea_tmp_check.sh");
-        FileUtil.writeToFile(ideTempFile, "#!/bin/sh\nexit 0");
-
-        if (SystemInfo.isWindows || SystemInfo.isMac) {
-          tempInaccessible = null;
-        }
-        else if (!ideTempFile.setExecutable(true, true)) {
-          tempInaccessible = "cannot set executable permission";
-        }
-        else if (new ProcessBuilder(ideTempFile.getAbsolutePath()).start().waitFor() != 0) {
-          tempInaccessible = "cannot execute test script";
-        }
-
-        if (!FileUtilRt.delete(ideTempFile)) {
-          ideTempFile.deleteOnExit();
-        }
-      }
-      catch (Exception e) {
-        tempInaccessible = e.getClass().getSimpleName() + ": " + e.getMessage();
-      }
-    }
-
-    if (tempInaccessible != null) {
-      String message = "Temp directory '" +
-                       ideTempDir +
-                       "' is inaccessible.\n" +
-                       "If you have modified the '" +
-                       PathManager.PROPERTY_SYSTEM_PATH +
-                       "' property please make sure it is correct,\n" +
-                       "otherwise please re-install the IDE.\n\nDetails: " +
-                       tempInaccessible;
-      Main.showMessage("Invalid System Path", message, true);
-      return false;
-    }
-
-    return true;
-  }
-
   private enum ActivationResult {
     STARTED,
     ACTIVATED,
@@ -252,7 +176,7 @@ public class StartupUtil {
 
   private static final String JAVA_IO_TEMP_DIR = "java.io.tmpdir";
 
-  private static void loadSystemLibraries(final Logger log) {
+  public static void loadSystemLibraries(final Logger log) {
     // load JNA and Snappy in own temp directory - to avoid collisions and work around no-exec /tmp
     File ideTempDir = new File(PathManager.getTempPath());
     if (!(ideTempDir.mkdirs() || ideTempDir.exists())) {

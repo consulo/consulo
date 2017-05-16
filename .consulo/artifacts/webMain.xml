@@ -2,123 +2,22 @@
   <artifact type="exploded-war" name="webMain">
     <output-path>$PROJECT_DIR$/out/artifacts/webMain</output-path>
     <root id="root">
-      <element id="java-web-resource" name="web-impl" />
+      <element id="directory" name="platform">
+        <element id="artifact" artifact-name="distMain-web" />
+      </element>
+      <element id="java-web-resource" name="web-boot" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="lib">
-          <element id="zip-archive" name="consulo-web.jar">
-            <element id="module-output" name="web-impl" />
-          </element>
-          <element id="dir-copy" path="$PROJECT_DIR$/lib" />
-          <element id="zip-archive" name="annotations.jar">
-            <element id="module-output" name="annotations" />
-          </element>
-          <element id="zip-archive" name="extensions.jar">
-            <element id="module-output" name="extensions" />
-          </element>
-          <element id="zip-archive" name="consulo.jar">
-            <element id="module-output" name="editor-ui-api" />
-            <element id="module-output" name="editor-ui-ex" />
-            <element id="module-output" name="external-system-api" />
-            <element id="module-output" name="external-system-impl" />
-            <element id="module-output" name="coverage-impl" />
-            <element id="module-output" name="bootstrap" />
-            <element id="module-output" name="boot" />
-            <element id="module-output" name="forms_rt" />
-            <element id="module-output" name="graph-api" />
-            <element id="module-output" name="graph-impl" />
-            <element id="module-output" name="indexing-api" />
-            <element id="module-output" name="indexing-impl" />
-            <element id="module-output" name="projectImportModel" />
-            <element id="module-output" name="projectModel-api" />
-            <element id="module-output" name="remote-servers-impl" />
-            <element id="module-output" name="slf4j-bind" />
-            <element id="module-output" name="smRunner" />
-            <element id="module-output" name="projectModel-impl" />
-            <element id="module-output" name="remote-servers-api" />
-            <element id="module-output" name="testFramework" />
-            <element id="module-output" name="testRunner" />
-            <element id="module-output" name="usageView" />
-          </element>
-          <element id="zip-archive" name="resources.jar">
-            <element id="module-production-resource-output" name="external-system-api" />
-            <element id="module-production-resource-output" name="external-system-impl" />
-            <element id="module-production-resource-output" name="dvcs-impl" />
-            <element id="module-production-resource-output" name="analysis-api" />
-            <element id="module-production-resource-output" name="icons" />
-            <element id="module-production-resource-output" name="platform-impl" />
-            <element id="module-production-resource-output" name="platform-resources" />
-            <element id="module-production-resource-output" name="platform-resources-en" />
-            <element id="module-production-resource-output" name="remote-servers-impl" />
-            <element id="module-production-resource-output" name="vcs-log-impl" />
-            <element id="module-production-resource-output" name="resources" />
-            <element id="module-production-resource-output" name="resources-en" />
-          </element>
-          <element id="zip-archive" name="consulo-analysis.jar">
-            <element id="module-output" name="analysis-api" />
-            <element id="module-output" name="analysis-impl" />
-          </element>
-          <element id="zip-archive" name="consulo-compiler.jar">
-            <element id="module-output" name="compiler-api" />
-            <element id="module-output" name="compiler-impl" />
-            <element id="module-output" name="compiler-bridge-impl" />
-            <element id="module-output" name="compiler-server-impl" />
-          </element>
-          <element id="zip-archive" name="consulo-xdebugger.jar">
-            <element id="module-output" name="xdebugger-api" />
-            <element id="module-output" name="xdebugger-impl" />
-          </element>
-          <element id="zip-archive" name="consulo-vcs.jar">
-            <element id="module-output" name="vcs-log-graph-impl" />
-            <element id="module-output" name="vcs-log-impl" />
-            <element id="module-output" name="vcs-log-graph-api" />
-            <element id="module-output" name="vcs-log-api" />
-            <element id="module-output" name="vcs-impl" />
-            <element id="module-output" name="vcs-api-core" />
-            <element id="module-output" name="vcs-api" />
-            <element id="module-output" name="dvcs-api" />
-            <element id="module-output" name="dvcs-impl" />
-            <element id="module-output" name="diff-api" />
-            <element id="module-output" name="diff-impl" />
-            <element id="module-output" name="lvcs-impl" />
-            <element id="module-output" name="lvcs-api" />
-          </element>
-          <element id="zip-archive" name="consulo-core.jar">
-            <element id="module-output" name="core-api" />
-            <element id="module-output" name="core-impl" />
-          </element>
-          <element id="zip-archive" name="consulo-platform.jar">
-            <element id="module-output" name="lang-api" />
-            <element id="module-output" name="lang-impl" />
-            <element id="module-output" name="platform-impl" />
-            <element id="module-output" name="platform-main" />
-            <element id="module-output" name="platform-api" />
-          </element>
           <element id="zip-archive" name="consulo-util.jar">
             <element id="module-output" name="util" />
             <element id="module-output" name="util-rt" />
           </element>
-          <element id="directory" name="plugins">
-            <element id="directory" name="core">
-              <element id="directory" name="lib">
-                <element id="zip-archive" name="core.jar">
-                  <element id="module-production-resource-output" name="core" />
-                </element>
-              </element>
-            </element>
-            <element id="dir-copy" path="$PROJECT_DIR$/impl/web-impl/dep" />
-          </element>
-          <element id="file-copy" path="$PROJECT_DIR$/impl/web-impl/lib/gwt-servlet-deps.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/impl/web-impl/lib/gwt-servlet.jar" />
-          <element id="zip-archive" name="consulo-ui.jar">
-            <element id="module-output" name="ui-api" />
+          <element id="library" level="project" name="Trove4j" />
+          <element id="zip-archive" name="consulo-web-boot.jar">
+            <element id="module-output" name="web-boot" />
           </element>
         </element>
       </element>
-      <element id="directory" name="icons">
-        <element id="module-production-resource-output" name="icons" />
-        <element id="dir-copy" path="$PROJECT_DIR$/impl/web-impl/gwt-out" />
-      </element>
-      <element id="dir-copy" path="$PROJECT_DIR$/impl/web-impl/gwt-out" />
     </root>
   </artifact>
 </component>

@@ -1009,7 +1009,6 @@
             <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-out" />
             <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-unitCache" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-            <content-folder type="WEB_RESOURCES" url="file://$MODULE_DIR$/webapp" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="javaee-google-gwt" />
@@ -1030,6 +1029,13 @@
               </sources>
               <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
               <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" type="sources" />
+            </library>
+          </orderEntry>
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/../web-boot/lib/javax.servlet-api-3.1.0.jar!/" />
+              </binaries>
             </library>
           </orderEntry>
         </module-layer>
@@ -1090,12 +1096,25 @@
       </module>
       <module name="impl/web-boot" dirurl="file://$PROJECT_DIR$/impl/web-boot" current-layer="Default">
         <module-layer name="Default">
-          <extension id="java" sdk-name="1.8" language-level-name="JDK_1_8" bytecode-version="1.7" />
+          <extension id="java" sdk-name="1.8" language-level-name="JDK_1_8" bytecode-version="1.8" />
+          <extension id="java-web" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="WEB_RESOURCES" url="file://$MODULE_DIR$/webapp" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="file://$MODULE_DIR$/lib" />
+              </binaries>
+              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
+            </library>
+          </orderEntry>
+          <orderEntry type="module" module-name="util" />
+          <orderEntry type="library" name="Log4J" level="project" />
+          <orderEntry type="library" name="Trove4j" level="project" />
         </module-layer>
       </module>
     </modules>
