@@ -76,7 +76,7 @@ public class PluginManagerCore {
   @NonNls
   public static final String PLUGIN_XML = "plugin.xml";
   public static final float PLUGINS_PROGRESS_MAX_VALUE = 0.3f;
-  static final Map<PluginId, Integer> ourId2Index = new THashMap<PluginId, Integer>();
+  static final Map<PluginId, Integer> ourId2Index = new THashMap<>();
   static final PluginClassCache ourPluginClasses = new PluginClassCache();
 
   static final String DISABLE = "disable";
@@ -124,7 +124,7 @@ public class PluginManagerCore {
   @NotNull
   public static List<String> getDisabledPlugins() {
     if (ourDisabledPlugins == null) {
-      ourDisabledPlugins = new ArrayList<String>();
+      ourDisabledPlugins = new ArrayList<>();
       if (System.getProperty("idea.ignore.disabled.plugins") == null && !isUnitTestMode()) {
         loadDisabledPlugins(PathManager.getConfigPath(), ourDisabledPlugins);
       }
@@ -194,7 +194,7 @@ public class PluginManagerCore {
   public static void checkDependants(final IdeaPluginDescriptor pluginDescriptor,
                                      final Function<PluginId, IdeaPluginDescriptor> pluginId2Descriptor,
                                      final Condition<PluginId> check) {
-    checkDependants(pluginDescriptor, pluginId2Descriptor, check, new HashSet<PluginId>());
+    checkDependants(pluginDescriptor, pluginId2Descriptor, check, new HashSet<>());
   }
 
   private static boolean checkDependants(final IdeaPluginDescriptor pluginDescriptor,
@@ -203,7 +203,7 @@ public class PluginManagerCore {
                                          final Set<PluginId> processed) {
     processed.add(pluginDescriptor.getPluginId());
     final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
-    final Set<PluginId> optionalDependencies = new HashSet<PluginId>(Arrays.asList(pluginDescriptor.getOptionalDependentPluginIds()));
+    final Set<PluginId> optionalDependencies = new HashSet<>(Arrays.asList(pluginDescriptor.getOptionalDependentPluginIds()));
     for (final PluginId dependentPluginId : dependentPluginIds) {
       if (processed.contains(dependentPluginId)) continue;
 
@@ -308,7 +308,7 @@ public class PluginManagerCore {
 
     //if (classPath.length == 0) return null;
     try {
-      final List<URL> urls = new ArrayList<URL>(classPath.length);
+      final List<URL> urls = new ArrayList<>(classPath.length);
       for (File aClassPath : classPath) {
         final File file = aClassPath.getCanonicalFile(); // it is critical not to have "." and ".." in classpath elements
         urls.add(file.toURI().toURL());
@@ -334,9 +334,9 @@ public class PluginManagerCore {
   }
 
   static void logPlugins() {
-    List<String> loadedBundled = new ArrayList<String>();
-    List<String> disabled = new ArrayList<String>();
-    List<String> loadedCustom = new ArrayList<String>();
+    List<String> loadedBundled = new ArrayList<>();
+    List<String> disabled = new ArrayList<>();
+    List<String> loadedCustom = new ArrayList<>();
 
     for (IdeaPluginDescriptor descriptor : ourPlugins) {
       final String version = descriptor.getVersion();
@@ -368,7 +368,7 @@ public class PluginManagerCore {
   }
 
   static ClassLoader[] getParentLoaders(Map<PluginId, ? extends IdeaPluginDescriptor> idToDescriptorMap, PluginId[] pluginIds) {
-    final List<ClassLoader> classLoaders = new ArrayList<ClassLoader>();
+    final List<ClassLoader> classLoaders = new ArrayList<>();
     for (final PluginId id : pluginIds) {
       IdeaPluginDescriptor pluginDescriptor = idToDescriptorMap.get(id);
       if (pluginDescriptor == null) {
@@ -419,7 +419,7 @@ public class PluginManagerCore {
   static void prepareLoadingPluginsErrorMessage(final List<String> problems) {
     if (!ApplicationManager.getApplication().isHeadlessEnvironment() && !ApplicationManager.getApplication().isUnitTestMode()) {
       if (ourPluginErrors == null) {
-        ourPluginErrors = new ArrayList<String>(problems);
+        ourPluginErrors = new ArrayList<>(problems);
       }
       else {
         ourPluginErrors.addAll(problems);
@@ -434,7 +434,7 @@ public class PluginManagerCore {
 
   static Comparator<IdeaPluginDescriptor> getPluginDescriptorComparator(Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap) {
     final Graph<PluginId> graph = createPluginIdGraph(idToDescriptorMap);
-    final DFSTBuilder<PluginId> builder = new DFSTBuilder<PluginId>(graph);
+    final DFSTBuilder<PluginId> builder = new DFSTBuilder<>(graph);
     /*
     if (!builder.isAcyclic()) {
       final Pair<String,String> circularDependency = builder.getCircularDependency();
@@ -451,7 +451,7 @@ public class PluginManagerCore {
   }
 
   private static Graph<PluginId> createPluginIdGraph(final Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap) {
-    final List<PluginId> ids = new ArrayList<PluginId>(idToDescriptorMap.keySet());
+    final List<PluginId> ids = new ArrayList<>(idToDescriptorMap.keySet());
     // this magic ensures that the dependent plugins always follow their dependencies in lexicographic order
     // needed to make sure that extensions are always in the same order
     Collections.sort(ids, new Comparator<PluginId>() {
@@ -469,7 +469,7 @@ public class PluginManagerCore {
       @Override
       public Iterator<PluginId> getIn(PluginId pluginId) {
         final IdeaPluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
-        ArrayList<PluginId> plugins = new ArrayList<PluginId>();
+        ArrayList<PluginId> plugins = new ArrayList<>();
         for (PluginId dependentPluginId : descriptor.getDependentPluginIds()) {
           // check for missing optional dependency
           if (idToDescriptorMap.containsKey(dependentPluginId)) {
@@ -607,7 +607,7 @@ public class PluginManagerCore {
     }
 
     if (descriptor != null && descriptor.getOptionalConfigs() != null && !descriptor.getOptionalConfigs().isEmpty()) {
-      final Map<PluginId, IdeaPluginDescriptorImpl> descriptors = new THashMap<PluginId, IdeaPluginDescriptorImpl>(descriptor.getOptionalConfigs().size());
+      final Map<PluginId, IdeaPluginDescriptorImpl> descriptors = new THashMap<>(descriptor.getOptionalConfigs().size());
       for (Map.Entry<PluginId, String> entry : descriptor.getOptionalConfigs().entrySet()) {
         String optionalDescriptorName = entry.getValue();
         assert !Comparing.equal(fileName, optionalDescriptorName) : "recursive dependency: " + fileName;
@@ -666,7 +666,7 @@ public class PluginManagerCore {
 
   @Nullable
   static String filterBadPlugins(List<? extends IdeaPluginDescriptor> result, final Map<String, String> disabledPluginNames) {
-    final Map<PluginId, IdeaPluginDescriptor> idToDescriptorMap = new HashMap<PluginId, IdeaPluginDescriptor>();
+    final Map<PluginId, IdeaPluginDescriptor> idToDescriptorMap = new HashMap<>();
     final StringBuilder message = new StringBuilder();
     boolean pluginsWithoutIdFound = false;
     for (Iterator<? extends IdeaPluginDescriptor> it = result.iterator(); it.hasNext(); ) {
@@ -686,8 +686,8 @@ public class PluginManagerCore {
       }
     }
 
-    final List<String> disabledPluginIds = new ArrayList<String>();
-    final LinkedHashSet<String> faultyDescriptors = new LinkedHashSet<String>();
+    final List<String> disabledPluginIds = new ArrayList<>();
+    final LinkedHashSet<String> faultyDescriptors = new LinkedHashSet<>();
     for (final Iterator<? extends IdeaPluginDescriptor> it = result.iterator(); it.hasNext(); ) {
       final IdeaPluginDescriptor pluginDescriptor = it.next();
       checkDependants(pluginDescriptor, new Function<PluginId, IdeaPluginDescriptor>() {
@@ -782,7 +782,7 @@ public class PluginManagerCore {
   }
 
   public static IdeaPluginDescriptorImpl[] loadDescriptors(@Nullable StartupProgress progress) {
-    final List<IdeaPluginDescriptorImpl> result = new ArrayList<IdeaPluginDescriptorImpl>();
+    final List<IdeaPluginDescriptorImpl> result = new ArrayList<>();
 
     int pluginsCount = countPlugins(PathManager.getPluginsPath()) + countPlugins(PathManager.getPreInstalledPluginsPath());
     loadDescriptors(PathManager.getPluginsPath(), result, progress, pluginsCount);
@@ -799,7 +799,7 @@ public class PluginManagerCore {
     }
 
     IdeaPluginDescriptorImpl[] pluginDescriptors = result.toArray(new IdeaPluginDescriptorImpl[result.size()]);
-    final Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap = new THashMap<PluginId, IdeaPluginDescriptorImpl>();
+    final Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap = new THashMap<>();
     for (IdeaPluginDescriptorImpl descriptor : pluginDescriptors) {
       idToDescriptorMap.put(descriptor.getPluginId(), descriptor);
     }
@@ -809,7 +809,7 @@ public class PluginManagerCore {
   }
 
   static void mergeOptionalConfigs(Map<PluginId, IdeaPluginDescriptorImpl> descriptors) {
-    final Map<PluginId, IdeaPluginDescriptorImpl> descriptorsWithModules = new THashMap<PluginId, IdeaPluginDescriptorImpl>(descriptors);
+    final Map<PluginId, IdeaPluginDescriptorImpl> descriptorsWithModules = new THashMap<>(descriptors);
     for (IdeaPluginDescriptorImpl descriptor : descriptors.values()) {
       final Map<PluginId, IdeaPluginDescriptorImpl> optionalDescriptors = descriptor.getOptionalDescriptors();
       if (optionalDescriptors != null && !optionalDescriptors.isEmpty()) {
@@ -865,7 +865,7 @@ public class PluginManagerCore {
       if (pluginIds != null) {
         shouldLoad = pluginIds.contains(idString);
         if (!shouldLoad) {
-          Map<PluginId, IdeaPluginDescriptor> map = new HashMap<PluginId, IdeaPluginDescriptor>();
+          Map<PluginId, IdeaPluginDescriptor> map = new HashMap<>();
           for (final IdeaPluginDescriptor pluginDescriptor : loaded) {
             map.put(pluginDescriptor.getPluginId(), pluginDescriptor);
           }
@@ -924,9 +924,9 @@ public class PluginManagerCore {
     assert callerClass != null;
     final ClassLoader parentLoader = callerClass.getClassLoader();
 
-    final List<IdeaPluginDescriptorImpl> result = new ArrayList<IdeaPluginDescriptorImpl>();
-    final Map<String, String> disabledPluginNames = new THashMap<String, String>();
-    List<String> brokenPluginsList = new SmartList<String>();
+    final List<IdeaPluginDescriptorImpl> result = new ArrayList<>();
+    final Map<String, String> disabledPluginNames = new THashMap<>();
+    List<String> brokenPluginsList = new SmartList<>();
     for (IdeaPluginDescriptorImpl descriptor : pluginDescriptors) {
       PluginSkipReason pluginSkipReason = calcPluginSkipReason(descriptor, pluginDescriptors);
       switch (pluginSkipReason) {
@@ -943,7 +943,7 @@ public class PluginManagerCore {
       }
     }
 
-    List<String> problemsWithPlugins = new SmartList<String>();
+    List<String> problemsWithPlugins = new SmartList<>();
     if (!brokenPluginsList.isEmpty()) {
       problemsWithPlugins.add("Following plugins are incompatible with current IDE build: " + StringUtil.join(brokenPluginsList, ", "));
     }
@@ -953,7 +953,7 @@ public class PluginManagerCore {
       problemsWithPlugins.add(badPluginMessage);
     }
 
-    final Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap = new THashMap<PluginId, IdeaPluginDescriptorImpl>();
+    final Map<PluginId, IdeaPluginDescriptorImpl> idToDescriptorMap = new THashMap<>();
     for (IdeaPluginDescriptorImpl descriptor : result) {
       idToDescriptorMap.put(descriptor.getPluginId(), descriptor);
     }
@@ -961,11 +961,11 @@ public class PluginManagerCore {
     mergeOptionalConfigs(idToDescriptorMap);
 
     final Graph<PluginId> graph = createPluginIdGraph(idToDescriptorMap);
-    final DFSTBuilder<PluginId> builder = new DFSTBuilder<PluginId>(graph);
+    final DFSTBuilder<PluginId> builder = new DFSTBuilder<>(graph);
     if (!builder.isAcyclic()) {
       final String cyclePresentation;
       if (ApplicationManager.getApplication().isInternal()) {
-        final List<String> cycles = new ArrayList<String>();
+        final List<String> cycles = new ArrayList<>();
         builder.getSCCs().forEach(new TIntProcedure() {
           int myTNumber = 0;
 
@@ -1047,7 +1047,7 @@ public class PluginManagerCore {
     }
 
     ExtensionPoint[] extensionPoints = area.getExtensionPoints();
-    Set<String> epNames = new THashSet<String>(extensionPoints.length);
+    Set<String> epNames = new THashSet<>(extensionPoints.length);
     for (ExtensionPoint point : extensionPoints) {
       epNames.add(point.getName());
     }
