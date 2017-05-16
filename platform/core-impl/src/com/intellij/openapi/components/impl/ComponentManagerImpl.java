@@ -37,6 +37,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import com.intellij.util.pico.DefaultPicoContainer;
+import consulo.util.SandboxUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -406,7 +407,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected boolean logSlowComponents() {
-    return LOG.isDebugEnabled();
+    return LOG.isDebugEnabled() || SandboxUtil.isInsideSandbox();
   }
 
   protected class ComponentsRegistry {

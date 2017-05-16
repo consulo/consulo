@@ -1,5 +1,5 @@
 <component>
-  <version major="2" minor="0" eap="true"/>
+  <version major="2" minor="0"/>
   <company name="consulo.io" url="http://consulo.io"/>
   <build number="SNAPSHOT" date="__BUILD_DATE__"/>
   <about url="/logo_about.png" foreground="000000" logoX="300" logoY="265" logoW="75" logoH="30"/>
@@ -8,8 +8,8 @@
 
   <help file="ideahelp.jar" root="idea"/>
   <documentation url="https://github.com/consulo/consulo/wiki"/>
-  <support url="https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md"/>
-  <feedback eap-url="https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md" release-url="https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md"/>
+  <support url="https://discuss.consulo.io"/>
+  <feedback release-url="https://discuss.consulo.io"/>
   <plugins url="http://consulo.io/"/>
   <whatsnew url="http://consulo.io/"/>
   <keymap win="https://github.com/consulo/consulo/wiki/Keymap-(Windows-&amp;-Linux)"

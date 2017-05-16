@@ -59,14 +59,12 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   private Calendar myBuildDate = null;
   private String myDocumentationUrl;
   private String mySupportUrl;
-  private String myEAPFeedbackUrl;
   private String myReleaseFeedbackUrl;
 
   private String myStatisticsUrl;
   private String myWhatsNewUrl;
   private String myWinKeymapUrl;
   private String myMacKeymapUrl;
-  private boolean myEAP;
   private boolean myHasHelp = true;
   private boolean myHasContextHelp = true;
   @NonNls private String myHelpFileName = "ideahelp.jar";
@@ -87,7 +85,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls private static final String ATTRIBUTE_ABOUT_FOREGROUND_COLOR = "foreground";
   @NonNls private static final String ATTRIBUTE_ABOUT_LINK_COLOR = "linkColor";
   @NonNls private static final String ELEMENT_ABOUT = "about";
-  @NonNls private static final String ATTRIBUTE_EAP = "eap";
   @NonNls private static final String HELP_ELEMENT_NAME = "help";
   @NonNls private static final String ATTRIBUTE_HELP_FILE = "file";
   @NonNls private static final String ATTRIBUTE_HELP_ROOT = "root";
@@ -95,7 +92,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @NonNls private static final String ELEMENT_SUPPORT = "support";
   @NonNls private static final String ELEMENT_FEEDBACK = "feedback";
   @NonNls private static final String ATTRIBUTE_RELEASE_URL = "release-url";
-  @NonNls private static final String ATTRIBUTE_EAP_URL = "eap-url";
   @NonNls private static final String ATTRIBUTE_WEBHELP_URL = "webhelp-url";
   @NonNls private static final String ATTRIBUTE_HAS_HELP = "has-help";
   @NonNls private static final String ATTRIBUTE_HAS_CONTEXT_HELP = "has-context-help";
@@ -160,11 +156,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   }
 
   @Override
-  public boolean isEAP() {
-    return myEAP;
-  }
-
-  @Override
   public String getDocumentationUrl() {
     return myDocumentationUrl;
   }
@@ -172,11 +163,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   @Override
   public String getSupportUrl() {
     return mySupportUrl;
-  }
-
-  @Override
-  public String getEAPFeedbackUrl() {
-    return myEAPFeedbackUrl;
   }
 
   @Override
@@ -291,7 +277,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
     if (versionElement != null) {
       myMajorVersion = versionElement.getAttributeValue(ATTRIBUTE_MAJOR);
       myMinorVersion = versionElement.getAttributeValue(ATTRIBUTE_MINOR);
-      myEAP = Boolean.parseBoolean(versionElement.getAttributeValue(ATTRIBUTE_EAP));
     }
 
     Element companyElement = parentNode.getChild(ELEMENT_COMPANY);
@@ -329,7 +314,7 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
     }
 
     Thread currentThread = Thread.currentThread();
-    currentThread.setName(currentThread.getName() + " " + myMajorVersion + "." + myMinorVersion + "#" + myBuildNumber + ", eap:" + myEAP);
+    currentThread.setName(currentThread.getName() + " " + myMajorVersion + "." + myMinorVersion + "#" + myBuildNumber);
 
     Element aboutLogoElement = parentNode.getChild(ELEMENT_ABOUT);
     if (aboutLogoElement != null) {
@@ -387,7 +372,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
 
     Element feedbackElement = parentNode.getChild(ELEMENT_FEEDBACK);
     if (feedbackElement != null) {
-      myEAPFeedbackUrl = feedbackElement.getAttributeValue(ATTRIBUTE_EAP_URL);
       myReleaseFeedbackUrl = feedbackElement.getAttributeValue(ATTRIBUTE_RELEASE_URL);
     }
 

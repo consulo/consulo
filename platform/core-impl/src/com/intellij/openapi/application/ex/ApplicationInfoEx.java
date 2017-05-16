@@ -35,7 +35,7 @@ import java.awt.*;
 public abstract class ApplicationInfoEx extends ApplicationInfo {
 
   public static ApplicationInfoEx getInstanceEx() {
-    return (ApplicationInfoEx) ApplicationInfo.getInstance();
+    return (ApplicationInfoEx)ApplicationInfo.getInstance();
   }
 
   public abstract String getAboutImageUrl();
@@ -63,13 +63,13 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
   public abstract String getFullApplicationName();
 
   @Deprecated
-  public abstract boolean isEAP();
+  public boolean isEAP() {
+    return false;
+  }
 
   public abstract String getDocumentationUrl();
 
   public abstract String getSupportUrl();
-
-  public abstract String getEAPFeedbackUrl();
 
   public abstract String getReleaseFeedbackUrl();
 

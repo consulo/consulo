@@ -414,7 +414,11 @@ public interface Application extends ComponentManager {
   @RequiredDispatchThread
   AccessToken acquireWriteActionLock(@NotNull Class marker);
 
+  @Deprecated
+  @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")
   boolean isInternal();
 
+  @Deprecated
+  @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")
   boolean isEAP();
 }
