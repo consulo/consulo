@@ -15,6 +15,8 @@
  */
 package consulo;
 
+import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.util.NotNullLazyValue;
 import org.jetbrains.annotations.NotNull;
 
 import static consulo.application.ApplicationProperties.CONSULO_AS_WEB_APP;
@@ -24,18 +26,24 @@ import static consulo.application.ApplicationProperties.CONSULO_AS_WEB_APP;
  * @since 16-May-17
  */
 public enum Platform {
-  DESKTOP,
-  WEB;
+  DESKTOP("consulo.platform.desktop"),
+  WEB("consulo.platform.web");
 
-  private static final Platform ourPlatform = _get();
-
-  @NotNull
-  private static Platform _get() {
-    return Boolean.getBoolean(CONSULO_AS_WEB_APP) ? WEB : DESKTOP;
-  }
+  private static final NotNullLazyValue<Platform> ourPlatformValue = NotNullLazyValue.createValue(() -> Boolean.getBoolean(CONSULO_AS_WEB_APP) ? WEB : DESKTOP);
 
   @NotNull
   public static Platform get() {
-    return ourPlatform;
+    return ourPlatformValue.getValue();
+  }
+
+  private final PluginId myPluginId;
+
+  Platform(String pluginId) {
+    myPluginId = PluginId.getId(pluginId);
+  }
+
+  @NotNull
+  public PluginId getPluginId() {
+    return myPluginId;
   }
 }

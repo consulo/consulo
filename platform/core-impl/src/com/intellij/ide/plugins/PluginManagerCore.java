@@ -103,16 +103,10 @@ public class PluginManagerCore {
   public static void loadDisabledPlugins(final String configPath, final Collection<String> disabledPlugins) {
     final File file = new File(configPath, DISABLED_PLUGINS_FILENAME);
     if (file.isFile()) {
-      try {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        try {
-          String id;
-          while ((id = reader.readLine()) != null) {
-            disabledPlugins.add(id.trim());
-          }
-        }
-        finally {
-          reader.close();
+      try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        String id;
+        while ((id = reader.readLine()) != null) {
+          disabledPlugins.add(id.trim());
         }
       }
       catch (IOException ignored) {
@@ -239,7 +233,7 @@ public class PluginManagerCore {
 
     // it can be an UrlClassLoader loaded by another class loader, so instanceof doesn't work
     try {
-      return ((Boolean) loader.getClass().getMethod("hasLoadedClass", String.class).invoke(loader, className)).booleanValue();
+      return ((Boolean)loader.getClass().getMethod("hasLoadedClass", String.class).invoke(loader, className)).booleanValue();
     }
     catch (Exception e) {
       return false;
@@ -249,7 +243,7 @@ public class PluginManagerCore {
   @Nullable
   public static PluginId getPluginId(@NotNull Class<?> clazz) {
     ClassLoader loader = clazz.getClassLoader();
-    if(!(loader instanceof PluginClassLoader)) {
+    if (!(loader instanceof PluginClassLoader)) {
       return null;
     }
     return ((PluginClassLoader)loader).getPluginId();
