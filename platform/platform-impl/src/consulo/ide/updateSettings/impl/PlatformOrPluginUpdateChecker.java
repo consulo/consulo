@@ -59,13 +59,18 @@ public class PlatformOrPluginUpdateChecker {
   private static final PluginId ourWinNoJre = PluginId.getId("consulo-win-no-jre");
   private static final PluginId ourWin = PluginId.getId("consulo-win");
   private static final PluginId ourWin64 = PluginId.getId("consulo-win64");
+  // dummy zip ids
+  private static final PluginId ourWinNoJreZip = PluginId.getId("consulo-win-no-jre-zip");
+  private static final PluginId ourWinZip = PluginId.getId("consulo-win-zip");
+  private static final PluginId ourWin64Zip = PluginId.getId("consulo-win64-zip");
   private static final PluginId ourLinuxNoJre = PluginId.getId("consulo-linux-no-jre");
   private static final PluginId ourLinux = PluginId.getId("consulo-linux");
   private static final PluginId ourLinux64 = PluginId.getId("consulo-linux64");
   private static final PluginId ourMacNoJre = PluginId.getId("consulo-mac-no-jre");
   private static final PluginId ourMac64 = PluginId.getId("consulo-mac64");
 
-  private static final PluginId[] ourPlatformIds = {ourWinNoJre, ourWin, ourWin64, ourLinuxNoJre, ourLinux, ourLinux64, ourMacNoJre, ourMac64};
+  private static final PluginId[] ourPlatformIds =
+          {ourWinNoJre, ourWin, ourWin64, ourLinuxNoJre, ourLinux, ourLinux64, ourMacNoJre, ourMac64, ourWinNoJreZip, ourWinZip, ourWin64Zip};
 
   @NotNull
   public static PluginId getPlatformPluginId() {
