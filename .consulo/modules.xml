@@ -997,6 +997,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
+          <orderEntry type="module" module-name="editor-ui-api" />
         </module-layer>
       </module>
       <module name="impl/web-impl" dirurl="file://$PROJECT_DIR$/impl/web-impl" current-layer="Default">
@@ -1019,6 +1020,18 @@
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="ui-api" />
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="file://$MODULE_DIR$/lib" />
+              </binaries>
+              <sources>
+                <root url="file://$MODULE_DIR$/lib" />
+              </sources>
+              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
+              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" type="sources" />
+            </library>
+          </orderEntry>
         </module-layer>
       </module>
       <module name="api/ui-api" dirurl="file://$PROJECT_DIR$/api/ui-api" current-layer="Default">
