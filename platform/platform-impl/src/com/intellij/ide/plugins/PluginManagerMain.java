@@ -26,6 +26,7 @@ import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import com.intellij.notification.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
@@ -34,17 +35,18 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.util.concurrency.SwingWorker;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.updateSettings.UpdateSettings;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -71,17 +73,21 @@ import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 public abstract class PluginManagerMain implements Disposable {
   public static Logger LOG = Logger.getInstance("#com.intellij.ide.plugins.PluginManagerMain");
 
-  @NonNls private static final String TEXT_PREFIX = "<html><head>" +
-                                                    "    <style type=\"text/css\">" +
-                                                    "        p {" +
-                                                    "            font-family: Arial,serif; font-size: 12pt; margin: 2px 2px" +
-                                                    "        }" +
-                                                    "    </style>" +
-                                                    "</head><body style=\"font-family: Arial,serif; font-size: 12pt; margin: 5px 5px;\">";
-  @NonNls private static final String TEXT_SUFFIX = "</body></html>";
+  @NonNls
+  private static final String TEXT_PREFIX = "<html><head>" +
+                                            "    <style type=\"text/css\">" +
+                                            "        p {" +
+                                            "            font-family: Arial,serif; font-size: 12pt; margin: 2px 2px" +
+                                            "        }" +
+                                            "    </style>" +
+                                            "</head><body style=\"font-family: Arial,serif; font-size: 12pt; margin: 5px 5px;\">";
+  @NonNls
+  private static final String TEXT_SUFFIX = "</body></html>";
 
-  @NonNls private static final String HTML_PREFIX = "<a href=\"";
-  @NonNls private static final String HTML_SUFFIX = "</a>";
+  @NonNls
+  private static final String HTML_PREFIX = "<a href=\"";
+  @NonNls
+  private static final String HTML_SUFFIX = "</a>";
 
   private boolean requireShutdown = false;
 
@@ -282,44 +288,35 @@ public abstract class PluginManagerMain implements Disposable {
   protected void loadPluginsFromHostInBackground() {
     setDownloadStatus(true);
 
-    new SwingWorker() {
-      List<IdeaPluginDescriptor> list = null;
-      List<String> errorMessages = new ArrayList<String>();
+    ApplicationManager.getApplication().executeOnPooledThread(() -> {
+      Ref<List<IdeaPluginDescriptor>> ref = Ref.create();
+      List<String> errorMessages = new ArrayList<>();
 
-      @Override
-      public Object construct() {
-        try {
-          list = RepositoryHelper.loadOnlyPluginsFromRepository(null, consulo.ide.updateSettings.UpdateSettings.getInstance().getChannel());
-        }
-        catch (Exception e) {
-          LOG.info(e);
-          errorMessages.add(e.getMessage());
-        }
-        return list;
+      try {
+        ref.set(RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel()));
+      }
+      catch (Throwable e) {
+        LOG.info(e);
+        errorMessages.add(e.getMessage());
       }
 
-      @Override
-      public void finished() {
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-          @Override
-          public void run() {
-            setDownloadStatus(false);
-            if (list != null) {
-              modifyPluginsList(list);
-              propagateUpdates(list);
-            }
-            if (!errorMessages.isEmpty()) {
-              if (Messages.OK ==
-                  Messages.showOkCancelDialog(IdeBundle.message("error.list.of.plugins.was.not.loaded", StringUtil.join(errorMessages, ", ")),
-                                              IdeBundle.message("title.plugins"), CommonBundle.message("button.retry"), CommonBundle.getCancelButtonText(),
-                                              Messages.getErrorIcon())) {
-                loadPluginsFromHostInBackground();
-              }
-            }
+      UIUtil.invokeLaterIfNeeded(() -> {
+        setDownloadStatus(false);
+        List<IdeaPluginDescriptor> list = ref.get();
+
+        if (list != null) {
+          modifyPluginsList(list);
+          propagateUpdates(list);
+        }
+        if (!errorMessages.isEmpty()) {
+          if (Messages.showOkCancelDialog(IdeBundle.message("error.list.of.plugins.was.not.loaded", StringUtil.join(errorMessages, ", ")),
+                                          IdeBundle.message("title.plugins"), CommonBundle.message("button.retry"), CommonBundle.getCancelButtonText(),
+                                          Messages.getErrorIcon()) == Messages.OK) {
+            loadPluginsFromHostInBackground();
           }
-        });
-      }
-    }.start();
+        }
+      });
+    });
   }
 
   protected abstract void propagateUpdates(List<IdeaPluginDescriptor> list);
@@ -522,7 +519,7 @@ public abstract class PluginManagerMain implements Disposable {
   private static boolean isAccepted(final Set<String> search, @NotNull final String filter, @NotNull final String description) {
     if (StringUtil.containsIgnoreCase(description, filter)) return true;
     final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
-    final HashSet<String> descriptionSet = new HashSet<String>(search);
+    final HashSet<String> descriptionSet = new HashSet<>(search);
     descriptionSet.removeAll(optionsRegistrar.getProcessedWords(description));
     if (descriptionSet.isEmpty()) {
       return true;
