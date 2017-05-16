@@ -44,7 +44,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager implements Ap
   };
 
   @NonNls
-  public static final String PROPERTY_RPC_PORT = "rpc.port";
+  public static final String PROPERTY_RPC_PORT = "consulo.rpc.port";
   private static final int PORTS_COUNT = 20;
 
   private final AtomicBoolean started = new AtomicBoolean(false);
