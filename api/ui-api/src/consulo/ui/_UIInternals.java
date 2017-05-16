@@ -33,7 +33,7 @@ abstract class _UIInternals {
     public static _UIInternals ourInstance = get();
 
     private static _UIInternals get() {
-      _UIInternals bindingInternal = null;
+      _UIInternals bindingInternal;
 
       try {
         Class<?> bindingClass = Class.forName(_UIInternals.class.getName() + "Impl");

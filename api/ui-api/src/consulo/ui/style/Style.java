@@ -24,5 +24,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Style {
   @NotNull
+  Style getName();
+
+  @NotNull
   RGBColor getColor(@NotNull ColorKey colorKey);
 }

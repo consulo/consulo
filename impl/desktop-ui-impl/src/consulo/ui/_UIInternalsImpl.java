@@ -133,6 +133,7 @@ class _UIInternalsImpl extends _UIInternals {
     return null;
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   UIAccess _UIAccess_get() {

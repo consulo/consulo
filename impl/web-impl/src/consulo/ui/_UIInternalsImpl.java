@@ -132,6 +132,7 @@ class _UIInternalsImpl extends _UIInternals {
     return new WGwtMenuBarImpl();
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   UIAccess _UIAccess_get() {

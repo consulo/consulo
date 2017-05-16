@@ -15,13 +15,22 @@
  */
 package consulo.ui.style;
 
-import consulo.ui.shared.RGBColor;
+import consulo.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 22-Jun-16
  */
 public interface StyleManager {
+  @NotNull
+  @Immutable
+  List<Style> getStyles();
 
+  @NotNull
+  Style getCurrentStyle();
+
+  void setCurrentStyle(@NotNull Style style);
 }
