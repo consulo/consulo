@@ -19,6 +19,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.ide.projectView.impl.ProjectViewPane;
+import com.intellij.openapi.project.DumbAware;
 import consulo.ide.projectView.impl.ProjectViewPaneOptionProvider;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -40,7 +41,7 @@ public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewP
     }
   };
 
-  private final class ShowExcludedFilesAction extends ToggleAction {
+  private final class ShowExcludedFilesAction extends ToggleAction implements DumbAware {
     private AbstractProjectViewPane myPane;
 
     private ShowExcludedFilesAction(AbstractProjectViewPane pane) {
