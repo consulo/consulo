@@ -18,8 +18,8 @@ package com.intellij.util.io;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -33,7 +33,8 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.io.ZipUtil");
 
-  private ZipUtil() {}
+  private ZipUtil() {
+  }
 
   public interface FileContentProcessor {
 
@@ -76,7 +77,7 @@ public class ZipUtil {
     if (writtenItemRelativePaths != null && !writtenItemRelativePaths.add(relativeName)) return false;
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Add "+file+" as "+relativeName);
+      LOG.debug("Add " + file + " as " + relativeName);
     }
 
     long size = isDir ? 0 : file.length();
@@ -89,12 +90,8 @@ public class ZipUtil {
     }
     zos.putNextEntry(e);
     if (!isDir) {
-      InputStream is = contentProcessor.getContent(file);
-      try {
+      try (InputStream is = contentProcessor.getContent(file)) {
         FileUtil.copy(is, zos);
-      }
-      finally {
-        is.close();
       }
     }
     zos.closeEntry();
@@ -141,25 +138,17 @@ public class ZipUtil {
   }
 
   public static void extract(@NotNull File file, @NotNull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
-    final ZipFile zipFile = new ZipFile(file);
-    try {
+    try (ZipFile zipFile = new ZipFile(file)) {
       extract(zipFile, outputDir, filenameFilter, overwrite);
-    }
-    finally {
-      zipFile.close();
     }
   }
 
-  public static void extract(final @NotNull ZipFile zipFile,
-                             @NotNull File outputDir,
-                             @Nullable FilenameFilter filenameFilter) throws IOException {
+  public static void extract(final @NotNull ZipFile zipFile, @NotNull File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
     extract(zipFile, outputDir, filenameFilter, true);
   }
 
-  public static void extract(final @NotNull ZipFile zipFile,
-                             @NotNull File outputDir,
-                             @Nullable FilenameFilter filenameFilter,
-                             boolean overwrite) throws IOException {
+  public static void extract(final @NotNull ZipFile zipFile, @NotNull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite)
+          throws IOException {
     final Enumeration entries = zipFile.entries();
     while (entries.hasMoreElements()) {
       ZipEntry entry = (ZipEntry)entries.nextElement();
@@ -185,26 +174,19 @@ public class ZipUtil {
       file.mkdir();
     }
     else {
-      final BufferedInputStream is = new BufferedInputStream(inputStream);
-      final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file));
-      try {
+      try (BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file)); BufferedInputStream is = new BufferedInputStream(inputStream)) {
         FileUtil.copy(is, os);
-      }
-      finally {
-        os.close();
-        is.close();
       }
     }
   }
 
   public static boolean isZipContainsFolder(File zip) throws IOException {
-    ZipFile zipFile = new ZipFile(zip);
-    try {
+    try (ZipFile zipFile = new ZipFile(zip)) {
       Enumeration en = zipFile.entries();
 
       while (en.hasMoreElements()) {
         ZipEntry zipEntry = (ZipEntry)en.nextElement();
-  
+
         // we do not necessarily get a separate entry for the subdirectory when the file
         // in the ZIP archive is placed in a subdirectory, so we need to check if the slash
         // is found anywhere in the path
@@ -215,14 +197,10 @@ public class ZipUtil {
       zipFile.close();
       return false;
     }
-    finally {
-      zipFile.close();
-    }
   }
 
   public static boolean isZipContainsEntry(File zip, String relativePath) throws IOException {
-    ZipFile zipFile = new ZipFile(zip);
-    try {
+    try (ZipFile zipFile = new ZipFile(zip)) {
       Enumeration en = zipFile.entries();
 
       while (en.hasMoreElements()) {
@@ -234,19 +212,14 @@ public class ZipUtil {
       zipFile.close();
       return false;
     }
-    finally {
-      zipFile.close();
-    }
   }
 
   /*
    * update an existing jar file. Adds/replace files specified in relpathToFile map
    */
   public static void update(InputStream in, OutputStream out, Map<String, File> relpathToFile) throws IOException {
-    ZipInputStream zis = new ZipInputStream(in);
-    ZipOutputStream zos = new ZipOutputStream(out);
 
-    try {
+    try (ZipInputStream zis = new ZipInputStream(in); ZipOutputStream zos = new ZipOutputStream(out)) {
       // put the old entries first, replace if necessary
       ZipEntry e;
       while ((e = zis.getNextEntry()) != null) {
@@ -279,10 +252,6 @@ public class ZipUtil {
         File file = relpathToFile.get(path);
         addFileToZip(zos, file, path, null, null);
       }
-    }
-    finally {
-      zis.close();
-      zos.close();
     }
   }
 }
