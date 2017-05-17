@@ -19,7 +19,6 @@ import com.intellij.concurrency.JobScheduler;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
@@ -30,6 +29,7 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -115,8 +115,7 @@ public class PerformanceWatcher implements ApplicationComponent {
 
         @Override
         public void consume(Thread thread) {
-          if (service.getBackendPoolExecutorSize() > ourReasonableThreadPoolSize
-              && ApplicationInfoImpl.getShadowInstance().isEAP()) {
+          if (service.getBackendPoolExecutorSize() > ourReasonableThreadPoolSize && SandboxUtil.isInsideSandbox()) {
             File file = dumpThreads("newPooledThread/", true);
             LOG.info("Not enough pooled threads" + (file != null ? "; dumped threads into file '" + file.getPath() + "'" : ""));
           }

@@ -15,8 +15,6 @@
  */
 package com.intellij.execution.configurations;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
@@ -24,6 +22,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.ArrayUtil;
 import com.pty4j.PtyProcess;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -90,8 +89,7 @@ public class PtyCommandLine extends GeneralCommandLine {
   }
 
   private static File getPtyLogFile() {
-    Application app = ApplicationManager.getApplication();
-    return app != null && app.isEAP() ? new File(PathManager.getLogPath(), "pty.log") : null;
+    return SandboxUtil.isInsideSandbox() ? new File(PathManager.getLogPath(), "pty.log") : null;
   }
 
   @NotNull

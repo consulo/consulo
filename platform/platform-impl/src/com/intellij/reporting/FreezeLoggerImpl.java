@@ -96,7 +96,6 @@ class ThreadDumpInfo {
   public final String version;
   public final String product;
   public final String buildNumber;
-  public final boolean isEAP;
   public final boolean isInDumbMode;
 
   public ThreadDumpInfo(ThreadInfo[] threadInfos, boolean isInDumbMode) {
@@ -104,7 +103,6 @@ class ThreadDumpInfo {
     this.product = ApplicationInfo.getInstance().getVersionName();
     this.version = ApplicationInfo.getInstance().getFullVersion();
     this.buildNumber = ApplicationInfo.getInstance().getBuild().toString();
-    this.isEAP = ApplicationManager.getApplication().isEAP();
     this.isInDumbMode = isInDumbMode;
   }
 }

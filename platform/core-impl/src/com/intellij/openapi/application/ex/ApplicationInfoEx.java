@@ -62,11 +62,6 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
 
   public abstract String getFullApplicationName();
 
-  @Deprecated
-  public boolean isEAP() {
-    return false;
-  }
-
   public abstract String getDocumentationUrl();
 
   public abstract String getSupportUrl();

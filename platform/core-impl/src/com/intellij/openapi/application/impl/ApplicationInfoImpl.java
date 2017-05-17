@@ -227,10 +227,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
       buffer.append(getMinorVersion());
     }
 
-    if (isEAP() || isBetaOrRC()) {
-      buffer.append(" #");
-      buffer.append(getBuild().asString());
-    }
     return buffer.toString();
   }
 
@@ -240,16 +236,6 @@ public class ApplicationInfoImpl extends ApplicationInfoEx {
   }
 
   private static ApplicationInfoImpl ourShadowInstance;
-
-  public boolean isBetaOrRC() {
-    String minor = getMinorVersion();
-    if (minor != null) {
-      if (minor.contains("RC") || minor.contains("Beta") || minor.contains("beta")) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   public static ApplicationInfoEx getShadowInstance() {
     if (ourShadowInstance == null) {

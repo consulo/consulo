@@ -30,6 +30,7 @@ import com.intellij.util.indexing.impl.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.PersistentHashMap;
+import consulo.util.SandboxUtil;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,8 +52,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
 
   static {
     if (!DebugAssertions.DEBUG) {
-      final Application app = ApplicationManager.getApplication();
-      DebugAssertions.DEBUG = app.isEAP() || app.isInternal();
+      DebugAssertions.DEBUG = SandboxUtil.isInsideSandbox();
     }
   }
 

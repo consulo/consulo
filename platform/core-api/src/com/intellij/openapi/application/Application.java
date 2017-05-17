@@ -420,5 +420,7 @@ public interface Application extends ComponentManager {
 
   @Deprecated
   @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")
-  boolean isEAP();
+  default boolean isEAP() {
+    return false;
+  }
 }

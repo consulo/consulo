@@ -210,11 +210,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public boolean isEAP() {
-    return false;
-  }
-
-  @Override
   public void runReadAction(@NotNull Runnable action) {
     try {
       action.run();
