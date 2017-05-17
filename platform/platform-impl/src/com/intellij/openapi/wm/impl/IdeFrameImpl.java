@@ -28,7 +28,6 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
@@ -52,6 +51,7 @@ import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
+import consulo.application.impl.FrameTitleUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -94,7 +94,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
                       ActionManagerEx actionManager,
                       DataManager dataManager,
                       Application application) {
-    super(applicationInfoEx.getFullApplicationName());
+    super(FrameTitleUtil.buildTitle());
     myRootPane = createRootPane(actionManager, dataManager, application);
     setRootPane(myRootPane);
     setBackground(UIUtil.getPanelBackground());
@@ -300,12 +300,10 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
 
       frame.getRootPane().putClientProperty("Window.documentFile", currentFile);
 
-      final String applicationName = ((ApplicationInfoEx)ApplicationInfo.getInstance()).getFullApplicationName();
+      final String applicationName = FrameTitleUtil.buildTitle();
       final Builder builder = new Builder();
       if (SystemInfo.isMac) {
-        boolean addAppName = StringUtil.isEmpty(title) ||
-                             ProjectManager.getInstance().getOpenProjects().length == 0 ||
-                             ((ApplicationInfoEx)ApplicationInfo.getInstance()).isEAP() && !applicationName.endsWith("SNAPSHOT");
+        boolean addAppName = StringUtil.isEmpty(title) || ProjectManager.getInstance().getOpenProjects().length == 0;
         builder.append(fileTitle).append(title).append(addAppName ? applicationName : null);
       } else {
         builder.append(title).append(fileTitle).append(applicationName);
@@ -598,10 +596,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
         builder.append(myProject.getName());
         builder.append(" - ");
       }
-
-      final String applicationName = ((ApplicationInfoEx)ApplicationInfo.getInstance()).getFullApplicationName();
-      builder.append(applicationName);
-
+      builder.append(FrameTitleUtil.buildTitle());
       return builder.toString();
     }
   }

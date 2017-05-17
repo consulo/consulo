@@ -15,6 +15,7 @@
  */
 package consulo.builtInWebServer.restApi;
 
+import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import consulo.buildInWebServer.api.JsonGetRequestHandler;
 import consulo.ide.updateSettings.UpdateChannel;
@@ -41,7 +42,7 @@ public class AboutRestHandler extends JsonGetRequestHandler {
   public JsonResponse handle() {
     ApplicationInfoEx applicationInfoEx = ApplicationInfoEx.getInstanceEx();
     AboutInfo data = new AboutInfo();
-    data.name = applicationInfoEx.getFullApplicationName();
+    data.name = ApplicationNamesInfo.getInstance().getFullProductName();
     data.build = applicationInfoEx.getBuild().getBuildNumber();
     data.build = applicationInfoEx.getBuild().getBuildNumber();
     data.channel = UpdateSettings.getInstance().getChannel();

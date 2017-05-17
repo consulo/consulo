@@ -19,7 +19,6 @@ import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
@@ -34,6 +33,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.application.impl.FrameTitleUtil;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -95,7 +95,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
   }
 
   public void setDefaultTitle() {
-    setTitle(getWelcomeFrameTitle());
+    setTitle(FrameTitleUtil.buildTitle());
   }
 
   @Override
@@ -146,10 +146,6 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
   @Override
   public AccessibleContext getCurrentAccessibleContext() {
     return accessibleContext;
-  }
-
-  protected String getWelcomeFrameTitle() {
-    return "Welcome to " + ApplicationNamesInfo.getInstance().getFullProductName();
   }
 
   public static boolean isUseProjectGroups() {

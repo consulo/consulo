@@ -17,7 +17,6 @@ package org.jetbrains.io;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.impl.FrameTitleUtil;
 import io.netty.buffer.ByteBuf;
@@ -48,7 +47,7 @@ public final class Responses {
     if (SERVER_HEADER_VALUE == null) {
       Application app = ApplicationManager.getApplication();
       if (app != null && !app.isDisposed()) {
-        SERVER_HEADER_VALUE = ApplicationInfoEx.getInstanceEx().getFullApplicationName();
+        SERVER_HEADER_VALUE = FrameTitleUtil.buildTitle();
       }
     }
     return SERVER_HEADER_VALUE;
