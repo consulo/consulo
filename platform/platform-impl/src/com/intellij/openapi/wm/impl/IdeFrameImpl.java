@@ -52,6 +52,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.application.impl.FrameTitleUtil;
+import consulo.wm.impl.status.ModuleLayerWidget;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -422,11 +423,15 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
     final ToggleReadOnlyAttributePanel readOnlyAttributePanel = new ToggleReadOnlyAttributePanel(project);
 
     final InsertOverwritePanel insertOverwritePanel = new InsertOverwritePanel(project);
-    statusBar.addWidget(insertOverwritePanel, "after Encoding");
-    statusBar.addWidget(readOnlyAttributePanel, "after InsertOverwrite");
+    statusBar.addWidget(insertOverwritePanel, "after " + encodingPanel.ID());
+    statusBar.addWidget(readOnlyAttributePanel, "after " + insertOverwritePanel.ID());
+
+    final ModuleLayerWidget moduleLayerWidget = new ModuleLayerWidget(project);
+    statusBar.addWidget(moduleLayerWidget, "after " + insertOverwritePanel.ID());
 
     Disposer.register(project, () -> {
       statusBar.removeWidget(encodingPanel.ID());
+      statusBar.removeWidget(moduleLayerWidget.ID());
       statusBar.removeWidget(lineSeparatorPanel.ID());
       statusBar.removeWidget(positionPanel.ID());
       statusBar.removeWidget(notificationArea.ID());
