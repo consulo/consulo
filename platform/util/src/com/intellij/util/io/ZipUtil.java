@@ -167,6 +167,7 @@ public class ZipUtil {
     final boolean isDirectory = entry.isDirectory();
     final String relativeName = entry.getName();
     final File file = new File(outputDir, relativeName);
+    file.setLastModified(entry.getTime());
     if (file.exists() && !overwrite) return;
 
     FileUtil.createParentDirs(file);
