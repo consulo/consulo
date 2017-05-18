@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: May 13, 2002
- * Time: 10:29:01 PM
- */
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -28,16 +22,16 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
-import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.util.DocumentUtil;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredWriteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,11 +115,11 @@ public class IndentSelectionAction extends EditorAction {
 
   static void doIndent(final int endIndex, final int startIndex, final Document document, final Project project, final Editor editor,
                        final int blockIndent) {
-    boolean bulkMode = endIndex - startIndex > 50;
-    if (bulkMode) ((DocumentEx)document).setInBulkUpdate(true);
+    final int[] caretOffset = {editor.getCaretModel().getOffset()};
 
-    try {
-      List<Integer> nonModifiableLines = new ArrayList<Integer>();
+    boolean bulkMode = endIndex - startIndex > 50;
+    DocumentUtil.executeInBulk(document, bulkMode, ()-> {
+      List<Integer> nonModifiableLines = new ArrayList<>();
       if (project != null) {
         PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
         IndentStrategy indentStrategy = LanguageIndentStrategy.getIndentStrategy(file);
@@ -139,13 +133,12 @@ public class IndentSelectionAction extends EditorAction {
       }
       for(int i=startIndex; i<=endIndex; i++) {
         if (!nonModifiableLines.contains(i)) {
-          EditorActionUtil.indentLine(project, editor, i, blockIndent);
+          caretOffset[0] = EditorActionUtil.indentLine(project, editor, i, blockIndent, caretOffset[0]);
         }
       }
-    }
-    finally {
-      if (bulkMode) ((DocumentEx)document).setInBulkUpdate(false);
-    }
+    });
+
+    editor.getCaretModel().moveToOffset(caretOffset[0]);
   }
 
   static boolean canIndent(Document document, PsiFile file, int line, @NotNull IndentStrategy indentStrategy) {
