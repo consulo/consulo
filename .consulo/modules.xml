@@ -23,7 +23,7 @@
           <orderEntry type="module" module-name="util" />
         </module-layer>
       </module>
-      <module name="api/compiler-api" dirurl="file://$PROJECT_DIR$/platform/compiler-api" current-layer="Default">
+      <module name="api/compiler-api" dirurl="file://$PROJECT_DIR$/api/compiler-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">

@@ -94,7 +94,7 @@ public class CompilerPaths {
   }
 
   public static String getCompilerSystemDirectoryName(Project project) {
-    return getPresentableName(project) + "." + project.getLocationHash();
+    return getPresentableName(project) + "" + project.getLocationHash();
   }
 
   @Nullable
@@ -141,7 +141,7 @@ public class CompilerPaths {
     else {
       moduleHash = module.getProject().getLocationHash();
     }
-    final String moduleDir = module.getName().replaceAll("\\s+", "_") + "." + moduleHash;
+    final String moduleDir = module.getName().replaceAll("\\s+", "_") + "" + moduleHash;
     return generatedCompilerDirectoryPath.replace(File.separatorChar, '/') +
            "/" +
            moduleDir +
