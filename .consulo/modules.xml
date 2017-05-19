@@ -402,7 +402,6 @@
           <orderEntry type="module" module-name="platform-impl" exported="" />
           <orderEntry type="module" module-name="usageView" exported="" />
           <orderEntry type="library" name="xpp3-1.1.4-min" level="project" />
-          <orderEntry type="library" exploded="" name="cli-parser" level="project" />
           <orderEntry type="module" module-name="indexing-api" />
           <orderEntry type="module" module-name="indexing-impl" exported="" />
           <orderEntry type="library" name="Snappy-Java" level="project" />

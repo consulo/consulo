@@ -1,7 +1,3 @@
 <component name="libraryTable">
-  <library name="cli-parser">
-    <binaries>
-      <root url="jar://$PROJECT_DIR$/lib/cli-parser-1.1.jar!/" />
-    </binaries>
-  </library>
+  <library name="cli-parser" />
 </component>
