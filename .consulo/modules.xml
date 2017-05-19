@@ -2,34 +2,6 @@
 <project>
   <component name="ModuleManager">
     <modules>
-      <module name="impl/analysis-impl" dirurl="file://$PROJECT_DIR$/impl/analysis-impl" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="analysis-api" exported="" />
-          <orderEntry type="module" module-name="core-api" />
-          <orderEntry type="module" module-name="core-impl" />
-          <orderEntry type="module" module-name="util" />
-          <orderEntry type="module" module-name="extensions" />
-          <orderEntry type="module" module-name="projectModel-impl" />
-          <orderEntry type="module" module-name="editor-ui-ex" />
-          <orderEntry type="module" module-name="indexing-impl" />
-        </module-layer>
-      </module>
-      <module name="impl/annotations" dirurl="file://$PROJECT_DIR$/platform/annotations" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-name="1.8" language-level-name="JDK_1_6" bytecode-version="1.6" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-        </module-layer>
-      </module>
       <module name="impl/boot" dirurl="file://$PROJECT_DIR$/platform/boot" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-name="1.8" language-level-name="JDK_1_8" bytecode-version="1.8" />
@@ -1099,6 +1071,24 @@
           <orderEntry type="library" name="Trove4j" level="project" />
         </module-layer>
       </module>
+      <module name="impl/analysis-impl" dirurl="file://$PROJECT_DIR$/impl/analysis-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="analysis-api" exported="" />
+          <orderEntry type="module" module-name="core-api" />
+          <orderEntry type="module" module-name="core-impl" />
+          <orderEntry type="module" module-name="util" />
+          <orderEntry type="module" module-name="extensions" />
+          <orderEntry type="module" module-name="projectModel-impl" />
+          <orderEntry type="module" module-name="editor-ui-ex" />
+          <orderEntry type="module" module-name="indexing-impl" />
+        </module-layer>
+      </module>
       <module name="api/analysis-api" dirurl="file://$PROJECT_DIR$/api/analysis-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
@@ -1114,6 +1104,16 @@
           <orderEntry type="module" module-name="core-api" />
           <orderEntry type="module" module-name="projectModel-api" />
           <orderEntry type="module" module-name="editor-ui-api" exported="" />
+        </module-layer>
+      </module>
+      <module name="api/annotations" dirurl="file://$PROJECT_DIR$/api/annotations" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-name="1.8" language-level-name="JDK_1_6" bytecode-version="1.6" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
     </modules>
