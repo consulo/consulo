@@ -51,7 +51,7 @@ public abstract class CompileActionBase extends AnAction implements DumbAware {
   public void update(@NotNull final AnActionEvent e) {
     super.update(e);
     final Project project = e.getData(CommonDataKeys.PROJECT);
-    if (project == null) {
+    if (project == null || !project.isInitialized()) {
       e.getPresentation().setEnabled(false);
     }
     else {
