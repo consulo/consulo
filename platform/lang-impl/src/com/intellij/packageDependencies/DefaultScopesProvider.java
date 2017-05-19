@@ -22,7 +22,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.search.scope.NonProjectFilesScope;
 import com.intellij.psi.search.scope.ProjectFilesScope;
-import com.intellij.psi.search.scope.TestsScope;
 import com.intellij.psi.search.scope.packageSet.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

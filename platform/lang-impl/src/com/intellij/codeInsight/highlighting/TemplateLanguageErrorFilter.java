@@ -21,7 +21,6 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.*;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
