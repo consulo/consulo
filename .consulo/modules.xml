@@ -36,7 +36,7 @@
           <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
-      <module name="impl/compiler-bridge-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-bridge-impl" current-layer="Default">
+      <module name="impl/compiler-bridge-impl" dirurl="file://$PROJECT_DIR$/modules/compiler-bridge-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -47,7 +47,7 @@
           <orderEntry type="module" module-name="compiler-api" />
         </module-layer>
       </module>
-      <module name="impl/compiler-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-impl" current-layer="Default">
+      <module name="impl/compiler-impl" dirurl="file://$PROJECT_DIR$/modules/compiler-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -66,7 +66,7 @@
           <orderEntry type="module" module-name="lang-api" />
         </module-layer>
       </module>
-      <module name="impl/compiler-server-impl" dirurl="file://$PROJECT_DIR$/platform/compiler-server-impl" current-layer="Default">
+      <module name="impl/compiler-server-impl" dirurl="file://$PROJECT_DIR$/modules/compiler-server-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -134,7 +134,7 @@
           <orderEntry type="module" module-name="lang-impl" />
         </module-layer>
       </module>
-      <module name="api/core-api" dirurl="file://$PROJECT_DIR$/platform/core-api" current-layer="Default">
+      <module name="api/core-api" dirurl="file://$PROJECT_DIR$/modules/core-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
@@ -152,7 +152,7 @@
           <orderEntry type="library" name="CGLIB" level="project" />
         </module-layer>
       </module>
-      <module name="impl/core-impl" dirurl="file://$PROJECT_DIR$/platform/core-impl" current-layer="Default">
+      <module name="impl/core-impl" dirurl="file://$PROJECT_DIR$/modules/core-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
@@ -830,7 +830,7 @@
           <orderEntry type="module" module-name="compiler-impl" />
         </module-layer>
       </module>
-      <module name="impl/coverage-impl" dirurl="file://$PROJECT_DIR$/platform/coverage-impl" current-layer="Default">
+      <module name="impl/coverage-impl" dirurl="file://$PROJECT_DIR$/modules/coverage-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -981,15 +981,8 @@
               <sources>
                 <root url="file://$MODULE_DIR$/lib" />
               </sources>
-              <jarDirectory url="file://$MODULE_DIR$/../../impl/web-impl/lib" recursive="false" />
-              <jarDirectory url="file://$MODULE_DIR$/../../impl/web-impl/lib" recursive="false" type="sources" />
-            </library>
-          </orderEntry>
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/../../impl/web-boot/lib/javax.servlet-api-3.1.0.jar!/" />
-              </binaries>
+              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
+              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" type="sources" />
             </library>
           </orderEntry>
         </module-layer>
@@ -1058,17 +1051,17 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="util" />
+          <orderEntry type="library" name="Log4J" level="project" />
+          <orderEntry type="library" name="Trove4j" level="project" />
           <orderEntry type="module-library">
             <library>
               <binaries>
                 <root url="file://$MODULE_DIR$/lib" />
               </binaries>
-              <jarDirectory url="file://$MODULE_DIR$/../../impl/web-boot/lib" recursive="false" />
+              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
             </library>
           </orderEntry>
-          <orderEntry type="module" module-name="util" />
-          <orderEntry type="library" name="Log4J" level="project" />
-          <orderEntry type="library" name="Trove4j" level="project" />
         </module-layer>
       </module>
       <module name="impl/analysis-impl" dirurl="file://$PROJECT_DIR$/modules/analysis-impl" current-layer="Default">
