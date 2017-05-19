@@ -23,8 +23,11 @@ import com.intellij.ide.dnd.TransferableWrapper;
 import com.intellij.ide.projectView.impl.nodes.DropTargetNode;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -158,9 +161,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     return path == null ? null : (TreeNode)path.getLastPathComponent();
   }
 
-  private boolean doDrop(@NotNull final TreeNode[] sourceNodes,
-                         @NotNull final TreeNode targetNode,
-                         final int dropAction) {
+  private boolean doDrop(@NotNull final TreeNode[] sourceNodes, @NotNull final TreeNode targetNode, final int dropAction) {
     TreeNode validTargetNode = getValidTargetNode(sourceNodes, targetNode, dropAction);
     if (validTargetNode != null) {
       final TreeNode[] filteredSourceNodes = removeRedundantSourceNodes(sourceNodes, validTargetNode, dropAction);
@@ -186,9 +187,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     }
   }
 
-  private TreeNode[] removeRedundantSourceNodes(@NotNull final TreeNode[] sourceNodes,
-                                                @NotNull final TreeNode targetNode,
-                                                final int dropAction) {
+  private TreeNode[] removeRedundantSourceNodes(@NotNull final TreeNode[] sourceNodes, @NotNull final TreeNode targetNode, final int dropAction) {
     final DropHandler dropHandler = getDropHandler(dropAction);
     List<TreeNode> result = new ArrayList<TreeNode>(sourceNodes.length);
     for (TreeNode sourceNode : sourceNodes) {
@@ -241,7 +240,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
 
     @NotNull
     protected PsiElement[] getPsiElements(@NotNull TreeNode[] nodes) {
-      List<PsiElement> psiElements = new ArrayList<PsiElement>(nodes.length);
+      List<PsiElement> psiElements = new ArrayList<>(nodes.length);
       for (TreeNode node : nodes) {
         PsiElement psiElement = getPsiElement(node);
         if (psiElement != null) {
@@ -264,9 +263,8 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     for (File file : fileList) {
       final VirtualFile vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
       if (vFile != null) {
-        final PsiFileSystemItem psiFile = vFile.isDirectory()
-                                          ? PsiManager.getInstance(myProject).findDirectory(vFile)
-                                          : PsiManager.getInstance(myProject).findFile(vFile);
+        final PsiFileSystemItem psiFile =
+                vFile.isDirectory() ? PsiManager.getInstance(myProject).findDirectory(vFile) : PsiManager.getInstance(myProject).findFile(vFile);
         if (psiFile != null) {
           sourceFiles.add(psiFile);
         }
@@ -286,9 +284,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
       }
       final PsiElement[] sourceElements = getPsiElements(sourceNodes);
       final PsiElement targetElement = getPsiElement(targetNode);
-      return sourceElements.length == 0 ||
-             ((targetNode == null || targetElement != null) &&
-              MoveHandler.canMove(sourceElements, targetElement));
+      return sourceElements.length == 0 || ((targetNode == null || targetElement != null) && MoveHandler.canMove(sourceElements, targetElement));
     }
 
     @Override
@@ -307,9 +303,22 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     private void doDrop(TreeNode targetNode, PsiElement[] sourceElements, final boolean externalDrop) {
       final PsiElement targetElement = getPsiElement(targetNode);
       if (targetElement == null) return;
+
+      if (DumbService.isDumb(myProject)) {
+        Messages.showMessageDialog(myProject, "Move refactoring is not available while indexing is in progress", "Indexing", null);
+        return;
+      }
+
       final Module module = getModule(targetNode);
       final DataContext dataContext = DataManager.getInstance().getDataContext(myTree);
-      getActionHandler().invoke(myProject, sourceElements, new DataContext() {
+      PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+
+      if (!targetElement.isValid()) return;
+      for (PsiElement sourceElement : sourceElements) {
+        if (!sourceElement.isValid()) return;
+      }
+
+      DataContext context = new DataContext() {
         @Override
         @Nullable
         public Object getData(@NonNls String dataId) {
@@ -323,7 +332,8 @@ class ProjectViewDropTarget implements DnDNativeTarget {
             return externalDrop ? null : dataContext.getData(dataId);
           }
         }
-      });
+      };
+      TransactionGuard.getInstance().submitTransactionAndWait(() -> getActionHandler().invoke(myProject, sourceElements, context));
     }
 
     private RefactoringActionHandler getActionHandler() {
@@ -379,6 +389,12 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     private void doDrop(TreeNode targetNode, PsiElement[] sourceElements) {
       final PsiElement targetElement = getPsiElement(targetNode);
       if (targetElement == null) return;
+
+      if (DumbService.isDumb(myProject)) {
+        Messages.showMessageDialog(myProject, "Copy refactoring is not available while indexing is in progress", "Indexing", null);
+        return;
+      }
+
       final PsiDirectory psiDirectory;
       if (targetElement instanceof PsiDirectoryContainer) {
         final PsiDirectoryContainer directoryContainer = (PsiDirectoryContainer)targetElement;
@@ -393,7 +409,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
         LOG.assertTrue(containingFile != null);
         psiDirectory = containingFile.getContainingDirectory();
       }
-      CopyHandler.doCopy(sourceElements, psiDirectory);
+      TransactionGuard.getInstance().submitTransactionAndWait(() -> CopyHandler.doCopy(sourceElements, psiDirectory));
     }
 
     @Override
