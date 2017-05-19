@@ -167,7 +167,7 @@
           <orderEntry type="library" name="Guava" level="project" />
         </module-layer>
       </module>
-      <module name="api/editor-ui-api" dirurl="file://$PROJECT_DIR$/platform/editor-ui-api" current-layer="Default">
+      <module name="api/editor-ui-api" dirurl="file://$PROJECT_DIR$/modules/editor-ui-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -182,7 +182,7 @@
           <orderEntry type="module" module-name="indexing-api" />
         </module-layer>
       </module>
-      <module name="api/editor-ui-ex" dirurl="file://$PROJECT_DIR$/platform/editor-ui-ex" current-layer="Default">
+      <module name="api/editor-ui-ex" dirurl="file://$PROJECT_DIR$/modules/editor-ui-ex" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -198,7 +198,7 @@
           <orderEntry type="module" module-name="projectModel-impl" />
         </module-layer>
       </module>
-      <module name="impl/extensions" dirurl="file://$PROJECT_DIR$/platform/extensions" current-layer="Default">
+      <module name="impl/extensions" dirurl="file://$PROJECT_DIR$/modules/extensions" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -217,7 +217,7 @@
           <orderEntry type="library" name="Mocks" level="project" />
         </module-layer>
       </module>
-      <module name="api/external-system-api" dirurl="file://$PROJECT_DIR$/platform/external-system-api" current-layer="Default">
+      <module name="api/external-system-api" dirurl="file://$PROJECT_DIR$/modules/external-system-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -234,7 +234,7 @@
           <orderEntry type="module" module-name="compiler-api" exported="" />
         </module-layer>
       </module>
-      <module name="impl/external-system-impl" dirurl="file://$PROJECT_DIR$/platform/external-system-impl" current-layer="Default">
+      <module name="impl/external-system-impl" dirurl="file://$PROJECT_DIR$/modules/external-system-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -842,7 +842,7 @@
           <orderEntry type="module" module-name="testRunner" />
         </module-layer>
       </module>
-      <module name="api/dvcs-api" dirurl="file://$PROJECT_DIR$/platform/dvcs-api" current-layer="Default">
+      <module name="api/dvcs-api" dirurl="file://$PROJECT_DIR$/modules/dvcs-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -867,7 +867,7 @@
           <orderEntry type="module" module-name="util-rt" />
         </module-layer>
       </module>
-      <module name="impl/dvcs-impl" dirurl="file://$PROJECT_DIR$/platform/dvcs-impl" current-layer="Default">
+      <module name="impl/dvcs-impl" dirurl="file://$PROJECT_DIR$/modules/dvcs-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -914,7 +914,7 @@
           <orderEntry type="library" name="slf4j-api" level="project" />
         </module-layer>
       </module>
-      <module name="impl/diff-impl" dirurl="file://$PROJECT_DIR$/platform/diff-impl" current-layer="Default">
+      <module name="impl/diff-impl" dirurl="file://$PROJECT_DIR$/modules/diff-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -930,7 +930,7 @@
           <orderEntry type="module" module-name="vcs-api" />
         </module-layer>
       </module>
-      <module name="api/diff-api" dirurl="file://$PROJECT_DIR$/platform/diff-api" current-layer="Default">
+      <module name="api/diff-api" dirurl="file://$PROJECT_DIR$/modules/diff-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
