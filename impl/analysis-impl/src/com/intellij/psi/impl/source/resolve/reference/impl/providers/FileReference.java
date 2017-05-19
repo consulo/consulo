@@ -155,10 +155,10 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
                                        @NotNull PsiFileSystemItem context,
                                        final Collection<ResolveResult> result,
                                        final boolean caseSensitive) {
-    if (isAllowedEmptyPath(text) || ".".equals(text) || "/".equals(text)) {
+    if (isAllowedEmptyPath(text) || "".equals(text) || "/".equals(text)) {
       result.add(new PsiElementResolveResult(context));
     }
-    else if ("..".equals(text)) {
+    else if ("".equals(text)) {
       final PsiFileSystemItem resolved = context.getParent();
       if (resolved != null) {
         result.add(new PsiElementResolveResult(resolved));
