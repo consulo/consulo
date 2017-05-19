@@ -39,11 +39,11 @@
           <element id="zip-archive" name="consulo-web-impl.jar">
             <element id="module-output" name="web-impl" />
           </element>
-          <element id="dir-copy" path="$PROJECT_DIR$/impl/web-impl/lib" />
-          <element id="file-copy" path="$PROJECT_DIR$/impl/web-boot/lib/javax.servlet-api-3.1.0.jar" />
+          <element id="dir-copy" path="$PROJECT_DIR$/modules/web-impl/lib" />
+          <element id="file-copy" path="$PROJECT_DIR$/modules/web-boot/lib/javax.servlet-api-3.1.0.jar" />
           <element id="zip-archive" name="consulo-web-resources.jar">
             <element id="directory" name="webResources">
-              <element id="dir-copy" path="$PROJECT_DIR$/impl/web-impl/gwt-out" />
+              <element id="dir-copy" path="$PROJECT_DIR$/modules/web-impl/gwt-out" />
             </element>
           </element>
         </element>

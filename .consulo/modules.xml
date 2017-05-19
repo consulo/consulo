@@ -23,7 +23,7 @@
           <orderEntry type="module" module-name="util" />
         </module-layer>
       </module>
-      <module name="api/compiler-api" dirurl="file://$PROJECT_DIR$/api/compiler-api" current-layer="Default">
+      <module name="api/compiler-api" dirurl="file://$PROJECT_DIR$/modules/compiler-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -954,11 +954,11 @@
           <orderEntry type="module" module-name="editor-ui-api" />
         </module-layer>
       </module>
-      <module name="impl/web-impl" dirurl="file://$PROJECT_DIR$/impl/web-impl" current-layer="Default">
+      <module name="impl/web-impl" dirurl="file://$PROJECT_DIR$/modules/web-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <extension id="java-web" />
-          <extension id="javaee-google-gwt" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-output-url="file://$MODULE_DIR$/gwt-out" compiler-max-heap-size="256" compiler-parameters="-draftCompile" compiler-vm-parameters="" />
+          <extension id="javaee-google-gwt" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-output-url="file://$MODULE_DIR$/../../impl/web-impl/gwt-out" compiler-max-heap-size="256" compiler-parameters="-draftCompile" compiler-vm-parameters="" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-out" />
             <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-unitCache" />
@@ -981,20 +981,20 @@
               <sources>
                 <root url="file://$MODULE_DIR$/lib" />
               </sources>
-              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
-              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" type="sources" />
+              <jarDirectory url="file://$MODULE_DIR$/../../impl/web-impl/lib" recursive="false" />
+              <jarDirectory url="file://$MODULE_DIR$/../../impl/web-impl/lib" recursive="false" type="sources" />
             </library>
           </orderEntry>
           <orderEntry type="module-library">
             <library>
               <binaries>
-                <root url="jar://$MODULE_DIR$/../web-boot/lib/javax.servlet-api-3.1.0.jar!/" />
+                <root url="jar://$MODULE_DIR$/../../impl/web-boot/lib/javax.servlet-api-3.1.0.jar!/" />
               </binaries>
             </library>
           </orderEntry>
         </module-layer>
       </module>
-      <module name="api/ui-api" dirurl="file://$PROJECT_DIR$/api/ui-api" current-layer="Default">
+      <module name="api/ui-api" dirurl="file://$PROJECT_DIR$/modules/ui-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
@@ -1007,7 +1007,7 @@
           <orderEntry type="module" module-name="util-rt" />
         </module-layer>
       </module>
-      <module name="impl/external-storage-impl" dirurl="file://$PROJECT_DIR$/impl/external-storage-impl" current-layer="Default">
+      <module name="impl/external-storage-impl" dirurl="file://$PROJECT_DIR$/modules/external-storage-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
@@ -1036,7 +1036,7 @@
           <orderEntry type="library" name="XmlRPC" level="project" />
         </module-layer>
       </module>
-      <module name="impl/desktop-ui-impl" dirurl="file://$PROJECT_DIR$/impl/desktop-ui-impl" current-layer="Default">
+      <module name="impl/desktop-ui-impl" dirurl="file://$PROJECT_DIR$/modules/desktop-ui-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
@@ -1048,7 +1048,7 @@
           <orderEntry type="module" module-name="ui-api" />
         </module-layer>
       </module>
-      <module name="impl/web-boot" dirurl="file://$PROJECT_DIR$/impl/web-boot" current-layer="Default">
+      <module name="impl/web-boot" dirurl="file://$PROJECT_DIR$/modules/web-boot" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-name="1.8" language-level-name="JDK_1_8" bytecode-version="1.8" />
           <extension id="java-web" />
@@ -1063,7 +1063,7 @@
               <binaries>
                 <root url="file://$MODULE_DIR$/lib" />
               </binaries>
-              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
+              <jarDirectory url="file://$MODULE_DIR$/../../impl/web-boot/lib" recursive="false" />
             </library>
           </orderEntry>
           <orderEntry type="module" module-name="util" />
@@ -1071,7 +1071,7 @@
           <orderEntry type="library" name="Trove4j" level="project" />
         </module-layer>
       </module>
-      <module name="impl/analysis-impl" dirurl="file://$PROJECT_DIR$/impl/analysis-impl" current-layer="Default">
+      <module name="impl/analysis-impl" dirurl="file://$PROJECT_DIR$/modules/analysis-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -1089,7 +1089,7 @@
           <orderEntry type="module" module-name="indexing-impl" />
         </module-layer>
       </module>
-      <module name="api/analysis-api" dirurl="file://$PROJECT_DIR$/api/analysis-api" current-layer="Default">
+      <module name="api/analysis-api" dirurl="file://$PROJECT_DIR$/modules/analysis-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -1106,7 +1106,7 @@
           <orderEntry type="module" module-name="editor-ui-api" exported="" />
         </module-layer>
       </module>
-      <module name="api/annotations" dirurl="file://$PROJECT_DIR$/api/annotations" current-layer="Default">
+      <module name="api/annotations" dirurl="file://$PROJECT_DIR$/modules/annotations" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-name="1.8" language-level-name="JDK_1_6" bytecode-version="1.6" />
           <content url="file://$MODULE_DIR$">
