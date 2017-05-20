@@ -21,6 +21,7 @@
     <groupId>consulo</groupId>
     <artifactId>parent</artifactId>
     <version>SNAPSHOT</version>
+    <relativePath>../../main/pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
