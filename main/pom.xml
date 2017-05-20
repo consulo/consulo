@@ -62,8 +62,8 @@
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
           <fork>true</fork>
-          <meminitial>2g</meminitial>
-          <maxmem>3g</maxmem>
+          <meminitial>1024</meminitial>
+          <maxmem>2048</maxmem>
         </configuration>
       </plugin>
     </plugins>
