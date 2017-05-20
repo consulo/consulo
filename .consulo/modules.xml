@@ -551,7 +551,7 @@
           <orderEntry type="module" module-name="compiler-api" />
         </module-layer>
       </module>
-      <module name="impl/remote-servers-agent-rt" dirurl="file://$PROJECT_DIR$/platform/remote-servers-agent-rt" current-layer="Default">
+      <module name="impl/remote-servers-agent-rt" dirurl="file://$PROJECT_DIR$/modules/remote-servers-agent-rt" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -561,7 +561,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="api/remote-servers-api" dirurl="file://$PROJECT_DIR$/platform/remote-servers-api" current-layer="Default">
+      <module name="api/remote-servers-api" dirurl="file://$PROJECT_DIR$/modules/remote-servers-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -575,7 +575,7 @@
           <orderEntry type="module" module-name="lang-api" />
         </module-layer>
       </module>
-      <module name="impl/remote-servers-impl" dirurl="file://$PROJECT_DIR$/platform/remote-servers-impl" current-layer="Default">
+      <module name="impl/remote-servers-impl" dirurl="file://$PROJECT_DIR$/modules/remote-servers-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -612,7 +612,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="impl/smRunner" dirurl="file://$PROJECT_DIR$/platform/smRunner" current-layer="Default">
+      <module name="impl/smRunner" dirurl="file://$PROJECT_DIR$/modules/smRunner" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -631,7 +631,7 @@
           <orderEntry type="library" name="slf4j-api" level="project" />
         </module-layer>
       </module>
-      <module name="impl/testFramework" dirurl="file://$PROJECT_DIR$/platform/testFramework" current-layer="Default">
+      <module name="impl/testFramework" dirurl="file://$PROJECT_DIR$/modules/testFramework" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -655,7 +655,7 @@
           <orderEntry type="library" name="tcServiceMessages" level="project" />
         </module-layer>
       </module>
-      <module name="impl/testRunner" dirurl="file://$PROJECT_DIR$/platform/testRunner" current-layer="Default">
+      <module name="impl/testRunner" dirurl="file://$PROJECT_DIR$/modules/testRunner" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -669,7 +669,7 @@
           <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
-      <module name="impl/usageView" dirurl="file://$PROJECT_DIR$/platform/usageView" current-layer="Default">
+      <module name="impl/usageView" dirurl="file://$PROJECT_DIR$/modules/usageView" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -719,7 +719,7 @@
           <orderEntry type="module" module-name="annotations" />
         </module-layer>
       </module>
-      <module name="api/vcs-api" dirurl="file://$PROJECT_DIR$/platform/vcs-api" current-layer="Default">
+      <module name="api/vcs-api" dirurl="file://$PROJECT_DIR$/modules/vcs-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -732,7 +732,7 @@
           <orderEntry type="module" module-name="vcs-api-core" exported="" />
         </module-layer>
       </module>
-      <module name="impl/vcs-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-impl" current-layer="Default">
+      <module name="impl/vcs-impl" dirurl="file://$PROJECT_DIR$/modules/vcs-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -751,12 +751,12 @@
           <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
-      <module name="api/vcs-log-api" dirurl="file://$PROJECT_DIR$/platform/vcs-log-api" current-layer="Default">
+      <module name="api/vcs-log-api" dirurl="file://$PROJECT_DIR$/modules/vcs-log-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-            <content-folder type="TEST" url="file://$MODULE_DIR$/../vcs-log/api/test" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/../../platform/vcs-log/api/test" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
@@ -767,14 +767,14 @@
           <orderEntry type="module" module-name="vcs-log-graph-api" />
         </module-layer>
       </module>
-      <module name="impl/vcs-log-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-log-impl" current-layer="Default">
+      <module name="impl/vcs-log-impl" dirurl="file://$PROJECT_DIR$/modules/vcs-log-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
             <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/../vcs-log/impl/icons" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/../../platform/vcs-log/impl/icons" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
@@ -789,7 +789,7 @@
           <orderEntry type="module" module-name="lang-impl" />
         </module-layer>
       </module>
-      <module name="api/xdebugger-api" dirurl="file://$PROJECT_DIR$/platform/xdebugger-api" current-layer="Default">
+      <module name="api/xdebugger-api" dirurl="file://$PROJECT_DIR$/modules/xdebugger-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -800,7 +800,7 @@
           <orderEntry type="module" module-name="lang-api" exported="" />
         </module-layer>
       </module>
-      <module name="impl/xdebugger-impl" dirurl="file://$PROJECT_DIR$/platform/xdebugger-impl" current-layer="Default">
+      <module name="impl/xdebugger-impl" dirurl="file://$PROJECT_DIR$/modules/xdebugger-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -855,7 +855,7 @@
           <orderEntry type="module" module-name="vcs-api" />
         </module-layer>
       </module>
-      <module name="api/vcs-log-graph-api" dirurl="file://$PROJECT_DIR$/platform/vcs-log-graph-api" current-layer="Default">
+      <module name="api/vcs-log-graph-api" dirurl="file://$PROJECT_DIR$/modules/vcs-log-graph-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -886,7 +886,7 @@
           <orderEntry type="module" module-name="lang-impl" />
         </module-layer>
       </module>
-      <module name="impl/vcs-log-graph-impl" dirurl="file://$PROJECT_DIR$/platform/vcs-log-graph-impl" current-layer="Default">
+      <module name="impl/vcs-log-graph-impl" dirurl="file://$PROJECT_DIR$/modules/vcs-log-graph-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -902,7 +902,7 @@
           <orderEntry type="library" name="Guava" level="project" />
         </module-layer>
       </module>
-      <module name="impl/slf4j-bind" dirurl="file://$PROJECT_DIR$/platform/slf4j-bind" current-layer="Default">
+      <module name="impl/slf4j-bind" dirurl="file://$PROJECT_DIR$/modules/slf4j-bind" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -942,7 +942,7 @@
           <orderEntry type="module" module-name="vcs-api-core" exported="" />
         </module-layer>
       </module>
-      <module name="api/vcs-api-core" dirurl="file://$PROJECT_DIR$/platform/vcs-api-core" current-layer="Default">
+      <module name="api/vcs-api-core" dirurl="file://$PROJECT_DIR$/modules/vcs-api-core" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
