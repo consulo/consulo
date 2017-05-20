@@ -38,6 +38,18 @@
           <orderEntry type="module" module-name="annotations" />
         </module-layer>
       </module>
+      <module name="forms_rt" dirurl="file://$PROJECT_DIR$/modules/forms_rt" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-name="1.8 with tools" language-level-name="JDK_1_8" bytecode-version="1.8" />
+          <extension id="maven" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
+            <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/target" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+        </module-layer>
+      </module>
     </modules>
   </component>
 </project>
