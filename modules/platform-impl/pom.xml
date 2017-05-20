@@ -38,7 +38,22 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
+      <artifactId>boot</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>bootstrap</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
       <artifactId>platform-api</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>lang-api</artifactId>
       <version>SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -46,7 +61,78 @@
       <artifactId>core-impl</artifactId>
       <version>SNAPSHOT</version>
     </dependency>
-    <!--internal dependencies-->
-    <!--external dependencies-->
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>projectModel-impl</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>analysis-impl</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>editor-ui-ex</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>diff-api</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <!--internal libraries-->
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>javasysmon</artifactId>
+      <version>0.3.6</version>
+    </dependency>
+    <!--extenal libraries-->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>${gson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>args4j</groupId>
+      <artifactId>args4j</artifactId>
+      <version>2.33</version>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <version>${cglib.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-compress</artifactId>
+      <version>1.14</version>
+    </dependency>
+    <dependency>
+      <groupId>org.swinglabs</groupId>
+      <artifactId>swingx</artifactId>
+      <version>1.6.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.swinglabs</groupId>
+          <artifactId>swing-worker</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>javax.help</groupId>
+      <artifactId>javahelp</artifactId>
+      <version>2.0.05</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.sanselan</groupId>
+      <artifactId>sanselan</artifactId>
+      <version>0.97-incubator</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jvnet.winp</groupId>
+      <artifactId>winp</artifactId>
+      <version>1.25</version>
+    </dependency>
   </dependencies>
 </project>

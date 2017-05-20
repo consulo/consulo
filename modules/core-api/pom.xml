@@ -77,7 +77,7 @@
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib-nodep</artifactId>
-      <version>3.2.5</version>
+      <version>${cglib.version}</version>
     </dependency>
   </dependencies>
 </project>
