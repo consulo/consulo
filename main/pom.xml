@@ -60,6 +60,8 @@
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
           <fork>true</fork>
+          <meminitial>512m</meminitial>
+          <maxmem>1g</maxmem>
         </configuration>
       </plugin>
     </plugins>
