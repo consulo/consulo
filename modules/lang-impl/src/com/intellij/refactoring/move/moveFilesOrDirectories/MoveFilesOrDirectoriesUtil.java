@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.refactoring.RefactoringBundle;
@@ -34,11 +33,13 @@ import com.intellij.refactoring.move.MoveHandler;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,8 +52,8 @@ public class MoveFilesOrDirectoriesUtil {
   /**
    * Moves the specified directory to the specified parent directory. Does not process non-code usages!
    *
-   * @param dir          the directory to move.
-   * @param newParentDir the directory to move <code>dir</code> into.
+   * @param aDirectory          the directory to move.
+   * @param destDirectory the directory to move {@code dir} into.
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    */
   public static void doMoveDirectory(final PsiDirectory aDirectory, final PsiDirectory destDirectory) throws IncorrectOperationException {
@@ -66,28 +67,29 @@ public class MoveFilesOrDirectoriesUtil {
     catch (IOException e) {
       throw new IncorrectOperationException(e);
     }
-
     DumbService.getInstance(manager.getProject()).completeJustSubmittedTasks();
   }
 
   /**
-   * Moves the specified file to the specified directory. Does not process non-code usages!
+   * Moves the specified file to the specified directory. Does not process non-code usages! file may be invalidated, need to be refreshed before use, like {@code newDirectory.findFile(file.getName())}
    *
    * @param file         the file to move.
    * @param newDirectory the directory to move the file into.
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    */
-  public static void doMoveFile(final PsiFile file, final PsiDirectory newDirectory) throws IncorrectOperationException {
-    PsiManager manager = file.getManager();
+  public static void doMoveFile(@NotNull PsiFile file, @NotNull PsiDirectory newDirectory) throws IncorrectOperationException {
     // the class is already there, this is true when multiple classes are defined in the same file
     if (!newDirectory.equals(file.getContainingDirectory())) {
       // do actual move
       checkMove(file, newDirectory);
 
+      VirtualFile vFile = file.getVirtualFile();
+      if (vFile == null) {
+        throw new IncorrectOperationException("Non-physical file: " + file + " (" + file.getClass() + ")");
+      }
+
       try {
-        final VirtualFile virtualFile = file.getVirtualFile();
-        LOG.assertTrue(virtualFile != null, file);
-        virtualFile.move(manager, newDirectory.getVirtualFile());
+        vFile.move(file.getManager(), newDirectory.getVirtualFile());
       }
       catch (IOException e) {
         throw new IncorrectOperationException(e);
@@ -131,51 +133,48 @@ public class MoveFilesOrDirectoriesUtil {
     final MoveFilesOrDirectoriesDialog.Callback doRun = new MoveFilesOrDirectoriesDialog.Callback() {
       @Override
       public void run(final MoveFilesOrDirectoriesDialog moveDialog) {
-        CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-          @Override
-          public void run() {
-            final PsiDirectory targetDirectory = moveDialog != null ? moveDialog.getTargetDirectory() : initialTargetDirectory;
+        CommandProcessor.getInstance().executeCommand(project, () -> {
+          final PsiDirectory targetDirectory1 = moveDialog != null ? moveDialog.getTargetDirectory() : initialTargetDirectory;
+          if (targetDirectory1 == null) {
+            LOG.error("It is null! The target directory, it is null!");
+            return;
+          }
 
-            LOG.assertTrue(targetDirectory != null);
-            targetElement[0] = targetDirectory;
+          Collection<PsiElement> toCheck = ContainerUtil.newArrayList((PsiElement)targetDirectory1);
+          for (PsiElement e : newElements) {
+            toCheck.add(e instanceof PsiFileSystemItem && e.getParent() != null ? e.getParent() : e);
+          }
+          if (!CommonRefactoringUtil.checkReadOnlyStatus(project, toCheck, false)) {
+            return;
+          }
 
-            PsiManager manager = PsiManager.getInstance(project);
-            try {
-              final int[] choice = elements.length > 1 || elements[0] instanceof PsiDirectory ? new int[]{-1} : null;
-              final List<PsiElement> els = new ArrayList<PsiElement>();
-              for (int i = 0, newElementsLength = newElements.length; i < newElementsLength; i++) {
-                final PsiElement psiElement = newElements[i];
-                if (psiElement instanceof PsiFile) {
-                  final PsiFile file = (PsiFile)psiElement;
-                  final boolean fileExist = ApplicationManager.getApplication().runWriteAction(new Computable<Boolean>() {
-                    @Override
-                    public Boolean compute() {
-                     return CopyFilesOrDirectoriesHandler.checkFileExist(targetDirectory, choice, file, file.getName(), "Move");
-                    }
-                  });
-                  if (fileExist) continue;
-                }
-                checkMove(psiElement, targetDirectory);
-                els.add(psiElement);
+          targetElement[0] = targetDirectory1;
+
+          try {
+            final int[] choice = elements.length > 1 || elements[0] instanceof PsiDirectory ? new int[]{-1} : null;
+            final List<PsiElement> els = new ArrayList<>();
+            for (final PsiElement psiElement : newElements) {
+              if (psiElement instanceof PsiFile) {
+                final PsiFile file = (PsiFile)psiElement;
+                if (CopyFilesOrDirectoriesHandler.checkFileExist(targetDirectory1, choice, file, file.getName(), "Move")) continue;
               }
-              final Runnable callback = new Runnable() {
-                @Override
-                public void run() {
-                  if (moveDialog != null) moveDialog.close(DialogWrapper.CANCEL_EXIT_CODE);
-                }
-              };
-              if (els.isEmpty()) {
-                callback.run();
-                return;
-              }
-              new MoveFilesOrDirectoriesProcessor(project, els.toArray(new PsiElement[els.size()]), targetDirectory,
-                                                  RefactoringSettings.getInstance().MOVE_SEARCH_FOR_REFERENCES_FOR_FILE,
-                                                  false, false, moveCallback, callback).run();
+              checkMove(psiElement, targetDirectory1);
+              els.add(psiElement);
             }
-            catch (IncorrectOperationException e) {
-              CommonRefactoringUtil.showErrorMessage(RefactoringBundle.message("error.title"), e.getMessage(),
-                                                     "refactoring.moveFile", project);
+            final Runnable callback = () -> {
+              if (moveDialog != null) moveDialog.close(DialogWrapper.CANCEL_EXIT_CODE);
+            };
+            if (els.isEmpty()) {
+              callback.run();
+              return;
             }
+            new MoveFilesOrDirectoriesProcessor(project, els.toArray(new PsiElement[els.size()]), targetDirectory1,
+                                                RefactoringSettings.getInstance().MOVE_SEARCH_FOR_REFERENCES_FOR_FILE,
+                                                false, false, moveCallback, callback).run();
+          }
+          catch (IncorrectOperationException e) {
+            CommonRefactoringUtil.showErrorMessage(RefactoringBundle.message("error.title"), e.getMessage(),
+                                                   "refactoring.moveFile", project);
           }
         }, MoveHandler.REFACTORING_NAME, null);
       }
@@ -204,7 +203,7 @@ public class MoveFilesOrDirectoriesUtil {
       case 1:
         return directories[0];
       default:
-        return DirectoryChooserUtil.chooseDirectory(directories, directories[0], project, new HashMap<PsiDirectory, String>());
+        return DirectoryChooserUtil.chooseDirectory(directories, directories[0], project, new HashMap<>());
     }
 
   }
@@ -283,7 +282,7 @@ public class MoveFilesOrDirectoriesUtil {
       }
       else if (dirs.length > 1) {
         throw new IncorrectOperationException(
-          "Moving of packages represented by more than one physical directory is not supported.");
+                "Moving of packages represented by more than one physical directory is not supported.");
       }
       checkMove(dirs[0], newContainer);
       return;
@@ -307,7 +306,7 @@ public class MoveFilesOrDirectoriesUtil {
           }
         }
         else {
-          throw new IncorrectOperationException("Element is not directory: " + element);
+          throw new IncorrectOperationException();
         }
       }
       container = container.getParent();

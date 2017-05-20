@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.intellij.ide.util;
 
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -29,6 +30,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EditorHelper {
+  public static <T extends PsiElement> void openFilesInEditor(@NotNull T[] elements) {
+    final int limit = UISettings.getInstance().getEditorTabLimit();
+    final int max = Math.min(limit, elements.length);
+    for (int i = 0; i < max; i++) {
+      openInEditor(elements[i], true);
+    }
+  }
 
   public static Editor openInEditor(@NotNull PsiElement element) {
     FileEditor editor = openInEditor(element, true);
