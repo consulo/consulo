@@ -681,7 +681,7 @@
           <orderEntry type="module" module-name="platform-impl" />
         </module-layer>
       </module>
-      <module name="impl/util" dirurl="file://$PROJECT_DIR$/platform/util" current-layer="Default">
+      <module name="impl/util" dirurl="file://$PROJECT_DIR$/modules/util" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
@@ -708,7 +708,7 @@
           <orderEntry type="module" module-name="ui-api" />
         </module-layer>
       </module>
-      <module name="impl/util-rt" dirurl="file://$PROJECT_DIR$/platform/util-rt" current-layer="Default">
+      <module name="impl/util-rt" dirurl="file://$PROJECT_DIR$/modules/util-rt" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
