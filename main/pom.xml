@@ -67,6 +67,12 @@
 
   <dependencies>
     <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>forms_rt</artifactId>
+      <version>1.0</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
