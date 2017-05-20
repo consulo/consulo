@@ -17,6 +17,7 @@
     <module>modules/core-api</module>
     <module>modules/core-impl</module>
     <module>modules/boot</module>
+    <module>modules/bootstrap</module>
     <module>modules/extensions</module>
     <module>modules/indexing-api</module>
     <module>modules/editor-ui-api</module>
