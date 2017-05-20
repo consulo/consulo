@@ -17,9 +17,8 @@ package com.intellij.util.io.zip;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.io.zip.JBZipEntry;
-import com.intellij.util.io.zip.JBZipFile;
-import com.intellij.util.io.zip.ReorderJarsMain;
+import com.intellij.util.lang.JarMemoryLoader;
+import com.intellij.util.lang.Resource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

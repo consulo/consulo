@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-abstract class Resource {
+public abstract class Resource {
   public enum Attribute {
     SPEC_TITLE, SPEC_VERSION, SPEC_VENDOR, IMPL_TITLE, IMPL_VERSION, IMPL_VENDOR
   }
