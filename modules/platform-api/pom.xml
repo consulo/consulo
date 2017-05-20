@@ -73,11 +73,6 @@
       <artifactId>analysis-api</artifactId>
       <version>SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>consulo</groupId>
-      <artifactId>forms_rt</artifactId>
-      <version>SNAPSHOT</version>
-    </dependency>
     <!--internal dependencies-->
     <dependency>
       <groupId>consulo.internal</groupId>
