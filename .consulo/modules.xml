@@ -398,7 +398,7 @@
           <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
-      <module name="api/platform-api" dirurl="file://$PROJECT_DIR$/platform/platform-api" current-layer="Default">
+      <module name="api/platform-api" dirurl="file://$PROJECT_DIR$/modules/platform-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -425,7 +425,7 @@
           <orderEntry type="library" name="apache-httpclient" level="project" />
         </module-layer>
       </module>
-      <module name="impl/platform-impl" dirurl="file://$PROJECT_DIR$/platform/platform-impl" current-layer="Default">
+      <module name="impl/platform-impl" dirurl="file://$PROJECT_DIR$/modules/platform-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -471,7 +471,7 @@
           <orderEntry type="library" name="javasysmon" level="project" />
         </module-layer>
       </module>
-      <module name="impl/platform-main" dirurl="file://$PROJECT_DIR$/platform/platform-main" current-layer="Default">
+      <module name="impl/platform-main" dirurl="file://$PROJECT_DIR$/modules/platform-main" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -483,7 +483,7 @@
           <orderEntry type="module" module-name="bootstrap" />
         </module-layer>
       </module>
-      <module name="impl/platform-resources" dirurl="file://$PROJECT_DIR$/platform/platform-resources" current-layer="Default">
+      <module name="impl/platform-resources" dirurl="file://$PROJECT_DIR$/modules/platform-resources" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -493,7 +493,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="impl/platform-resources-en" dirurl="file://$PROJECT_DIR$/platform/platform-resources-en" current-layer="Default">
+      <module name="impl/platform-resources-en" dirurl="file://$PROJECT_DIR$/modules/platform-resources-en" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -503,7 +503,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="impl/platform-tests" dirurl="file://$PROJECT_DIR$/platform/platform-tests" current-layer="Default">
+      <module name="impl/platform-tests" dirurl="file://$PROJECT_DIR$/modules/platform-tests" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -523,7 +523,7 @@
           <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
-      <module name="api/projectModel-api" dirurl="file://$PROJECT_DIR$/platform/projectModel-api" current-layer="Default">
+      <module name="api/projectModel-api" dirurl="file://$PROJECT_DIR$/modules/projectModel-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -537,7 +537,7 @@
           <orderEntry type="module" module-name="ui-api" exported="" />
         </module-layer>
       </module>
-      <module name="impl/projectModel-impl" dirurl="file://$PROJECT_DIR$/platform/projectModel-impl" current-layer="Default">
+      <module name="impl/projectModel-impl" dirurl="file://$PROJECT_DIR$/modules/projectModel-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
