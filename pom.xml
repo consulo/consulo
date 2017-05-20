@@ -23,6 +23,7 @@
     <module>modules/bootstrap</module>
     <module>modules/extensions</module>
     <module>modules/indexing-api</module>
+    <module>modules/indexing-impl</module>
     <module>modules/editor-ui-api</module>
     <module>modules/platform-api</module>
     <module>modules/projectModel-api</module>
