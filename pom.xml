@@ -25,6 +25,7 @@
     <module>modules/editor-ui-api</module>
     <module>modules/platform-api</module>
     <module>modules/projectModel-api</module>
+    <module>modules/projectModel-impl</module>
     <module>modules/ui-api</module>
     <module>modules/util</module>
     <module>modules/util-rt</module>

@@ -53,7 +53,20 @@
   </build>
 
   <dependencies>
-    <!--internal dependencies-->
-    <!--external dependencies-->
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>core-impl</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>projectModel-api</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>compiler-api</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>
