@@ -18,6 +18,7 @@
     <module>modules/core-api</module>
     <module>modules/core-impl</module>
     <module>modules/compiler-api</module>
+    <module>modules/diff-api</module>
     <module>modules/boot</module>
     <module>modules/bootstrap</module>
     <module>modules/extensions</module>
