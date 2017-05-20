@@ -86,6 +86,12 @@
       <scope>test</scope>
     </dependency>
     <!--internal dependencies-->
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>build.serviceMessages</artifactId>
+      <version>1.0</version>
+      <scope>test</scope>
+    </dependency>
     <!--external dependencies-->
     <dependency>
       <groupId>com.miglayout</groupId>

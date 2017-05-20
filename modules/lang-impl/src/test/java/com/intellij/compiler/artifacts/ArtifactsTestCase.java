@@ -7,7 +7,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ModuleRootModificationUtil;
+import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorSettings;
@@ -105,7 +105,7 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
         if (sourceRoot != null) {
           PsiTestUtil.addSourceContentToRoots(module, sourceRoot);
         }
-        ModuleRootModificationUtil.setModuleSdk(module, getTestProjectJdk());
+     //   ModuleRootModificationUtil.setModuleSdk(module, getTestProjectJdk());
         result.setResult(module);
       }
     }.execute().getResultObject();
@@ -115,8 +115,8 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
   public class MockArtifactsStructureConfigurableContext implements ArtifactsStructureConfigurableContext {
     private ModifiableArtifactModel myModifiableModel;
     private final Map<Module, ModifiableRootModel> myModifiableRootModels = new HashMap<Module, ModifiableRootModel>();
-    private final Map<CompositePackagingElement<?>, ManifestFileConfiguration> myManifestFiles =
-      new HashMap<CompositePackagingElement<?>, ManifestFileConfiguration>();
+  //  private final Map<CompositePackagingElement<?>, ManifestFileConfiguration> myManifestFiles =
+   //   new HashMap<CompositePackagingElement<?>, ManifestFileConfiguration>();
 
     @Override
     @NotNull
@@ -179,7 +179,7 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
     public Library findLibrary(@NotNull String level, @NotNull String libraryName) {
       return ArtifactManager.getInstance(myProject).getResolvingContext().findLibrary(level, libraryName);
     }
-
+   /*
     @Override
     public ManifestFileConfiguration getManifestFile(CompositePackagingElement<?> element, ArtifactType artifactType) {
       final VirtualFile manifestFile = ManifestFileUtil.findManifestFile(element, this, PlainArtifactType.getInstance());
@@ -193,7 +193,7 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
         myManifestFiles.put(element, configuration);
       }
       return configuration;
-    }
+    }     */
 
     @Override
     public CompositePackagingElement<?> getRootElement(@NotNull Artifact artifact) {

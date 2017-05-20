@@ -15,7 +15,7 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.history.integration.LocalHistoryImpl;
+import com.intellij.history.LocalHistory;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.IdeaLogger;
@@ -296,7 +296,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
       localFileSystem.cleanupForNextTest();
     }
 
-    LocalHistoryImpl.getInstanceImpl().cleanupForNextTest();
+    LocalHistory.getInstance().cleanupForNextTest();
   }
 
   private static Set<VirtualFile> eternallyLivingFiles() {

@@ -39,6 +39,7 @@
     <module>modules/lvcs-api</module>
     <module>modules/vcs-api</module>
     <module>modules/vcs-api-core</module>
+    <module>modules/vcs-impl</module>
     <module>modules/ui-api</module>
     <module>modules/usageView</module>
     <module>modules/util</module>

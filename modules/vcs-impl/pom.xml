@@ -36,7 +36,22 @@
   </properties>
 
   <dependencies>
-    <!--internal dependencies-->
-    <!--external dependencies-->
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>lang-impl</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>lang-impl</artifactId>
+      <version>SNAPSHOT</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>diff-impl</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>

@@ -15,7 +15,6 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import com.intellij.util.io.TestFileSystemBuilder;
 import com.intellij.util.io.TestFileSystemItem;
-import consulo.vfs.util.ArchiveVfsUtil;
 import junit.framework.Assert;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,7 +65,7 @@ public abstract class ArtifactCompilerTestCase extends BaseCompilerTestCase {
     return TestPackagingElementBuilder.archive(myProject, name);
   }
 
-  protected CompilationLog compileProject() {
+ /* protected CompilationLog compileProject() {
     return make(getArtifactManager().getArtifacts());
   }
 
@@ -83,7 +82,7 @@ public abstract class ArtifactCompilerTestCase extends BaseCompilerTestCase {
 
     jarEntry = jarRoot.findFileByRelativePath(pathInJar);
     Assert.assertNotNull(jarEntry);
-  }
+  }    */
 
   protected static TestFileSystemBuilder fs() {
     return TestFileSystemItem.fs();

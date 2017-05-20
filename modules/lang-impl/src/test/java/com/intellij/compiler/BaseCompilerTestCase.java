@@ -1,47 +1,13 @@
 package com.intellij.compiler;
 
 import com.intellij.ProjectTopics;
-import com.intellij.compiler.impl.CompileDriver;
-import com.intellij.compiler.impl.ExitStatus;
-import com.intellij.openapi.application.Result;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.compiler.*;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootModificationUtil;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
-import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
 import com.intellij.testFramework.ModuleTestCase;
-import com.intellij.testFramework.PsiTestUtil;
-import com.intellij.testFramework.VfsTestUtil;
-import com.intellij.util.ParameterizedRunnable;
-import com.intellij.util.concurrency.Semaphore;
-import com.intellij.util.io.TestFileSystemBuilder;
-import com.intellij.util.ui.UIUtil;
-import consulo.compiler.impl.CompilerManagerImpl;
 import consulo.compiler.server.BuildManager;
-import gnu.trove.THashSet;
 import junit.framework.Assert;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.util.JpsPathUtil;
-
-import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author nik
@@ -66,17 +32,17 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
           forceFSRescan();
         }
       });
-      CompilerTestUtil.enableExternalCompiler(myProject);
+     // CompilerTestUtil.enableExternalCompiler(myProject);
     }
     else {
-      CompilerTestUtil.disableExternalCompiler(myProject);
+     // CompilerTestUtil.disableExternalCompiler(myProject);
     }
   }
 
   protected void forceFSRescan() {
     BuildManager.getInstance().clearState(myProject);
   }
-
+ /*
   @Override
   protected Sdk getTestProjectJdk() {
     if (useExternalCompiler()) {
@@ -98,7 +64,7 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
     }
 
     super.tearDown();
-  }
+  }  */
 
   protected ArtifactManager getArtifactManager() {
     return ArtifactManager.getInstance(myProject);
@@ -114,7 +80,7 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
     return baseDir;
   }
 
-  protected void copyToProject(String relativePath) {
+  /*protected void copyToProject(String relativePath) {
     File dir = PathManagerEx.findFileUnderProjectHome(relativePath, getClass());
     final File target = new File(FileUtil.toSystemDependentName(getProjectBasePath()));
     try {
@@ -130,9 +96,9 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
         virtualDir.refresh(false, true);
       }
     }.execute();
-  }
+  }    */
 
-  protected Module addModule(final String moduleName, final @Nullable VirtualFile sourceRoot) {
+  /*protected Module addModule(final String moduleName, final @Nullable VirtualFile sourceRoot) {
     return addModule(moduleName, sourceRoot, null);
   }
 
@@ -483,5 +449,5 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
         Assert.fail("'" + actual.iterator().next() + "' must not be " + name);
       }
     }
-  }
+  }  */
 }

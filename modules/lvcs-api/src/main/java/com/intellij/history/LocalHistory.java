@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 public abstract class LocalHistory {
   public static final Object VFS_EVENT_REQUESTOR = new Object();
@@ -43,4 +44,7 @@ public abstract class LocalHistory {
   public abstract byte[] getByteContent(VirtualFile f, FileRevisionTimestampComparator c);
 
   public abstract boolean isUnderControl(VirtualFile f);
+
+  @TestOnly
+  public abstract void cleanupForNextTest();
 }
