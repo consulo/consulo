@@ -68,6 +68,18 @@
       <artifactId>platform-impl</artifactId>
       <version>SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>compiler-impl</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>platform-impl</artifactId>
+      <version>SNAPSHOT</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
     <!--internal dependencies-->
     <!--external dependencies-->
   </dependencies>

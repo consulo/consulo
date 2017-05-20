@@ -183,7 +183,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
 
   private void resetClassFields(final Class<?> aClass) {
     try {
-      UsefulTestCase.clearDeclaredFields(this, aClass);
+      clearDeclaredFields(this, aClass);
     }
     catch (IllegalAccessException e) {
       throw new RuntimeException(e);
@@ -533,7 +533,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     DocumentCommitThread.getInstance().clearQueue();
     CodeStyleSettingsManager.getInstance(project).dropTemporarySettings();
     checkAllTimersAreDisposed();
-    UsefulTestCase.doPostponedFormatting(project);
+    doPostponedFormatting(project);
 
     LookupManager lookupManager = LookupManager.getInstance(project);
     if (lookupManager != null) {
@@ -750,7 +750,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     String name = getName();
     assertTrue("Test name should start with 'test': " + name, name.startsWith("test"));
     name = name.substring("test".length());
-    if (!name.isEmpty() && lowercaseFirstLetter && !UsefulTestCase.isAllUppercaseName(name)) {
+    if (!name.isEmpty() && lowercaseFirstLetter && !isAllUppercaseName(name)) {
       name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
     }
     return name;

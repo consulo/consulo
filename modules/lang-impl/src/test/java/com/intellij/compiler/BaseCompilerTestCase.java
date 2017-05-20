@@ -3,7 +3,6 @@ package com.intellij.compiler;
 import com.intellij.ProjectTopics;
 import com.intellij.compiler.impl.CompileDriver;
 import com.intellij.compiler.impl.ExitStatus;
-import consulo.compiler.server.BuildManager;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.ex.PathManagerEx;
@@ -12,7 +11,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ModuleRootAdapter;
+import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootModificationUtil;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -24,13 +25,14 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
 import com.intellij.testFramework.ModuleTestCase;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.PsiTestUtil;
 import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.util.ParameterizedRunnable;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.io.TestFileSystemBuilder;
 import com.intellij.util.ui.UIUtil;
+import consulo.compiler.impl.CompilerManagerImpl;
+import consulo.compiler.server.BuildManager;
 import gnu.trove.THashSet;
 import junit.framework.Assert;
 import org.jetbrains.annotations.Nullable;
@@ -126,7 +128,7 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
     new WriteAction() {
       protected void run(final Result result) {
         VirtualFile virtualDir = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(target);
-        assertNotNull(target.getAbsolutePath() + " not found", virtualDir);
+        Assert.assertNotNull(target.getAbsolutePath() + " not found", virtualDir);
         virtualDir.refresh(false, true);
       }
     }.execute();
@@ -185,7 +187,7 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
 
   protected void assertModulesUpToDate() {
     boolean upToDate = getCompilerManager().isUpToDate(getCompilerManager().createProjectCompileScope());
-    assertTrue("Modules are not up to date", upToDate);
+    Assert.assertTrue("Modules are not up to date", upToDate);
   }
 
   protected CompilationLog compile(boolean force, VirtualFile... files) {
@@ -399,7 +401,7 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
   protected static void createFileInOutput(Module m, final String fileName) {
     try {
       boolean created = new File(getOutputDir(m), fileName).createNewFile();
-      assertTrue(created);
+      Assert.assertTrue(created);
     }
     catch (IOException e) {
       throw new RuntimeException(e);
@@ -409,7 +411,7 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
   protected static void createFileInOutput(Artifact a, final String name)  {
     try {
       boolean created = new File(a.getOutputPath(), name).createNewFile();
-      assertTrue(created);
+      Assert.assertTrue(created);
     }
     catch (IOException e) {
       throw new RuntimeException(e);
@@ -433,7 +435,7 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
 
     public void assertUpToDate() {
       if (useExternalCompiler()) {
-        assertTrue(myExternalBuildUpToDate);
+        Assert.assertTrue(myExternalBuildUpToDate);
       }
       else {
         checkRecompiled();

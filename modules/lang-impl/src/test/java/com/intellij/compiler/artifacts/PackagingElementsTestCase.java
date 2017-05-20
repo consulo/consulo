@@ -17,6 +17,8 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.util.PathUtil;
+import consulo.vfs.util.ArchiveVfsUtil;
+import junit.framework.Assert;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -47,7 +49,7 @@ public abstract class PackagingElementsTestCase extends ArtifactsTestCase {
 
   protected VirtualFile getBaseDir() {
     final VirtualFile baseDir = myProject.getBaseDir();
-    assertNotNull(baseDir);
+    Assert.assertNotNull(baseDir);
     return baseDir;
   }
 
@@ -86,9 +88,9 @@ public abstract class PackagingElementsTestCase extends ArtifactsTestCase {
   private static VirtualFile getJarFromLibDirectory(final String relativePath) {
     final File file = PathManager.findFileInLibDirectory(relativePath);
     final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
-    assertNotNull(file.getAbsolutePath() + " not found", virtualFile);
-    final VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(virtualFile);
-    assertNotNull(jarRoot);
+    Assert.assertNotNull(file.getAbsolutePath() + " not found", virtualFile);
+    final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(virtualFile);
+    Assert.assertNotNull(jarRoot);
     return jarRoot;
   }
 

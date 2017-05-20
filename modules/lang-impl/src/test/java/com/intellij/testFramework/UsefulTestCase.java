@@ -360,11 +360,11 @@ public abstract class UsefulTestCase extends TestCase {
   }
 
   public static void assertOrderedEquals(@NotNull byte[] actual, @NotNull byte[] expected) {
-    assertEquals(actual.length, expected.length);
+    Assert.assertEquals(actual.length, expected.length);
     for (int i = 0; i < actual.length; i++) {
       byte a = actual[i];
       byte e = expected[i];
-      assertEquals("not equals at index: "+i, e, a);
+      Assert.assertEquals("not equals at index: " + i, e, a);
     }
   }
 
@@ -411,8 +411,8 @@ public abstract class UsefulTestCase extends TestCase {
   }
 
   public static <T> void assertSameElements(String message, Collection<? extends T> collection, Collection<T> expected) {
-    assertNotNull(collection);
-    assertNotNull(expected);
+    Assert.assertNotNull(collection);
+    Assert.assertNotNull(expected);
     if (collection.size() != expected.size() || !new HashSet<T>(expected).equals(new HashSet<T>(collection))) {
       Assert.assertEquals(message, toString(expected, "\n"), toString(collection, "\n"));
       Assert.assertEquals(message, new HashSet<T>(expected), new HashSet<T>(collection));
@@ -579,7 +579,7 @@ public abstract class UsefulTestCase extends TestCase {
   }
 
   public static void assertEmpty(final String s) {
-    assertTrue(s, StringUtil.isEmpty(s));
+    Assert.assertTrue(s, StringUtil.isEmpty(s));
   }
 
   public static void assertEmpty(final String errorMsg, final Collection<?> collection) {
@@ -588,11 +588,11 @@ public abstract class UsefulTestCase extends TestCase {
   }
 
   public static void assertSize(int expectedSize, final Object[] array) {
-    assertEquals(toString(Arrays.asList(array)), expectedSize, array.length);
+    Assert.assertEquals(toString(Arrays.asList(array)), expectedSize, array.length);
   }
 
   public static void assertSize(int expectedSize, final Collection<?> c) {
-    assertEquals(toString(c), expectedSize, c.size());
+    Assert.assertEquals(toString(c), expectedSize, c.size());
   }
 
   protected <T extends Disposable> T disposeOnTearDown(final T disposable) {
@@ -737,7 +737,7 @@ public abstract class UsefulTestCase extends TestCase {
       Object firstTimer = field.get(queue);
       if (firstTimer != null) {
         try {
-          fail("Not disposed Timer: " + firstTimer.toString() + "; queue:" + queue);
+          Assert.fail("Not disposed Timer: " + firstTimer.toString() + "; queue:" + queue);
         }
         finally {
           field.set(queue, null);
@@ -790,7 +790,7 @@ public abstract class UsefulTestCase extends TestCase {
     catch (Throwable thr) {
       throwableName = thr.getClass().getName();
     }
-    assertNull(throwableName);
+    Assert.assertNull(throwableName);
   }
 
   private static void assertExceptionOccurred(boolean shouldOccur,
@@ -804,9 +804,9 @@ public abstract class UsefulTestCase extends TestCase {
       if (shouldOccur) {
         wasThrown = true;
         final String errorMessage = exceptionCase.getAssertionErrorMessage();
-        assertEquals(errorMessage, exceptionCase.getExpectedExceptionClass(), e.getClass());
+        Assert.assertEquals(errorMessage, exceptionCase.getExpectedExceptionClass(), e.getClass());
         if (expectedErrorMsg != null) {
-          assertEquals("Compare error messages", expectedErrorMsg, e.getMessage());
+          Assert.assertEquals("Compare error messages", expectedErrorMsg, e.getMessage());
         }
       }
       else if (exceptionCase.getExpectedExceptionClass().equals(e.getClass())) {
@@ -815,7 +815,7 @@ public abstract class UsefulTestCase extends TestCase {
         System.out.println("");
         e.printStackTrace(System.out);
 
-        fail("Exception isn't expected here. Exception message: " + e.getMessage());
+        Assert.fail("Exception isn't expected here. Exception message: " + e.getMessage());
       }
       else {
         throw e;
@@ -823,7 +823,7 @@ public abstract class UsefulTestCase extends TestCase {
     }
     finally {
       if (shouldOccur && !wasThrown) {
-        fail(exceptionCase.getAssertionErrorMessage());
+        Assert.fail(exceptionCase.getAssertionErrorMessage());
       }
     }
   }

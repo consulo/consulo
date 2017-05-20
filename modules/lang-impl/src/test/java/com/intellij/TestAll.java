@@ -439,8 +439,8 @@ public class TestAll implements Test {
       classFilterName = "";
     }
     myTestCaseLoader = new TestCaseLoader(classFilterName, isPerformanceTestsRun());
-    myTestCaseLoader.addFirstTest(Class.forName("_FirstInSuiteTest"));
-    myTestCaseLoader.addLastTest(Class.forName("_LastInSuiteTest"));
+    myTestCaseLoader.addFirstTest(Class.forName("com.intellij.testFramework._FirstInSuiteTest"));
+    myTestCaseLoader.addLastTest(Class.forName("com.intellij.testFramework._LastInSuiteTest"));
 
     fillTestCases(myTestCaseLoader, packageRoot, classRoots);
   }

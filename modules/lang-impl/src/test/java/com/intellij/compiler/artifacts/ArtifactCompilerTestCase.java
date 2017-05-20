@@ -16,6 +16,7 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import com.intellij.util.io.TestFileSystemBuilder;
 import com.intellij.util.io.TestFileSystemItem;
+import junit.framework.Assert;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -31,7 +32,7 @@ public abstract class ArtifactCompilerTestCase extends BaseCompilerTestCase {
   protected void deleteArtifact(final Artifact artifact) {
     final ModifiableArtifactModel model = getArtifactManager().createModifiableModel();
     model.removeArtifact(artifact);
-    commitModel(model);
+    ArtifactsTestCase.commitModel(model);
   }
 
   protected Artifact addArtifact(TestPackagingElementBuilder builder) {
@@ -73,17 +74,17 @@ public abstract class ArtifactCompilerTestCase extends BaseCompilerTestCase {
 
   protected void changeFileInJar(String jarPath, String pathInJar) throws Exception {
     final VirtualFile jarFile = LocalFileSystem.getInstance().findFileByPath(jarPath);
-    assertNotNull(jarFile);
+    Assert.assertNotNull(jarFile);
     final VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(jarFile);
-    assertNotNull(jarRoot);
+    Assert.assertNotNull(jarRoot);
     VirtualFile jarEntry = jarRoot.findFileByRelativePath(pathInJar);
-    assertNotNull(jarEntry);
-    assertNotNull(jarFile);
+    Assert.assertNotNull(jarEntry);
+    Assert.assertNotNull(jarFile);
     changeFile(jarFile);
     jarFile.refresh(false, false);
 
     jarEntry = jarRoot.findFileByRelativePath(pathInJar);
-    assertNotNull(jarEntry);
+    Assert.assertNotNull(jarEntry);
   }
 
   protected static TestFileSystemBuilder fs() {
@@ -92,8 +93,8 @@ public abstract class ArtifactCompilerTestCase extends BaseCompilerTestCase {
 
   public static void assertNoOutput(Artifact artifact) {
     final String outputPath = artifact.getOutputPath();
-    assertNotNull("output path not specified for " + artifact.getName(), outputPath);
-    assertFalse(new File(FileUtil.toSystemDependentName(outputPath)).exists());
+    Assert.assertNotNull("output path not specified for " + artifact.getName(), outputPath);
+    Assert.assertFalse(new File(FileUtil.toSystemDependentName(outputPath)).exists());
   }
 
   public static void assertEmptyOutput(Artifact a1) throws IOException {
@@ -108,9 +109,9 @@ public abstract class ArtifactCompilerTestCase extends BaseCompilerTestCase {
 
   protected static VirtualFile getOutputDir(Artifact artifact) {
     final String output = artifact.getOutputPath();
-    assertNotNull("output path not specified for " + artifact.getName(), output);
+    Assert.assertNotNull("output path not specified for " + artifact.getName(), output);
     final VirtualFile outputFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(output);
-    assertNotNull("output file not found " + output, outputFile);
+    Assert.assertNotNull("output file not found " + output, outputFile);
     return outputFile;
   }
 }

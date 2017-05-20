@@ -77,7 +77,7 @@ public abstract class FileStructureTestBase extends CodeInsightFixtureTestCase {
 
   protected void checkTree() throws Exception {
     final String expected = FileUtil.loadFile(new File(getTestDataPath() + "/" + getTreeFileName()), true);
-    Assert.assertEquals(expected.trim(), PlatformTestUtil.print(getTree(), true).trim());
+    assertEquals(expected.trim(), PlatformTestUtil.print(getTree(), true).trim());
   }
 
 

@@ -1,7 +1,5 @@
 package com.intellij.compiler.artifacts;
 
-import com.intellij.facet.Facet;
-import com.intellij.facet.impl.DefaultFacetsProvider;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.ModifiableModuleModel;
@@ -10,16 +8,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ModuleRootModificationUtil;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.ui.configuration.FacetsProvider;
+import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
+import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorSettings;
+import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactProjectStructureElement;
+import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurableContext;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.ManifestFileProvider;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import com.intellij.packaging.ui.ArtifactEditor;
-import com.intellij.packaging.ui.ManifestFileConfiguration;
 import com.intellij.testFramework.IdeaTestCase;
 import com.intellij.testFramework.PsiTestUtil;
 import org.jetbrains.annotations.NotNull;
@@ -110,46 +109,6 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
     }.execute().getResultObject();
   }
 
-  public static class MockPackagingEditorContext extends ArtifactEditorContextImpl {
-    public MockPackagingEditorContext(ArtifactsStructureConfigurableContext parent, final ArtifactEditorEx editor) {
-      super(parent, editor);
-    }
-
-    @Override
-    public void selectArtifact(@NotNull Artifact artifact) {
-    }
-
-    @Override
-    public void selectFacet(@NotNull Facet<?> facet) {
-    }
-
-    @Override
-    public void selectModule(@NotNull Module module) {
-    }
-
-    @Override
-    public void selectLibrary(@NotNull Library library) {
-    }
-
-    @Override
-    public void queueValidation() {
-    }
-
-    @Override
-    public List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, String title) {
-      return new ArrayList<Artifact>(artifacts);
-    }
-
-    @Override
-    public List<Module> chooseModules(List<Module> modules, String title) {
-      return modules;
-    }
-
-    @Override
-    public List<Library> chooseLibraries(String title) {
-      return Collections.emptyList();
-    }
-  }
 
   public class MockArtifactsStructureConfigurableContext implements ArtifactsStructureConfigurableContext {
     private ModifiableArtifactModel myModifiableModel;
