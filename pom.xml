@@ -10,6 +10,14 @@
 
   <packaging>pom</packaging>
 
+
+  <repositories>
+    <repository>
+      <id>consulo</id>
+      <url>https://nexus.consulo.io/repository/consulo/</url>
+    </repository>
+  </repositories>
+  
   <modules>
     <module>main</module>
 
