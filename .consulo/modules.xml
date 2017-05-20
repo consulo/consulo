@@ -251,7 +251,7 @@
           <orderEntry type="module" module-name="xdebugger-impl" />
         </module-layer>
       </module>
-      <module name="impl/forms_rt" dirurl="file://$PROJECT_DIR$/platform/forms_rt" current-layer="Default">
+      <module name="impl/forms_rt" dirurl="file://$PROJECT_DIR$/modules/forms_rt" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -261,7 +261,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="api/graph-api" dirurl="file://$PROJECT_DIR$/platform/graph-api" current-layer="Default">
+      <module name="api/graph-api" dirurl="file://$PROJECT_DIR$/modules/graph-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -272,7 +272,7 @@
           <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
-      <module name="impl/graph-impl" dirurl="file://$PROJECT_DIR$/platform/graph-impl" current-layer="Default">
+      <module name="impl/graph-impl" dirurl="file://$PROJECT_DIR$/modules/graph-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -284,7 +284,7 @@
           <orderEntry type="module" module-name="graph-api" />
         </module-layer>
       </module>
-      <module name="impl/icons" dirurl="file://$PROJECT_DIR$/platform/icons" current-layer="Default">
+      <module name="impl/icons" dirurl="file://$PROJECT_DIR$/modules/icons" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -294,7 +294,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="api/indexing-api" dirurl="file://$PROJECT_DIR$/platform/indexing-api" current-layer="Default">
+      <module name="api/indexing-api" dirurl="file://$PROJECT_DIR$/modules/indexing-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -307,7 +307,7 @@
           <orderEntry type="library" name="NanoXML" level="project" />
         </module-layer>
       </module>
-      <module name="impl/indexing-impl" dirurl="file://$PROJECT_DIR$/platform/indexing-impl" current-layer="Default">
+      <module name="impl/indexing-impl" dirurl="file://$PROJECT_DIR$/modules/indexing-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
