@@ -28,6 +28,7 @@
     <module>modules/projectModel-api</module>
     <module>modules/projectModel-impl</module>
     <module>modules/lvcs-api</module>
+    <module>modules/vcs-api</module>
     <module>modules/vcs-api-core</module>
     <module>modules/ui-api</module>
     <module>modules/util</module>
