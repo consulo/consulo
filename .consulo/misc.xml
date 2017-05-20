@@ -6,5 +6,10 @@
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/modules/forms_rt/pom.xml" />
+      </set>
+    </option>
   </component>
 </project>
