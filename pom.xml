@@ -33,6 +33,7 @@
     <module>modules/projectModel-api</module>
     <module>modules/projectModel-impl</module>
     <module>modules/lang-api</module>
+    <module>modules/lang-impl</module>
     <module>modules/lvcs-api</module>
     <module>modules/vcs-api</module>
     <module>modules/vcs-api-core</module>

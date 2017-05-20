@@ -26,7 +26,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>diff-impl</artifactId>
+  <artifactId>lang-impl</artifactId>
   <version>SNAPSHOT</version>
 
   <packaging>jar</packaging>
@@ -35,16 +35,40 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin.version}</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+          <fork>true</fork>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>diff-api</artifactId>
+      <artifactId>lang-api</artifactId>
       <version>SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>lang-impl</artifactId>
+      <artifactId>vcs-api</artifactId>
       <version>SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>platform-impl</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <!--internal dependencies-->
+    <!--external dependencies-->
   </dependencies>
 </project>
