@@ -22,6 +22,7 @@
     <module>modules/indexing-api</module>
     <module>modules/editor-ui-api</module>
     <module>modules/forms_rt</module>
+    <module>modules/platform-api</module>
     <module>modules/projectModel-api</module>
     <module>modules/ui-api</module>
     <module>modules/util</module>
