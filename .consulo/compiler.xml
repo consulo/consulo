@@ -25,6 +25,12 @@
       <output url="file://$PROJECT_DIR$/modules/forms_rt/target/test-classes" type="TEST" />
       <output url="file://$PROJECT_DIR$/modules/forms_rt/target/test-classes" type="TEST_RESOURCE" />
     </module>
+    <module name="ui-api" exclude="false">
+      <output url="file://$PROJECT_DIR$/modules/ui-api/target/classes" type="PRODUCTION" />
+      <output url="file://$PROJECT_DIR$/modules/ui-api/target/classes" type="PRODUCTION_RESOURCE" />
+      <output url="file://$PROJECT_DIR$/modules/ui-api/target/test-classes" type="TEST" />
+      <output url="file://$PROJECT_DIR$/modules/ui-api/target/test-classes" type="TEST_RESOURCE" />
+    </module>
   </component>
   <component name="JavaCompilerConfiguration" compiler="JavacCompiler">
     <annotation-processing>
@@ -51,6 +57,13 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="forms_rt" />
+      </profile>
+      <profile default="false" name="Annotation profile for ui-api" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="ui-api" />
       </profile>
     </annotation-processing>
   </component>

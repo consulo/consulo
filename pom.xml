@@ -13,6 +13,7 @@
   <modules>
     <module>modules/annotations</module>
     <module>modules/forms_rt</module>
+    <module>modules/ui-api</module>
     <module>modules/util-rt</module>
   </modules>
 
