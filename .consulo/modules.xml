@@ -56,7 +56,6 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="compiler-api" exported="" />
-          <orderEntry type="module" module-name="resources-en" exported="" />
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="library" name="Netty" level="project" />
           <orderEntry type="library" name="OroMatcher" level="project" />
@@ -103,8 +102,6 @@
           <orderEntry type="module" module-name="platform-main" />
           <orderEntry type="module" module-name="platform-resources" />
           <orderEntry type="module" module-name="platform-resources-en" />
-          <orderEntry type="module" module-name="resources" />
-          <orderEntry type="module" module-name="resources-en" />
           <orderEntry type="module" module-name="testFramework" />
           <orderEntry type="module" module-name="testRunner" />
           <orderEntry type="module" module-name="usageView" />
@@ -337,7 +334,6 @@
           <orderEntry type="library" name="Mocks" level="project" />
           <orderEntry type="module" module-name="analysis-api" exported="" />
           <orderEntry type="module" module-name="compiler-api" />
-          <orderEntry type="module" module-name="resources-en" />
         </module-layer>
       </module>
       <module name="impl/lang-impl" dirurl="file://$PROJECT_DIR$/modules/lang-impl" current-layer="Default">
@@ -532,7 +528,6 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
-          <orderEntry type="module" module-name="resources-en" exported="" />
           <orderEntry type="library" exploded="" name="Guava" level="project" />
           <orderEntry type="module" module-name="ui-api" exported="" />
         </module-layer>
@@ -590,28 +585,6 @@
           <orderEntry type="module" module-name="compiler-impl" />
         </module-layer>
       </module>
-      <module name="impl/resources" dirurl="file://$PROJECT_DIR$/resources" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="platform-resources" />
-          <orderEntry type="module" module-name="util" />
-        </module-layer>
-      </module>
-      <module name="impl/resources-en" dirurl="file://$PROJECT_DIR$/resources-en" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-        </module-layer>
-      </module>
       <module name="impl/smRunner" dirurl="file://$PROJECT_DIR$/modules/smRunner" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
@@ -647,7 +620,6 @@
           <orderEntry type="library" exploded="" name="Log4J" level="project" />
           <orderEntry type="module" module-name="vcs-api" exported="" />
           <orderEntry type="module" module-name="lvcs-impl" />
-          <orderEntry type="module" module-name="resources-en" />
           <orderEntry type="library" exploded="" name="Mocks" level="project" />
           <orderEntry type="module" module-name="vcs-impl" />
           <orderEntry type="module" module-name="platform-resources" exported="" />

@@ -59,8 +59,6 @@
         <element id="module-output" name="platform-impl" />
         <element id="module-production-resource-output" name="platform-impl" />
         <element id="module-output" name="platform-main" />
-        <element id="module-production-resource-output" name="platform-resources" />
-        <element id="module-production-resource-output" name="platform-resources-en" />
         <element id="module-output" name="projectModel-impl" />
         <element id="module-output" name="remote-servers-impl" />
         <element id="module-production-resource-output" name="remote-servers-impl" />
@@ -91,8 +89,8 @@
       </element>
       <element id="zip-archive" name="consulo-resources.jar">
         <element id="module-production-resource-output" name="icons" />
-        <element id="module-production-resource-output" name="resources-en" />
-        <element id="module-production-resource-output" name="resources" />
+        <element id="module-production-resource-output" name="platform-resources" />
+        <element id="module-production-resource-output" name="platform-resources-en" />
       </element>
       <element id="zip-archive" name="consulo-graph-api.jar">
         <element id="module-output" name="graph-api" />
