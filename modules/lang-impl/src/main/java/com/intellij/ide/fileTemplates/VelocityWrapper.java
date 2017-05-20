@@ -27,6 +27,7 @@ import org.apache.velocity.context.Context;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.apache.velocity.exception.VelocityException;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.RuntimeSingleton;
@@ -136,6 +137,9 @@ class VelocityWrapper {
     try {
       ourTemplateManager.set(FileTemplateManager.getInstance());
       return Velocity.evaluate(context, writer, "", templateContent);
+    }
+    catch (IOException e) {
+      throw new VelocityException(e);
     }
     finally {
       ourTemplateManager.set(null);

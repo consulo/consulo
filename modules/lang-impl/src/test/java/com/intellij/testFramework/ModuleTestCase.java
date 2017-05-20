@@ -15,22 +15,14 @@
  */
 package com.intellij.testFramework;
 
-import com.intellij.ide.highlighter.ModuleFileType;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.StdModuleTypes;
-import com.intellij.openapi.module.impl.ModuleImpl;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
 import com.intellij.util.Consumer;
 import com.intellij.util.SmartList;
 import com.intellij.util.lang.CompoundRuntimeException;
@@ -98,15 +90,15 @@ public abstract class ModuleTestCase extends IdeaTestCase {
 
   protected Module loadModule(@NotNull String modulePath) {
     final ModuleManager moduleManager = ModuleManager.getInstance(myProject);
-    Module module;
-    try {
+    Module module = null;
+    /*try {
       module = ApplicationManager.getApplication().runWriteAction((ThrowableComputable<Module, Exception>)() -> moduleManager.loadModule(
               FileUtil.toSystemIndependentName(modulePath)));
     }
     catch (Exception e) {
       LOG.error(e);
       return null;
-    }
+    }  */
 
     myModulesToDispose.add(module);
     return module;
@@ -138,14 +130,12 @@ public abstract class ModuleTestCase extends IdeaTestCase {
     return result.get();
   }
 
-  protected Module createModuleFromTestData(final String dirInTestData, final String newModuleFileName, final ModuleType moduleType,
-                                            final boolean addSourceRoot)
-          throws IOException {
+  protected Module createModuleFromTestData(final String dirInTestData, final String newModuleFileName, final boolean addSourceRoot) throws IOException {
     final File dirInTestDataFile = new File(dirInTestData);
     assertTrue(dirInTestDataFile.isDirectory());
     final File moduleDir = createTempDirectory();
     FileUtil.copyDir(dirInTestDataFile, moduleDir);
-    final Module module = createModule(moduleDir + "/" + newModuleFileName, moduleType);
+    final Module module = createModule(moduleDir + "/" + newModuleFileName);
     final VirtualFile root = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(moduleDir);
     assertNotNull(root);
     new WriteCommandAction.Simple(module.getProject()) {

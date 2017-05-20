@@ -75,6 +75,11 @@
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
+      <artifactId>usageView</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
       <artifactId>platform-impl</artifactId>
       <version>SNAPSHOT</version>
       <type>test-jar</type>
@@ -82,5 +87,36 @@
     </dependency>
     <!--internal dependencies-->
     <!--external dependencies-->
+    <dependency>
+      <groupId>com.miglayout</groupId>
+      <artifactId>miglayout</artifactId>
+      <version>3.7.4</version>
+    </dependency>
+    <dependency>
+      <groupId>velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>1.5</version>
+      <exclusions>
+        <exclusion>
+          <groupId>velocity</groupId>
+          <artifactId>velocity-dep</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.ogce</groupId>
+      <artifactId>xpp3</artifactId>
+      <version>1.1.5</version>
+    </dependency>
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
+      <version>1.4.3</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2.2</version>
+    </dependency>
   </dependencies>
 </project>

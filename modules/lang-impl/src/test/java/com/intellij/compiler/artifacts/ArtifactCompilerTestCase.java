@@ -5,7 +5,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -16,13 +15,12 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import com.intellij.util.io.TestFileSystemBuilder;
 import com.intellij.util.io.TestFileSystemItem;
+import consulo.vfs.util.ArchiveVfsUtil;
 import junit.framework.Assert;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-
-import static com.intellij.compiler.artifacts.ArtifactsTestCase.commitModel;
 
 /**
  * @author nik
@@ -75,7 +73,7 @@ public abstract class ArtifactCompilerTestCase extends BaseCompilerTestCase {
   protected void changeFileInJar(String jarPath, String pathInJar) throws Exception {
     final VirtualFile jarFile = LocalFileSystem.getInstance().findFileByPath(jarPath);
     Assert.assertNotNull(jarFile);
-    final VirtualFile jarRoot = JarFileSystem.getInstance().getJarRootForLocalFile(jarFile);
+    final VirtualFile jarRoot = ArchiveVfsUtil.getJarRootForLocalFile(jarFile);
     Assert.assertNotNull(jarRoot);
     VirtualFile jarEntry = jarRoot.findFileByRelativePath(pathInJar);
     Assert.assertNotNull(jarEntry);
