@@ -23,6 +23,8 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
+          <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.10" level="project" />
+          <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
         </module-layer>
       </module>
       <module name="util-rt" dirurl="file://$PROJECT_DIR$/modules/util-rt" current-layer="Default">
@@ -36,6 +38,8 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="annotations" />
+          <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.10" level="project" />
+          <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
         </module-layer>
       </module>
       <module name="forms_rt" dirurl="file://$PROJECT_DIR$/modules/forms_rt" current-layer="Default">
@@ -48,6 +52,8 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
+          <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.10" level="project" />
+          <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
         </module-layer>
       </module>
       <module name="ui-api" dirurl="file://$PROJECT_DIR$/modules/ui-api" current-layer="Default">
@@ -63,6 +69,8 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="annotations" />
           <orderEntry type="module" module-name="util-rt" />
+          <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.10" level="project" />
+          <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
         </module-layer>
       </module>
       <module name="extensions" dirurl="file://$PROJECT_DIR$/modules/extensions" current-layer="Default">
@@ -77,6 +85,23 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="annotations" />
+          <orderEntry type="module" module-name="util" />
+          <orderEntry type="module" module-name="ui-api" />
+          <orderEntry type="module" module-name="util-rt" />
+          <orderEntry type="library" name="Maven: consulo.internal:eawtstub:1.0" level="project" />
+          <orderEntry type="library" name="Maven: net.java.dev.jna:jna:4.1.0" level="project" />
+          <orderEntry type="library" name="Maven: net.java.dev.jna:jna-platform:4.1.0" level="project" />
+          <orderEntry type="library" name="Maven: org.imgscalr:imgscalr-lib:4.2" level="project" />
+          <orderEntry type="library" name="Maven: org.iq80.snappy:snappy:0.3" level="project" />
+          <orderEntry type="library" name="Maven: log4j:log4j:1.2.4" level="project" />
+          <orderEntry type="library" name="Maven: oro:oro:2.0.8" level="project" />
+          <orderEntry type="library" name="Maven: consulo.internal:jdom:2.1" level="project" />
+          <orderEntry type="library" name="Maven: jaxen:jaxen:1.1.6" level="project" />
+          <orderEntry type="library" name="Maven: consulo.internal:trove4j:2.0" level="project" />
+          <orderEntry type="library" name="Maven: picocontainer:picocontainer:1.2" level="project" />
+          <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
+          <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.10" level="project" />
+          <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
         </module-layer>
       </module>
       <module name="util" dirurl="file://$PROJECT_DIR$/modules/util" current-layer="Default">
@@ -100,14 +125,14 @@
           <orderEntry type="library" name="Maven: consulo.internal:eawtstub:1.0" level="project" />
           <orderEntry type="library" name="Maven: net.java.dev.jna:jna:4.1.0" level="project" />
           <orderEntry type="library" name="Maven: net.java.dev.jna:jna-platform:4.1.0" level="project" />
-          <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
-          <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
           <orderEntry type="library" name="Maven: org.imgscalr:imgscalr-lib:4.2" level="project" />
           <orderEntry type="library" name="Maven: org.iq80.snappy:snappy:0.3" level="project" />
           <orderEntry type="library" name="Maven: log4j:log4j:1.2.4" level="project" />
           <orderEntry type="library" name="Maven: oro:oro:2.0.8" level="project" />
           <orderEntry type="library" name="Maven: picocontainer:picocontainer:1.2" level="project" />
           <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
+          <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.10" level="project" />
+          <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
         </module-layer>
       </module>
       <module name="parent" dirurl="file://$PROJECT_DIR$/main" current-layer="Default">
@@ -119,6 +144,8 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
+          <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.10" level="project" />
+          <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
         </module-layer>
       </module>
     </modules>
