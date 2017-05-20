@@ -55,6 +55,12 @@
       <output url="file://$PROJECT_DIR$/modules/core-api/target/test-classes" type="TEST" />
       <output url="file://$PROJECT_DIR$/modules/core-api/target/test-classes" type="TEST_RESOURCE" />
     </module>
+    <module name="boot" exclude="false">
+      <output url="file://$PROJECT_DIR$/modules/boot/target/classes" type="PRODUCTION" />
+      <output url="file://$PROJECT_DIR$/modules/boot/target/classes" type="PRODUCTION_RESOURCE" />
+      <output url="file://$PROJECT_DIR$/modules/boot/target/test-classes" type="TEST" />
+      <output url="file://$PROJECT_DIR$/modules/boot/target/test-classes" type="TEST_RESOURCE" />
+    </module>
   </component>
   <component name="JavaCompilerConfiguration" compiler="JavacCompiler">
     <annotation-processing>
@@ -109,6 +115,13 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="core-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for boot" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="boot" />
       </profile>
     </annotation-processing>
   </component>
