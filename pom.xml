@@ -40,6 +40,7 @@
     <module>modules/vcs-api</module>
     <module>modules/vcs-api-core</module>
     <module>modules/ui-api</module>
+    <module>modules/usageView</module>
     <module>modules/util</module>
     <module>modules/util-rt</module>
   </modules>
