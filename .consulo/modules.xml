@@ -320,7 +320,7 @@
           <orderEntry type="module" module-name="projectModel-impl" />
         </module-layer>
       </module>
-      <module name="api/lang-api" dirurl="file://$PROJECT_DIR$/platform/lang-api" current-layer="Default">
+      <module name="api/lang-api" dirurl="file://$PROJECT_DIR$/modules/lang-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -340,7 +340,7 @@
           <orderEntry type="module" module-name="resources-en" />
         </module-layer>
       </module>
-      <module name="impl/lang-impl" dirurl="file://$PROJECT_DIR$/platform/lang-impl" current-layer="Default">
+      <module name="impl/lang-impl" dirurl="file://$PROJECT_DIR$/modules/lang-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
