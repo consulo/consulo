@@ -4,6 +4,4 @@ project.xcworkspace/
 xcschemes/
 workspace.xml
 /.consulo/sandbox
-/impl/web-impl/dep
-/impl/web-impl/gwt-out
-/impl/web-impl/gwt-unitCache
+target/
