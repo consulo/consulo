@@ -26,7 +26,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>compiler-impl</artifactId>
+  <artifactId>compiler-bridge-impl</artifactId>
   <version>SNAPSHOT</version>
 
   <packaging>jar</packaging>
@@ -38,15 +38,8 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>platform-impl</artifactId>
+      <artifactId>compiler-api</artifactId>
       <version>SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>consulo</groupId>
-      <artifactId>compiler-bridge-impl</artifactId>
-      <version>SNAPSHOT</version>
-    </dependency>
-    <!--internal dependencies-->
-    <!--external dependencies-->
   </dependencies>
 </project>
