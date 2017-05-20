@@ -14,6 +14,7 @@
     <module>main</module>
 
     <module>modules/annotations</module>
+    <module>modules/analysis-api</module>
     <module>modules/core-api</module>
     <module>modules/core-impl</module>
     <module>modules/boot</module>
