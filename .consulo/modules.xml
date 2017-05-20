@@ -65,6 +65,46 @@
           <orderEntry type="module" module-name="util-rt" />
         </module-layer>
       </module>
+      <module name="extensions" dirurl="file://$PROJECT_DIR$/modules/extensions" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-name="1.8 with tools" language-level-name="JDK_1_8" bytecode-version="1.8" />
+          <extension id="maven" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/src/test/java" />
+            <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/target" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="annotations" />
+        </module-layer>
+      </module>
+      <module name="util" dirurl="file://$PROJECT_DIR$/modules/util" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-name="1.8 with tools" language-level-name="JDK_1_8" bytecode-version="1.8" />
+          <extension id="maven" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/src/test/java" />
+            <content-folder type="TEST_RESOURCE" url="file://$MODULE_DIR$/src/test/resources" />
+            <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/target" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="annotations" />
+        </module-layer>
+      </module>
+      <module name="parent" dirurl="file://$PROJECT_DIR$/main" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-name="1.8 with tools" language-level-name="JDK_1_8" bytecode-version="1.8" />
+          <extension id="maven" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/target" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+        </module-layer>
+      </module>
     </modules>
   </component>
 </project>

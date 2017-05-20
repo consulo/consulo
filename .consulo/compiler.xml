@@ -31,6 +31,24 @@
       <output url="file://$PROJECT_DIR$/modules/ui-api/target/test-classes" type="TEST" />
       <output url="file://$PROJECT_DIR$/modules/ui-api/target/test-classes" type="TEST_RESOURCE" />
     </module>
+    <module name="extensions" exclude="false">
+      <output url="file://$PROJECT_DIR$/modules/extensions/target/classes" type="PRODUCTION" />
+      <output url="file://$PROJECT_DIR$/modules/extensions/target/classes" type="PRODUCTION_RESOURCE" />
+      <output url="file://$PROJECT_DIR$/modules/extensions/target/test-classes" type="TEST" />
+      <output url="file://$PROJECT_DIR$/modules/extensions/target/test-classes" type="TEST_RESOURCE" />
+    </module>
+    <module name="util" exclude="false">
+      <output url="file://$PROJECT_DIR$/modules/util/target/classes" type="PRODUCTION" />
+      <output url="file://$PROJECT_DIR$/modules/util/target/classes" type="PRODUCTION_RESOURCE" />
+      <output url="file://$PROJECT_DIR$/modules/util/target/test-classes" type="TEST" />
+      <output url="file://$PROJECT_DIR$/modules/util/target/test-classes" type="TEST_RESOURCE" />
+    </module>
+    <module name="parent" exclude="false">
+      <output url="file://$PROJECT_DIR$/main/target/classes" type="PRODUCTION" />
+      <output url="file://$PROJECT_DIR$/main/target/classes" type="PRODUCTION_RESOURCE" />
+      <output url="file://$PROJECT_DIR$/main/target/test-classes" type="TEST" />
+      <output url="file://$PROJECT_DIR$/main/target/test-classes" type="TEST_RESOURCE" />
+    </module>
   </component>
   <component name="JavaCompilerConfiguration" compiler="JavacCompiler">
     <annotation-processing>
@@ -64,6 +82,20 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="ui-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for extensions" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="extensions" />
+      </profile>
+      <profile default="false" name="Annotation profile for util" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="util" />
       </profile>
     </annotation-processing>
   </component>
