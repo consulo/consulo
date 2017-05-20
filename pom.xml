@@ -18,6 +18,7 @@
     <module>modules/core-impl</module>
     <module>modules/boot</module>
     <module>modules/extensions</module>
+    <module>modules/indexing-api</module>
     <module>modules/forms_rt</module>
     <module>modules/projectModel-api</module>
     <module>modules/ui-api</module>

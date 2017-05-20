@@ -53,8 +53,21 @@
   </build>
 
   <dependencies>
-
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>core-api</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>projectModel-api</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
     <!--external dependencies-->
-   
+    <dependency>
+      <groupId>be.cyberelf.nanoxml</groupId>
+      <artifactId>nanoxml</artifactId>
+      <version>2.2.3</version>
+    </dependency>
   </dependencies>
 </project>
