@@ -5,4 +5,7 @@ xcschemes/
 workspace.xml
 /.consulo/sandbox
 /.consulo/libraries
+/.consulo/encoding.xml
+/.consulo/compiler.xml
+/.consulo/modules.xml
 target/

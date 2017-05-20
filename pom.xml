@@ -15,6 +15,7 @@
 
     <module>modules/annotations</module>
     <module>modules/core-api</module>
+    <module>modules/core-impl</module>
     <module>modules/boot</module>
     <module>modules/extensions</module>
     <module>modules/forms_rt</module>

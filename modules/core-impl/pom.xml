@@ -17,41 +17,30 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>consulo</groupId>
+    <artifactId>parent</artifactId>
+    <version>SNAPSHOT</version>
+    <relativePath>../../main/pom.xml</relativePath>
+  </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>consulo</groupId>
-  <artifactId>parent</artifactId>
+  <artifactId>core-impl</artifactId>
   <version>SNAPSHOT</version>
 
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jna.version>4.1.0</jna.version>
-    <jdom.version>2.1</jdom.version>
-    <trove4j.version>2.0</trove4j.version>
-    <junit.version>4.10</junit.version>
-    <log4j.version>1.2.4</log4j.version>
-    <picocontainer.version>1.2</picocontainer.version>
-    <guava.version>21.0</guava.version>
-
-    <maven.compiler.plugin.version>3.3</maven.compiler.plugin.version>
   </properties>
-
-  <repositories>
-    <repository>
-      <id>consulo</id>
-      <url>https://nexus.consulo.io/repository/consulo/</url>
-    </repository>
-  </repositories>
 
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
+        <version>${maven.compiler.plugin.version}</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -65,10 +54,15 @@
 
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
+      <groupId>consulo</groupId>
+      <artifactId>core-api</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <!--external dependencies-->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
     </dependency>
   </dependencies>
 </project>
