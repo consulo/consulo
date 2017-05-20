@@ -12,12 +12,9 @@
         <element id="module-output" name="testFramework" />
         <element id="module-production-resource-output" name="platform-resources-en" />
       </element>
-      <element id="library" level="project" name="Trove4j" />
-      <element id="library" level="project" name="JDOM" />
       <element id="jar-archive" name="annotations.jar">
         <element id="module-output" name="annotations" />
       </element>
-      <element id="library" level="project" name="Guava" />
     </root>
   </artifact>
 </component>

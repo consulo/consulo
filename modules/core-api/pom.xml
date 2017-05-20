@@ -60,8 +60,24 @@
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
+      <artifactId>extensions</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
       <artifactId>util</artifactId>
       <version>SNAPSHOT</version>
+    </dependency>
+    <!--external dependencies-->
+    <dependency>
+      <groupId>dk.brics.automaton</groupId>
+      <artifactId>automaton</artifactId>
+      <version>1.11-8</version>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <version>3.2.5</version>
     </dependency>
   </dependencies>
 </project>

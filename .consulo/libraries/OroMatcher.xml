@@ -1,7 +1,0 @@
-<component name="libraryTable">
-  <library name="OroMatcher">
-    <binaries>
-      <root url="jar://$PROJECT_DIR$/lib/oromatcher.jar!/" />
-    </binaries>
-  </library>
-</component>

@@ -1,7 +1,0 @@
-<component name="libraryTable">
-  <library name="thrift">
-    <binaries>
-      <root url="jar://$PROJECT_DIR$/lib/libthrift-0.9.1.jar!/" />
-    </binaries>
-  </library>
-</component>

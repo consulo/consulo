@@ -49,6 +49,12 @@
       <output url="file://$PROJECT_DIR$/main/target/test-classes" type="TEST" />
       <output url="file://$PROJECT_DIR$/main/target/test-classes" type="TEST_RESOURCE" />
     </module>
+    <module name="core-api" exclude="false">
+      <output url="file://$PROJECT_DIR$/modules/core-api/target/classes" type="PRODUCTION" />
+      <output url="file://$PROJECT_DIR$/modules/core-api/target/classes" type="PRODUCTION_RESOURCE" />
+      <output url="file://$PROJECT_DIR$/modules/core-api/target/test-classes" type="TEST" />
+      <output url="file://$PROJECT_DIR$/modules/core-api/target/test-classes" type="TEST_RESOURCE" />
+    </module>
   </component>
   <component name="JavaCompilerConfiguration" compiler="JavacCompiler">
     <annotation-processing>
@@ -96,6 +102,13 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="util" />
+      </profile>
+      <profile default="false" name="Annotation profile for core-api" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="core-api" />
       </profile>
     </annotation-processing>
   </component>
