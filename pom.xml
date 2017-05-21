@@ -36,6 +36,7 @@
     <module>modules/indexing-impl</module>
     <module>modules/platform-api</module>
     <module>modules/platform-impl</module>
+    <module>modules/platform-main</module>
     <module>modules/platform-resources</module>
     <module>modules/platform-resources-en</module>
     <module>modules/projectModel-api</module>
