@@ -53,6 +53,7 @@
     <module>modules/lvcs-impl</module>
     <module>modules/remote-servers-api</module>
     <module>modules/remote-servers-agent-rt</module>
+    <module>modules/remote-servers-impl</module>
     <module>modules/vcs-api</module>
     <module>modules/vcs-api-core</module>
     <module>modules/vcs-log-graph-api</module>
