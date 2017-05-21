@@ -90,7 +90,7 @@
       </plugin>
       <plugin>
         <groupId>consulo.maven</groupId>
-        <artifactId>notnull-instrumenter-pluginn</artifactId>
+        <artifactId>notnull-instrumenter-plugin</artifactId>
         <version>0.7.0</version>
         <executions>
           <execution>
