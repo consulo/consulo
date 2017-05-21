@@ -48,6 +48,7 @@
     <module>modules/vcs-api</module>
     <module>modules/vcs-api-core</module>
     <module>modules/vcs-log-graph-api</module>
+    <module>modules/vcs-log-graph-impl</module>
     <module>modules/vcs-log-api</module>
     <module>modules/vcs-impl</module>
     <module>modules/ui-api</module>
