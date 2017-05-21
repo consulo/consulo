@@ -81,11 +81,6 @@ public class MockProject implements Project {
   }
 
   @Override
-  public String getLocation() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public void save() {
     throw new UnsupportedOperationException();
   }

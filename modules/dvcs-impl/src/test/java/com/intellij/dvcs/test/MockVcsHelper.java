@@ -25,6 +25,7 @@ import com.intellij.openapi.vcs.changes.CommitResultHandler;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.history.VcsFileRevision;
 import com.intellij.openapi.vcs.history.VcsHistoryProvider;
+import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.merge.MergeDialogCustomizer;
 import com.intellij.openapi.vcs.merge.MergeProvider;
 import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
@@ -76,6 +77,12 @@ public class MockVcsHelper extends AbstractVcsHelper {
   }
 
   @Override
+  public void showAnnotation(FileAnnotation annotation, VirtualFile file, AbstractVcs vcs, int line) {
+    throw new UnsupportedOperationException();
+
+  }
+
+  @Override
   public void showDifferences(VcsFileRevision cvsVersionOn, VcsFileRevision cvsVersionOn1, File file) {
     throw new UnsupportedOperationException();
   }
@@ -96,10 +103,7 @@ public class MockVcsHelper extends AbstractVcsHelper {
   }
 
   @Override
-  public void showChangesBrowser(CommittedChangesProvider provider,
-                                 RepositoryLocation location,
-                                 @Nls String title,
-                                 @Nullable Component parent) {
+  public void showChangesBrowser(CommittedChangesProvider provider, RepositoryLocation location, @Nls String title, @Nullable Component parent) {
     throw new UnsupportedOperationException();
   }
 
@@ -130,9 +134,7 @@ public class MockVcsHelper extends AbstractVcsHelper {
 
   @NotNull
   @Override
-  public List<VirtualFile> showMergeDialog(List<VirtualFile> files,
-                                           MergeProvider provider,
-                                           @NotNull MergeDialogCustomizer mergeDialogCustomizer) {
+  public List<VirtualFile> showMergeDialog(List<VirtualFile> files, MergeProvider provider, @NotNull MergeDialogCustomizer mergeDialogCustomizer) {
     myMergeDialogShown = true;
     if (myMergeHandler != null) {
       myMergeHandler.showMergeDialog();
@@ -184,8 +186,10 @@ public class MockVcsHelper extends AbstractVcsHelper {
   }
 
   @Override
-  public boolean commitChanges(@NotNull Collection<Change> changes, @NotNull LocalChangeList initialChangeList,
-                               @NotNull String commitMessage, @Nullable CommitResultHandler customResultHandler) {
+  public boolean commitChanges(@NotNull Collection<Change> changes,
+                               @NotNull LocalChangeList initialChangeList,
+                               @NotNull String commitMessage,
+                               @Nullable CommitResultHandler customResultHandler) {
     myCommitDialogShown = true;
     if (myCommitHandler != null) {
       boolean success = myCommitHandler.commit(commitMessage);
@@ -203,6 +207,16 @@ public class MockVcsHelper extends AbstractVcsHelper {
       customResultHandler.onFailure();
     }
     return false;
+  }
+
+  @Override
+  public void loadAndShowCommittedChangesDetails(@NotNull Project project,
+                                                 @NotNull VcsRevisionNumber revision,
+                                                 @NotNull VirtualFile file,
+                                                 @NotNull VcsKey key,
+                                                 @Nullable RepositoryLocation location,
+                                                 boolean local) {
+    throw new UnsupportedOperationException();
   }
 
   public void registerHandler(CommitHandler handler) {

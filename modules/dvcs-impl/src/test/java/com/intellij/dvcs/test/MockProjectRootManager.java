@@ -16,7 +16,6 @@
 package com.intellij.dvcs.test;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.OrderEnumerator;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -76,26 +75,6 @@ public class MockProjectRootManager extends ProjectRootManager {
 
   @Override
   public VirtualFile[] getContentSourceRoots() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Sdk getProjectSdk() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public String getProjectSdkName() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setProjectSdk(Sdk sdk) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setProjectSdkName(String name) {
     throw new UnsupportedOperationException();
   }
 

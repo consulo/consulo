@@ -29,6 +29,7 @@
     <module>modules/diff-api</module>
     <module>modules/diff-impl</module>
     <module>modules/dvcs-api</module>
+    <module>modules/dvcs-impl</module>
     <module>modules/editor-ui-api</module>
     <module>modules/editor-ui-ex</module>
     <module>modules/external-storage-impl</module>
