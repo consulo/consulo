@@ -22,16 +22,17 @@ import com.intellij.history.core.LocalHistoryTestCase;
 import com.intellij.history.core.changes.ChangeSet;
 import com.intellij.history.core.changes.CreateFileChange;
 import com.intellij.history.core.tree.RootEntry;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class RevisionsTest extends LocalHistoryTestCase {
-  ChangeSet cs = cs("Action", new CreateFileChange(nextId(), "f"));
+  ChangeSet cs = cs("Action", new CreateFileChange(LocalHistoryTestCase.nextId(), "f"));
 
   @Test
   public void testCurrentRevisionIsBefore() {
     Revision r = new CurrentRevision(null, null);
-    assertNull(r.getChangeSetName());
-    assertNull(r.getChangeSetId());
+    Assert.assertNull(r.getChangeSetName());
+    Assert.assertNull(r.getChangeSetId());
   }
 
   @Test
@@ -53,7 +54,7 @@ public class RevisionsTest extends LocalHistoryTestCase {
     RootEntry e = (RootEntry)r.findEntry();
 
     assertEquals(e.getClass(), RootEntry.class);
-    assertNotNull(e.findEntry("f1"));
-    assertNull(e.findEntry("f2"));
+    Assert.assertNotNull(e.findEntry("f1"));
+    Assert.assertNull(e.findEntry("f2"));
   }
 }
