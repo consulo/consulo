@@ -88,7 +88,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+      <!--<plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>notnull-instrumenter-plugin</artifactId>
         <version>0.7.0</version>
@@ -100,7 +100,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
     </plugins>
   </build>
 
