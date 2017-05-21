@@ -55,7 +55,7 @@
 
   <pluginRepositories>
     <pluginRepository>
-      <id>consulo</id>
+      <id>consulo-plugin</id>
       <url>https://nexus.consulo.io/repository/consulo/</url>
     </pluginRepository>
   </pluginRepositories>
