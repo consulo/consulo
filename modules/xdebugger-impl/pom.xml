@@ -46,5 +46,12 @@
       <artifactId>lang-impl</artifactId>
       <version>SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>lang-impl</artifactId>
+      <version>SNAPSHOT</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
