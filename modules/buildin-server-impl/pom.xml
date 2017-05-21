@@ -36,7 +36,21 @@
   </properties>
 
   <dependencies>
-    <!--internal dependencies-->
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>platform-impl</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>xdebugger-impl</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
     <!--external dependencies-->
+    <dependency>
+      <groupId>org.apache.ws.xmlrpc</groupId>
+      <artifactId>xmlrpc</artifactId>
+      <version>2.0.1</version>
+    </dependency>
   </dependencies>
 </project>
