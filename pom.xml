@@ -37,6 +37,7 @@
     <module>modules/platform-api</module>
     <module>modules/platform-impl</module>
     <module>modules/platform-resources</module>
+    <module>modules/platform-resources-en</module>
     <module>modules/projectModel-api</module>
     <module>modules/projectModel-impl</module>
     <module>modules/lang-api</module>
