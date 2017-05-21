@@ -51,6 +51,7 @@
     <module>modules/lang-impl</module>
     <module>modules/lvcs-api</module>
     <module>modules/lvcs-impl</module>
+    <module>modules/slf4j-bind</module>
     <module>modules/remote-servers-api</module>
     <module>modules/remote-servers-agent-rt</module>
     <module>modules/remote-servers-impl</module>
