@@ -30,6 +30,8 @@
     <module>modules/extensions</module>
     <module>modules/editor-ui-api</module>
     <module>modules/editor-ui-ex</module>
+    <module>modules/graph-api</module>
+    <module>modules/graph-impl</module>
     <module>modules/indexing-api</module>
     <module>modules/indexing-impl</module>
     <module>modules/platform-api</module>
