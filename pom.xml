@@ -22,6 +22,7 @@
     <module>modules/compiler-api</module>
     <module>modules/compiler-impl</module>
     <module>modules/compiler-bridge-impl</module>
+    <module>modules/compiler-server-impl</module>
     <module>modules/desktop-ui-impl</module>
     <module>modules/diff-api</module>
     <module>modules/diff-impl</module>
