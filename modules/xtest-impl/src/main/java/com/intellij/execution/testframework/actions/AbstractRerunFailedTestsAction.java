@@ -44,10 +44,11 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.awt.*;
@@ -126,10 +127,15 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
   }
 
   protected Filter<?> getFailuresFilter() {
-    if (TestConsoleProperties.INCLUDE_NON_STARTED_IN_RERUN_FAILED.value(myConsoleProperties)) {
-      return Filter.NOT_PASSED.and(Filter.IGNORED.not()).or(Filter.FAILED_OR_INTERRUPTED);
+    return getFailuresFilter(myConsoleProperties);
+  }
+
+  @TestOnly
+  public static Filter<?> getFailuresFilter(TestConsoleProperties consoleProperties) {
+    if (TestConsoleProperties.INCLUDE_NON_STARTED_IN_RERUN_FAILED.value(consoleProperties)) {
+      return Filter.NOT_PASSED.or(Filter.FAILED_OR_INTERRUPTED).and(Filter.IGNORED.not());
     }
-    return Filter.FAILED_OR_INTERRUPTED;
+    return Filter.FAILED_OR_INTERRUPTED.and(Filter.IGNORED.not());
   }
 
   @RequiredDispatchThread
@@ -158,7 +164,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
     }
 
     final LinkedHashMap<Executor, ProgramRunner> availableRunners = new LinkedHashMap<Executor, ProgramRunner>();
-    for (Executor ex : new Executor[] {DefaultRunExecutor.getRunExecutorInstance(), DefaultDebugExecutor.getDebugExecutorInstance()}) {
+    for (Executor ex : new Executor[]{DefaultRunExecutor.getRunExecutorInstance(), DefaultDebugExecutor.getDebugExecutorInstance()}) {
       final ProgramRunner runner = RunnerRegistry.getInstance().getRunner(ex.getId(), profile);
       if (runner != null) {
         availableRunners.put(ex, runner);
@@ -189,11 +195,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
         }
       });
       //noinspection ConstantConditions
-      JBPopupFactory.getInstance().createListPopupBuilder(list)
-              .setTitle("Restart Failed Tests")
-              .setMovable(false)
-              .setResizable(false)
-              .setRequestFocus(true)
+      JBPopupFactory.getInstance().createListPopupBuilder(list).setTitle("Restart Failed Tests").setMovable(false).setResizable(false).setRequestFocus(true)
               .setItemChoosenCallback(new Runnable() {
                 @Override
                 public void run() {
@@ -242,8 +244,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
     return null;
   }
 
-  protected static abstract class MyRunProfile extends RunConfigurationBase implements ModuleRunProfile,
-                                                                                       WrappingRunConfiguration<RunConfigurationBase> {
+  protected static abstract class MyRunProfile extends RunConfigurationBase implements ModuleRunProfile, WrappingRunConfiguration<RunConfigurationBase> {
     @Deprecated
     public RunConfigurationBase getConfiguration() {
       return getPeer();

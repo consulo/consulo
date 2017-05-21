@@ -52,6 +52,7 @@
     <module>modules/xdebugger-api</module>
     <module>modules/xdebugger-impl</module>
     <module>modules/xtest-impl</module>
+    <module>modules/xtest-sm-impl</module>
   </modules>
 
   <properties>

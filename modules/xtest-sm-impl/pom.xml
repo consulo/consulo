@@ -26,7 +26,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>lang-impl</artifactId>
+  <artifactId>xtest-sm-impl</artifactId>
   <version>SNAPSHOT</version>
 
   <packaging>jar</packaging>
@@ -35,55 +35,29 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven.compiler.plugin.version}</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-          <showDeprecation>true</showDeprecation>
-          <showWarnings>true</showWarnings>
-          <fork>true</fork>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>lang-api</artifactId>
+      <artifactId>lang-impl</artifactId>
       <version>SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-api</artifactId>
+      <artifactId>xtest-impl</artifactId>
       <version>SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>platform-impl</artifactId>
+      <artifactId>lang-impl</artifactId>
       <version>SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>consulo</groupId>
-      <artifactId>compiler-impl</artifactId>
-      <version>SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>consulo</groupId>
-      <artifactId>usageView</artifactId>
-      <version>SNAPSHOT</version>
+      <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
     <!--internal dependencies-->
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>build.serviceMessages</artifactId>
       <version>1.0</version>
-      <scope>test</scope>
       <exclusions>
         <!--FIXME [VISTALL] tempolary solution until we make depend to our library-->
         <exclusion>
@@ -94,35 +68,9 @@
     </dependency>
     <!--external dependencies-->
     <dependency>
-      <groupId>com.miglayout</groupId>
-      <artifactId>miglayout</artifactId>
-      <version>3.7.4</version>
-    </dependency>
-    <dependency>
-      <groupId>velocity</groupId>
-      <artifactId>velocity</artifactId>
-      <version>1.5</version>
-      <exclusions>
-        <exclusion>
-          <groupId>velocity</groupId>
-          <artifactId>velocity-dep</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.ogce</groupId>
-      <artifactId>xpp3</artifactId>
-      <version>1.1.5</version>
-    </dependency>
-    <dependency>
-      <groupId>com.thoughtworks.xstream</groupId>
-      <artifactId>xstream</artifactId>
-      <version>1.4.3</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.2.2</version>
+      <groupId>org.apache.thrift</groupId>
+      <artifactId>libthrift</artifactId>
+      <version>0.9.1</version>
     </dependency>
   </dependencies>
 </project>
