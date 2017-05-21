@@ -51,6 +51,7 @@
     <module>modules/lang-impl</module>
     <module>modules/lvcs-api</module>
     <module>modules/lvcs-impl</module>
+    <module>modules/remote-servers-api</module>
     <module>modules/vcs-api</module>
     <module>modules/vcs-api-core</module>
     <module>modules/vcs-log-graph-api</module>
