@@ -35,6 +35,7 @@
     <module>modules/platform-impl</module>
     <module>modules/projectModel-api</module>
     <module>modules/projectModel-impl</module>
+    <module>modules/testRunner</module>
     <module>modules/lang-api</module>
     <module>modules/lang-impl</module>
     <module>modules/lvcs-api</module>
