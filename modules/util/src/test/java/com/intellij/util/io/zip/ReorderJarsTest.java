@@ -21,6 +21,7 @@ import com.intellij.util.lang.JarMemoryLoader;
 import com.intellij.util.lang.Resource;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -35,6 +36,7 @@ import static org.junit.Assert.*;
  * @author Dmitry Avdeev
  * @since 12/07/2011
  */
+@Ignore
 public class ReorderJarsTest {
   private File myTempDirectory;
 

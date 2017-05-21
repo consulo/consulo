@@ -16,10 +16,12 @@
 package com.intellij.openapi.ui;
 
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
 import javax.swing.*;
 import java.awt.*;
 
+@Ignore
 public class SplitterTest extends TestCase{
 
   public void testResizeVert() {

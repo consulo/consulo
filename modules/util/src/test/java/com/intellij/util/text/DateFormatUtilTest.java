@@ -20,6 +20,7 @@ import com.intellij.openapi.util.Clock;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -33,6 +34,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class DateFormatUtilTest {
   @SuppressWarnings("SpellCheckingInspection") private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy hh.mm.ss");
 

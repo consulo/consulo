@@ -21,10 +21,7 @@ import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.TimeoutUtil;
 import org.jetbrains.annotations.NotNull;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 import java.util.Arrays;
@@ -33,6 +30,7 @@ import static com.intellij.openapi.util.io.IoTestUtil.assertTimestampsEqual;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeTrue;
 
+@Ignore
 public class FileAttributesReadingTest {
   private final byte[] myTestData = new byte[]{'t', 'e', 's', 't'};
   private File myTempDirectory;

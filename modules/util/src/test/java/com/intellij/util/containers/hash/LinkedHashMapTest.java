@@ -16,11 +16,13 @@
 package com.intellij.util.containers.hash;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.Map;
 
+@Ignore
 public class LinkedHashMapTest {
 
   @Test

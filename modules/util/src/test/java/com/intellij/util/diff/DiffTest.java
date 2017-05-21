@@ -17,12 +17,14 @@ package com.intellij.util.diff;
 
 import com.intellij.util.ArrayUtil;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
 import java.util.ArrayList;
 
 /**
  * @author dyoma
  */
+@Ignore
 public class DiffTest extends TestCase {
   private static final Object[] DATA_123 = {"1", "2", "3"};
   private static final Object[] DATA_AB = {"a", "b"};
