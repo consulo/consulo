@@ -46,6 +46,7 @@
     <module>modules/util</module>
     <module>modules/util-rt</module>
     <module>modules/xdebugger-api</module>
+    <module>modules/xdebugger-impl</module>
   </modules>
 
   <properties>
