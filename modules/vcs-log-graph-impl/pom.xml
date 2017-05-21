@@ -36,7 +36,20 @@
   </properties>
 
   <dependencies>
-    <!--internal dependencies-->
-    <!--external dependencies-->
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>vcs-log-graph-api</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>util</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>vcs-log-api</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>
