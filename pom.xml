@@ -16,6 +16,7 @@
     <module>modules/annotations</module>
     <module>modules/analysis-api</module>
     <module>modules/analysis-impl</module>
+    <module>modules/buildin-server-impl</module>
     <module>modules/core-api</module>
     <module>modules/core-impl</module>
     <module>modules/compiler-api</module>
