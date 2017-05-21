@@ -20,7 +20,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>consulo.arch</groupId>
+  <groupId>consulo</groupId>
   <artifactId>arch.global</artifactId>
   <version>SNAPSHOT</version>
 
