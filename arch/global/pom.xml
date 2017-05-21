@@ -53,6 +53,13 @@
     </repository>
   </repositories>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>consulo</id>
+      <url>https://nexus.consulo.io/repository/consulo/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <build>
     <plugins>
       <plugin>
@@ -77,6 +84,19 @@
           <execution>
             <goals>
               <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>consulo.maven</groupId>
+        <artifactId>notnull-instrumenter-pluginn</artifactId>
+        <version>0.7.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>instrument</goal>
+              <goal>tests-instrument</goal>
             </goals>
           </execution>
         </executions>
