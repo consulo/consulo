@@ -50,6 +50,7 @@
     <module>modules/vcs-log-graph-api</module>
     <module>modules/vcs-log-graph-impl</module>
     <module>modules/vcs-log-api</module>
+    <module>modules/vcs-log-impl</module>
     <module>modules/vcs-impl</module>
     <module>modules/ui-api</module>
     <module>modules/usageView</module>
