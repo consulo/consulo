@@ -16,6 +16,8 @@
     <module>modules/annotations</module>
     <module>modules/analysis-api</module>
     <module>modules/analysis-impl</module>
+    <module>modules/boot</module>
+    <module>modules/bootstrap</module>
     <module>modules/buildin-server-impl</module>
     <module>modules/core-api</module>
     <module>modules/core-impl</module>
@@ -26,12 +28,11 @@
     <module>modules/desktop-ui-impl</module>
     <module>modules/diff-api</module>
     <module>modules/diff-impl</module>
-    <module>modules/boot</module>
-    <module>modules/bootstrap</module>
     <module>modules/dvcs-api</module>
-    <module>modules/extensions</module>
     <module>modules/editor-ui-api</module>
     <module>modules/editor-ui-ex</module>
+    <module>modules/external-storage-impl</module>
+    <module>modules/extensions</module>
     <module>modules/graph-api</module>
     <module>modules/graph-impl</module>
     <module>modules/indexing-api</module>
