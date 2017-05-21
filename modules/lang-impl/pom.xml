@@ -84,6 +84,13 @@
       <artifactId>build.serviceMessages</artifactId>
       <version>1.0</version>
       <scope>test</scope>
+      <exclusions>
+        <!--tempolary solution until we make depend to our library-->
+        <exclusion>
+          <groupId>org.jetbrains</groupId>
+          <artifactId>annotations-java5</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!--external dependencies-->
     <dependency>

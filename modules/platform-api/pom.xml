@@ -61,6 +61,20 @@
       <groupId>consulo.internal</groupId>
       <artifactId>pty4j</artifactId>
       <version>0.7.2</version>
+      <exclusions>
+        <exclusion>
+          <groupId>net.java.dev.jna</groupId>
+          <artifactId>jna</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>net.java.dev.jna</groupId>
+          <artifactId>jna-platform</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!--external dependencies-->
     <dependency>
@@ -87,6 +101,20 @@
       <groupId>com.github.markusbernhardt</groupId>
       <artifactId>proxy-vole</artifactId>
       <version>1.0.3</version>
+      <exclusions>
+        <exclusion>
+          <groupId>net.java.dev.jna</groupId>
+          <artifactId>jna</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>net.java.dev.jna</groupId>
+          <artifactId>jna-platform</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.ini4j</groupId>
+          <artifactId>ini4j</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 </project>

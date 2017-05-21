@@ -117,6 +117,10 @@
           <groupId>org.swinglabs</groupId>
           <artifactId>swing-worker</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>com.jhlabs</groupId>
+          <artifactId>filters</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
