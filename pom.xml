@@ -11,7 +11,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>main</module>
+    <module>arch/global</module>
 
     <module>modules/annotations</module>
     <module>modules/analysis-api</module>

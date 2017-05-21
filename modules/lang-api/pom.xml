@@ -18,10 +18,10 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <groupId>consulo</groupId>
-    <artifactId>parent</artifactId>
+    <groupId>consulo.arch</groupId>
+    <artifactId>global</artifactId>
     <version>SNAPSHOT</version>
-    <relativePath>../../main/pom.xml</relativePath>
+    <relativePath>../../arch/global/pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
