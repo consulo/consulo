@@ -33,6 +33,7 @@
     <module>modules/editor-ui-ex</module>
     <module>modules/external-storage-impl</module>
     <module>modules/external-system-api</module>
+    <module>modules/external-system-impl</module>
     <module>modules/extensions</module>
     <module>modules/graph-api</module>
     <module>modules/graph-impl</module>
