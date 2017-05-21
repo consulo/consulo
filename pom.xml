@@ -27,6 +27,7 @@
     <module>modules/diff-impl</module>
     <module>modules/boot</module>
     <module>modules/bootstrap</module>
+    <module>modules/dvcs-api</module>
     <module>modules/extensions</module>
     <module>modules/editor-ui-api</module>
     <module>modules/editor-ui-ex</module>
@@ -46,6 +47,7 @@
     <module>modules/lvcs-api</module>
     <module>modules/vcs-api</module>
     <module>modules/vcs-api-core</module>
+    <module>modules/vcs-log-graph-api</module>
     <module>modules/vcs-log-api</module>
     <module>modules/vcs-impl</module>
     <module>modules/ui-api</module>
