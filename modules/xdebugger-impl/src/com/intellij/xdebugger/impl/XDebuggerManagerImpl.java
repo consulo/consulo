@@ -27,7 +27,6 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunContentWithExecutorListener;
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.editor.Document;
@@ -44,9 +43,12 @@ import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.xmlb.annotations.Property;
-import com.intellij.xdebugger.*;
+import com.intellij.xdebugger.XDebugProcess;
+import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
-import com.intellij.xdebugger.breakpoints.XBreakpointAdapter;
+import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl;
@@ -65,10 +67,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * @author nik
  */
-@State(
-        name = XDebuggerManagerImpl.COMPONENT_NAME,
-        storages = {@Storage(
-                file = StoragePathMacros.WORKSPACE_FILE)})
+@State(name = XDebuggerManagerImpl.COMPONENT_NAME, storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class XDebuggerManagerImpl extends XDebuggerManager
         implements NamedComponent, PersistentStateComponent<XDebuggerManagerImpl.XDebuggerState> {
   @NonNls public static final String COMPONENT_NAME = "XDebuggerManager";
@@ -77,13 +76,13 @@ public class XDebuggerManagerImpl extends XDebuggerManager
   private final XDebuggerWatchesManager myWatchesManager;
   private final Map<ProcessHandler, XDebugSessionImpl> mySessions;
   private final ExecutionPointHighlighter myExecutionPointHighlighter;
-  private final AtomicReference<XDebugSessionImpl> myActiveSession = new AtomicReference<XDebugSessionImpl>();
+  private final AtomicReference<XDebugSessionImpl> myActiveSession = new AtomicReference<>();
 
   public XDebuggerManagerImpl(final Project project, final StartupManager startupManager, MessageBus messageBus) {
     myProject = project;
     myBreakpointManager = new XBreakpointManagerImpl(project, this, startupManager);
     myWatchesManager = new XDebuggerWatchesManager();
-    mySessions = new LinkedHashMap<ProcessHandler, XDebugSessionImpl>();
+    mySessions = new LinkedHashMap<>();
     myExecutionPointHighlighter = new ExecutionPointHighlighter(project);
 
     MessageBusConnection messageBusConnection = messageBus.connect();
@@ -104,7 +103,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager
         updateExecutionPoint(file, false);
       }
     });
-    myBreakpointManager.addBreakpointListener(new XBreakpointAdapter<XBreakpoint<?>>() {
+    myBreakpointManager.addBreakpointListener(new XBreakpointListener<XBreakpoint<?>>() {
       @Override
       public void breakpointChanged(@NotNull XBreakpoint<?> breakpoint) {
         if (!(breakpoint instanceof XLineBreakpoint)) {
@@ -177,14 +176,14 @@ public class XDebuggerManagerImpl extends XDebuggerManager
 
   @Override
   @NotNull
-  public XDebugSession startSession(@NotNull ExecutionEnvironment environment, @NotNull XDebugProcessStarter processStarter) throws ExecutionException {
+  public XDebugSession startSession(@NotNull ExecutionEnvironment environment, @NotNull consulo.xdebugger.XDebugProcessStarter processStarter) throws ExecutionException {
     return startSession(environment.getContentToReuse(), processStarter, new XDebugSessionImpl(environment, this));
   }
 
   @Override
   @NotNull
   public XDebugSession startSessionAndShowTab(@NotNull String sessionName, @Nullable RunContentDescriptor contentToReuse,
-                                              @NotNull XDebugProcessStarter starter) throws ExecutionException {
+                                              @NotNull consulo.xdebugger.XDebugProcessStarter starter) throws ExecutionException {
     return startSessionAndShowTab(sessionName, contentToReuse, false, starter);
   }
 
@@ -192,7 +191,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager
   @Override
   public XDebugSession startSessionAndShowTab(@NotNull String sessionName, @Nullable RunContentDescriptor contentToReuse,
                                               boolean showToolWindowOnSuspendOnly,
-                                              @NotNull XDebugProcessStarter starter) throws ExecutionException {
+                                              @NotNull consulo.xdebugger.XDebugProcessStarter starter) throws ExecutionException {
     return startSessionAndShowTab(sessionName, null, contentToReuse, showToolWindowOnSuspendOnly, starter);
   }
 
@@ -202,7 +201,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager
                                               Icon icon,
                                               @Nullable RunContentDescriptor contentToReuse,
                                               boolean showToolWindowOnSuspendOnly,
-                                              @NotNull XDebugProcessStarter starter) throws ExecutionException {
+                                              @NotNull consulo.xdebugger.XDebugProcessStarter starter) throws ExecutionException {
     XDebugSessionImpl session = startSession(contentToReuse, starter, new XDebugSessionImpl(null, this, sessionName,
                                                                                             icon, showToolWindowOnSuspendOnly));
     if (!showToolWindowOnSuspendOnly) {
@@ -214,7 +213,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager
   }
 
   private XDebugSessionImpl startSession(@Nullable RunContentDescriptor contentToReuse,
-                                         @NotNull XDebugProcessStarter processStarter,
+                                         @NotNull consulo.xdebugger.XDebugProcessStarter processStarter,
                                          @NotNull XDebugSessionImpl session) throws ExecutionException {
     XDebugProcess process = processStarter.start(session);
     myProject.getMessageBus().syncPublisher(TOPIC).processStarted(process);
@@ -251,12 +250,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager
       if (descriptor != null) {
         // in test-mode RunContentWithExecutorListener.contentRemoved events are not sent (see RunContentManagerImpl.showRunContent)
         // so we make sure the mySessions and mySessionData are cleared correctly when session is disposed
-        Disposer.register(descriptor, new Disposable() {
-          @Override
-          public void dispose() {
-            mySessions.remove(session.getDebugProcess().getProcessHandler());
-          }
-        });
+        Disposer.register(descriptor, () -> mySessions.remove(session.getDebugProcess().getProcessHandler()));
       }
 
       if (!myProject.isDisposed() && !ApplicationManager.getApplication().isUnitTestMode() && XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isHideDebuggerOnProcessTermination()) {
@@ -311,7 +305,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager
       final XDebugProcess process = session.getDebugProcess();
       if (processClass.isInstance(process)) {
         if (list == null) {
-          list = new SmartList<T>();
+          list = new SmartList<>();
         }
         list.add(processClass.cast(process));
       }
