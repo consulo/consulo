@@ -37,12 +37,12 @@ public class ResourceUtil {
   private ResourceUtil() {
   }
 
-  public static URL getResource(@NotNull Class loaderClass, @NonNls @NotNull String basePath, @NonNls @NotNull String fileName) {
+  public static URL getResource(@NotNull ClassLoader classLoader, @NonNls @NotNull String basePath, @NonNls @NotNull String fileName) {
     if (basePath.endsWith("/")) basePath = basePath.substring(0, basePath.length() - 1);
 
     final List<String> bundles = calculateBundleNames(basePath, Locale.getDefault());
     for (String bundle : bundles) {
-      URL url = loaderClass.getResource(bundle + "/" + fileName);
+      URL url = classLoader.getResource(bundle + "/" + fileName);
       if (url == null) continue;
 
       try {
@@ -55,7 +55,11 @@ public class ResourceUtil {
       return url;
     }
 
-    return loaderClass.getResource(basePath + "/" + fileName);
+    return classLoader.getResource(basePath + "/" + fileName);
+  }
+
+  public static URL getResource(@NotNull Class loaderClass, @NonNls @NotNull String basePath, @NonNls @NotNull String fileName) {
+    return getResource(loaderClass.getClassLoader(), basePath, fileName);
   }
 
   /**

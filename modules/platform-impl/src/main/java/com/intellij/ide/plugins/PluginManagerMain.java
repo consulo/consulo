@@ -56,7 +56,6 @@ import javax.swing.border.Border;
 import javax.swing.event.*;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -73,14 +72,6 @@ import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 public abstract class PluginManagerMain implements Disposable {
   public static Logger LOG = Logger.getInstance("#com.intellij.ide.plugins.PluginManagerMain");
 
-  @NonNls
-  private static final String TEXT_PREFIX = "<html><head>" +
-                                            "    <style type=\"text/css\">" +
-                                            "        p {" +
-                                            "            font-family: Arial,serif; font-size: 12pt; margin: 2px 2px" +
-                                            "        }" +
-                                            "    </style>" +
-                                            "</head><body style=\"font-family: Arial,serif; font-size: 12pt; margin: 5px 5px;\">";
   @NonNls
   private static final String TEXT_SUFFIX = "</body></html>";
 
@@ -122,7 +113,7 @@ public abstract class PluginManagerMain implements Disposable {
 
   protected void init() {
     GuiUtils.replaceJSplitPaneWithIDEASplitter(main);
-    myDescriptionTextArea.setEditorKit(new HTMLEditorKit());
+    myDescriptionTextArea.setEditorKit(UIUtil.getHTMLEditorKit());
     myDescriptionTextArea.setEditable(false);
     myDescriptionTextArea.addHyperlinkListener(new MyHyperlinkListener());
 
@@ -396,14 +387,27 @@ public abstract class PluginManagerMain implements Disposable {
 
   private static void setTextValue(@Nullable StringBuilder text, @Nullable String filter, JEditorPane pane) {
     if (text != null) {
-      text.insert(0, TEXT_PREFIX);
+      text.insert(0, getTextPrefix());
       text.append(TEXT_SUFFIX);
       pane.setText(SearchUtil.markup(text.toString(), filter).trim());
       pane.setCaretPosition(0);
     }
     else {
-      pane.setText(TEXT_PREFIX + TEXT_SUFFIX);
+      pane.setText(getTextPrefix() + TEXT_SUFFIX);
     }
+  }
+
+  private static String getTextPrefix() {
+    String string = "<html><head>\n" +
+                    "    <style type=\"text/css\">\n" +
+                    "        p {\n font-family: Arial,serif; font-size: %dpt; margin: %dpx %dpx\n" +
+                    "        }\n" +
+                    "    </style>\n" +
+                    "</head><body style=\"font-family: Arial,serif; font-size: %dpt; margin: %dpx %dpx;\">";
+    int font = JBUI.scale(12);
+    int margin5 = JBUI.scale(5);
+    int margin2 = JBUI.scale(2);
+    return String.format(string, font, margin2, margin2, font, margin5, margin5);
   }
 
   private static String composeHref(String vendorUrl) {

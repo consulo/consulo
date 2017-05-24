@@ -50,7 +50,7 @@ public abstract class XDebugProcess {
   private ProcessHandler myProcessHandler;
 
   /**
-   * @param session pass <code>session</code> parameter of {@link XDebugProcessStarter#start} method to this constructor
+   * @param session pass <code>session</code> parameter of {@link consulo.xdebugger.XDebugProcessStarter#start} method to this constructor
    */
   protected XDebugProcess(@NotNull XDebugSession session) {
     mySession = session;

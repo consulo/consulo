@@ -87,6 +87,10 @@
     <xi:fallback/>
   </xi:include>
 
+  <xi:include href="/META-INF/TipsOfTheDay.xml" xpointer="xpointer(/idea-plugin/*)">
+    <xi:fallback/>
+  </xi:include>
+
   <extensionPoints>
     <extensionPoint name="listOfElements" beanClass="consulo.extensions.ListOfElementsEP"/>
     <extensionPoint name="addTo.listOfElements" beanClass="consulo.extensions.AddToElementEP"/>
@@ -219,6 +223,8 @@
     <extensionPoint name="frameEditorComponentProvider" interface="com.intellij.openapi.wm.ex.FrameEditorComponentProvider"/>
 
     <extensionPoint name="productivityFeaturesProvider" interface="com.intellij.featureStatistics.ProductivityFeaturesProvider"/>
+
+    <extensionPoint name="tipAndTrick" beanClass="com.intellij.ide.util.TipAndTrickBean"/>
 
     <extensionPoint name="iconDescriptorUpdater" interface="consulo.ide.IconDescriptorUpdater"/>
 
