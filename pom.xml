@@ -13,6 +13,8 @@
   <modules>
     <module>arch/global</module>
 
+    <module>distribution</module>
+
     <module>modules/annotations</module>
     <module>modules/analysis-api</module>
     <module>modules/analysis-impl</module>

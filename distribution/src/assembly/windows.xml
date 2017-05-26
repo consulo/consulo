@@ -1,0 +1,55 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>windows</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}/boot/win/</directory>
+      <includes>
+        <include>*</include>
+      </includes>
+      <excludes>
+        <exclude>*.formatted</exclude>
+      </excludes>
+      <outputDirectory>/Consulo/</outputDirectory>
+      <lineEnding>lf</lineEnding>
+      <useDefaultExcludes>true</useDefaultExcludes>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/shared/</directory>
+      <includes>
+        <include>*/*</include>
+      </includes>
+      <excludes>
+        <exclude>*.formatted</exclude>
+      </excludes>
+      <outputDirectory>/Consulo/platform/build${project.version}/</outputDirectory>
+      <lineEnding>lf</lineEnding>
+      <useDefaultExcludes>true</useDefaultExcludes>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/win</directory>
+      <includes>
+        <include>*/*</include>
+      </includes>
+      <outputDirectory>/Consulo/platform/build${project.version}/</outputDirectory>
+      <useDefaultExcludes>true</useDefaultExcludes>
+    </fileSet>
+  </fileSets>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/Consulo/platform/build${project.version}/lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <excludes>
+        <exclude>consulo:bundle</exclude>
+      </excludes>
+    </dependencySet>
+  </dependencySets>
+</assembly>
