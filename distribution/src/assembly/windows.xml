@@ -13,22 +13,14 @@
       <includes>
         <include>*</include>
       </includes>
-      <excludes>
-        <exclude>*.formatted</exclude>
-      </excludes>
       <outputDirectory>/Consulo/</outputDirectory>
-      <lineEnding>lf</lineEnding>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/platform/shared/</directory>
       <includes>
         <include>*/*</include>
       </includes>
-      <excludes>
-        <exclude>*.formatted</exclude>
-      </excludes>
       <outputDirectory>/Consulo/platform/build${project.version}/</outputDirectory>
-      <lineEnding>lf</lineEnding>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/platform/win</directory>
