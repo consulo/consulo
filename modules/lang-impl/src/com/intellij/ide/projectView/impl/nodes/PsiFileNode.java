@@ -16,8 +16,6 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.CommonBundle;
-import consulo.ide.IconDescriptorUpdaters;
-import consulo.fileTypes.ArchiveFileType;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
@@ -32,16 +30,18 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.PathUtil;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.fileTypes.ArchiveFileType;
+import consulo.ide.IconDescriptorUpdaters;
+import consulo.vfs.util.ArchiveVfsUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWithText {
@@ -60,7 +60,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
       }
     }
 
-    return new ArrayList<AbstractTreeNode>();
+    return ContainerUtil.emptyList();
   }
 
   private boolean isArchive() {
