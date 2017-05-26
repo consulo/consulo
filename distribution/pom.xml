@@ -80,5 +80,25 @@
       <artifactId>xdebugger-impl</artifactId>
       <version>SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>vcs-api</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>vcs-impl</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>external-system-api</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>external-system-impl</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>
