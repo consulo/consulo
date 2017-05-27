@@ -24,6 +24,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.text.StringTokenizer;
+import consulo.startup.StartupActionLogger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -44,7 +45,8 @@ public class BootstrapClassLoaderUtil extends ClassUtilCore {
   private static final String PROPERTY_ALLOW_BOOTSTRAP_RESOURCES = "idea.allow.bootstrap.resources";
   private static final String PROPERTY_ADDITIONAL_CLASSPATH = "idea.additional.classpath";
 
-  private BootstrapClassLoaderUtil() { }
+  private BootstrapClassLoaderUtil() {
+  }
 
   private static Logger getLogger() {
     return Logger.getInstance(BootstrapClassLoaderUtil.class);
@@ -60,11 +62,9 @@ public class BootstrapClassLoaderUtil extends ClassUtilCore {
     addAdditionalClassPath(classpath);
     addParentClasspath(classpath, true);
 
-    UrlClassLoader.Builder builder = UrlClassLoader.build()
-            .urls(filterClassPath(new ArrayList<URL>(classpath)))
-            .allowLock()
-            .usePersistentClasspathIndexForLocalClassDirectories()
-            .useCache();
+    UrlClassLoader.Builder builder =
+            UrlClassLoader.build().urls(filterClassPath(new ArrayList<URL>(classpath))).allowLock().usePersistentClasspathIndexForLocalClassDirectories()
+                    .useCache();
     if (Boolean.valueOf(System.getProperty(PROPERTY_ALLOW_BOOTSTRAP_RESOURCES, "true"))) {
       builder.allowBootstrapResources();
     }
@@ -73,13 +73,30 @@ public class BootstrapClassLoaderUtil extends ClassUtilCore {
 
     UrlClassLoader newClassLoader = builder.get();
 
-    // prepare plugins
-    if (updatePlugins) {
-      try {
-        StartupActionScriptManager.executeActionScript();
+    StartupActionLogger logger = null;
+    try {
+      logger = new StartupActionLogger();
+
+      logger.info("start: update=" + updatePlugins);
+      // prepare plugins
+      if (updatePlugins) {
+        try {
+          StartupActionScriptManager.executeActionScript(logger);
+        }
+        catch (IOException e) {
+          logger.error(e);
+
+          Main.showMessage("Plugin Installation Error", e);
+        }
       }
-      catch (IOException e) {
-        Main.showMessage("Plugin Installation Error", e);
+    }
+    finally {
+      if (logger != null) {
+        try {
+          logger.close();
+        }
+        catch (IOException ignored) {
+        }
       }
     }
 
