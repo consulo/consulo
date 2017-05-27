@@ -99,22 +99,16 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>velocity-engine-core</artifactId>
+      <version>2.1</version>
+    </dependency>
     <!--external dependencies-->
     <dependency>
       <groupId>com.miglayout</groupId>
       <artifactId>miglayout</artifactId>
       <version>3.7.4</version>
-    </dependency>
-    <dependency>
-      <groupId>velocity</groupId>
-      <artifactId>velocity</artifactId>
-      <version>1.5</version>
-      <exclusions>
-        <exclusion>
-          <groupId>velocity</groupId>
-          <artifactId>velocity-dep</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.ogce</groupId>
