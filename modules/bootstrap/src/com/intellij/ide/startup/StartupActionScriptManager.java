@@ -26,6 +26,7 @@ import javax.swing.*;
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,7 +44,16 @@ public class StartupActionScriptManager {
   }
 
   public static synchronized void executeActionScript(Logger logger) throws IOException {
-    List<ActionCommand> commands = loadActionScript(logger);
+    List<ActionCommand> commands = Collections.emptyList();
+    try {
+      commands = loadActionScript(logger);
+    }
+    catch (ProblemWithFileException e) {
+      // if we catch problem with file - drop action.script file
+      saveActionScript(new ArrayList<ActionCommand>());
+      throw e;
+    }
+
     for (ActionCommand command : commands) {
       logger.info("start: load command " + command);
     }
@@ -74,7 +84,8 @@ public class StartupActionScriptManager {
       command.execute(logger);
       return;
     }
-    final List<ActionCommand> commands = loadActionScript(logger);
+
+    final ArrayList<ActionCommand> commands = loadActionScript(logger);
     commands.add(command);
     saveActionScript(commands);
   }
@@ -113,7 +124,7 @@ public class StartupActionScriptManager {
     }
   }
 
-  private static void saveActionScript(List<ActionCommand> commands) throws IOException {
+  private static void saveActionScript(ArrayList<ActionCommand> commands) throws IOException {
     File temp = new File(PathManager.getPluginTempPath());
     boolean exists = true;
     if (!temp.exists()) {
