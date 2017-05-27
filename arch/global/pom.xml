@@ -22,7 +22,7 @@
 
   <groupId>consulo</groupId>
   <artifactId>arch.global</artifactId>
-  <version>${global.version}</version>
+  <version>SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
