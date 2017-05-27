@@ -51,6 +51,12 @@
       <groupId>org.apache.ws.xmlrpc</groupId>
       <artifactId>xmlrpc</artifactId>
       <version>2.0.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 </project>
