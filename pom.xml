@@ -13,6 +13,7 @@
 
   <modules>
     <module>arch/global</module>
+    <module>arch/ide</module>
 
     <module>distribution</module>
 

@@ -37,7 +37,7 @@
       <unpack>false</unpack>
       <scope>runtime</scope>
       <excludes>
-        <exclude>consulo:bundle</exclude>
+        <exclude>consulo:consulo-bundle</exclude>
       </excludes>
     </dependencySet>
   </dependencySets>
