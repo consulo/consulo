@@ -26,8 +26,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>core-api</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-core-api</artifactId>
+  <version>${global.version}</version>
 
   <packaging>jar</packaging>
 
@@ -39,17 +39,17 @@
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>annotations</artifactId>
-      <version>SNAPSHOT</version>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>extensions</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-extensions</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>util</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-util</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <!--external dependencies-->
     <dependency>

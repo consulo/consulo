@@ -3,11 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+  <parent>
+    <groupId>consulo</groupId>
+    <artifactId>arch.global</artifactId>
+    <version>SNAPSHOT</version>
+    <relativePath>../arch/global/pom.ml</relativePath>
+  </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>consulo</groupId>
-  <artifactId>bundle</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-bundle</artifactId>
+  <version>${global.version}</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,183 +42,183 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>annotations</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-annotations</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>core-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-core-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>core-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-core-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>platform-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-platform-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>platform-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-platform-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>lang-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-lang-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>lang-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-lang-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>xdebugger-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-xdebugger-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>xdebugger-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-xdebugger-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>external-system-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-external-system-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>external-system-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-external-system-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>buildin-server-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-buildin-server-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>compiler-server-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-compiler-server-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>desktop-ui-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-desktop-ui-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-log-graph-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-log-graph-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-log-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-log-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>dvcs-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-dvcs-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-log-graph-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-log-graph-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-log-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-log-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>dvcs-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-dvcs-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>external-storage-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-external-storage-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>graph-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-graph-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>graph-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-graph-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>platform-main</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-platform-main</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>platform-resources</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-platform-resources</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>platform-resources-en</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-platform-resources-en</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>lvcs-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-lvcs-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>slf4j-bind</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-slf4j-bind</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>remote-servers-agent-rt</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-remote-servers-agent-rt</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>remote-servers-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-remote-servers-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>remote-servers-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-remote-servers-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>xtest-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-xtest-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>xcoverage-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-xcoverage-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>xtest-sm-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-xtest-sm-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
   </dependencies>
 </project>

@@ -11,8 +11,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>annotations</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-annotations</artifactId>
+  <version>${global.version}</version>
 
   <packaging>jar</packaging>
 

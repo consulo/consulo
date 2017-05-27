@@ -25,8 +25,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>dvcs-impl</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-dvcs-impl</artifactId>
+  <version>${global.version}</version>
 
   <packaging>jar</packaging>
 
@@ -37,40 +37,40 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>dvcs-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-dvcs-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>core-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-core-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-log-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-log-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>lang-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-lang-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>lang-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-lang-impl</artifactId>
+      <version>${global.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-impl</artifactId>
+      <version>${global.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>

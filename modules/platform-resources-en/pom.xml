@@ -26,8 +26,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>platform-resources-en</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-platform-resources-en</artifactId>
+  <version>${global.version}</version>
 
   <packaging>jar</packaging>
 

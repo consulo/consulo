@@ -26,8 +26,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>compiler-api</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-compiler-api</artifactId>
+  <version>${global.version}</version>
 
   <packaging>jar</packaging>
 

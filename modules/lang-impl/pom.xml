@@ -26,8 +26,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>lang-impl</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-lang-impl</artifactId>
+  <version>${global.version}</version>
 
   <packaging>jar</packaging>
 
@@ -55,33 +55,33 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>lang-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-lang-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>platform-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-platform-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>compiler-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-compiler-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>usageView</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-usageView</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>util</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-util</artifactId>
+      <version>${global.version}</version>
       <scope>test</scope>
       <type>test-jar</type>
     </dependency>

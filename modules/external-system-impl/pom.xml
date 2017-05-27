@@ -26,8 +26,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>external-system-impl</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-external-system-impl</artifactId>
+  <version>${global.version}</version>
 
   <packaging>jar</packaging>
 
@@ -38,23 +38,23 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>external-system-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-external-system-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>lang-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-lang-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>xdebugger-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-xdebugger-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
   </dependencies>
 </project>

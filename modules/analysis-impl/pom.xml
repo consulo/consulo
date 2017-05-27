@@ -26,8 +26,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>analysis-impl</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-analysis-impl</artifactId>
+  <version>${global.version}</version>
 
   <packaging>jar</packaging>
 
@@ -38,23 +38,23 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>analysis-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-analysis-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>core-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-core-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>util</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-util</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>editor-ui-ex</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-editor-ui-ex</artifactId>
+      <version>${global.version}</version>
     </dependency>
   </dependencies>
 </project>

@@ -26,7 +26,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>slf4j-bind</artifactId>
+  <artifactId>consulo-slf4j-bind</artifactId>
   <version>SNAPSHOT</version>
 
   <packaging>jar</packaging>
@@ -39,7 +39,7 @@
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>util</artifactId>
-      <version>SNAPSHOT</version>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

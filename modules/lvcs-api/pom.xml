@@ -26,8 +26,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>lvcs-api</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-lvcs-api</artifactId>
+  <version>${global.version}</version>
 
   <packaging>jar</packaging>
 
@@ -38,8 +38,8 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>core-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-core-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <!--internal dependencies-->
     <!--external dependencies-->

@@ -26,8 +26,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>projectModel-impl</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-projectModel-impl</artifactId>
+  <version>${global.version}</version>
 
   <packaging>jar</packaging>
 
@@ -38,18 +38,18 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>core-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-core-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>projectModel-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-projectModel-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>compiler-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-compiler-api</artifactId>
+      <version>${global.version}</version>
     </dependency>
   </dependencies>
 </project>

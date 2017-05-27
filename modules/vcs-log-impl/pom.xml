@@ -26,8 +26,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>vcs-log-impl</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-vcs-log-impl</artifactId>
+  <version>${global.version}</version>
 
   <packaging>jar</packaging>
 
@@ -38,28 +38,28 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-log-api</artifactId>
+      <artifactId>consulo-vcs-log-api</artifactId>
       <version>SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>platform-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-platform-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-log-graph-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-log-graph-impl</artifactId>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>vcs-log-graph-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-vcs-log-graph-impl</artifactId>
+      <version>${global.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>

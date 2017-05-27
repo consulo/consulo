@@ -25,8 +25,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>indexing-impl</artifactId>
-  <version>SNAPSHOT</version>
+  <artifactId>consulo-indexing-impl</artifactId>
+  <version>${global.version}</version>
 
   <packaging>jar</packaging>
 
@@ -39,17 +39,17 @@
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>indexing-api</artifactId>
-      <version>SNAPSHOT</version>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>core-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <version>${global.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>projectModel-impl</artifactId>
-      <version>SNAPSHOT</version>
+      <version>${global.version}</version>
     </dependency>
   </dependencies>
 </project>
