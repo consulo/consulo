@@ -160,5 +160,8 @@ public abstract class Logger {
     return value || assertTrue(false, null);
   }
 
-  public abstract void setLevel(Level level);
+  @Deprecated
+  public void setLevel(Level level) {
+    // deprecated
+  }
 }

@@ -25,6 +25,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.RequiredDispatchThread;
 
 import java.io.IOException;
 
@@ -32,6 +33,7 @@ public class PsiFileImplUtil {
   private PsiFileImplUtil() {
   }
 
+  @RequiredDispatchThread
   public static PsiFile setName(final PsiFile file, String newName) throws IncorrectOperationException {
     VirtualFile vFile = file.getViewProvider().getVirtualFile();
     PsiManagerImpl manager = (PsiManagerImpl)file.getManager();
@@ -50,12 +52,13 @@ public class PsiFileImplUtil {
       vFile.rename(manager, newName);
     }
     catch(IOException e){
-      throw new IncorrectOperationException(e.toString(),e);
+      throw new IncorrectOperationException(e);
     }
 
     return file.getViewProvider().isPhysical() ? manager.findFile(vFile) : file;
   }
 
+  @RequiredDispatchThread
   public static void checkSetName(PsiFile file, String name) throws IncorrectOperationException {
     VirtualFile vFile = file.getVirtualFile();
     VirtualFile parentFile = vFile.getParent();
@@ -74,7 +77,7 @@ public class PsiFileImplUtil {
       vFile.delete(manager);
     }
     catch(IOException e){
-      throw new IncorrectOperationException(e.toString(),e);
+      throw new IncorrectOperationException(e);
     }
   }
 }

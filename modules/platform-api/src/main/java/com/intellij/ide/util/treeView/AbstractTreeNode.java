@@ -120,7 +120,7 @@ public abstract class AbstractTreeNode<T> extends PresentableNodeDescriptor impl
   }
 
   public boolean equals(Object object) {
-    return object instanceof AbstractTreeNode && Comparing.equal(getValue(), ((AbstractTreeNode)object).getValue());
+    return object instanceof AbstractTreeNode && Comparing.equal(myValue, ((AbstractTreeNode)object).myValue);
   }
 
   public int hashCode() {
@@ -147,12 +147,17 @@ public abstract class AbstractTreeNode<T> extends PresentableNodeDescriptor impl
     return myParentDescriptor;
   }
 
+  @SuppressWarnings("unchecked")
   public final T getValue() {
-    return myValue;
+    if (myValue == null) {
+      return null;
+    }
+    return (T)TreeAnchorizer.getService().retrieveElement(myValue);
   }
 
+  @SuppressWarnings("unchecked")
   public final void setValue(T value) {
-    myValue = value;
+    myValue = value == null ? null : (T)TreeAnchorizer.getService().createAnchor(value);
   }
 
   @Nullable
