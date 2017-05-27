@@ -19,6 +19,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.io.ZipUtil;
+import consulo.startup.ProblemWithFileException;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -59,13 +60,9 @@ public class StartupActionScriptManager {
       }
     }
 
-    if (commands.size() > 0) {
-      commands.clear();
+    logger.info("start: saved empty list");
 
-      logger.info("start: saved empty list");
-
-      saveActionScript(commands);
-    }
+    saveActionScript(new ArrayList<ActionCommand>());
   }
 
   public static synchronized void addActionCommand(ActionCommand command) throws IOException {
@@ -87,13 +84,16 @@ public class StartupActionScriptManager {
     return systemPath + File.separator + ACTION_SCRIPT_FILE;
   }
 
-  private static List<ActionCommand> loadActionScript(Logger logger) throws IOException {
+  private static ArrayList<ActionCommand> loadActionScript(Logger logger) throws IOException {
     File file = new File(getActionScriptPath());
     if (file.exists()) {
       ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
       try {
         //noinspection unchecked
-        return (List<ActionCommand>)ois.readObject();
+        return (ArrayList<ActionCommand>)ois.readObject();
+      }
+      catch (InvalidClassException e) {
+        throw new ProblemWithFileException(e);
       }
       catch (ClassNotFoundException e) {
         // problem with scrambled code
@@ -143,6 +143,9 @@ public class StartupActionScriptManager {
   public static class CopyCommand implements Serializable, ActionCommand {
     @NonNls
     private static final String action = "copy";
+
+    private static final long serialVersionUID = 1;
+
     private final File mySource;
     private final File myDestination;
 
@@ -186,6 +189,9 @@ public class StartupActionScriptManager {
   public static class UnzipCommand implements Serializable, ActionCommand {
     @NonNls
     private static final String action = "unzip";
+
+    private static final long serialVersionUID = 2;
+
     private File mySource;
     private FilenameFilter myFilenameFilter;
     private File myDestination;
@@ -233,6 +239,9 @@ public class StartupActionScriptManager {
   public static class DeleteCommand implements Serializable, ActionCommand {
     @NonNls
     private static final String action = "delete";
+
+    private static final long serialVersionUID = 3;
+
     private final File mySource;
 
     public DeleteCommand(File source) {

@@ -24,9 +24,11 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.text.StringTokenizer;
+import consulo.startup.ProblemWithFileException;
 import consulo.startup.StartupActionLogger;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -82,6 +84,10 @@ public class BootstrapClassLoaderUtil extends ClassUtilCore {
       if (updatePlugins) {
         try {
           StartupActionScriptManager.executeActionScript(logger);
+        }
+        catch (ProblemWithFileException e) {
+          JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Old plugin update script format. Need call 'About -> Check For Updates' again.",
+                                        "Installing Plugin", JOptionPane.ERROR_MESSAGE);
         }
         catch (IOException e) {
           logger.error(e);
