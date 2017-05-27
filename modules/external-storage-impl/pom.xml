@@ -38,7 +38,7 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>platform-impl</artifactId>
+      <artifactId>consulo-platform-impl</artifactId>
       <version>${global.version}</version>
     </dependency>
   </dependencies>
