@@ -7,7 +7,7 @@
 
   <groupId>consulo</groupId>
   <artifactId>group</artifactId>
-  <version>SNAPSHOT</version>
+  <version>2-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 

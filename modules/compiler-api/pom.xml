@@ -20,14 +20,14 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.global</artifactId>
-    <version>SNAPSHOT</version>
+    <version>2-SNAPSHOT</version>
     <relativePath>../../arch/global/pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>consulo-compiler-api</artifactId>
-  <version>${global.version}</version>
+  <version>2-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
@@ -38,18 +38,18 @@
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>core-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-core-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>projectModel-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-projectModel-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>platform-api</artifactId>
-      <version>SNAPSHOT</version>
+      <artifactId>consulo-platform-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <!--internal dependencies-->
     <!--external dependencies-->

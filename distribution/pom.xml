@@ -6,13 +6,13 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.global</artifactId>
-    <version>SNAPSHOT</version>
+    <version>2-SNAPSHOT</version>
     <relativePath>../arch/global/pom.ml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>consulo-bundle</artifactId>
-  <version>${global.version}</version>
+  <version>2-SNAPSHOT</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,182 +43,182 @@
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-annotations</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-core-api</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-core-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-platform-api</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-platform-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-lang-api</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-lang-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-xdebugger-api</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-xdebugger-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-vcs-api</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-vcs-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-external-system-api</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-external-system-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-buildin-server-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-compiler-server-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-desktop-ui-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-vcs-log-graph-api</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-vcs-log-api</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-dvcs-api</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-vcs-log-graph-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-vcs-log-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-dvcs-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-external-storage-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-graph-api</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-graph-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-platform-main</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-platform-resources</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-platform-resources-en</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-lvcs-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-slf4j-bind</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-remote-servers-agent-rt</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-remote-servers-api</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-remote-servers-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-xtest-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-xcoverage-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-xtest-sm-impl</artifactId>
-      <version>${global.version}</version>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>
