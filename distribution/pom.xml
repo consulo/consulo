@@ -21,32 +21,6 @@
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2-beta-5</version>
-        <executions>
-          <execution>
-            <id>create-archive-windows</id>
-            <configuration>
-              <descriptor>src/assembly/windows.xml</descriptor>
-            </configuration>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>create-archive-linux</id>
-            <configuration>
-              <descriptor>src/assembly/linux.xml</descriptor>
-            </configuration>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>com.google.code.maven-replacer-plugin</groupId>
         <artifactId>maven-replacer-plugin</artifactId>
         <version>1.4.0</version>
@@ -81,6 +55,32 @@
             <phase>process-sources</phase>
             <goals>
               <goal>replace</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2-beta-5</version>
+        <executions>
+          <execution>
+            <id>create-archive-windows</id>
+            <configuration>
+              <descriptor>src/assembly/windows.xml</descriptor>
+            </configuration>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>create-archive-linux</id>
+            <configuration>
+              <descriptor>src/assembly/linux.xml</descriptor>
+            </configuration>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
             </goals>
           </execution>
         </executions>
