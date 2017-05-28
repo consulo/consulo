@@ -18,6 +18,7 @@
     <module>distribution</module>
 
     <module>plugins/core</module>
+    <module>plugins/sandLanguage</module>
 
     <module>modules/annotations</module>
     <module>modules/analysis-api</module>
