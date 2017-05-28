@@ -43,9 +43,8 @@
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>consulo-lang-impl</artifactId>
+      <artifactId>consulo-lang-impl-testing</artifactId>
       <version>${project.version}</version>
-      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>

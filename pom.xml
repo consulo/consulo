@@ -58,6 +58,7 @@
     <module>modules/lang-impl-testing</module>
     <module>modules/lvcs-api</module>
     <module>modules/lvcs-impl</module>
+    <module>modules/lvcs-impl-testing</module>
     <module>modules/slf4j-bind</module>
     <module>modules/remote-servers-api</module>
     <module>modules/remote-servers-agent-rt</module>
