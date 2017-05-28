@@ -38,7 +38,16 @@
       <scope>runtime</scope>
       <excludes>
         <exclude>consulo:consulo-bundle</exclude>
+        <exclude>consulo:consulo-core-plugin</exclude>
       </excludes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/Consulo/platform/build${build.number.to.use}/plugins/core</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <includes>
+        <include>consulo:consulo-core-plugin</include>
+      </includes>
     </dependencySet>
   </dependencySets>
 </assembly>

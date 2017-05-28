@@ -38,4 +38,12 @@
       </plugin>
     </plugins>
   </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>consulo-core-plugin</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 </project>
