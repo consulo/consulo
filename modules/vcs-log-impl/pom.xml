@@ -58,10 +58,8 @@
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>consulo-vcs-log-graph-impl</artifactId>
+      <artifactId>consulo-vcs-log-graph-impl-testing</artifactId>
       <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

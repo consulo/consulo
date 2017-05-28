@@ -26,7 +26,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-lvcs-impl</artifactId>
+  <artifactId>consulo-vcs-log-graph-impl-testing</artifactId>
   <version>2-SNAPSHOT</version>
 
   <packaging>jar</packaging>
@@ -37,13 +37,13 @@
 
   <dependencies>
     <dependency>
-      <groupId>consulo</groupId>
-      <artifactId>consulo-vcs-impl</artifactId>
-      <version>${project.version}</version>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>consulo-diff-impl</artifactId>
+      <artifactId>consulo-vcs-log-graph-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
