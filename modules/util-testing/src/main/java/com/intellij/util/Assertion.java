@@ -176,7 +176,7 @@ public class Assertion extends Assert {
 
   public void empty(Object[] array) {
     try {
-      compareAll(ArrayUtil.EMPTY_OBJECT_ARRAY, array);
+      compareAll(ArrayUtilRt.EMPTY_OBJECT_ARRAY, array);
     } catch(AssertionFailedError e) {
       System.err.println("Size: " + array.length);
       throw e;
