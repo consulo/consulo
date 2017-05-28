@@ -55,6 +55,7 @@
     <module>modules/projectModel-impl</module>
     <module>modules/lang-api</module>
     <module>modules/lang-impl</module>
+    <module>modules/lang-impl-testing</module>
     <module>modules/lvcs-api</module>
     <module>modules/lvcs-impl</module>
     <module>modules/slf4j-bind</module>

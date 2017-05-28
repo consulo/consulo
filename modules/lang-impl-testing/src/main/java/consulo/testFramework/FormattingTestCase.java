@@ -35,7 +35,7 @@ import java.lang.reflect.Modifier;
  * @author VISTALL
  * @since 19.04.2015
  */
-public class FormattingTestCase extends OneFileAtProjectTestCase {
+public abstract class FormattingTestCase extends OneFileAtProjectTestCase {
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public static @interface Setup {

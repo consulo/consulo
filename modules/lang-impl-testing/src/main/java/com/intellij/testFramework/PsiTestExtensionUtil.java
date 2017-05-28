@@ -21,10 +21,6 @@ import com.intellij.openapi.util.Disposer;
 
 import java.lang.reflect.Modifier;
 
-/**
- * @author VISTALL
- * @since 15:42/24.06.13
- */
 public class PsiTestExtensionUtil {
 
   public static <T> void registerExtension(final ExtensionPointName<T> name, final T t, final Disposable parentDisposable) {

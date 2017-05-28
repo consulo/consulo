@@ -50,6 +50,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.FileComparisonFailure;
+import junit.framework.Assert;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -74,7 +75,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
     Runnable action = new Runnable() {
       @Override
       public void run() {
-        CommandProcessor.getInstance().executeCommand(getProject(), new Runnable() {
+        CommandProcessor.getInstance().executeCommand(LightPlatformTestCase.getProject(), new Runnable() {
           @Override
           public void run() {
 
@@ -140,7 +141,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
     String fullPath = getTestDataPath() + filePath;
 
     final VirtualFile vFile = LocalFileSystem.getInstance().findFileByPath(fullPath.replace(File.separatorChar, '/'));
-    assertNotNull("file " + fullPath + " not found", vFile);
+    Assert.assertNotNull("file " + fullPath + " not found", vFile);
     return vFile;
   }
 
@@ -157,8 +158,8 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
       public Document compute() {
         if (myVFile != null) {
           // avoid messing with invalid files, in case someone calls configureXXX() several times
-          PsiDocumentManager.getInstance(ourProject).commitAllDocuments();
-          FileEditorManager.getInstance(ourProject).closeFile(myVFile);
+          PsiDocumentManager.getInstance(LightPlatformTestCase.ourProject).commitAllDocuments();
+          FileEditorManager.getInstance(LightPlatformTestCase.ourProject).closeFile(myVFile);
           try {
             myVFile.delete(this);
           }
@@ -216,39 +217,39 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
       int caretLine = StringUtil.offsetToLineNumber(fileText, caretMarker.getStartOffset());
       int caretCol = EditorUtil.calcColumnNumber(null, myEditor.getDocument().getText(),
                                                  myEditor.getDocument().getLineStartOffset(caretLine), caretMarker.getStartOffset(),
-                                                 CodeStyleSettingsManager.getSettings(getProject()).getIndentOptions(InternalStdFileTypes.JAVA).TAB_SIZE);
+                                                 CodeStyleSettingsManager.getSettings(LightPlatformTestCase.getProject()).getIndentOptions(InternalStdFileTypes.JAVA).TAB_SIZE);
       LogicalPosition pos = new LogicalPosition(caretLine, caretCol);
       myEditor.getCaretModel().moveToLogicalPosition(pos);
     }
   }
 
   protected static Editor createEditor(@NotNull VirtualFile file) {
-    Editor editor = FileEditorManager.getInstance(getProject()).openTextEditor(new OpenFileDescriptor(getProject(), file, 0), false);
+    Editor editor = FileEditorManager.getInstance(LightPlatformTestCase.getProject()).openTextEditor(new OpenFileDescriptor(LightPlatformTestCase.getProject(), file, 0), false);
     ((EditorImpl)editor).setCaretActive();
     return editor;
   }
 
   @NotNull
   private static Document setupFileEditorAndDocument(@NotNull String fileName, @NotNull String fileText) throws IOException {
-    EncodingProjectManager.getInstance(getProject()).setEncoding(null, CharsetToolkit.UTF8_CHARSET);
+    EncodingProjectManager.getInstance(LightPlatformTestCase.getProject()).setEncoding(null, CharsetToolkit.UTF8_CHARSET);
     EncodingProjectManager.getInstance(ProjectManager.getInstance().getDefaultProject()).setEncoding(null, CharsetToolkit.UTF8_CHARSET);
-    PostprocessReformattingAspect.getInstance(ourProject).doPostponedFormatting();
+    PostprocessReformattingAspect.getInstance(LightPlatformTestCase.ourProject).doPostponedFormatting();
     deleteVFile();
-    myVFile = getSourceRoot().createChildData(null, fileName);
+    myVFile = LightPlatformTestCase.getSourceRoot().createChildData(null, fileName);
     VfsUtil.saveText(myVFile, fileText);
     final FileDocumentManager manager = FileDocumentManager.getInstance();
     final Document document = manager.getDocument(myVFile);
-    assertNotNull("Can't create document for '" + fileName + "'", document);
+    Assert.assertNotNull("Can't create document for '" + fileName + "'", document);
     manager.reloadFromDisk(document);
     document.insertString(0, " ");
     document.deleteString(0, 1);
-    myFile = getPsiManager().findFile(myVFile);
-    assertNotNull("Can't create PsiFile for '" + fileName + "'. Unknown file type most probably.", myFile);
-    assertTrue(myFile.isPhysical());
+    myFile = LightPlatformTestCase.getPsiManager().findFile(myVFile);
+    Assert.assertNotNull("Can't create PsiFile for '" + fileName + "'. Unknown file type most probably.", myFile);
+    Assert.assertTrue(myFile.isPhysical());
     myEditor = createEditor(myVFile);
     myVFile.setCharset(CharsetToolkit.UTF8_CHARSET);
 
-    PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
+    PsiDocumentManager.getInstance(LightPlatformTestCase.getProject()).commitAllDocuments();
     return document;
   }
 
@@ -277,7 +278,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
 
   @Override
   protected void tearDown() throws Exception {
-    FileEditorManager editorManager = FileEditorManager.getInstance(getProject());
+    FileEditorManager editorManager = FileEditorManager.getInstance(LightPlatformTestCase.getProject());
     VirtualFile[] openFiles = editorManager.getOpenFiles();
     for (VirtualFile openFile : openFiles) {
       editorManager.closeFile(openFile);
@@ -310,20 +311,20 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
   protected void checkResultByFile(@Nullable String message, @NotNull String filePath, final boolean ignoreTrailingSpaces) {
     bringRealEditorBack();
 
-    getProject().getComponent(PostprocessReformattingAspect.class).doPostponedFormatting();
+    LightPlatformTestCase.getProject().getComponent(PostprocessReformattingAspect.class).doPostponedFormatting();
     if (ignoreTrailingSpaces) {
       final Editor editor = myEditor;
       TrailingSpacesStripper.strip(editor.getDocument(), false, true);
       EditorUtil.fillVirtualSpaceUntilCaret(editor);
     }
 
-    PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
+    PsiDocumentManager.getInstance(LightPlatformTestCase.getProject()).commitAllDocuments();
 
     String fullPath = getTestDataPath() + filePath;
 
     File ioFile = new File(fullPath);
 
-    assertTrue(getMessage("Cannot find file " + fullPath, message), ioFile.exists());
+    Assert.assertTrue(getMessage("Cannot find file " + fullPath, message), ioFile.exists());
     String fileText = null;
     try {
       fileText = FileUtil.loadFile(ioFile, CharsetToolkit.UTF8);
@@ -359,7 +360,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
    */
   protected void checkResultByText(final String message, @NotNull final String fileText, final boolean ignoreTrailingSpaces, final String filePath) {
     bringRealEditorBack();
-    PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
+    PsiDocumentManager.getInstance(LightPlatformTestCase.getProject()).commitAllDocuments();
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
@@ -378,7 +379,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
                                          : null;
 
         if (ignoreTrailingSpaces) {
-          ((DocumentImpl)document).stripTrailingSpaces(ourProject);
+          ((DocumentImpl)document).stripTrailingSpaces(LightPlatformTestCase.ourProject);
         }
 
         if (caretMarker != null) {
@@ -394,16 +395,16 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
         }
 
 
-        PostprocessReformattingAspect.getInstance(getProject()).doPostponedFormatting();
+        PostprocessReformattingAspect.getInstance(LightPlatformTestCase.getProject()).doPostponedFormatting();
         String newFileText = document.getText();
 
-        PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
+        PsiDocumentManager.getInstance(LightPlatformTestCase.getProject()).commitAllDocuments();
         String fileText = myFile.getText();
         String failMessage = getMessage("Text mismatch", message);
         if (filePath != null && !newFileText.equals(fileText)) {
           throw new FileComparisonFailure(failMessage, newFileText, fileText, filePath);
         }
-        assertEquals(failMessage, newFileText, fileText);
+        Assert.assertEquals(failMessage, newFileText, fileText);
 
         checkCaretPosition(caretMarker, newFileText, message);
         checkSelection(selStartMarker, selEndMarker, newFileText, message);
@@ -424,31 +425,31 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
       int selEndLine = StringUtil.offsetToLineNumber(newFileText, selEndMarker.getEndOffset());
       int selEndCol = selEndMarker.getEndOffset() - StringUtil.lineColToOffset(newFileText, selEndLine, 0);
 
-      assertEquals(
+      Assert.assertEquals(
           getMessage("selectionStartLine", message),
           selStartLine + 1,
           StringUtil.offsetToLineNumber(newFileText, myEditor.getSelectionModel().getSelectionStart()) + 1);
 
-      assertEquals(
+      Assert.assertEquals(
           getMessage("selectionStartCol", message),
           selStartCol + 1,
           myEditor.getSelectionModel().getSelectionStart() -
           StringUtil.lineColToOffset(newFileText, selStartLine, 0) +
                                                                    1);
 
-      assertEquals(
+      Assert.assertEquals(
           getMessage("selectionEndLine", message),
           selEndLine + 1,
           StringUtil.offsetToLineNumber(newFileText, myEditor.getSelectionModel().getSelectionEnd()) + 1);
 
-      assertEquals(
+      Assert.assertEquals(
           getMessage("selectionEndCol", message),
           selEndCol + 1,
           myEditor.getSelectionModel().getSelectionEnd() - StringUtil.lineColToOffset(newFileText, selEndLine, 0) +
           1);
     }
     else {
-      assertTrue(getMessage("must not have selection", message), !myEditor.getSelectionModel().hasSelection());
+      Assert.assertTrue(getMessage("must not have selection", message), !myEditor.getSelectionModel().hasSelection());
     }
   }
 
@@ -459,10 +460,10 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
       int caretCol = EditorUtil.calcColumnNumber(null, newFileText,
                                                  StringUtil.lineColToOffset(newFileText, caretLine, 0),
                                                  caretMarker.getStartOffset(),
-                                                 CodeStyleSettingsManager.getSettings(getProject()).getIndentOptions(InternalStdFileTypes.JAVA).TAB_SIZE);
+                                                 CodeStyleSettingsManager.getSettings(LightPlatformTestCase.getProject()).getIndentOptions(InternalStdFileTypes.JAVA).TAB_SIZE);
 
-      assertEquals(getMessage("caretLine", message), caretLine, myEditor.getCaretModel().getLogicalPosition().line);
-      assertEquals(getMessage("caretColumn", message), caretCol, myEditor.getCaretModel().getLogicalPosition().column);
+      Assert.assertEquals(getMessage("caretLine", message), caretLine, myEditor.getCaretModel().getLogicalPosition().line);
+      Assert.assertEquals(getMessage("caretColumn", message), caretCol, myEditor.getCaretModel().getLogicalPosition().column);
     }
   }
 
@@ -503,10 +504,10 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
   }
 
   protected static void bringRealEditorBack() {
-    PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
+    PsiDocumentManager.getInstance(LightPlatformTestCase.getProject()).commitAllDocuments();
     if (myEditor instanceof EditorWindow) {
       Document document = ((DocumentWindow)myEditor.getDocument()).getDelegate();
-      myFile = PsiDocumentManager.getInstance(getProject()).getPsiFile(document);
+      myFile = PsiDocumentManager.getInstance(LightPlatformTestCase.getProject()).getPsiFile(document);
       myEditor = ((EditorWindow)myEditor).getDelegate();
       myVFile = myFile.getVirtualFile();
     }
@@ -601,11 +602,11 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
   }
   
   protected static void lineComment() {
-    new CommentByLineCommentHandler().invoke(getProject(), getEditor(), getEditor().getCaretModel().getPrimaryCaret(), getFile());
+    new CommentByLineCommentHandler().invoke(LightPlatformTestCase.getProject(), getEditor(), getEditor().getCaretModel().getPrimaryCaret(), getFile());
   }
 
   protected static void executeAction(@NonNls @NotNull final String actionId) {
-    CommandProcessor.getInstance().executeCommand(getProject(), new Runnable() {
+    CommandProcessor.getInstance().executeCommand(LightPlatformTestCase.getProject(), new Runnable() {
       @Override
       public void run() {
         EditorActionManager actionManager = EditorActionManager.getInstance();
@@ -625,7 +626,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
           return getEditor();
         }
         if (CommonDataKeys.PROJECT.is(dataId)) {
-          return getProject();
+          return LightPlatformTestCase.getProject();
         }
         if (LangDataKeys.PSI_FILE.is(dataId)) {
           return getFile();

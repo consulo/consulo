@@ -41,7 +41,7 @@ import java.util.List;
  * @author VISTALL
  * @since 08.04.2016
  */
-public class FoldingTestCase extends OneFileAtProjectTestCase {
+public abstract class FoldingTestCase extends OneFileAtProjectTestCase {
   private class Border implements Comparable<Border> {
     public static final boolean LEFT = true;
     public static final boolean RIGHT = false;

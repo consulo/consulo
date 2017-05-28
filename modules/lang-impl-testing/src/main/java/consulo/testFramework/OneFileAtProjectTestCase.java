@@ -37,6 +37,7 @@ import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.util.FileComparisonFailure;
 import consulo.lang.util.LanguageVersionUtil;
+import junit.framework.Assert;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredDispatchThread;
@@ -138,7 +139,7 @@ public class OneFileAtProjectTestCase extends UsefulTestCase {
   public static void doCheckResult(String fullPath, String targetDataName, String text) throws IOException {
     text = text.trim();
     String expectedFileName = fullPath + File.separatorChar + targetDataName;
-    if (OVERWRITE_TESTDATA) {
+    if (UsefulTestCase.OVERWRITE_TESTDATA) {
       VfsTestUtil.overwriteTestData(expectedFileName, text);
       System.out.println("File " + expectedFileName + " created.");
     }
@@ -150,7 +151,7 @@ public class OneFileAtProjectTestCase extends UsefulTestCase {
     }
     catch (FileNotFoundException e) {
       VfsTestUtil.overwriteTestData(expectedFileName, text);
-      fail("No output text found. File " + expectedFileName + " created.");
+      Assert.fail("No output text found. File " + expectedFileName + " created.");
     }
   }
 

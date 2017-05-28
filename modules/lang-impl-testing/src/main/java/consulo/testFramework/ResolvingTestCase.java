@@ -15,6 +15,7 @@
  */
 package consulo.testFramework;
 
+import com.intellij.testFramework.UsefulTestCase;
 import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
@@ -27,6 +28,7 @@ import com.intellij.util.FileComparisonFailure;
 import com.intellij.util.Function;
 import com.intellij.util.containers.LinkedMultiMap;
 import com.intellij.util.containers.MultiMap;
+import junit.framework.Assert;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +45,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 06.04.2016
  */
-public class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
+public abstract class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
   protected String myExtension;
   @NonNls
   protected final String myFullDataPath;
@@ -74,7 +76,7 @@ public class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
   private void checkResult(@NotNull String filePath) throws Exception {
     configureByFile(filePath);
 
-    PsiFile file = myFile;
+    PsiFile file = LightPlatformCodeInsightTestCase.myFile;
     final MultiMap<PsiReference, ResolveResult> refs = new LinkedMultiMap<PsiReference, ResolveResult>();
     file.accept(new PsiRecursiveElementVisitor() {
       @Override
@@ -133,7 +135,7 @@ public class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
 
   private static void doCheckResult(String path, String text) throws IOException {
     text = text.trim();
-    if (OVERWRITE_TESTDATA) {
+    if (UsefulTestCase.OVERWRITE_TESTDATA) {
       VfsTestUtil.overwriteTestData(path, text);
       System.out.println("File " + path + " created.");
     }
@@ -145,7 +147,7 @@ public class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
     }
     catch (FileNotFoundException e) {
       VfsTestUtil.overwriteTestData(path, text);
-      fail("No output text found. File " + path + " created.");
+      Assert.fail("No output text found. File " + path + " created.");
     }
   }
 
