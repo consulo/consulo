@@ -43,6 +43,7 @@
         <include>*/*</include>
       </includes>
       <excludes>
+        <exclude>/bin/.gitignore</exclude>
         <exclude>/bin/launcher.sh.template</exclude>
       </excludes>
       <outputDirectory>/Consulo/platform/build${build.number.to.use}/</outputDirectory>
