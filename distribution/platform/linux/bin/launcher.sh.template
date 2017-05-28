@@ -122,19 +122,19 @@ if [ -r "$VM_OPTIONS_FILE" ]; then
   VM_OPTIONS="$VM_OPTIONS -Djb.vmOptionsFile=\"$VM_OPTIONS_FILE\""
 fi
 
-COMMON_JVM_ARGS="\"-Xbootclasspath/a:$IDE_HOME/lib/consulo-boot-2-SNAPSHOT.jar\" -Didea.home.path=\"$IDE_HOME\" -Didea.properties.file=\"$ROOT_DIR/consulo.properties\""
+COMMON_JVM_ARGS="\"-Xbootclasspath/a:$IDE_HOME/lib/consulo-boot-@project.version@.jar\" -Didea.home.path=\"$IDE_HOME\" -Didea.properties.file=\"$ROOT_DIR/consulo.properties\""
 IDE_JVM_ARGS=""
 ALL_JVM_ARGS="$VM_OPTIONS $COMMON_JVM_ARGS $IDE_JVM_ARGS $AGENT $REQUIRED_JVM_ARGS"
 
-CLASSPATH="$IDE_HOME/lib/consulo-bootstrap-2-SNAPSHOT.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-extensions-2-SNAPSHOT.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-util-2-SNAPSHOT.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-util-rt-2-SNAPSHOT.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jdom-2.1.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/log4j-1.2.4.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/trove4j-2.0.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jna-4.1.0.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jna-platform-4.1.0.jar"
+CLASSPATH="$IDE_HOME/lib/consulo-bootstrap-@project.version@.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-extensions-@project.version@.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-util-@project.version@.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/consulo-util-rt-@project.version@.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jdom-@jdom.version@.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/log4j-@log4j.version@.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/trove4j-@trove4j.version@.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jna-@jna.version@.jar"
+CLASSPATH="$CLASSPATH:$IDE_HOME/lib/jna-platform-@jna.version@.jar"
 if [ -n "$IDEA_CLASSPATH" ]; then
   CLASSPATH="$CLASSPATH:$IDEA_CLASSPATH"
 fi

@@ -60,6 +60,7 @@
       <groupId>consulo</groupId>
       <artifactId>consulo-vcs-log-graph-impl-testing</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

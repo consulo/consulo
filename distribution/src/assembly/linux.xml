@@ -1,0 +1,71 @@
+<!--
+  - Copyright 2013-2017 consulo.io
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>linux</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}/boot/linux/</directory>
+      <includes>
+        <include>*</include>
+      </includes>
+      <outputDirectory>/Consulo/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/shared/</directory>
+      <includes>
+        <include>*/*</include>
+      </includes>
+      <outputDirectory>/Consulo/platform/build${build.number.to.use}/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/linux</directory>
+      <includes>
+        <include>*/*</include>
+      </includes>
+      <excludes>
+        <exclude>/bin/launcher.sh.template</exclude>
+      </excludes>
+      <outputDirectory>/Consulo/platform/build${build.number.to.use}/</outputDirectory>
+    </fileSet>
+  </fileSets>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/Consulo/platform/build${build.number.to.use}/lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <excludes>
+        <exclude>consulo:consulo-bundle</exclude>
+        <exclude>consulo:consulo-core-plugin</exclude>
+      </excludes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/Consulo/platform/build${build.number.to.use}/plugins/core</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <includes>
+        <include>consulo:consulo-core-plugin</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</assembly>
