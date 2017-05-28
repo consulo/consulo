@@ -61,7 +61,7 @@
       </excludes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>/Consulo/platform/build${build.number}/plugins/lib/core</outputDirectory>
+      <outputDirectory>/Consulo/platform/build${build.number}/plugins/core/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <includes>
