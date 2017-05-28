@@ -43,7 +43,7 @@
     <slf4j.version>1.7.25</slf4j.version>
     <junit.version>4.10</junit.version>
 
-    <build.number.to.use>SNAPSHOT</build.number.to.use>
+    <build.number>SNAPSHOT</build.number>
 
     <maven.compiler.plugin.version>3.3</maven.compiler.plugin.version>
   </properties>
@@ -57,7 +57,7 @@
         </property>
       </activation>
       <properties>
-        <build.number.to.use>${env.BUILD_NUMBER}</build.number.to.use>
+        <build.number>${env.BUILD_NUMBER}</build.number>
       </properties>
     </profile>
   </profiles>

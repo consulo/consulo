@@ -35,7 +35,7 @@
       <includes>
         <include>*/*</include>
       </includes>
-      <outputDirectory>/Consulo/platform/build${build.number.to.use}/</outputDirectory>
+      <outputDirectory>/Consulo/platform/build${build.number}/</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/platform/linux</directory>
@@ -46,13 +46,13 @@
         <exclude>/bin/.gitignore</exclude>
         <exclude>/bin/launcher.sh.template</exclude>
       </excludes>
-      <outputDirectory>/Consulo/platform/build${build.number.to.use}/</outputDirectory>
+      <outputDirectory>/Consulo/platform/build${build.number}/</outputDirectory>
     </fileSet>
   </fileSets>
 
   <dependencySets>
     <dependencySet>
-      <outputDirectory>/Consulo/platform/build${build.number.to.use}/lib</outputDirectory>
+      <outputDirectory>/Consulo/platform/build${build.number}/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <excludes>
@@ -61,7 +61,7 @@
       </excludes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>/Consulo/platform/build${build.number.to.use}/plugins/core</outputDirectory>
+      <outputDirectory>/Consulo/platform/build${build.number}/plugins/core</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <includes>
