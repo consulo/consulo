@@ -20,20 +20,20 @@
       <includes>
         <include>*/*</include>
       </includes>
-      <outputDirectory>/Consulo/platform/build${project.version}/</outputDirectory>
+      <outputDirectory>/Consulo/platform/build${build.number.to.use}/</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/platform/win</directory>
       <includes>
         <include>*/*</include>
       </includes>
-      <outputDirectory>/Consulo/platform/build${project.version}/</outputDirectory>
+      <outputDirectory>/Consulo/platform/build${build.number.to.use}/</outputDirectory>
     </fileSet>
   </fileSets>
 
   <dependencySets>
     <dependencySet>
-      <outputDirectory>/Consulo/platform/build${project.version}/lib</outputDirectory>
+      <outputDirectory>/Consulo/platform/build${build.number.to.use}/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <excludes>

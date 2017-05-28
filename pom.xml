@@ -7,7 +7,7 @@
 
   <groupId>consulo</groupId>
   <artifactId>group</artifactId>
-  <version>SNAPSHOT</version>
+  <version>2-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
@@ -16,6 +16,8 @@
     <module>arch/ide</module>
 
     <module>distribution</module>
+
+    <module>plugins/core</module>
 
     <module>modules/annotations</module>
     <module>modules/analysis-api</module>

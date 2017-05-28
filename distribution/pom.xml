@@ -6,13 +6,13 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.ide</artifactId>
-    <version>SNAPSHOT</version>
+    <version>2-SNAPSHOT</version>
     <relativePath>../arch/ide/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>consulo-bundle</artifactId>
-  <version>SNAPSHOT</version>
+  <version>2-SNAPSHOT</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

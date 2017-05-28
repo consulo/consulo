@@ -22,12 +22,12 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.global</artifactId>
-    <version>SNAPSHOT</version>
+    <version>2-SNAPSHOT</version>
     <relativePath>../global/pom.xml</relativePath>
   </parent>
   
   <artifactId>arch.ide</artifactId>
-  <version>SNAPSHOT</version>
+  <version>2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <dependencies>

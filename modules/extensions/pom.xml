@@ -5,14 +5,14 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.global</artifactId>
-    <version>SNAPSHOT</version>
+    <version>2-SNAPSHOT</version>
     <relativePath>../../arch/global/pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>consulo-extensions</artifactId>
-  <version>SNAPSHOT</version>
+  <version>2-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 

@@ -22,7 +22,7 @@
 
   <groupId>consulo</groupId>
   <artifactId>arch.global</artifactId>
-  <version>SNAPSHOT</version>
+  <version>2-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
@@ -42,13 +42,32 @@
     <cglib.version>3.2.4</cglib.version>
     <slf4j.version>1.7.25</slf4j.version>
 
+    <build.number.to.use>SNAPSHOT</build.number.to.use>
+
     <maven.compiler.plugin.version>3.3</maven.compiler.plugin.version>
   </properties>
+
+  <profiles>
+    <profile>
+      <id>build-number-is-set</id>
+      <activation>
+        <property>
+          <name>env.BUILD_NUMBER</name>
+        </property>
+      </activation>
+      <properties>
+        <build.number.to.use>${env.BUILD_NUMBER}</build.number.to.use>
+      </properties>
+    </profile>
+  </profiles>
 
   <repositories>
     <repository>
       <id>consulo</id>
       <url>https://nexus.consulo.io/repository/consulo/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
   </repositories>
 
@@ -56,6 +75,9 @@
     <pluginRepository>
       <id>consulo-plugin</id>
       <url>https://nexus.consulo.io/repository/consulo/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </pluginRepository>
   </pluginRepositories>
 
