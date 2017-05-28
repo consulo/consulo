@@ -64,9 +64,9 @@
         <version>2.2-beta-5</version>
         <executions>
           <execution>
-            <id>create-archive-windows</id>
+            <id>create-archive-win</id>
             <configuration>
-              <descriptor>src/assembly/windows.xml</descriptor>
+              <descriptor>src/assembly/win.xml</descriptor>
             </configuration>
             <phase>package</phase>
             <goals>
@@ -77,6 +77,16 @@
             <id>create-archive-linux</id>
             <configuration>
               <descriptor>src/assembly/linux.xml</descriptor>
+            </configuration>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>create-archive-mac</id>
+            <configuration>
+              <descriptor>src/assembly/mac.xml</descriptor>
             </configuration>
             <phase>package</phase>
             <goals>
