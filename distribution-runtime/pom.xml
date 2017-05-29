@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <groupId>consulo</groupId>
+    <artifactId>arch.ide</artifactId>
+    <version>2-SNAPSHOT</version>
+    <relativePath>../arch/ide/pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>consulo-runtime</artifactId>
+  <version>2-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <sandbox.home>target/consulo-runtime-${project.version}-runtime/Consulo/platform/build${build.number}</sandbox.home>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2-beta-5</version>
+        <executions>
+          <execution>
+            <id>create-runtime</id>
+            <configuration>
+              <descriptor>src/assembly/runtime.xml</descriptor>
+            </configuration>
+            <phase>compile</phase>
+            <goals>
+              <goal>directory-single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.5.0</version>
+        <configuration>
+          <mainClass>com.intellij.idea.Main</mainClass>
+          <workingDirectory>${sandbox.home}</workingDirectory>
+          <includeProjectDependencies>false</includeProjectDependencies>
+          <!--<arguments>
+            <argument>-Xbootclasspath/a:${sandbox.home}/lib/consulo-boot-${project.version}.jar</argument>
+          </arguments> -->
+          <additionalClasspathElements>
+            <element>${sandbox.home}/lib/consulo-bootstrap-${project.version}.jar</element>
+            <element>${sandbox.home}/lib/consulo-extensions-${project.version}.jar</element>
+            <element>${sandbox.home}/lib/consulo-util-${project.version}.jar</element>
+            <element>${sandbox.home}/lib/consulo-util-rt-${project.version}.jar</element>
+            <element>${sandbox.home}/lib/jdom-${jdom.version}.jar</element>
+            <element>${sandbox.home}/lib/log4j-${log4j.version}.jar</element>
+            <element>${sandbox.home}/lib/trove4j-${trove4j.version}.jar</element>
+            <element>${sandbox.home}/lib/jna-${jna.version}.jar</element>
+            <element>${sandbox.home}/lib/jna-platform-${jna.version}.jar</element>
+          </additionalClasspathElements>
+          <systemProperties>
+            <property>
+              <key>idea.home.path</key>
+              <value>${sandbox.home}</value>
+            </property>
+            <property>
+              <key>consulo.in.sandbox</key>
+              <value>true</value>
+            </property>
+            <property>
+              <key>idea.config.path</key>
+              <value>${project.basedir}/../.consulo/sandbox/config</value>
+            </property>
+            <property>
+              <key>idea.system.path</key>
+              <value>${project.basedir}/../.consulo/sandbox/system</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>consulo-core-plugin</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>consulo-sand-language-plugin</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>
