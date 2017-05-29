@@ -86,7 +86,7 @@ public class BootstrapClassLoaderUtil extends ClassUtilCore {
           StartupActionScriptManager.executeActionScript(logger);
         }
         catch (ProblemWithFileException e) {
-          JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Old plugin update script format. Need call 'About -> Check For Updates' again.",
+          JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Old plugin update script format. Need call 'Check For Updates' again.",
                                         "Installing Plugin", JOptionPane.ERROR_MESSAGE);
         }
         catch (IOException e) {
