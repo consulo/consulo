@@ -106,6 +106,23 @@
           <testFailureIgnore>true</testFailureIgnore>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>consulo.maven</groupId>
+        <artifactId>ui-designer-maven-plugin</artifactId>
+        <version>2.0</version>
+        <configuration>
+          <useJBScaling>true</useJBScaling>
+        </configuration>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>instrument</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <!--<plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>notnull-instrumenter-plugin</artifactId>
