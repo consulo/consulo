@@ -1,6 +1,7 @@
 package com.intellij.openapi.externalSystem.service.project.manage;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.Key;
@@ -20,11 +21,14 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtilRt;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.externalSystem.module.extension.ExternalSystemMutableModuleExtension;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -43,7 +47,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
   public static final com.intellij.openapi.util.Key<ModuleData> MODULE_DATA_KEY = com.intellij.openapi.util.Key.create("MODULE_DATA_KEY");
 
-  private static final Logger LOG = Logger.getInstance("#" + ModuleDataService.class.getName());
+  private static final Logger LOG = Logger.getInstance(ModuleDataService.class.getName());
 
   /**
    * We can't modify project modules (add/remove) until it's initialised, so, we delay that activity. Current constant
@@ -70,6 +74,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
       return;
     }
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
+      @RequiredDispatchThread
       @Override
       public void execute() {
         final Collection<DataNode<ModuleData>> toCreate = filterExistingModules(toImport, project);
@@ -86,8 +91,8 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     });
   }
 
+  @RequiredDispatchThread
   private void createModules(@NotNull final Collection<DataNode<ModuleData>> toCreate, @NotNull final Project project) {
-
     final Map<DataNode<ModuleData>, Module> moduleMappings = ContainerUtilRt.newHashMap();
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
@@ -100,14 +105,14 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
       @RequiredWriteAction
       private void importModule(@NotNull ModuleManager moduleManager, @NotNull DataNode<ModuleData> module) {
-        ModuleData data = module.getData();
-        final Module created = moduleManager.newModule(data.getExternalName(), data.getModuleDirPath());
+        ModuleData moduleData = module.getData();
+        final Module created = moduleManager.newModule(moduleData.getExternalName(), moduleData.getModuleDirPath());
 
         // Ensure that the dependencies are clear (used to be not clear when manually removing the module and importing it via gradle)
         final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(created);
         final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
 
-        setModuleOptions(created, module);
+        setModuleOptions(created, moduleRootModel, module);
 
         RootPolicy<Object> visitor = new RootPolicy<Object>() {
           @Override
@@ -136,6 +141,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
   }
 
   @NotNull
+  @RequiredDispatchThread
   private Collection<DataNode<ModuleData>> filterExistingModules(@NotNull Collection<DataNode<ModuleData>> modules, @NotNull Project project) {
     Collection<DataNode<ModuleData>> result = ContainerUtilRt.newArrayList();
     for (DataNode<ModuleData> node : modules) {
@@ -145,7 +151,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
         result.add(node);
       }
       else {
-        setModuleOptions(module, node);
+        setModuleOptions(module, null, node);
       }
     }
     return result;
@@ -153,10 +159,6 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
   private static void syncPaths(@NotNull Module module, @NotNull ModuleData data) {
     ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
-    if (compilerPathsManager == null) {
-      LOG.warn(String.format("Can't sync paths for module '%s'. Reason: no compiler extension is found for it", module.getName()));
-      return;
-    }
     compilerPathsManager.setInheritedCompilerOutput(data.isInheritProjectCompileOutputPath());
     if (!data.isInheritProjectCompileOutputPath()) {
       String compileOutputPath = data.getCompileOutputPath(ExternalSystemSourceType.SOURCE);
@@ -176,6 +178,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
       return;
     }
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
+      @RequiredDispatchThread
       @Override
       @RequiredWriteAction
       public void execute() {
@@ -189,10 +192,17 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     });
   }
 
+  @RequiredDispatchThread
   public static void unlinkModuleFromExternalSystem(@NotNull Module module) {
-    module.clearOption(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY);
-    module.clearOption(ExternalSystemConstants.LINKED_PROJECT_PATH_KEY);
-    module.clearOption(ExternalSystemConstants.ROOT_PROJECT_PATH_KEY);
+    ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
+
+    ExternalSystemMutableModuleExtension<?> extension = modifiableModel.getExtension(ExternalSystemMutableModuleExtension.class);
+    if (extension != null) {
+      extension.setEnabled(false);
+      extension.removeAllOptions();
+    }
+
+    WriteAction.run(modifiableModel::commit);
   }
 
   private class ImportModulesTask implements Runnable {
@@ -220,24 +230,49 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     }
   }
 
-  private static void setModuleOptions(Module module, DataNode<ModuleData> moduleDataNode) {
+  @RequiredDispatchThread
+  private static void setModuleOptions(@NotNull final Module module,
+                                       @Nullable final ModifiableRootModel originalModel,
+                                       @NotNull final DataNode<ModuleData> moduleDataNode) {
+
     ModuleData moduleData = moduleDataNode.getData();
     module.putUserData(MODULE_DATA_KEY, moduleData);
 
-    module.setOption(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY, moduleData.getOwner().toString());
-    module.setOption(ExternalSystemConstants.LINKED_PROJECT_PATH_KEY, moduleData.getLinkedExternalProjectPath());
-    module.setOption(ExternalSystemConstants.LINKED_PROJECT_ID_KEY, moduleData.getId());
     final ProjectData projectData = moduleDataNode.getData(ProjectKeys.PROJECT);
-    module.setOption(ExternalSystemConstants.ROOT_PROJECT_PATH_KEY, projectData != null ? projectData.getLinkedExternalProjectPath() : "");
+    if (projectData == null) {
+      throw new IllegalArgumentException("projectData is null");
+    }
 
+    ModifiableRootModel otherModel = originalModel == null ? ModuleRootManager.getInstance(module).getModifiableModel() : originalModel;
+
+    // remove prev. extension
+    ExternalSystemMutableModuleExtension<?> oldExtension = otherModel.getExtension(ExternalSystemMutableModuleExtension.class);
+    if (oldExtension != null) {
+      oldExtension.setEnabled(false);
+      oldExtension.removeAllOptions();
+    }
+
+    ExternalSystemMutableModuleExtension<?> newExtension = otherModel.getExtensionWithoutCheck(projectData.getOwner().getId());
+    if (newExtension == null) {
+      LOG.error("ModuleExtension is not registered for externalSystem: " + projectData.getOwner().getId());
+      return;
+    }
+
+    newExtension.setEnabled(true);
+    newExtension.setOption(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY, moduleData.getOwner().toString());
+    newExtension.setOption(ExternalSystemConstants.LINKED_PROJECT_PATH_KEY, moduleData.getLinkedExternalProjectPath());
+    newExtension.setOption(ExternalSystemConstants.LINKED_PROJECT_ID_KEY, moduleData.getId());
     if (moduleData.getGroup() != null) {
-      module.setOption(ExternalSystemConstants.EXTERNAL_SYSTEM_MODULE_GROUP_KEY, moduleData.getGroup());
+      newExtension.setOption(ExternalSystemConstants.EXTERNAL_SYSTEM_MODULE_GROUP_KEY, moduleData.getGroup());
     }
     if (moduleData.getVersion() != null) {
-      module.setOption(ExternalSystemConstants.EXTERNAL_SYSTEM_MODULE_VERSION_KEY, moduleData.getVersion());
+      newExtension.setOption(ExternalSystemConstants.EXTERNAL_SYSTEM_MODULE_VERSION_KEY, moduleData.getVersion());
     }
 
-    // clear maven option
-    module.clearOption("org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule");
+    newExtension.setOption(ExternalSystemConstants.ROOT_PROJECT_PATH_KEY, projectData.getLinkedExternalProjectPath());
+
+    if (originalModel == null) {
+      WriteAction.run(otherModel::commit);
+    }
   }
 }

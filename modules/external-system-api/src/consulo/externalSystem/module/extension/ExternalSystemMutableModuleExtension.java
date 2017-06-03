@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.module.impl;
+package consulo.externalSystem.module.extension;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.util.ArrayFactory;
+import consulo.module.extension.MutableModuleExtension;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 03-Jun-17
  */
-public interface ModuleEx extends Module {
-  public static final ModuleEx[] EMPTY_ARRAY = new ModuleEx[0];
-  public static ArrayFactory<ModuleEx> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new ModuleEx[count];
+public interface ExternalSystemMutableModuleExtension<T extends ExternalSystemModuleExtension<T>>
+        extends ExternalSystemModuleExtension<T>, MutableModuleExtension<T> {
+  void setOption(@NotNull String key, @Nullable String value);
 
-  void init();
-  void loadModuleComponents();
-  void moduleAdded();
-  void projectOpened();
-  void projectClosed();
-  void rename(String newName);
+  void removeOption(@NotNull String key);
 
-  void clearScopesCache();
+  void removeAllOptions();
 }

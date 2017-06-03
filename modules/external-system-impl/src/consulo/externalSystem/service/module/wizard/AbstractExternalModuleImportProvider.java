@@ -56,6 +56,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.moduleImport.ModuleImportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -156,6 +157,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
         if (externalProjectNode != null) {
           ExternalSystemUtil.ensureToolWindowInitialized(project, myExternalSystemId);
           ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
+            @RequiredDispatchThread
             @Override
             public void execute() {
               ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(new Runnable() {
@@ -344,6 +346,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
    */
   private void setupLibraries(@NotNull final DataNode<ProjectData> projectWithResolvedLibraries, final Project project) {
     ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
+      @RequiredDispatchThread
       @Override
       public void execute() {
         ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(new Runnable() {

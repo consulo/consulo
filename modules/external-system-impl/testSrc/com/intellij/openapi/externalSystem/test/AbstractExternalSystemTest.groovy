@@ -33,6 +33,7 @@ import com.intellij.testFramework.UsefulTestCase
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture
 import com.intellij.testFramework.fixtures.IdeaTestFixtureFactory
 import com.intellij.util.ui.UIUtil
+import consulo.annotations.RequiredDispatchThread
 import org.jetbrains.annotations.NotNull
 import org.jetbrains.annotations.Nullable
 
@@ -155,6 +156,7 @@ abstract class AbstractExternalSystemTest extends UsefulTestCase {
 
       final Project myProject = project
       ExternalSystemApiUtil.executeProjectChangeAction(true, new DisposeAwareProjectChange(myProject) {
+        @RequiredDispatchThread
         @Override
         void execute() {
           ProjectRootManagerEx.getInstanceEx(myProject).mergeRootsChangesDuring {

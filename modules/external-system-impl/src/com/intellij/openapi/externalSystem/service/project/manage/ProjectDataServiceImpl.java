@@ -23,6 +23,7 @@ import com.intellij.openapi.externalSystem.model.project.ProjectData;
 import com.intellij.openapi.externalSystem.util.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -71,6 +72,7 @@ public class ProjectDataServiceImpl implements ProjectDataService<ProjectData, P
       return;
     }
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
+      @RequiredDispatchThread
       @Override
       public void execute() {
         String oldName = project.getName();

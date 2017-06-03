@@ -29,7 +29,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleComponent;
 import com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
@@ -41,16 +40,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.picocontainer.MutablePicoContainer;
 
-import java.util.*;
-
 /**
  * @author max
  */
 public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx {
   public static final Logger LOGGER = Logger.getInstance(ModuleImpl.class);
-
-  @NonNls
-  private static final String OPTION_WORKSPACE = "workspace";
 
   @NotNull
   private final Project myProject;
@@ -62,8 +56,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   private final ModuleScopeProvider myModuleScopeProvider;
   @Nullable
   private final VirtualFilePointer myDirVirtualFilePointer;
-  @NotNull
-  private final Map<String, String> myOptions = new LinkedHashMap<String, String>();
 
   public ModuleImpl(@NotNull String name, @Nullable String dirUrl, @NotNull Project project) {
     super(project, "Module " + name);
@@ -92,25 +84,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
       if (PluginManagerCore.shouldSkipPlugin(plugin)) continue;
       loadComponentsConfiguration(plugin.getModuleComponents(), plugin, false);
     }
-  }
-
-  @Override
-  protected boolean isComponentSuitable(Map<String, String> options) {
-    if (!super.isComponentSuitable(options)) return false;
-    if (options == null) return true;
-
-    Set<String> optionNames = options.keySet();
-    for (String optionName : optionNames) {
-      if (Comparing.equal(OPTION_WORKSPACE, optionName)) continue;
-      if (!parseOptionValue(options.get(optionName)).contains(getOptionValue(optionName))) return false;
-    }
-
-    return true;
-  }
-
-  private static List<String> parseOptionValue(String optionValue) {
-    if (optionValue == null) return new ArrayList<String>(0);
-    return Arrays.asList(optionValue.split(";"));
   }
 
   @Override
@@ -194,21 +167,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     }
   }
 
-  @Override
-  public void setOption(@NotNull String optionName, @NotNull String optionValue) {
-    myOptions.put(optionName, optionValue);
-  }
-
-  @Override
-  public void clearOption(@NotNull String optionName) {
-    myOptions.remove(optionName);
-  }
-
-  @Override
-  public String getOptionValue(@NotNull String optionName) {
-    return myOptions.get(optionName);
-  }
-
   @NotNull
   @Override
   public GlobalSearchScope getModuleScope() {
@@ -274,7 +232,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     myModuleScopeProvider.clearCache();
   }
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
+  @Override
   public String toString() {
     return "Module: '" + getName() + "'";
   }

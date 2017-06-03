@@ -19,6 +19,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,6 +77,7 @@ public class RefreshExternalProjectAction extends AnAction implements DumbAware,
             return;
           }
           ExternalSystemApiUtil.executeProjectChangeAction(true, new DisposeAwareProjectChange(project) {
+            @RequiredDispatchThread
             @Override
             public void execute() {
               ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(new Runnable() {
