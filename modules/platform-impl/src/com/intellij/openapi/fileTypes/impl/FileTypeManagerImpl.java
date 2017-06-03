@@ -827,13 +827,13 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         Disable check - it's provide stackoverflow exception when file inside library order
         https://github.com/consulo/consulo/issues/275
       */
-      Project project = ProjectLocator.getInstance().guessProjectForFile(file);
+      /*Project project = ProjectLocator.getInstance().guessProjectForFile(file);
       if (project != null) {
         ProjectFileIndex fileIndex = ProjectFileIndex.SERVICE.getInstance(project);
         if (fileIndex.isExcluded(file)) {
           excluded = true;
         }
-      }
+      } */
 
       if(!excluded) {
         final InputStream inputStream = ((FileSystemInterface)file.getFileSystem()).getInputStream(file);
