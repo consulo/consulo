@@ -41,8 +41,8 @@ public class HelpManagerImpl extends HelpManager {
 
   private HelpSet myHelpSet = null;
   private IdeaHelpBroker myBroker = null;
-  //private FXHelpBrowser myFXHelpBrowser;
 
+  @Override
   public void invokeHelp(@Nullable String id) {
     if (MacHelpUtil.isApplicable()) {
       if (MacHelpUtil.invokeHelp(id)) return;
@@ -51,17 +51,8 @@ public class HelpManagerImpl extends HelpManager {
       myHelpSet = createHelpSet();
     }
 
-    //if (Registry.is("ide.help.fxbrowser")) {
-    //  if (myFXHelpBrowser == null) {
-    //    myFXHelpBrowser = new FXHelpBrowser(myHelpSet);
-    //  }
-    //
-    //  myFXHelpBrowser.showDocumentation(id);
-    //  return;
-    //}
-
     if (myHelpSet == null) {
-      BrowserUtil.launchBrowser(ApplicationInfoEx.getInstanceEx().getWebHelpUrl() + id);
+      BrowserUtil.browse(ApplicationInfoEx.getInstanceEx().getWebHelpUrl() + id);
       return;
     }
 
