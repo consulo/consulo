@@ -43,7 +43,7 @@ public class SearchWebAction extends AnAction implements DumbAware {
       return;
     }
     if (StringUtil.isNotEmpty(string)) {
-      BrowserUtil.launchBrowser("http://www.google.com/search?q="+ URLEncoder.encode(string));
+      BrowserUtil.browse("http://www.google.com/search?q="+ URLEncoder.encode(string));
     }
   }
 

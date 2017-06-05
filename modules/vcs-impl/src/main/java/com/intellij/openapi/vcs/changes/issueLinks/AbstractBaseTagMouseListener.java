@@ -34,7 +34,7 @@ public abstract class AbstractBaseTagMouseListener extends ClickListener impleme
       }
 
       if ((tag != null) && (! Object.class.getName().equals(tag.getClass().getName()))) {
-        BrowserUtil.launchBrowser(tag.toString());
+        BrowserUtil.browse(tag.toString());
         return true;
       }
     }

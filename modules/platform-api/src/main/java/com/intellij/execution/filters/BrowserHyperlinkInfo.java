@@ -28,11 +28,12 @@ public class BrowserHyperlinkInfo implements HyperlinkInfo {
     myUrl = url;
   }
 
+  @Override
   public void navigate(Project project) {
     openUrl(myUrl);
   }
 
   public static void openUrl(String url) {
-    BrowserUtil.launchBrowser(url);
+    BrowserUtil.browse(url);
   }
 }

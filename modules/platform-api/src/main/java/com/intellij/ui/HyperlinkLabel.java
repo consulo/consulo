@@ -146,12 +146,7 @@ public class HyperlinkLabel extends HighlightableComponent {
       removeHyperlinkListener(myHyperlinkListener);
     }
     if (url != null) {
-      myHyperlinkListener = new HyperlinkListener() {
-        @Override
-        public void hyperlinkUpdate(HyperlinkEvent e) {
-          BrowserUtil.launchBrowser(url);
-        }
-      };
+      myHyperlinkListener = e -> BrowserUtil.browse(url);
       addHyperlinkListener(myHyperlinkListener);
     }
   }

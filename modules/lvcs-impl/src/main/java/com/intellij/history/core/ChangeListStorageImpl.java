@@ -18,8 +18,6 @@ package com.intellij.history.core;
 
 import com.intellij.history.core.changes.ChangeSet;
 import com.intellij.history.utils.LocalHistoryLog;
-import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
@@ -136,15 +134,15 @@ public class ChangeListStorageImpl implements ChangeListStorage {
                                                 @Override
                                                 public void hyperlinkUpdate(@NotNull Notification notification,
                                                                             @NotNull HyperlinkEvent event) {
-                                                  if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                                                  /*if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                                                     if ("url".equals(event.getDescription())) {
-                                                      BrowserUtil.launchBrowser("http://youtrack.jetbrains.net/issue/IDEA-71270");
+                                                      BrowserUtil.browse("http://youtrack.jetbrains.net/issue/IDEA-71270");
                                                     }
                                                     else {
                                                       File file = new File(logFile);
                                                       ShowFilePathAction.openFile(file);
                                                     }
-                                                  }
+                                                  } */
                                                 }
                                               }), null);
   }
