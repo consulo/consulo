@@ -16,6 +16,7 @@
 package com.intellij.openapi.externalSystem.util;
 
 import com.intellij.openapi.components.ComponentManager;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -29,8 +30,10 @@ public abstract class DisposeAwareProjectChange implements Runnable {
     myComponentManager = componentManager;
   }
 
+  @RequiredDispatchThread
   public abstract void execute();
 
+  @Override
   public final void run() {
     if (!myComponentManager.isDisposed()) {
       execute();

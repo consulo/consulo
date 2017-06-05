@@ -19,12 +19,14 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.io.ZipUtil;
+import consulo.startup.ProblemWithFileException;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,7 +44,16 @@ public class StartupActionScriptManager {
   }
 
   public static synchronized void executeActionScript(Logger logger) throws IOException {
-    List<ActionCommand> commands = loadActionScript(logger);
+    List<ActionCommand> commands = Collections.emptyList();
+    try {
+      commands = loadActionScript(logger);
+    }
+    catch (ProblemWithFileException e) {
+      // if we catch problem with file - drop action.script file
+      saveActionScript(new ArrayList<ActionCommand>());
+      throw e;
+    }
+
     for (ActionCommand command : commands) {
       logger.info("start: load command " + command);
     }
@@ -59,13 +70,9 @@ public class StartupActionScriptManager {
       }
     }
 
-    if (commands.size() > 0) {
-      commands.clear();
+    logger.info("start: saved empty list");
 
-      logger.info("start: saved empty list");
-
-      saveActionScript(commands);
-    }
+    saveActionScript(new ArrayList<ActionCommand>());
   }
 
   public static synchronized void addActionCommand(ActionCommand command) throws IOException {
@@ -77,7 +84,8 @@ public class StartupActionScriptManager {
       command.execute(logger);
       return;
     }
-    final List<ActionCommand> commands = loadActionScript(logger);
+
+    final ArrayList<ActionCommand> commands = loadActionScript(logger);
     commands.add(command);
     saveActionScript(commands);
   }
@@ -87,13 +95,16 @@ public class StartupActionScriptManager {
     return systemPath + File.separator + ACTION_SCRIPT_FILE;
   }
 
-  private static List<ActionCommand> loadActionScript(Logger logger) throws IOException {
+  private static ArrayList<ActionCommand> loadActionScript(Logger logger) throws IOException {
     File file = new File(getActionScriptPath());
     if (file.exists()) {
       ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
       try {
         //noinspection unchecked
-        return (List<ActionCommand>)ois.readObject();
+        return (ArrayList<ActionCommand>)ois.readObject();
+      }
+      catch (InvalidClassException e) {
+        throw new ProblemWithFileException(e);
       }
       catch (ClassNotFoundException e) {
         // problem with scrambled code
@@ -113,7 +124,7 @@ public class StartupActionScriptManager {
     }
   }
 
-  private static void saveActionScript(List<ActionCommand> commands) throws IOException {
+  private static void saveActionScript(ArrayList<ActionCommand> commands) throws IOException {
     File temp = new File(PathManager.getPluginTempPath());
     boolean exists = true;
     if (!temp.exists()) {
@@ -143,6 +154,9 @@ public class StartupActionScriptManager {
   public static class CopyCommand implements Serializable, ActionCommand {
     @NonNls
     private static final String action = "copy";
+
+    private static final long serialVersionUID = 1;
+
     private final File mySource;
     private final File myDestination;
 
@@ -186,6 +200,9 @@ public class StartupActionScriptManager {
   public static class UnzipCommand implements Serializable, ActionCommand {
     @NonNls
     private static final String action = "unzip";
+
+    private static final long serialVersionUID = 2;
+
     private File mySource;
     private FilenameFilter myFilenameFilter;
     private File myDestination;
@@ -233,6 +250,9 @@ public class StartupActionScriptManager {
   public static class DeleteCommand implements Serializable, ActionCommand {
     @NonNls
     private static final String action = "delete";
+
+    private static final long serialVersionUID = 3;
+
     private final File mySource;
 
     public DeleteCommand(File source) {

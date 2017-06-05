@@ -118,24 +118,8 @@ public class MockModule extends MockComponentManager implements Module {
   }
 
   @Override
-  @Nullable
-  public String getOptionValue(@NotNull final String optionName) {
-    throw new UnsupportedOperationException("Method getOptionValue is not yet implemented in " + getClass().getName());
-  }
-
-  @Override
   @NotNull
   public Project getProject() {
     return myProject;
-  }
-
-  @Override
-  public void setOption(@NotNull final String optionName, @NotNull final String optionValue) {
-    throw new UnsupportedOperationException("Method setOption is not yet implemented in " + getClass().getName());
-  }
-
-  @Override
-  public void clearOption(@NotNull String optionName) {
-    throw new UnsupportedOperationException("Method clearOption is not yet implemented in " + getClass().getName());
   }
 }

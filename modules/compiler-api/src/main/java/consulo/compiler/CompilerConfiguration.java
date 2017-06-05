@@ -35,7 +35,7 @@ public abstract class CompilerConfiguration {
   @Nullable
   public abstract VirtualFile getCompilerOutput();
 
-  @Nullable
+  @NotNull
   public abstract String getCompilerOutputUrl();
 
   public abstract VirtualFilePointer getCompilerOutputPointer();

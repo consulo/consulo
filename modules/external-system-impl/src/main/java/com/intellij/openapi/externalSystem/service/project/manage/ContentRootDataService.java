@@ -26,6 +26,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtilRt;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.roots.impl.*;
 import org.jetbrains.annotations.NotNull;
 import consulo.roots.ContentFolderScopes;
@@ -74,6 +75,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
 
   private static void importData(@NotNull final Collection<DataNode<ContentRootData>> datas, @NotNull final Module module, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {
+      @RequiredDispatchThread
       @Override
       public void execute() {
         final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
@@ -89,7 +91,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
           ProjectSystemId projectSystemId = datas.iterator().next().getData().getOwner();
           AbstractExternalSystemSettings externalSystemSettings = ExternalSystemApiUtil.getSettings(module.getProject(), projectSystemId);
 
-          String path = module.getOptionValue(ExternalSystemConstants.ROOT_PROJECT_PATH_KEY);
+          String path = ExternalSystemApiUtil.getExtensionSystemOption(module, ExternalSystemConstants.ROOT_PROJECT_PATH_KEY);
           if (path != null) {
             ExternalProjectSettings projectSettings = externalSystemSettings.getLinkedProjectSettings(path);
             createEmptyContentRootDirectories = projectSettings != null && projectSettings.isCreateEmptyContentRootDirectories();

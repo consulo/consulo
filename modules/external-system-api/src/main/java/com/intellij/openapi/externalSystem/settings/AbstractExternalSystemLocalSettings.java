@@ -28,6 +28,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtilRt;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -216,6 +217,7 @@ public abstract class AbstractExternalSystemLocalSettings {
     pruneOutdatedEntries();
   }
 
+  @RequiredReadAction
   private void pruneOutdatedEntries() {
     ExternalSystemManager<?,?,?,?,?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
     assert manager != null;
@@ -235,11 +237,11 @@ public abstract class AbstractExternalSystemLocalSettings {
       pathsToForget.remove(projectSettings.getExternalProjectPath());
     }
     for (Module module : ModuleManager.getInstance(myProject).getModules()) {
-      String id = module.getOptionValue(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY);
+      String id = ExternalSystemApiUtil.getExtensionSystemOption(module, ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY);
       if (!myExternalSystemId.toString().equals(id)) {
         continue;
       }
-      pathsToForget.remove(module.getOptionValue(ExternalSystemConstants.LINKED_PROJECT_PATH_KEY));
+      pathsToForget.remove(ExternalSystemApiUtil.getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_PATH_KEY));
     }
 
     if (!pathsToForget.isEmpty()) {

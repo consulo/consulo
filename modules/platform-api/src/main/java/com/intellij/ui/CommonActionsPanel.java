@@ -24,6 +24,8 @@ import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -91,16 +93,16 @@ public class CommonActionsPanel extends JPanel {
     }
   }
 
-  private Map<Buttons, MyActionButton> myButtons = new HashMap<Buttons, MyActionButton>();
-  private final AnActionButton[] myActions;
+  private Map<Buttons, MyActionButton> myButtons = new HashMap<>();
+  private final AnAction[] myActions;
 
   CommonActionsPanel(ListenerFactory factory, @Nullable JComponent contextComponent, ActionToolbarPosition position,
-                     @Nullable AnActionButton[] additionalActions, @Nullable Comparator<AnActionButton> buttonComparator,
+                     @Nullable AnAction[] additionalActions, @Nullable Comparator<AnAction> buttonComparator,
                      String addName, String removeName, String moveUpName, String moveDownName, String editName,
                      Icon addIcon, Buttons... buttons) {
     super(new BorderLayout());
     final Listener listener = factory.createListener(this);
-    AnActionButton[] actions = new AnActionButton[buttons.length];
+    AnAction[] actions = new AnAction[buttons.length];
     for (int i = 0; i < buttons.length; i++) {
       Buttons button = buttons[i];
       String name = null;
@@ -116,18 +118,20 @@ public class CommonActionsPanel extends JPanel {
       myButtons.put(button, b);
     }
     if (additionalActions != null && additionalActions.length > 0) {
-      final ArrayList<AnActionButton> allActions = new ArrayList<AnActionButton>(Arrays.asList(actions));
+      final ArrayList<AnAction> allActions = new ArrayList<>(Arrays.asList(actions));
       allActions.addAll(Arrays.asList(additionalActions));
-      actions = allActions.toArray(new AnActionButton[allActions.size()]);
+      actions = allActions.toArray(new AnAction[allActions.size()]);
     }
     myActions = actions;
-    for (AnActionButton action : actions) {
-      action.setContextComponent(contextComponent);
+    for (AnAction action : actions) {
+      if(action instanceof AnActionButton) {
+        ((AnActionButton)action).setContextComponent(contextComponent);
+      }
     }
     if (buttonComparator != null) {
       Arrays.sort(myActions, buttonComparator);
     }
-    ArrayList<AnAction> toolbarActions = new ArrayList<AnAction>(Arrays.asList(myActions));
+    ArrayList<AnAction> toolbarActions = new ArrayList<>(Arrays.asList(myActions));
     for (int i = 0; i < toolbarActions.size(); i++) {
         if (toolbarActions.get(i) instanceof AnActionButton.CheckedAnActionButton) {
           toolbarActions.set(i, ((AnActionButton.CheckedAnActionButton)toolbarActions.get(i)).getDelegate());
@@ -162,15 +166,15 @@ public class CommonActionsPanel extends JPanel {
   @Override
   public void addNotify() {
     final JRootPane pane = getRootPane();
-    for (AnActionButton button : myActions) {
-      final ShortcutSet shortcut = button.getShortcut();
+    for (AnAction button : myActions) {
+      final ShortcutSet shortcut = button instanceof AnActionButton ? ((AnActionButton)button).getShortcut() : null;
       if (shortcut != null) {
         if (button instanceof MyActionButton
             && ((MyActionButton)button).isAddButton()
             && UIUtil.isDialogRootPane(pane)) {
           button.registerCustomShortcutSet(shortcut, pane);
         } else {
-          button.registerCustomShortcutSet(shortcut, button.getContextComponent());
+          button.registerCustomShortcutSet(shortcut, ((AnActionButton)button).getContextComponent());
         }
         if (button instanceof MyActionButton && ((MyActionButton)button).isRemoveButton()) {
           registerDeleteHook((MyActionButton)button);
@@ -183,13 +187,15 @@ public class CommonActionsPanel extends JPanel {
 
   private static void registerDeleteHook(final MyActionButton removeButton) {
     new AnAction("Delete Hook") {
+      @RequiredDispatchThread
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         removeButton.actionPerformed(e);
       }
 
+      @RequiredDispatchThread
       @Override
-      public void update(AnActionEvent e) {
+      public void update(@NotNull AnActionEvent e) {
         final JComponent contextComponent = removeButton.getContextComponent();
         if (contextComponent instanceof JTable && ((JTable)contextComponent).isEditing()) {
           e.getPresentation().setEnabled(false);
@@ -222,8 +228,9 @@ public class CommonActionsPanel extends JPanel {
       myListener = listener;
     }
 
+    @RequiredDispatchThread
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
       myButton.performAction(myListener);
     }
 
