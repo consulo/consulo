@@ -64,6 +64,7 @@
 
   <dependencySets>
     <dependencySet>
+      <directoryMode></directoryMode>
       <outputDirectory>/Consulo/platform/build${build.number}/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
