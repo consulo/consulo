@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Factory which provides callbacks to run before and after checkin operations.
@@ -46,7 +47,8 @@ public abstract class CheckinHandlerFactory implements BaseCheckinHandlerFactory
    * @param commitContext
    * @return the handler instance.
    */
-  @NotNull
+  @Override
+  @Nullable
   public abstract CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext);
 
   @Override
