@@ -15,6 +15,7 @@
  */
 package consulo.application;
 
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 public interface ApplicationProperties {
   @NotNull
   @NonNls
+  @Deprecated
+  @DeprecationInfo("Old idea internal mode - replaced by sandbox mode")
   String IDEA_IS_INTERNAL = "idea.is.internal";
 
   @NotNull
@@ -38,4 +41,18 @@ public interface ApplicationProperties {
   @NotNull
   @NonNls
   String CONSULO_AS_WEB_APP = "consulo.as.web.app";
+
+  @NotNull
+  @NonNls
+  @Deprecated
+  @DeprecationInfo("Old idea plugins path. See #CONSULO_PLUGINS_PATHS")
+  String IDEA_PLUGINS_PATH = "idea.plugins.path";
+
+  @NotNull
+  @NonNls
+  String CONSULO_PLUGINS_PATHS = "consulo.plugins.paths";
+
+  @NotNull
+  @NonNls
+  String CONSULO_INSTALL_PLUGINS_PATH = "consulo.install.plugins.path";
 }

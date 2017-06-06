@@ -16,7 +16,6 @@
 
 package com.maddyhome.idea.copyright.pattern;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -71,9 +70,6 @@ public class VelocityHelper {
 
         extendedProperties.setProperty(RuntimeConstants.RESOURCE_LOADER, "file");
         extendedProperties.setProperty(RuntimeConstants.PARSER_POOL_SIZE, "1");
-
-        extendedProperties.setProperty("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
-        extendedProperties.setProperty("file.resource.loader.path", PathManager.getPluginsPath() + "/Copyright/resources");
 
         VelocityEngine engine = new VelocityEngine(extendedProperties);
         engine.init();

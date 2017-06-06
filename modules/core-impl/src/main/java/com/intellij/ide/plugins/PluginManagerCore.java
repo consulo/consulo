@@ -82,8 +82,6 @@ public class PluginManagerCore {
   static final String DISABLE = "disable";
   static final String ENABLE = "enable";
   static final String EDIT = "edit";
-  @NonNls
-  private static final String PROPERTY_PLUGIN_PATH = "plugin.path";
   static List<String> ourDisabledPlugins = null;
   static IdeaPluginDescriptor[] ourPlugins;
   static List<String> ourPluginErrors = null;
@@ -721,26 +719,18 @@ public class PluginManagerCore {
     return URLDecoder.decode(quotePluses);
   }
 
-  static void loadDescriptorsFromProperty(final List<IdeaPluginDescriptorImpl> result) {
-    final String pathProperty = System.getProperty(PROPERTY_PLUGIN_PATH);
-    if (pathProperty == null) return;
-
-    for (StringTokenizer t = new StringTokenizer(pathProperty, File.pathSeparator); t.hasMoreTokens(); ) {
-      String s = t.nextToken();
-      final IdeaPluginDescriptorImpl ideaPluginDescriptor = loadDescriptor(new File(s), PLUGIN_XML);
-      if (ideaPluginDescriptor != null) {
-        result.add(ideaPluginDescriptor);
-      }
-    }
-  }
-
   public static IdeaPluginDescriptorImpl[] loadDescriptors(@Nullable StartupProgress progress) {
     final List<IdeaPluginDescriptorImpl> result = new ArrayList<>();
 
-    int pluginsCount = countPlugins(PathManager.getPluginsPath()) + countPlugins(PathManager.getPreInstalledPluginsPath());
-    loadDescriptors(PathManager.getPluginsPath(), result, progress, pluginsCount);
+    int pluginsCount = countPlugins(PathManager.getPreInstalledPluginsPath());
+    String[] pluginsPaths = PathManager.getPluginsPaths();
+    for (String pluginsPath : pluginsPaths) {
+      pluginsCount += countPlugins(pluginsPath);
+    }
+    for (String pluginsPath : pluginsPaths) {
+      loadDescriptors(pluginsPath, result, progress, pluginsCount);
+    }
     loadDescriptors(PathManager.getPreInstalledPluginsPath(), result, progress, pluginsCount);
-    loadDescriptorsFromProperty(result);
 
     // insert dummy platform code
     insertPlatformPlugin(result);
