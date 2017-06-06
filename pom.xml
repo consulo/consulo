@@ -16,7 +16,7 @@
     <module>arch/ide</module>
 
     <module>distribution</module>
-    <module>distribution-runtime</module>
+    <module>distribution-sandbox</module>
 
     <module>plugins/core</module>
     <module>plugins/sandLanguage</module>

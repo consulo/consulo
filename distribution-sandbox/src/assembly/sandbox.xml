@@ -16,8 +16,10 @@
 <assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
-  <id>runtime</id>
-
+  <id/>
+  <formats>
+    <format>dir</format>
+  </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
 
   <fileSets>
@@ -64,7 +66,6 @@
 
   <dependencySets>
     <dependencySet>
-      <directoryMode></directoryMode>
       <outputDirectory>/Consulo/platform/build${build.number}/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
