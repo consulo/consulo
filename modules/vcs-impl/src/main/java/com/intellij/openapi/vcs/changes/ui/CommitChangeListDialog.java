@@ -393,7 +393,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     Box afterBox = Box.createVerticalBox();
     for (BaseCheckinHandlerFactory factory : getCheckInFactories(project)) {
       final CheckinHandler handler = factory.createHandler(this, myCommitContext);
-      if (CheckinHandler.DUMMY.equals(handler)) continue;
+      if (handler == null || CheckinHandler.DUMMY.equals(handler)) continue;
 
       myHandlers.add(handler);
       final RefreshableOnComponent beforePanel = handler.getBeforeCheckinConfigurationPanel();

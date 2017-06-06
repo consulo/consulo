@@ -22,6 +22,7 @@ import com.intellij.openapi.vcs.changes.CommitExecutor;
 import com.intellij.openapi.vcs.changes.LocalCommitExecutor;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.intellij.util.PairConsumer;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -39,6 +40,8 @@ public abstract class CheckinHandler {
   /**
    * you can return this handler if your handler shouldn't be created (for instance, your VCS is not active)
    */
+  @Deprecated
+  @DeprecationInfo("Return null if handler is not supported")
   public static final CheckinHandler DUMMY = new CheckinHandler() {
   };
 
