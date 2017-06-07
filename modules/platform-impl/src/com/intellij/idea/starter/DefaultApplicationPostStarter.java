@@ -66,7 +66,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
     if (!args.isNoSplash()) {
       final SplashScreen splashScreen = getSplashScreen();
       if (splashScreen == null) {
-        mySplash = new Splash();
+        mySplash = new Splash(false);
         mySplash.show();
       }
     }

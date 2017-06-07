@@ -98,7 +98,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     JPanel panel = new JPanel(new BorderLayout());
     JPanel logoPanel = new JPanel(new BorderLayout());
     logoPanel.setBorder(JBUI.Borders.empty(53, 66, 45, 0));
-    AnimatedLogoLabel animatedLogoLabel = new AnimatedLogoLabel(8, false);
+    AnimatedLogoLabel animatedLogoLabel = new AnimatedLogoLabel(8, false, true);
     animatedLogoLabel.setForeground(SandboxUtil.isInsideSandbox() ? JBColor.WHITE : JBColor.GRAY);
     logoPanel.add(animatedLogoLabel, BorderLayout.CENTER);
 
