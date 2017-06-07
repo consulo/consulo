@@ -1531,7 +1531,8 @@ public class UIUtil {
     if (isUnderNativeMacLookAndFeel()) {
       return new Insets(1, 0, 1, 0);
     }
-    return UIManager.getInsets("listPopupInsets");
+    Insets listPopupInsets = UIManager.getInsets("listPopupInsets");
+    return listPopupInsets == null ? JBUI.emptyInsets() : listPopupInsets;
   }
 
   public static boolean isToUseDottedCellBorder() {

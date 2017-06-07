@@ -55,6 +55,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.ComboBoxButtonUI;
+import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
 import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;
 import consulo.ide.ui.laf.intellij.ActionButtonUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
@@ -92,10 +94,8 @@ import java.util.List;
  * @author Eugene Belyaev
  * @author Vladimir Kondratyev
  */
-@State(name = "LafManager", storages = {
-        @Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml", deprecated = true),
-        @Storage(file = StoragePathMacros.APP_CONFIG + "/laf.xml", roamingType = RoamingType.PER_PLATFORM)
-})
+@State(name = "LafManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml", deprecated = true),
+        @Storage(file = StoragePathMacros.APP_CONFIG + "/laf.xml", roamingType = RoamingType.PER_PLATFORM)})
 public final class LafManagerImpl extends LafManager implements ApplicationComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.LafManager");
 
@@ -154,6 +154,10 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       lafList.add(new ModernDarkLookAndFeelInfo());
     }
     lafList.add(new DarculaLookAndFeelInfo());
+
+    if(SystemInfo.isLinux && EarlyAccessProgramManager.is(GTKPlusEAPDescriptor.class)) {
+      lafList.add(new UIManager.LookAndFeelInfo("GTK+", "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"));
+    }
 
     myLaFs = lafList.toArray(new UIManager.LookAndFeelInfo[lafList.size()]);
 
@@ -469,6 +473,13 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     patchOptionPaneIcons(uiDefaults);
 
     fixSeparatorColor(uiDefaults);
+
+    if (uiDefaults.get("ComboBoxButtonUI") == null) {
+      uiDefaults.put("ComboBoxButtonUI", ComboBoxButtonUI.class.getName());
+    }
+    if (uiDefaults.get("ActionButtonUI") == null) {
+      uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
+    }
 
     updateToolWindows();
     for (Frame frame : Frame.getFrames()) {
