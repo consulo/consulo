@@ -51,6 +51,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -93,6 +94,7 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
     public void onSuccess(@Nullable final DataNode<ProjectData> externalProject) {
       if (externalProject != null) {
         ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(myProject) {
+          @RequiredDispatchThread
           @Override
           public void execute() {
             ProjectRootManagerEx.getInstanceEx(myProject).mergeRootsChangesDuring(new Runnable() {

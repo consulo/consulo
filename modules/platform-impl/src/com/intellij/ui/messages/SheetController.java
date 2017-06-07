@@ -15,7 +15,6 @@
  */
 package com.intellij.ui.messages;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -330,7 +329,7 @@ public class SheetController {
     messageTextPane.repaint();
 
     ico.setOpaque(false);
-    ico.setSize(new Dimension(AllIcons.Logo_welcomeScreen.getIconWidth(), AllIcons.Logo_welcomeScreen.getIconHeight()));
+    ico.setSize(new Dimension(80, 8));
     ico.setLocation(LEFT_SHEET_PADDING, TOP_SHEET_PADDING);
     sheetPanel.add(ico);
     headerLabel.setLocation(LEFT_SHEET_OFFSET, TOP_SHEET_PADDING);

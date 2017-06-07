@@ -22,12 +22,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayFactory;
+import consulo.annotations.DeprecationInfo;
 import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Represents a module in an IDEA project.
+ * Represents a module in an Consulo project.
  *
  * @see ModuleManager#getModules()
  * @see ModuleComponent
@@ -35,13 +36,7 @@ import org.jetbrains.annotations.Nullable;
 public interface Module extends ComponentManager, AreaInstance, Disposable, Named {
   public static final Module[] EMPTY_ARRAY = new Module[0];
 
-  public static ArrayFactory<Module> ARRAY_FACTORY = new ArrayFactory<Module>() {
-    @NotNull
-    @Override
-    public Module[] create(int count) {
-      return count == 0 ? EMPTY_ARRAY : new Module[count];
-    }
-  };
+  public static ArrayFactory<Module> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Module[count];
 
   /**
    * Returns the <code>VirtualFile</code> to the module dir
@@ -97,17 +92,25 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
   /**
    * Sets a custom option for this module.
    *
-   * @param optionName the name of the custom option.
+   * @param optionName  the name of the custom option.
    * @param optionValue the value of the custom option.
    */
-  void setOption(@NotNull String optionName, @NotNull String optionValue);
+  @Deprecated
+  @DeprecationInfo("Use ModuleExtension for store your variables")
+  default void setOption(@NotNull String optionName, @NotNull String optionValue) {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * Removes a custom option from this module.
    *
    * @param optionName the name of the custom option.
    */
-  void clearOption(@NotNull String optionName);
+  @Deprecated
+  @DeprecationInfo("Use ModuleExtension for store your variables")
+  default void clearOption(@NotNull String optionName) {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * Gets the value of a custom option for this module.
@@ -116,7 +119,11 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    * @return the value of the custom option, or null if no value has been set.
    */
   @Nullable
-  String getOptionValue(@NotNull String optionName);
+  @Deprecated
+  @DeprecationInfo("Use ModuleExtension for store your variables")
+  default String getOptionValue(@NotNull String optionName) {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * Returns module scope including sources and tests, excluding libraries and dependencies.
@@ -125,6 +132,7 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    */
   @NotNull
   GlobalSearchScope getModuleScope();
+
   @NotNull
   GlobalSearchScope getModuleScope(boolean includeTests);
 
@@ -143,16 +151,22 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    */
   @NotNull
   GlobalSearchScope getModuleWithDependenciesScope();
+
   @NotNull
   GlobalSearchScope getModuleContentScope();
+
   @NotNull
   GlobalSearchScope getModuleContentWithDependenciesScope();
+
   @NotNull
   GlobalSearchScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests);
+
   @NotNull
   GlobalSearchScope getModuleWithDependentsScope();
+
   @NotNull
   GlobalSearchScope getModuleTestsWithDependentsScope();
+
   @NotNull
   GlobalSearchScope getModuleRuntimeScope(boolean includeTests);
 }

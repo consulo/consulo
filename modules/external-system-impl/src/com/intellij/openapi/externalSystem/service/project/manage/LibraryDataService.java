@@ -17,6 +17,7 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -99,6 +100,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
                             boolean synchronous)
   {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
+      @RequiredDispatchThread
       @Override
       public void execute() {
         // Is assumed to be called from the EDT.
@@ -163,6 +165,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
       return;
     }
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
+      @RequiredDispatchThread
       @Override
       public void execute() {
         final LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
@@ -210,6 +213,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
       return;
     }
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
+      @RequiredDispatchThread
       @Override
       public void execute() {
         Library.ModifiableModel model = ideLibrary.getModifiableModel();

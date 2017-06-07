@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.module;
 
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -63,7 +64,11 @@ public interface ModifiableModuleModel {
    * @return the module instance.
    */
   @NotNull
-  Module newModule(@NotNull @NonNls String name, @Nullable @NonNls String dirPath, @Nullable Map<String, String> options);
+  @Deprecated
+  @DeprecationInfo("Parameter options is deprecated")
+  default Module newModule(@NotNull @NonNls String name, @Nullable @NonNls String dirPath, @Nullable Map<String, String> options) {
+    return newModule(name, dirPath);
+  }
 
   /**
    * Disposes of the specified module and removes it from the project. {@link #commit()}

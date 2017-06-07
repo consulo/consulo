@@ -653,12 +653,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     @Override
     @NotNull
     public Module newModule(@NotNull @NonNls String name, @Nullable @NonNls String dirPath) {
-      return newModule(name, dirPath, null);
-    }
-
-    @Override
-    @NotNull
-    public Module newModule(@NotNull @NonNls String name, @Nullable @NonNls String dirPath, @Nullable Map<String, String> options) {
       assertWritable();
 
       final String dirUrl = dirPath == null ? null : VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, dirPath);
@@ -670,11 +664,6 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
       if (moduleEx == null) {
         moduleEx = createModule(name, dirUrl, null);
-        if (options != null) {
-          for (Map.Entry<String, String> option : options.entrySet()) {
-            moduleEx.setOption(option.getKey(), option.getValue());
-          }
-        }
         initModule(moduleEx);
       }
       return moduleEx;

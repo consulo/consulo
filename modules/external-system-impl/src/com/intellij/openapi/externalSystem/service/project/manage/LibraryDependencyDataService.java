@@ -32,6 +32,7 @@ import com.intellij.openapi.roots.impl.ModuleLibraryOrderEntryImpl;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.BooleanFunction;
@@ -97,6 +98,7 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
                          final boolean synchronous)
   {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {
+      @RequiredDispatchThread
       @Override
       public void execute() {
         importMissingProjectLibraries(module, nodesToImport, synchronous);

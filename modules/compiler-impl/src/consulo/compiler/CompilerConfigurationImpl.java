@@ -21,11 +21,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.WatchedRootsProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.ui.LightFilePointer;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.containers.HashSet;
+import com.intellij.util.io.URLUtil;
 import consulo.compiler.impl.ModuleCompilerPathsManagerImpl;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
@@ -103,15 +106,11 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     return rootsToWatch;
   }
 
-  @Nullable
+  @NotNull
   @Override
   public String getCompilerOutputUrl() {
     if (myOutputDirPointer == null) {
-      VirtualFile baseDir = myProject.getBaseDir();
-      assert baseDir != null;
-      VirtualFile outDir = baseDir.findFileByRelativePath(DEFAULT_OUTPUT_URL);
-
-      return outDir == null ? myProject.getPresentableUrl() + "/" + DEFAULT_OUTPUT_URL : outDir.getUrl();
+      return VirtualFileManager.constructUrl(URLUtil.FILE_PROTOCOL, FileUtil.toSystemIndependentName(myProject.getBasePath()) + "/" + DEFAULT_OUTPUT_URL);
     }
     return myOutputDirPointer.getUrl();
   }
@@ -126,9 +125,10 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
 
   @Override
   public void setCompilerOutputUrl(@Nullable String compilerOutputUrl) {
-    myOutputDirPointer = VirtualFilePointerManager.getInstance().create(compilerOutputUrl, myProject, null);
+    myOutputDirPointer = compilerOutputUrl == null ? null : VirtualFilePointerManager.getInstance().create(compilerOutputUrl, myProject, null);
 
-    myCompilerOutputWatchRequest = LocalFileSystem.getInstance().replaceWatchedRoot(myCompilerOutputWatchRequest, compilerOutputUrl, true);
+    myCompilerOutputWatchRequest =
+            compilerOutputUrl == null ? null : LocalFileSystem.getInstance().replaceWatchedRoot(myCompilerOutputWatchRequest, compilerOutputUrl, true);
   }
 
   public void getState(Element stateElement) {

@@ -25,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtilRt;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -41,6 +42,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
 
   public void setScope(@NotNull final DependencyScope scope, @NotNull final ExportableOrderEntry dependency, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
+      @RequiredDispatchThread
       @Override
       public void execute() {
         doForDependency(dependency, new Consumer<ExportableOrderEntry>() {
@@ -55,6 +57,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
 
   public void setExported(final boolean exported, @NotNull final ExportableOrderEntry dependency, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
+      @RequiredDispatchThread
       @Override
       public void execute() {
         doForDependency(dependency, new Consumer<ExportableOrderEntry>() {
@@ -118,6 +121,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
     }
     for (final ExportableOrderEntry dependency : toRemove) {
       ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
+        @RequiredDispatchThread
         @Override
         public void execute() {
           ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);

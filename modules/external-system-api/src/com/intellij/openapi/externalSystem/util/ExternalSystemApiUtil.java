@@ -33,6 +33,7 @@ import com.intellij.openapi.externalSystem.service.ParametersEnhancer;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.OrderRootType;
@@ -43,12 +44,13 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.containers.TransferToEDTQueue;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.ui.UIUtil;
+import consulo.externalSystem.module.extension.ExternalSystemModuleExtension;
+import consulo.vfs.util.ArchiveVfsUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,14 +71,17 @@ import java.util.regex.Pattern;
  */
 public class ExternalSystemApiUtil {
 
-  private static final Logger LOG                           = Logger.getInstance("#" + ExternalSystemApiUtil.class.getName());
+  private static final Logger LOG = Logger.getInstance("#" + ExternalSystemApiUtil.class.getName());
   private static final String LAST_USED_PROJECT_PATH_PREFIX = "LAST_EXTERNAL_PROJECT_PATH_";
 
-  @NotNull public static final String PATH_SEPARATOR = "/";
+  @NotNull
+  public static final String PATH_SEPARATOR = "/";
 
-  @NotNull private static final Pattern ARTIFACT_PATTERN = Pattern.compile("(?:.*/)?(.+?)(?:-([\\d+](?:\\.[\\d]+)*))?(?:\\.[^\\.]+?)?");
+  @NotNull
+  private static final Pattern ARTIFACT_PATTERN = Pattern.compile("(?:.*/)?(.+?)(?:-([\\d+](?:\\.[\\d]+)*))?(?:\\.[^\\.]+?)?");
 
-  @NotNull public static final Comparator<Object> ORDER_AWARE_COMPARATOR = new Comparator<Object>() {
+  @NotNull
+  public static final Comparator<Object> ORDER_AWARE_COMPARATOR = new Comparator<Object>() {
 
     @Override
     public int compare(@NotNull Object o1, @NotNull Object o2) {
@@ -105,14 +110,16 @@ public class ExternalSystemApiUtil {
     }
   };
 
-  @NotNull private static final NullableFunction<DataNode<?>, Key<?>> GROUPER = new NullableFunction<DataNode<?>, Key<?>>() {
+  @NotNull
+  private static final NullableFunction<DataNode<?>, Key<?>> GROUPER = new NullableFunction<DataNode<?>, Key<?>>() {
     @Override
     public Key<?> fun(DataNode<?> node) {
       return node.getKey();
     }
   };
 
-  @NotNull private static final Comparator<Object> COMPARABLE_GLUE = new Comparator<Object>() {
+  @NotNull
+  private static final Comparator<Object> COMPARABLE_GLUE = new Comparator<Object>() {
     @SuppressWarnings("unchecked")
     @Override
     public int compare(Object o1, Object o2) {
@@ -120,7 +127,8 @@ public class ExternalSystemApiUtil {
     }
   };
 
-  @NotNull private static final TransferToEDTQueue<Runnable> TRANSFER_TO_EDT_QUEUE =
+  @NotNull
+  private static final TransferToEDTQueue<Runnable> TRANSFER_TO_EDT_QUEUE =
           new TransferToEDTQueue<Runnable>("External System queue", new Processor<Runnable>() {
             @Override
             public boolean process(Runnable runnable) {
@@ -198,7 +206,7 @@ public class ExternalSystemApiUtil {
   }
 
   /**
-   * @param path    target path
+   * @param path target path
    * @return absolute path that points to the same location as the given one and that uses only slashes
    */
   @NotNull
@@ -260,11 +268,8 @@ public class ExternalSystemApiUtil {
       K key = grouper.fun(data);
       if (key == null) {
         LOG.warn(String.format(
-                "Skipping entry '%s' during grouping. Reason: it's not possible to build a grouping key with grouping strategy '%s'. "
-                + "Given entries: %s",
-                data,
-                grouper.getClass(),
-                nodes));
+                "Skipping entry '%s' during grouping. Reason: it's not possible to build a grouping key with grouping strategy '%s'. " + "Given entries: %s",
+                data, grouper.getClass(), nodes));
         continue;
       }
       List<V> grouped = result.get(key);
@@ -333,13 +338,10 @@ public class ExternalSystemApiUtil {
 
   @SuppressWarnings("unchecked")
   @Nullable
-  public static <T> DataNode<T> findParent(@NotNull DataNode<?> node,
-                                           @NotNull Key<T> key,
-                                           @Nullable BooleanFunction<DataNode<T>> predicate) {
+  public static <T> DataNode<T> findParent(@NotNull DataNode<?> node, @NotNull Key<T> key, @Nullable BooleanFunction<DataNode<T>> predicate) {
     DataNode<?> parent = node.getParent();
     if (parent == null) return null;
-    return key.equals(parent.getKey()) && (predicate == null || predicate.fun((DataNode<T>)parent))
-           ? (DataNode<T>)parent : findParent(parent, key, predicate);
+    return key.equals(parent.getKey()) && (predicate == null || predicate.fun((DataNode<T>)parent)) ? (DataNode<T>)parent : findParent(parent, key, predicate);
   }
 
   @SuppressWarnings("unchecked")
@@ -412,9 +414,9 @@ public class ExternalSystemApiUtil {
   /**
    * Configures given classpath to reference target i18n bundle file(s).
    *
-   * @param classPath     process classpath
-   * @param bundlePath    path to the target bundle file
-   * @param contextClass  class from the same content root as the target bundle file
+   * @param classPath    process classpath
+   * @param bundlePath   path to the target bundle file
+   * @param contextClass class from the same content root as the target bundle file
    */
   public static void addBundle(@NotNull PathsList classPath, @NotNull String bundlePath, @NotNull Class<?> contextClass) {
     String pathToUse = bundlePath.replace('.', '/');
@@ -447,7 +449,7 @@ public class ExternalSystemApiUtil {
    * This method allows to differentiate between them (e.g. we don't want to change language level when new module is imported to
    * an existing project).
    *
-   * @return    <code>true</code> if new project is being imported; <code>false</code> if new module is being imported
+   * @return <code>true</code> if new project is being imported; <code>false</code> if new module is being imported
    */
   public static boolean isNewProjectConstruction() {
     return ProjectManager.getInstance().getOpenProjects().length == 0;
@@ -492,21 +494,18 @@ public class ExternalSystemApiUtil {
   /**
    * There is a possible case that external project linked to an ide project is a multi-project, i.e. contains more than one
    * module.
-   * <p/>
+   * <p>
    * This method tries to find root project's config path assuming that given path points to a sub-project's config path.
    *
-   * @param externalProjectPath  external sub-project's config path
-   * @param externalSystemId     target external system
-   * @param project              target ide project
-   * @return                     root external project's path if given path is considered to point to a known sub-project's config;
-   *                             <code>null</code> if it's not possible to find a root project's config path on the basis of the
-   *                             given path
+   * @param externalProjectPath external sub-project's config path
+   * @param externalSystemId    target external system
+   * @param project             target ide project
+   * @return root external project's path if given path is considered to point to a known sub-project's config;
+   * <code>null</code> if it's not possible to find a root project's config path on the basis of the
+   * given path
    */
   @Nullable
-  public static String getRootProjectPath(@NotNull String externalProjectPath,
-                                          @NotNull ProjectSystemId externalSystemId,
-                                          @NotNull Project project)
-  {
+  public static String getRootProjectPath(@NotNull String externalProjectPath, @NotNull ProjectSystemId externalSystemId, @NotNull Project project) {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
       return null;
@@ -520,7 +519,7 @@ public class ExternalSystemApiUtil {
   /**
    * {@link RemoteUtil#unwrap(Throwable) unwraps} given exception if possible and builds error message for it.
    *
-   * @param e  exception to process
+   * @param e exception to process
    * @return error message for the given exception
    */
   @SuppressWarnings({"ThrowableResultOfMethodCallIgnored", "IOResourceOpenedButNotSafelyClosed"})
@@ -544,29 +543,23 @@ public class ExternalSystemApiUtil {
   @SuppressWarnings("unchecked")
   @NotNull
   public static AbstractExternalSystemSettings getSettings(@NotNull Project project, @NotNull ProjectSystemId externalSystemId)
-          throws IllegalArgumentException
-  {
+          throws IllegalArgumentException {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
-      throw new IllegalArgumentException(String.format(
-              "Can't retrieve external system settings for id '%s'. Reason: no such external system is registered",
-              externalSystemId.getReadableName()
-      ));
+      throw new IllegalArgumentException(String.format("Can't retrieve external system settings for id '%s'. Reason: no such external system is registered",
+                                                       externalSystemId.getReadableName()));
     }
     return manager.getSettingsProvider().fun(project);
   }
 
   @SuppressWarnings("unchecked")
-  public static <S extends AbstractExternalSystemLocalSettings> S getLocalSettings(@NotNull Project project,
-                                                                                   @NotNull ProjectSystemId externalSystemId)
-          throws IllegalArgumentException
-  {
+  public static <S extends AbstractExternalSystemLocalSettings> S getLocalSettings(@NotNull Project project, @NotNull ProjectSystemId externalSystemId)
+          throws IllegalArgumentException {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
-      throw new IllegalArgumentException(String.format(
-              "Can't retrieve local external system settings for id '%s'. Reason: no such external system is registered",
-              externalSystemId.getReadableName()
-      ));
+      throw new IllegalArgumentException(
+              String.format("Can't retrieve local external system settings for id '%s'. Reason: no such external system is registered",
+                            externalSystemId.getReadableName()));
     }
     return (S)manager.getLocalSettingsProvider().fun(project);
   }
@@ -574,15 +567,12 @@ public class ExternalSystemApiUtil {
   @SuppressWarnings("unchecked")
   public static <S extends ExternalSystemExecutionSettings> S getExecutionSettings(@NotNull Project project,
                                                                                    @NotNull String linkedProjectPath,
-                                                                                   @NotNull ProjectSystemId externalSystemId)
-          throws IllegalArgumentException
-  {
+                                                                                   @NotNull ProjectSystemId externalSystemId) throws IllegalArgumentException {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
-      throw new IllegalArgumentException(String.format(
-              "Can't retrieve external system execution settings for id '%s'. Reason: no such external system is registered",
-              externalSystemId.getReadableName()
-      ));
+      throw new IllegalArgumentException(
+              String.format("Can't retrieve external system execution settings for id '%s'. Reason: no such external system is registered",
+                            externalSystemId.getReadableName()));
     }
     return (S)manager.getExecutionSettingsProvider().fun(Pair.create(project, linkedProjectPath));
   }
@@ -591,15 +581,14 @@ public class ExternalSystemApiUtil {
    * Historically we prefer to work with third-party api not from ide process but from dedicated slave process (there is a risk
    * that third-party api has bugs which might make the whole ide process corrupted, e.g. a memory leak at the api might crash
    * the whole ide process).
-   * <p/>
+   * <p>
    * However, we do allow to explicitly configure the ide to work with third-party external system api from the ide process.
-   * <p/>
+   * <p>
    * This method allows to check whether the ide is configured to use 'out of process' or 'in process' mode for the system.
    *
-   * @param externalSystemId     target external system
-   *
-   * @return   <code>true</code> if the ide is configured to work with external system api from the ide process;
-   *           <code>false</code> otherwise
+   * @param externalSystemId target external system
+   * @return <code>true</code> if the ide is configured to work with external system api from the ide process;
+   * <code>false</code> otherwise
    */
   public static boolean isInProcessMode(ProjectSystemId externalSystemId) {
     return Registry.is(externalSystemId.getId() + ExternalSystemConstants.USE_IN_PROCESS_COMMUNICATION_REGISTRY_KEY_SUFFIX, false);
@@ -609,28 +598,27 @@ public class ExternalSystemApiUtil {
    * There is a possible case that methods of particular object should be executed with classpath different from the one implied
    * by the current class' class loader. External system offers {@link ParametersEnhancer#enhanceLocalProcessing(List)} method
    * for defining that custom classpath.
-   * <p/>
+   * <p>
    * It's also possible that particular implementation of {@link ParametersEnhancer} is compiled using dependency to classes
    * which are provided by the {@link ParametersEnhancer#enhanceLocalProcessing(List) expanded classpath}. E.g. a class
    * <code>'A'</code> might use method of class <code>'B'</code> and 'A' is located at the current (system/plugin) classpath but
    * <code>'B'</code> is not. We need to reload <code>'A'</code> using its expanded classpath then, i.e. create new class loaded
    * with that expanded classpath and load <code>'A'</code> by it.
-   * <p/>
+   * <p>
    * This method allows to do that.
    *
-   * @param clazz  custom classpath-aware class which instance should be created (is assumed to have a no-args constructor)
-   * @param <T>    target type
-   * @return       newly created instance of the given class loaded by custom classpath-aware loader
-   * @throws IllegalAccessException     as defined by reflection processing
-   * @throws InstantiationException     as defined by reflection processing
-   * @throws NoSuchMethodException      as defined by reflection processing
-   * @throws InvocationTargetException  as defined by reflection processing
-   * @throws ClassNotFoundException     as defined by reflection processing
+   * @param clazz custom classpath-aware class which instance should be created (is assumed to have a no-args constructor)
+   * @param <T>   target type
+   * @return newly created instance of the given class loaded by custom classpath-aware loader
+   * @throws IllegalAccessException    as defined by reflection processing
+   * @throws InstantiationException    as defined by reflection processing
+   * @throws NoSuchMethodException     as defined by reflection processing
+   * @throws InvocationTargetException as defined by reflection processing
+   * @throws ClassNotFoundException    as defined by reflection processing
    */
   @NotNull
   public static <T extends ParametersEnhancer> T reloadIfNecessary(@NotNull final Class<T> clazz)
-          throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException
-  {
+          throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException {
     T instance = clazz.newInstance();
     List<URL> urls = ContainerUtilRt.newArrayList();
     instance.enhanceLocalProcessing(urls);
@@ -664,23 +652,36 @@ public class ExternalSystemApiUtil {
     return (T)loader.loadClass(clazz.getName()).newInstance();
   }
 
+  @Contract("null -> false, _")
+  public static String getExtensionSystemOption(@Nullable Module module, @NotNull String key) {
+    if (module == null) {
+      return null;
+    }
+    ExternalSystemModuleExtension extension = ModuleUtilCore.getExtension(module, ExternalSystemModuleExtension.class);
+    if (extension == null) {
+      return null;
+    }
+    return extension.getOption(key);
+  }
+
   @Contract("_, null -> false")
   public static boolean isExternalSystemAwareModule(@NotNull ProjectSystemId systemId, @Nullable Module module) {
-    return module != null && systemId.getId().equals(module.getOptionValue(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY));
+    String extensionSystemOption = getExtensionSystemOption(module, ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY);
+    return extensionSystemOption != null && systemId.getId().equals(extensionSystemOption);
   }
 
   @Contract("_, null -> false")
   public static boolean isExternalSystemAwareModule(@NotNull String systemId, @Nullable Module module) {
-    return module != null && systemId.equals(module.getOptionValue(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY));
+    return module != null && systemId.equals(getExtensionSystemOption(module, ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY));
   }
 
   @Nullable
   public static String getExternalProjectPath(@Nullable Module module) {
-    return module != null ? module.getOptionValue(ExternalSystemConstants.LINKED_PROJECT_PATH_KEY) : null;
+    return getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_PATH_KEY);
   }
 
   @Nullable
   public static String getExternalProjectId(@Nullable Module module) {
-    return module != null ? module.getOptionValue(ExternalSystemConstants.LINKED_PROJECT_ID_KEY) : null;
+    return getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_ID_KEY);
   }
 }
