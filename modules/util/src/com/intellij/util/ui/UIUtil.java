@@ -31,6 +31,7 @@ import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.annotations.DeprecationInfo;
+import consulo.ui.GTKPlusUIUtil;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
@@ -1447,7 +1448,13 @@ public class UIUtil {
 
   public static boolean isUnderDarkBuildInLaf() {
     LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-    return lookAndFeel instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)lookAndFeel).isDark();
+    if (lookAndFeel instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)lookAndFeel).isDark()) {
+      return true;
+    }
+    if (isUnderGTKLookAndFeel()) {
+      return GTKPlusUIUtil.isDarkTheme();
+    }
+    return false;
   }
 
   public static boolean isUnderBuildInLaF() {
@@ -1455,9 +1462,6 @@ public class UIUtil {
     return lookAndFeel instanceof BuildInLookAndFeel;
   }
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  @Deprecated
-  @DeprecationInfo(value = "Look & Feel is not supported", until = "3.0")
   public static boolean isUnderGTKLookAndFeel() {
     return UIManager.getLookAndFeel().getName().contains("GTK");
   }
@@ -1834,10 +1838,9 @@ public class UIUtil {
   /**
    * Creates a HiDPI-aware BufferedImage in device scale.
    *
-   * @param width the width in user coordinate space
+   * @param width  the width in user coordinate space
    * @param height the height in user coordinate space
-   * @param type the type of the image
-   *
+   * @param type   the type of the image
    * @return a HiDPI-aware BufferedImage in device scale
    */
   @NotNull
@@ -1852,11 +1855,10 @@ public class UIUtil {
   /**
    * Creates a HiDPI-aware BufferedImage in the graphics config scale.
    *
-   * @param gc the graphics config
-   * @param width the width in user coordinate space
+   * @param gc     the graphics config
+   * @param width  the width in user coordinate space
    * @param height the height in user coordinate space
-   * @param type the type of the image
-   *
+   * @param type   the type of the image
    * @return a HiDPI-aware BufferedImage in the graphics scale
    */
   @NotNull
@@ -1871,11 +1873,10 @@ public class UIUtil {
   /**
    * Creates a HiDPI-aware BufferedImage in the graphics device scale.
    *
-   * @param g the graphics of the target device
-   * @param width the width in user coordinate space
+   * @param g      the graphics of the target device
+   * @param width  the width in user coordinate space
    * @param height the height in user coordinate space
-   * @param type the type of the image
-   *
+   * @param type   the type of the image
    * @return a HiDPI-aware BufferedImage in the graphics scale
    */
   @NotNull
@@ -1888,23 +1889,21 @@ public class UIUtil {
       //noinspection UndesirableClassUsage
       return new BufferedImage(width, height, type);
     }
-    return createImage(width, height, type);  }
+    return createImage(width, height, type);
+  }
 
   /**
    * Creates a HiDPI-aware BufferedImage in the component scale.
    *
-   * @param comp the component associated with the target graphics device
-   * @param width the width in user coordinate space
+   * @param comp   the component associated with the target graphics device
+   * @param width  the width in user coordinate space
    * @param height the height in user coordinate space
-   * @param type the type of the image
-   *
+   * @param type   the type of the image
    * @return a HiDPI-aware BufferedImage in the component scale
    */
   @NotNull
   public static BufferedImage createImage(Component comp, int width, int height, int type) {
-    return comp != null ?
-           createImage(comp != null ? comp.getGraphicsConfiguration() : null, width, height, type) :
-           createImage(width, height, type);
+    return comp != null ? createImage(comp != null ? comp.getGraphicsConfiguration() : null, width, height, type) : createImage(width, height, type);
   }
 
   public static void drawImage(Graphics g, Image image, int x, int y, ImageObserver observer) {
@@ -2354,7 +2353,12 @@ public class UIUtil {
     }
 
     final StyleSheet style = new StyleSheet();
-    style.addStyleSheet(isUnderDarkBuildInLaf() ? (StyleSheet)UIManager.getDefaults().get("StyledEditorKit.JBDefaultStyle") : DEFAULT_HTML_KIT_CSS);
+    if (isUnderDarkBuildInLaf() && !isUnderGTKLookAndFeel()) {
+      style.addStyleSheet((StyleSheet)UIManager.getDefaults().get("StyledEditorKit.JBDefaultStyle"));
+    }
+    else {
+      style.addStyleSheet(DEFAULT_HTML_KIT_CSS);
+    }
     style.addRule(customCss);
 
     return new HTMLEditorKit() {
@@ -3438,7 +3442,7 @@ public class UIUtil {
 
   //May have no usages but it's useful in runtime (Debugger "watches", some logging etc.)
   public static String getDebugText(Component c) {
-    StringBuilder builder  = new StringBuilder();
+    StringBuilder builder = new StringBuilder();
     getAllTextsRecursivelyImpl(c, builder);
     return builder.toString();
   }

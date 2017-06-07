@@ -62,6 +62,7 @@ import consulo.ide.ui.laf.intellij.ActionButtonUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
+import consulo.ui.GTKPlusUIUtil;
 import consulo.ui.laf.MacButtonlessScrollbarUI;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.jdom.Element;
@@ -155,7 +156,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     }
     lafList.add(new DarculaLookAndFeelInfo());
 
-    if(SystemInfo.isLinux && EarlyAccessProgramManager.is(GTKPlusEAPDescriptor.class)) {
+    if (SystemInfo.isLinux && EarlyAccessProgramManager.is(GTKPlusEAPDescriptor.class)) {
       lafList.add(new UIManager.LookAndFeelInfo("GTK+", "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"));
     }
 
@@ -445,6 +446,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   @Override
   public void updateUI() {
     final UIDefaults uiDefaults = UIManager.getLookAndFeelDefaults();
+
+    GTKPlusUIUtil.updateUI();
 
     fixPopupWeight();
 

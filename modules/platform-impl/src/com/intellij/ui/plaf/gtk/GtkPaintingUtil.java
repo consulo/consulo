@@ -16,6 +16,7 @@
 package com.intellij.ui.plaf.gtk;
 
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.GTKPlusUIUtil;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -24,7 +25,6 @@ import javax.swing.plaf.basic.BasicMenuItemUI;
 import javax.swing.plaf.synth.ColorType;
 import javax.swing.plaf.synth.SynthContext;
 import java.awt.*;
-import java.lang.reflect.Method;
 
 // todo[r.sh] get rid of SynthUI reflection after migration to JDK 7
 public class GtkPaintingUtil {
@@ -73,13 +73,6 @@ public class GtkPaintingUtil {
   }
 
   public static SynthContext getSynthContext(final MenuItemUI ui, final JComponent item) {
-    try {
-      final Method getContext = ui.getClass().getMethod("getContext", JComponent.class);
-      getContext.setAccessible(true);
-      return (SynthContext)getContext.invoke(ui, item);
-    }
-    catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    return GTKPlusUIUtil.getSynthContext(ui, item);
   }
 }
