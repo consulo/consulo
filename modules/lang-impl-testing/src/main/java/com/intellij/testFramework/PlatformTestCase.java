@@ -113,7 +113,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     boolean firstTime = ourApplication == null;
 
     ourApplication = ApplicationStarter.getInstance();
-   // ourApplication.setDataProvider(this);
+    // ourApplication.setDataProvider(this);
 
     if (firstTime) {
       cleanPersistedVFSContent();
@@ -197,8 +197,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   @NotNull
   public static Project createProject(File projectDir, String creationPlace) {
     try {
-      Project project =
-        ProjectManagerEx.getInstanceEx().newProject(FileUtil.getNameWithoutExtension(projectDir), projectDir.getPath(), false, false);
+      Project project = ProjectManagerEx.getInstanceEx().newProject(FileUtil.getNameWithoutExtension(projectDir), projectDir.getPath(), false, false);
       assert project != null;
 
       project.putUserData(CREATION_PLACE, creationPlace);
@@ -342,32 +341,26 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
 
   @Override
   protected void tearDown() throws Exception {
-    CompositeException result = new CompositeException();
     if (myProject != null) {
-      try {
-        LightPlatformTestCase.doTearDown(getProject(), ourApplication, false);
-      }
-      catch (Throwable e) {
-        result.add(e);
-      }
+      LightPlatformTestCase.doTearDown(getProject(), ourApplication, false);
     }
 
     try {
       checkForSettingsDamage();
     }
     catch (Throwable e) {
-      result.add(e);
+      throw e;
     }
     try {
       Project project = getProject();
-      disposeProject(result);
+      disposeProject();
 
       if (project != null) {
         try {
           InjectedLanguageManagerImpl.checkInjectorsAreDisposed(project);
         }
         catch (AssertionError e) {
-          result.add(e);
+          throw e;
         }
       }
       try {
@@ -377,40 +370,35 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
         LocalFileSystem.getInstance().refreshIoFiles(myFilesToDelete);
       }
       catch (Throwable e) {
-        result.add(e);
+        throw e;
       }
 
       if (!myAssertionsInTestDetected) {
         if (IdeaLogger.ourErrorsOccurred != null) {
-          result.add(IdeaLogger.ourErrorsOccurred);
+          throw IdeaLogger.ourErrorsOccurred;
         }
       }
 
-      try {
-        super.tearDown();
-      }
-      catch (Throwable e) {
-        result.add(e);
-      }
+      super.tearDown();
 
       //cleanTheWorld();
       try {
         myEditorListenerTracker.checkListenersLeak();
       }
       catch (AssertionError error) {
-        result.add(error);
+        throw error;
       }
       try {
         myThreadTracker.checkLeak();
       }
       catch (AssertionError error) {
-        result.add(error);
+        throw error;
       }
       try {
         LightPlatformTestCase.checkEditorsReleased();
       }
       catch (Throwable error) {
-        result.add(error);
+        throw error;
       }
       //if (directoryIndex != null) {
       //  directoryIndex.assertAncestorConsistent();
@@ -425,16 +413,15 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
       myThreadTracker = null;
       ourTestCase = null;
     }
-    if (!result.isEmpty()) throw result;
   }
 
-  private void disposeProject(@NotNull CompositeException result) /* throws nothing */ {
+  private void disposeProject() throws Exception {
     try {
       DocumentCommitThread.getInstance().clearQueue();
       UIUtil.dispatchAllInvocationEvents();
     }
     catch (Exception e) {
-      result.add(e);
+      throw e;
     }
     try {
       if (myProject != null) {
@@ -456,7 +443,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
       }
     }
     catch (Exception e) {
-      result.add(e);
+      throw e;
     }
     finally {
       if (myProject != null) {
@@ -553,9 +540,13 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
             setUp();
           }
           catch (Throwable e) {
-            CompositeException result = new CompositeException(e);
-            disposeProject(result);
-            throw result;
+            try {
+              tearDown();
+            }
+            catch (Exception ignored) {
+            }
+
+            throw e;
           }
           try {
             myAssertionsInTestDetected = true;
@@ -714,8 +705,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     }
   }
 
-  public static VirtualFile createTempFile(@NonNls String ext, @Nullable byte[] bom, @NonNls String content, Charset charset)
-    throws IOException {
+  public static VirtualFile createTempFile(@NonNls String ext, @Nullable byte[] bom, @NonNls String content, Charset charset) throws IOException {
     File temp = FileUtil.createTempFile("copy", "." + ext);
     setContentOnDisk(temp, bom, content, charset);
 

@@ -197,7 +197,6 @@ public abstract class UsefulTestCase extends TestCase {
 
   public static void doCheckForSettingsDamage(@NotNull CodeStyleSettings oldCodeStyleSettings,
                                               @NotNull CodeStyleSettings currentCodeStyleSettings) throws Exception {
-    CompositeException result = new CompositeException();
     final CodeInsightSettings settings = CodeInsightSettings.getInstance();
     try {
       Element newS = new Element("temp");
@@ -209,14 +208,14 @@ public abstract class UsefulTestCase extends TestCase {
       Element temp = new Element("temp");
       clean.writeExternal(temp);
       settings.loadState(temp);
-      result.add(error);
+      throw error;
     }
 
     try {
       checkSettingsEqual(oldCodeStyleSettings, currentCodeStyleSettings, "Code style settings damaged");
     }
     catch (AssertionError e) {
-      result.add(e);
+      throw e;
     }
     finally {
       currentCodeStyleSettings.clearCodeStyleSettings();
@@ -226,16 +225,14 @@ public abstract class UsefulTestCase extends TestCase {
       InplaceRefactoring.checkCleared();
     }
     catch (AssertionError e) {
-      result.add(e);
+      throw e;
     }
     try {
       StartMarkAction.checkCleared();
     }
     catch (AssertionError e) {
-      result.add(e);
+      throw e;
     }
-
-    if (!result.isEmpty()) throw result;
   }
 
   protected void storeSettings() {

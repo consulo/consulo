@@ -624,7 +624,6 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
   }
 
   public static void checkEditorsReleased() throws Exception {
-    CompositeException result = new CompositeException();
     final Editor[] allEditors = EditorFactory.getInstance().getAllEditors();
     if (allEditors.length > 0) {
       for (Editor editor : allEditors) {
@@ -632,7 +631,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
           EditorFactoryImpl.throwNotReleasedError(editor);
         }
         catch (Throwable e) {
-          result.add(e);
+          throw e;
         }
         finally {
           EditorFactory.getInstance().releaseEditor(editor);
@@ -642,10 +641,9 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
         fail("Unreleased editors: " + allEditors.length);
       }
       catch (Throwable e) {
-        result.add(e);
+        throw e;
       }
     }
-    if (!result.isEmpty()) throw result;
   }
 
   @Override
