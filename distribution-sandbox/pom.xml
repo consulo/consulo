@@ -17,7 +17,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <sandbox.home>target/consulo-sandbox-${project.version}/Consulo/platform/build${build.number}</sandbox.home>
   </properties>
 
   <build>
@@ -43,37 +42,7 @@
         <artifactId>run-maven-plugin</artifactId>
         <version>2.0</version>
         <configuration>
-          <mainClass>com.intellij.idea.Main</mainClass>
-          <includeProjectDependencies>false</includeProjectDependencies>
-          <additionalClasspathElements>
-            <element>${sandbox.home}/lib/consulo-bootstrap-${project.version}.jar</element>
-            <element>${sandbox.home}/lib/consulo-extensions-${project.version}.jar</element>
-            <element>${sandbox.home}/lib/consulo-util-${project.version}.jar</element>
-            <element>${sandbox.home}/lib/consulo-util-rt-${project.version}.jar</element>
-            <element>${sandbox.home}/lib/jdom-${jdom.version}.jar</element>
-            <element>${sandbox.home}/lib/log4j-${log4j.version}.jar</element>
-            <element>${sandbox.home}/lib/trove4j-${trove4j.version}.jar</element>
-            <element>${sandbox.home}/lib/jna-${jna.version}.jar</element>
-            <element>${sandbox.home}/lib/jna-platform-${jna.version}.jar</element>
-          </additionalClasspathElements>
-          <systemProperties>
-            <property>
-              <key>idea.home.path</key>
-              <value>${sandbox.home}</value>
-            </property>
-            <property>
-              <key>consulo.in.sandbox</key>
-              <value>true</value>
-            </property>
-            <property>
-              <key>idea.config.path</key>
-              <value>${project.basedir}/../.consulo/sandbox/config</value>
-            </property>
-            <property>
-              <key>idea.system.path</key>
-              <value>${project.basedir}/../.consulo/sandbox/system</value>
-            </property>
-          </systemProperties>
+          <buildDirectory>${project.build.directory}/consulo-sandbox-${project.version}</buildDirectory>
         </configuration>
       </plugin>
     </plugins>
