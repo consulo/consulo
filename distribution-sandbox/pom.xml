@@ -39,7 +39,7 @@
       </plugin>
       <plugin>
         <groupId>consulo.maven</groupId>
-        <artifactId>run-maven-plugin</artifactId>
+        <artifactId>consulo-maven-plugin</artifactId>
         <version>2.0</version>
         <configuration>
           <buildDirectory>${project.build.directory}/consulo-sandbox-${project.version}</buildDirectory>
