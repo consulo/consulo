@@ -66,7 +66,7 @@ public class RepositoryHelper {
     builder.append(platformVersion);
     builder.append("&channel=");
     builder.append(channel);
-    builder.append("&pluginId=");
+    builder.append("&id=");
     builder.append(pluginId);
 
     if (!noTracking) {
