@@ -42,6 +42,7 @@ import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.LazyUiDisposable;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,8 +63,8 @@ import java.util.List;
 import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
 
 public class JBTabsImpl extends JComponent
-  implements JBTabs, PropertyChangeListener, TimerListener, DataProvider, PopupMenuListener, Disposable, JBTabsPresentation, Queryable,
-             QuickActionProvider {
+        implements JBTabs, PropertyChangeListener, TimerListener, DataProvider, PopupMenuListener, Disposable, JBTabsPresentation, Queryable,
+                   QuickActionProvider {
 
   public static final DataKey<JBTabsImpl> NAVIGATION_ACTIONS_KEY = DataKey.create("JBTabs");
   @NonNls
@@ -122,7 +123,8 @@ public class JBTabsImpl extends JComponent
   private boolean myPaintFocus;
 
   private boolean myHideTabs = false;
-  @Nullable private Project myProject;
+  @Nullable
+  private Project myProject;
 
   private boolean myRequestFocusOnLastFocusedComponent = false;
   private boolean myListenerAdded;
@@ -145,8 +147,10 @@ public class JBTabsImpl extends JComponent
 
   private final TabActionsAutoHideListener myTabActionsAutoHideListener = new TabActionsAutoHideListener();
   private IdeGlassPane myGlassPane;
-  @NonNls private static final String LAYOUT_DONE = "Layout.done";
-  @NonNls public static final String STRETCHED_BY_WIDTH = "Layout.stretchedByWidth";
+  @NonNls
+  private static final String LAYOUT_DONE = "Layout.done";
+  @NonNls
+  public static final String STRETCHED_BY_WIDTH = "Layout.stretchedByWidth";
 
   private TimedDeadzone.Length myTabActionsMouseDeadzone = TimedDeadzone.DEFAULT;
 
@@ -177,19 +181,35 @@ public class JBTabsImpl extends JComponent
   private boolean myAlwaysPaintSelectedTab;
   private int myFirstTabOffset;
 
+  @Deprecated
+  @DeprecationInfo("Use JBEditorTabs or TabbedPaneWrapper")
   public JBTabsImpl(@NotNull Project project) {
     this(project, project);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use JBEditorTabs or TabbedPaneWrapper")
   private JBTabsImpl(@NotNull Project project, @NotNull Disposable parent) {
     this(project, ActionManager.getInstance(), IdeFocusManager.getInstance(project), parent);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use JBEditorTabs or TabbedPaneWrapper")
   public JBTabsImpl(@Nullable Project project, IdeFocusManager focusManager, @NotNull Disposable parent) {
     this(project, ActionManager.getInstance(), focusManager, parent);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use JBEditorTabs or TabbedPaneWrapper")
   public JBTabsImpl(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @NotNull Disposable parent) {
+    this(project, actionManager, focusManager, parent, false);
+  }
+
+  protected JBTabsImpl(@Nullable Project project,
+                       ActionManager actionManager,
+                       IdeFocusManager focusManager,
+                       @NotNull Disposable parent,
+                       boolean onlyForChildren) {
     myProject = project;
     myActionManager = actionManager;
     myFocusManager = focusManager != null ? focusManager : getGlobalInstance();
@@ -750,9 +770,7 @@ public class JBTabsImpl extends JComponent
   }
 
   @NotNull
-  public JBTabs setPopupGroup(@NotNull final Getter<ActionGroup> popupGroup,
-                              @NotNull final String place,
-                              final boolean addNavigationGroup) {
+  public JBTabs setPopupGroup(@NotNull final Getter<ActionGroup> popupGroup, @NotNull final String place, final boolean addNavigationGroup) {
     myPopupGroup = popupGroup;
     myPopupPlace = place;
     myAddNavigationGroup = addNavigationGroup;
@@ -1365,8 +1383,7 @@ public class JBTabsImpl extends JComponent
 
       if (group != null && myTabs.myActionManager != null) {
         final String place = info.getPlace();
-        ActionToolbar toolbar =
-          myTabs.myActionManager.createActionToolbar(place != null ? place : ActionPlaces.UNKNOWN, group, myTabs.myHorizontalSide);
+        ActionToolbar toolbar = myTabs.myActionManager.createActionToolbar(place != null ? place : ActionPlaces.UNKNOWN, group, myTabs.myHorizontalSide);
         toolbar.setTargetComponent(info.getActionsContextComponent());
         final JComponent actionToolbar = toolbar.getComponent();
         add(actionToolbar, BorderLayout.CENTER);
@@ -1696,13 +1713,12 @@ public class JBTabsImpl extends JComponent
         g2d.fill(shapeInfo.fillPath.getShape());
       }
 
-      final Line2D.Float gradientLine =
-        shapeInfo.fillPath.transformLine(shapeInfo.fillPath.getX(), paintTopY, shapeInfo.fillPath.getX(), paintBottomY);
+      final Line2D.Float gradientLine = shapeInfo.fillPath.transformLine(shapeInfo.fillPath.getX(), paintTopY, shapeInfo.fillPath.getX(), paintBottomY);
 
 
-      g2d.setPaint(UIUtil.getGradientPaint((float)gradientLine.getX1(), (float)gradientLine.getY1(),
-                                           shapeInfo.fillPath.transformY1(shapeInfo.from, shapeInfo.to), (float)gradientLine.getX2(),
-                                           (float)gradientLine.getY2(), shapeInfo.fillPath.transformY1(shapeInfo.to, shapeInfo.from)));
+      g2d.setPaint(
+              UIUtil.getGradientPaint((float)gradientLine.getX1(), (float)gradientLine.getY1(), shapeInfo.fillPath.transformY1(shapeInfo.from, shapeInfo.to),
+                                      (float)gradientLine.getX2(), (float)gradientLine.getY2(), shapeInfo.fillPath.transformY1(shapeInfo.to, shapeInfo.from)));
       g2d.fill(shapeInfo.fillPath.getShape());
     }
 
@@ -1743,8 +1759,7 @@ public class JBTabsImpl extends JComponent
     boolean last = myLastLayoutPass.getNextFor(selected) == null;
 
     boolean leftEdge = !isSingleRow() && first && border.left == 0;
-    boolean rightEdge =
-      !isSingleRow() && last && Boolean.TRUE.equals(myInfo2Label.get(selected).getClientProperty(STRETCHED_BY_WIDTH)) && border.right == 0;
+    boolean rightEdge = !isSingleRow() && last && Boolean.TRUE.equals(myInfo2Label.get(selected).getClientProperty(STRETCHED_BY_WIDTH)) && border.right == 0;
 
     boolean isDraggedNow = selected != null && myDragHelper != null && selected.equals(myDragHelper.getDragSource());
 
@@ -1812,7 +1827,9 @@ public class JBTabsImpl extends JComponent
   }
 
   public static class ShapeInfo {
-    public ShapeInfo() {}
+    public ShapeInfo() {
+    }
+
     public ShapeTransform path;
     public ShapeTransform fillPath;
     public ShapeTransform labelPath;
@@ -1933,11 +1950,7 @@ public class JBTabsImpl extends JComponent
     myLastPaintedSelection = selected;
   }
 
-  private void paintNonSelected(final Graphics2D g2d,
-                                final TabInfo each,
-                                final boolean leftGhostExists,
-                                final boolean rightGhostExists,
-                                int row, int column) {
+  private void paintNonSelected(final Graphics2D g2d, final TabInfo each, final boolean leftGhostExists, final boolean rightGhostExists, int row, int column) {
     if (myDropInfo == each) return;
 
     final TabLabel label = myInfo2Label.get(each);
@@ -1959,8 +1972,7 @@ public class JBTabsImpl extends JComponent
         img = UIUtil.createImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D imgG2d = img.createGraphics();
         imgG2d.addRenderingHints(g2d.getRenderingHints());
-        doPaintInactive(imgG2d, leftGhostExists, label, new Rectangle(imageInsets, 0, label.getWidth(), label.getHeight()),
-                        rightGhostExists, row, column);
+        doPaintInactive(imgG2d, leftGhostExists, label, new Rectangle(imageInsets, 0, label.getWidth(), label.getHeight()), rightGhostExists, row, column);
         imgG2d.dispose();
       }
 
@@ -1995,7 +2007,9 @@ public class JBTabsImpl extends JComponent
                                  boolean leftGhostExists,
                                  TabLabel label,
                                  Rectangle effectiveBounds,
-                                 boolean rightGhostExists, int row, int column) {
+                                 boolean rightGhostExists,
+                                 int row,
+                                 int column) {
     int tabIndex = myVisibleInfos.indexOf(label.getInfo());
 
     final int arc = getArcSize();
@@ -2087,18 +2101,13 @@ public class JBTabsImpl extends JComponent
 
     // TODO
 
-    final Line2D.Float gradientLine =
-      shape.transformLine(0, topY, 0, topY + shape.deltaY((int)(shape.getHeight() / 1.5)));
+    final Line2D.Float gradientLine = shape.transformLine(0, topY, 0, topY + shape.deltaY((int)(shape.getHeight() / 1.5)));
 
     final Paint gp = UIUtil.isUnderDarcula()
-                     ? UIUtil.getGradientPaint(gradientLine.x1, gradientLine.y1,
-                                               shape.transformY1(backgroundColor, backgroundColor),
-                                               gradientLine.x2, gradientLine.y2,
-                                               shape.transformY1(backgroundColor, backgroundColor))
-                     : UIUtil.getGradientPaint(gradientLine.x1, gradientLine.y1,
-                                               shape.transformY1(backgroundColor.brighter().brighter(), backgroundColor),
-                                               gradientLine.x2, gradientLine.y2,
-                                               shape.transformY1(backgroundColor, backgroundColor.brighter().brighter()));
+                     ? UIUtil.getGradientPaint(gradientLine.x1, gradientLine.y1, shape.transformY1(backgroundColor, backgroundColor), gradientLine.x2,
+                                               gradientLine.y2, shape.transformY1(backgroundColor, backgroundColor))
+                     : UIUtil.getGradientPaint(gradientLine.x1, gradientLine.y1, shape.transformY1(backgroundColor.brighter().brighter(), backgroundColor),
+                                               gradientLine.x2, gradientLine.y2, shape.transformY1(backgroundColor, backgroundColor.brighter().brighter()));
 
     final Paint old = g2d.getPaint();
     g2d.setPaint(gp);
@@ -2106,8 +2115,7 @@ public class JBTabsImpl extends JComponent
     g2d.setPaint(old);
 
     g2d.setColor(topBlockColor);
-    g2d.draw(
-      shape.transformLine(leftX + shape.deltaX(arc + 1), topY + shape.deltaY(1), rightX - shape.deltaX(arc - 1), topY + shape.deltaY(1)));
+    g2d.draw(shape.transformLine(leftX + shape.deltaX(arc + 1), topY + shape.deltaY(1), rightX - shape.deltaX(arc - 1), topY + shape.deltaY(1)));
 
     if (!rightEdge) {
       g2d.setColor(rightBlockColor);
@@ -2135,8 +2143,7 @@ public class JBTabsImpl extends JComponent
 
     final int boundsX = shape.path.getX() + shape.path.deltaX(shape.insets.left);
 
-    final int boundsY =
-      isHideTabs() ? shape.path.getY() + shape.path.deltaY(shape.insets.top) : shape.labelPath.getMaxY() + shape.path.deltaY(1);
+    final int boundsY = isHideTabs() ? shape.path.getY() + shape.path.deltaY(shape.insets.top) : shape.labelPath.getMaxY() + shape.path.deltaY(1);
 
     final int boundsHeight = Math.abs(shape.path.getMaxY() - boundsY) - shape.insets.bottom - paintBorder.bottom;
     final int boundsWidth = Math.abs(shape.path.getMaxX() - (shape.insets.left + shape.insets.right));
@@ -2180,21 +2187,18 @@ public class JBTabsImpl extends JComponent
     g2d.setColor(borderColor);
 
     //bottom
-    g2d.fill(shaper.reset().doRect(boundsX, Math.abs(shape.path.getMaxY() - shape.insets.bottom - paintBorder.bottom), boundsWidth,
-                                   paintBorder.bottom).getShape());
+    g2d.fill(shaper.reset().doRect(boundsX, Math.abs(shape.path.getMaxY() - shape.insets.bottom - paintBorder.bottom), boundsWidth, paintBorder.bottom)
+                     .getShape());
 
     //left
     g2d.fill(shaper.reset().doRect(boundsX, boundsY, paintBorder.left, boundsHeight).getShape());
 
     //right
-    g2d.fill(shaper.reset()
-               .doRect(shape.path.getMaxX() - shape.insets.right - paintBorder.right, boundsY, paintBorder.right, boundsHeight).getShape());
+    g2d.fill(shaper.reset().doRect(shape.path.getMaxX() - shape.insets.right - paintBorder.right, boundsY, paintBorder.right, boundsHeight).getShape());
   }
 
   protected boolean isStealthModeEffective() {
-    return myStealthTabMode && getTabCount() == 1 &&
-           (isSideComponentVertical() || !isSideComponentOnTabs()) &&
-           getTabsPosition() == JBTabsPosition.top;
+    return myStealthTabMode && getTabCount() == 1 && (isSideComponentVertical() || !isSideComponentOnTabs()) && getTabsPosition() == JBTabsPosition.top;
   }
 
 
