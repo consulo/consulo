@@ -123,13 +123,13 @@
       </plugin>
       <plugin>
         <groupId>consulo.maven</groupId>
-        <artifactId>notnull-instrumenter-plugin</artifactId>
-        <version>0.7.0</version>
+        <artifactId>not-null-maven-plugin</artifactId>
+        <version>2.0</version>
         <executions>
           <execution>
             <goals>
               <goal>instrument</goal>
-              <goal>tests-instrument</goal>
+              <goal>test-instrument</goal>
             </goals>
           </execution>
         </executions>
