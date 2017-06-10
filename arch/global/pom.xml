@@ -123,7 +123,7 @@
       </plugin>
       <plugin>
         <groupId>consulo.maven</groupId>
-        <artifactId>not-null-maven-plugin</artifactId>
+        <artifactId>notnull-maven-plugin</artifactId>
         <version>2.0</version>
         <executions>
           <execution>
