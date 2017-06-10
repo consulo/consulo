@@ -82,7 +82,7 @@ public class JBEditorTabs extends JBTabsImpl {
   private JBEditorTabsPainter myTabPainter;
 
   public JBEditorTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @NotNull Disposable parent) {
-    super(project, actionManager, focusManager, parent);
+    super(project, actionManager, focusManager, parent, true);
   }
 
   @Override
