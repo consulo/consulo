@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.util;
+package consulo.ide.util;
 
 import com.intellij.util.ImageLoader;
 import gnu.trove.THashMap;
@@ -28,7 +28,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 6/7/17
  */
-class URLDictionatyLoader extends Dictionary<URL, Image> {
+public class URLDictionatyLoader extends Dictionary<URL, Image> {
   private Map<URL, Image> myImages = new THashMap<>();
 
   @Override
