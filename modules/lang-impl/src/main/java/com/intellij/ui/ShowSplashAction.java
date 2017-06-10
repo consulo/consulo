@@ -32,7 +32,7 @@ public class ShowSplashAction extends AnAction {
   @RequiredDispatchThread
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    final Splash splash = new Splash();
+    final Splash splash = new Splash(true);
 
     Future<?> task = ApplicationManager.getApplication().executeOnPooledThread((Runnable)() -> {
       for (int i = 0; i <= 100; i++) {

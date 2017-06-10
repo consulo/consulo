@@ -46,7 +46,11 @@ public class Splash extends JDialog implements StartupProgress {
 
   private final AnimatedLogoLabel myLabel;
 
-  public Splash() {
+  /**
+   * @param unstableScaling - cache scale value or always recalculate it.
+   *                        On start - scaling may changed, and will provide some artifacts after LafManager loading
+   */
+  public Splash(boolean unstableScaling) {
     super((Frame)null, false);
 
     setUndecorated(true);
@@ -55,7 +59,7 @@ public class Splash extends JDialog implements StartupProgress {
     }
     setFocusableWindowState(false);
 
-    myLabel = new AnimatedLogoLabel(14, true);
+    myLabel = new AnimatedLogoLabel(14, true, unstableScaling);
     myLabel.setForeground(SandboxUtil.isInsideSandbox() ? Color.WHITE : Color.BLACK);
 
     Container contentPane = getContentPane();

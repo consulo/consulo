@@ -383,7 +383,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @Override
   public void loadState(Element state) {
-    if (myProject.isInitialized()) {
+    if (!myProject.isInitialized()) {
       throw new IllegalArgumentException("Project is not initialized yet. Please do not call CompilerManager inside #initCompoment()");
     }
 

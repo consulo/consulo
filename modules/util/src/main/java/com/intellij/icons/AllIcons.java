@@ -681,8 +681,6 @@ public class AllIcons {
 
   }
 
-  public static final SwingImageRef Logo_welcomeScreen = IconLoader.getIcon("/Logo_welcomeScreen.png"); // 80x80
-  
   public static class Mac {
     public static final SwingImageRef AppIconOk512 = IconLoader.getIcon("/mac/appIconOk512.png"); // 55x55
     public static final SwingImageRef Text = IconLoader.getIcon("/mac/text.gif"); // 32x32

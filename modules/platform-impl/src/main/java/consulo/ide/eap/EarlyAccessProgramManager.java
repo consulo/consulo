@@ -15,7 +15,11 @@
  */
 package consulo.ide.eap;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import org.jdom.Element;
@@ -28,12 +32,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 17:11/15.10.13
  */
-@State(
-  name = "EarlyAccessProgramManager",
-  storages = {
-    @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")
-  }
-)
+@State(name = "EarlyAccessProgramManager", storages = @Storage("eap.xml"))
 public class EarlyAccessProgramManager implements PersistentStateComponent<Element> {
   @NotNull
   public static EarlyAccessProgramManager getInstance() {
@@ -44,8 +43,8 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
     return getInstance().getState(key);
   }
 
-  private Map<Class<? extends EarlyAccessProgramDescriptor>, Boolean> myStates =
-    new LinkedHashMap<Class<? extends EarlyAccessProgramDescriptor>, Boolean>();
+  private static final Logger LOGGER = Logger.getInstance(EarlyAccessProgramManager.class);
+  private Map<Class<? extends EarlyAccessProgramDescriptor>, Boolean> myStates = new LinkedHashMap<>();
 
   public EarlyAccessProgramManager() {
     for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
@@ -54,9 +53,12 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
   }
 
   public boolean getState(@NotNull Class<? extends EarlyAccessProgramDescriptor> key) {
-    Boolean val = myStates.get(key);
-    assert val != null;
-    return val;
+    Boolean value = myStates.get(key);
+    if (value == null) {
+      LOGGER.error("Descriptor is not registered: " + key.getName());
+      return false;
+    }
+    return value;
   }
 
   public void setState(Class<? extends EarlyAccessProgramDescriptor> key, boolean itemSelected) {
@@ -67,15 +69,15 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
   @Override
   public Element getState() {
     Element element = new Element("state");
-    for (Map.Entry<Class<? extends EarlyAccessProgramDescriptor>, Boolean> k : myStates.entrySet()) {
-      EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtension(k.getKey());
-      if(extension.getDefaultState() == k.getValue()) {
+    for (Map.Entry<Class<? extends EarlyAccessProgramDescriptor>, Boolean> entry : myStates.entrySet()) {
+      EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtension(entry.getKey());
+      if (extension.getDefaultState() == entry.getValue()) {
         continue;
       }
 
       Element child = new Element("state");
-      child.setAttribute("class", k.getKey().getName());
-      child.setAttribute("value", String.valueOf(k.getValue()));
+      child.setAttribute("class", entry.getKey().getName());
+      child.setAttribute("value", String.valueOf(entry.getValue()));
 
       element.addContent(child);
     }
@@ -90,7 +92,7 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
       String aClass = element.getAttributeValue("class");
 
       EarlyAccessProgramDescriptor descriptor = map.get(aClass);
-      if(descriptor == null) {
+      if (descriptor == null) {
         continue;
       }
 
@@ -101,7 +103,7 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
   }
 
   private static Map<String, EarlyAccessProgramDescriptor> descriptorToMap() {
-    Map<String, EarlyAccessProgramDescriptor> map = new HashMap<String, EarlyAccessProgramDescriptor>();
+    Map<String, EarlyAccessProgramDescriptor> map = new HashMap<>();
     for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
       map.put(descriptor.getClass().getName(), descriptor);
     }

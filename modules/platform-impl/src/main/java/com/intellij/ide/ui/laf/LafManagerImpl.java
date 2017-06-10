@@ -21,7 +21,9 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.ide.ui.UISettings;
+import com.intellij.ide.ui.laf.darcula.DarculaEditorTabsPainter;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
+import com.intellij.ide.ui.laf.intellij.DefaultEditorTabsPainter;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
 import com.intellij.notification.Notification;
@@ -55,11 +57,14 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.ComboBoxButtonUI;
+import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
 import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;
 import consulo.ide.ui.laf.intellij.ActionButtonUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
+import consulo.ui.GTKPlusUIUtil;
 import consulo.ui.laf.MacButtonlessScrollbarUI;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.jdom.Element;
@@ -92,10 +97,8 @@ import java.util.List;
  * @author Eugene Belyaev
  * @author Vladimir Kondratyev
  */
-@State(name = "LafManager", storages = {
-        @Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml", deprecated = true),
-        @Storage(file = StoragePathMacros.APP_CONFIG + "/laf.xml", roamingType = RoamingType.PER_PLATFORM)
-})
+@State(name = "LafManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml", deprecated = true),
+        @Storage(file = StoragePathMacros.APP_CONFIG + "/laf.xml", roamingType = RoamingType.PER_PLATFORM)})
 public final class LafManagerImpl extends LafManager implements ApplicationComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.LafManager");
 
@@ -154,6 +157,10 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       lafList.add(new ModernDarkLookAndFeelInfo());
     }
     lafList.add(new DarculaLookAndFeelInfo());
+
+    if (SystemInfo.isLinux && EarlyAccessProgramManager.is(GTKPlusEAPDescriptor.class)) {
+      lafList.add(new UIManager.LookAndFeelInfo("GTK+", "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"));
+    }
 
     myLaFs = lafList.toArray(new UIManager.LookAndFeelInfo[lafList.size()]);
 
@@ -442,6 +449,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   public void updateUI() {
     final UIDefaults uiDefaults = UIManager.getLookAndFeelDefaults();
 
+    GTKPlusUIUtil.updateUI();
+
     fixPopupWeight();
 
     fixGtkPopupStyle();
@@ -469,6 +478,18 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     patchOptionPaneIcons(uiDefaults);
 
     fixSeparatorColor(uiDefaults);
+
+    if (uiDefaults.get("ComboBoxButtonUI") == null) {
+      uiDefaults.put("ComboBoxButtonUI", ComboBoxButtonUI.class.getName());
+    }
+    if (uiDefaults.get("ActionButtonUI") == null) {
+      uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
+    }
+
+    if (uiDefaults.get("jbeditor.tabs.painter") == null) {
+      uiDefaults.put("jbeditor.tabs.painter",
+                     UIUtil.isUnderDarkBuildInLaf() ? DarculaEditorTabsPainter.class.getName() : DefaultEditorTabsPainter.class.getName());
+    }
 
     updateToolWindows();
     for (Frame frame : Frame.getFrames()) {

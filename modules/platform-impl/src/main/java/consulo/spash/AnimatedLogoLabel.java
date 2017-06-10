@@ -36,14 +36,26 @@ public class AnimatedLogoLabel extends JComponent {
   private static class MyComponentUI extends ComponentUI {
     private final int[][] myEmptyData = new int[43][7];
 
-    private MyComponentUI() {
+    private Dimension myFixedSizeScaled;
+    private Integer myLetterHeightScaled;
+
+    private MyComponentUI(AnimatedLogoLabel animatedLogoLabel, boolean unstableScaling) {
       for (int i = 0; i < ourOffsets.length; i++) {
         fillAtOffset(Alphabet.validCharacters, ' ', i, myEmptyData);
+      }
+
+      if (!unstableScaling) {
+        myFixedSizeScaled = getPreferredSize(animatedLogoLabel);
+        myLetterHeightScaled = JBUI.scale(animatedLogoLabel.myLetterHeight);
       }
     }
 
     @Override
     public Dimension getPreferredSize(JComponent c) {
+      if (myFixedSizeScaled != null) {
+        return myFixedSizeScaled;
+      }
+
       AnimatedLogoLabel logoLabel = (AnimatedLogoLabel)c;
       return new Dimension(JBUI.scale(logoLabel.myData.length * logoLabel.myLetterHeight), JBUI.scale(logoLabel.myData[0].length * logoLabel.myLetterHeight));
     }
@@ -62,7 +74,7 @@ public class AnimatedLogoLabel extends JComponent {
     public void paint(Graphics g, JComponent c) {
       AnimatedLogoLabel logoLabel = (AnimatedLogoLabel)c;
 
-      BufferedImage  image = UIUtil.createImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
+      BufferedImage image = UIUtil.createImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
       Graphics graphics = image.getGraphics();
       paint(graphics, logoLabel, myEmptyData, c.getBackground());
       paint(graphics, logoLabel, logoLabel.myData, c.getForeground());
@@ -79,7 +91,7 @@ public class AnimatedLogoLabel extends JComponent {
           int a = ints[x];
 
           if (a > 0) {
-            int size = JBUI.scale(c.myLetterHeight);
+            int size = myLetterHeightScaled != null ? myLetterHeightScaled : JBUI.scale(c.myLetterHeight);
             g.setColor(color);
             g.fillRect(y * size, x * size, size, size);
           }
@@ -105,7 +117,7 @@ public class AnimatedLogoLabel extends JComponent {
 
   private final Object lock = new Object();
 
-  public AnimatedLogoLabel(int letterHeightInPixels, boolean animated) {
+  public AnimatedLogoLabel(int letterHeightInPixels, boolean animated, boolean unstableScaling) {
     myLetterHeight = letterHeightInPixels;
     myAnimated = animated;
 
@@ -183,7 +195,7 @@ public class AnimatedLogoLabel extends JComponent {
       };
     }
 
-    updateUI();
+    setUI(new MyComponentUI(this, unstableScaling));
   }
 
   private void repaintAll() {
@@ -226,6 +238,5 @@ public class AnimatedLogoLabel extends JComponent {
 
   @Override
   public void updateUI() {
-    setUI(new MyComponentUI());
   }
 }

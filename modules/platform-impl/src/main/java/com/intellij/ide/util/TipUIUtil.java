@@ -43,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
+import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -94,7 +94,7 @@ public class TipUIUtil {
         return;
       }
 
-      StringBuffer text = new StringBuffer(ResourceUtil.loadText(url));
+      StringBuilder text = new StringBuilder(ResourceUtil.loadText(url));
       updateShortcuts(text);
       updateImages(text, tipLoader, browser);
       String replaced = text.toString().replace("&productName;", ApplicationNamesInfo.getInstance().getFullProductName());
@@ -137,7 +137,7 @@ public class TipUIUtil {
     }
   }
 
-  private static void updateImages(StringBuffer text, ClassLoader tipLoader, JEditorPane browser) {
+  private static void updateImages(StringBuilder text, ClassLoader tipLoader, JEditorPane browser) {
     final boolean dark = UIUtil.isUnderDarcula();
 //    if (!dark && !retina) {
 //      return;
@@ -153,20 +153,40 @@ public class TipUIUtil {
       final int srcIndex = img.indexOf("src=");
       final int endIndex = img.indexOf(".png", srcIndex);
       if (endIndex != -1) {
-        final String path = img.substring(srcIndex + 5, endIndex);
+        String path = img.substring(srcIndex + 5, endIndex);
         if (!path.endsWith("_dark") && !path.endsWith("@2x")) {
           boolean hidpi = JBUI.isPixHiDPI(comp);
-          String newPath = path + (hidpi ? "@2x" : "") + (dark ? "_dark" : "") + ".png";
-          URL url = ResourceUtil.getResource(tipLoader, "/tips/", newPath);
+          path += (hidpi ? "@2x" : "") + (dark ? "_dark" : "") + ".png";
+          URL url = ResourceUtil.getResource(tipLoader, "/tips/", path);
           if (url != null) {
-            resizeImageContainer(text, comp, index, end, hidpi, newPath, url);
-          }
-          else if (hidpi) {
-            String oldPath = path + ".png";
-            url = ResourceUtil.getResource(tipLoader, "/tips/", oldPath);
-            if (url != null) {
-              resizeImageContainer(text, comp, index, end, true, oldPath, url);
+            String newImgTag = "<img src=\"" + path + "\" ";
+            try {
+              BufferedImage image = ImageIO.read(url.openStream());
+              int w = image.getWidth();
+              int h = image.getHeight();
+              if (UIUtil.isJreHiDPI(comp)) {
+                // compensate JRE scale
+                float sysScale = JBUI.sysScale(comp);
+                w = (int)(w / sysScale);
+                h = (int)(h / sysScale);
+              }
+              else {
+                // compensate image scale
+                float imgScale = hidpi ? 2f : 1f;
+                w = (int)(w / imgScale);
+                h = (int)(h / imgScale);
+              }
+              // fit the user scale
+              w = (int)(JBUI.scale((float)w));
+              h = (int)(JBUI.scale((float)h));
+
+              newImgTag += "width=\"" + w + "\" height=\"" + h + "\"";
             }
+            catch (Exception ignore) {
+              newImgTag += "width=\"400\" height=\"200\"";
+            }
+            newImgTag += "/>";
+            text.replace(index, end + 1, newImgTag);
           }
         }
       }
@@ -174,38 +194,7 @@ public class TipUIUtil {
     }
   }
 
-  private static void resizeImageContainer(StringBuffer text, Component comp, final int index, final int end, boolean hidpi, String path, @NotNull URL url) {
-    String newImgTag = "<img src=\"" + path + "\" ";
-    try {
-      BufferedImage image = ImageIO.read(url.openStream());
-      int w = image.getWidth();
-      int h = image.getHeight();
-      if (UIUtil.isJreHiDPI(comp)) {
-        // compensate JRE scale
-        float sysScale = JBUI.sysScale(comp);
-        w = (int)(w / sysScale);
-        h = (int)(h / sysScale);
-      }
-      else {
-        // compensate image scale
-        float imgScale = hidpi ? 2f : 1f;
-        w = (int)(w / imgScale);
-        h = (int)(h / imgScale);
-      }
-      // fit the user scale
-      w = (int)(JBUI.scale((float)w));
-      h = (int)(JBUI.scale((float)h));
-
-      newImgTag += "width=\"" + w + "\" height=\"" + h + "\"";
-    }
-    catch (Exception ignore) {
-      newImgTag += "width=\"400\" height=\"200\"";
-    }
-    newImgTag += "/>";
-    text.replace(index, end + 1, newImgTag);
-  }
-
-  private static void updateShortcuts(StringBuffer text) {
+  private static void updateShortcuts(StringBuilder text) {
     int lastIndex = 0;
     while (true) {
       lastIndex = text.indexOf(SHORTCUT_ENTITY, lastIndex);
@@ -246,14 +235,18 @@ public class TipUIUtil {
 
   @NotNull
   public static JEditorPane createTipBrowser() {
-    JEditorPane browser = new JEditorPane();
+    JEditorPane browser = new JEditorPane() {
+      @Override
+      public void setDocument(Document document) {
+        super.setDocument(document);
+        document.putProperty("imageCache", new URLDictionatyLoader());
+      }
+    };
     browser.setEditable(false);
     browser.setBackground(UIUtil.getTextFieldBackground());
-    browser.addHyperlinkListener(new HyperlinkListener() {
-      public void hyperlinkUpdate(HyperlinkEvent e) {
-        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          BrowserUtil.browse(e.getURL());
-        }
+    browser.addHyperlinkListener(e -> {
+      if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+        BrowserUtil.browse(e.getURL());
       }
     });
     URL resource = ResourceUtil.getResource(TipUIUtil.class, "/tips/css/", UIUtil.isUnderDarcula() ? "tips_darcula.css" : "tips.css");
