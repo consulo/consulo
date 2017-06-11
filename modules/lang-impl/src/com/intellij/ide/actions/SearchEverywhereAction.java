@@ -1015,7 +1015,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
       super(false);
       getTextEditor().setOpaque(false);
       getTextEditor().putClientProperty("JTextField.Search.noBorderRing", Boolean.TRUE);
-      if (UIUtil.isUnderDarkBuildInLaf()) {
+      if (UIUtil.isUnderDarkTheme()) {
         getTextEditor().setBackground(Gray._45);
         getTextEditor().setForeground(Gray._240);
       }

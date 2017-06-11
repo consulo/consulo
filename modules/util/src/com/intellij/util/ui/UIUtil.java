@@ -1433,9 +1433,9 @@ public class UIUtil {
   }
 
   @Deprecated
-  @DeprecationInfo(value = "Use #isUnderDarkBuildInLaf", until = "2.0")
+  @DeprecationInfo(value = "Use #isUnderDarkTheme()", until = "2.0")
   public static boolean isUnderDarcula() {
-    return isUnderDarkBuildInLaf();
+    return isUnderDarkTheme();
   }
 
   public static boolean isUnderIntelliJLaF() {
@@ -1446,7 +1446,22 @@ public class UIUtil {
     return SystemInfo.isMac && isUnderIntelliJLaF();
   }
 
+  @Deprecated
+  @DeprecationInfo(value = "Use #isUnderDarkTheme()", until = "2.0")
   public static boolean isUnderDarkBuildInLaf() {
+    return isUnderDarkTheme();
+  }
+
+  public static boolean isUnderBuildInLaF() {
+    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
+    return lookAndFeel instanceof BuildInLookAndFeel;
+  }
+
+  public static boolean isUnderGTKLookAndFeel() {
+    return UIManager.getLookAndFeel().getName().contains("GTK");
+  }
+
+  public static boolean isUnderDarkTheme() {
     LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
     if (lookAndFeel instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)lookAndFeel).isDark()) {
       return true;
@@ -1457,13 +1472,13 @@ public class UIUtil {
     return false;
   }
 
-  public static boolean isUnderBuildInLaF() {
-    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-    return lookAndFeel instanceof BuildInLookAndFeel;
-  }
-
-  public static boolean isUnderGTKLookAndFeel() {
-    return UIManager.getLookAndFeel().getName().contains("GTK");
+  /**
+   * Enable & disable macOS dark title decoration. Works only on JetBrains JRE
+   *
+   * https://github.com/JetBrains/jdk8u_jdk/commit/83e6b1c2e67a192558f8882f663718d4bea0c8b0
+   */
+  public static void resetRootPaneAppearance(JRootPane rootPane) {
+    rootPane.putClientProperty("jetbrains.awt.windowDarkAppearance" , isUnderDarkTheme());
   }
 
   public static final Color GTK_AMBIANCE_TEXT_COLOR = new Color(223, 219, 210);
