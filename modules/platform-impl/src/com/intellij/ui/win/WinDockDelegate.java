@@ -45,7 +45,7 @@ public class WinDockDelegate implements SystemDock.Delegate {
     final AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
     RecentTasks.clear();
     String name = ApplicationNamesInfo.getInstance().getProductName().toLowerCase(Locale.US);
-    String exePath = PathManager.getDistributionDirectory() + File.separator + name + (SystemInfo.is64Bit ? "64" : "") + ".exe";
+    String exePath = PathManager.getAppHomeDirectory() + File.separator + name + (SystemInfo.is64Bit ? "64" : "") + ".exe";
     if(!new File(exePath).exists()) {
       throw new IllegalArgumentException("Executable is not exists");
     }

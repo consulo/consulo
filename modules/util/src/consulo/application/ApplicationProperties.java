@@ -15,6 +15,7 @@
  */
 package consulo.application;
 
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 public interface ApplicationProperties {
   @NotNull
   @NonNls
+  @Deprecated
+  @DeprecationInfo("Use CONSULO_IN_SANDBOX")
   String IDEA_IS_INTERNAL = "idea.is.internal";
 
   @NotNull
@@ -38,4 +41,22 @@ public interface ApplicationProperties {
   @NotNull
   @NonNls
   String CONSULO_AS_WEB_APP = "consulo.as.web.app";
+
+  /**
+   * Disable using external platform directory for platform updates
+   *
+   * @type boolean
+   */
+  @NotNull
+  @NonNls
+  String CONSULO_NO_EXTERNAL_PLATFORM = "consulo.no.external.platform";
+
+  /**
+   * Path to boot application home
+   *
+   * @type String
+   */
+  @NotNull
+  @NonNls
+  String CONSULO_APP_HOME_PATH = "consulo.app.home.path";
 }
