@@ -22,6 +22,7 @@ typedef JNIIMPORT jint(JNICALL *JNI_createJavaVM)(JavaVM **pvm, JNIEnv **env, vo
 WCHAR* moduleFilePath = NULL;
 WCHAR* propertiesFilePath = NULL;
 WCHAR* workingDirectoryPath = NULL;
+WCHAR* appHomePath = NULL;
 
 HINSTANCE hInst; // Current instance.
 char jvmPath[_MAX_PATH] = "";
@@ -357,6 +358,7 @@ void AddPredefinedVMOptions(std::vector<std::string>& vmOptionLines)
 {
 	vmOptionLines.push_back("-Didea.properties.file=" + EncodeWideACP(std::wstring(propertiesFilePath)));
 	vmOptionLines.push_back("-Didea.home.path=" + EncodeWideACP(std::wstring(workingDirectoryPath)));
+	vmOptionLines.push_back("-Dconsulo.app.home.path=" + EncodeWideACP(std::wstring(appHomePath)));
 }
 
 bool LoadVMOptions(WCHAR* targetVmOptionFile)
@@ -661,11 +663,32 @@ extern "C" int __declspec(dllexport) __cdecl launchConsulo(HINSTANCE hInstance,
 					   WCHAR* propertiesFile,
 					   WCHAR* vmOptionFile)
 {
+	int value = MessageBoxW(0, L"Major boot change. Please update Consulo build. Visit page on wiki https://github.com/consulo/consulo/wiki/Major-boot-changes", L"Consulo", MB_OKCANCEL);
+	if(value == IDOK)
+	{
+		ShellExecute(0, 0, L"https://github.com/consulo/consulo/wiki/Major-boot-changes", 0, 0, SW_SHOW);
+	}
+	return 0;
+}
+
+extern "C" int __declspec(dllexport) __cdecl launchConsulo2(HINSTANCE hInstance,
+                       HINSTANCE hPrevInstance,
+                       LPTSTR    lpCmdLine,
+                       int       nCmdShow,
+					   int argc,
+					   WCHAR** wargv,
+					   WCHAR* moduleFile,
+					   WCHAR* workingDirectory,
+					   WCHAR* propertiesFile,
+					   WCHAR* vmOptionFile,
+					   WCHAR* appHome)
+{
   UNREFERENCED_PARAMETER(hPrevInstance);
 
   moduleFilePath = moduleFile;
   workingDirectoryPath = workingDirectory;
   propertiesFilePath = propertiesFile;
+  appHomePath = appHome;
 
   hInst = hInstance;
 
