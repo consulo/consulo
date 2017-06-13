@@ -54,8 +54,7 @@ typedef int (__cdecl *launchConsulo)(
 					   WCHAR* moduleFile,
 					   WCHAR* workingDirectory,
 					   WCHAR* propertiesFile,
-					   WCHAR* vmOptionFile,
-					   WCHAR* appHomePath);
+					   WCHAR* vmOptionFile);
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                        HINSTANCE hPrevInstance,
@@ -69,8 +68,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	
 	if (INVALID_HANDLE_VALUE == hFind) 
 	{
-		MessageBox(NULL, L"'platform' directory not found. Please visit https://consulo.io/trouble.html", L"Consulo", MB_OK);
-		ShellExecute(0, 0, L"https://consulo.io/trouble.htm", 0, 0, SW_SHOW);
+		MessageBox(NULL, L"'platform' directory not found", L"Consulo", MB_OK);
 		return 1;
 	} 
 	
@@ -134,7 +132,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		return 5;
 	}
 
-	launchConsulo func = (launchConsulo)GetProcAddress(libraryHandle, "launchConsulo2");
+	launchConsulo func = (launchConsulo)GetProcAddress(libraryHandle, "launchConsulo");
 	if(!func)
 	{
 		MessageBox(NULL, L"'launchConsulo' function is not found", L"Consulo", MB_OK);
@@ -144,7 +142,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	WCHAR* vmOptionFileW = (WCHAR*)vmOptionsFile.c_str();
 	WCHAR* workDirectoryW = (WCHAR*)workDirectory.c_str();
 	WCHAR* propertiesFileW = (WCHAR*)propertiesFile.c_str();
-	WCHAR* appHomePath = (WCHAR*)getParentPath().c_str(); 
 
-	return func(hInstance, hPrevInstance, lpCmdLine, nCmdShow, __argc, __wargv, buffer, workDirectoryW, propertiesFileW, vmOptionFileW, appHomePath);
+	return func(hInstance, hPrevInstance, lpCmdLine, nCmdShow, __argc, __wargv, buffer, workDirectoryW, propertiesFileW, vmOptionFileW);
 }
