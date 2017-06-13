@@ -45,11 +45,11 @@ public class WinDockDelegate implements SystemDock.Delegate {
     final AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
     RecentTasks.clear();
     String name = ApplicationNamesInfo.getInstance().getProductName().toLowerCase(Locale.US);
-    String exePath = PathManager.getAppHomeDirectory() + File.separator + name + (SystemInfo.is64Bit ? "64" : "") + ".exe";
-    if(!new File(exePath).exists()) {
-      throw new IllegalArgumentException("Executable is not exists");
+    File exePath = new File(PathManager.getAppHomeDirectory(), name + (SystemInfo.is64Bit ? "64" : "") + ".exe");
+    if(!exePath.exists()) {
+      throw new IllegalArgumentException("Executable is not exists. Path: " + exePath.getPath());
     }
-    String launcher = RecentTasks.getShortenPath(exePath);
+    String launcher = RecentTasks.getShortenPath(exePath.getPath());
     Task[] tasks = new Task[recentProjectActions.length];
     for (int i = 0; i < recentProjectActions.length; i++) {
       ReopenProjectAction rpa = (ReopenProjectAction)recentProjectActions[i];
