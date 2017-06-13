@@ -128,7 +128,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
   }
 
   private static File prepare() throws IOException {
-    File distributionDirectory = PathManager.getAppHomeDirectory();
+    File distributionDirectory = PathManager.getDistributionDirectory();
     String name = ApplicationNamesInfo.getInstance().getFullProductName();
 
     final String iconPath = AppUIUtil.findIcon(distributionDirectory.getPath());

@@ -114,7 +114,7 @@ public class Restarter {
     final String[] argv = argv_ptr.getWideStringArray(0, argc.getValue());
     kernel32.LocalFree(argv_ptr);
 
-    doScheduleRestart(new File(PathManager.getBinPath(), "restarter.exe"), PathManager.getAppHomeDirectory(), commands -> {
+    doScheduleRestart(new File(PathManager.getBinPath(), "restarter.exe"), PathManager.getDistributionDirectory(), commands -> {
       Collections.addAll(commands, String.valueOf(pid), String.valueOf(beforeRestart.length));
       Collections.addAll(commands, beforeRestart);
       Collections.addAll(commands, String.valueOf(argc.getValue()));
@@ -132,7 +132,7 @@ public class Restarter {
   }
 
   private static void restartOnMac(@NotNull final String... beforeRestart) throws IOException {
-    File distributionDirectory = PathManager.getAppHomeDirectory();
+    File distributionDirectory = PathManager.getDistributionDirectory();
 
     File appDirectory = distributionDirectory.getParentFile();
     if (!StringUtil.endsWithIgnoreCase(appDirectory.getName(), ".app")) {

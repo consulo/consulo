@@ -59,7 +59,7 @@ class LibNotifyWrapper implements SystemNotificationsImpl.Notifier {
       throw new IllegalStateException("notify_init failed");
     }
 
-    String icon = AppUIUtil.findIcon(PathManager.getAppHomeDirectory().getPath());
+    String icon = AppUIUtil.findIcon(PathManager.getDistributionDirectory().getPath());
     myIcon = icon != null ? icon : "dialog-information";
 
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();

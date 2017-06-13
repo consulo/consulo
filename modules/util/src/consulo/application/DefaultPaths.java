@@ -94,12 +94,6 @@ public abstract class DefaultPaths {
 
     @NotNull
     @Override
-    public File getExternalPlatformDirectory(@NotNull File defaultPath) {
-      return new File(SystemProperties.getUserHome(), "Library/Application Support/Consulo Platform");
-    }
-
-    @NotNull
-    @Override
     protected String getLocalSettingsDirNoPrefix() {
       return SystemProperties.getUserHome() + "/Library/Caches";
     }
@@ -124,12 +118,6 @@ public abstract class DefaultPaths {
   }
 
   private static class Windows extends SimpleDefaultPaths {
-    @NotNull
-    @Override
-    public File getExternalPlatformDirectory(@NotNull File defaultPath) {
-      return new File(Shell32Util.getFolderPath(ShlObj.CSIDL_APPDATA), "Consulo Platform");
-    }
-
     @NotNull
     @Override
     protected String getDocumentsDirNoPrefix() {
@@ -195,13 +183,5 @@ public abstract class DefaultPaths {
   @NotNull
   public String getRoamingPluginsDir() {
     return getRoamingSettingsDir() + File.separatorChar + "plugins";
-  }
-
-  /**
-   * @return external platform directory, on each updates directory will be install in it, or inside distribution directory if null
-   */
-  @NotNull
-  public File getExternalPlatformDirectory(@NotNull File defaultPath) {
-    return defaultPath;
   }
 }
