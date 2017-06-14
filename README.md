@@ -26,3 +26,12 @@ To run the project, use the "Consulo" shared run configuration.
 * [Download](https://github.com/consulo/consulo/wiki/Downloads)
 * [Issues](https://github.com/consulo/consulo/issues)
 * [Forum](https://discuss.consulo.io/)
+
+
+## Tools
+
+ *  [YourKit Java Profiler](https://www.yourkit.com/java/profiler) with open source license provided by [YourKit](https://www.yourkit.com/) 
+    
+    ![](https://www.yourkit.com/images/yklogo.png)
+    
+    YourKit supports open source projects with its full-featured  [YourKit Java Profiler](https://www.yourkit.com/java/profiler/) and [YourKit .NET Profiler](https://www.yourkit.com/.net/profiler/)
