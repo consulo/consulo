@@ -19,7 +19,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.TableUtil;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Function;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.TextTransferable;
 import com.intellij.xml.util.XmlStringUtil;
@@ -31,11 +30,8 @@ import javax.swing.table.TableColumn;
 import java.awt.datatransfer.Transferable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: stathik
- * Date: Dec 11, 2003
- * Time: 4:19:20 PM
- * To change this template use Options | File Templates.
+ * @author stathik
+ * @since 4:19:20 PM Dec 11, 2003
  */
 public class PluginTable extends JBTable {
   public PluginTable(final PluginTableModel model) {
@@ -53,25 +49,14 @@ public class PluginTable extends JBTable {
 
     setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     setShowGrid(false);
-    setStriped(true);
     setTransferHandler(new TransferHandler() {
       @Nullable
       @Override
       protected Transferable createTransferable(JComponent c) {
         final IdeaPluginDescriptor[] selectedValues = getSelectedObjects();
         if (selectedValues == null) return null;
-        final String text = StringUtil.join(selectedValues, new Function<IdeaPluginDescriptor, String>() {
-          @Override
-          public String fun(IdeaPluginDescriptor descriptor) {
-            return descriptor.getName();
-          }
-        }, ", ");
-        final String htmlText = "<body>\n<ul>\n" + StringUtil.join(selectedValues, new Function<IdeaPluginDescriptor, String>() {
-          @Override
-          public String fun(IdeaPluginDescriptor descriptor) {
-            return descriptor.getName();
-          }
-        }, "</li>\n<li>") + "</ul>\n</body>\n";
+        final String text = StringUtil.join(selectedValues, IdeaPluginDescriptor::getName, ", ");
+        final String htmlText = "<body>\n<ul>\n" + StringUtil.join(selectedValues, IdeaPluginDescriptor::getName, "</li>\n<li>") + "</ul>\n</body>\n";
         return new TextTransferable(XmlStringUtil.wrapInHtml(htmlText), text);
       }
 
@@ -80,6 +65,7 @@ public class PluginTable extends JBTable {
         return COPY;
       }
     });
+
     if (model.getColumnCount() > 1) {
       setColumnWidth(1, new JCheckBox().getPreferredSize().width + 4);
     }
@@ -119,9 +105,9 @@ public class PluginTable extends JBTable {
   public void select(IdeaPluginDescriptor... descriptors) {
     PluginTableModel tableModel = (PluginTableModel)getModel();
     getSelectionModel().clearSelection();
-    for (int i=0; i<tableModel.getRowCount();i++) {
+    for (int i = 0; i < tableModel.getRowCount(); i++) {
       IdeaPluginDescriptor descriptorAt = tableModel.getObjectAt(i);
-      if (ArrayUtil.find(descriptors,descriptorAt) != -1) {
+      if (ArrayUtil.find(descriptors, descriptorAt) != -1) {
         final int row = convertRowIndexToView(i);
         getSelectionModel().addSelectionInterval(row, row);
       }

@@ -431,6 +431,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     RIGHT_HORIZONTAL_SPLIT = value;
   }
 
+  public float getFontSize() {
+    return FONT_SIZE;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

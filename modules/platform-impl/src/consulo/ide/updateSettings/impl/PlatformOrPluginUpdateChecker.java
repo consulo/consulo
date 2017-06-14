@@ -233,7 +233,7 @@ public class PlatformOrPluginUpdateChecker {
     }
 
     final PluginManagerUISettings updateSettings = PluginManagerUISettings.getInstance();
-    updateSettings.myOutdatedPlugins.clear();
+    updateSettings.getOutdatedPlugins().clear();
     if (!ourPlugins.isEmpty()) {
       try {
         for (final Map.Entry<PluginId, IdeaPluginDescriptor> entry : ourPlugins.entrySet()) {
@@ -246,7 +246,7 @@ public class PlatformOrPluginUpdateChecker {
           }
 
           if (StringUtil.compareVersionNumbers(filtered.getVersion(), entry.getValue().getVersion()) > 0) {
-            updateSettings.myOutdatedPlugins.add(pluginId.toString());
+            updateSettings.getOutdatedPlugins().add(pluginId.toString());
 
             processDependencies(filtered, targets, remotePlugins);
 

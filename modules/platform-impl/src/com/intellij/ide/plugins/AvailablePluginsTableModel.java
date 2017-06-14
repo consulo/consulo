@@ -36,7 +36,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
 
   public static final String ALL = "All";
   private String myCategory = ALL;
-  private TreeSet<String> myAvailableCategories = new TreeSet<String>();
+  private TreeSet<String> myAvailableCategories = new TreeSet<>();
 
   protected static final String STATUS = "Status";
 
@@ -50,7 +50,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
       new PluginManagerColumnInfo(PluginManagerColumnInfo.COLUMN_CATEGORY, this)*/};
 
     setSortKey(new RowSorter.SortKey(getNameColumn(), SortOrder.ASCENDING));
-    view = new ArrayList<IdeaPluginDescriptor>();
+    view = new ArrayList<>();
   }
 
   public String getCategory() {

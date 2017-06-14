@@ -16,8 +16,10 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.ide.ui.SplitterProportionsDataImpl;
-import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.ui.SplitterProportionsData;
 import com.intellij.openapi.util.JDOMExternalizableStringList;
@@ -31,15 +33,8 @@ import javax.swing.*;
 /**
  * @author yole
  */
-@State(
-        name = "PluginManagerConfigurable",
-        storages = {
-                @Storage(
-                        file = StoragePathMacros.APP_CONFIG + "/plugin_ui.xml")
-        }
-)
+@State(name = "PluginManagerConfigurable", storages = @Storage("plugin_ui.xml"))
 public class PluginManagerUISettings implements PersistentStateComponent<Element>, PerformInBackgroundOption {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.plugins.PluginManagerUISettings");
   private static final SkipDefaultValuesSerializationFilters FILTERS = new SkipDefaultValuesSerializationFilters();
 
   public int AVAILABLE_SORT_COLUMN_ORDER = SortOrder.ASCENDING.ordinal();
@@ -48,8 +43,8 @@ public class PluginManagerUISettings implements PersistentStateComponent<Element
   public boolean AVAILABLE_SORT_BY_STATUS = false;
   public boolean INSTALLED_SORT_BY_STATUS = false;
   public boolean UPDATE_IN_BACKGROUND = false;
-  public JDOMExternalizableStringList myOutdatedPlugins = new JDOMExternalizableStringList();
 
+  private JDOMExternalizableStringList myOutdatedPlugins = new JDOMExternalizableStringList();
   private JDOMExternalizableStringList myInstalledPlugins = new JDOMExternalizableStringList();
 
   @NonNls private static final String AVAILABLE_PROPORTIONS = "available-proportions";
@@ -59,6 +54,10 @@ public class PluginManagerUISettings implements PersistentStateComponent<Element
 
   public JDOMExternalizableStringList getInstalledPlugins() {
     return myInstalledPlugins;
+  }
+
+  public JDOMExternalizableStringList getOutdatedPlugins() {
+    return myOutdatedPlugins;
   }
 
   public static PluginManagerUISettings getInstance() {
