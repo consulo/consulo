@@ -30,7 +30,7 @@ To run the project, use the "Consulo" shared run configuration.
 
 ## Tools
 
- *  [YourKit Java Profiler](https://www.yourkit.com/java/profiler) with opensource license provded by [YourKit](https://www.yourkit.com/) 
+ *  [YourKit Java Profiler](https://www.yourkit.com/java/profiler) with open source license provided by [YourKit](https://www.yourkit.com/) 
     
     ![](https://www.yourkit.com/images/yklogo.png)
     
