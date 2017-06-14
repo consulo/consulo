@@ -49,7 +49,7 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
       return UpdateChannel.nightly;
     }
 
-    File file = PathManager.getDistributionDirectory();
+    File file = PathManager.getAppHomeDirectory();
     for (UpdateChannel channel : UpdateChannel.values()) {
       if (new File(file, "." + channel.name()).exists()) {
         return channel;

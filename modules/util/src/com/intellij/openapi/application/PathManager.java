@@ -20,10 +20,10 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.SystemProperties;
 import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
+import consulo.application.ApplicationProperties;
 import consulo.application.DefaultPaths;
 import consulo.util.SandboxUtil;
 import gnu.trove.THashSet;
@@ -50,7 +50,6 @@ public class PathManager {
   public static final String PROPERTY_PLUGINS_PATH = "idea.plugins.path";
   public static final String PROPERTY_HOME_PATH = "idea.home.path";
   public static final String PROPERTY_LOG_PATH = "idea.log.path";
-  public static final String MAC_APP_HOME_PATH = "consulo.mac.app.home.path";
 
   private static final String PLATFORM_FOLDER = "platform";
   private static final String LIB_FOLDER = "lib";
@@ -65,8 +64,9 @@ public class PathManager {
   private static String ourPluginsPath;
   private static String ourLogPath;
 
-  // IDE installation paths
-
+  /**
+   * @return home path of platform (in most cases path is $APP_HOME_PATH$/platform/$HOME_PATH$)
+   */
   @NotNull
   public static String getHomePath() {
     if (ourHomePath != null) return ourHomePath;
@@ -100,17 +100,23 @@ public class PathManager {
    */
   @NotNull
   public static File getExternalPlatformDirectory() {
-    if (SystemInfo.isMac && !SandboxUtil.isInsideSandbox()) {
-      return new File(SystemProperties.getUserHome(), "Library/Application Support/Consulo Platform");
+    File defaultPath = new File(getAppHomeDirectory(), PLATFORM_FOLDER);
+
+    // force platform inside distribution directory
+    if (Boolean.getBoolean(ApplicationProperties.CONSULO_NO_EXTERNAL_PLATFORM) || SandboxUtil.isInsideSandbox()) {
+      return defaultPath;
     }
-    return new File(getDistributionDirectory(), PLATFORM_FOLDER);
+    return DefaultPaths.getInstance().getExternalPlatformDirectory(defaultPath);
   }
 
+  /**
+   * @return app home, equal IDE installation path
+   */
   @NotNull
-  public static File getDistributionDirectory() {
-    String macAppHomePath = System.getProperty(MAC_APP_HOME_PATH);
-    if (macAppHomePath != null) {
-      return new File(macAppHomePath, "Contents");
+  public static File getAppHomeDirectory() {
+    String appHomePath = System.getProperty(ApplicationProperties.CONSULO_APP_HOME_PATH);
+    if (appHomePath != null) {
+      return new File(getAbsolutePath(trimPathQuotes(appHomePath)));
     }
 
     File homeDir = new File(getHomePath());
@@ -314,8 +320,7 @@ public class PathManager {
 
     if (propFile != null) {
       try {
-        InputStream fis = new BufferedInputStream(new FileInputStream(propFile));
-        try {
+        try (InputStream fis = new BufferedInputStream(new FileInputStream(propFile))) {
           final PropertyResourceBundle bundle = new PropertyResourceBundle(fis);
           final Enumeration keys = bundle.getKeys();
           String home = (String)bundle.handleGetObject("idea.home");
@@ -330,9 +335,6 @@ public class PathManager {
               sysProperties.setProperty(key, value);
             }
           }
-        }
-        finally {
-          fis.close();
         }
       }
       catch (IOException e) {
