@@ -22,7 +22,6 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.ui.SplitterProportionsData;
-import com.intellij.openapi.util.JDOMExternalizableStringList;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
@@ -44,21 +43,11 @@ public class PluginManagerUISettings implements PersistentStateComponent<Element
   public boolean INSTALLED_SORT_BY_STATUS = false;
   public boolean UPDATE_IN_BACKGROUND = false;
 
-  private JDOMExternalizableStringList myOutdatedPlugins = new JDOMExternalizableStringList();
-  private JDOMExternalizableStringList myInstalledPlugins = new JDOMExternalizableStringList();
-
-  @NonNls private static final String AVAILABLE_PROPORTIONS = "available-proportions";
+  @NonNls
+  private static final String AVAILABLE_PROPORTIONS = "available-proportions";
 
   private final SplitterProportionsData mySplitterProportionsData = new SplitterProportionsDataImpl();
   private final SplitterProportionsData myAvailableSplitterProportionsData = new SplitterProportionsDataImpl();
-
-  public JDOMExternalizableStringList getInstalledPlugins() {
-    return myInstalledPlugins;
-  }
-
-  public JDOMExternalizableStringList getOutdatedPlugins() {
-    return myOutdatedPlugins;
-  }
 
   public static PluginManagerUISettings getInstance() {
     return ServiceManager.getService(PluginManagerUISettings.class);

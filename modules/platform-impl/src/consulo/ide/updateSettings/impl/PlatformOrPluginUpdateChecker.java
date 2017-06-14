@@ -39,6 +39,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
 import org.jetbrains.annotations.NotNull;
@@ -232,8 +233,8 @@ public class PlatformOrPluginUpdateChecker {
       }
     }
 
-    final PluginManagerUISettings updateSettings = PluginManagerUISettings.getInstance();
-    updateSettings.getOutdatedPlugins().clear();
+    final InstalledPluginsState state = InstalledPluginsState.getInstance();
+    state.getOutdatedPlugins().clear();
     if (!ourPlugins.isEmpty()) {
       try {
         for (final Map.Entry<PluginId, IdeaPluginDescriptor> entry : ourPlugins.entrySet()) {
@@ -246,7 +247,7 @@ public class PlatformOrPluginUpdateChecker {
           }
 
           if (StringUtil.compareVersionNumbers(filtered.getVersion(), entry.getValue().getVersion()) > 0) {
-            updateSettings.getOutdatedPlugins().add(pluginId.toString());
+            state.getOutdatedPlugins().add(pluginId);
 
             processDependencies(filtered, targets, remotePlugins);
 

@@ -30,6 +30,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.ide.updateSettings.impl.PluginListDialog;
 import org.jetbrains.annotations.NotNull;
@@ -259,12 +260,12 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
   private void installedPluginsToModel(Collection<IdeaPluginDescriptor> list) {
     for (IdeaPluginDescriptor pluginNode : list) {
-      final String idString = pluginNode.getPluginId().getIdString();
-      final PluginManagerUISettings pluginManagerUISettings = PluginManagerUISettings.getInstance();
-      if (!pluginManagerUISettings.getInstalledPlugins().contains(idString)) {
-        pluginManagerUISettings.getInstalledPlugins().add(idString);
+      final PluginId idString = pluginNode.getPluginId();
+      final InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
+      if (!pluginsState.getInstalledPlugins().contains(idString)) {
+        pluginsState.getInstalledPlugins().add(idString);
       }
-      pluginManagerUISettings.getOutdatedPlugins().remove(idString);
+      pluginsState.getOutdatedPlugins().remove(idString);
     }
 
     final InstalledPluginsTableModel installedPluginsModel = (InstalledPluginsTableModel)myInstalledPluginPanel.getPluginsModel();

@@ -17,13 +17,13 @@ package com.intellij.ide.plugins;
 
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.JDOMExternalizableStringList;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.BooleanTableCellEditor;
 import com.intellij.ui.BooleanTableCellRenderer;
 import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.ColumnInfo;
 import consulo.Platform;
+import consulo.ide.plugins.InstalledPluginsState;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -229,17 +229,15 @@ public class InstalledPluginsTableModel extends PluginTableModel {
   private static void updateExistingPluginInfo(IdeaPluginDescriptor descr, IdeaPluginDescriptor existing) {
     int state = StringUtil.compareVersionNumbers(descr.getVersion(), existing.getVersion());
     final PluginId pluginId = existing.getPluginId();
-    final String idString = pluginId.getIdString();
-    final JDOMExternalizableStringList installedPlugins = PluginManagerUISettings.getInstance().getInstalledPlugins();
-    if (!installedPlugins.contains(idString) && !((IdeaPluginDescriptorImpl)existing).isDeleted()) {
-      installedPlugins.add(idString);
+    final Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
+    if (!installedPlugins.contains(pluginId) && !((IdeaPluginDescriptorImpl)existing).isDeleted()) {
+      installedPlugins.add(pluginId);
     }
-    final PluginManagerUISettings updateSettings = PluginManagerUISettings.getInstance();
+    final InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
     if (state > 0 && !PluginManager.isIncompatible(descr) && !updatedPlugins.contains(descr.getPluginId())) {
       NewVersions2Plugins.put(pluginId, 1);
-      if (!updateSettings.getOutdatedPlugins().contains(idString)) {
-        updateSettings.getOutdatedPlugins().add(idString);
-      }
+
+      pluginsState.getOutdatedPlugins().add(pluginId);
 
       final IdeaPluginDescriptorImpl plugin = (IdeaPluginDescriptorImpl)existing;
       plugin.setDownloadsCount(descr.getDownloads());
@@ -250,7 +248,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
 
     }
     else {
-      updateSettings.getOutdatedPlugins().remove(idString);
+      pluginsState.getOutdatedPlugins().remove(pluginId);
       if (NewVersions2Plugins.remove(pluginId) != null) {
         updatedPlugins.add(pluginId);
       }
@@ -283,7 +281,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
 
   public static boolean hasNewerVersion(PluginId descr) {
     return !wasUpdated(descr) &&
-           (NewVersions2Plugins.containsKey(descr) || PluginManagerUISettings.getInstance().getOutdatedPlugins().contains(descr.getIdString()));
+           (NewVersions2Plugins.containsKey(descr) || InstalledPluginsState.getInstance().getOutdatedPlugins().contains(descr));
   }
 
   public static boolean wasUpdated(PluginId descr) {

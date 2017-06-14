@@ -23,6 +23,7 @@ import com.intellij.ui.LightColors;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.UIUtil;
+import consulo.ide.plugins.InstalledPluginsState;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -119,47 +120,46 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
     if (PluginManager.isPluginInstalled(pluginId)) {
       return false;
     }
-    return PluginManagerUISettings.getInstance().getInstalledPlugins().contains(pluginId.getIdString());
+    return InstalledPluginsState.getInstance().getInstalledPlugins().contains(pluginId);
   }
 
+  @Override
   public Comparator<IdeaPluginDescriptor> getComparator() {
     final Comparator<IdeaPluginDescriptor> comparator = getColumnComparator();
     if (isSortByStatus()) {
       final RowSorter.SortKey defaultSortKey = myModel.getDefaultSortKey();
       final int up = defaultSortKey != null && defaultSortKey.getSortOrder() == SortOrder.ASCENDING ? -1 : 1;
-      return new Comparator<IdeaPluginDescriptor>() {
-        public int compare(IdeaPluginDescriptor o1, IdeaPluginDescriptor o2) {
-          if (o1 instanceof PluginNode && o2 instanceof PluginNode) {
-            final int status1 = ((PluginNode)o1).getStatus();
-            final int status2 = ((PluginNode)o2).getStatus();
-            if (isDownloaded((PluginNode)o1)){
-              if (!isDownloaded((PluginNode)o2)) return up;
-              return comparator.compare(o1, o2);
-            }
-            if (isDownloaded((PluginNode)o2)) return -up;
+      return (o1, o2) -> {
+        if (o1 instanceof PluginNode && o2 instanceof PluginNode) {
+          final int status1 = ((PluginNode)o1).getStatus();
+          final int status2 = ((PluginNode)o2).getStatus();
+          if (isDownloaded((PluginNode)o1)){
+            if (!isDownloaded((PluginNode)o2)) return up;
+            return comparator.compare(o1, o2);
+          }
+          if (isDownloaded((PluginNode)o2)) return -up;
 
-            if (status1 == PluginNode.STATUS_DELETED) {
-              if (status2 != PluginNode.STATUS_DELETED) return up;
-              return comparator.compare(o1, o2);
-            }
-            if (status2 == PluginNode.STATUS_DELETED) return -up;
+          if (status1 == PluginNode.STATUS_DELETED) {
+            if (status2 != PluginNode.STATUS_DELETED) return up;
+            return comparator.compare(o1, o2);
+          }
+          if (status2 == PluginNode.STATUS_DELETED) return -up;
 
-            if (status1 == PluginNode.STATUS_INSTALLED) {
-              if (status2 !=PluginNode.STATUS_INSTALLED) return up;
-              final boolean hasNewerVersion1 = InstalledPluginsTableModel.hasNewerVersion(o1.getPluginId());
-              final boolean hasNewerVersion2 = InstalledPluginsTableModel.hasNewerVersion(o2.getPluginId());
-              if (hasNewerVersion1 != hasNewerVersion2) {
-                if (hasNewerVersion1) return up;
-                return -up;
-              }
-              return comparator.compare(o1, o2);
-            }
-            if (status2 == PluginNode.STATUS_INSTALLED) {
+          if (status1 == PluginNode.STATUS_INSTALLED) {
+            if (status2 !=PluginNode.STATUS_INSTALLED) return up;
+            final boolean hasNewerVersion1 = InstalledPluginsTableModel.hasNewerVersion(o1.getPluginId());
+            final boolean hasNewerVersion2 = InstalledPluginsTableModel.hasNewerVersion(o2.getPluginId());
+            if (hasNewerVersion1 != hasNewerVersion2) {
+              if (hasNewerVersion1) return up;
               return -up;
             }
+            return comparator.compare(o1, o2);
           }
-          return comparator.compare(o1, o2);
+          if (status2 == PluginNode.STATUS_INSTALLED) {
+            return -up;
+          }
         }
+        return comparator.compare(o1, o2);
       };
     }
 
@@ -168,58 +168,42 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
 
   protected Comparator<IdeaPluginDescriptor> getColumnComparator() {
     if (isSortByName()) {
-      return new Comparator<IdeaPluginDescriptor>() {
-        public int compare(IdeaPluginDescriptor o1, IdeaPluginDescriptor o2) {
-          return StringUtil.compare(o1.getName(), o2.getName(), true);
-        }
-      };
+      return (o1, o2) -> StringUtil.compare(o1.getName(), o2.getName(), true);
     }
     if (columnIdx == COLUMN_RATE) {
-      return new Comparator<IdeaPluginDescriptor>() {
-        @Override
-        public int compare(IdeaPluginDescriptor o1, IdeaPluginDescriptor o2) {
-          final String rating1 = ((PluginNode)o1).getRating();
-          final String rating2 = ((PluginNode)o2).getRating();
-          return Comparing.compare(rating1, rating2);
-        }
+      return (o1, o2) -> {
+        final String rating1 = ((PluginNode)o1).getRating();
+        final String rating2 = ((PluginNode)o2).getRating();
+        return Comparing.compare(rating1, rating2);
       };
     }
     if (isSortByDownloads()) {
-      return new Comparator<IdeaPluginDescriptor>() {
-        public int compare(IdeaPluginDescriptor o1, IdeaPluginDescriptor o2) {
-          String count1 = o1.getDownloads();
-          String count2 = o2.getDownloads();
-          if (count1 != null && count2 != null) {
-            return Long.valueOf(count1).compareTo(Long.valueOf(count2));
-          }
-          else if (count1 != null) {
-            return -1;
-          }
-          else {
-            return 1;
-          }
+      return (o1, o2) -> {
+        String count1 = o1.getDownloads();
+        String count2 = o2.getDownloads();
+        if (count1 != null && count2 != null) {
+          return Long.valueOf(count1).compareTo(Long.valueOf(count2));
+        }
+        else if (count1 != null) {
+          return -1;
+        }
+        else {
+          return 1;
         }
       };
     }
     if (isSortByDate()) {
-      return new Comparator<IdeaPluginDescriptor>() {
-        public int compare(IdeaPluginDescriptor o1, IdeaPluginDescriptor o2) {
-          long date1 = (o1 instanceof PluginNode) ? ((PluginNode)o1).getDate() : ((IdeaPluginDescriptorImpl)o1).getDate();
-          long date2 = (o2 instanceof PluginNode) ? ((PluginNode)o2).getDate() : ((IdeaPluginDescriptorImpl)o2).getDate();
-          if (date1 < date2) {
-            return -1;
-          }
-          else if (date1 > date2) return 1;
-          return 0;
+      return (o1, o2) -> {
+        long date1 = (o1 instanceof PluginNode) ? ((PluginNode)o1).getDate() : ((IdeaPluginDescriptorImpl)o1).getDate();
+        long date2 = (o2 instanceof PluginNode) ? ((PluginNode)o2).getDate() : ((IdeaPluginDescriptorImpl)o2).getDate();
+        if (date1 < date2) {
+          return -1;
         }
+        else if (date1 > date2) return 1;
+        return 0;
       };
     }
-    return new Comparator<IdeaPluginDescriptor>() {
-      @Override
-      public int compare(IdeaPluginDescriptor o1, IdeaPluginDescriptor o2) {
-        return StringUtil.compare(o1.getCategory(), o2.getCategory(), true);
-      }
-    };
+    return (o1, o2) -> StringUtil.compare(o1.getCategory(), o2.getCategory(), true);
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})

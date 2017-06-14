@@ -23,10 +23,11 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.JDOMExternalizableStringList;
+import consulo.ide.plugins.InstalledPluginsState;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * @author Konstantin Bulenkov
@@ -112,10 +113,9 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
 
     try {
       PluginInstallUtil.prepareToUninstall(pluginId);
-      final JDOMExternalizableStringList installedPlugins = PluginManagerUISettings.getInstance().getInstalledPlugins();
-      final String pluginIdString = pluginId.getIdString();
-      while (installedPlugins.contains(pluginIdString)) {
-        installedPlugins.remove(pluginIdString);
+      final Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
+      while (installedPlugins.contains(pluginId)) {
+        installedPlugins.remove(pluginId);
       }
       host.setRequireShutdown(descriptor.isEnabled());
     }

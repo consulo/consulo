@@ -1311,6 +1311,8 @@
     <applicationService serviceInterface="com.intellij.openapi.keymap.impl.DefaultKeymap"
                         serviceImplementation="com.intellij.openapi.keymap.impl.DefaultKeymap"/>
 
+    <applicationService serviceImplementation="consulo.ide.plugins.InstalledPluginsState" />
+
     <applicationService serviceInterface="com.intellij.ide.passwordSafe.impl.providers.masterKey.PasswordDatabase"
                         serviceImplementation="com.intellij.ide.passwordSafe.impl.providers.masterKey.PasswordDatabase"/>
     <applicationService serviceInterface="com.intellij.ide.passwordSafe.config.PasswordSafeSettings"
