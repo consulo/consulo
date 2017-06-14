@@ -114,8 +114,8 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
   }
 
 
-  public static boolean isDownloaded(@NotNull PluginNode node) {
-    if (node.getStatus() == PluginNode.STATUS_DOWNLOADED) return true;
+  public static boolean isDownloaded(@NotNull IdeaPluginDescriptor node) {
+    if (node instanceof PluginNode && ((PluginNode)node).getStatus() == PluginNode.STATUS_DOWNLOADED) return true;
     final PluginId pluginId = node.getPluginId();
     if (PluginManager.isPluginInstalled(pluginId)) {
       return false;

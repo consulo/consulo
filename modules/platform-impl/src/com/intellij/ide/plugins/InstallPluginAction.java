@@ -260,12 +260,11 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
   private void installedPluginsToModel(Collection<IdeaPluginDescriptor> list) {
     for (IdeaPluginDescriptor pluginNode : list) {
-      final PluginId idString = pluginNode.getPluginId();
+      final PluginId id = pluginNode.getPluginId();
       final InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
-      if (!pluginsState.getInstalledPlugins().contains(idString)) {
-        pluginsState.getInstalledPlugins().add(idString);
-      }
-      pluginsState.getOutdatedPlugins().remove(idString);
+
+      pluginsState.getInstalledPlugins().add(id);
+      pluginsState.getOutdatedPlugins().remove(id);
     }
 
     final InstalledPluginsTableModel installedPluginsModel = (InstalledPluginsTableModel)myInstalledPluginPanel.getPluginsModel();

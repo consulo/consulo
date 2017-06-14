@@ -16,11 +16,14 @@
 package com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.UpdateSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,6 +46,23 @@ public class PluginsAdvertiserHolder {
 
   public static void update(@Nullable List<IdeaPluginDescriptor> list) {
     ourLoadedPluginDescriptors = ContainerUtil.isEmpty(list) ? null : list;
+
+    if (list != null) {
+      InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
+
+      for (IdeaPluginDescriptor newPluginDescriptor : list) {
+        final IdeaPluginDescriptor installed = PluginManager.getPlugin(newPluginDescriptor.getPluginId());
+        if (installed != null) {
+          int state = StringUtil.compareVersionNumbers(newPluginDescriptor.getVersion(), installed.getVersion());
+
+          if (state > 0 &&
+              !PluginManager.isIncompatible(newPluginDescriptor) &&
+              !pluginsState.getUpdatedPlugins().contains(newPluginDescriptor.getPluginId())) {
+            pluginsState.getOutdatedPlugins().add(newPluginDescriptor.getPluginId());
+          }
+        }
+      }
+    }
   }
 
   public static void initiaze(@NotNull Project project, @NotNull Consumer<List<IdeaPluginDescriptor>> consumer) {
@@ -61,7 +81,7 @@ public class PluginsAdvertiserHolder {
       try {
         pluginDescriptors = RepositoryHelper.loadPluginsFromRepository(indicator, updateSettings.getChannel());
 
-        ourLoadedPluginDescriptors = pluginDescriptors;
+        update(pluginDescriptors);
 
         if (pluginDescriptors.isEmpty()) {
           return;

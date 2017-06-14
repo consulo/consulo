@@ -65,7 +65,7 @@ public class PluginListDialog extends DialogWrapper {
     public TableCellRenderer getRenderer(final IdeaPluginDescriptor pluginDescriptor) {
       return new PluginsTableRenderer(pluginDescriptor, true) {
         @Override
-        protected void updatePresentation(boolean isSelected, PluginNode pluginNode, TableModel model) {
+        protected void updatePresentation(boolean isSelected, @NotNull IdeaPluginDescriptor pluginNode, TableModel model) {
           Couple<IdeaPluginDescriptor> couple = ContainerUtil.find(myNodes, it -> it.getSecond() == pluginDescriptor);
           assert couple != null;
           IdeaPluginDescriptor oldPlugin = couple.getFirst();

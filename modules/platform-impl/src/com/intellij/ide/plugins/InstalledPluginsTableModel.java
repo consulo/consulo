@@ -35,15 +35,10 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: stathik
- * Date: Dec 26, 2003
- * Time: 3:51:58 PM
- * To change this template use Options | File Templates.
+ * @author stathik
+ * @since 3:51:58 PM Dec 26, 2003
  */
 public class InstalledPluginsTableModel extends PluginTableModel {
-  public static Map<PluginId, Integer> NewVersions2Plugins = new HashMap<>();
-  public static Set<PluginId> updatedPlugins = new HashSet<>();
   private final Map<PluginId, Boolean> myEnabled = new HashMap<>();
   private final Map<PluginId, Set<PluginId>> myDependentToRequiredListMap = new HashMap<>();
 
@@ -53,12 +48,10 @@ public class InstalledPluginsTableModel extends PluginTableModel {
   public static final String[] ENABLED_VALUES = new String[]{ENABLED_DISABLED, ENABLED, DISABLED};
   private String myEnabledFilter = ENABLED_DISABLED;
 
-  private static final Set<IdeaPluginDescriptor> myInstalled = new HashSet<>();
-
   public InstalledPluginsTableModel() {
     super.columns = new ColumnInfo[]{new MyPluginManagerColumnInfo(), new EnabledPluginInfo()};
     view = new ArrayList<>(Arrays.asList(PluginManager.getPlugins()));
-    view.addAll(myInstalled);
+    view.addAll(InstalledPluginsState.getInstance().getAllPlugins());
     reset(view);
 
     for (Iterator<IdeaPluginDescriptor> iterator = view.iterator(); iterator.hasNext(); ) {
@@ -73,26 +66,21 @@ public class InstalledPluginsTableModel extends PluginTableModel {
 
   public boolean appendOrUpdateDescriptor(IdeaPluginDescriptor descriptor) {
     final PluginId descrId = descriptor.getPluginId();
-    final IdeaPluginDescriptor existing = PluginManager.getPlugin(descrId);
-    if (existing != null) {
-      updateExistingPlugin(descriptor, existing);
+    final IdeaPluginDescriptor installed = PluginManager.getPlugin(descrId);
+    InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
+
+    if (installed != null) {
+      pluginsState.updateExistingPlugin(descriptor, installed);
       return true;
     }
-    else if (!myInstalled.contains(descriptor)) {
-      myInstalled.add(descriptor);
+    else if (!pluginsState.getAllPlugins().contains(descriptor)) {
+      pluginsState.getAllPlugins().add(descriptor);
       view.add(descriptor);
       setEnabled(descriptor, true);
       fireTableDataChanged();
       return true;
     }
     return false;
-  }
-
-  public static void updateExistingPlugin(IdeaPluginDescriptor descriptor, @Nullable IdeaPluginDescriptor existing) {
-    if (existing != null) {
-      updateExistingPluginInfo(descriptor, existing);
-      updatedPlugins.add(existing.getPluginId());
-    }
   }
 
   public static int getCheckboxColumn() {
@@ -149,6 +137,10 @@ public class InstalledPluginsTableModel extends PluginTableModel {
   protected void updatePluginDependencies() {
     myDependentToRequiredListMap.clear();
 
+    InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
+
+    Set<PluginId> updatedPlugins = pluginsState.getUpdatedPlugins();
+
     final int rowCount = getRowCount();
     for (int i = 0; i < rowCount; i++) {
       final IdeaPluginDescriptor descriptor = getObjectAt(i);
@@ -156,10 +148,10 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       myDependentToRequiredListMap.remove(pluginId);
       if (descriptor instanceof IdeaPluginDescriptorImpl && ((IdeaPluginDescriptorImpl)descriptor).isDeleted()) continue;
       final Boolean enabled = myEnabled.get(pluginId);
-      if (enabled == null || enabled.booleanValue()) {
-        PluginManager.checkDependants(descriptor, pluginId1 -> PluginManager.getPlugin(pluginId1), dependantPluginId -> {
+      if (enabled == null || enabled) {
+        PluginManager.checkDependants(descriptor, PluginManager::getPlugin, dependantPluginId -> {
           final Boolean enabled1 = myEnabled.get(dependantPluginId);
-          if ((enabled1 == null && !updatedPlugins.contains(dependantPluginId)) || (enabled1 != null && !enabled1.booleanValue())) {
+          if ((enabled1 == null && !updatedPlugins.contains(dependantPluginId)) || (enabled1 != null && !enabled1)) {
             Set<PluginId> required = myDependentToRequiredListMap.get(pluginId);
             if (required == null) {
               required = new HashSet<>();
@@ -189,7 +181,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       IdeaPluginDescriptor existing = PluginManager.getPlugin(descrId);
       if (existing != null) {
         if (descr instanceof PluginNode) {
-          updateExistingPluginInfo(descr, existing);
+          InstalledPluginsState.getInstance().updateExistingPluginInfo(descr, existing);
         }
         else {
           view.add(descr);
@@ -197,7 +189,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
         }
       }
     }
-    for (IdeaPluginDescriptor descriptor : myInstalled) {
+    for (IdeaPluginDescriptor descriptor : InstalledPluginsState.getInstance().getAllPlugins()) {
       if (!view.contains(descriptor)) {
         view.add(descriptor);
       }
@@ -208,7 +200,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
   @Override
   protected ArrayList<IdeaPluginDescriptor> toProcess() {
     ArrayList<IdeaPluginDescriptor> toProcess = super.toProcess();
-    for (IdeaPluginDescriptor descriptor : myInstalled) {
+    for (IdeaPluginDescriptor descriptor : InstalledPluginsState.getInstance().getAllPlugins()) {
       if (!toProcess.contains(descriptor)) {
         toProcess.add(descriptor);
       }
@@ -224,35 +216,6 @@ public class InstalledPluginsTableModel extends PluginTableModel {
     }
 
     super.filter(filtered);
-  }
-
-  private static void updateExistingPluginInfo(IdeaPluginDescriptor descr, IdeaPluginDescriptor existing) {
-    int state = StringUtil.compareVersionNumbers(descr.getVersion(), existing.getVersion());
-    final PluginId pluginId = existing.getPluginId();
-    final Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
-    if (!installedPlugins.contains(pluginId) && !((IdeaPluginDescriptorImpl)existing).isDeleted()) {
-      installedPlugins.add(pluginId);
-    }
-    final InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
-    if (state > 0 && !PluginManager.isIncompatible(descr) && !updatedPlugins.contains(descr.getPluginId())) {
-      NewVersions2Plugins.put(pluginId, 1);
-
-      pluginsState.getOutdatedPlugins().add(pluginId);
-
-      final IdeaPluginDescriptorImpl plugin = (IdeaPluginDescriptorImpl)existing;
-      plugin.setDownloadsCount(descr.getDownloads());
-      plugin.setVendor(descr.getVendor());
-      plugin.setVendorEmail(descr.getVendorEmail());
-      plugin.setVendorUrl(descr.getVendorUrl());
-      plugin.setUrl(descr.getUrl());
-
-    }
-    else {
-      pluginsState.getOutdatedPlugins().remove(pluginId);
-      if (NewVersions2Plugins.remove(pluginId) != null) {
-        updatedPlugins.add(pluginId);
-      }
-    }
   }
 
   public void enableRows(IdeaPluginDescriptor[] ideaPluginDescriptors, Boolean value) {
@@ -280,22 +243,21 @@ public class InstalledPluginsTableModel extends PluginTableModel {
 
 
   public static boolean hasNewerVersion(PluginId descr) {
-    return !wasUpdated(descr) &&
-           (NewVersions2Plugins.containsKey(descr) || InstalledPluginsState.getInstance().getOutdatedPlugins().contains(descr));
+    return InstalledPluginsState.getInstance().hasNewerVersion(descr);
   }
 
   public static boolean wasUpdated(PluginId descr) {
-    return updatedPlugins.contains(descr);
+    return InstalledPluginsState.getInstance().wasUpdated(descr);
   }
 
   public boolean isEnabled(final PluginId pluginId) {
     final Boolean enabled = myEnabled.get(pluginId);
-    return enabled != null && enabled.booleanValue();
+    return enabled != null && enabled;
   }
 
   public boolean isDisabled(final PluginId pluginId) {
     final Boolean enabled = myEnabled.get(pluginId);
-    return enabled != null && !enabled.booleanValue();
+    return enabled != null && !enabled;
   }
 
   public Map<PluginId, Boolean> getEnabledMap() {
@@ -324,7 +286,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
   private class EnabledPluginInfo extends ColumnInfo<IdeaPluginDescriptor, Boolean> {
 
     public EnabledPluginInfo() {
-      super(/*IdeBundle.message("plugin.manager.enable.column.title")*/"");
+      super("");
     }
 
     @Override
@@ -372,15 +334,15 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       return (o1, o2) -> {
         final Boolean enabled1 = myEnabled.get(o1.getPluginId());
         final Boolean enabled2 = myEnabled.get(o2.getPluginId());
-        if (enabled1 != null && enabled1.booleanValue()) {
-          if (enabled2 != null && enabled2.booleanValue()) {
+        if (enabled1 != null && enabled1) {
+          if (enabled2 != null && enabled2) {
             return 0;
           }
 
           return 1;
         }
         else {
-          if (enabled2 == null || !enabled2.booleanValue()) {
+          if (enabled2 == null || !enabled2) {
             return 0;
           }
           return -1;
@@ -407,19 +369,19 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       for (Iterator<IdeaPluginDescriptor> iterator = descriptorsToCheckDependencies.iterator(); iterator.hasNext(); ) {
         IdeaPluginDescriptor descriptor = iterator.next();
         final Boolean enabled = myEnabled.get(descriptor.getPluginId());
-        if (enabled == null || !enabled.booleanValue()) {
+        if (enabled == null || !enabled) {
           iterator.remove();
         }
       }
     }
 
     for (final IdeaPluginDescriptor ideaPluginDescriptor : descriptorsToCheckDependencies) {
-      PluginManager.checkDependants(ideaPluginDescriptor, pluginId -> PluginManager.getPlugin(pluginId), pluginId -> {
+      PluginManager.checkDependants(ideaPluginDescriptor, PluginManager::getPlugin, pluginId -> {
         Boolean enabled = myEnabled.get(pluginId);
         if (enabled == null) {
           return false;
         }
-        if (newVal && !enabled.booleanValue()) {
+        if (newVal && !enabled) {
           deps.add(pluginId);
         }
 
@@ -439,7 +401,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       });
     }
     if (!deps.isEmpty()) {
-      final String listOfSelectedPlugins = StringUtil.join(ideaPluginDescriptors, pluginDescriptor -> pluginDescriptor.getName(), ", ");
+      final String listOfSelectedPlugins = StringUtil.join(ideaPluginDescriptors, IdeaPluginDescriptor::getName, ", ");
       final Set<IdeaPluginDescriptor> pluginDependencies = new HashSet<>();
       final String listOfDependencies = StringUtil.join(deps, pluginId -> {
         final IdeaPluginDescriptor pluginDescriptor = PluginManager.getPlugin(pluginId);

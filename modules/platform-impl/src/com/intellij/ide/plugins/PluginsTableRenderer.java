@@ -28,6 +28,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -116,18 +117,19 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
       myLastUpdated.setText(DateFormatUtil.formatBetweenDates(pluginNode.getDate(), System.currentTimeMillis()));
     }
 
-    updatePresentation(isSelected, pluginNode, table.getModel());
+    updatePresentation(isSelected, myPluginDescriptor, table.getModel());
 
     return myPanel;
   }
 
-  protected void updatePresentation(boolean isSelected, PluginNode pluginNode, TableModel model) {
+  protected void updatePresentation(boolean isSelected, @NotNull IdeaPluginDescriptor pluginNode, TableModel model) {
     final IdeaPluginDescriptor installed = PluginManager.getPlugin(myPluginDescriptor.getPluginId());
-    if ((pluginNode != null && PluginManagerColumnInfo.isDownloaded(pluginNode)) ||
-        (installed != null && InstalledPluginsTableModel.wasUpdated(installed.getPluginId()))) {
-      if (!isSelected) myName.setForeground(FileStatus.ADDED.getColor());
+    if (PluginManagerColumnInfo.isDownloaded(pluginNode) || installed != null && InstalledPluginsTableModel.wasUpdated(installed.getPluginId())) {
+      if (!isSelected) {
+        myName.setForeground(FileStatus.ADDED.getColor());
+      }
     }
-    else if (pluginNode != null && pluginNode.getStatus() == PluginNode.STATUS_INSTALLED) {
+    else if (pluginNode instanceof PluginNode && ((PluginNode)pluginNode).getStatus() == PluginNode.STATUS_INSTALLED || installed != null) {
       PluginId pluginId = pluginNode.getPluginId();
       final boolean hasNewerVersion = InstalledPluginsTableModel.hasNewerVersion(pluginId);
       if (hasNewerVersion) {
