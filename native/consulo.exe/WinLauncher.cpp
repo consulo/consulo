@@ -99,8 +99,6 @@ void pushAppData(std::vector<std::wstring> *names)
 		{
 			std::wstring value(ffd.cFileName);
 
-			MessageBox(0, value.c_str(), L"", 0);
-
 			names->push_back(value);
 		}
 	}
