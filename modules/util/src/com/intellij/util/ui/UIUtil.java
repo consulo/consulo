@@ -2309,7 +2309,7 @@ public class UIUtil {
   }
 
   public static Color getBorderColor() {
-    return isUnderDarkBuildInLaf() ? Gray._50 : BORDER_COLOR;
+    return new JBColor(BORDER_COLOR, Gray._50);
   }
 
   public static Font getTitledBorderFont() {

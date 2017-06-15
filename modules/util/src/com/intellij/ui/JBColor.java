@@ -17,7 +17,6 @@ package com.intellij.ui;
 
 import com.intellij.util.NotNullProducer;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -31,7 +30,7 @@ import java.awt.image.ColorModel;
 @SuppressWarnings("UseJBColor")
 public class JBColor extends Color {
 
-  private static volatile boolean DARK = UIUtil.isUnderDarcula();
+  private static volatile boolean DARK = UIUtil.isUnderDarkTheme();
 
   private final Color darkColor;
   private final NotNullProducer<Color> func;
@@ -44,7 +43,7 @@ public class JBColor extends Color {
     super(regular.getRGB(), regular.getAlpha() != 255);
     darkColor = dark;
     //noinspection AssignmentToStaticFieldFromInstanceMethod
-    DARK = UIUtil.isUnderDarcula(); //Double check. Sometimes DARK != isDarcula() after dialogs appear on splash screen
+    DARK = UIUtil.isUnderDarkTheme(); //Double check. Sometimes DARK != isDarcula() after dialogs appear on splash screen
     func = null;
   }
 
@@ -107,13 +106,7 @@ public class JBColor extends Color {
   @Override
   public Color brighter() {
     if (func != null) {
-      return new JBColor(new NotNullProducer<Color>() {
-        @NotNull
-        @Override
-        public Color produce() {
-          return func.produce().brighter();
-        }
-      });
+      return new JBColor(func.produce()::brighter);
     }
     return new JBColor(super.brighter(), getDarkVariant().brighter());
   }
@@ -121,13 +114,7 @@ public class JBColor extends Color {
   @Override
   public Color darker() {
     if (func != null) {
-      return new JBColor(new NotNullProducer<Color>() {
-        @NotNull
-        @Override
-        public Color produce() {
-          return func.produce().darker();
-        }
-      });
+      return new JBColor(func.produce()::darker);
     }
     return new JBColor(super.darker(), getDarkVariant().darker());
   }
@@ -254,33 +241,14 @@ public class JBColor extends Color {
   public static final Color CYAN = cyan;
 
   public static Color foreground() {
-    return new JBColor(new NotNullProducer<Color>() {
-      @NotNull
-      @Override
-      public Color produce() {
-        return UIUtil.getLabelForeground();
-      }
-    });
+    return new JBColor(UIUtil::getLabelForeground);
   }
 
   public static Color background() {
-    return new JBColor(new NotNullProducer<Color>() {
-      @NotNull
-      @Override
-      public Color produce() {
-        return UIUtil.getListBackground();
-      }
-    });
+    return new JBColor(UIUtil::getListBackground);
   }
 
   public static Color border() {
-    return new JBColor(new NotNullProducer<Color>() {
-      @NotNull
-      @Override
-      public Color produce() {
-        //noinspection deprecation
-        return UIUtil.getBorderColor();
-      }
-    });
+    return new JBColor(UIUtil::getBorderColor);
   }
 }
