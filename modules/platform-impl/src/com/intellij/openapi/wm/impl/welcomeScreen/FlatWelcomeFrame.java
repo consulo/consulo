@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
+import com.intellij.ide.ui.UISettings;
+import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
@@ -46,7 +48,7 @@ import java.io.File;
 /**
  * @author Konstantin Bulenkov
  */
-public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, AccessibleContextAccessor {
+public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, AccessibleContextAccessor, UISettingsListener {
   @NotNull
   public static Dimension getDefaultWindowSize() {
     return JBUI.size(777, 460);
@@ -69,6 +71,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
     setContentPane(myScreen);
     setDefaultTitle();
     AppUIUtil.updateWindowIcon(this);
+    UIUtil.resetRootPaneAppearance(rootPane);
     setSize(getDefaultWindowSize());
     setResizable(false);
     Point location = DimensionService.getInstance().getLocationNoRealKey(WelcomeFrame.DIMENSION_KEY);
@@ -186,5 +189,10 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
   @Override
   public JComponent getComponent() {
     return getRootPane();
+  }
+
+  @Override
+  public void uiSettingsChanged(UISettings source) {
+    UIUtil.resetRootPaneAppearance(getRootPane());
   }
 }
