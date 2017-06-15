@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.laf;
+package consulo.ide.ui.laf.mac;
 
 import com.intellij.openapi.util.Factory;
 import com.intellij.ui.Gray;
