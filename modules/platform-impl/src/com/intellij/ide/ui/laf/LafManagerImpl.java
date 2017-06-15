@@ -61,11 +61,12 @@ import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;
 import consulo.ide.ui.laf.darcula.DarculaEditorTabsUI;
 import consulo.ide.ui.laf.intellij.ActionButtonUI;
 import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
+import consulo.ide.ui.laf.mac.MacButtonlessScrollbarUI;
+import consulo.ide.ui.laf.mac.MacEditorTabsUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
 import consulo.ui.GTKPlusUIUtil;
-import consulo.ide.ui.laf.mac.MacButtonlessScrollbarUI;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -462,6 +463,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       uiDefaults.put("ScrollBarUI", MacButtonlessScrollbarUI.class.getName());
       uiDefaults.put("ComboBoxButtonUI", ComboBoxButtonUI.class.getName());
       uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
+      uiDefaults.put("JBEditorTabsUI", MacEditorTabsUI.class.getName());
     }
     else if (UIUtil.isWinLafOnVista()) {
       uiDefaults.put("ComboBox.border", null);
