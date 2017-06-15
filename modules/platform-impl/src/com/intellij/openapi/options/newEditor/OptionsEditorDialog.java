@@ -210,7 +210,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   }
 
   @Override
-  protected void doOKAction() {
+  public void doOKAction() {
     myEditor.flushModifications();
 
     if (myEditor.canApply()) {

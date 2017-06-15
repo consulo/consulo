@@ -311,6 +311,8 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   protected String canApply() {
     final Map<PluginId, Set<PluginId>> dependentToRequiredListMap = new HashMap<>(((InstalledPluginsTableModel)myPluginsModel).getDependentToRequiredListMap());
     for (Iterator<PluginId> iterator = dependentToRequiredListMap.keySet().iterator(); iterator.hasNext(); ) {
+      PluginId item = iterator.next();
+      // ignore
       iterator.remove();
     }
     if (!dependentToRequiredListMap.isEmpty()) {

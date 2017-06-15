@@ -16,8 +16,14 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.options.newEditor.OptionsEditorDialog;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.GraphicsConfig;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
@@ -269,6 +275,17 @@ public class PluginHeaderPanel {
           if (myManager != null) {
             myManager.apply();
           }
+          final DialogWrapper dialog = DialogWrapper.findInstance(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
+          if (dialog != null && dialog.isModal()) {
+            dialog.close(DialogWrapper.OK_EXIT_CODE);
+          }
+          IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+            DialogWrapper settings = DialogWrapper.findInstance(IdeFocusManager.findInstance().getFocusOwner());
+            if (settings instanceof OptionsEditorDialog) {
+              ((OptionsEditorDialog)settings).doOKAction();
+            }
+            ((ApplicationEx)ApplicationManager.getApplication()).restart(true);
+          }, ModalityState.current());
           break;
       }
       setPlugin(myPlugin);
