@@ -264,12 +264,7 @@ public class PluginHeaderPanel {
                   .install(null, () -> UIUtil.invokeLaterIfNeeded(() -> setPlugin(myPlugin)));
           break;
         case UNINSTALL:
-          //try {
           UninstallPluginAction.uninstall(myManager.getInstalled(), myPlugin);
-          //}
-          //catch (IOException e1) {
-          //  e1.printStackTrace();
-          //}
           break;
         case RESTART:
           if (myManager != null) {
