@@ -21,9 +21,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.laf.darcula.DarculaEditorTabsPainter;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
-import com.intellij.ide.ui.laf.intellij.DefaultEditorTabsPainter;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
 import com.intellij.notification.Notification;
@@ -60,7 +58,9 @@ import consulo.actionSystem.ex.ComboBoxButtonUI;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
 import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;
+import consulo.ide.ui.laf.darcula.DarculaEditorTabsUI;
 import consulo.ide.ui.laf.intellij.ActionButtonUI;
+import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
@@ -486,9 +486,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
     }
 
-    if (uiDefaults.get("jbeditor.tabs.painter") == null) {
-      uiDefaults.put("jbeditor.tabs.painter",
-                     UIUtil.isUnderDarkBuildInLaf() ? DarculaEditorTabsPainter.class.getName() : DefaultEditorTabsPainter.class.getName());
+    if (uiDefaults.get("JBEditorTabsUI") == null) {
+      uiDefaults.put("JBEditorTabsUI", UIUtil.isUnderDarkTheme() ? DarculaEditorTabsUI.class.getName() : IntelliJEditorTabsUI.class.getName());
     }
 
     updateToolWindows();

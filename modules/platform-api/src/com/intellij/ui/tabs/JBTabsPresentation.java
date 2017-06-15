@@ -16,6 +16,7 @@
 package com.intellij.ui.tabs;
 
 import com.intellij.util.ui.TimedDeadzone;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +33,11 @@ public interface JBTabsPresentation {
 
   JBTabsPresentation setPaintFocus(boolean paintFocus);
 
-  JBTabsPresentation setAlwaysPaintSelectedTab(final boolean paintSelected);
+  @Deprecated
+  @DeprecationInfo("Doing nothing")
+  default JBTabsPresentation setAlwaysPaintSelectedTab(final boolean paintSelected) {
+    return this;
+  }
 
   JBTabsPresentation setStealthTabMode(boolean stealthTabMode);
 
@@ -52,7 +57,11 @@ public interface JBTabsPresentation {
 
   JBTabsPresentation setInnerInsets(Insets innerInsets);
 
-  JBTabsPresentation setGhostsAlwaysVisible(boolean visible);
+  @Deprecated
+  @DeprecationInfo("Doing nothing")
+  default JBTabsPresentation setGhostsAlwaysVisible(boolean visible) {
+    return this;
+  }
 
   JBTabsPresentation setFocusCycle(final boolean root);
 

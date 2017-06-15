@@ -19,7 +19,6 @@ package com.intellij.execution.ui.layout.impl;
 import com.intellij.execution.ui.layout.*;
 import com.intellij.execution.ui.layout.actions.CloseViewAction;
 import com.intellij.execution.ui.layout.actions.MinimizeViewAction;
-import com.intellij.ide.ui.laf.JBEditorTabsPainter;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.ui.popup.JBPopup;
@@ -84,23 +83,15 @@ public class GridCellImpl implements GridCell {
       }
 
       @Override
-      protected JBEditorTabsPainter createPainter() {
-        JBEditorTabsPainter painter = super.createPainter();
-        painter.setModifyTabColor(UIManager.getColor("runner.grid.tabs.color"));
-        return painter;
+      public void updateUI() {
+        super.updateUI();
+
+        getUI().setModifyTabColor(UIManager.getColor("runner.grid.tabs.color"));
       }
 
       @Override
       public int tabMSize() {
         return 12;
-      }
-
-      @Override
-      protected void paintBorder(Graphics2D g2d, ShapeInfo shape, Color borderColor) {
-        if (UIUtil.isUnderDarcula()) {
-          return;
-        }
-        super.paintBorder(g2d, shape, borderColor);
       }
 
       @Override
