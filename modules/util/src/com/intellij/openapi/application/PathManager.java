@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
@@ -320,7 +321,10 @@ public class PathManager {
 
     if (propFile != null) {
       try {
-        try (InputStream fis = new BufferedInputStream(new FileInputStream(propFile))) {
+        InputStream fis = null;
+        try {
+          fis = new BufferedInputStream(new FileInputStream(propFile));
+
           final PropertyResourceBundle bundle = new PropertyResourceBundle(fis);
           final Enumeration keys = bundle.getKeys();
           String home = (String)bundle.handleGetObject("idea.home");
@@ -335,6 +339,9 @@ public class PathManager {
               sysProperties.setProperty(key, value);
             }
           }
+        }
+        finally {
+          StreamUtil.closeStream(fis);
         }
       }
       catch (IOException e) {

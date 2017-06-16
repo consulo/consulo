@@ -19,6 +19,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.util.Function;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakStringInterner;
@@ -162,7 +163,12 @@ public class UrlClassLoader extends ClassLoader {
 
   protected UrlClassLoader(@NotNull Builder builder) {
     super(builder.myParent);
-    myURLs = ContainerUtil.map(builder.myURLs, UrlClassLoader::internProtocol);
+    myURLs = ContainerUtil.map(builder.myURLs, new Function<URL, URL>() {
+      @Override
+      public URL fun(URL url) {
+        return internProtocol(url);
+      }
+    });
     myClassPath = createClassPath(builder);
     myAllowBootstrapResources = builder.myAllowBootstrapResources;
     myClassNameInterner = ourParallelCapableLoaders != null && ourParallelCapableLoaders.contains(getClass()) ? new WeakStringInterner() : null;

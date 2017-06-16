@@ -30,6 +30,7 @@
               <element id="module-output" name="util-rt" />
               <element id="module-output" name="util" />
               <element id="module-output" name="slf4j-bind" />
+              <element id="module-production-resource-output" name="util" />
             </element>
             <element id="zip-archive" name="extensions.jar">
               <element id="module-output" name="extensions" />

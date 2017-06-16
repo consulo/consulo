@@ -15,15 +15,15 @@
  */
 package com.intellij.util;
 
+import com.intellij.openapi.util.Getter;
 import com.intellij.util.containers.JBTreeTraverser;
+import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.EventListener;
-
-import static com.intellij.util.ui.UIUtil.uiTraverser;
 
 /**
  * Pushes events down the UI components hierarchy.
@@ -44,10 +44,14 @@ public class ComponentTreeEventDispatcher<T extends EventListener> {
 
   private ComponentTreeEventDispatcher(@Nullable final Component root, @NotNull Class<T> listenerClass) {
     myListenerClass = listenerClass;
-    myMulticaster = EventDispatcher.createMulticaster(listenerClass, () -> {
-      JBTreeTraverser<Component> traverser = uiTraverser(root);
-      if (root == null) traverser = traverser.withRoots(Arrays.asList(Window.getWindows()));
-      return traverser.postOrderDfsTraversal().filter(myListenerClass);
+    myMulticaster = EventDispatcher.createMulticaster(listenerClass, new Getter<Iterable<T>>() {
+      @Nullable
+      @Override
+      public Iterable<T> get() {
+        JBTreeTraverser<Component> traverser = UIUtil.uiTraverser(root);
+        if (root == null) traverser = traverser.withRoots(Arrays.asList(Window.getWindows()));
+        return traverser.postOrderDfsTraversal().filter(myListenerClass);
+      }
     });
   }
 
