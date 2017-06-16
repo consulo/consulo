@@ -120,7 +120,7 @@ public class ApplicationStarter {
     return asWebApp ? "consulo.web.main.WebPostStarter" : "com.intellij.idea.starter.DefaultApplicationPostStarter";
   }
 
-  public void run() {
+  public void run(boolean newConfigFolder) {
     try {
       ApplicationEx app = ApplicationManagerEx.getApplicationEx();
       app.load(PathManager.getOptionsPath());
@@ -128,7 +128,7 @@ public class ApplicationStarter {
       ((TransactionGuardImpl) TransactionGuard.getInstance()).performUserActivity(new Runnable() {
         @Override
         public void run() {
-          myPostStarter.main(myArgs);
+          myPostStarter.main(newConfigFolder, myArgs);
         }
       });
       myPostStarter = null; //GC it

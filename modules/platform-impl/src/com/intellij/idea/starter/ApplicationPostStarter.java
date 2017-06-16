@@ -32,6 +32,6 @@ public abstract class ApplicationPostStarter {
   public void premain(@NotNull CommandLineArgs args) {
   }
 
-  public void main(@NotNull CommandLineArgs args) {
+  public void main(boolean newConfigFolder, @NotNull CommandLineArgs args) {
   }
 }

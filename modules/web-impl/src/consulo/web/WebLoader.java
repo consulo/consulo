@@ -122,7 +122,7 @@ public class WebLoader {
 
     SwingUtilities.invokeLater(() -> {
       PluginManager.installExceptionHandler();
-      app.run();
+      app.run(false);
     });
   }
 

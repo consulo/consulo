@@ -20,10 +20,8 @@ import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.JBCardLayout;
-import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.MultiMap;
 import consulo.ide.customize.CustomizeDownloadAndStartStepPanel;
 import consulo.ide.customize.CustomizeSelectTemplateStepPanel;
@@ -74,9 +72,6 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
   @Override
   protected void dispose() {
     System.clearProperty(StartupActionScriptManager.STARTUP_WIZARD_MODE);
-    if (!SystemProperties.getBooleanProperty("no.ide.firstStartup", false)) {
-      Registry.get("ide.firstStartup").setValue(false);
-    }
     super.dispose();
   }
 

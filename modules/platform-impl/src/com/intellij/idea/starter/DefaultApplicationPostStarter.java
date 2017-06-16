@@ -29,7 +29,6 @@ import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.openapi.wm.impl.WindowManagerImpl;
@@ -86,7 +85,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(@NotNull CommandLineArgs args) {
+  public void main(boolean newConfigFolder, @NotNull CommandLineArgs args) {
     SystemDock.updateMenu();
 
     // if OS has dock, RecentProjectsManager will be already created, but not all OS have dock, so, we trigger creation here to ensure that RecentProjectsManager app listener will be added
@@ -111,7 +110,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
       }
     }, ModalityState.NON_MODAL);
 
-    if (Registry.is("ide.firstStartup") && !SandboxUtil.isInsideSandbox()) {
+    if (newConfigFolder && !SandboxUtil.isInsideSandbox()) {
       FirstStartCustomizeUtil.show(true);
     }
 
