@@ -23,6 +23,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.updateSettings.impl.DetectedPluginsPanel;
 import com.intellij.openapi.util.Couple;
 import com.intellij.ui.TableUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -39,7 +40,9 @@ public class PluginsAdvertiserDialog extends DialogWrapper {
   private final HashSet<String> mySkippedPlugins = new HashSet<>();
   private boolean myUserAccepted;
 
-  PluginsAdvertiserDialog(@Nullable Project project, Collection<Couple<IdeaPluginDescriptor>> plugins, List<IdeaPluginDescriptor> allPlugins) {
+  public PluginsAdvertiserDialog(@Nullable Project project,
+                                 @NotNull Collection<Couple<IdeaPluginDescriptor>> plugins,
+                                 @NotNull List<IdeaPluginDescriptor> allPlugins) {
     super(project);
     myProject = project;
     myUploadedPlugins = plugins;
