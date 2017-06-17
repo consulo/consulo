@@ -32,6 +32,7 @@ import com.intellij.util.containers.JBTreeTraverser;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.GTKPlusUIUtil;
+import consulo.ui.laf.MorphColor;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
@@ -973,7 +974,13 @@ public class UIUtil {
   }
 
   public static Color getTreeTextForeground() {
-    return UIManager.getColor("Tree.textForeground");
+    return MorphColor.of(new NotNullProducer<Color>() {
+      @NotNull
+      @Override
+      public Color produce() {
+        return UIManager.getColor("Tree.textForeground");
+      }
+    });
   }
 
   public static Color getTreeSelectionBackground() {
@@ -1254,7 +1261,13 @@ public class UIUtil {
   }
 
   public static Color getSeparatorForeground() {
-    return UIManager.getColor("Separator.foreground");
+    return MorphColor.of(new NotNullProducer<Color>() {
+      @NotNull
+      @Override
+      public Color produce() {
+        return UIManager.getColor("Separator.foreground");
+      }
+    });
   }
 
   public static Color getSeparatorBackground() {
@@ -1474,11 +1487,11 @@ public class UIUtil {
 
   /**
    * Enable & disable macOS dark title decoration. Works only on JetBrains JRE
-   *
+   * <p/>
    * https://github.com/JetBrains/jdk8u_jdk/commit/83e6b1c2e67a192558f8882f663718d4bea0c8b0
    */
   public static void resetRootPaneAppearance(JRootPane rootPane) {
-    rootPane.putClientProperty("jetbrains.awt.windowDarkAppearance" , isUnderDarkTheme());
+    rootPane.putClientProperty("jetbrains.awt.windowDarkAppearance", isUnderDarkTheme());
   }
 
   public static final Color GTK_AMBIANCE_TEXT_COLOR = new Color(223, 219, 210);
@@ -2001,7 +2014,7 @@ public class UIUtil {
 
   /**
    * Configures composite to use for drawing text with the given graphics container.
-   * <p>
+   * <p/>
    * The whole idea is that <a href="http://en.wikipedia.org/wiki/X_Rendering_Extension">XRender-based</a> pipeline doesn't support
    * {@link AlphaComposite#SRC} and we should use {@link AlphaComposite#SRC_OVER} instead.
    *
