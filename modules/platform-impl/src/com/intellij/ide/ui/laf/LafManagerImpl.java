@@ -67,6 +67,7 @@ import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
 import consulo.ui.GTKPlusUIUtil;
+import consulo.ui.laf.UIModificationTracker;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -337,6 +338,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
 
       boolean dark = laf instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)laf).isDark();
       JBColor.setDark(dark);
+      UIModificationTracker.getInstance().incModificationCount();
       IconLoader.setUseDarkIcons(dark);
       fireUpdate();
       UIManager.setLookAndFeel(laf);
