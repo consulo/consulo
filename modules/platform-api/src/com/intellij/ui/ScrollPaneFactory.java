@@ -16,7 +16,6 @@
 package com.intellij.ui;
 
 
-
 import com.intellij.ui.components.JBScrollPane;
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -43,21 +42,18 @@ public class ScrollPaneFactory implements ScrollPaneConstants {
   }
 
   public static JScrollPane createScrollPane(Component view,
-                                             @MagicConstant(intValues = {
-                                               VERTICAL_SCROLLBAR_ALWAYS,
-                                               VERTICAL_SCROLLBAR_AS_NEEDED,
-                                               VERTICAL_SCROLLBAR_NEVER}) int vsbPolicy,
-                                             @MagicConstant(intValues = {
-                                               HORIZONTAL_SCROLLBAR_ALWAYS,
-                                               HORIZONTAL_SCROLLBAR_AS_NEEDED,
-                                               HORIZONTAL_SCROLLBAR_NEVER}) int hsbPolicy) {
+                                             @MagicConstant(intValues = {VERTICAL_SCROLLBAR_ALWAYS, VERTICAL_SCROLLBAR_AS_NEEDED,
+                                                     VERTICAL_SCROLLBAR_NEVER}) int vsbPolicy,
+                                             @MagicConstant(intValues = {HORIZONTAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED,
+                                                     HORIZONTAL_SCROLLBAR_NEVER}) int hsbPolicy) {
     return new JBScrollPane(view, vsbPolicy, hsbPolicy);
   }
 
   public static JScrollPane createScrollPane(Component view, boolean withoutBorder) {
     JBScrollPane scrollPane = new JBScrollPane(view);
     if (withoutBorder) {
-      scrollPane.setBorder(IdeBorderFactory.createEmptyBorder(0)); // set empty border, because setting null doesn't always take effect
+      scrollPane.setBorder(IdeBorderFactory.createEmptyBorder()); // set empty border, because setting null doesn't always take effect
+      scrollPane.setViewportBorder(IdeBorderFactory.createEmptyBorder());
     }
     return scrollPane;
   }
