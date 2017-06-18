@@ -16,7 +16,6 @@
 package consulo.ide.actions;
 
 import com.intellij.ide.actions.QualifiedNameProvider;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -28,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 22:51/08.10.13
  */
-public class PsiPackageQualifiedNameProvider implements QualifiedNameProvider {
+public class DefaultPackageQualifiedNameProvider implements QualifiedNameProvider {
   @Nullable
   @Override
   public PsiElement adjustElementToCopy(PsiElement element) {
@@ -63,9 +62,5 @@ public class PsiPackageQualifiedNameProvider implements QualifiedNameProvider {
   @Override
   public PsiElement qualifiedNameToElement(String fqn, Project project) {
     return PsiPackageManager.getInstance(project).findAnyPackage(fqn);
-  }
-
-  @Override
-  public void insertQualifiedName(String fqn, PsiElement element, Editor editor, Project project) {
   }
 }

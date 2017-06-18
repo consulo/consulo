@@ -2505,7 +2505,7 @@
     <moduleService serviceInterface="consulo.compiler.ModuleCompilerPathsManager"
                    serviceImplementation="consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
 
-    <qualifiedNameProvider implementation="consulo.ide.actions.PsiPackageQualifiedNameProvider"/>
+    <qualifiedNameProvider implementation="consulo.ide.actions.DefaultPackageQualifiedNameProvider" id="defaultPackage" order="last"/>
 
     <pathMacroExpendableProtocol protocol="zip"/>
 
