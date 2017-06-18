@@ -28,6 +28,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.ConcurrencyUtil;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredReadAction;
@@ -50,7 +51,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   private final Project myProject;
   private final DirectoryIndex myDirectoryIndex;
 
-  private Map<Class<? extends ModuleExtension>, ConcurrentMap<String, PsiPackage>> myPackageCache = ContainerUtil.newConcurrentMap();
+  private Map<Class<? extends ModuleExtension>, ConcurrentMap<String, Object>> myPackageCache = ContainerUtil.newConcurrentMap();
 
   public PsiPackageManagerImpl(Project project, DirectoryIndex directoryIndex) {
     myProject = project;
@@ -88,22 +89,24 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   @Nullable
   @Override
   public PsiPackage findPackage(@NotNull String qualifiedName, @NotNull Class<? extends ModuleExtension> extensionClass) {
-    ConcurrentMap<String, PsiPackage> map = myPackageCache.get(extensionClass);
+    ConcurrentMap<String, Object> map = myPackageCache.get(extensionClass);
     if (map != null) {
-      final PsiPackage psiPackage = map.get(qualifiedName);
-      if (psiPackage != null) {
-        return psiPackage;
+      final Object value = map.get(qualifiedName);
+      // if we processed - but not found package
+      if (value == ObjectUtil.NULL) {
+        return null;
+      }
+      else if (value != null) {
+        return (PsiPackage)value;
       }
     }
 
-    final PsiPackage newPackage = createPackage(qualifiedName, extensionClass);
-    if (newPackage != null) {
-      if (map == null) {
-        myPackageCache.put(extensionClass, map = ContainerUtil.newConcurrentMap());
-      }
+    PsiPackage newPackage = createPackage(qualifiedName, extensionClass);
 
-      ConcurrencyUtil.cacheOrGet(map, qualifiedName, newPackage);
-    }
+    Object valueForInsert = ObjectUtil.notNull(newPackage, ObjectUtil.NULL);
+
+    myPackageCache.computeIfAbsent(extensionClass, aClass -> ContainerUtil.newConcurrentMap()).putIfAbsent(qualifiedName, valueForInsert);
+
     return newPackage;
   }
 
@@ -188,13 +191,19 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
 
   @RequiredReadAction
   @Override
-  public PsiPackage findAnyPackage(@NotNull PsiDirectory directory) {
-    String packageName = myDirectoryIndex.getPackageName(directory.getVirtualFile());
+  @Nullable
+  public PsiPackage findAnyPackage(@NotNull VirtualFile directory) {
+    String packageName = myDirectoryIndex.getPackageName(directory);
     if (packageName == null) {
       return null;
     }
 
-    Module module = ModuleUtilCore.findModuleForPsiElement(directory);
+    PsiPackage packageFromCache = findAnyPackageFromCache(packageName);
+    if (packageFromCache != null) {
+      return packageFromCache;
+    }
+
+    Module module = ModuleUtilCore.findModuleForFile(directory, myProject);
     if (module == null) {
       return null;
     }
@@ -212,10 +221,31 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   @RequiredReadAction
   @Override
   public PsiPackage findAnyPackage(@NotNull String packageName) {
-    for (ConcurrentMap<String, PsiPackage> map : myPackageCache.values()) {
-      PsiPackage psiPackage = map.get(packageName);
+    Query<VirtualFile> dirs = myDirectoryIndex.getDirectoriesByPackageName(packageName, true);
+    if (dirs.findFirst() == null) {
+      return null;
+    }
+
+    PsiPackage packageFromCache = findAnyPackageFromCache(packageName);
+    if (packageFromCache != null) {
+      return packageFromCache;
+    }
+
+    for (VirtualFile dir : dirs) {
+      PsiPackage psiPackage = findAnyPackage(dir);
       if (psiPackage != null) {
         return psiPackage;
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  private PsiPackage findAnyPackageFromCache(@NotNull String packageName) {
+    for (ConcurrentMap<String, Object> map : myPackageCache.values()) {
+      Object o = map.get(packageName);
+      if (o instanceof PsiPackage) {
+        return (PsiPackage)o;
       }
     }
     return null;
