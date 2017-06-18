@@ -15,21 +15,18 @@
  */
 package consulo.psi.impl;
 
+import com.intellij.ProjectTopics;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.vfs.*;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
@@ -70,6 +67,14 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
         myPackageCache.clear();
       }
     }, this);
+
+
+    project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+      @Override
+      public void rootsChanged(ModuleRootEvent event) {
+        myPackageCache.clear();
+      }
+    });
 
     LowMemoryWatcher.register(myPackageCache::clear, this);
   }
@@ -154,7 +159,6 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     ProjectFileIndex fileIndexFacade = ProjectFileIndex.SERVICE.getInstance(myProject);
     PsiManager psiManager = PsiManager.getInstance(myProject);
     if (fileIndexFacade.isInLibraryClasses(virtualFile)) {
-
       List<OrderEntry> orderEntriesForFile = fileIndexFacade.getOrderEntriesForFile(virtualFile);
       for (OrderEntry orderEntry : orderEntriesForFile) {
         Module ownerModule = orderEntry.getOwnerModule();
@@ -175,8 +179,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   @Nullable
   @Override
   public PsiPackage findPackage(@NotNull PsiDirectory directory, @NotNull Class<? extends ModuleExtension> extensionClass) {
-    ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(directory.getProject()).getFileIndex();
-    String packageName = projectFileIndex.getPackageNameByDirectory(directory.getVirtualFile());
+    String packageName = myDirectoryIndex.getPackageName(directory.getVirtualFile());
     if (packageName == null) {
       return null;
     }
@@ -186,8 +189,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   @RequiredReadAction
   @Override
   public PsiPackage findAnyPackage(@NotNull PsiDirectory directory) {
-    ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(directory.getProject()).getFileIndex();
-    String packageName = projectFileIndex.getPackageNameByDirectory(directory.getVirtualFile());
+    String packageName = myDirectoryIndex.getPackageName(directory.getVirtualFile());
     if (packageName == null) {
       return null;
     }
