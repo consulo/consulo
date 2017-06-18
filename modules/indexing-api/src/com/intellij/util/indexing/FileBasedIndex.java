@@ -23,10 +23,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileVisitor;
-import com.intellij.openapi.vfs.VirtualFileWithId;
+import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.vfs.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
@@ -83,9 +81,7 @@ public abstract class FileBasedIndex implements BaseComponent {
   public abstract <K, V> List<V> getValues(@NotNull ID<K, V> indexId, @NotNull K dataKey, @NotNull GlobalSearchScope filter);
 
   @NotNull
-  public abstract <K, V> Collection<VirtualFile> getContainingFiles(@NotNull ID<K, V> indexId,
-                                                                    @NotNull K dataKey,
-                                                                    @NotNull GlobalSearchScope filter);
+  public abstract <K, V> Collection<VirtualFile> getContainingFiles(@NotNull ID<K, V> indexId, @NotNull K dataKey, @NotNull GlobalSearchScope filter);
 
   /**
    * @return false if ValueProcessor.process() returned false; true otherwise or if ValueProcessor was not called at all
@@ -100,11 +96,11 @@ public abstract class FileBasedIndex implements BaseComponent {
    * @return false if ValueProcessor.process() returned false; true otherwise or if ValueProcessor was not called at all
    */
   public <K, V> boolean processValues(@NotNull ID<K, V> indexId,
-                                               @NotNull K dataKey,
-                                               @Nullable VirtualFile inFile,
-                                               @NotNull FileBasedIndex.ValueProcessor<V> processor,
-                                               @NotNull GlobalSearchScope filter,
-                                               @Nullable IdFilter idFilter) {
+                                      @NotNull K dataKey,
+                                      @Nullable VirtualFile inFile,
+                                      @NotNull FileBasedIndex.ValueProcessor<V> processor,
+                                      @NotNull GlobalSearchScope filter,
+                                      @Nullable IdFilter idFilter) {
     return processValues(indexId, dataKey, inFile, processor, filter);
   }
 
@@ -160,15 +156,28 @@ public abstract class FileBasedIndex implements BaseComponent {
     VfsUtilCore.visitChildrenRecursively(root, new VirtualFileVisitor() {
       @Override
       public boolean visitFile(@NotNull VirtualFile file) {
-        if (visitedRoots != null && !root.equals(file) && file.isDirectory() && !visitedRoots.add(file)) {
-          return false; // avoid visiting files more than once, e.g. additional indexed roots intersect sometimes
-        }
-        if (projectFileIndex != null && projectFileIndex.isExcluded(file)) {
-          return false;
+        if (!acceptsFile(file)) return false;
+        if (file.is(VFileProperty.SYMLINK)) {
+          if (!Registry.is("indexer.follows.symlinks")) return false;
+          VirtualFile canonicalFile = file.getCanonicalFile();
+
+          if (canonicalFile != null) {
+            if (!acceptsFile(canonicalFile)) return false;
+          }
         }
         if (indicator != null) indicator.checkCanceled();
 
         processor.processFile(file);
+        return true;
+      }
+
+      private boolean acceptsFile(@NotNull VirtualFile file) {
+        if (visitedRoots != null && !root.equals(file) && file.isDirectory() && !visitedRoots.add(file)) {
+          return false;
+        }
+        if (projectFileIndex != null && projectFileIndex.isExcluded(file)) {
+          return false;
+        }
         return true;
       }
     });
@@ -177,15 +186,15 @@ public abstract class FileBasedIndex implements BaseComponent {
   public interface ValueProcessor<V> {
     /**
      * @param value a value to process
-     * @param file the file the value came from
+     * @param file  the file the value came from
      * @return false if no further processing is needed, true otherwise
      */
     boolean process(VirtualFile file, V value);
   }
 
   /**
-  * Author: dmitrylomov
-  */
+   * Author: dmitrylomov
+   */
   public interface InputFilter {
     boolean acceptInput(@Nullable Project project, @NotNull VirtualFile file);
   }
@@ -196,5 +205,5 @@ public abstract class FileBasedIndex implements BaseComponent {
 
   // TODO: remove once changes becomes permanent
   public static final boolean ourEnableTracingOfKeyHashToVirtualFileMapping =
-    SystemProperties.getBooleanProperty("idea.enable.tracing.keyhash2virtualfile", true);
+          SystemProperties.getBooleanProperty("idea.enable.tracing.keyhash2virtualfile", true);
 }
