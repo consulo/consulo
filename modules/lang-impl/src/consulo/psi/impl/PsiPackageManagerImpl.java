@@ -15,6 +15,7 @@
  */
 package consulo.psi.impl;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -25,21 +26,20 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.util.LowMemoryWatcher;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.*;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Query;
-import com.intellij.util.containers.ConcurrentHashMap;
-import com.intellij.util.messages.MessageBus;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 import java.util.List;
 import java.util.Map;
@@ -49,41 +49,29 @@ import java.util.concurrent.ConcurrentMap;
  * @author VISTALL
  * @since 8:05/20.05.13
  */
-public class PsiPackageManagerImpl extends PsiPackageManager {
+public class PsiPackageManagerImpl extends PsiPackageManager implements Disposable {
   private final Project myProject;
   private final DirectoryIndex myDirectoryIndex;
 
-  @SuppressWarnings("UnusedDeclaration")
-  private final LowMemoryWatcher myLowMemoryWatcher = LowMemoryWatcher.register(new Runnable() {
-    @Override
-    public void run() {
-      myPackageCache.clear();
-    }
-  });
+  private Map<Class<? extends ModuleExtension>, ConcurrentMap<String, PsiPackage>> myPackageCache = ContainerUtil.newConcurrentMap();
 
-  private Map<Class<? extends ModuleExtension>, ConcurrentMap<String, PsiPackage>> myPackageCache =
-          new ConcurrentHashMap<Class<? extends ModuleExtension>, ConcurrentMap<String, PsiPackage>>();
-
-  public PsiPackageManagerImpl(Project project, PsiManager psiManager, DirectoryIndex directoryIndex, MessageBus bus) {
+  public PsiPackageManagerImpl(Project project, DirectoryIndex directoryIndex) {
     myProject = project;
     myDirectoryIndex = directoryIndex;
 
-    final PsiModificationTracker modificationTracker = psiManager.getModificationTracker();
+    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
+      @Override
+      public void fileDeleted(@NotNull VirtualFileEvent event) {
+        myPackageCache.clear();
+      }
 
-    if (bus != null) {
-      bus.connect().subscribe(PsiModificationTracker.TOPIC, new PsiModificationTracker.Listener() {
-        private long lastTimeSeen = -1L;
+      @Override
+      public void fileMoved(@NotNull VirtualFileMoveEvent event) {
+        myPackageCache.clear();
+      }
+    }, this);
 
-        @Override
-        public void modificationCountChanged() {
-          final long now = modificationTracker.getJavaStructureModificationCount();
-          if (lastTimeSeen != now) {
-            lastTimeSeen = now;
-            myPackageCache.clear();
-          }
-        }
-      });
-    }
+    LowMemoryWatcher.register(myPackageCache::clear, this);
   }
 
   @Override
@@ -106,7 +94,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
     final PsiPackage newPackage = createPackage(qualifiedName, extensionClass);
     if (newPackage != null) {
       if (map == null) {
-        myPackageCache.put(extensionClass, map = new ConcurrentHashMap<String, PsiPackage>());
+        myPackageCache.put(extensionClass, map = ContainerUtil.newConcurrentMap());
       }
 
       ConcurrencyUtil.cacheOrGet(map, qualifiedName, newPackage);
@@ -245,5 +233,10 @@ public class PsiPackageManagerImpl extends PsiPackageManager {
       }
     }
     return true;
+  }
+
+  @Override
+  public void dispose() {
+    myPackageCache.clear();
   }
 }
