@@ -15,6 +15,8 @@
  */
 package consulo.util.ui.tree;
 
+import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
+import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.laf.MorphColor;
@@ -42,8 +44,17 @@ public class TreeDecorationUtil {
 
   @NotNull
   public static Color getTreeBackground() {
-    return MorphColor.of(() -> UIUtil.isUnderDarkTheme()
-                               ? ColorUtil.darker(UIManager.getColor("Hyperlink.linkColor"), 10)
-                               : ColorUtil.desaturate(UIManager.getColor("Hyperlink.linkColor"), 18));
+    return MorphColor.of(TreeDecorationUtil::calcColor);
+  }
+
+  @NotNull
+  private static Color calcColor() {
+    if (UIUtil.isUnderAquaLookAndFeel()) {
+      Color color = IntelliJLaf.isGraphite() ? DarculaUIUtil.MAC_GRAPHITE_COLOR : DarculaUIUtil.MAC_REGULAR_COLOR;
+      return ColorUtil.desaturate(color, 8);
+    }
+    return UIUtil.isUnderDarkTheme()
+           ? ColorUtil.darker(UIManager.getColor("Hyperlink.linkColor"), 10)
+           : ColorUtil.desaturate(UIManager.getColor("Hyperlink.linkColor"), 18);
   }
 }
