@@ -44,10 +44,10 @@ public class DarculaUIUtil implements SwingConstants {
   private static final JBColor DEFAULT_INACTIVE_ERROR_COLOR = new JBColor(0xebbcbc, 0x725252);
 
   @SuppressWarnings("UseJBColor")
-  private static final Color MAC_REGULAR_COLOR = new Color(0x80479cfc, true);
+  public static final Color MAC_REGULAR_COLOR = new Color(0x80479cfc, true);
 
   @SuppressWarnings("UseJBColor")
-  private static final Color MAC_GRAPHITE_COLOR = new Color(0x8099979d, true);
+  public static final Color MAC_GRAPHITE_COLOR = new Color(0x8099979d, true);
 
   private static final Color ACTIVE_ERROR_COLOR = new JBColor(() -> UIUtil.isUnderDefaultMacTheme() ? MAC_ACTIVE_ERROR_COLOR : DEFAULT_ACTIVE_ERROR_COLOR);
   private static final Color INACTIVE_ERROR_COLOR =
