@@ -39,8 +39,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.ListUtil;
+import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.speedSearch.ListWithFilter;
 import com.intellij.util.Function;
 import com.intellij.util.SystemProperties;
@@ -178,8 +178,7 @@ public class RecentProjectPanel extends JPanel {
 
     myList.setSelectedIndex(0);
 
-    JBScrollPane scroll = new JBScrollPane(myList);
-    scroll.setBorder(null);
+    JScrollPane scroll = ScrollPaneFactory.createScrollPane(myList, true);
 
     JComponent list = recentProjectActions.length == 0 ? myList : ListWithFilter.wrap(myList, scroll, new Function<Object, String>() {
       @Override

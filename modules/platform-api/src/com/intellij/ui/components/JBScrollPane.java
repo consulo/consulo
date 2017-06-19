@@ -173,8 +173,9 @@ public class JBScrollPane extends JScrollPane {
   }
 
   private void updateViewportBorder() {
-    setViewportBorder(new ViewportBorder(JBUI.scale(myViewportBorderWidth >= 0 ? myViewportBorderWidth : 1)));
-  }
+    if (getViewportBorder() instanceof ViewportBorder) {
+      setViewportBorder(new ViewportBorder(myViewportBorderWidth >= 0 ? myViewportBorderWidth : 1));
+    }  }
 
   public static ViewportBorder createIndentBorder() {
     return new ViewportBorder(JBUI.scale(2));
