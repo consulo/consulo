@@ -1327,13 +1327,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
       setOpaque(false);
     }
     else {
-      if (isInsideNavBar()) {
-        setBorder(JBUI.Borders.empty(0, 2));
-      }
-      else {
-        setBorder(JBUI.Borders.empty(2));
-      }
-
+      setBorder(JBUI.Borders.empty(2));
       setMinimumButtonSize(JBUI.size(myDecorateButtons ? new Dimension(30, 20) : DEFAULT_MINIMUM_BUTTON_SIZE));
       setOpaque(true);
       setLayoutPolicy(AUTO_LAYOUT_POLICY);

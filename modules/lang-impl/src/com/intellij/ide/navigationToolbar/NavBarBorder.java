@@ -26,22 +26,9 @@ import java.awt.*;
 * @author Konstantin Bulenkov
 */
 public class NavBarBorder implements Border {
-  private final boolean myDocked;
-  private final int myRightOffset;
-
-  public NavBarBorder(boolean docked, int rightOffset) {
-    myDocked = docked;
-    myRightOffset = rightOffset;
-  }
-
   @Override
   public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width, final int height) {
-    if (!myDocked) return;
-
     if (UISettings.getInstance().SHOW_MAIN_TOOLBAR) {
-      //g.setColor(Gray._180);
-      //g.drawLine(x, y, x + width, y);
-
       g.setColor(Gray._0.withAlpha(50));
       g.drawLine(x, y, x + width, y);
     }
@@ -49,19 +36,15 @@ public class NavBarBorder implements Border {
 
   @Override
   public Insets getBorderInsets(final Component c) {
-    if (myDocked) {
-      if (!UISettings.getInstance().SHOW_MAIN_TOOLBAR) {
-        if (NavBarRootPaneExtension.runToolbarExists()) {
-          return new JBInsets(1, 0, 1, 4);
-        }
-
-        return new JBInsets(0, 0, 0, 4);
+    if (!UISettings.getInstance().SHOW_MAIN_TOOLBAR) {
+      if (NavBarRootPaneExtension.runToolbarExists()) {
+        return new JBInsets(1, 0, 1, 4);
       }
 
-      return new JBInsets(1, 0, 0, 4);
+      return new JBInsets(0, 0, 0, 4);
     }
 
-    return new JBInsets(1, 0, 1, 4);
+    return new JBInsets(1, 0, 0, 4);
   }
 
   @Override

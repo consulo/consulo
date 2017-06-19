@@ -388,7 +388,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   }
 
   public boolean getShowNavigationBar() {
-    return SHOW_MAIN_TOOLBAR;
+    return SHOW_NAVIGATION_BAR;
   }
 
   public int getPresentationModeFontSize() {
