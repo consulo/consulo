@@ -27,7 +27,6 @@ import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.vfs.*;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
-import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
@@ -58,6 +57,11 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     myDirectoryIndex = directoryIndex;
 
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
+      @Override
+      public void fileCreated(@NotNull VirtualFileEvent event) {
+        myPackageCache.clear();
+      }
+
       @Override
       public void fileDeleted(@NotNull VirtualFileEvent event) {
         myPackageCache.clear();
