@@ -26,6 +26,7 @@ import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 /**
  * @author VISTALL
@@ -37,29 +38,41 @@ public class ModernPasswordFieldUI extends BasicPasswordFieldUI implements Moder
 
   @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
   public static ComponentUI createUI(final JComponent c) {
-    ModernPasswordFieldUI ui = new ModernPasswordFieldUI(c);
-    c.addFocusListener(new FocusAdapter() {
+    return new ModernPasswordFieldUI(c);
+  }
+
+  private boolean myFocused;
+  private MouseEnterHandler myMouseEnterHandler;
+  private FocusListener myFocusListener;
+
+  public ModernPasswordFieldUI(JComponent c) {
+    myMouseEnterHandler = new MouseEnterHandler(c);
+  }
+
+  @Override
+  public void installUI(JComponent c) {
+    super.installUI(c);
+    myMouseEnterHandler.replace(null, c);
+    c.addFocusListener(myFocusListener = new FocusAdapter() {
       @Override
       public void focusGained(FocusEvent e) {
-        ui.myFocused = true;
+        myFocused = true;
         c.repaint();
       }
 
       @Override
       public void focusLost(FocusEvent e) {
-        ui.myFocused = false;
+        myFocused = false;
         c.repaint();
       }
     });
-
-    return ui;
   }
 
-  private boolean myFocused;
-  private MouseEnterHandler myMouseEnterHandler;
-
-  public ModernPasswordFieldUI(JComponent c) {
-    myMouseEnterHandler = new MouseEnterHandler(c);
+  @Override
+  public void uninstallUI(JComponent c) {
+    super.uninstallUI(c);
+    myMouseEnterHandler.replace(c, null);
+    c.removeFocusListener(myFocusListener);
   }
 
   @Override

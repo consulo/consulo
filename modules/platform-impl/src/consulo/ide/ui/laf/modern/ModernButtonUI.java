@@ -32,11 +32,10 @@ import java.awt.*;
 /**
  * @author VISTALL
  * @since 02.08.14
- *        <p/>
- *        Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaButtonUI}
+ * <p>
+ * Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaButtonUI}
  */
 public class ModernButtonUI extends BasicButtonUI {
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
   public static ComponentUI createUI(JComponent c) {
     return new ModernButtonUI(c);
   }
@@ -56,9 +55,21 @@ public class ModernButtonUI extends BasicButtonUI {
   }
 
   @Override
+  public void installUI(JComponent c) {
+    super.installUI(c);
+    myMouseEnterHandler.replace(null, c);
+  }
+
+  @Override
+  public void uninstallUI(JComponent c) {
+    super.uninstallUI(c);
+    myMouseEnterHandler.replace(c, null);
+  }
+
+  @Override
   public void paint(Graphics g, JComponent c) {
     final Border border = c.getBorder();
-    if(border != null) {
+    if (border != null) {
       final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
       final boolean square = isSquare(c);
 
@@ -117,7 +128,7 @@ public class ModernButtonUI extends BasicButtonUI {
       SwingUtilities2
               .drawStringUnderlineCharAt(c, g, text, -1, textRect.x + getTextShiftOffset() + 1, textRect.y + metrics.getAscent() + getTextShiftOffset() + 1);
 
-      if(!ModernButtonBorderPainter.isDefaultButton(button)) {
+      if (!ModernButtonBorderPainter.isDefaultButton(button)) {
         g.setColor(UIManager.getColor("Button.disabledText"));
         SwingUtilities2.drawStringUnderlineCharAt(c, g, text, -1, textRect.x + getTextShiftOffset(), textRect.y + metrics.getAscent() + getTextShiftOffset());
       }

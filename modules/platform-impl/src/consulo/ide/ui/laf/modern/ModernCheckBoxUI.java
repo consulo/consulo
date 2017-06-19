@@ -51,6 +51,18 @@ public class ModernCheckBoxUI extends BasicCheckBoxUI {
   }
 
   @Override
+  public void installUI(JComponent c) {
+    super.installUI(c);
+    myMouseEnterHandler.replace(null, c);
+  }
+
+  @Override
+  public void uninstallUI(JComponent c) {
+    super.uninstallUI(c);
+    myMouseEnterHandler.replace(c, null);
+  }
+
+  @Override
   public synchronized void paint(Graphics g2d, JComponent c) {
     Graphics2D g = (Graphics2D)g2d;
     JCheckBox b = (JCheckBox)c;

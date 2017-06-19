@@ -32,45 +32,58 @@ import java.awt.event.*;
 /**
  * @author VISTALL
  * @since 05.08.14
- * <p/>
+ * <p>
  * Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaTextFieldUI}
  */
 public class ModernTextFieldUI extends BasicTextFieldUI implements ModernTextBorder.ModernTextUI {
+  public static ComponentUI createUI(final JComponent c) {
+    return new ModernTextFieldUI((JTextField)c);
+  }
+
   private static final Icon SEARCH_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/search.png");
-  private static final Icon SEARCH_WITH_HISTORY_ICON =
-          IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/searchWithHistory.png");
+  private static final Icon SEARCH_WITH_HISTORY_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/searchWithHistory.png");
   private static final Icon CLEAR_ICON = IconLoader.findIcon("/com/intellij/ide/ui/laf/icons/clear.png");
 
-  private enum SearchAction {POPUP, CLEAR}
+  private enum SearchAction {
+    POPUP,
+    CLEAR
+  }
 
   private final MouseEnterHandler myMouseEnterHandler;
+  private FocusListener myFocusListener;
+  private MouseMotionListener myMouseMotionListener;
+  private MouseListener myMouseListener;
+
   private boolean myFocus;
 
   public ModernTextFieldUI(JTextField textField) {
     myMouseEnterHandler = new MouseEnterHandler(textField);
   }
 
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-  public static ComponentUI createUI(final JComponent c) {
-    final ModernTextFieldUI ui = new ModernTextFieldUI((JTextField)c);
-    c.addFocusListener(new FocusAdapter() {
+  @Override
+  public void installUI(JComponent c) {
+    super.installUI(c);
+
+    myMouseEnterHandler.replace(null, c);
+
+    c.addFocusListener(myFocusListener = new FocusAdapter() {
       @Override
       public void focusGained(FocusEvent e) {
-        ui.myFocus = true;
+        myFocus = true;
         c.repaint();
       }
 
       @Override
       public void focusLost(FocusEvent e) {
-        ui.myFocus = false;
+        myFocus = false;
         c.repaint();
       }
     });
-    c.addMouseMotionListener(new MouseMotionAdapter() {
+    c.addMouseMotionListener(myMouseMotionListener = new MouseMotionAdapter() {
       @Override
       public void mouseMoved(MouseEvent e) {
-        if (ui.getComponent() != null && isSearchField(c)) {
-          if (ui.getActionUnder(e) != null) {
+        if (isSearchField(c)) {
+          if (getActionUnder(e) != null) {
             c.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
           }
           else {
@@ -79,15 +92,15 @@ public class ModernTextFieldUI extends BasicTextFieldUI implements ModernTextBor
         }
       }
     });
-    c.addMouseListener(new MouseAdapter() {
+    c.addMouseListener(myMouseListener = new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
         if (isSearchField(c)) {
-          final SearchAction action = ui.getActionUnder(e);
+          final SearchAction action = getActionUnder(e);
           if (action != null) {
             switch (action) {
               case POPUP:
-                ui.showSearchPopup();
+                showSearchPopup();
                 break;
               case CLEAR:
                 ((JTextField)c).setText("");
@@ -98,7 +111,15 @@ public class ModernTextFieldUI extends BasicTextFieldUI implements ModernTextBor
         }
       }
     });
-    return ui;
+  }
+
+  @Override
+  public void uninstallUI(JComponent c) {
+    super.uninstallUI(c);
+    myMouseEnterHandler.replace(c, null);
+    c.removeFocusListener(myFocusListener);
+    c.removeMouseMotionListener(myMouseMotionListener);
+    c.removeMouseListener(myMouseListener);
   }
 
   protected void showSearchPopup() {
@@ -166,9 +187,7 @@ public class ModernTextFieldUI extends BasicTextFieldUI implements ModernTextBor
       }
       g.drawRect(r.x, r.y, r.width, r.height - JBUI.scale(1));
       Point p = getSearchIconCoord();
-      Icon searchIcon = getComponent().getClientProperty("JTextField.Search.FindPopup") instanceof JPopupMenu
-                        ? SEARCH_WITH_HISTORY_ICON
-                        : SEARCH_ICON;
+      Icon searchIcon = getComponent().getClientProperty("JTextField.Search.FindPopup") instanceof JPopupMenu ? SEARCH_WITH_HISTORY_ICON : SEARCH_ICON;
       searchIcon.paintIcon(null, g, p.x, p.y);
       if (getComponent().hasFocus() && getComponent().getText().length() > 0) {
         p = getClearIconCoord();

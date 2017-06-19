@@ -30,18 +30,16 @@ import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.util.ui.tree.TreeDecorationUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
-import javax.swing.plaf.TreeUI;
-import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -84,7 +82,6 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     myTree.setRootVisible(false);
     myTree.setShowsRootHandles(true);
-    myTree.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER));
     myBuilder = new MyBuilder(structure);
     myBuilder.setFilteringMerge(300, null);
     Disposer.register(this, myBuilder);
@@ -146,13 +143,8 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   public void updateUI() {
     super.updateUI();
 
-    TreeUI treeUI = myTree == null ? null : myTree.getUI();
-    if(treeUI instanceof BasicTreeUI) {
-      ((BasicTreeUI)treeUI).setLeftChildIndent(15);
-    }
-
     if(myTree != null) {
-      myTree.setBackground(OptionsEditor.getOptionsTreeBackgroundColor());
+      TreeDecorationUtil.decorateTree(myTree);
     }
   }
 

@@ -35,15 +35,26 @@ import java.awt.*;
  * Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaRadioButtonUI}
  */
 public class ModernRadioButtonUI extends BasicRadioButtonUI {
-  private MouseEnterHandler myMouseEnterHandler;
+  public static ComponentUI createUI(JComponent c) {
+    return new ModernRadioButtonUI(c);
+  }
+
+  private final MouseEnterHandler myMouseEnterHandler;
 
   public ModernRadioButtonUI(final JComponent c) {
     myMouseEnterHandler = new MouseEnterHandler(c);
   }
 
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-  public static ComponentUI createUI(JComponent c) {
-    return new ModernRadioButtonUI(c);
+  @Override
+  public void installUI(JComponent c) {
+    super.installUI(c);
+    myMouseEnterHandler.replace(null, c);
+  }
+
+  @Override
+  public void uninstallUI(JComponent c) {
+    super.uninstallUI(c);
+    myMouseEnterHandler.replace(c, null);
   }
 
   @Override

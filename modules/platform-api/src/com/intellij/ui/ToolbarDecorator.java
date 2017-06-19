@@ -51,6 +51,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
   protected boolean myUpActionEnabled;
   protected boolean myDownActionEnabled;
   protected Border myActionsPanelBorder;
+  private Color myToolbarBackgroundColor;
   private final List<AnAction> myExtraActions = new SmartList<>();
   private ActionToolbarPosition myToolbarPosition;
   protected AnActionButtonRunnable myAddAction;
@@ -149,6 +150,11 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
 
   public ToolbarDecorator disableDownAction() {
     myDownActionEnabled = false;
+    return this;
+  }
+
+  public ToolbarDecorator setToolbarBackgroundColor(@NotNull Color color) {
+    myToolbarBackgroundColor = color;
     return this;
   }
 
@@ -369,6 +375,10 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     updateButtons();
     installDnD();
     panel.putClientProperty(ActionToolbar.ACTION_TOOLBAR_PROPERTY_KEY, myActionsPanel.getComponent(0));
+
+    if (myToolbarBackgroundColor != null) {
+      myActionsPanel.setBackground(myToolbarBackgroundColor);
+    }
 
     Border mainBorder = myPanelBorder != null ? myPanelBorder : IdeBorderFactory.createBorder(SideBorder.ALL);
     if (myAsUsualTopToolbar) {

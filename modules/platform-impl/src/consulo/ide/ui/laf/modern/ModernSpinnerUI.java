@@ -69,6 +69,21 @@ public class ModernSpinnerUI extends BasicSpinnerUI implements ModernTextBorder.
   }
 
   @Override
+  public void installUI(JComponent c) {
+    super.installUI(c);
+    myMouseEnterHandler.replace(null, c);
+  }
+
+  @Override
+  public void uninstallUI(JComponent c) {
+    super.uninstallUI(c);
+
+    JComponent editor = ((JSpinner)c).getEditor();
+    Component component = editor.getComponents()[0];
+    myMouseEnterHandler.replace(component, null);
+  }
+
+  @Override
   protected void replaceEditor(JComponent oldEditor, JComponent newEditor) {
     super.replaceEditor(oldEditor, newEditor);
     if (oldEditor != null) {

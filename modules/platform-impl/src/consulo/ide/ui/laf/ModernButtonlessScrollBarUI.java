@@ -43,12 +43,7 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
     return new ModernButtonlessScrollBarUI();
   }
 
-  private static Factory<JButton> EMPTY_BUTTON_FACTORY = new Factory<JButton>() {
-    @Override
-    public JButton create() {
-      return new EmptyButton();
-    }
-  };
+  private static Factory<JButton> EMPTY_BUTTON_FACTORY = EmptyButton::new;
 
   private final AdjustmentListener myAdjustmentListener;
   private final MouseMotionAdapter myMouseMotionListener;
@@ -58,12 +53,7 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
   private boolean myMouseIsOverThumb = false;
 
   protected ModernButtonlessScrollBarUI() {
-    myAdjustmentListener = new AdjustmentListener() {
-      @Override
-      public void adjustmentValueChanged(AdjustmentEvent e) {
-        repaint();
-      }
-    };
+    myAdjustmentListener = e -> repaint();
 
     myMouseMotionListener = new MouseMotionAdapter() {
       @Override
