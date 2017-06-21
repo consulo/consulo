@@ -208,7 +208,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     return new LibraryImpl(this, this, myModuleRootLayer);
   }
 
-  @Override
+  @NotNull
   public Library cloneLibrary(ModuleRootLayerImpl moduleRootLayer) {
     LOG.assertTrue(myLibraryTable == null);
     final LibraryImpl clone = new LibraryImpl(this, null, moduleRootLayer);

@@ -20,6 +20,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
@@ -124,7 +125,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 
   @Override
   public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel) {
-    return new ModuleLibraryOrderEntryImpl(((LibraryEx)myLibrary).cloneLibrary(rootModel), rootModel, myExported, myScope, true);
+    return new ModuleLibraryOrderEntryImpl(((LibraryImpl)myLibrary).cloneLibrary(rootModel), rootModel, myExported, myScope, true);
   }
 
   @Override
