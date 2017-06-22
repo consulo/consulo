@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
+package com.intellij.ide.plugins.pluginsAdvertisement;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
@@ -26,6 +26,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.*;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -33,6 +34,7 @@ import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

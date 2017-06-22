@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
+package com.intellij.ide.plugins.pluginsAdvertisement;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
@@ -25,10 +25,13 @@ import com.intellij.openapi.fileTypes.FileNameMatcherFactory;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
 import com.intellij.openapi.util.Couple;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.plugins.SimpleExtension;
+import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.HyperlinkEvent;

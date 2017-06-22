@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
+package com.intellij.ide.plugins.pluginsAdvertisement;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.InstallPluginAction;
