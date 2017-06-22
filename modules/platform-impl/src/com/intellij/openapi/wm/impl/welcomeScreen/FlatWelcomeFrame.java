@@ -134,10 +134,6 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
     return new JBColor(Gray._0, Gray.xBB);
   }
 
-  public static Color getListSelectionColor(boolean hasFocus) {
-    return hasFocus ? new JBColor(0x3875d6, 0x4b6eaf) : new JBColor(Gray.xDD, Gray.x45);
-  }
-
   public static Color getActionLinkSelectionColor() {
     return new JBColor(0xdbe5f5, 0x485875);
   }
