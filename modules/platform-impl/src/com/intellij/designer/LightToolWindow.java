@@ -35,6 +35,7 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.ui.ToolwindowPaintUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -554,7 +555,7 @@ public class LightToolWindow extends JPanel {
 
     BufferedImage image = UIUtil.createImage(width, height, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g = image.createGraphics();
-    UIUtil.drawHeader(g, 0, width, height, active, true, false, false);
+    ToolwindowPaintUtil.drawHeader(g, 0, width, height, active, true, false, false);
     g.dispose();
 
     return image;

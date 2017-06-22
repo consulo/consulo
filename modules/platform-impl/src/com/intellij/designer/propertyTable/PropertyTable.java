@@ -37,6 +37,7 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.PairFunction;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.ui.ToolwindowPaintUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -1212,7 +1213,7 @@ public abstract class PropertyTable extends JBTable {
             super.paintBackground(g, x, width, height);
           }
           else {
-            UIUtil.drawHeader(g, x, width, height, true, myDrawTopLine);
+            ToolwindowPaintUtil.drawHeader(g, x, width, height, true, myDrawTopLine);
           }
         }
       };
