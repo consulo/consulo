@@ -26,14 +26,15 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.*;
-import com.intellij.openapi.util.Couple;
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -107,8 +108,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     }
     else {
       panel.createActionLabel("Install plugins", () -> {
-        final PluginsAdvertiserDialog advertiserDialog =
-                new PluginsAdvertiserDialog(null, plugins.stream().map(x -> Couple.of(x, x)).collect(Collectors.toList()), allPlugins);
+        final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, new ArrayList<>(plugins));
         advertiserDialog.show();
         if (advertiserDialog.isUserInstalledPlugins()) {
           myEnabledExtensions.add(extension);

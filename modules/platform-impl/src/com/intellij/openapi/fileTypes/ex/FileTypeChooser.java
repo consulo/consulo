@@ -16,17 +16,14 @@
 package com.intellij.openapi.fileTypes.ex;
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiser;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.impl.FileTypeRenderer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiser;
-import com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
-import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
-import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
@@ -39,15 +36,17 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
+import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class FileTypeChooser extends DialogWrapper {
   private JList<FileType> myList;
@@ -188,8 +187,7 @@ public class FileTypeChooser extends DialogWrapper {
     final FileType type = chooser.getSelectedType();
     if (type == null) {
       final PluginsAdvertiserDialog advertiserDialog =
-              new PluginsAdvertiserDialog(null, chooser.myFeaturePlugins.stream().map(x -> Couple.of(x, x)).collect(Collectors.toList()),
-                                          PluginsAdvertiserHolder.getLoadedPluginDescriptors());
+              new PluginsAdvertiserDialog(null, new ArrayList<>(chooser.myFeaturePlugins));
       advertiserDialog.show();
       return null;
     }

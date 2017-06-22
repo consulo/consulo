@@ -41,13 +41,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
   protected static final String STATUS = "Status";
 
   public AvailablePluginsTableModel() {
-    super.columns = new ColumnInfo[] {
-            new AvailablePluginColumnInfo(this),
-            //new PluginManagerColumnInfo(PluginManagerColumnInfo.COLUMN_DOWNLOADS, this),
-            //new PluginManagerColumnInfo(PluginManagerColumnInfo.COLUMN_RATE, this),
-            //new PluginManagerColumnInfo(PluginManagerColumnInfo.COLUMN_DATE, this)
-      /*,
-      new PluginManagerColumnInfo(PluginManagerColumnInfo.COLUMN_CATEGORY, this)*/};
+    super.columns = new ColumnInfo[]{new AvailablePluginColumnInfo(this)};
 
     setSortKey(new RowSorter.SortKey(getNameColumn(), SortOrder.ASCENDING));
     view = new ArrayList<>();
@@ -65,7 +59,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
   @Override
   public boolean isPluginDescriptorAccepted(IdeaPluginDescriptor descriptor) {
     final String category = descriptor.getCategory();
-    if (category != null){
+    if (category != null) {
       if (!ALL.equals(myCategory) && !category.equals(myCategory)) return false;
     }
 
@@ -102,7 +96,8 @@ public class AvailablePluginsTableModel extends PluginTableModel {
       final String category = descr.getCategory();
       if (category != null) {
         myAvailableCategories.add(category);
-      } else {
+      }
+      else {
         myAvailableCategories.add(AvailablePluginsManagerMain.N_A);
       }
     }

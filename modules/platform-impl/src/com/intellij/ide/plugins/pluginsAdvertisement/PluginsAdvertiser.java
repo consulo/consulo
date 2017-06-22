@@ -27,16 +27,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
-import com.intellij.openapi.util.Couple;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.plugins.SimpleExtension;
+import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class PluginsAdvertiser implements StartupActivity {
   private static NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
@@ -95,7 +94,7 @@ public class PluginsAdvertiser implements StartupActivity {
           else if ("configure".equals(description)) {
             notification.expire();
 
-            new PluginsAdvertiserDialog(project, ids.stream().map(x -> Couple.of(x, x)).collect(Collectors.toList()), pluginDescriptors).show();
+            new PluginsAdvertiserDialog(project, new ArrayList<>(ids)).show();
           }
         }
       }).notify(project);
