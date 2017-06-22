@@ -30,7 +30,6 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
@@ -40,6 +39,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.plugins.InstalledPluginsState;
+import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
 import org.jetbrains.annotations.NotNull;
@@ -128,7 +128,8 @@ public class PlatformOrPluginUpdateChecker {
     switch (type) {
       case NO_UPDATE:
         if (showResults) {
-          ourGroup.createNotification(IdeBundle.message("update.available.group"), "There no updates", NotificationType.INFORMATION, null).notify(project);
+          ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.there.are.no.updates"),
+                                      NotificationType.INFORMATION, null).notify(project);
         }
         break;
       case PLUGIN_UPDATE:
@@ -138,8 +139,9 @@ public class PlatformOrPluginUpdateChecker {
         }
         else {
           Notification notification =
-                  ourGroup.createNotification(IdeBundle.message("update.available.group"), "Updates available", NotificationType.INFORMATION, null);
-          notification.addAction(new NotificationAction("View updates") {
+                  ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.available"), NotificationType.INFORMATION,
+                                              null);
+          notification.addAction(new NotificationAction(IdeBundle.message("update.view.updates")) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
               new PluginListDialog(project, targetsForUpdate, null, null).show();
