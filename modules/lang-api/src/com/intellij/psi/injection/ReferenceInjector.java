@@ -17,7 +17,6 @@ package com.intellij.psi.injection;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
@@ -47,11 +46,6 @@ public abstract class ReferenceInjector extends Injectable {
   public abstract PsiReference[] getReferences(@NotNull PsiElement element, @NotNull final ProcessingContext context, @NotNull TextRange range);
 
   public static ReferenceInjector findById(final String id) {
-    return ContainerUtil.find(EXTENSION_POINT_NAME.getExtensions(), new Condition<ReferenceInjector>() {
-      @Override
-      public boolean value(ReferenceInjector injector) {
-        return id.equals(injector.getId());
-      }
-    });
+    return ContainerUtil.find(EXTENSION_POINT_NAME.getExtensions(), injector -> id.equals(injector.getId()));
   }
 }
