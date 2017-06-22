@@ -198,9 +198,6 @@ public class PlatformOrPluginUpdateChecker {
           // change current build
           currentBuildNumber = pluginDescriptor.getVersion();
           newPlatformPlugin = pluginDescriptor;
-
-          // FIXME [VISTALL]  drop it
-          ((PluginNode)pluginDescriptor).setName("Platform");
           break;
         }
       }
