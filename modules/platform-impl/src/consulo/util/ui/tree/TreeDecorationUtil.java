@@ -53,8 +53,12 @@ public class TreeDecorationUtil {
       Color color = IntelliJLaf.isGraphite() ? DarculaUIUtil.MAC_GRAPHITE_COLOR : DarculaUIUtil.MAC_REGULAR_COLOR;
       return ColorUtil.desaturate(color, 8);
     }
+    Color color = UIManager.getColor("Hyperlink.linkColor");
+    if(color == null) {
+      color = DarculaUIUtil.MAC_REGULAR_COLOR;
+    }
     return UIUtil.isUnderDarkTheme()
-           ? ColorUtil.darker(UIManager.getColor("Hyperlink.linkColor"), 10)
-           : ColorUtil.desaturate(UIManager.getColor("Hyperlink.linkColor"), 18);
+           ? ColorUtil.darker(color, 10)
+           : ColorUtil.desaturate(color, 18);
   }
 }
