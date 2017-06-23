@@ -125,7 +125,7 @@ public class EventLog {
   }
 
   public static LogEntry formatForLog(@NotNull final Notification notification, final String indent) {
-    DocumentImpl logDoc = new DocumentImpl("",true);
+    DocumentImpl logDoc = new DocumentImpl("", true);
     AtomicBoolean showMore = new AtomicBoolean(false);
     Map<RangeMarker, HyperlinkInfo> links = new LinkedHashMap<RangeMarker, HyperlinkInfo>();
     List<RangeMarker> lineSeparators = new ArrayList<RangeMarker>();
@@ -151,7 +151,7 @@ public class EventLog {
     hasHtml |= parseHtmlContent(addIndents(content, indent), notification, logDoc, showMore, links, lineSeparators);
 
     List<AnAction> actions = notification.getActions();
-    if (NotificationsManagerImpl.newEnabled() && !actions.isEmpty()) {
+    if (!actions.isEmpty()) {
       String text = "<p>" + StringUtil.join(actions, new Function<AnAction, String>() {
         private int index;
 
@@ -191,8 +191,7 @@ public class EventLog {
         appendText(logDoc, " ");
       }
       appendText(logDoc, "(" + sb + ")");
-      list.add(new Pair<TextRange, HyperlinkInfo>(TextRange.from(logDoc.getTextLength() - 1 - sb.length(), sb.length()),
-                                                  new ShowBalloon(notification)));
+      list.add(new Pair<TextRange, HyperlinkInfo>(TextRange.from(logDoc.getTextLength() - 1 - sb.length(), sb.length()), new ShowBalloon(notification)));
     }
 
     return new LogEntry(logDoc.getText(), status, list, titleLength);
@@ -258,12 +257,8 @@ public class EventLog {
     }
   }
 
-  private static String getStatusText(DocumentImpl logDoc,
-                                      AtomicBoolean showMore,
-                                      List<RangeMarker> lineSeparators,
-                                      String indent,
-                                      boolean hasHtml) {
-    DocumentImpl statusDoc = new DocumentImpl(logDoc.getImmutableCharSequence(),true);
+  private static String getStatusText(DocumentImpl logDoc, AtomicBoolean showMore, List<RangeMarker> lineSeparators, String indent, boolean hasHtml) {
+    DocumentImpl statusDoc = new DocumentImpl(logDoc.getImmutableCharSequence(), true);
     List<RangeMarker> statusSeparators = new ArrayList<RangeMarker>();
     for (RangeMarker separator : lineSeparators) {
       if (separator.isValid()) {
@@ -276,10 +271,12 @@ public class EventLog {
     return statusDoc.getText();
   }
 
-  private static boolean parseHtmlContent(String text, Notification notification,
+  private static boolean parseHtmlContent(String text,
+                                          Notification notification,
                                           Document document,
                                           AtomicBoolean showMore,
-                                          Map<RangeMarker, HyperlinkInfo> links, List<RangeMarker> lineSeparators) {
+                                          Map<RangeMarker, HyperlinkInfo> links,
+                                          List<RangeMarker> lineSeparators) {
     String content = StringUtil.convertLineSeparators(text);
 
     int initialLen = document.getTextLength();
@@ -301,8 +298,7 @@ public class EventLog {
           String linkText = content.substring(tagMatcher.end(), linkEnd).replaceAll(TAG_PATTERN.pattern(), "");
           int linkStart = document.getTextLength();
           appendText(document, linkText);
-          links.put(document.createRangeMarker(new TextRange(linkStart, document.getTextLength())),
-                    new NotificationHyperlinkInfo(notification, href));
+          links.put(document.createRangeMarker(new TextRange(linkStart, document.getTextLength())), new NotificationHyperlinkInfo(notification, href));
           content = content.substring(linkEnd + A_CLOSING.length());
           continue;
         }
@@ -334,18 +330,18 @@ public class EventLog {
   }
 
   private static final String[] HTML_TAGS =
-          {"a", "abbr", "acronym", "address", "applet", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo", "big",
-                  "blockquote", "body", "br", "button", "canvas", "caption", "center", "cite", "code", "col", "colgroup", "command", "datalist", "dd",
-                  "del", "details", "dfn", "dir", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "font", "footer", "form",
-                  "frame", "frameset", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hgroup", "hr", "html", "i", "iframe", "img", "input",
-                  "ins", "kbd", "keygen", "label", "legend", "li", "link", "map", "mark", "menu", "meta", "meter", "nav", "noframes", "noscript",
-                  "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script",
-                  "section", "select", "small", "source", "span", "strike", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td",
-                  "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul", "var", "video", "wbr"};
+          {"a", "abbr", "acronym", "address", "applet", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo", "big", "blockquote", "body",
+                  "br", "button", "canvas", "caption", "center", "cite", "code", "col", "colgroup", "command", "datalist", "dd", "del", "details", "dfn", "dir",
+                  "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "font", "footer", "form", "frame", "frameset", "h1", "h2", "h3", "h4",
+                  "h5", "h6", "head", "header", "hgroup", "hr", "html", "i", "iframe", "img", "input", "ins", "kbd", "keygen", "label", "legend", "li", "link",
+                  "map", "mark", "menu", "meta", "meter", "nav", "noframes", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "pre",
+                  "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small", "source", "span", "strike", "strong", "style",
+                  "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul", "var",
+                  "video", "wbr"};
 
   private static final String[] SKIP_TAGS = {"html", "body", "b", "i", "font"};
 
-  private static boolean isTag(@NotNull String []tags, @NotNull String tag) {
+  private static boolean isTag(@NotNull String[] tags, @NotNull String tag) {
     tag = tag.substring(1, tag.length() - 1); // skip <>
     tag = StringUtil.trimEnd(StringUtil.trimStart(tag, "/"), "/"); // skip /
     int index = tag.indexOf(' ');
@@ -434,7 +430,7 @@ public class EventLog {
     final ToolWindow eventLog = getEventLog(project);
     if (eventLog != null) {
       if (!eventLog.isVisible()) {
-        activate(eventLog, notification == null ? null :notification.getGroupId(), null);
+        activate(eventLog, notification == null ? null : notification.getGroupId(), null);
       }
       else {
         eventLog.hide(null);
@@ -643,14 +639,13 @@ public class EventLog {
       if (target != null) {
         IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
         assert frame != null;
-        Ref<Object> layoutDataRef = null;
-        if (NotificationsManagerImpl.newEnabled()) {
-          BalloonLayoutData layoutData = new BalloonLayoutData();
-          layoutData.groupId = "";
-          layoutData.showFullContent = true;
-          layoutData.showSettingButton = false;
-          layoutDataRef = new Ref<Object>(layoutData);
-        }
+        Ref<BalloonLayoutData> layoutDataRef = null;
+        BalloonLayoutData layoutData = new BalloonLayoutData();
+        layoutData.groupId = "";
+        layoutData.showFullContent = true;
+        layoutData.showSettingButton = false;
+        layoutDataRef = Ref.create(layoutData);
+
         Balloon balloon = NotificationsManagerImpl.createBalloon(frame, myNotification, true, true, layoutDataRef, project);
         balloon.show(target, Balloon.Position.above);
       }

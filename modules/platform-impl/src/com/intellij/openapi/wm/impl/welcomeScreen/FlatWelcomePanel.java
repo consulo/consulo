@@ -21,7 +21,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.impl.IdeNotificationArea;
-import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -113,9 +112,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     NonOpaquePanel toolbar = new NonOpaquePanel();
 
     toolbar.setLayout(new BoxLayout(toolbar, BoxLayout.X_AXIS));
-    if (NotificationsManagerImpl.newEnabled()) {
-      toolbar.add(createEventsLink());
-    }
+    toolbar.add(createEventsLink());
     toolbar.add(createActionLink("Configure", IdeActions.GROUP_WELCOME_SCREEN_CONFIGURE, AllIcons.General.GearPlain, true));
     toolbar.add(createActionLink("Get Help", IdeActions.GROUP_WELCOME_SCREEN_DOC, null, false));
 
