@@ -34,6 +34,7 @@ import consulo.annotations.DeprecationInfo;
 import consulo.ui.GTKPlusUIUtil;
 import consulo.ui.laf.MorphColor;
 import consulo.util.ui.BuildInLookAndFeel;
+import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -49,14 +50,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.ComboBoxUI;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.ProgressBarUI;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicRadioButtonUI;
 import javax.swing.plaf.basic.ComboPopup;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.NumberFormatter;
+import javax.swing.text.*;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import javax.swing.undo.UndoManager;
@@ -69,6 +68,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ImageObserver;
 import java.awt.image.PixelGrabber;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -189,6 +189,9 @@ public class UIUtil {
     DEFAULT_HTML_KIT_CSS = kit.getStyleSheet();
     // .. erase global ref to this CSS so no one can alter it
     kit.setStyleSheet(null);
+
+    // Applied to all JLabel instances, including subclasses. Supported in JBSDK only.
+    UIManager.getDefaults().put("javax.swing.JLabel.userStyleSheet", UIUtil.JBHtmlEditorKit.createStyleSheet());
   }
 
   private static void blockATKWrapper() {
@@ -2371,30 +2374,64 @@ public class UIUtil {
   }
 
   public static HTMLEditorKit getHTMLEditorKit(boolean noGapsBetweenParagraphs) {
-    Font font = getLabelFont();
-    @NonNls String family = !SystemInfo.isWindows && font != null ? font.getFamily() : "Tahoma";
-    final int size = font != null ? font.getSize() : JBUI.scale(11);
+    return new JBHtmlEditorKit(noGapsBetweenParagraphs);
+  }
 
-    String customCss = String.format("body, div, p { font-family: %s; font-size: %s; }", family, size);
-    if (noGapsBetweenParagraphs) {
-      customCss += " p { margin-top: 0; }";
+  public static class JBHtmlEditorKit extends HTMLEditorKit {
+    private final StyleSheet style;
+
+    public JBHtmlEditorKit() {
+      this(true);
     }
 
-    final StyleSheet style = new StyleSheet();
-    if (isUnderDarkBuildInLaf() && !isUnderGTKLookAndFeel()) {
-      style.addStyleSheet((StyleSheet)UIManager.getDefaults().get("StyledEditorKit.JBDefaultStyle"));
+    public JBHtmlEditorKit(boolean noGapsBetweenParagraphs) {
+      style = createStyleSheet();
+      if (noGapsBetweenParagraphs) style.addRule("p { margin-top: 0; }");
     }
-    else {
-      style.addStyleSheet(DEFAULT_HTML_KIT_CSS);
-    }
-    style.addRule(customCss);
 
-    return new HTMLEditorKit() {
-      @Override
-      public StyleSheet getStyleSheet() {
-        return style;
+    @Override
+    public StyleSheet getStyleSheet() {
+      return style;
+    }
+
+    public static StyleSheet createStyleSheet() {
+      StyleSheet style = new StyleSheet();
+      style.addStyleSheet(isUnderDarkTheme() && !isUnderGTKLookAndFeel() ? (StyleSheet)UIManager.getDefaults().get("StyledEditorKit.JBDefaultStyle") : DEFAULT_HTML_KIT_CSS);
+      style.addRule("code { font-size: 100%; }"); // small by Swing's default
+      style.addRule("small { font-size: small; }"); // x-small by Swing's default
+      return style;
+    }
+
+    @Override
+    public void install(final JEditorPane pane) {
+      super.install(pane);
+      if (pane != null) {
+        // JEditorPane.HONOR_DISPLAY_PROPERTIES must be set after HTMLEditorKit is completely installed
+        pane.addPropertyChangeListener("editorKit", new PropertyChangeListener() {
+          @Override
+          public void propertyChange(PropertyChangeEvent e) {
+            Font font = getLabelFont();
+            assert font instanceof FontUIResource;
+            if (SystemInfo.isWindows) {
+              font = getFontWithFallback("Tahoma", font.getStyle(), font.getSize());
+            }
+            // In case JBUI user scale factor changes, the font will be auto-updated by BasicTextUI.installUI()
+            // with a font of the properly scaled size. And is then propagated to CSS, making HTML text scale dynamically.
+            pane.setFont(font);
+
+            // let CSS font properties inherit from the pane's font
+            pane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+            pane.removePropertyChangeListener(this);
+          }
+        });
       }
-    };
+    }
+  }
+
+
+  public static FontUIResource getFontWithFallback(@NotNull String familyName, @JdkConstants.FontStyle int style, int size) {
+    Font fontWithFallback = new StyleContext().getFont(familyName, style, size);
+    return fontWithFallback instanceof FontUIResource ? (FontUIResource)fontWithFallback : new FontUIResource(fontWithFallback);
   }
 
   public static void removeScrollBorder(final Component c) {
