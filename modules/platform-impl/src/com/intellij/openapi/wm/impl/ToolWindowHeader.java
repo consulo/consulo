@@ -42,9 +42,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.util.ui.ToolwindowPaintUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.plaf.PanelUI;
@@ -391,7 +392,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
 
     BufferedImage image = UIUtil.createImage(width, height, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g = image.createGraphics();
-    UIUtil.drawHeader(g, 0, width, height, active, true, !floating, true);
+    ToolwindowPaintUtil.drawHeader(g, 0, width, height, active, true, !floating, true);
     g.dispose();
 
     return image;

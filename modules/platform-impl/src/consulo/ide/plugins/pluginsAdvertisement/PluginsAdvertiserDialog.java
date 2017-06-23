@@ -103,7 +103,7 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
 
   @Override
   public Dimension getDefaultSize() {
-    return new Dimension(500, 700);
+    return new Dimension(500, 800);
   }
 
   @Override
