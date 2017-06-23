@@ -18,6 +18,7 @@ package consulo.util.ui.tree;
 import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ui.ColorUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.laf.MorphColor;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,7 @@ public class TreeDecorationUtil {
   public static void decorateTree(@NotNull JTree tree) {
     TreeUI treeUI = tree.getUI();
     if (treeUI instanceof BasicTreeUI) {
-      ((BasicTreeUI)treeUI).setLeftChildIndent(10);
+      ((BasicTreeUI)treeUI).setLeftChildIndent(JBUI.scale(10));
     }
 
     tree.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER));

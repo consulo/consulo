@@ -77,6 +77,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.synth.Region;
@@ -92,8 +93,10 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Eugene Belyaev
@@ -479,6 +482,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
 
     patchLafFonts(uiDefaults);
 
+    patchHiDPI(uiDefaults);
+
     patchOptionPaneIcons(uiDefaults);
 
     fixSeparatorColor(uiDefaults);
@@ -613,6 +618,41 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     new JBPopupMenu();  // invokes updateUI() -> updateStyle()
 
     SynthLookAndFeel.setStyleFactory(original);
+  }
+
+  private static void patchHiDPI(UIDefaults defaults) {
+    Object prevScaleVal = defaults.get("hidpi.scaleFactor");
+    // used to normalize previously patched values
+    float prevScale = prevScaleVal != null ? (Float)prevScaleVal : 1f;
+
+    if (prevScale == JBUI.scale(1f) && prevScaleVal != null) return;
+
+    List<String> myIntKeys = Arrays.asList("Tree.leftChildIndent", "Tree.rightChildIndent", "Tree.rowHeight");
+
+    List<String> myDimensionKeys = Arrays.asList("Slider.horizontalSize", "Slider.verticalSize", "Slider.minimumHorizontalSize", "Slider.minimumVerticalSize");
+
+    for (Map.Entry<Object, Object> entry : defaults.entrySet()) {
+      Object value = entry.getValue();
+      String key = entry.getKey().toString();
+      if (value instanceof Dimension) {
+        if (value instanceof UIResource || myDimensionKeys.contains(key)) {
+          entry.setValue(JBUI.size((Dimension)value).asUIResource());
+        }
+      }
+      else if (value instanceof Insets) {
+        if (value instanceof UIResource) {
+          entry.setValue(JBUI.insets(((Insets)value)).asUIResource());
+        }
+      }
+      else if (value instanceof Integer) {
+        // FIXME [VISTALL] we already fix maxGutterIconWidth with UI classes
+        if (/*key.endsWith(".maxGutterIconWidth") || */myIntKeys.contains(key)) {
+          int normValue = (int)((Integer)value / prevScale);
+          entry.setValue(Integer.valueOf(JBUI.scale(normValue)));
+        }
+      }
+    }
+    defaults.put("hidpi.scaleFactor", JBUI.scale(1f));
   }
 
   private static void patchFileChooserStrings(final UIDefaults defaults) {
