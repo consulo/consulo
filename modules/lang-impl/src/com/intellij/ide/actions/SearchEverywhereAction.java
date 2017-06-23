@@ -436,8 +436,8 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
       if (more < newIndex) {
         more = myList.getItemsCount() - 1;
       }
-      ListScrollingUtil.ensureIndexIsVisible(myList, more, forward ? 1 : -1);
-      ListScrollingUtil.ensureIndexIsVisible(myList, newIndex, forward ? 1 : -1);
+      ScrollingUtil.ensureIndexIsVisible(myList, more, forward ? 1 : -1);
+      ScrollingUtil.ensureIndexIsVisible(myList, newIndex, forward ? 1 : -1);
     }
   }
 
@@ -2075,7 +2075,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
             myList.revalidate();
             myList.repaint();
           }
-          ListScrollingUtil.ensureSelectionExists(myList);
+          ScrollingUtil.ensureSelectionExists(myList);
           if (myList.getModel().getSize() > 0) {
             updatePopupBounds();
           }
@@ -2150,7 +2150,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
                             break;
                         }
                       }
-                      ListScrollingUtil.selectItem(myList, index);
+                      ScrollingUtil.selectItem(myList, index);
                       myDone.setDone();
                     }
                     catch (Exception e) {

@@ -76,7 +76,7 @@ public class ActionMacroConfigurationPanel implements Disposable {
       myMacrosModel.addElement(macro.clone());
     }
     myMacrosList.setModel(myMacrosModel);
-    ListScrollingUtil.ensureSelectionExists(myMacrosList);
+    ScrollingUtil.ensureSelectionExists(myMacrosList);
   }
 
   public void apply() {
@@ -136,7 +136,7 @@ public class ActionMacroConfigurationPanel implements Disposable {
       actionModel.addElement(action);
     }
     myMacroActionsList.setModel(actionModel);
-    ListScrollingUtil.ensureSelectionExists(myMacroActionsList);
+    ScrollingUtil.ensureSelectionExists(myMacroActionsList);
   }
 
   public JPanel getPanel() {

@@ -41,7 +41,7 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiTreeChangeEvent;
 import com.intellij.psi.PsiTreeChangeListener;
-import com.intellij.ui.ListScrollingUtil;
+import com.intellij.ui.ScrollingUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NotNull;
 
@@ -305,7 +305,7 @@ public class NavBarListener extends WolfTheProblemSolver.ProblemListener
     return action instanceof PopupAction
            || action instanceof CopyAction
            || action instanceof CutAction
-           || action instanceof ListScrollingUtil.ListScrollAction;
+           || action instanceof ScrollingUtil.ListScrollAction;
   }
 
   @Override

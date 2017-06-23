@@ -99,7 +99,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     final TableSpeedSearch speedSearch = new TableSpeedSearch(myTable);
     speedSearch.setClearSearchOnNavigateNoMatch(true);
     PopupHandler.installUnknownPopupHandler(myTable, createPopupGroup(), ActionManager.getInstance());
-    TableScrollingUtil.installActions(myTable);
+    ScrollingUtil.installActions(myTable);
 
     myTable.registerKeyboardAction(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {

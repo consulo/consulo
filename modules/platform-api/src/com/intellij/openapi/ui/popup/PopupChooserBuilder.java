@@ -31,6 +31,7 @@ import com.intellij.util.BooleanFunction;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.Nls;
@@ -539,9 +540,9 @@ public class PopupChooserBuilder {
         ListUtil.installAutoSelectOnMouseMove(list);
       }
 
-      ListScrollingUtil.installActions(list);
+      ScrollingUtil.installActions(list);
 
-      setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+      setBorder(JBUI.Borders.empty());
       myList = list;
     }
 

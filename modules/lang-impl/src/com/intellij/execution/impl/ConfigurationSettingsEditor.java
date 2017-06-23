@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.ListScrollingUtil;
+import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.Convertor;
 import org.jetbrains.annotations.NonNls;
@@ -226,7 +226,7 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
     public void addExecutorComponent(Executor executor, JComponent component) {
       myRunnerPanel.add(component, executor.getId());
       myListModel.addElement(executor);
-      ListScrollingUtil.ensureSelectionExists(myRunnersList);
+      ScrollingUtil.ensureSelectionExists(myRunnersList);
     }
 
     public JComponent getComponent() {

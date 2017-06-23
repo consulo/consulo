@@ -18,7 +18,7 @@ package com.intellij.ide.navigationToolbar;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.ListScrollingUtil;
+import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
@@ -54,7 +54,7 @@ class NavBarListWrapper extends JBScrollPane implements DataProvider {
       }
     });
 
-    ListScrollingUtil.installActions(list);
+    ScrollingUtil.installActions(list);
 
     final int modelSize = list.getModel().getSize();
     setBorder(BorderFactory.createEmptyBorder());
