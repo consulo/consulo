@@ -63,7 +63,7 @@ public class DarculaSpinnerBorder implements Border, UIResource {
     }
 
     if (focused) {
-      DarculaUIUtil.paintFocusRing(g, x1, y1, width1, height1);
+      DarculaUIUtil.paintFocusRing(g, new Rectangle(x1, y1, width1, height1));
     }
     else {
       g.setColor(Gray._100);
