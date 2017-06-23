@@ -17,7 +17,6 @@ package com.intellij.ui;
 
 import com.intellij.ide.ui.AntialiasingType;
 import com.intellij.util.ui.FontInfo;
-import consulo.util.ui.AntialiasingUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

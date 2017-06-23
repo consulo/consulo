@@ -53,10 +53,10 @@ import com.intellij.ui.mac.foundation.ID;
 import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ReflectionUtil;
+import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.OwnerOptional;
 import com.intellij.util.ui.UIUtil;
-import consulo.util.ui.AntialiasingUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -907,7 +907,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
           myOpened = true;
           final DialogWrapper activeWrapper = getActiveWrapper();
           for (JComponent c : UIUtil.uiTraverser(e.getWindow()).filter(JComponent.class)) {
-            AntialiasingUtil.setup(c::putClientProperty, AntialiasingType.getAAHintForSwingComponent());
+            GraphicsUtil.setAntialiasingType(c, AntialiasingType.getAAHintForSwingComponent());
           }
           if (activeWrapper == null) {
             myFocusedCallback.setRejected();
