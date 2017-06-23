@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.ui.ListScrollingUtil;
+import com.intellij.ui.ScrollingUtil;
 
 public class HomeHandler extends EditorActionHandler {
   private final EditorActionHandler myOriginalHandler;
@@ -39,6 +39,6 @@ public class HomeHandler extends EditorActionHandler {
     }
 
     lookup.markSelectionTouched();
-    ListScrollingUtil.moveHome(lookup.getList());
+    ScrollingUtil.moveHome(lookup.getList());
   }
 }

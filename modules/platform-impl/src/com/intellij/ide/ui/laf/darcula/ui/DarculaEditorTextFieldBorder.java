@@ -52,7 +52,7 @@ public class DarculaEditorTextFieldBorder implements Border {
     }
 
     if (textField.isEnabled() && textField.isVisible() && textField.getFocusTarget().hasFocus()) {
-      DarculaUIUtil.paintFocusRing(g, x1, y1, width1, height1);
+      DarculaUIUtil.paintFocusRing(g, new Rectangle(x1, y1, width1, height1));
     }
     else {
       g.setColor(new JBColor(Gray._150, Gray._100));

@@ -26,6 +26,7 @@ import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ComponentTreeEventDispatcher;
 import com.intellij.util.SystemProperties;
+import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.Accessor;
 import com.intellij.util.xmlb.SerializationFilter;
@@ -33,7 +34,6 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.annotations.DeprecationInfo;
-import consulo.util.ui.AntialiasingUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -439,10 +439,13 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
    * @see #setupComponentAntialiasing(JComponent)
    */
   public static void setupComponentAntialiasing(JComponent component) {
-    AntialiasingUtil.setup(component::putClientProperty, AntialiasingType.getAAHintForSwingComponent());
+    GraphicsUtil.setAntialiasingType(component, AntialiasingType.getAAHintForSwingComponent());
   }
 
   public static void setupEditorAntialiasing(JComponent component) {
-    AntialiasingUtil.setup(component::putClientProperty, getInstance().EDITOR_AA_TYPE.getTextInfo());
+    UISettings settings = getInstanceOrNull();
+    if (settings != null) {
+      GraphicsUtil.setAntialiasingType(component, settings.EDITOR_AA_TYPE.getTextInfo());
+    }
   }
 }

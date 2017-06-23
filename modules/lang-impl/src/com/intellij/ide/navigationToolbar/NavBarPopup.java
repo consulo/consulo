@@ -131,7 +131,7 @@ public class NavBarPopup extends LightweightHint implements Disposable{
       show(myPanel, p.x - JBUI.scale(offset), p.y, myPanel, new HintHint(myPanel, p));
       final JBList list = getList();
       if (0 <= myIndex && myIndex < list.getItemsCount()) {
-        ListScrollingUtil.selectItem(list, myIndex);
+        ScrollingUtil.selectItem(list, myIndex);
       }
     }
     if (myPanel.isInFloatingMode()) {

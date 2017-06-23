@@ -119,7 +119,7 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
         QuickList quickList = new QuickList(createUniqueName(), "", ArrayUtil.EMPTY_STRING_ARRAY, false);
         myQuickListsModel.addElement(quickList);
         myQuickListsList.clearSelection();
-        ListScrollingUtil.selectItem(myQuickListsList, quickList);
+        ScrollingUtil.selectItem(myQuickListsList, quickList);
         myKeymapListener.processCurrentKeymapChanged(getCurrentQuickListIds());
       }
     }).setRemoveAction(new AnActionButtonRunnable() {

@@ -19,7 +19,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
-import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Pair;
@@ -166,10 +165,6 @@ public class NotificationsUtil {
     Icon icon = notification.getIcon();
     if (icon != null) {
       return icon;
-    }
-
-    if (!NotificationsManagerImpl.newEnabled()) {
-      return getMessageType(notification).getDefaultIcon();
     }
 
     switch (notification.getType()) {

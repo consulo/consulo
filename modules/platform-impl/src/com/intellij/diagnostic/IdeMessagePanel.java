@@ -32,8 +32,6 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.ui.BalloonLayout;
 import com.intellij.ui.BalloonLayoutData;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.LightColors;
-import com.intellij.ui.popup.NotificationPopup;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -236,26 +234,9 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
       myNotificationPopupAlreadyShown = false;
     }
     else if (state == IdeFatalErrorsIcon.State.UnreadErrors && !myNotificationPopupAlreadyShown) {
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          String notificationText = tryGetFromMessages(myMessagePool.getFatalErrors(false, false));
-          if (NotificationsManagerImpl.newEnabled()) {
-            IdeMessagePanel.this.showErrorNotification(notificationText);
-            return;
-          }
-          if (notificationText == null) {
-            notificationText = INTERNAL_ERROR_NOTICE;
-          }
-          final JLabel label = new JLabel(notificationText);
-          label.setIcon(AllIcons.Ide.FatalError);
-          new NotificationPopup(IdeMessagePanel.this, label, LightColors.RED, false, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-              _openFatals(null);
-            }
-          }, true);
-        }
+      ApplicationManager.getApplication().invokeLater(() -> {
+        String notificationText = tryGetFromMessages(myMessagePool.getFatalErrors(false, false));
+        showErrorNotification(notificationText);
       });
       myNotificationPopupAlreadyShown = true;
     }
@@ -291,7 +272,7 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
     Project project = myFrame.getProject();
     assert project != null;
 
-    Balloon balloon = NotificationsManagerImpl.createBalloon(myFrame, notification, false, false, new Ref<Object>(layoutData), project);
+    Balloon balloon = NotificationsManagerImpl.createBalloon(myFrame, notification, false, false, Ref.create(layoutData), project);
     layout.add(balloon);
   }
 

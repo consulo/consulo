@@ -35,7 +35,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
-import com.intellij.ui.ListScrollingUtil;
+import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import com.intellij.util.ui.update.LazyUiDisposable;
@@ -779,20 +779,20 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
 
     if ("selectNextRow".equals(action)) {
       if (ensureSelectionExists()) {
-        ListScrollingUtil.moveDown(myList, e.getModifiersEx());
+        ScrollingUtil.moveDown(myList, e.getModifiersEx());
         e.consume();
       }
     }
     else if ("selectPreviousRow".equals(action)) {
-      ListScrollingUtil.moveUp(myList, e.getModifiersEx());
+      ScrollingUtil.moveUp(myList, e.getModifiersEx());
       e.consume();
     }
     else if ("scrollDown".equals(action)) {
-      ListScrollingUtil.movePageDown(myList);
+      ScrollingUtil.movePageDown(myList);
       e.consume();
     }
     else if ("scrollUp".equals(action)) {
-      ListScrollingUtil.movePageUp(myList);
+      ScrollingUtil.movePageUp(myList);
       e.consume();
     }
     else if (getSelectedFileFromCompletionPopup() != null &&

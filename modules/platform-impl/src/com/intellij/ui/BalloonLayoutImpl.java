@@ -19,7 +19,6 @@ import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.notification.EventLog;
 import com.intellij.notification.Notification;
-import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -132,8 +131,7 @@ public class BalloonLayoutImpl implements BalloonLayout {
     ApplicationManager.getApplication().assertIsDispatchThread();
     Balloon merge = merge(layoutData);
     if (merge == null) {
-      if (NotificationsManagerImpl.newEnabled() &&
-          getVisibleCount() > 0 &&
+      if (getVisibleCount() > 0 &&
           layoutData instanceof BalloonLayoutData &&
           ((BalloonLayoutData)layoutData).groupId != null) {
         int index = -1;
@@ -282,9 +280,6 @@ public class BalloonLayoutImpl implements BalloonLayout {
 
   private void calculateSize() {
     myWidth = null;
-    if (myLayoutData.isEmpty() && !NotificationsManagerImpl.newEnabled()) {
-      return;
-    }
 
     for (Balloon balloon : myBalloons) {
       BalloonLayoutData layoutData = myLayoutData.get(balloon);
@@ -308,103 +303,12 @@ public class BalloonLayoutImpl implements BalloonLayout {
       remove(myBalloons.get(0), true);
       columns = createColumns(layoutRec);
     }
-    List<Integer> columnWidths = computeWidths(columns);
 
     ToolWindowsPane pane = UIUtil.findComponentOfType(myParent, ToolWindowsPane.class);
-    JComponent component = pane != null ? pane : myParent;
-    int paneOnScreen = component.isShowing() ? component.getLocationOnScreen().y : 0;
-    int layerOnScreen = myLayeredPane.isShowing() ? myLayeredPane.getLocationOnScreen().y : 0;
-    int toolbarsOffset = paneOnScreen - layerOnScreen;
-
     JComponent layeredPane = pane != null ? pane.getMyLayeredPane() : null;
     int eachColumnX = (layeredPane == null ? myLayeredPane.getWidth() : layeredPane.getX() + layeredPane.getWidth()) - 4;
 
-    if (NotificationsManagerImpl.newEnabled()) {
-      newLayout(columns.get(0), eachColumnX + 4, (int)myLayeredPane.getBounds().getMaxY());
-      return;
-    }
-
-    if (myLayoutData.isEmpty()) {
-      for (int i = 0; i < columns.size(); i++) {
-        final ArrayList<Balloon> eachColumn = columns.get(i);
-        final Integer eachWidth = columnWidths.get(i);
-        eachColumnX -= eachWidth.intValue();
-        int eachY = toolbarsOffset + 2;
-        for (Balloon eachBalloon : eachColumn) {
-          final Rectangle eachRec = new Rectangle();
-          eachRec.setSize(getSize(eachBalloon));
-          if (((BalloonImpl)eachBalloon).hasShadow()) {
-            final Insets shadow = ((BalloonImpl)eachBalloon).getShadowBorderInsets();
-            eachRec.width += shadow.left + shadow.right;
-            eachRec.height += shadow.top + shadow.bottom;
-          }
-          eachY += 2; // space between two notifications
-          eachRec.setLocation(eachColumnX + eachWidth.intValue() - eachRec.width, eachY);
-          eachBalloon.setBounds(eachRec);
-          eachY += eachRec.height;
-        }
-      }
-    }
-    else {
-      for (int i = 0; i < columns.size(); i++) {
-        final ArrayList<Balloon> eachColumn = columns.get(i);
-        final Integer eachWidth = columnWidths.get(i);
-        int eachY = toolbarsOffset;
-        int columnSize = eachColumn.size();
-
-        if (columnSize > 0 && !((BalloonImpl)eachColumn.get(0)).hasShadow()) {
-          eachY += 4;
-        }
-        eachColumnX -= eachWidth.intValue();
-
-        boolean addShadow = false;
-        for (Balloon balloon : eachColumn) {
-          if (myLayoutData.get(balloon) == null) {
-            addShadow = true;
-            break;
-          }
-        }
-
-        for (int j = 0; j < columnSize; j++) {
-          BalloonImpl eachBalloon = (BalloonImpl)eachColumn.get(j);
-          Rectangle eachRec = new Rectangle(getSize(eachBalloon));
-          eachRec.setLocation(eachColumnX + eachWidth.intValue() - eachRec.width, eachY);
-
-          boolean hasShadow = eachBalloon.hasShadow();
-          Insets shadow = hasShadow ? eachBalloon.getShadowBorderInsets() : null;
-
-          if (addShadow && hasShadow) {
-            eachRec.width += shadow.left + shadow.right;
-            eachRec.x -= shadow.left;
-          }
-
-          eachBalloon.setBounds(eachRec);
-          eachY += eachRec.height;
-
-          // space between two notifications
-          if (j + 1 < columnSize) {
-            BalloonImpl next = (BalloonImpl)eachColumn.get(j + 1);
-            boolean hasNextShadow = next.hasShadow();
-            int space = BalloonLayoutConfiguration.NotificationSpace;
-
-            if (hasShadow == hasNextShadow) {
-              if (hasShadow) {
-                eachY += space - shadow.top - shadow.bottom;
-              }
-              else {
-                eachY += space;
-              }
-            }
-            else if (hasShadow) {
-              eachY += space - shadow.top;
-            }
-            else {
-              eachY += space - next.getShadowBorderInsets().bottom;
-            }
-          }
-        }
-      }
-    }
+    newLayout(columns.get(0), eachColumnX + 4, (int)myLayeredPane.getBounds().getMaxY());
   }
 
   private void newLayout(List<Balloon> balloons, int startX, int bottomY) {

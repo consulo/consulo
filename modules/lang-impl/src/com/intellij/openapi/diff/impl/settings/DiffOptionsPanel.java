@@ -133,7 +133,7 @@ public class DiffOptionsPanel implements OptionsPanel {
         myDescriptions.put(type.getExternalName(), (MyColorAndFontDescription)description);
       }
     }
-    ListScrollingUtil.ensureSelectionExists(myOptionsList);
+    ScrollingUtil.ensureSelectionExists(myOptionsList);
   }
 
   @Override
@@ -151,7 +151,7 @@ public class DiffOptionsPanel implements OptionsPanel {
           return new Runnable() {
             @Override
             public void run() {
-              ListScrollingUtil.selectItem(myOptionsList, i1);
+              ScrollingUtil.selectItem(myOptionsList, i1);
             }
           };
 
@@ -197,7 +197,7 @@ public class DiffOptionsPanel implements OptionsPanel {
       Object o = myOptionsModel.get(i);
       if (o instanceof TextDiffType) {
         if (typeToSelect.equals(((TextDiffType)o).getDisplayName())) {
-          ListScrollingUtil.selectItem(myOptionsList, i);
+          ScrollingUtil.selectItem(myOptionsList, i);
           return;
         }
       }

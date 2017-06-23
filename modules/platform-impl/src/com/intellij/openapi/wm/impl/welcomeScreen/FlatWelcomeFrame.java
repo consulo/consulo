@@ -17,7 +17,6 @@ package com.intellij.openapi.wm.impl.welcomeScreen;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
-import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.application.ApplicationManager;
@@ -85,12 +84,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
       }
     }, this);
 
-    if (NotificationsManagerImpl.newEnabled()) {
-      myBalloonLayout = new WelcomeBalloonLayoutImpl(rootPane, JBUI.insets(8), myScreen.getMainWelcomePanel().myEventListener, myScreen.getMainWelcomePanel().myEventLocation);
-    }
-    else {
-      myBalloonLayout = new BalloonLayoutImpl(rootPane, JBUI.insets(8));
-    }
+    myBalloonLayout = new WelcomeBalloonLayoutImpl(rootPane, JBUI.insets(8), myScreen.getMainWelcomePanel().myEventListener, myScreen.getMainWelcomePanel().myEventLocation);
 
     WelcomeFrame.setupCloseAction(this);
     MnemonicHelper.init(this);

@@ -375,10 +375,10 @@ public class FileStructureDialog extends DialogWrapper {
               int index = myList.getSelectedIndex();
               if (index != -1 && index < myList.getModel().getSize()) {
                 myList.clearSelection();
-                ListScrollingUtil.selectItem(myList, index);
+                ScrollingUtil.selectItem(myList, index);
               }
               else {
-                ListScrollingUtil.ensureSelectionExists(myList);
+                ScrollingUtil.ensureSelectionExists(myList);
               }
             }
           });
@@ -437,7 +437,7 @@ public class FileStructureDialog extends DialogWrapper {
     public void scrollSelectionInView() {
       int selectedIndex = myList.getSelectedIndex();
       if (selectedIndex >= 0) {
-        ListScrollingUtil.ensureIndexIsVisible(myList, selectedIndex, 0);
+        ScrollingUtil.ensureIndexIsVisible(myList, selectedIndex, 0);
       }
     }
   }

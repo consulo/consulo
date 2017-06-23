@@ -44,6 +44,6 @@ public class MultipleTraitsListSpeedSearch extends MultipleTraitsSpeedSearch<JLi
 
   @Override
   protected void selectElement(Object element, String selectedText) {
-    ListScrollingUtil.selectItem(myComponent, element);
+    ScrollingUtil.selectItem(myComponent, element);
   }
 }
