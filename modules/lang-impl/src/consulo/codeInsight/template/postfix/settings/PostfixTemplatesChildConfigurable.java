@@ -28,12 +28,12 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.util.ui.JBUI;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
@@ -89,7 +89,7 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
 
     myPostfixDescriptionPanel = new PostfixDescriptionPanel();
     JPanel component = myPostfixDescriptionPanel.getComponent();
-    component.setBorder(new EmptyBorder(0, 8, 0, 0));
+    component.setBorder(JBUI.Borders.empty(0, 8, 0, 0));
     splitter.setSecondComponent(component);
 
     myCheckBoxList.setItems(new ArrayList<>(postfixTemplateProvider.getTemplates()), PostfixTemplate::getPresentableName, postfixTemplate -> Boolean.TRUE);
