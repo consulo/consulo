@@ -89,6 +89,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
 
   private Document myDocument;
   private Editor myEditor;
+  private Project myProject;
 
   public TemplateCommentPanel(@NotNull FileType fileType, @Nullable TemplateCommentPanel parentPanel, @NotNull Project project) {
     this(fileType.getName(), fileType, parentPanel, project);
@@ -100,16 +101,9 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   public TemplateCommentPanel(@NotNull String optionName, @Nullable FileType fileType, @Nullable TemplateCommentPanel parentPanel, @NotNull Project project) {
     this.parentPanel = parentPanel;
     myOptionName = optionName;
+    myProject = project;
     myManager = CopyrightManager.getInstance(project);
     myFileType = fileType;
-
-    EditorFactory editorFactory = EditorFactory.getInstance();
-    myDocument = editorFactory.createDocument("");
-
-    myEditor = editorFactory.createEditor(myDocument, project, ObjectUtil.notNull(fileType, PlainTextFileType.INSTANCE), true);
-    CopyrightConfigurable.setupEditor(myEditor);
-
-    myPreviewEditorPanel.add(myEditor.getComponent(), BorderLayout.CENTER);
 
     // no comboboxes for template
     if (optionName.equals(CopyrightFileConfigManager.LANG_TEMPLATE)) {
@@ -357,6 +351,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
       defaultCopyrightText = FileTypeUtil.buildComment(myCommenter, myAllowSeparator, evaluate, options);
     }
 
+    initEditor();
     WriteAction.run(() -> myDocument.setText(defaultCopyrightText));
   }
 
@@ -374,14 +369,29 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   @RequiredDispatchThread
   @Override
   public JComponent createComponent() {
+    initEditor();
     return mainPanel;
+  }
+
+  private void initEditor() {
+    if (myEditor == null) {
+      myPreviewEditorPanel.removeAll();
+      EditorFactory editorFactory = EditorFactory.getInstance();
+      myDocument = editorFactory.createDocument("");
+
+      myEditor = editorFactory.createEditor(myDocument, myProject, ObjectUtil.notNull(myFileType, PlainTextFileType.INSTANCE), true);
+      CopyrightConfigurable.setupEditor(myEditor);
+
+      myPreviewEditorPanel.add(myEditor.getComponent(), BorderLayout.CENTER);
+    }
   }
 
   @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
-    if (!myEditor.isDisposed()) {
+    if (myEditor != null) {
       EditorFactory.getInstance().releaseEditor(myEditor);
+      myEditor = null;
     }
   }
 
