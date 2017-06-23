@@ -163,7 +163,7 @@ public class HectorComponent extends JPanel {
         final ErrorsConfigurable errorsConfigurable = ErrorsConfigurable.SERVICE.createConfigurable(project);
         assert errorsConfigurable != null;
         errorsConfigurable.setFilterLanguages(languages);
-        ShowSettingsUtil.getInstance().editConfigurable(project, errorsConfigurable);
+        ShowSettingsUtil.getInstance().editConfigurable(errorsConfigurable.getDisplayName(), project, errorsConfigurable);
       }
     });
 
