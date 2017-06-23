@@ -57,7 +57,7 @@ public class DarculaTextBorder implements Border, UIResource {
     g.translate(x, y);
 
     if (c.hasFocus()) {
-      DarculaUIUtil.paintFocusRing(g, JBUI.scale(2), JBUI.scale(2), width - JBUI.scale(4), height - JBUI.scale(4));
+      DarculaUIUtil.paintFocusRing(g, new Rectangle(JBUI.scale(2), JBUI.scale(2), width - JBUI.scale(4), height - JBUI.scale(4)));
     }
     else {
       boolean editable = !(c instanceof JTextComponent) || (((JTextComponent)c).isEditable());
