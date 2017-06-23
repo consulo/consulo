@@ -714,7 +714,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
             new String[]{"getLocation", "getBorder", "getLocationOnScreen", "getMinimumSize", "getMaximumSize", "getPreferredSize", "getSize", "getAlignmentX",
                     "getAlignmentY", "getTooltipText", "getVisibleRect", "getLayout", "getForeground", "getBackground", "getFont", "isOpaque",
                     "isFocusCycleRoot", "isValid", "isDisplayable", "isShowing", "isEnabled", "isLightweight", "isFocusable", "isFocusOwner", "getToolTipText",
-                    "getText", "isEditable", "getIcon"};
+                    "getText", "isEditable", "getIcon", "getUI"};
 
     private Component myComponent;
     private List<PropertyBean> myProperties = new ArrayList<PropertyBean>();

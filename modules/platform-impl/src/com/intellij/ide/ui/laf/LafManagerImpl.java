@@ -117,7 +117,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
                   "MenuBar.font", "MenuItem.font", "MenuItem.acceleratorFont", "RadioButtonMenuItem.font", "CheckBoxMenuItem.font", "Menu.font",
                   "PopupMenu.font", "OptionPane.font", "Panel.font", "ProgressBar.font", "ScrollPane.font", "Viewport.font", "TabbedPane.font", "Table.font",
                   "TableHeader.font", "TextField.font", "PasswordField.font", "TextArea.font", "TextPane.font", "EditorPane.font", "TitledBorder.font",
-                  "ToolBar.font", "ToolTip.font", "Tree.font"};
+                  "ToolBar.font", "ToolTip.font", "Tree.font", "FormattedTextField.font", "Spinner.font"};
 
   @NonNls
   private static final String[] ourFileChooserTextKeys =

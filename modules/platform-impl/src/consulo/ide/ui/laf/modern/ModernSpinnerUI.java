@@ -17,17 +17,17 @@ package consulo.ide.ui.laf.modern;
 
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ide.ui.laf.DPIAwareArrowButton;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
-import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -40,7 +40,6 @@ import java.awt.event.FocusEvent;
  * Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaSpinnerUI}
  */
 public class ModernSpinnerUI extends BasicSpinnerUI implements ModernTextBorder.ModernTextUI {
-  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
   public static ComponentUI createUI(JComponent c) {
     return new ModernSpinnerUI(c);
   }
@@ -117,7 +116,7 @@ public class ModernSpinnerUI extends BasicSpinnerUI implements ModernTextBorder.
   protected Component createPreviousButton() {
     JButton button = createArrow(SwingConstants.SOUTH);
     button.setName("Spinner.previousButton");
-    button.setBorder(new EmptyBorder(1, 1, 1, 1));
+    button.setBorder(JBUI.Borders.empty(1));
     installPreviousButtonListeners(button);
     return button;
   }
@@ -126,7 +125,7 @@ public class ModernSpinnerUI extends BasicSpinnerUI implements ModernTextBorder.
   protected Component createNextButton() {
     JButton button = createArrow(SwingConstants.NORTH);
     button.setName("Spinner.nextButton");
-    button.setBorder(new EmptyBorder(1, 1, 1, 1));
+    button.setBorder(JBUI.Borders.empty(1));
     installNextButtonListeners(button);
     return button;
   }
@@ -141,7 +140,7 @@ public class ModernSpinnerUI extends BasicSpinnerUI implements ModernTextBorder.
         final JComponent editor = spinner.getEditor();
         if (editor != null) {
           final Rectangle bounds = editor.getBounds();
-          editor.setBounds(bounds.x, bounds.y, bounds.width - 6, bounds.height);
+          editor.setBounds(bounds.x, bounds.y, bounds.width - JBUI.scale(6), bounds.height);
         }
       }
     };
@@ -150,10 +149,10 @@ public class ModernSpinnerUI extends BasicSpinnerUI implements ModernTextBorder.
   private JButton createArrow(@MagicConstant(intValues = {SwingConstants.NORTH, SwingConstants.SOUTH}) int direction) {
     final Color shadow = UIUtil.getPanelBackground();
     final Color darkShadow = UIUtil.getLabelForeground();
-    JButton b = new BasicArrowButton(direction, shadow, shadow, darkShadow, shadow) {
+    JButton b = new DPIAwareArrowButton(direction, shadow, shadow, darkShadow, shadow) {
       @Override
       public void paint(Graphics g) {
-        int y = direction == NORTH ? getHeight() - 6 : 2;
+        int y = direction == NORTH ? getHeight() - JBUI.scale(6) : JBUI.scale(2);
         paintTriangle(g, 0, y, 0, direction, ModernSpinnerUI.this.spinner.isEnabled());
       }
 
@@ -166,8 +165,8 @@ public class ModernSpinnerUI extends BasicSpinnerUI implements ModernTextBorder.
       public void paintTriangle(Graphics g, int x, int y, int size, int direction, boolean isEnabled) {
         final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
         int mid;
-        final int w = 8;
-        final int h = 6;
+        final int w = JBUI.scale(8);
+        final int h = JBUI.scale(6);
         mid = w / 2;
 
         g.setColor(isEnabled ? darkShadow : darkShadow.darker());
@@ -175,10 +174,10 @@ public class ModernSpinnerUI extends BasicSpinnerUI implements ModernTextBorder.
         g.translate(x, y);
         switch (direction) {
           case SOUTH:
-            g.fillPolygon(new int[]{0, w, mid}, new int[]{1, 1, h}, 3);
+            g.fillPolygon(new int[]{0, w, mid}, new int[]{JBUI.scale(1), JBUI.scale(1), h}, 3);
             break;
           case NORTH:
-            g.fillPolygon(new int[]{0, w, mid}, new int[]{h - 1, h - 1, 0}, 3);
+            g.fillPolygon(new int[]{0, w, mid}, new int[]{h - JBUI.scale(1), h - JBUI.scale(1), 0}, 3);
             break;
           case WEST:
           case EAST:
