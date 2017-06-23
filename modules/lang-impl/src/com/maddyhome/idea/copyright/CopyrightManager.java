@@ -16,7 +16,6 @@
 
 package com.maddyhome.idea.copyright;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
@@ -31,7 +30,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.PsiFile;
@@ -41,12 +43,12 @@ import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.util.containers.HashMap;
 import com.maddyhome.idea.copyright.actions.UpdateCopyrightProcessor;
 import com.maddyhome.idea.copyright.util.NewFileTracker;
+import consulo.copyright.config.CopyrightFileConfig;
+import consulo.copyright.config.CopyrightFileConfigManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.copyright.config.CopyrightFileConfig;
-import consulo.copyright.config.CopyrightFileConfigManager;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -86,12 +88,7 @@ public class CopyrightManager extends AbstractProjectComponent implements Persis
     super(project);
     if (!myProject.isDefault()) {
       final NewFileTracker newFileTracker = NewFileTracker.getInstance();
-      Disposer.register(myProject, new Disposable() {
-        @Override
-        public void dispose() {
-          newFileTracker.clear();
-        }
-      });
+      Disposer.register(myProject, newFileTracker::clear);
       startupManager.runWhenProjectIsInitialized(new Runnable() {
         @Override
         public void run() {

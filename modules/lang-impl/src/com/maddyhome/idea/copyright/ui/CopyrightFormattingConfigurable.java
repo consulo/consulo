@@ -29,14 +29,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.copyright.config.CopyrightFileConfigManager;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
-import consulo.copyright.config.CopyrightFileConfigManager;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class CopyrightFormattingConfigurable extends SearchableConfigurable.Parent.Abstract implements Configurable.NoScroll {
@@ -64,6 +64,7 @@ public class CopyrightFormattingConfigurable extends SearchableConfigurable.Pare
     return getId();
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent createComponent() {
     getOrCreateMainPanel();
@@ -72,29 +73,38 @@ public class CopyrightFormattingConfigurable extends SearchableConfigurable.Pare
 
   private TemplateCommentPanel getOrCreateMainPanel() {
     if (myPanel == null) {
-      myPanel = new TemplateCommentPanel(CopyrightFileConfigManager.LANG_TEMPLATE, null, myProject);
+      myPanel = new TemplateCommentPanel(CopyrightFileConfigManager.LANG_TEMPLATE, null, null, myProject);
     }
     return myPanel;
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     return myPanel.isModified();
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     myPanel.apply();
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     myPanel.reset();
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
-    myPanel.disposeUIResources();
+    if (myPanel != null) {
+      myPanel.disposeUIResources();
+    }
+    for (Configurable configurable : getConfigurables()) {
+      configurable.disposeUIResources();
+    }
     myPanel = null;
   }
 
@@ -107,20 +117,15 @@ public class CopyrightFormattingConfigurable extends SearchableConfigurable.Pare
   protected Configurable[] buildConfigurables() {
     getOrCreateMainPanel();
     FileType[] registeredFileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
-    List<Configurable> list = new ArrayList<Configurable>();
+    List<Configurable> list = new ArrayList<>();
     for (FileType fileType : registeredFileTypes) {
       UpdateCopyrightsProvider updateCopyrightsProvider = CopyrightUpdaters.INSTANCE.forFileType(fileType);
-      if(updateCopyrightsProvider == null) {
+      if (updateCopyrightsProvider == null) {
         continue;
       }
       list.add(updateCopyrightsProvider.createConfigurable(myProject, myPanel, fileType));
     }
-    Collections.sort(list, new Comparator<Configurable>() {
-      @Override
-      public int compare(Configurable o1, Configurable o2) {
-        return o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
-      }
-    });
+    Collections.sort(list, (o1, o2) -> o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName()));
 
     return ContainerUtil.toArray(list, Configurable.ARRAY_FACTORY);
   }

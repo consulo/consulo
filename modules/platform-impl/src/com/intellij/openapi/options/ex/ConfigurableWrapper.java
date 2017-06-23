@@ -207,12 +207,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
         kids = ((Composite)getConfigurable()).getConfigurables();
       }
       else if (ep.children != null) {
-        kids = ContainerUtil.mapNotNull(ep.getChildren(), new NullableFunction<ConfigurableEP, ConfigurableWrapper>() {
-          @Override
-          public ConfigurableWrapper fun(ConfigurableEP ep) {
-            return ep.isAvailable() ? (ConfigurableWrapper)wrapConfigurable(ep) : null;
-          }
-        }, EMPTY_ARRAY);
+        kids = ContainerUtil.mapNotNull(ep.getChildren(), ep1 -> ep1.isAvailable() ? (ConfigurableWrapper)wrapConfigurable(ep1) : null, EMPTY_ARRAY);
       }
       if (ep.childrenEPName != null) {
         ExtensionPoint<Object> childrenEP = Extensions.getArea(ep.getProject()).getExtensionPoint(ep.childrenEPName);

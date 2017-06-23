@@ -36,6 +36,7 @@ public abstract class EditorFactory implements ApplicationComponent {
    *
    * @return the editor factory instance.
    */
+  @NotNull
   public static EditorFactory getInstance() {
     final Application application = ApplicationManager.getApplication();
     return application == null ? null : application.getComponent(EditorFactory.class);

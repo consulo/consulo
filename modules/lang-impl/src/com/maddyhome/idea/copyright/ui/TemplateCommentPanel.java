@@ -17,14 +17,20 @@
 package com.maddyhome.idea.copyright.ui;
 
 import com.intellij.lang.Commenter;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorFontType;
+import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.util.ObjectUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
@@ -43,15 +49,15 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.EventListenerList;
+import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class TemplateCommentPanel implements SearchableConfigurable {
+public class TemplateCommentPanel implements SearchableConfigurable, Configurable.NoScroll {
   private final CopyrightManager myManager;
   private final TemplateCommentPanel parentPanel;
   private final String myOptionName;
   private final EventListenerList listeners = new EventListenerList();
   private JRadioButton[] fileLocations = null;
-  private JTextArea preview;
   private JPanel mainPanel;
   private JRadioButton rbBefore;
   private JRadioButton rbAfter;
@@ -75,24 +81,35 @@ public class TemplateCommentPanel implements SearchableConfigurable {
   private JLabel lblLengthAfter;
   private JLabel mySeparatorCharLabel;
   private JPanel myAdditionalPanel;
+  private JPanel myPreviewEditorPanel;
   private boolean myAllowBlock;
   private Commenter myCommenter;
   private boolean myAllowSeparator;
-  private FileType myFileType;
+  private final FileType myFileType;
+
+  private Document myDocument;
+  private Editor myEditor;
 
   public TemplateCommentPanel(@NotNull FileType fileType, @Nullable TemplateCommentPanel parentPanel, @NotNull Project project) {
-    this(fileType.getName(), parentPanel, project);
+    this(fileType.getName(), fileType, parentPanel, project);
     myAllowBlock = FileTypeUtil.hasBlockComment(fileType);
     myCommenter = FileTypeUtil.getCommenter(fileType);
     myAllowSeparator = CopyrightUpdaters.INSTANCE.forFileType(fileType).isAllowSeparator();
-
-    myFileType = fileType;
   }
 
-  public TemplateCommentPanel(@NotNull String optionName, @Nullable TemplateCommentPanel parentPanel, @NotNull Project project) {
+  public TemplateCommentPanel(@NotNull String optionName, @Nullable FileType fileType, @Nullable TemplateCommentPanel parentPanel, @NotNull Project project) {
     this.parentPanel = parentPanel;
     myOptionName = optionName;
     myManager = CopyrightManager.getInstance(project);
+    myFileType = fileType;
+
+    EditorFactory editorFactory = EditorFactory.getInstance();
+    myDocument = editorFactory.createDocument("");
+
+    myEditor = editorFactory.createEditor(myDocument, project, ObjectUtil.notNull(fileType, PlainTextFileType.INSTANCE), true);
+    CopyrightConfigurable.setupEditor(myEditor);
+
+    myPreviewEditorPanel.add(myEditor.getComponent(), BorderLayout.CENTER);
 
     // no comboboxes for template
     if (optionName.equals(CopyrightFileConfigManager.LANG_TEMPLATE)) {
@@ -113,14 +130,11 @@ public class TemplateCommentPanel implements SearchableConfigurable {
     group.add(rbBefore);
     group.add(rbAfter);
 
-    fileLocationPanel.setBorder(BorderFactory.createEmptyBorder());
+    fileLocationPanel.setBorder(JBUI.Borders.empty());
 
     addAdditionalComponents(myAdditionalPanel);
 
     addOptionChangeListener(() -> showPreview(getOptions()));
-
-
-    preview.setFont(EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN));
 
     myUseDefaultSettingsRadioButton.setSelected(true);
 
@@ -343,7 +357,7 @@ public class TemplateCommentPanel implements SearchableConfigurable {
       defaultCopyrightText = FileTypeUtil.buildComment(myCommenter, myAllowSeparator, evaluate, options);
     }
 
-    SwingUtilities.invokeLater(() -> preview.setText(defaultCopyrightText));
+    WriteAction.run(() -> myDocument.setText(defaultCopyrightText));
   }
 
   @Override
@@ -361,6 +375,14 @@ public class TemplateCommentPanel implements SearchableConfigurable {
   @Override
   public JComponent createComponent() {
     return mainPanel;
+  }
+
+  @RequiredDispatchThread
+  @Override
+  public void disposeUIResources() {
+    if (!myEditor.isDisposed()) {
+      EditorFactory.getInstance().releaseEditor(myEditor);
+    }
   }
 
   @RequiredDispatchThread

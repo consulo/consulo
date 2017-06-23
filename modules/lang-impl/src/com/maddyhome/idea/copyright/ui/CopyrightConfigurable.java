@@ -18,20 +18,25 @@ package com.maddyhome.idea.copyright.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorFontType;
+import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.EditorSettings;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextField;
+import com.intellij.util.ui.JBUI;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.copyright.PredefinedCopyrightTextEP;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
@@ -41,11 +46,13 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> {
+public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> implements Configurable.NoScroll {
   public static class PreviewDialog extends DialogWrapper {
     @NotNull
     private final String myText;
     private final Dimension mySize;
+
+    private Editor myEditor;
 
     public PreviewDialog(@Nullable Project project, @NotNull String text, @NotNull Dimension size) {
       super(project);
@@ -58,19 +65,27 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> {
     @NotNull
     @Override
     protected Action[] createActions() {
-      return new Action[] {getOKAction()};
+      return new Action[]{getOKAction()};
+    }
+
+    @Override
+    protected void dispose() {
+      super.dispose();
+      if (myEditor != null) {
+        EditorFactory.getInstance().releaseEditor(myEditor);
+      }
     }
 
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-      JEditorPane editorPane = new JEditorPane();
-      editorPane.setFont(EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN));
-      editorPane.setText(myText);
-      editorPane.setPreferredSize(mySize);
-      editorPane.setEditable(false);
+      Document document = EditorFactory.getInstance().createDocument(myText);
+      myEditor = EditorFactory.getInstance().createViewer(document);
+      setupEditor(myEditor);
 
-      return new JBScrollPane(editorPane);
+      JComponent component = myEditor.getComponent();
+      component.setPreferredSize(mySize);
+      return component;
     }
   }
 
@@ -79,9 +94,11 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> {
   private JPanel myWholePanel;
   private boolean myModified;
   private String myDisplayName;
-  private JEditorPane myCopyrightEditorPanel;
   private JTextField myKeywordField;
   private JTextField myAllowReplaceTextField;
+
+  private Editor myCopyrightEditor;
+  private Document myCopyrightDocument;
 
   public CopyrightConfigurable(final Project project, CopyrightProfile copyrightProfile, Runnable updater) {
     super(true, updater);
@@ -91,18 +108,23 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> {
 
     myWholePanel = new JPanel(new VerticalFlowLayout());
 
-    myCopyrightEditorPanel = new JEditorPane();
-    myCopyrightEditorPanel.setFont(EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN));
+    EditorFactory editorFactory = EditorFactory.getInstance();
+    myCopyrightDocument = editorFactory.createDocument("");
+    myCopyrightEditor = editorFactory.createEditor(myCopyrightDocument);
+    setupEditor(myCopyrightEditor);
 
     DefaultActionGroup group = new DefaultActionGroup();
 
-    group.add(new AnAction("Preview", null, AllIcons.Actions.Preview) {
-      @Override
-      public void actionPerformed(AnActionEvent e) {
-        try {
-          String evaluate = VelocityHelper.evaluate(null, project, null, myCopyrightEditorPanel.getText());
+    JComponent editorComponent = myCopyrightEditor.getComponent();
 
-          new PreviewDialog(project, evaluate, myCopyrightEditorPanel.getSize()).show();
+    group.add(new AnAction("Preview", null, AllIcons.Actions.Preview) {
+      @RequiredDispatchThread
+      @Override
+      public void actionPerformed(@NotNull AnActionEvent e) {
+        try {
+          String evaluate = VelocityHelper.evaluate(null, project, null, myCopyrightEditor.getDocument().getText());
+
+          new PreviewDialog(project, evaluate, editorComponent.getSize()).show();
         }
         catch (Exception e1) {
           Messages.showErrorDialog(myProject, "Template contains error:\n" + e1.getMessage(), "Preview");
@@ -112,15 +134,17 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> {
     PredefinedCopyrightTextEP[] extensions = PredefinedCopyrightTextEP.EP_NAME.getExtensions();
     if (extensions.length > 0) {
       group.add(new AnAction("Reset To", null, AllIcons.Actions.Reset) {
+        @RequiredDispatchThread
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        public void actionPerformed(@NotNull AnActionEvent e) {
           DefaultActionGroup actionGroup = new DefaultActionGroup();
           for (PredefinedCopyrightTextEP extension : extensions) {
             actionGroup.add(new AnAction(extension.name) {
+              @RequiredDispatchThread
               @Override
-              public void actionPerformed(AnActionEvent e) {
+              public void actionPerformed(@NotNull AnActionEvent e) {
                 String text = extension.getText();
-                myCopyrightEditorPanel.setText(text);
+                WriteAction.run(() -> myCopyrightDocument.setText(text));
               }
             });
           }
@@ -141,8 +165,8 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> {
     toolBarPanel.add(label, BorderLayout.EAST);
 
     result.add(toolBarPanel, BorderLayout.NORTH);
-    result.add(new JBScrollPane(myCopyrightEditorPanel), BorderLayout.CENTER);
-    result.setPreferredSize(new Dimension(-1, 400));
+    result.add(editorComponent, BorderLayout.CENTER);
+    result.setPreferredSize(JBUI.size(-1, 400));
 
     myWholePanel.add(result);
 
@@ -150,36 +174,52 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> {
     myWholePanel.add(LabeledComponent.left(myAllowReplaceTextField = new JBTextField(), "Allow replacing copyright if old copyright contains"));
   }
 
+  static void setupEditor(Editor editor) {
+    EditorSettings settings = editor.getSettings();
+    settings.setLineNumbersShown(false);
+    settings.setFoldingOutlineShown(false);
+    settings.setIndentGuidesShown(false);
+    settings.setLineMarkerAreaShown(false);
+  }
+
+  @Override
   public CopyrightProfile getEditableObject() {
     return myCopyrightProfile;
   }
 
+  @Override
   public String getBannerSlogan() {
     return myCopyrightProfile.getName();
   }
 
+  @Override
   public JComponent createOptionsPanel() {
     return myWholePanel;
   }
 
+  @Override
   @Nls
   public String getDisplayName() {
     return myCopyrightProfile.getName();
   }
 
+  @Override
   public void setDisplayName(String s) {
     myCopyrightProfile.setName(s);
   }
 
+  @Override
   @Nullable
   @NonNls
   public String getHelpTopic() {
     return null;
   }
 
+  @Override
+  @RequiredDispatchThread
   public boolean isModified() {
     return myModified ||
-           !Comparing.strEqual(EntityUtil.encode(myCopyrightEditorPanel.getText().trim()), myCopyrightProfile.getNotice()) ||
+           !Comparing.strEqual(EntityUtil.encode(myCopyrightDocument.getText().trim()), myCopyrightProfile.getNotice()) ||
            !Comparing.strEqual(myKeywordField.getText().trim(), myCopyrightProfile.getKeyword()) ||
            !Comparing.strEqual(myAllowReplaceTextField.getText().trim(), myCopyrightProfile.getAllowReplaceKeyword()) ||
            !Comparing.strEqual(myDisplayName, myCopyrightProfile.getName());
@@ -189,8 +229,10 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> {
     myModified = modified;
   }
 
+  @Override
+  @RequiredDispatchThread
   public void apply() throws ConfigurationException {
-    myCopyrightProfile.setNotice(EntityUtil.encode(myCopyrightEditorPanel.getText().trim()));
+    myCopyrightProfile.setNotice(EntityUtil.encode(myCopyrightDocument.getText().trim()));
     myCopyrightProfile.setKeyword(myKeywordField.getText());
     myCopyrightProfile.setAllowReplaceKeyword(myAllowReplaceTextField.getText());
     CopyrightManager.getInstance(myProject).replaceCopyright(myDisplayName, myCopyrightProfile);
@@ -198,13 +240,18 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> {
     myModified = false;
   }
 
+  @Override
+  @RequiredDispatchThread
   public void reset() {
     myDisplayName = myCopyrightProfile.getName();
-    myCopyrightEditorPanel.setText(EntityUtil.decode(myCopyrightProfile.getNotice()));
+    WriteAction.run(() -> myCopyrightDocument.setText(EntityUtil.decode(myCopyrightProfile.getNotice())));
     myKeywordField.setText(myCopyrightProfile.getKeyword());
     myAllowReplaceTextField.setText(myCopyrightProfile.getAllowReplaceKeyword());
   }
 
+  @RequiredDispatchThread
+  @Override
   public void disposeUIResources() {
+    EditorFactory.getInstance().releaseEditor(myCopyrightEditor);
   }
 }
