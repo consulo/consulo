@@ -74,10 +74,10 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
     }
 
     if (b.isSelected() && b.getSelectedIcon() != null) {
-      b.getSelectedIcon().paintIcon(b, g, iconRect.x + 4, iconRect.y + 2);
+      b.getSelectedIcon().paintIcon(b, g, iconRect.x + JBUI.scale(4), iconRect.y + JBUI.scale(2));
     }
     else if (!b.isSelected() && b.getIcon() != null) {
-      b.getIcon().paintIcon(b, g, iconRect.x + 4, iconRect.y + 2);
+      b.getIcon().paintIcon(b, g, iconRect.x + JBUI.scale(4), iconRect.y + JBUI.scale(2));
     }
     else {
       final int x = iconRect.x + JBUI.scale(3);
@@ -98,25 +98,25 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
       final boolean armed = b.getModel().isArmed();
 
       if (c.hasFocus()) {
-        g.setPaint(UIUtil.getGradientPaint(w / 2, 1, getFocusedBackgroundColor1(armed), w / 2, h, getFocusedBackgroundColor2(armed)));
-        g.fillRoundRect(0, 0, w - 2, h - 2, 4, 4);
+        g.setPaint(UIUtil.getGradientPaint(w / 2, JBUI.scale(1), getFocusedBackgroundColor1(armed), w / 2, h, getFocusedBackgroundColor2(armed)));
+        g.fillRoundRect(0, 0, w - JBUI.scale(2), h - JBUI.scale(2), JBUI.scale(4), JBUI.scale(4));
 
-        DarculaUIUtil.paintFocusRing(g, new Rectangle(1, 1, w - 2, h - 2));
+        DarculaUIUtil.paintFocusRing(g, new Rectangle(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(2), h - JBUI.scale(2)));
       }
       else {
-        g.setPaint(UIUtil.getGradientPaint(w / 2, 1, getBackgroundColor1(), w / 2, h, getBackgroundColor2()));
-        g.fillRoundRect(0, 0, w, h - 1, 4, 4);
+        g.setPaint(UIUtil.getGradientPaint(w / 2, JBUI.scale(1), getBackgroundColor1(), w / 2, h, getBackgroundColor2()));
+        g.fillRoundRect(0, 0, w, h - JBUI.scale(1), JBUI.scale(4), JBUI.scale(4));
 
         g.setPaint(UIUtil.getGradientPaint(w / 2, 1, getBorderColor1(b.isEnabled()), w / 2, h, getBorderColor2(b.isEnabled())));
-        g.drawRoundRect(0, (UIUtil.isUnderDarcula() ? 1 : 0), w, h - 1, 4, 4);
+        g.drawRoundRect(0, (UIUtil.isUnderDarcula() ? JBUI.scale(1) : 0), w, h - JBUI.scale(1), JBUI.scale(4), JBUI.scale(4));
 
         g.setPaint(getInactiveFillColor());
-        g.drawRoundRect(0, 0, w, h - 1, 4, 4);
+        g.drawRoundRect(0, 0, w, h - JBUI.scale(1), JBUI.scale(4), JBUI.scale(4));
       }
 
       if (b.getModel().isSelected()) {
         g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-        g.setStroke(new BasicStroke(JBUI.scale(1) * 2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.setStroke(new BasicStroke(JBUI.scale(1 * 2.0f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.setPaint(getShadowColor(b.isEnabled()));
         g.drawLine(JBUI.scale(4), JBUI.scale(7), JBUI.scale(7), JBUI.scale(11));
         g.drawLine(JBUI.scale(7), JBUI.scale(11), w, JBUI.scale(2));
