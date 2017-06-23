@@ -33,7 +33,6 @@ import com.intellij.util.PairConsumer;
 import com.intellij.util.ui.Centerizer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -159,15 +158,6 @@ public class TabLabel extends JPanel {
         finally {
           g.setComposite(oldComposite);
           g.setClip(oldClip);
-        }
-      }
-
-      @Override
-      protected void applyAdditionalHints(@NotNull Graphics2D g) {
-        if (!SystemInfo.isJavaVersionAtLeast("1.7") &&
-            g.getComposite() instanceof AlphaComposite &&
-            (((AlphaComposite)g.getComposite()).getAlpha() < 1)) {
-          g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
         }
       }
     };
