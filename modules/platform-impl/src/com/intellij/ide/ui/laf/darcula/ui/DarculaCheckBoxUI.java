@@ -45,7 +45,7 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
   @Override
   public synchronized void paint(Graphics g2d, JComponent c) {
     Graphics2D g = (Graphics2D)g2d;
-    JCheckBox b = (JCheckBox) c;
+    JCheckBox b = (JCheckBox)c;
     final ButtonModel model = b.getModel();
     final Dimension size = c.getSize();
     final Font font = c.getFont();
@@ -63,10 +63,9 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
     viewRect.width -= (i.right + viewRect.x);
     viewRect.height -= (i.bottom + viewRect.y);
 
-    String text = SwingUtilities.layoutCompoundLabel(c, fm, b.getText(), getDefaultIcon(),
-                                                     b.getVerticalAlignment(), b.getHorizontalAlignment(),
-                                                     b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
-                                                     viewRect, iconRect, textRect, b.getIconTextGap());
+    String text = SwingUtilities
+            .layoutCompoundLabel(c, fm, b.getText(), getDefaultIcon(), b.getVerticalAlignment(), b.getHorizontalAlignment(), b.getVerticalTextPosition(),
+                                 b.getHorizontalTextPosition(), viewRect, iconRect, textRect, b.getIconTextGap());
 
     //background
     if (c.isOpaque()) {
@@ -75,18 +74,19 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
     }
 
     if (b.isSelected() && b.getSelectedIcon() != null) {
-      b.getSelectedIcon().paintIcon(b, g, iconRect.x + 4, iconRect.y + 2);
-    } else if (!b.isSelected() && b.getIcon() != null) {
-      b.getIcon().paintIcon(b, g, iconRect.x + 4, iconRect.y + 2);
-    } else {
+      b.getSelectedIcon().paintIcon(b, g, iconRect.x + JBUI.scale(4), iconRect.y + JBUI.scale(2));
+    }
+    else if (!b.isSelected() && b.getIcon() != null) {
+      b.getIcon().paintIcon(b, g, iconRect.x + JBUI.scale(4), iconRect.y + JBUI.scale(2));
+    }
+    else {
       final int x = iconRect.x + JBUI.scale(3);
       final int y = iconRect.y + JBUI.scale(3);
       final int w = iconRect.width - JBUI.scale(6);
       final int h = iconRect.height - JBUI.scale(6);
 
       g.translate(x, y);
-      final Paint paint = UIUtil.getGradientPaint(w / 2, 0, b.getBackground().brighter(),
-                                                  w / 2, h, b.getBackground());
+      final Paint paint = UIUtil.getGradientPaint(w / 2, 0, b.getBackground().brighter(), w / 2, h, b.getBackground());
       g.setPaint(paint);
       g.fillRect(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(2), h - JBUI.scale(2));
 
@@ -98,24 +98,25 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
       final boolean armed = b.getModel().isArmed();
 
       if (c.hasFocus()) {
-        g.setPaint(UIUtil.getGradientPaint(w/2, 1, getFocusedBackgroundColor1(armed), w/2, h, getFocusedBackgroundColor2(armed)));
-        g.fillRoundRect(0, 0, w - 2, h - 2, 4, 4);
+        g.setPaint(UIUtil.getGradientPaint(w / 2, JBUI.scale(1), getFocusedBackgroundColor1(armed), w / 2, h, getFocusedBackgroundColor2(armed)));
+        g.fillRoundRect(0, 0, w - JBUI.scale(2), h - JBUI.scale(2), JBUI.scale(4), JBUI.scale(4));
 
-        DarculaUIUtil.paintFocusRing(g, new Rectangle(1, 1, w - 2, h - 2));
-      } else {
-        g.setPaint(UIUtil.getGradientPaint(w / 2, 1, getBackgroundColor1(), w / 2, h, getBackgroundColor2()));
-        g.fillRoundRect(0, 0, w, h - 1 , 4, 4);
+        DarculaUIUtil.paintFocusRing(g, new Rectangle(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(2), h - JBUI.scale(2)));
+      }
+      else {
+        g.setPaint(UIUtil.getGradientPaint(w / 2, JBUI.scale(1), getBackgroundColor1(), w / 2, h, getBackgroundColor2()));
+        g.fillRoundRect(0, 0, w, h - JBUI.scale(1), JBUI.scale(4), JBUI.scale(4));
 
         g.setPaint(UIUtil.getGradientPaint(w / 2, 1, getBorderColor1(b.isEnabled()), w / 2, h, getBorderColor2(b.isEnabled())));
-        g.drawRoundRect(0, (UIUtil.isUnderDarcula() ? 1 : 0), w, h - 1, 4, 4);
+        g.drawRoundRect(0, (UIUtil.isUnderDarcula() ? JBUI.scale(1) : 0), w, h - JBUI.scale(1), JBUI.scale(4), JBUI.scale(4));
 
         g.setPaint(getInactiveFillColor());
-        g.drawRoundRect(0, 0, w, h - 1, 4, 4);
+        g.drawRoundRect(0, 0, w, h - JBUI.scale(1), JBUI.scale(4), JBUI.scale(4));
       }
 
       if (b.getModel().isSelected()) {
         g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-        g.setStroke(new BasicStroke(JBUI.scale(1) *2.0f, BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+        g.setStroke(new BasicStroke(JBUI.scale(1 * 2.0f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.setPaint(getShadowColor(b.isEnabled()));
         g.drawLine(JBUI.scale(4), JBUI.scale(7), JBUI.scale(7), JBUI.scale(11));
         g.drawLine(JBUI.scale(7), JBUI.scale(11), w, JBUI.scale(2));
@@ -128,16 +129,14 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
     }
 
     //text
-    if(text != null) {
-      View view = (View) c.getClientProperty(BasicHTML.propertyKey);
+    if (text != null) {
+      View view = (View)c.getClientProperty(BasicHTML.propertyKey);
       if (view != null) {
         view.paint(g, textRect);
-      } else {
+      }
+      else {
         g.setColor(model.isEnabled() ? b.getForeground() : getDisabledTextColor());
-        SwingUtilities2.drawStringUnderlineCharAt(c, g, text,
-                                                  b.getDisplayedMnemonicIndex(),
-                                                  textRect.x,
-                                                  textRect.y + fm.getAscent());
+        SwingUtilities2.drawStringUnderlineCharAt(c, g, text, b.getDisplayedMnemonicIndex(), textRect.x, textRect.y + fm.getAscent());
       }
     }
   }
@@ -147,13 +146,11 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
   }
 
   protected Color getBorderColor1(boolean enabled) {
-    return enabled ? getColor("borderColor1", Gray._120.withAlpha(0x5a))
-                   : getColor("disabledBorderColor1", Gray._120.withAlpha(90));
+    return enabled ? getColor("borderColor1", Gray._120.withAlpha(0x5a)) : getColor("disabledBorderColor1", Gray._120.withAlpha(90));
   }
 
   protected Color getBorderColor2(boolean enabled) {
-    return enabled ? getColor("borderColor2", Gray._105.withAlpha(90))
-                   : getColor("disabledBorderColor2", Gray._105.withAlpha(90));
+    return enabled ? getColor("borderColor2", Gray._105.withAlpha(90)) : getColor("disabledBorderColor2", Gray._105.withAlpha(90));
   }
 
   protected Color getBackgroundColor1() {
@@ -165,23 +162,19 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
   }
 
   protected Color getCheckSignColor(boolean enabled) {
-    return enabled ? getColor("checkSignColor", Gray._170)
-                   : getColor("checkSignColorDisabled", Gray._120);
+    return enabled ? getColor("checkSignColor", Gray._170) : getColor("checkSignColorDisabled", Gray._120);
   }
 
   protected Color getShadowColor(boolean enabled) {
-    return enabled ? getColor("shadowColor", Gray._30)
-                   : getColor("shadowColorDisabled", Gray._60);
+    return enabled ? getColor("shadowColor", Gray._30) : getColor("shadowColorDisabled", Gray._60);
   }
 
   protected Color getFocusedBackgroundColor1(boolean armed) {
-    return armed ? getColor("focusedArmed.backgroundColor1", Gray._100)
-                 : getColor("focused.backgroundColor1", Gray._120);
+    return armed ? getColor("focusedArmed.backgroundColor1", Gray._100) : getColor("focused.backgroundColor1", Gray._120);
   }
 
   protected Color getFocusedBackgroundColor2(boolean armed) {
-    return armed ? getColor("focusedArmed.backgroundColor2", Gray._55)
-                 : getColor("focused.backgroundColor2", Gray._75);
+    return armed ? getColor("focusedArmed.backgroundColor2", Gray._55) : getColor("focused.backgroundColor2", Gray._75);
   }
 
   protected static Color getColor(String shortPropertyName, Color defaultValue) {
