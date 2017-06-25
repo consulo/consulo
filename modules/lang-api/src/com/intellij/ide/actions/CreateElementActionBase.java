@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,17 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeView;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.application.WriteActionAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.InputValidator;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -34,7 +36,7 @@ import javax.swing.*;
  *
  * @since 5.1
  */
-public abstract class CreateElementActionBase extends AnAction {
+public abstract class CreateElementActionBase extends CreateInDirectoryActionBase implements WriteActionAware {
 
   protected CreateElementActionBase() {
   }
@@ -80,50 +82,10 @@ public abstract class CreateElementActionBase extends AnAction {
     }
   }
 
-  @RequiredDispatchThread
-  @Override
-  public void update(@NotNull final AnActionEvent e) {
-    if(!e.getPresentation().isVisible()) {
-      return;
-    }
-    final DataContext dataContext = e.getDataContext();
-    final Presentation presentation = e.getPresentation();
-
-    final boolean enabled = isAvailable(dataContext);
-
-    presentation.setVisible(enabled);
-    presentation.setEnabled(enabled);
-  }
-
-  @Override
-  public boolean isDumbAware() {
-    return false;
-  }
-
-  protected boolean isAvailable(final DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    if (project == null) {
-      return false;
-    }
-
-    if (DumbService.getInstance(project).isDumb() && !isDumbAware()) {
-      return false;
-    }
-
-    final IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
-    if (view == null || view.getDirectories().length == 0) {
-      return false;
-    }
-
-    return true;
-  }
-
   public static String filterMessage(String message) {
     if (message == null) return null;
     @NonNls final String ioExceptionPrefix = "java.io.IOException:";
-    if (message.startsWith(ioExceptionPrefix)) {
-      message = message.substring(ioExceptionPrefix.length());
-    }
+    message = StringUtil.trimStart(message, ioExceptionPrefix);
     return message;
   }
 
@@ -148,6 +110,11 @@ public abstract class CreateElementActionBase extends AnAction {
     @Override
     public PsiElement[] create(String newName) throws Exception {
       return CreateElementActionBase.this.create(newName, myDirectory);
+    }
+
+    @Override
+    public boolean startInWriteAction() {
+      return CreateElementActionBase.this.startInWriteAction();
     }
 
     @Override

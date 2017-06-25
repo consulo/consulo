@@ -27,7 +27,6 @@ import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExte
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
-import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.DoubleClickListener;
@@ -148,6 +147,15 @@ public class FileTypeChooser extends DialogWrapper {
   }
 
   /**
+   * Speculates if file with newName would have known file type
+   */
+  @Nullable
+  @RequiredDispatchThread
+  public static FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile parent, @NotNull String newName, @Nullable Project project) {
+    return getKnownFileTypeOrAssociate(new FakeVirtualFile(parent, newName), project);
+  }
+
+  /**
    * If fileName is already associated any known file type returns it.
    * Otherwise asks user to select file type and associates it with fileName extension if any selected.
    *
@@ -157,7 +165,7 @@ public class FileTypeChooser extends DialogWrapper {
   @RequiredDispatchThread
   public static FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile file, @Nullable Project project) {
     if (project != null && !(file instanceof FakeVirtualFile)) {
-      ((PsiManagerEx)PsiManager.getInstance(project)).getFileManager().findFile(file); // autodetect text file if needed
+      PsiManagerEx.getInstanceEx(project).getFileManager().findFile(file); // autodetect text file if needed
     }
     FileType type = file.getFileType();
     if (type == UnknownFileType.INSTANCE) {
@@ -186,8 +194,7 @@ public class FileTypeChooser extends DialogWrapper {
     }
     final FileType type = chooser.getSelectedType();
     if (type == null) {
-      final PluginsAdvertiserDialog advertiserDialog =
-              new PluginsAdvertiserDialog(null, new ArrayList<>(chooser.myFeaturePlugins));
+      final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, new ArrayList<>(chooser.myFeaturePlugins));
       advertiserDialog.show();
       return null;
     }

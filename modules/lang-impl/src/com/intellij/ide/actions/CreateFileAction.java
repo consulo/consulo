@@ -20,7 +20,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.project.DumbAware;
@@ -32,7 +32,6 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
@@ -73,7 +72,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     }
     else {
       Messages.showInputDialog(project, IdeBundle.message("prompt.enter.new.file.name"),
-                               IdeBundle.message("title.new.file"), Messages.getQuestionIcon(), null, validator);
+                               IdeBundle.message("title.new.file"), null, null, validator);
       return validator.getCreatedElements();
     }
   }
@@ -82,7 +81,12 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
   @NotNull
   protected PsiElement[] create(String newName, PsiDirectory directory) throws Exception {
     MkDirs mkdirs = new MkDirs(newName, directory);
-    return new PsiElement[]{mkdirs.directory.createFile(getFileName(mkdirs.newName))};
+    return new PsiElement[]{WriteAction.compute(() -> mkdirs.directory.createFile(getFileName(mkdirs.newName)))};
+  }
+
+  public static PsiDirectory findOrCreateSubdirectory(@NotNull PsiDirectory parent, @NotNull String subdirName) {
+    final PsiDirectory sub = parent.findSubdirectory(subdirName);
+    return sub == null ? WriteAction.compute(() -> parent.createSubdirectory(subdirName)) : sub;
   }
 
   public static class MkDirs {
@@ -111,8 +115,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
             directory = parentDirectory;
           }
           else if (!".".equals(dir)){
-            final PsiDirectory sub = directory.findSubdirectory(dir);
-            directory = sub == null ? directory.createSubdirectory(dir) : sub;
+            directory = findOrCreateSubdirectory(directory, dir);
           }
           firstToken = false;
         }
@@ -200,7 +203,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
           }
         }
         if (FileTypeManager.getInstance().isFileIgnored(getFileName(token))) {
-          myErrorText = "'" + token + "' is an ignored name (Settings | File Types | Ignore files and folders)";
+          myErrorText = "'" + token + "' is an ignored name (Settings | Editor | File Types | Ignore files and folders)";
           return true;
         }
         firstToken = false;
@@ -229,9 +232,10 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
       final PsiDirectory psiDirectory = getDirectory();
 
       final Project project = psiDirectory.getProject();
-      final FileType type = FileTypeChooser.getKnownFileTypeOrAssociate(new FakeVirtualFile(psiDirectory.getVirtualFile(), getFileName(inputString)),
-                                                                        project);
-      return type != null && MyValidator.super.canClose(getFileName(inputString));
+      final boolean[] result = {false};
+      FileTypeChooser.getKnownFileTypeOrAssociate(psiDirectory.getVirtualFile(), getFileName(inputString), project);
+      result[0] = super.canClose(getFileName(inputString));
+      return result[0];
     }
   }
 }
