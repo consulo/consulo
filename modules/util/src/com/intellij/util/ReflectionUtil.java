@@ -20,6 +20,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.DifferenceFilter;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.JBIterable;
+import com.intellij.util.containers.JBTreeTraverser;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -138,8 +140,10 @@ public class ReflectionUtil {
 
   @NotNull
   public static List<Field> collectFields(@NotNull Class clazz) {
-    List<Field> result = new ArrayList<Field>();
-    collectFields(clazz, result);
+    List<Field> result = ContainerUtil.newArrayList();
+    for (Class c : classTraverser(clazz)) {
+      result.addAll(getClassDeclaredFields(c));
+    }
     return result;
   }
 
@@ -168,35 +172,13 @@ public class ReflectionUtil {
     throw new NoSuchFieldException("Class: " + clazz + " fieldName: " + fieldName + " fieldType: " + fieldType);
   }
 
-  private static void collectFields(@NotNull Class clazz, @NotNull List<Field> result) {
-    final Field[] fields = clazz.getDeclaredFields();
-    result.addAll(Arrays.asList(fields));
-    final Class superClass = clazz.getSuperclass();
-    if (superClass != null) {
-      collectFields(superClass, result);
-    }
-    final Class[] interfaces = clazz.getInterfaces();
-    for (Class each : interfaces) {
-      collectFields(each, result);
-    }
-  }
-
   private static Field processFields(@NotNull Class clazz, @NotNull Condition<Field> checker) {
-    for (Field field : clazz.getDeclaredFields()) {
-      if (checker.value(field)) {
+    for (Class c : classTraverser(clazz)) {
+      Field field = JBIterable.of(c.getDeclaredFields()).find(checker);
+      if (field != null) {
         field.setAccessible(true);
         return field;
       }
-    }
-    final Class superClass = clazz.getSuperclass();
-    if (superClass != null) {
-      Field result = processFields(superClass, checker);
-      if (result != null) return result;
-    }
-    final Class[] interfaces = clazz.getInterfaces();
-    for (Class each : interfaces) {
-      Field result = processFields(each, checker);
-      if (result != null) return result;
     }
     return null;
   }
@@ -558,4 +540,16 @@ public class ReflectionUtil {
   public static boolean isAssignable(@NotNull Class<?> ancestor, @NotNull Class<?> descendant) {
     return ancestor == descendant || ancestor.isAssignableFrom(descendant);
   }
+
+  @NotNull
+  public static JBTreeTraverser<Class> classTraverser(@Nullable Class root) {
+    return new JBTreeTraverser<Class>(CLASS_STRUCTURE).unique().withRoot(root);
+  }
+
+  private static final Function<Class, Iterable<Class>> CLASS_STRUCTURE = new Function<Class, Iterable<Class>>() {
+    @Override
+    public Iterable<Class> fun(Class aClass) {
+      return JBIterable.of(aClass.getSuperclass()).append(aClass.getInterfaces());
+    }
+  };
 }

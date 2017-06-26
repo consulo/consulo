@@ -22,14 +22,18 @@ import java.util.Collection;
 /**
  * @author max
  * @author Konstantin Bulenkov
+ *
+ * @see Functions for some common implementations
+ *
+ * Consider to use java.util.function.Function
  */
 @SuppressWarnings({"unchecked"})
 public interface Function<Param, Result> {
   Result fun(Param param);
 
-  Function ID = new Function() {
+  Function ID = new Function.Mono() {
     @Override
-    public Object fun(final Object o) {
+    public Object fun(Object o) {
       return o;
     }
   };
@@ -42,13 +46,6 @@ public interface Function<Param, Result> {
       return String.valueOf(o);
     }
   };
-
-  final class Self<P, R> implements Function<P, R> {
-    @Override
-    public R fun(P p) {
-      return (R)p;
-    }
-  }
 
   interface Mono<T> extends Function<T, T> {}
 
@@ -78,15 +75,6 @@ public interface Function<Param, Result> {
     @Override
     public R fun(Collection<P> ps) {
       return (R)ps.iterator().next();
-    }
-  }
-
-  class Predefined {
-    public static <I,O> Function<I, O> NULL() {
-      return NULL;
-    }
-    public static <I,O> Function<I, O> TO_STRING() {
-      return TO_STRING;
     }
   }
 }
