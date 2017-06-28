@@ -19,9 +19,12 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
+import consulo.annotations.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL
@@ -30,18 +33,23 @@ import consulo.annotations.RequiredReadAction;
 public class PsiPackageSupportProviders {
   @RequiredReadAction
   public static boolean isPackageSupported(@NotNull Project project) {
-    PsiPackageSupportProvider[] extensions = PsiPackageSupportProvider.EP_NAME.getExtensions();
-    ModuleManager moduleManager = ModuleManager.getInstance(project);
-    for (Module module : moduleManager.getModules()) {
-      ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-      for (ModuleExtension moduleExtension : rootManager.getExtensions()) {
-        for (PsiPackageSupportProvider extension : extensions) {
-          if(extension.isSupported(moduleExtension)) {
-            return true;
+    return CachedValuesManager.getManager(project).getCachedValue(project, () -> {
+      boolean result = false;
+      PsiPackageSupportProvider[] extensions = PsiPackageSupportProvider.EP_NAME.getExtensions();
+      ModuleManager moduleManager = ModuleManager.getInstance(project);
+      loop:
+      for (Module module : moduleManager.getModules()) {
+        ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+        for (ModuleExtension moduleExtension : rootManager.getExtensions()) {
+          for (PsiPackageSupportProvider extension : extensions) {
+            if (extension.isSupported(moduleExtension)) {
+              result = true;
+              break loop;
+            }
           }
         }
       }
-    }
-    return false;
+      return CachedValueProvider.Result.create(result, ProjectRootManager.getInstance(project));
+    });
   }
 }
