@@ -32,6 +32,7 @@ import java.util.List;
  * @see ProjectRootManager#getFileIndex()
  */
 public interface ProjectFileIndex extends FileIndex {
+  @Deprecated
   class SERVICE {
     private SERVICE() {
     }
@@ -39,6 +40,11 @@ public interface ProjectFileIndex extends FileIndex {
     public static ProjectFileIndex getInstance(Project project) {
       return ServiceManager.getService(project, ProjectFileIndex.class);
     }
+  }
+
+  @NotNull
+  static ProjectFileIndex getInstance(Project project) {
+    return ServiceManager.getService(project, ProjectFileIndex.class);
   }
 
   /**
