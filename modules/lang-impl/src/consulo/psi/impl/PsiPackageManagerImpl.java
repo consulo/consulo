@@ -121,13 +121,13 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
       return null;
     }
 
-    for (VirtualFile next : dirs) {
-      PsiPackage packageFromProviders = createPackageFromProviders(next, extensionClass, qualifiedName);
+    for (VirtualFile directory : dirs) {
+      PsiPackage packageFromProviders = createPackageFromProviders(directory, extensionClass, qualifiedName);
       if (packageFromProviders != null) {
         return packageFromProviders;
       }
 
-      PsiPackage packageFromLibrary = createPackageFromLibrary(next, extensionClass, qualifiedName);
+      PsiPackage packageFromLibrary = createPackageFromLibrary(directory, extensionClass, qualifiedName);
       if (packageFromLibrary != null) {
         return packageFromLibrary;
       }
@@ -153,7 +153,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
 
     PsiManager psiManager = PsiManager.getInstance(myProject);
     for (PsiPackageSupportProvider p : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
-      if (p.isSupported(extension)) {
+      if (p.isSupported(extension) && p.acceptVirtualFile(moduleForFile, virtualFile)) {
         return p.createPackage(psiManager, this, extensionClass, qualifiedName);
       }
     }
@@ -163,7 +163,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   private PsiPackage createPackageFromLibrary(@NotNull VirtualFile virtualFile,
                                               @NotNull Class<? extends ModuleExtension> extensionClass,
                                               @NotNull String qualifiedName) {
-    ProjectFileIndex fileIndexFacade = ProjectFileIndex.SERVICE.getInstance(myProject);
+    ProjectFileIndex fileIndexFacade = ProjectFileIndex.getInstance(myProject);
     PsiManager psiManager = PsiManager.getInstance(myProject);
     if (fileIndexFacade.isInLibraryClasses(virtualFile)) {
       List<OrderEntry> orderEntriesForFile = fileIndexFacade.getOrderEntriesForFile(virtualFile);

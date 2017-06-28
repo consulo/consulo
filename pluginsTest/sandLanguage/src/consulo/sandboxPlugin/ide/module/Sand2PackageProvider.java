@@ -16,7 +16,6 @@
 package consulo.sandboxPlugin.ide.module;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.module.Module;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.file.PsiPackageBase;
 import com.intellij.util.ArrayFactory;
@@ -35,13 +34,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Sand2PackageProvider implements PsiPackageSupportProvider {
   @Override
-  public boolean isSupported(@NotNull ModuleExtension moduleExtension) {
+  public boolean isSupported(@NotNull ModuleExtension<?> moduleExtension) {
     return moduleExtension instanceof Sand2ModuleExtension;
-  }
-
-  @Override
-  public boolean isValidPackageName(@NotNull Module module, @NotNull String packageName) {
-    return true;
   }
 
   @NotNull

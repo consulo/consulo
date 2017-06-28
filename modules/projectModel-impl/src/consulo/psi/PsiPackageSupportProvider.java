@@ -17,8 +17,13 @@ package consulo.psi;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import consulo.module.extension.ModuleExtension;
+import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.TestContentFolderTypeProvider;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,9 +33,16 @@ import org.jetbrains.annotations.NotNull;
 public interface PsiPackageSupportProvider {
   ExtensionPointName<PsiPackageSupportProvider> EP_NAME = ExtensionPointName.create("com.intellij.psi.packageSupportProvider");
 
-  boolean isSupported(@NotNull ModuleExtension moduleExtension);
+  boolean isSupported(@NotNull ModuleExtension<?> moduleExtension);
 
-  boolean isValidPackageName(@NotNull Module module, @NotNull String packageName);
+  default boolean isValidPackageName(@NotNull Module module, @NotNull String packageName) {
+    return true;
+  }
+
+  default boolean acceptVirtualFile(@NotNull Module module, @NotNull VirtualFile virtualFile) {
+    ContentFolderTypeProvider type = ProjectFileIndex.getInstance(module.getProject()).getContentFolderTypeForFile(virtualFile);
+    return ProductionContentFolderTypeProvider.getInstance().equals(type) || TestContentFolderTypeProvider.getInstance().equals(type);
+  }
 
   @NotNull
   PsiPackage createPackage(@NotNull PsiManager psiManager,
