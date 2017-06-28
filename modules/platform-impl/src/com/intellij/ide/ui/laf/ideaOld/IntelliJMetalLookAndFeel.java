@@ -34,7 +34,7 @@ import java.awt.*;
 /**
 * @author Konstantin Bulenkov
 */
-public final class IdeaLaf extends MetalLookAndFeel {
+public final class IntelliJMetalLookAndFeel extends MetalLookAndFeel {
 
   public static final ColorUIResource TOOLTIP_BACKGROUND_COLOR = new ColorUIResource(255, 255, 231);
 

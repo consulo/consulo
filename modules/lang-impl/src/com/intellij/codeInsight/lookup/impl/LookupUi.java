@@ -37,7 +37,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
@@ -47,7 +46,11 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Alarm;
 import com.intellij.util.PlatformIcons;
-import com.intellij.util.ui.*;
+import com.intellij.util.ui.AbstractLayoutManager;
+import com.intellij.util.ui.AsyncProcessIcon;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
+import consulo.ui.plaf.OverridableIncreaseButtonScrollUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,6 +60,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.ScrollBarUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Collection;
@@ -105,12 +109,10 @@ class LookupUi {
     myScrollPane = new JBScrollPane(lookup.getList());
     myScrollPane.setViewportBorder(JBUI.Borders.empty());
     myScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    ButtonlessScrollBarUI.setOwnScrollBarImplementationUI(myScrollPane.getVerticalScrollBar(), new Factory<JButton>() {
-      @Override
-      public JButton create() {
-        return myScrollBarIncreaseButton;
-      }
-    });
+    ScrollBarUI ui = myScrollPane.getVerticalScrollBar().getUI();
+    if(ui instanceof OverridableIncreaseButtonScrollUI) {
+      ((OverridableIncreaseButtonScrollUI)ui).setIncreaseButtonFactory(() -> myScrollBarIncreaseButton);
+    }
     lookup.getComponent().add(myLayeredPane, BorderLayout.CENTER);
 
     //IDEA-82111

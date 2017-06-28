@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.util.ui.JBUI;
-import consulo.util.ui.OwnScrollBarUI;
+import consulo.ui.plaf.OverridableIncreaseButtonScrollUI;
 import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
@@ -62,7 +62,7 @@ public abstract class Updater<Painter extends ErrorStripePainter> implements Dis
     myScrollBar.addMouseListener(myMouseAdapter);
     myScrollBar.addMouseMotionListener(myMouseAdapter);
     myQueue = new MergingUpdateQueue("ErrorStripeUpdater", 100, true, myScrollBar, this);
-    UIUtil.putClientProperty(myScrollBar, OwnScrollBarUI.TRACK, new RegionPainter<Object>() {
+    UIUtil.putClientProperty(myScrollBar, OverridableIncreaseButtonScrollUI.TRACK, new RegionPainter<Object>() {
       @Override
       public void paint(Graphics2D g, int x, int y, int width, int height, Object object) {
         DaemonCodeAnalyzerSettings settings = DaemonCodeAnalyzerSettings.getInstance();
@@ -81,7 +81,7 @@ public abstract class Updater<Painter extends ErrorStripePainter> implements Dis
   public void dispose() {
     myScrollBar.removeMouseListener(myMouseAdapter);
     myScrollBar.removeMouseMotionListener(myMouseAdapter);
-    UIUtil.putClientProperty(myScrollBar, OwnScrollBarUI.TRACK, null);
+    UIUtil.putClientProperty(myScrollBar, OverridableIncreaseButtonScrollUI.TRACK, null);
   }
 
   private int findErrorStripeIndex(Painter painter, int x, int y) {

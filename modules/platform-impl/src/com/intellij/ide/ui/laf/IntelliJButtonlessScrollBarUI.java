@@ -16,13 +16,15 @@
 package com.intellij.ide.ui.laf;
 
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
-import com.intellij.util.ui.*;
-import consulo.util.ui.OwnScrollBarUI;
+import com.intellij.util.ui.Animator;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.RegionPainter;
+import com.intellij.util.ui.UIUtil;
+import consulo.ui.plaf.OverridableIncreaseButtonScrollUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -31,12 +33,13 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.function.Supplier;
 
 /**
  * @author max
  * @author Konstantin Bulenkov
  */
-public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScrollBarUI {
+public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements OverridableIncreaseButtonScrollUI {
   @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
   public static ComponentUI createUI(JComponent c) {
     return new IntelliJButtonlessScrollBarUI();
@@ -68,17 +71,10 @@ public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements O
     return UIUtil.isUnderDarcula() ? 20 : 40;
   }
 
-  private static Factory<JButton> EMPTY_BUTTON_FACTORY = new Factory<JButton>() {
-    @Override
-    public JButton create() {
-      return new EmptyButton();
-    }
-  };
-
   private final AdjustmentListener myAdjustmentListener;
   private final MouseMotionAdapter myMouseMotionListener;
   private final MouseAdapter myMouseListener;
-  private Factory<JButton> myIncreaseButtonFactory = EMPTY_BUTTON_FACTORY;
+  private Supplier<JButton> myIncreaseButtonFactory = EmptyButton::new;
 
   private Animator myAnimator;
 
@@ -154,10 +150,6 @@ public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements O
     else {
       myAnimator.resume();
     }
-  }
-
-  public static BasicScrollBarUI createNormal() {
-    return new IntelliJButtonlessScrollBarUI();
   }
 
   @Override
@@ -343,7 +335,7 @@ public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements O
 
   @Override
   protected JButton createIncreaseButton(int orientation) {
-    return myIncreaseButtonFactory.create();
+    return myIncreaseButtonFactory.get();
   }
 
   @Override
@@ -352,7 +344,7 @@ public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements O
   }
 
   @Override
-  public void setIncreaseButtonFactory(@NotNull Factory<JButton> buttonFactory) {
+  public void setIncreaseButtonFactory(@NotNull Supplier<JButton> buttonFactory) {
     myIncreaseButtonFactory = buttonFactory;
   }
 

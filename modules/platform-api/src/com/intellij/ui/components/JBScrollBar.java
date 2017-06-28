@@ -15,7 +15,6 @@
  */
 package com.intellij.ui.components;
 
-import com.intellij.util.ui.ButtonlessScrollBarUI;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -37,10 +36,5 @@ public class JBScrollBar extends JScrollBar{
 
   private void init() {
     putClientProperty("JScrollBar.fastWheelScrolling", Boolean.TRUE); // fast scrolling for JDK 6
-  }
-
-  @Override
-  public void updateUI() {
-    ButtonlessScrollBarUI.setOwnScrollBarImplementationUI(this);
   }
 }

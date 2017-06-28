@@ -304,11 +304,6 @@ public class JBScrollPane extends JScrollPane {
     }
 
     @Override
-    public void updateUI() {
-      ButtonlessScrollBarUI.setOwnScrollBarImplementationUI(this);
-    }
-
-    @Override
     public boolean canBePreprocessed(MouseEvent e) {
       return JBScrollPane.canBePreprocessed(e, this);
     }

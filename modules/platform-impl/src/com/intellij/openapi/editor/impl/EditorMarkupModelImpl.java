@@ -56,7 +56,6 @@ import com.intellij.util.Alarm;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.ButtonlessScrollBarUI;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -174,7 +173,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     if (IJSwingUtilities.findParentByInterface(myEditor.getComponent(), EditorWindowHolder.class) == null ||
         isVisible ||
         !UISettings.getInstance().SHOW_EDITOR_TOOLTIP) {
-      final Set<RangeHighlighter> highlighters = new THashSet<RangeHighlighter>();
+      final Set<RangeHighlighter> highlighters = new THashSet<>();
       getNearestHighlighters(this, me.getY(), highlighters);
       getNearestHighlighters((MarkupModelEx)DocumentMarkupModel.forDocument(myEditor.getDocument(), getEditor().getProject(), true), me.getY(), highlighters);
       if (highlighters.isEmpty()) return false;
@@ -199,7 +198,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       float rowRatio = (float)visualLine / (myEditor.getVisibleLineCount() - 1);
       int y = myRowAdjuster != 0 ? (int)(rowRatio * myEditor.getVerticalScrollBar().getHeight()) : me.getY();
       me = new MouseEvent(me.getComponent(), me.getID(), me.getWhen(), me.getModifiers(), me.getX(), y, me.getClickCount(), me.isPopupTrigger());
-      final List<RangeHighlighterEx> highlighters = new ArrayList<RangeHighlighterEx>();
+      final List<RangeHighlighterEx> highlighters = new ArrayList<>();
       collectRangeHighlighters(this, visualLine, highlighters);
       collectRangeHighlighters((MarkupModelEx)DocumentMarkupModel.forDocument(myEditor.getDocument(), getEditor().getProject(), true), visualLine,
                                highlighters);
@@ -245,7 +244,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
   @Nullable
   private RangeHighlighter getNearestRangeHighlighter(final MouseEvent e) {
-    List<RangeHighlighter> highlighters = new ArrayList<RangeHighlighter>();
+    List<RangeHighlighter> highlighters = new ArrayList<>();
     getNearestHighlighters(this, e.getY(), highlighters);
     getNearestHighlighters((MarkupModelEx)DocumentMarkupModel.forDocument(myEditor.getDocument(), myEditor.getProject(), true), e.getY(), highlighters);
     RangeHighlighter nearestMarker = null;
@@ -460,12 +459,6 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
     @Override
     protected void paintComponent(Graphics g) {
-      if (UISettings.getInstance().PRESENTATION_MODE) {
-        g.setColor(getEditor().getColorsScheme().getDefaultBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-        return;
-      }
-
       Rectangle componentBounds = getBounds();
       ProperTextRange docRange = ProperTextRange.create(0, componentBounds.height);
       if (myCachedTrack == null || myCachedHeight != componentBounds.height) {
@@ -501,11 +494,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     }
 
     private void paintBackground(Graphics g, Rectangle bounds) {
-      if (UISettings.getInstance().PRESENTATION_MODE) {
-        return;
-      }
-
-      g.setColor(ButtonlessScrollBarUI.getTrackBackground());
+      g.setColor(UIUtil.getPanelBackground());
       g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
       g.setColor(UIUtil.getBorderColor());
@@ -534,21 +523,11 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     }
 
     private void drawMarkup(@NotNull final Graphics g, int startOffset, int endOffset, @NotNull MarkupModelEx markup1, @NotNull MarkupModelEx markup2) {
-      final Queue<PositionedStripe> thinEnds = new PriorityQueue<PositionedStripe>(5, new Comparator<PositionedStripe>() {
-        @Override
-        public int compare(@NotNull PositionedStripe o1, @NotNull PositionedStripe o2) {
-          return o1.yEnd - o2.yEnd;
-        }
-      });
-      final Queue<PositionedStripe> wideEnds = new PriorityQueue<PositionedStripe>(5, new Comparator<PositionedStripe>() {
-        @Override
-        public int compare(@NotNull PositionedStripe o1, @NotNull PositionedStripe o2) {
-          return o1.yEnd - o2.yEnd;
-        }
-      });
+      final Queue<PositionedStripe> thinEnds = new PriorityQueue<>(5, (o1, o2) -> o1.yEnd - o2.yEnd);
+      final Queue<PositionedStripe> wideEnds = new PriorityQueue<>(5, (o1, o2) -> o1.yEnd - o2.yEnd);
       // sorted by layer
-      final List<PositionedStripe> thinStripes = new ArrayList<PositionedStripe>(); // layer desc
-      final List<PositionedStripe> wideStripes = new ArrayList<PositionedStripe>(); // layer desc
+      final List<PositionedStripe> thinStripes = new ArrayList<>(); // layer desc
+      final List<PositionedStripe> wideStripes = new ArrayList<>(); // layer desc
       final int[] thinYStart = new int[1];  // in range 0..yStart all spots are drawn
       final int[] wideYStart = new int[1];  // in range 0..yStart all spots are drawn
 
@@ -867,7 +846,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
         final String text = tooltipObject.toString();
         if (tooltips == null) {
-          tooltips = new THashSet<String>();
+          tooltips = new THashSet<>();
         }
         if (tooltips.add(text)) {
           if (bigRenderer == null) {
@@ -1000,7 +979,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   private class EditorFragmentRenderer implements TooltipRenderer {
     private int myVisualLine;
     private boolean myShowInstantly;
-    private final List<RangeHighlighterEx> myHighlighters = new ArrayList<RangeHighlighterEx>();
+    private final List<RangeHighlighterEx> myHighlighters = new ArrayList<>();
     private BufferedImage myCacheLevel1;
     private BufferedImage myCacheLevel2;
     private int myCacheStartLine;
@@ -1010,8 +989,8 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     private int myRelativeY;
     private boolean myDelayed = false;
     private boolean isDirty = false;
-    private final AtomicReference<Point> myPointHolder = new AtomicReference<Point>();
-    private final AtomicReference<HintHint> myHintHolder = new AtomicReference<HintHint>();
+    private final AtomicReference<Point> myPointHolder = new AtomicReference<>();
+    private final AtomicReference<HintHint> myHintHolder = new AtomicReference<>();
 
     private EditorFragmentRenderer() {
       update(-1, Collections.<RangeHighlighterEx>emptyList(), false);

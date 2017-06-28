@@ -15,20 +15,22 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.util.Factory;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
-import consulo.util.ui.OwnScrollBarUI;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.DeprecationInfo;
+import consulo.ui.plaf.OverridableIncreaseButtonScrollUI;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import javax.swing.plaf.ScrollBarUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.util.function.Supplier;
 
 /**
  * @author max
@@ -36,24 +38,7 @@ import java.awt.event.*;
  */
 @Deprecated
 @DeprecationInfo("User cant create ButtonlessScrollBarUI. Implementation of UI is stored in Laf")
-public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScrollBarUI {
-  public static void setOwnScrollBarImplementationUI(@NotNull JScrollBar scrollBar) {
-    setOwnScrollBarImplementationUI(scrollBar, EMPTY_BUTTON_FACTORY);
-  }
-
-  public static void setOwnScrollBarImplementationUI(@NotNull JScrollBar scrollBar, @NotNull Factory<JButton> incButtonFactory) {
-    ScrollBarUI ui = (ScrollBarUI)UIManager.getUI(scrollBar);
-    if(!(ui instanceof OwnScrollBarUI)) {
-      BasicScrollBarUI normal = createNormal();
-      ((OwnScrollBarUI)normal).setIncreaseButtonFactory(incButtonFactory);
-      scrollBar.setUI(normal);
-    }
-    else {
-      ((OwnScrollBarUI)ui).setIncreaseButtonFactory(incButtonFactory);
-      scrollBar.setUI(ui);
-    }
-  }
-
+public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OverridableIncreaseButtonScrollUI {
   public static JBColor getGradientLightColor() {
     return new JBColor(Gray._251, Gray._95);
   }
@@ -80,27 +65,17 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
     return 20;
   }
 
-  private static Factory<JButton> EMPTY_BUTTON_FACTORY = new Factory<JButton>() {
-    @Override
-    public JButton create() {
-      return new EmptyButton();
-    }
-  };
+  private static Supplier<JButton> EMPTY_BUTTON_FACTORY = EmptyButton::new;
 
   private final AdjustmentListener myAdjustmentListener;
   private final MouseMotionAdapter myMouseMotionListener;
   private final MouseAdapter myMouseListener;
-  private Factory<JButton> myIncreaseButtonFactory = EMPTY_BUTTON_FACTORY;
+  private Supplier<JButton> myIncreaseButtonFactory = EMPTY_BUTTON_FACTORY;
 
   private boolean myMouseIsOverThumb = false;
 
   protected ButtonlessScrollBarUI() {
-    myAdjustmentListener = new AdjustmentListener() {
-      @Override
-      public void adjustmentValueChanged(AdjustmentEvent e) {
-        repaint();
-      }
-    };
+    myAdjustmentListener = e -> repaint();
 
     myMouseMotionListener = new MouseMotionAdapter() {
       @Override
@@ -128,7 +103,8 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
   public void layoutContainer(Container scrollbarContainer) {
     try {
       super.layoutContainer(scrollbarContainer);
-    } catch (NullPointerException ignore) {
+    }
+    catch (NullPointerException ignore) {
       //installUI is not performed yet or uninstallUI has set almost every field to null. Just ignore it //IDEA-89674
     }
   }
@@ -145,19 +121,8 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
     };
   }
 
-  public int getDecrementButtonHeight() {
-    return decrButton.getHeight();
-  }
-  public int getIncrementButtonHeight() {
-    return incrButton.getHeight();
-  }
-
   private void repaint() {
-    scrollbar.repaint(((ButtonlessScrollBarUI)scrollbar.getUI()).getThumbBounds());
-  }
-
-  public static BasicScrollBarUI createNormal() {
-    return new ButtonlessScrollBarUI();
+    scrollbar.repaint(getThumbBounds());
   }
 
   @Override
@@ -195,18 +160,14 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
   }
 
   @Override
-  public Rectangle getThumbBounds() {
-    return super.getThumbBounds();
-  }
-
-  @Override
   protected void uninstallListeners() {
     if (scrollTimer != null) {
       // it is already called otherwise
       super.uninstallListeners();
     }
     scrollbar.removeAdjustmentListener(myAdjustmentListener);
-  //  Disposer.dispose(myAnimator);
+    scrollbar.removeMouseListener(myMouseListener);
+    scrollbar.removeMouseMotionListener(myMouseMotionListener);
   }
 
   @Override
@@ -315,7 +276,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
 
   @Override
   protected JButton createIncreaseButton(int orientation) {
-    return myIncreaseButtonFactory.create();
+    return myIncreaseButtonFactory.get();
   }
 
   @Override
@@ -324,7 +285,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScroll
   }
 
   @Override
-  public void setIncreaseButtonFactory(@NotNull Factory<JButton> buttonFactory) {
+  public void setIncreaseButtonFactory(@NotNull Supplier<JButton> buttonFactory) {
     myIncreaseButtonFactory = buttonFactory;
   }
 

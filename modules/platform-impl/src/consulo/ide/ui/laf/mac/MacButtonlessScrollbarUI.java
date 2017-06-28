@@ -15,7 +15,6 @@
  */
 package consulo.ide.ui.laf.mac;
 
-import com.intellij.openapi.util.Factory;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
@@ -23,7 +22,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
-import consulo.util.ui.OwnScrollBarUI;
+import consulo.ui.plaf.OverridableIncreaseButtonScrollUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -34,12 +33,13 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 5/10/17
  */
-public class MacButtonlessScrollbarUI extends BasicScrollBarUI implements OwnScrollBarUI {
+public class MacButtonlessScrollbarUI extends BasicScrollBarUI implements OverridableIncreaseButtonScrollUI {
   @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
   public static ComponentUI createUI(JComponent c) {
     return new MacButtonlessScrollbarUI();
@@ -62,11 +62,9 @@ public class MacButtonlessScrollbarUI extends BasicScrollBarUI implements OwnScr
 
   private static final BasicStroke ourBorderStroke = new BasicStroke();
 
-  private static Factory<JButton> EMPTY_BUTTON_FACTORY = EmptyButton::new;
-
   private final MouseMotionAdapter myMouseMotionListener;
   private final MouseAdapter myMouseListener;
-  private Factory<JButton> myIncreaseButtonFactory = EMPTY_BUTTON_FACTORY;
+  private Supplier<JButton> myIncreaseButtonFactory = EmptyButton::new;
 
   private boolean myMouseIsOverThumb = false;
 
@@ -265,7 +263,7 @@ public class MacButtonlessScrollbarUI extends BasicScrollBarUI implements OwnScr
 
   @Override
   protected JButton createIncreaseButton(int orientation) {
-    return myIncreaseButtonFactory.create();
+    return myIncreaseButtonFactory.get();
   }
 
   @Override
@@ -274,7 +272,7 @@ public class MacButtonlessScrollbarUI extends BasicScrollBarUI implements OwnScr
   }
 
   @Override
-  public void setIncreaseButtonFactory(@NotNull Factory<JButton> buttonFactory) {
+  public void setIncreaseButtonFactory(@NotNull Supplier<JButton> buttonFactory) {
     myIncreaseButtonFactory = buttonFactory;
   }
 
