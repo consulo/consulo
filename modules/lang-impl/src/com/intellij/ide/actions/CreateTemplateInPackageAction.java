@@ -30,6 +30,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import consulo.module.extension.ModuleExtension;
+import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,12 +70,12 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
     }
 
     final Module module = LangDataKeys.MODULE.getData(dataContext);
-    if(module == null) {
+    if (module == null) {
       return false;
     }
 
     final Class<? extends ModuleExtension> moduleExtensionClass = getModuleExtensionClass();
-    if(moduleExtensionClass != null && ModuleUtilCore.getExtension(module, moduleExtensionClass) == null) {
+    if (moduleExtensionClass != null && ModuleUtilCore.getExtension(module, moduleExtensionClass) == null) {
       return false;
     }
 
@@ -82,9 +83,19 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
       return true;
     }
 
+    PsiPackageSupportProvider[] extensions = PsiPackageSupportProvider.EP_NAME.getExtensions();
+
     ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     for (PsiDirectory dir : view.getDirectories()) {
-      if (projectFileIndex.isInSourceContent(dir.getVirtualFile()) && checkPackageExists(dir)) {
+      boolean accepted = false;
+      for (PsiPackageSupportProvider provider : extensions) {
+        if (provider.acceptVirtualFile(module, dir.getVirtualFile())) {
+          accepted = true;
+          break;
+        }
+      }
+
+      if (accepted && projectFileIndex.isInSourceContent(dir.getVirtualFile()) && checkPackageExists(dir)) {
         return true;
       }
     }
