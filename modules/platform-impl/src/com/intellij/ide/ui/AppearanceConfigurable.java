@@ -53,10 +53,6 @@ public class AppearanceConfigurable implements SearchableConfigurable {
     return IdeBundle.message("title.appearance");
   }
 
-  public AppearanceConfigurable() {
-    myComponent = new MyComponent();
-  }
-
   private void initComponent() {
     if (myComponent == null) {
       myComponent = new MyComponent();
