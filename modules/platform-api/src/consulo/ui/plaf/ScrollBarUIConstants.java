@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,15 @@ package consulo.ui.plaf;
 
 import com.intellij.openapi.util.Key;
 import com.intellij.util.ui.RegionPainter;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 11.04.14
- *
- * This is marker class
+ * @since 28-Jun-17
  */
-public interface OverridableIncreaseButtonScrollUI {
+public interface ScrollBarUIConstants {
   /**
    * This key defines a region painter, which is used by the custom ScrollBarUI
    * to draw additional paintings (i.e. error stripes) on the scrollbar's track.
@@ -37,5 +34,8 @@ public interface OverridableIncreaseButtonScrollUI {
    */
   Key<RegionPainter<Object>> TRACK = Key.create("JB_SCROLL_BAR_TRACK");
 
-  void setIncreaseButtonFactory(@NotNull Supplier<JButton> buttonFactory);
+  /**
+   * This key define a factory for custom increase button, which is used by the custom ScrollBarUI
+   */
+  Key<Supplier<? extends JButton>> INCREASE_BUTTON_FACTORY = Key.create("JB_SCROLL_BAR_TRACK");
 }

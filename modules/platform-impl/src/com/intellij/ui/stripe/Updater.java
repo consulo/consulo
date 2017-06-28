@@ -21,11 +21,10 @@ import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.util.ui.JBUI;
-import consulo.ui.plaf.OverridableIncreaseButtonScrollUI;
-import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.ui.plaf.ScrollBarUIConstants;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -62,18 +61,15 @@ public abstract class Updater<Painter extends ErrorStripePainter> implements Dis
     myScrollBar.addMouseListener(myMouseAdapter);
     myScrollBar.addMouseMotionListener(myMouseAdapter);
     myQueue = new MergingUpdateQueue("ErrorStripeUpdater", 100, true, myScrollBar, this);
-    UIUtil.putClientProperty(myScrollBar, OverridableIncreaseButtonScrollUI.TRACK, new RegionPainter<Object>() {
-      @Override
-      public void paint(Graphics2D g, int x, int y, int width, int height, Object object) {
-        DaemonCodeAnalyzerSettings settings = DaemonCodeAnalyzerSettings.getInstance();
-        myPainter.setMinimalThickness(settings == null ? 2 : Math.min(settings.ERROR_STRIPE_MARK_MIN_HEIGHT, JBUI.scale(4)));
-        myPainter.setErrorStripeGap(1);
-        if (myPainter instanceof ExtraErrorStripePainter) {
-          ExtraErrorStripePainter extra = (ExtraErrorStripePainter)myPainter;
-          extra.setGroupSwap(!myScrollBar.getComponentOrientation().isLeftToRight());
-        }
-        myPainter.paint(g, x, y, width, height, object);
+    UIUtil.putClientProperty(myScrollBar, ScrollBarUIConstants.TRACK, (g, x, y, width, height, object) -> {
+      DaemonCodeAnalyzerSettings settings = DaemonCodeAnalyzerSettings.getInstance();
+      myPainter.setMinimalThickness(settings == null ? 2 : Math.min(settings.ERROR_STRIPE_MARK_MIN_HEIGHT, JBUI.scale(4)));
+      myPainter.setErrorStripeGap(1);
+      if (myPainter instanceof ExtraErrorStripePainter) {
+        ExtraErrorStripePainter extra = (ExtraErrorStripePainter)myPainter;
+        extra.setGroupSwap(!myScrollBar.getComponentOrientation().isLeftToRight());
       }
+      myPainter.paint(g, x, y, width, height, object);
     });
   }
 
@@ -81,7 +77,7 @@ public abstract class Updater<Painter extends ErrorStripePainter> implements Dis
   public void dispose() {
     myScrollBar.removeMouseListener(myMouseAdapter);
     myScrollBar.removeMouseMotionListener(myMouseAdapter);
-    UIUtil.putClientProperty(myScrollBar, OverridableIncreaseButtonScrollUI.TRACK, null);
+    UIUtil.putClientProperty(myScrollBar, ScrollBarUIConstants.TRACK, null);
   }
 
   private int findErrorStripeIndex(Painter painter, int x, int y) {

@@ -19,8 +19,7 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
 import consulo.annotations.DeprecationInfo;
-import consulo.ui.plaf.OverridableIncreaseButtonScrollUI;
-import org.jetbrains.annotations.NotNull;
+import consulo.ui.plaf.ScrollBarUIConstants;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -38,7 +37,7 @@ import java.util.function.Supplier;
  */
 @Deprecated
 @DeprecationInfo("User cant create ButtonlessScrollBarUI. Implementation of UI is stored in Laf")
-public class ButtonlessScrollBarUI extends BasicScrollBarUI implements OverridableIncreaseButtonScrollUI {
+public class ButtonlessScrollBarUI extends BasicScrollBarUI {
   public static JBColor getGradientLightColor() {
     return new JBColor(Gray._251, Gray._95);
   }
@@ -65,12 +64,9 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements Overridab
     return 20;
   }
 
-  private static Supplier<JButton> EMPTY_BUTTON_FACTORY = EmptyButton::new;
-
   private final AdjustmentListener myAdjustmentListener;
   private final MouseMotionAdapter myMouseMotionListener;
   private final MouseAdapter myMouseListener;
-  private Supplier<JButton> myIncreaseButtonFactory = EMPTY_BUTTON_FACTORY;
 
   private boolean myMouseIsOverThumb = false;
 
@@ -183,7 +179,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements Overridab
       g.drawLine(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y);
     }
 
-    RegionPainter<Object> painter = UIUtil.getClientProperty(c, TRACK);
+    RegionPainter<Object> painter = UIUtil.getClientProperty(c, ScrollBarUIConstants.TRACK);
     if (painter != null) {
       painter.paint((Graphics2D)g, bounds.x, bounds.y, bounds.width, bounds.height, null);
     }
@@ -276,17 +272,13 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI implements Overridab
 
   @Override
   protected JButton createIncreaseButton(int orientation) {
-    return myIncreaseButtonFactory.get();
+    Supplier<? extends JButton> property = UIUtil.getClientProperty(scrollbar, ScrollBarUIConstants.INCREASE_BUTTON_FACTORY);
+    return property == null ? new EmptyButton() : property.get();
   }
 
   @Override
   protected JButton createDecreaseButton(int orientation) {
     return new EmptyButton();
-  }
-
-  @Override
-  public void setIncreaseButtonFactory(@NotNull Supplier<JButton> buttonFactory) {
-    myIncreaseButtonFactory = buttonFactory;
   }
 
   private static class EmptyButton extends JButton {

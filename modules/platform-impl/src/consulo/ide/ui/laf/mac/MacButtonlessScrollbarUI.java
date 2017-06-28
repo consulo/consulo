@@ -22,8 +22,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.plaf.OverridableIncreaseButtonScrollUI;
-import org.jetbrains.annotations.NotNull;
+import consulo.ui.plaf.ScrollBarUIConstants;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -39,7 +38,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 5/10/17
  */
-public class MacButtonlessScrollbarUI extends BasicScrollBarUI implements OverridableIncreaseButtonScrollUI {
+public class MacButtonlessScrollbarUI extends BasicScrollBarUI {
   @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
   public static ComponentUI createUI(JComponent c) {
     return new MacButtonlessScrollbarUI();
@@ -64,7 +63,6 @@ public class MacButtonlessScrollbarUI extends BasicScrollBarUI implements Overri
 
   private final MouseMotionAdapter myMouseMotionListener;
   private final MouseAdapter myMouseListener;
-  private Supplier<JButton> myIncreaseButtonFactory = EmptyButton::new;
 
   private boolean myMouseIsOverThumb = false;
 
@@ -180,7 +178,7 @@ public class MacButtonlessScrollbarUI extends BasicScrollBarUI implements Overri
       g.drawLine(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y);
     }
 
-    RegionPainter<Object> painter = UIUtil.getClientProperty(c, TRACK);
+    RegionPainter<Object> painter = UIUtil.getClientProperty(c, ScrollBarUIConstants.TRACK);
     if (painter != null) {
       painter.paint((Graphics2D)g, bounds.x, bounds.y, bounds.width, bounds.height, null);
     }
@@ -249,7 +247,7 @@ public class MacButtonlessScrollbarUI extends BasicScrollBarUI implements Overri
   }
 
   protected Color adjustColor(Color c) {
-    if(!myMouseIsOverThumb) {
+    if (!myMouseIsOverThumb) {
       return c;
     }
     final int sign = UIUtil.isUnderDarkBuildInLaf() ? -1 : 1;
@@ -263,17 +261,13 @@ public class MacButtonlessScrollbarUI extends BasicScrollBarUI implements Overri
 
   @Override
   protected JButton createIncreaseButton(int orientation) {
-    return myIncreaseButtonFactory.get();
+    Supplier<? extends JButton> property = UIUtil.getClientProperty(scrollbar, ScrollBarUIConstants.INCREASE_BUTTON_FACTORY);
+    return property == null ? new EmptyButton() : property.get();
   }
 
   @Override
   protected JButton createDecreaseButton(int orientation) {
     return new EmptyButton();
-  }
-
-  @Override
-  public void setIncreaseButtonFactory(@NotNull Supplier<JButton> buttonFactory) {
-    myIncreaseButtonFactory = buttonFactory;
   }
 
   private static class EmptyButton extends JButton {

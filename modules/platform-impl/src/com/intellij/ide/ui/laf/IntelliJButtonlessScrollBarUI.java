@@ -24,8 +24,7 @@ import com.intellij.util.ui.Animator;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.plaf.OverridableIncreaseButtonScrollUI;
-import org.jetbrains.annotations.NotNull;
+import consulo.ui.plaf.ScrollBarUIConstants;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -39,8 +38,7 @@ import java.util.function.Supplier;
  * @author max
  * @author Konstantin Bulenkov
  */
-public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements OverridableIncreaseButtonScrollUI {
-  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
+public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI {
   public static ComponentUI createUI(JComponent c) {
     return new IntelliJButtonlessScrollBarUI();
   }
@@ -74,7 +72,6 @@ public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements O
   private final AdjustmentListener myAdjustmentListener;
   private final MouseMotionAdapter myMouseMotionListener;
   private final MouseAdapter myMouseListener;
-  private Supplier<JButton> myIncreaseButtonFactory = EmptyButton::new;
 
   private Animator myAnimator;
 
@@ -234,7 +231,7 @@ public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements O
       g.drawLine(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y);
     }
 
-    RegionPainter<Object> painter = UIUtil.getClientProperty(c, TRACK);
+    RegionPainter<Object> painter = UIUtil.getClientProperty(c, ScrollBarUIConstants.TRACK);
     if (painter != null) {
       painter.paint((Graphics2D)g, bounds.x, bounds.y, bounds.width, bounds.height, null);
     }
@@ -335,17 +332,13 @@ public class IntelliJButtonlessScrollBarUI extends BasicScrollBarUI implements O
 
   @Override
   protected JButton createIncreaseButton(int orientation) {
-    return myIncreaseButtonFactory.get();
+    Supplier<? extends JButton> property = UIUtil.getClientProperty(scrollbar, ScrollBarUIConstants.INCREASE_BUTTON_FACTORY);
+    return property == null ? new EmptyButton() : property.get();
   }
 
   @Override
   protected JButton createDecreaseButton(int orientation) {
     return new EmptyButton();
-  }
-
-  @Override
-  public void setIncreaseButtonFactory(@NotNull Supplier<JButton> buttonFactory) {
-    myIncreaseButtonFactory = buttonFactory;
   }
 
   private static class EmptyButton extends JButton {

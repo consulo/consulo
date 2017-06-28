@@ -21,8 +21,7 @@ import com.intellij.ui.LightColors;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.plaf.OverridableIncreaseButtonScrollUI;
-import org.jetbrains.annotations.NotNull;
+import consulo.ui.plaf.ScrollBarUIConstants;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -40,8 +39,7 @@ import java.util.function.Supplier;
  * @author Konstantin Bulenkov
  * @author VISTALL
  */
-public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements OverridableIncreaseButtonScrollUI {
-  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
+public class ModernButtonlessScrollBarUI extends BasicScrollBarUI {
   public static ComponentUI createUI(JComponent c) {
     return new ModernButtonlessScrollBarUI();
   }
@@ -166,7 +164,7 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Ove
     g.setColor(new JBColor(LightColors.SLIGHTLY_GRAY, UIUtil.getListBackground()));
     g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
-    RegionPainter<Object> painter = UIUtil.getClientProperty(c, TRACK);
+    RegionPainter<Object> painter = UIUtil.getClientProperty(c, ScrollBarUIConstants.TRACK);
     if (painter != null) {
       painter.paint((Graphics2D)g, bounds.x, bounds.y, bounds.width, bounds.height, null);
     }
@@ -268,17 +266,13 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Ove
 
   @Override
   protected JButton createIncreaseButton(int orientation) {
-    return myIncreaseButtonFactory.get();
+    Supplier<? extends JButton> property = UIUtil.getClientProperty(scrollbar, ScrollBarUIConstants.INCREASE_BUTTON_FACTORY);
+    return property == null ? new EmptyButton() : property.get();
   }
 
   @Override
   protected JButton createDecreaseButton(int orientation) {
     return new EmptyButton();
-  }
-
-  @Override
-  public void setIncreaseButtonFactory(@NotNull Supplier<JButton> buttonFactory) {
-    myIncreaseButtonFactory = buttonFactory;
   }
 
   private static class EmptyButton extends JButton {
