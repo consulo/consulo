@@ -41,6 +41,8 @@
             <element id="artifact" artifact-name="crossPlatformLibraries" />
             <element id="zip-archive" name="consulo-desktop-impl.jar">
               <element id="module-output" name="desktop-ui-impl" />
+              <element id="module-output" name="desktop-ui-laf-impl" />
+              <element id="module-production-resource-output" name="desktop-ui-laf-impl" />
             </element>
           </element>
           <element id="directory" name="license">
