@@ -435,6 +435,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return FONT_SIZE;
   }
 
+  public boolean getShowIconInQuickNavigation() {
+    return SHOW_ICONS_IN_QUICK_NAVIGATION;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */
