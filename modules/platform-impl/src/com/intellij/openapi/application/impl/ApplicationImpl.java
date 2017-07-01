@@ -60,7 +60,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.psi.PsiLock;
 import com.intellij.ui.AppIcon;
 import com.intellij.ui.Splash;
 import com.intellij.util.*;
@@ -888,7 +887,6 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   private void startRead() {
-    assertNoPsiLock();
     myLock.readLock();
   }
 
@@ -1077,7 +1075,6 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       action.run();
     }
     else {
-      assertNoPsiLock();
       if (!myLock.tryReadLock()) return false;
       try {
         action.run();
@@ -1131,7 +1128,6 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       fireBeforeWriteActionStart(clazz);
 
       if (!myLock.isWriteLocked()) {
-        assertNoPsiLock();
         if (!myLock.tryWriteLock()) {
           Future<?> reportSlowWrite = ourDumpThreadsOnLongWriteActionWaiting <= 0
                                       ? null
@@ -1245,14 +1241,6 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     @Override
     public void finish() {
       endRead();
-    }
-  }
-
-  private final boolean myExtraChecks = isUnitTestMode();
-
-  private void assertNoPsiLock() {
-    if (myExtraChecks) {
-      LOG.assertTrue(!Thread.holdsLock(PsiLock.LOCK), "Thread must not hold PsiLock while performing readAction");
     }
   }
 
