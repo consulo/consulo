@@ -39,14 +39,18 @@ import java.util.List;
 import java.util.Map;
 
 public class ResolveScopeManagerImpl extends ResolveScopeManager {
-
   private final Project myProject;
   private final ProjectRootManager myProjectRootManager;
   private final PsiManager myManager;
 
-  private final Map<VirtualFile, GlobalSearchScope> myDefaultResolveScopesCache = new ConcurrentFactoryMap<VirtualFile, GlobalSearchScope>() {
-    @Override
-    protected GlobalSearchScope create(VirtualFile key) {
+  private final Map<VirtualFile, GlobalSearchScope> myDefaultResolveScopesCache;
+
+  public ResolveScopeManagerImpl(Project project, ProjectRootManager projectRootManager, PsiManager psiManager) {
+    myProject = project;
+    myProjectRootManager = projectRootManager;
+    myManager = psiManager;
+
+    myDefaultResolveScopesCache = ConcurrentFactoryMap.createMap((key) -> {
       GlobalSearchScope scope = null;
       for(ResolveScopeProvider resolveScopeProvider: ResolveScopeProvider.EP_NAME.getExtensions()) {
         scope = resolveScopeProvider.getResolveScope(key, myProject);
@@ -61,39 +65,22 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
       }
 
       return scope;
-    }
-  };
-
-  public ResolveScopeManagerImpl(Project project, ProjectRootManager projectRootManager, PsiManager psiManager) {
-    myProject = project;
-    myProjectRootManager = projectRootManager;
-    myManager = psiManager;
-
-    ((PsiManagerImpl) psiManager).registerRunnableToRunOnChange(new Runnable() {
-      @Override
-      public void run() {
-        myDefaultResolveScopesCache.clear();
-      }
     });
 
+    ((PsiManagerImpl) psiManager).registerRunnableToRunOnChange(myDefaultResolveScopesCache::clear);
   }
 
-  private GlobalSearchScope getDefaultResolveScope(@NotNull PsiFile psiFile, @NotNull final VirtualFile vFile) {
-    return myDefaultResolveScopesCache.get(vFile);
-  }
-
+  @NotNull
   private GlobalSearchScope getInherentResolveScope(VirtualFile vFile) {
     ProjectFileIndex projectFileIndex = myProjectRootManager.getFileIndex();
     Module module = projectFileIndex.getModuleForFile(vFile);
     if (module != null) {
       boolean includeTests = projectFileIndex.isInTestSourceContent(vFile);
-                             // TODO: dmitrylomov: removed this line to see what fails.
-                             //!(vFile.getFileType() == StdFileTypes.JAVA && projectFileIndex.isContentSourceFile(vFile));
       return GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, includeTests);
     }
     else {
       // resolve references in libraries in context of all modules which contain it
-      List<Module> modulesLibraryUsedIn = new ArrayList<Module>();
+      List<Module> modulesLibraryUsedIn = new ArrayList<>();
       List<OrderEntry> orderEntries = projectFileIndex.getOrderEntriesForFile(vFile);
 
       LibraryOrderEntry lib = null;
@@ -171,9 +158,8 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
       return GlobalSearchScope.allScope(myProject);
     }
 
-    return getDefaultResolveScope(contextFile, vFile);
+    return myDefaultResolveScopesCache.get(vFile);
   }
-
 
   @NotNull
   @RequiredReadAction
@@ -181,9 +167,8 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
   public GlobalSearchScope getDefaultResolveScope(final VirtualFile vFile) {
     final PsiFile psiFile = myManager.findFile(vFile);
     assert psiFile != null;
-    return getDefaultResolveScope(psiFile, vFile);
+    return myDefaultResolveScopesCache.get(vFile);
   }
-
 
   @Override
   @NotNull
