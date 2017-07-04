@@ -21,6 +21,7 @@ import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.LibraryScopeCache;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiManagerImpl;
@@ -30,9 +31,9 @@ import com.intellij.psi.search.DelegatingGlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.annotations.RequiredReadAction;
 import consulo.roots.OrderEntryWithTracking;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredReadAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
 
     myDefaultResolveScopesCache = ConcurrentFactoryMap.createMap((key) -> {
       GlobalSearchScope scope = null;
-      for(ResolveScopeProvider resolveScopeProvider: ResolveScopeProvider.EP_NAME.getExtensions()) {
+      for (ResolveScopeProvider resolveScopeProvider : ResolveScopeProvider.EP_NAME.getExtensions()) {
         scope = resolveScopeProvider.getResolveScope(key, myProject);
         if (scope != null) break;
       }
@@ -67,7 +68,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
       return scope;
     });
 
-    ((PsiManagerImpl) psiManager).registerRunnableToRunOnChange(myDefaultResolveScopesCache::clear);
+    ((PsiManagerImpl)psiManager).registerRunnableToRunOnChange(myDefaultResolveScopesCache::clear);
   }
 
   @NotNull
@@ -85,7 +86,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
 
       LibraryOrderEntry lib = null;
       for (OrderEntry entry : orderEntries) {
-        if(entry instanceof ModuleExtensionWithSdkOrderEntry) {
+        if (entry instanceof ModuleExtensionWithSdkOrderEntry) {
           modulesLibraryUsedIn.add(entry.getOwnerModule());
         }
         else if (entry instanceof LibraryOrderEntry) {
@@ -95,7 +96,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
         else if (entry instanceof ModuleOrderEntry) {
           modulesLibraryUsedIn.add(entry.getOwnerModule());
         }
-        else if(entry instanceof OrderEntryWithTracking) {
+        else if (entry instanceof OrderEntryWithTracking) {
           modulesLibraryUsedIn.add(entry.getOwnerModule());
         }
       }
@@ -150,7 +151,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
         return GlobalSearchScope.allScope(myProject);
       }
       else if (contextFile instanceof FileResolveScopeProvider) {
-        return ((FileResolveScopeProvider) contextFile).getFileResolveScope();
+        return ((FileResolveScopeProvider)contextFile).getFileResolveScope();
       }
       vFile = contextFile.getOriginalFile().getVirtualFile();
     }
@@ -173,6 +174,23 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
   @Override
   @NotNull
   public GlobalSearchScope getUseScope(@NotNull PsiElement element) {
+    Pair<GlobalSearchScope, VirtualFile> pair = getDefaultResultScopeInfo(element);
+    if(pair.getSecond() == null) {
+      return pair.getFirst();
+    }
+
+    GlobalSearchScope targetScope = pair.getFirst();
+    for (ResolveScopeEnlarger scopeEnlarger : ResolveScopeEnlarger.EP_NAME.getExtensions()) {
+      SearchScope scope = scopeEnlarger.getAdditionalUseScope(pair.getSecond(), element.getProject());
+      if(scope != null) {
+        targetScope = targetScope.union(scope);
+      }
+    }
+    return targetScope;
+  }
+
+  @NotNull
+  private Pair<GlobalSearchScope, VirtualFile> getDefaultResultScopeInfo(@NotNull PsiElement element) {
     VirtualFile vFile;
     final GlobalSearchScope allScope = GlobalSearchScope.allScope(myManager.getProject());
     if (element instanceof PsiDirectory) {
@@ -180,25 +198,25 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
     }
     else {
       final PsiFile containingFile = element.getContainingFile();
-      if (containingFile == null) return allScope;
+      if (containingFile == null) return Pair.create(allScope, null);
       vFile = containingFile.getVirtualFile();
     }
 
-    if (vFile == null) return allScope;
+    if (vFile == null) return Pair.create(allScope, null);
     ProjectFileIndex projectFileIndex = myProjectRootManager.getFileIndex();
     Module module = projectFileIndex.getModuleForFile(vFile);
     if (module != null) {
       boolean isTest = projectFileIndex.isInTestSourceContent(vFile);
-      return isTest
-             ? GlobalSearchScope.moduleTestsWithDependentsScope(module)
-             : GlobalSearchScope.moduleWithDependentsScope(module);
+      GlobalSearchScope scope = isTest ? GlobalSearchScope.moduleTestsWithDependentsScope(module) : GlobalSearchScope.moduleWithDependentsScope(module);
+      return Pair.create(scope, vFile);
     }
     else {
       final PsiFile f = element.getContainingFile();
       final VirtualFile vf = f == null ? null : f.getVirtualFile();
 
-      return f == null || vf == null || vf.isDirectory() || allScope.contains(vf)
-             ? allScope : GlobalSearchScope.fileScope(f).uniteWith(allScope);
+      GlobalSearchScope scope =
+              f == null || vf == null || vf.isDirectory() || allScope.contains(vf) ? allScope : GlobalSearchScope.fileScope(f).uniteWith(allScope);
+      return Pair.create(scope, vf);
     }
   }
 }

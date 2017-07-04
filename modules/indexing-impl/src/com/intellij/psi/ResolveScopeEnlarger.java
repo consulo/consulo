@@ -29,5 +29,12 @@ public abstract class ResolveScopeEnlarger {
   public static final ExtensionPointName<ResolveScopeEnlarger> EP_NAME = ExtensionPointName.create("com.intellij.resolveScopeEnlarger");
 
   @Nullable
-  public abstract SearchScope getAdditionalResolveScope(@NotNull VirtualFile file, Project project);
+  public SearchScope getAdditionalResolveScope(@NotNull VirtualFile file, Project project) {
+    return null;
+  }
+
+  @Nullable
+  public SearchScope getAdditionalUseScope(@NotNull VirtualFile file, @NotNull Project project) {
+    return null;
+  }
 }
