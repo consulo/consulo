@@ -19,7 +19,6 @@ package com.intellij.codeInsight.documentation;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.hint.ElementLocationUtil;
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.actions.BaseNavigateToSourceAction;
@@ -35,7 +34,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -44,6 +43,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.pom.Navigatable;
@@ -57,6 +57,8 @@ import com.intellij.ui.SideBorder;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Consumer;
+import com.intellij.util.Url;
+import com.intellij.util.Urls;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBDimension;
@@ -66,6 +68,7 @@ import com.intellij.util.ui.accessibility.ScreenReader;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.ide.BuiltInServerManager;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -75,8 +78,10 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.text.*;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
@@ -107,7 +112,6 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   private volatile boolean myIsEmpty;
   private boolean myIsShown;
   private final JLabel myElementLabel;
-  private final MutableAttributeSet myFontSizeStyle = new SimpleAttributeSet();
   private JSlider myFontSizeSlider;
   private final JComponent mySettingsPanel;
   private final MyShowSettingsButton myShowSettingsButton;
@@ -125,7 +129,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         return inMemory;
       }
 
-      /*Url parsedUrl = Urls.parseEncoded(url.toExternalForm());
+      Url parsedUrl = Urls.parseEncoded(url.toExternalForm());
       BuiltInServerManager builtInServerManager = BuiltInServerManager.getInstance();
       if (parsedUrl != null && builtInServerManager.isOnBuiltInWebServer(parsedUrl)) {
         try {
@@ -134,7 +138,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         catch (MalformedURLException e) {
           LOG.warn(e);
         }
-      } */
+      }
       return Toolkit.getDefaultToolkit().createImage(url);
     }
   };
@@ -264,8 +268,12 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       // Note: Making the caret visible is merely for convenience
       myEditorPane.getCaret().setVisible(true);
     }
-    myEditorPane.setBackground(HintUtil.INFORMATION_COLOR);
-    myEditorPane.setEditorKit(UIUtil.getHTMLEditorKit(false));
+    myEditorPane.setBackground(EditorColorsUtil.getGlobalOrDefaultColor(COLOR_KEY));
+    HTMLEditorKit editorKit = UIUtil.getHTMLEditorKit(false);
+    String editorFontName = StringUtil.escapeQuotes(EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName());
+    editorKit.getStyleSheet().addRule("code {font-family:\"" + editorFontName + "\"}");
+    editorKit.getStyleSheet().addRule("pre {font-family:\"" + editorFontName + "\"}");
+    myEditorPane.setEditorKit(editorKit);
     myScrollPane = new JBScrollPane(myEditorPane) {
       @Override
       protected void processMouseWheelEvent(MouseWheelEvent e) {
@@ -293,7 +301,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         }
 
         setQuickDocFontSize(newFontSize);
-        applyFontSize();
+        applyFontProps();
         setFontSizeSliderSize(newFontSize);
       }
     };
@@ -493,7 +501,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
           return;
         }
         setQuickDocFontSize(FontSize.values()[myFontSizeSlider.getValue()]);
-        applyFontSize();
+        applyFontProps();
       }
     });
 
@@ -655,7 +663,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     highlightLink(-1);
 
     myEditorPane.setText(text);
-    applyFontSize();
+    applyFontProps();
 
     if (!myIsShown && myHint != null && !ApplicationManager.getApplication().isUnitTestMode()) {
       myManager.showHint(myHint);
@@ -674,23 +682,17 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       }});
   }
 
-  private void applyFontSize() {
+  private void applyFontProps() {
     Document document = myEditorPane.getDocument();
     if (!(document instanceof StyledDocument)) {
       return;
     }
+    String fontName = Registry.is("documentation.component.editor.font") ?
+                      EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName() :
+                      myEditorPane.getFont().getFontName();
 
-    final StyledDocument styledDocument = (StyledDocument)document;
-
-    EditorColorsManager colorsManager = EditorColorsManager.getInstance();
-    EditorColorsScheme scheme = colorsManager.getGlobalScheme();
-    StyleConstants.setFontSize(myFontSizeStyle, JBUI.scale(getQuickDocFontSize().getSize()));
-    if (Registry.is("documentation.component.editor.font")) {
-      StyleConstants.setFontFamily(myFontSizeStyle, scheme.getEditorFontName());
-    }
-
-    ApplicationManager.getApplication().executeOnPooledThread(
-            () -> styledDocument.setCharacterAttributes(0, styledDocument.getLength(), myFontSizeStyle, false));
+    // changing font will change the doc's CSS as myEditorPane has JEditorPane.HONOR_DISPLAY_PROPERTIES via UIUtil.getHTMLEditorKit
+    myEditorPane.setFont(UIUtil.getFontWithFallback(fontName, Font.PLAIN, JBUI.scale(getQuickDocFontSize().getSize())));
   }
 
   private void goBack() {
