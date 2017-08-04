@@ -83,10 +83,7 @@ import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.ui.components.JBScrollBar;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.mac.MacGestureSupportForEditor;
-import com.intellij.util.Alarm;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.Consumer;
-import com.intellij.util.IJSwingUtilities;
+import com.intellij.util.*;
 import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
@@ -105,6 +102,7 @@ import javax.swing.Timer;
 import javax.swing.border.Border;
 import javax.swing.plaf.ScrollBarUI;
 import javax.swing.plaf.ScrollPaneUI;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -122,6 +120,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.CharacterIterator;
@@ -2759,11 +2758,19 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     }
   }
 
-  class MyScrollBar extends JBScrollBar {
+  private static final Field decrButtonField = ReflectionUtil.getDeclaredField(BasicScrollBarUI.class, "decrButton");
+  private static final Field incrButtonField = ReflectionUtil.getDeclaredField(BasicScrollBarUI.class, "incrButton");
+
+  class MyScrollBar extends JBScrollBar implements IdeGlassPane.TopComponent {
     private Consumer<Graphics> myRepaintCallback;
 
     private MyScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
       super(orientation);
+    }
+
+    @Override
+    public boolean canBePreprocessed(MouseEvent e) {
+      return JBScrollPane.canBePreprocessed(e, this);
     }
 
     @Override
@@ -2923,9 +2930,12 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     assertIsDispatchThread();
     int currentHorOffset = myScrollingModel.getHorizontalScrollOffset();
     myScrollBarOrientation = type;
-    myScrollPane.putClientProperty(JBScrollPane.Flip.class, type == VERTICAL_SCROLLBAR_LEFT ? JBScrollPane.Flip.HORIZONTAL : null);
-    myMarkupModel.setErrorStripeVisible(false);
-    myMarkupModel.setErrorStripeVisible(true);
+    if (type == VERTICAL_SCROLLBAR_LEFT) {
+      myScrollPane.setLayout(new LeftHandScrollbarLayout());
+    }
+    else {
+      myScrollPane.setLayout(new ScrollPaneLayout());
+    }
     myScrollingModel.scrollHorizontally(currentHorOffset);
   }
 
