@@ -193,7 +193,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
         if (draggableObject != null) {
           final int line = convertPointToLineNumber(e.getPoint());
           if (line != -1) {
-            draggableObject.copy(line, myEditor.getVirtualFile());
+            draggableObject.copy(line, myEditor.getVirtualFile(), e.getAction().getActionId());
           }
         }
       }
@@ -212,7 +212,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
           final int line = convertPointToLineNumber(e.getPoint());
           if (line != -1) {
             e.setDropPossible(true);
-            e.setCursor(draggableObject.getCursor(line));
+            e.setCursor(draggableObject.getCursor(line, e.getAction().getActionId()));
           }
         }
       }

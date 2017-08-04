@@ -93,6 +93,10 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
   void setCurrentStackFrame(@NotNull XExecutionStack executionStack, @NotNull XStackFrame frame, boolean isTopFrame);
 
+  default void setCurrentStackFrame(@NotNull XExecutionStack executionStack, @NotNull XStackFrame frame) {
+    setCurrentStackFrame(executionStack, frame, frame.equals(executionStack.getTopFrame()));
+  }
+
   /**
    * Call this method to setup custom icon and/or error message (it will be shown in tooltip) for breakpoint
    *

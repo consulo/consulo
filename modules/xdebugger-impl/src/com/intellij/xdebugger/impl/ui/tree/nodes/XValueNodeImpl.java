@@ -50,13 +50,9 @@ import java.util.Comparator;
 /**
  * @author nik
  */
-public class XValueNodeImpl extends XValueContainerNode<XValue> implements XValueNode, XCompositeNode, XValueNodePresentationConfigurator.ConfigurableXValueNode, RestorableStateNode {
-  public static final Comparator<XValueNodeImpl> COMPARATOR = new Comparator<XValueNodeImpl>() {
-    @Override
-    public int compare(XValueNodeImpl o1, XValueNodeImpl o2) {
-      return StringUtil.naturalCompare(o1.getName(), o2.getName());
-    }
-  };
+public class XValueNodeImpl extends XValueContainerNode<XValue>
+        implements XValueNode, XCompositeNode, XValueNodePresentationConfigurator.ConfigurableXValueNode, RestorableStateNode {
+  public static final Comparator<XValueNodeImpl> COMPARATOR = (o1, o2) -> StringUtil.naturalCompare(o1.getName(), o2.getName());
 
   private static final int MAX_NAME_LENGTH = 100;
 
@@ -90,8 +86,11 @@ public class XValueNodeImpl extends XValueContainerNode<XValue> implements XValu
   }
 
   @Override
-  public void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @NotNull String separator,
-                              @NonNls @Nullable String value, boolean hasChildren) {
+  public void setPresentation(@Nullable Icon icon,
+                              @NonNls @Nullable String type,
+                              @NonNls @NotNull String separator,
+                              @NonNls @Nullable String value,
+                              boolean hasChildren) {
     XValueNodePresentationConfigurator.setPresentation(icon, type, separator, value, hasChildren, this);
   }
 
@@ -172,13 +171,14 @@ public class XValueNodeImpl extends XValueContainerNode<XValue> implements XValu
 
   @Override
   public void setFullValueEvaluator(@NotNull final XFullValueEvaluator fullValueEvaluator) {
-    invokeNodeUpdate(new Runnable() {
-      @Override
-      public void run() {
-        myFullValueEvaluator = fullValueEvaluator;
-        XValueNodeImpl.this.fireNodeChanged();
-      }
+    invokeNodeUpdate(() -> {
+      myFullValueEvaluator = fullValueEvaluator;
+      XValueNodeImpl.this.fireNodeChanged();
     });
+  }
+
+  public void clearFullValueEvaluator() {
+    myFullValueEvaluator = null;
   }
 
   private void updateText() {

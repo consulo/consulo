@@ -1,3 +1,18 @@
+/*
+ * Copyright 2000-2017 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.notification.NotificationType;
@@ -11,7 +26,6 @@ import com.intellij.xdebugger.frame.XFullValueEvaluator;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.awt.*;
 
@@ -31,12 +45,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
   public void startFetchingValue(@NotNull XFullValueEvaluator fullValueEvaluator) {
     fullValueEvaluator.startEvaluation(this);
 
-    new Alarm().addRequest(new Runnable() {
-      @Override
-      public void run() {
-        showProgress();
-      }
-    }, 500);
+    new Alarm().addRequest(this::showProgress, 500);
   }
 
   @Override
@@ -70,6 +79,10 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
     }
   }
 
+  public XValueNodeImpl getNode() {
+    return myNode;
+  }
+
   protected void evaluationComplete(@NotNull String value, @NotNull Project project) {
 
   }
@@ -101,7 +114,6 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
         return false;
       }
 
-      @RequiredDispatchThread
       @Override
       public void onCancel() {
         myCanceled = true;
