@@ -113,7 +113,7 @@ public class ImportModuleAction extends AnAction {
 
       @Override
       public Icon getIcon(VirtualFile file) {
-        for (ModuleImportProvider importProvider : ModuleImportProviders.getExtensions()) {
+        for (ModuleImportProvider importProvider : ModuleImportProviders.getExtensions(true)) {
           if (importProvider.canImport(file)) {
             return importProvider.getIcon();
           }
@@ -124,7 +124,7 @@ public class ImportModuleAction extends AnAction {
     };
     descriptor.setHideIgnored(false);
     descriptor.setTitle("Select File or Directory to Import");
-    List<ModuleImportProvider> providers = ModuleImportProviders.getExtensions();
+    List<ModuleImportProvider> providers = ModuleImportProviders.getExtensions(true);
     String description = getFileChooserDescription(project);
     descriptor.setDescription(description);
 
@@ -153,7 +153,7 @@ public class ImportModuleAction extends AnAction {
   }
 
   public static String getFileChooserDescription(final Project project) {
-    List<ModuleImportProvider> providers = ModuleImportProviders.getExtensions();
+    List<ModuleImportProvider> providers = ModuleImportProviders.getExtensions(true);
 
     return IdeBundle.message("import.project.chooser.header", StringUtil.join(providers, ModuleImportProvider::getFileSample, ", <br>"));
   }
@@ -192,7 +192,7 @@ public class ImportModuleAction extends AnAction {
       return;
     }
 
-    presentation.setEnabledAndVisible(!ModuleImportProviders.getExtensions().isEmpty());
+    presentation.setEnabledAndVisible(!ModuleImportProviders.getExtensions(true).isEmpty());
   }
 
   public boolean canCreateNewProject() {

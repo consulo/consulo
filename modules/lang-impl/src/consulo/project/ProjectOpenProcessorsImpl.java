@@ -40,7 +40,7 @@ public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
       List<ProjectOpenProcessor> processors = new ArrayList<>();
       processors.add(PlatformProjectOpenProcessor.getInstance());
 
-      for (ModuleImportProvider<?> provider : ModuleImportProviders.getExtensions()) {
+      for (ModuleImportProvider<?> provider : ModuleImportProviders.getExtensions(false)) {
         processors.add(new ModuleImportBasedProjectOpenProcessor(provider));
       }
       return processors.toArray(new ProjectOpenProcessor[processors.size()]);

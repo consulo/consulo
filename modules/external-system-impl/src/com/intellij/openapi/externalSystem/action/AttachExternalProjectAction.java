@@ -84,7 +84,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
     }
 
     Ref<ModuleImportProvider<?>> providerRef = Ref.create();
-    for (ModuleImportProvider<?> provider : ModuleImportProviders.getExtensions()) {
+    for (ModuleImportProvider<?> provider : ModuleImportProviders.getExtensions(true)) {
       if (provider instanceof AbstractExternalModuleImportProvider &&
           externalSystemId.equals(((AbstractExternalModuleImportProvider)provider).getExternalSystemId())) {
         providerRef.set(provider);
