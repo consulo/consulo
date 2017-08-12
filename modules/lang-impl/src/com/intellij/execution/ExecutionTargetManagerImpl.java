@@ -15,7 +15,6 @@
  */
 package com.intellij.execution;
 
-import com.intellij.execution.impl.RunManagerImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.extensions.Extensions;
@@ -72,7 +71,7 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
 
   @Override
   public void initComponent() {
-    RunManagerImpl.getInstanceImpl(myProject).addRunManagerListener(new RunManagerAdapter() {
+    myProject.getMessageBus().connect().subscribe(RunManagerListener.TOPIC, new RunManagerListener() {
       @Override
       public void runConfigurationChanged(@NotNull RunnerAndConfigurationSettings settings) {
         if (settings == RunManager.getInstance(myProject).getSelectedConfiguration()) {

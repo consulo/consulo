@@ -198,14 +198,6 @@ public class MockRunManager extends RunManagerEx {
   }
 
   @Override
-  public void addRunManagerListener(RunManagerListener listener) {
-  }
-
-  @Override
-  public void removeRunManagerListener(RunManagerListener listener) {
-  }
-
-  @Override
   public void refreshUsagesList(RunProfile profile) {
   }
 
