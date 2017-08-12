@@ -63,7 +63,7 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
 
   @RequiredUIAccess
   @Override
-  public void setValue(@NotNull E value) {
+  public void setValue(E value) {
     setSelectedItem(value);
   }
 
