@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,13 @@ import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.CharTableImpl;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.ILightStubFileElementType;
 import com.intellij.util.CharTable;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class FileElement extends LazyParseableElement implements FileASTNode, Getter<FileElement> {
+  public static final FileElement[] EMPTY_ARRAY = new FileElement[0];
   private volatile CharTable myCharTable = new CharTableImpl();
   private volatile boolean myDetached;
 
@@ -51,23 +50,17 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
     return myCharTable;
   }
 
-  @Nullable
+  @NotNull
   @Override
   public LighterAST getLighterAST() {
-    final IFileElementType contentType = (IFileElementType)getElementType();
-    assert contentType instanceof ILightStubFileElementType:contentType;
-
-    LighterAST tree;
-    if (!isParsed()) {
+    IElementType contentType = getElementType();
+    if (!isParsed() && contentType instanceof ILightStubFileElementType) {
       return new FCTSBackedLighterAST(getCharTable(), ((ILightStubFileElementType<?>)contentType).parseContentsLight(this));
     }
-    else {
-      tree = new TreeBackedLighterAST(this);
-    }
-    return tree;
+    return new TreeBackedLighterAST(this);
   }
 
-  public FileElement(IElementType type, CharSequence text) {
+  public FileElement(@NotNull IElementType type, CharSequence text) {
     super(type, text);
   }
 

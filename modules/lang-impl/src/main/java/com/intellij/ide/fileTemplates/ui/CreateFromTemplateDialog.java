@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,18 @@ package com.intellij.ide.fileTemplates.ui;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.actions.CreateFileAction;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -38,12 +43,16 @@ import java.awt.*;
 import java.util.Properties;
 
 public class CreateFromTemplateDialog extends DialogWrapper {
-  @NotNull private final PsiDirectory myDirectory;
-  @NotNull private final Project myProject;
+  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.ui.CreateFromTemplateDialog");
+  @NotNull
+  private final PsiDirectory myDirectory;
+  @NotNull
+  private final Project myProject;
   private PsiElement myCreatedElement;
   private final CreateFromTemplatePanel myAttrPanel;
   private final JComponent myAttrComponent;
-  @NotNull private final FileTemplate myTemplate;
+  @NotNull
+  private final FileTemplate myTemplate;
   private final Properties myDefaultProperties;
 
   public CreateFromTemplateDialog(@NotNull Project project,
@@ -84,7 +93,12 @@ public class CreateFromTemplateDialog extends DialogWrapper {
     }
   }
 
-  public PsiElement create(){
+  public PsiElement create() {
+    if (ApplicationManager.getApplication().isUnitTestMode()) {
+      doCreate(myTemplate.getName() + "." + myTemplate.getExtension());
+      Disposer.dispose(getDisposable());
+      return myCreatedElement;
+    }
     if (myAttrPanel != null) {
       if (myAttrPanel.hasSomethingToAsk()) {
         show();
@@ -97,26 +111,31 @@ public class CreateFromTemplateDialog extends DialogWrapper {
   }
 
   @Override
-  protected void doOKAction(){
+  protected void doOKAction() {
     String fileName = myAttrPanel.getFileName();
     if (fileName != null && fileName.length() == 0) {
-      Messages.showMessageDialog(myAttrComponent, IdeBundle.message("error.please.enter.a.file.name"), CommonBundle.getErrorTitle(),
-                                 Messages.getErrorIcon());
+      Messages.showMessageDialog(myAttrComponent, IdeBundle.message("error.please.enter.a.file.name"), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
       return;
     }
     doCreate(fileName);
-    if ( myCreatedElement != null ) {
+    if (myCreatedElement != null) {
       super.doOKAction();
     }
   }
 
-  private void doCreate(@Nullable final String fileName)  {
+  private void doCreate(@Nullable String fileName) {
     try {
-      myCreatedElement = FileTemplateUtil.createFromTemplate(myTemplate, fileName, myAttrPanel.getProperties(myDefaultProperties),
-                                                             myDirectory);
+      String newName = fileName;
+      PsiDirectory directory = myDirectory;
+      if (fileName != null) {
+        final String finalFileName = fileName;
+        CreateFileAction.MkDirs mkDirs = WriteAction.compute(() -> new CreateFileAction.MkDirs(finalFileName, myDirectory));
+        newName = mkDirs.newName;
+        directory = mkDirs.directory;
+      }
+      myCreatedElement = FileTemplateUtil.createFromTemplate(myTemplate, newName, myAttrPanel.getProperties(myDefaultProperties), directory);
     }
     catch (Exception e) {
-      e.printStackTrace();
       showErrorDialog(e);
     }
   }
@@ -126,6 +145,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
   }
 
   private void showErrorDialog(final Exception e) {
+    LOG.info(e);
     Messages.showMessageDialog(myProject, filterMessage(e.getMessage()), getErrorMessage(), Messages.getErrorIcon());
   }
 
@@ -134,13 +154,16 @@ public class CreateFromTemplateDialog extends DialogWrapper {
   }
 
   @Nullable
-  private String filterMessage(String message){
-    if (message == null) return null;
+  private String filterMessage(String message) {
+    if (message == null) {
+      message = "unknown error";
+    }
+
     @NonNls String ioExceptionPrefix = "java.io.IOException:";
-    if (message.startsWith(ioExceptionPrefix)){
+    if (message.startsWith(ioExceptionPrefix)) {
       return message.substring(ioExceptionPrefix.length());
     }
-    if (message.contains("File already exists")){
+    if (message.contains("File already exists")) {
       return message;
     }
 
@@ -148,15 +171,16 @@ public class CreateFromTemplateDialog extends DialogWrapper {
   }
 
   @Override
-  protected JComponent createCenterPanel(){
+  protected JComponent createCenterPanel() {
     myAttrPanel.ensureFitToScreen(200, 200);
     JPanel centerPanel = new JPanel(new GridBagLayout());
-    centerPanel.add(myAttrComponent, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+    centerPanel.add(myAttrComponent,
+                    new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
     return centerPanel;
   }
 
   @Override
-  public JComponent getPreferredFocusedComponent(){
+  public JComponent getPreferredFocusedComponent() {
     return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myAttrComponent);
   }
 }

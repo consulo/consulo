@@ -166,7 +166,7 @@ public final class StripeButtonUI extends MetalToggleButtonUI {
       /* Draw the Text */
       if (model.isEnabled()) {
         /*** paint the text normally */
-        g2.setColor(UIUtil.isUnderDarkBuildInLaf() && model.isSelected()
+        g2.setColor(UIUtil.isUnderDarkTheme() && model.isSelected()
                     ? button.getForeground().brighter()
                     : button.getForeground());
         BasicGraphicsUtils

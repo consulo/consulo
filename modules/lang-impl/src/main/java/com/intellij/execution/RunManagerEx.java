@@ -49,18 +49,15 @@ public abstract class RunManagerEx extends RunManager {
   public abstract RunManagerConfig getConfig();
 
   /**
-   * @deprecated use {@link RunManager#createRunConfiguration(String, ConfigurationFactory)} instead
    * @param name
    * @param type
    * @return
+   * @deprecated use {@link RunManager#createRunConfiguration(String, ConfigurationFactory)} instead
    */
   @NotNull
   public abstract RunnerAndConfigurationSettings createConfiguration(String name, ConfigurationFactory type);
 
-  public abstract void addConfiguration(RunnerAndConfigurationSettings settings,
-                                        boolean isShared,
-                                        List<BeforeRunTask> tasks,
-                                        boolean addTemplateTasksIfAbsent);
+  public abstract void addConfiguration(RunnerAndConfigurationSettings settings, boolean isShared, List<BeforeRunTask> tasks, boolean addTemplateTasksIfAbsent);
 
   public abstract boolean isConfigurationShared(RunnerAndConfigurationSettings settings);
 
@@ -84,8 +81,12 @@ public abstract class RunManagerEx extends RunManager {
 
   public abstract void removeConfiguration(@Nullable RunnerAndConfigurationSettings settings);
 
-  public abstract void addRunManagerListener(RunManagerListener listener);
-  public abstract void removeRunManagerListener(RunManagerListener listener);
+  /**
+   * @deprecated Use {@link RunManagerListener#TOPIC} instead.
+   */
+  @Deprecated
+  public void addRunManagerListener(RunManagerListener listener) {
+  }
 
   @NotNull
   public abstract Map<String, List<RunnerAndConfigurationSettings>> getStructure(@NotNull ConfigurationType type);

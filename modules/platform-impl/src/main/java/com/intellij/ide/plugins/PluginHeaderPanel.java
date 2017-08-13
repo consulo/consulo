@@ -16,8 +16,14 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.options.newEditor.OptionsEditorDialog;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.GraphicsConfig;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
@@ -29,8 +35,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author Konstantin Bulenkov
@@ -52,7 +56,13 @@ public class PluginHeaderPanel {
   private JPanel myDownloadsPanel;
   private JPanel myVersionInfoPanel;
 
-  enum ACTION_ID {UPDATE, INSTALL, UNINSTALL, RESTART}
+  enum ACTION_ID {
+    UPDATE,
+    INSTALL,
+    UNINSTALL,
+    RESTART
+  }
+
   private ACTION_ID myActionId = ACTION_ID.INSTALL;
 
   public PluginHeaderPanel(@Nullable PluginManagerMain manager, JTable pluginTable) {
@@ -114,9 +124,11 @@ public class PluginHeaderPanel {
       if (!plugin.isBundled()) {
         if (((IdeaPluginDescriptorImpl)plugin).isDeleted()) {
           myActionId = ACTION_ID.RESTART;
-        } else if (InstalledPluginsTableModel.hasNewerVersion(plugin.getPluginId())) {
+        }
+        else if (InstalledPluginsTableModel.hasNewerVersion(plugin.getPluginId())) {
           myActionId = ACTION_ID.UPDATE;
-        } else {
+        }
+        else {
           myActionId = ACTION_ID.UNINSTALL;
         }
       }
@@ -141,6 +153,7 @@ public class PluginHeaderPanel {
         setOpaque(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       }
+
       @Override
       public Dimension getPreferredSize() {
         final FontMetrics metrics = getFontMetrics(getFont());
@@ -170,9 +183,12 @@ public class PluginHeaderPanel {
 
       private Color getButtonForeground() {
         switch (myActionId) {
-          case UPDATE: return new JBColor(Gray._0, Gray._210);
-          case INSTALL: return new JBColor(Gray._255, Gray._210);
-          case UNINSTALL: return new JBColor(Gray._0, Gray._140);
+          case UPDATE:
+            return new JBColor(Gray._0, Gray._210);
+          case INSTALL:
+            return new JBColor(Gray._255, Gray._210);
+          case UNINSTALL:
+            return new JBColor(Gray._0, Gray._140);
           case RESTART:
             break;
         }
@@ -182,12 +198,13 @@ public class PluginHeaderPanel {
 
       private Paint getBackgroundPaint() {
         switch (myActionId) {
-          case UPDATE: return new JBColor(new Color(209, 190, 114), new Color(49, 98, 49));
-          case INSTALL: return new JBColor(new Color(0x4DA864), new Color(49, 98, 49));
-          case UNINSTALL: return UIUtil.isUnderDarcula()
-                                 ? new GradientPaint(0, 0, UIManager.getColor("Button.darcula.color1"),
-                                                     0, getHeight(), UIManager.getColor("Button.darcula.color2"))
-                                 : Gray._240;
+          case UPDATE:
+            return new JBColor(new Color(209, 190, 114), new Color(49, 98, 49));
+          case INSTALL:
+            return new JBColor(new Color(0x4DA864), new Color(49, 98, 49));
+          case UNINSTALL:
+            return UIUtil.isUnderDarcula() ? new GradientPaint(0, 0, UIManager.getColor("Button.darcula.color1"), 0, getHeight(),
+                                                               UIManager.getColor("Button.darcula.color2")) : Gray._240;
           case RESTART:
             break;
         }
@@ -196,9 +213,12 @@ public class PluginHeaderPanel {
 
       private Paint getBackgroundBorderPaint() {
         switch (myActionId) {
-          case UPDATE: return new JBColor(new Color(164, 145, 82), Gray._85);
-          case INSTALL: return new JBColor(new Color(0x337043), Gray._80);
-          case UNINSTALL: return new JBColor(Gray._220, Gray._100.withAlpha(180));
+          case UPDATE:
+            return new JBColor(new Color(164, 145, 82), Gray._85);
+          case INSTALL:
+            return new JBColor(new Color(0x337043), Gray._80);
+          case UNINSTALL:
+            return new JBColor(Gray._220, Gray._100.withAlpha(180));
           case RESTART:
         }
         return Gray._208;
@@ -208,10 +228,14 @@ public class PluginHeaderPanel {
       @Override
       public String getText() {
         switch (myActionId) {
-          case UPDATE: return "Update plugin";
-          case INSTALL: return  "Install plugin";
-          case UNINSTALL: return "Uninstall plugin";
-          case RESTART: return "Restart " + ApplicationNamesInfo.getInstance().getFullProductName();
+          case UPDATE:
+            return "Update plugin";
+          case INSTALL:
+            return "Install plugin";
+          case UNINSTALL:
+            return "Uninstall plugin";
+          case RESTART:
+            return "Restart " + ApplicationNamesInfo.getInstance().getFullProductName();
         }
         return super.getText();
       }
@@ -219,44 +243,47 @@ public class PluginHeaderPanel {
       @Override
       public Icon getIcon() {
         switch (myActionId) {
-          case UPDATE: return AllIcons.General.DownloadPlugin;
-          case INSTALL: return  AllIcons.General.DownloadPlugin;
-          case UNINSTALL: return AllIcons.Actions.Delete;
-          case RESTART: return AllIcons.Actions.Restart;
+          case UPDATE:
+            return AllIcons.General.DownloadPlugin;
+          case INSTALL:
+            return AllIcons.General.DownloadPlugin;
+          case UNINSTALL:
+            return AllIcons.Actions.Delete;
+          case RESTART:
+            return AllIcons.Actions.Restart;
         }
         return super.getIcon();
 
       }
     };
-    myInstallButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        switch (myActionId) {
-          case UPDATE:
-          case INSTALL:
-            new InstallPluginAction(myManager.getAvailable(), myManager.getInstalled()).install(null, new Runnable() {
-              @Override
-              public void run() {
-                setPlugin(myPlugin);
-              }
-            });
-            break;
-          case UNINSTALL:
-            //try {
-            UninstallPluginAction.uninstall(myManager.getInstalled(), myPlugin);
-            //}
-            //catch (IOException e1) {
-            //  e1.printStackTrace();
-            //}
-            break;
-          case RESTART:
-            if (myManager != null) {
-              myManager.apply();
+    myInstallButton.addActionListener(e -> {
+      switch (myActionId) {
+        case UPDATE:
+        case INSTALL:
+          new InstallPluginAction(myManager.getAvailable(), myManager.getInstalled())
+                  .install(null, () -> UIUtil.invokeLaterIfNeeded(() -> setPlugin(myPlugin)));
+          break;
+        case UNINSTALL:
+          UninstallPluginAction.uninstall(myManager.getInstalled(), myPlugin);
+          break;
+        case RESTART:
+          if (myManager != null) {
+            myManager.apply();
+          }
+          final DialogWrapper dialog = DialogWrapper.findInstance(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
+          if (dialog != null && dialog.isModal()) {
+            dialog.close(DialogWrapper.OK_EXIT_CODE);
+          }
+          IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+            DialogWrapper settings = DialogWrapper.findInstance(IdeFocusManager.findInstance().getFocusOwner());
+            if (settings instanceof OptionsEditorDialog) {
+              ((OptionsEditorDialog)settings).doOKAction();
             }
-            break;
-        }
-        setPlugin(myPlugin);
+            ((ApplicationEx)ApplicationManager.getApplication()).restart(true);
+          }, ModalityState.current());
+          break;
       }
+      setPlugin(myPlugin);
     });
   }
 

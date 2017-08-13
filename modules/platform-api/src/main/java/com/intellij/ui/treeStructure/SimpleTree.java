@@ -262,12 +262,6 @@ public class SimpleTree extends Tree implements CellEditorListener {
     return false;
   }
 
-  @Override
-  @Deprecated
-  protected boolean paintNodes() {
-    return true;
-  }
-
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 

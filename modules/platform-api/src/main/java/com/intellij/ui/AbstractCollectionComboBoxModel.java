@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * @author traff
  */
-public abstract class AbstractCollectionComboBoxModel<T> extends AbstractListModel implements ComboBoxModel {
+public abstract class AbstractCollectionComboBoxModel<T> extends AbstractListModel<T> implements ComboBoxModel<T> {
   protected T mySelection;
 
   public AbstractCollectionComboBoxModel(@Nullable T selection) {

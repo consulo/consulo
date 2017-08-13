@@ -27,6 +27,7 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -299,6 +300,8 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     return hasFocus();
   }
 
+  @Deprecated
+  @DeprecationInfo("Paint around nodes stupied border")
   protected boolean paintNodes() {
     return false;
   }

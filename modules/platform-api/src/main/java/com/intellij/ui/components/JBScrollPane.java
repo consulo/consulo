@@ -173,8 +173,9 @@ public class JBScrollPane extends JScrollPane {
   }
 
   private void updateViewportBorder() {
-    setViewportBorder(new ViewportBorder(JBUI.scale(myViewportBorderWidth >= 0 ? myViewportBorderWidth : 1)));
-  }
+    if (getViewportBorder() instanceof ViewportBorder) {
+      setViewportBorder(new ViewportBorder(myViewportBorderWidth >= 0 ? myViewportBorderWidth : 1));
+    }  }
 
   public static ViewportBorder createIndentBorder() {
     return new ViewportBorder(JBUI.scale(2));
@@ -300,11 +301,6 @@ public class JBScrollPane extends JScrollPane {
   private class MyScrollBar extends ScrollBar implements IdeGlassPane.TopComponent {
     public MyScrollBar(int orientation) {
       super(orientation);
-    }
-
-    @Override
-    public void updateUI() {
-      ButtonlessScrollBarUI.setOwnScrollBarImplementationUI(this);
     }
 
     @Override

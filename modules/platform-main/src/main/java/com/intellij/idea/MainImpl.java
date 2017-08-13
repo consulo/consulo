@@ -27,12 +27,12 @@ public class MainImpl {
    * Called from PluginManager via reflection.
    */
   protected static void start(String[] args) {
-    StartupUtil.prepareAndStart(args, (commandLineArgs) -> {
+    StartupUtil.prepareAndStart(args, (newConfigFolder, commandLineArgs) -> {
       ApplicationStarter app = new ApplicationStarter(commandLineArgs);
 
       SwingUtilities.invokeLater(() -> {
         PluginManager.installExceptionHandler();
-        app.run();
+        app.run(newConfigFolder);
       });
     });
   }

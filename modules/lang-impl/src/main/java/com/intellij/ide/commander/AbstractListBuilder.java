@@ -24,7 +24,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import com.intellij.ui.ListScrollingUtil;
+import com.intellij.ui.ScrollingUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.HashMap;
 import gnu.trove.THashSet;
@@ -148,11 +148,11 @@ public abstract class AbstractListBuilder {
   }
 
   protected void selectItem(int i) {
-    ListScrollingUtil.selectItem(myList, i);
+    ScrollingUtil.selectItem(myList, i);
   }
 
   protected void ensureSelectionExist() {
-    ListScrollingUtil.ensureSelectionExists(myList);
+    ScrollingUtil.ensureSelectionExists(myList);
   }
 
   public final void selectElement(final Object element, VirtualFile virtualFile) {

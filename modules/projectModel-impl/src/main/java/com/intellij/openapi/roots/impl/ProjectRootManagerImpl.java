@@ -140,7 +140,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   @Override
   @NotNull
   public ProjectFileIndex getFileIndex() {
-    return ProjectFileIndex.SERVICE.getInstance(myProject);
+    return ProjectFileIndex.getInstance(myProject);
   }
 
   @Override

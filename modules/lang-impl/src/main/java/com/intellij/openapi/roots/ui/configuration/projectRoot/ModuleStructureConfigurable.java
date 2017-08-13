@@ -805,7 +805,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
       super.update(e);
       if(myImport) {
         Presentation presentation = e.getPresentation();
-        presentation.setEnabledAndVisible(!ModuleImportProviders.getExtensions().isEmpty());
+        presentation.setEnabledAndVisible(!ModuleImportProviders.getExtensions(true).isEmpty());
       }
     }
   }

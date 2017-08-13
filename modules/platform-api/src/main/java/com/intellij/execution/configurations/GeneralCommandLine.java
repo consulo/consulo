@@ -144,6 +144,12 @@ public class GeneralCommandLine implements UserDataHolder {
     return this;
   }
 
+  @NotNull
+  public GeneralCommandLine withEnvironment(@NotNull String key, @NotNull String value) {
+    getEnvironment().put(key, value);
+    return this;
+  }
+
   @Deprecated
   @DeprecationInfo(value = "Use #getParentEnvironmentType()", until = "3.0")
   public boolean isPassParentEnvironment() {

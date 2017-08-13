@@ -70,9 +70,7 @@ import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.*;
-import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.ParagraphView;
-import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
@@ -92,18 +90,9 @@ public class NotificationsManagerImpl extends NotificationsManager {
     ApplicationManager.getApplication().getMessageBus().connect().subscribe(Notifications.TOPIC, new MyNotificationListener(null));
   }
 
-  public static boolean newEnabled() {
-    return true;
-  }
-
   @Override
   public void expire(@NotNull final Notification notification) {
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        EventLog.expireNotification(notification);
-      }
-    });
+    UIUtil.invokeLaterIfNeeded(() -> EventLog.expireNotification(notification));
   }
 
   @Override
@@ -121,9 +110,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     return ArrayUtil.toObjectArray(result, klass);
   }
 
-  private static void doNotify(@NotNull final Notification notification,
-                               @Nullable NotificationDisplayType displayType,
-                               @Nullable final Project project) {
+  private static void doNotify(@NotNull final Notification notification, @Nullable NotificationDisplayType displayType, @Nullable final Project project) {
     final NotificationsConfigurationImpl configuration = NotificationsConfigurationImpl.getInstanceImpl();
     if (!configuration.isRegistered(notification.getGroupId())) {
       configuration.register(notification.getGroupId(), displayType == null ? NotificationDisplayType.BALLOON : displayType);
@@ -139,12 +126,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     if (NotificationsConfigurationImpl.getInstanceImpl().SHOW_BALLOONS) {
-      final Runnable runnable = new DumbAwareRunnable() {
-        @Override
-        public void run() {
-          showNotification(notification, project);
-        }
-      };
+      final DumbAwareRunnable runnable = () -> showNotification(notification, project);
       if (project == null) {
         UIUtil.invokeLaterIfNeeded(runnable);
       }
@@ -157,12 +139,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
   private static void showNotification(@NotNull final Notification notification, @Nullable final Project project) {
     Application application = ApplicationManager.getApplication();
     if (application instanceof ApplicationEx && !((ApplicationEx)application).isLoaded()) {
-      application.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          showNotification(notification, project);
-        }
-      }, ModalityState.current());
+      application.invokeLater(() -> showNotification(notification, project), ModalityState.current());
       return;
     }
 
@@ -226,13 +203,11 @@ public class NotificationsManagerImpl extends NotificationsManager {
           msg += notification.getContent();
         }
 
-        if (newEnabled()) {
-          Window window = findWindowForBalloon(project);
-          if (window instanceof IdeFrame) {
-            BalloonLayout layout = ((IdeFrame)window).getBalloonLayout();
-            if (layout != null) {
-              ((BalloonLayoutImpl)layout).remove(notification);
-            }
+        Window window = findWindowForBalloon(project);
+        if (window instanceof IdeFrame) {
+          BalloonLayout layout = ((IdeFrame)window).getBalloonLayout();
+          if (layout != null) {
+            ((BalloonLayoutImpl)layout).remove(notification);
           }
         }
 
@@ -255,34 +230,31 @@ public class NotificationsManagerImpl extends NotificationsManager {
       final ProjectManager projectManager = ProjectManager.getInstance();
       final boolean noProjects = projectManager.getOpenProjects().length == 0;
       final boolean sticky = NotificationDisplayType.STICKY_BALLOON == displayType || noProjects;
-      Ref<Object> layoutDataRef = newEnabled() ? new Ref<Object>() : null;
-      if (layoutDataRef != null) {
-        if (project == null || project.isDefault()) {
+      Ref<BalloonLayoutData> layoutDataRef = Ref.create();
+      if (project == null || project.isDefault()) {
+        BalloonLayoutData layoutData = new BalloonLayoutData();
+        layoutData.groupId = "";
+        layoutData.welcomeScreen = layout instanceof WelcomeBalloonLayoutImpl;
+        layoutData.type = notification.getType();
+        layoutDataRef.set(layoutData);
+      }
+      else {
+        BalloonLayoutData.MergeInfo mergeData = ((BalloonLayoutImpl)layout).preMerge(notification);
+        if (mergeData != null) {
           BalloonLayoutData layoutData = new BalloonLayoutData();
-          layoutData.groupId = "";
-          layoutData.welcomeScreen = layout instanceof WelcomeBalloonLayoutImpl;
-          layoutData.type = notification.getType();
+          layoutData.mergeData = mergeData;
           layoutDataRef.set(layoutData);
         }
-        else {
-          BalloonLayoutData.MergeInfo mergeData = ((BalloonLayoutImpl)layout).preMerge(notification);
-          if (mergeData != null) {
-            BalloonLayoutData layoutData = new BalloonLayoutData();
-            layoutData.mergeData = mergeData;
-            layoutDataRef.set(layoutData);
-          }
-        }
       }
-      final Balloon balloon = createBalloon((IdeFrame)window, notification, false, false, layoutDataRef,
-                                            project != null ? project : ApplicationManager.getApplication());
-
+      final Balloon balloon =
+              createBalloon((IdeFrame)window, notification, false, false, layoutDataRef, project != null ? project : ApplicationManager.getApplication());
       if (notification.isExpired()) {
         return null;
       }
 
-      layout.add(balloon, layoutDataRef == null ? null : layoutDataRef.get());
-      if (layoutDataRef != null && layoutDataRef.get() instanceof BalloonLayoutData) {
-        ((BalloonLayoutData)layoutDataRef.get()).project = project;
+      layout.add(balloon, layoutDataRef.get());
+      if (layoutDataRef.get() != null) {
+        layoutDataRef.get().project = project;
       }
       ((BalloonImpl)balloon).startFadeoutTimer(0);
       if (NotificationDisplayType.BALLOON == displayType) {
@@ -294,16 +266,10 @@ public class NotificationsManagerImpl extends NotificationsManager {
             }
 
             if (!sticky) {
-              if (newEnabled()) {
-                ((BalloonImpl)balloon).startSmartFadeoutTimer(10000);
-              }
-              else {
-                ((BalloonImpl)balloon).startFadeoutTimer(0);
-                ((BalloonImpl)balloon).setHideOnClickOutside(true);
-              }
+              ((BalloonImpl)balloon).startSmartFadeoutTimer(10000);
             }
             else //noinspection ConstantConditions
-              if (noProjects && !newEnabled()) {
+              if (noProjects && !true) {
                 projectManager.addProjectManagerListener(new ProjectManagerAdapter() {
                   @Override
                   public void projectOpened(Project project) {
@@ -337,12 +303,13 @@ public class NotificationsManagerImpl extends NotificationsManager {
     return frame;
   }
 
+
   @NotNull
   public static Balloon createBalloon(@NotNull final IdeFrame window,
                                       @NotNull final Notification notification,
                                       final boolean showCallout,
                                       final boolean hideOnClickOutside,
-                                      @Nullable Ref<Object> layoutDataRef,
+                                      @NotNull Ref<BalloonLayoutData> layoutDataRef,
                                       @NotNull Disposable parentDisposable) {
     return createBalloon(window.getComponent(), notification, showCallout, hideOnClickOutside, layoutDataRef, parentDisposable);
   }
@@ -352,22 +319,96 @@ public class NotificationsManagerImpl extends NotificationsManager {
                                       @NotNull final Notification notification,
                                       final boolean showCallout,
                                       final boolean hideOnClickOutside,
-                                      @Nullable Ref<Object> layoutDataRef,
+                                      @NotNull Ref<BalloonLayoutData> layoutDataRef,
                                       @NotNull Disposable parentDisposable) {
-    if (layoutDataRef != null) {
-      return createNewBalloon(windowComponent, notification, showCallout, hideOnClickOutside, layoutDataRef, parentDisposable);
+    final BalloonLayoutData layoutData = layoutDataRef.isNull() ? new BalloonLayoutData() : layoutDataRef.get();
+    if (layoutData.groupId == null) {
+      layoutData.groupId = notification.getGroupId();
+      layoutData.id = notification.id;
+    }
+    else {
+      layoutData.groupId = null;
+      layoutData.mergeData = null;
+    }
+    layoutDataRef.set(layoutData);
+
+    if (layoutData.fillColor == null) {
+      layoutData.fillColor = FILL_COLOR;
+    }
+    if (layoutData.borderColor == null) {
+      layoutData.borderColor = BORDER_COLOR;
     }
 
-    final JEditorPane text = new JEditorPane();
-    text.setEditorKit(UIUtil.getHTMLEditorKit());
+    boolean actions = !notification.getActions().isEmpty();
+    boolean showFullContent = layoutData.showFullContent || notification instanceof NotificationActionProvider;
+
+    Color foregroundR = Gray._0;
+    Color foregroundD = Gray._191;
+    final Color foreground = new JBColor(foregroundR, foregroundD);
+
+    final JEditorPane text = new JEditorPane() {
+      @Override
+      protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (layoutData.showMinSize) {
+          Point location = getCollapsedTextEndLocation(this, layoutData);
+          if (location != null) {
+            g.setColor(getForeground());
+            g.drawString("...", location.x, location.y + g.getFontMetrics().getAscent());
+          }
+        }
+      }
+    };
+    text.setEditorKit(new UIUtil.JBHtmlEditorKit() {
+      final HTMLFactory factory = new HTMLFactory() {
+        @Override
+        public View create(Element e) {
+          View view = super.create(e);
+          if (view instanceof ParagraphView) {
+            // wrap too long words, for example: ATEST_TABLE_SIGNLE_ROW_UPDATE_AUTOCOMMIT_A_FIK
+            return new ParagraphView(e) {
+              @Override
+              protected SizeRequirements calculateMinorAxisRequirements(int axis, SizeRequirements r) {
+                if (r == null) {
+                  r = new SizeRequirements();
+                }
+                r.minimum = (int)layoutPool.getMinimumSpan(axis);
+                r.preferred = Math.max(r.minimum, (int)layoutPool.getPreferredSpan(axis));
+                r.maximum = Integer.MAX_VALUE;
+                r.alignment = 0.5f;
+                return r;
+              }
+            };
+          }
+          return view;
+        }
+      };
+
+      @Override
+      public ViewFactory getViewFactory() {
+        return factory;
+      }
+    });
+    text.setForeground(foreground);
 
     final HyperlinkListener listener = NotificationsUtil.wrapListener(notification);
     if (listener != null) {
       text.addHyperlinkListener(listener);
     }
 
-    final JLabel label = new JLabel(NotificationsUtil.buildHtml(notification, null));
-    text.setText(NotificationsUtil.buildHtml(notification, "width:" + Math.min(JBUI.scale(350), label.getPreferredSize().width) + "px;"));
+    String fontStyle = NotificationsUtil.getFontStyle();
+    int prefSize = new JLabel(NotificationsUtil.buildHtml(notification, null, true, null, fontStyle)).getPreferredSize().width;
+    String style = prefSize > BalloonLayoutConfiguration.MaxWidth ? BalloonLayoutConfiguration.MaxWidthStyle : null;
+
+    if (layoutData.showFullContent) {
+      style = prefSize > BalloonLayoutConfiguration.MaxFullContentWidth ? BalloonLayoutConfiguration.MaxFullContentWidthStyle : null;
+    }
+
+    String textR = NotificationsUtil.buildHtml(notification, style, true, foregroundR, fontStyle);
+    String textD = NotificationsUtil.buildHtml(notification, style, true, foregroundD, fontStyle);
+    LafHandler lafHandler = new LafHandler(text, textR, textD);
+    layoutData.lafHandler = lafHandler;
+
     text.setEditable(false);
     text.setOpaque(false);
 
@@ -377,72 +418,260 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     text.setBorder(null);
 
-    final JPanel content = new NonOpaquePanel(new BorderLayout((int)(label.getIconTextGap() * 1.5), (int)(label.getIconTextGap() * 1.5)));
+    final JPanel content = new NonOpaquePanel(new BorderLayout());
 
     if (text.getCaret() != null) {
       text.setCaretPosition(0);
     }
-    JScrollPane pane = ScrollPaneFactory.createScrollPane(text, true); // do not add 1px border for viewport on UI update
-    pane.setOpaque(false);
-    pane.getViewport().setOpaque(false);
-    content.add(pane, BorderLayout.CENTER);
 
-    final NonOpaquePanel north = new NonOpaquePanel(new BorderLayout());
-    north.add(new JLabel(NotificationsUtil.getIcon(notification)), BorderLayout.NORTH);
-    content.add(north, BorderLayout.WEST);
+    final JScrollPane pane = createBalloonScrollPane(text, false);
 
-    content.setBorder(new EmptyBorder(2, 4, 2, 4));
+    pane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+      @Override
+      public void adjustmentValueChanged(AdjustmentEvent e) {
+        JScrollBar scrollBar = pane.getVerticalScrollBar();
+        if (layoutData.showMinSize && scrollBar.getValue() > 0) {
+          scrollBar.removeAdjustmentListener(this);
+          scrollBar.setValue(0);
+          scrollBar.addAdjustmentListener(this);
+        }
+      }
+    });
+
+    LinkLabel<Void> expandAction = null;
+
+    int lines = 3;
+    if (notification.hasTitle()) {
+      lines--;
+    }
+    if (actions) {
+      lines--;
+    }
+
+    layoutData.fullHeight = text.getPreferredSize().height;
+    layoutData.twoLineHeight = calculateContentHeight(lines);
+    layoutData.maxScrollHeight = Math.min(layoutData.fullHeight, calculateContentHeight(10));
+    layoutData.configuration = BalloonLayoutConfiguration.create(notification, layoutData, actions);
+
+    if (layoutData.welcomeScreen) {
+      layoutData.maxScrollHeight = layoutData.fullHeight;
+    }
+    else if (!showFullContent && layoutData.maxScrollHeight != layoutData.fullHeight) {
+      pane.setViewport(new GradientViewport(text, JBUI.insets(10, 0), true) {
+        @Nullable
+        @Override
+        protected Color getViewColor() {
+          return layoutData.fillColor;
+        }
+
+        @Override
+        protected void paintGradient(Graphics g) {
+          if (!layoutData.showMinSize) {
+            super.paintGradient(g);
+          }
+        }
+      });
+    }
+
+    configureBalloonScrollPane(pane, layoutData.fillColor);
+
+    if (showFullContent) {
+      pane.setPreferredSize(text.getPreferredSize());
+    }
+    else if (layoutData.twoLineHeight < layoutData.fullHeight) {
+      text.setPreferredSize(null);
+      Dimension size = text.getPreferredSize();
+      size.height = layoutData.twoLineHeight;
+      text.setPreferredSize(size);
+      text.setSize(size);
+      layoutData.showMinSize = true;
+
+      pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+      pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+      pane.setPreferredSize(size);
+
+      text.setCaret(new TextCaret(layoutData));
+
+      expandAction = new LinkLabel<>(null, AllIcons.Ide.Notification.Expand, (LinkListener<Void>)(link, ignored) -> {
+        layoutData.showMinSize = !layoutData.showMinSize;
+
+        text.setPreferredSize(null);
+        Dimension size1 = text.getPreferredSize();
+
+        if (layoutData.showMinSize) {
+          size1.height = layoutData.twoLineHeight;
+          pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+          link.setIcon(AllIcons.Ide.Notification.Expand);
+          link.setHoveringIcon(AllIcons.Ide.Notification.ExpandHover);
+        }
+        else {
+          text.select(0, 0);
+          size1.height = layoutData.fullHeight;
+          pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+          link.setIcon(AllIcons.Ide.Notification.Collapse);
+          link.setHoveringIcon(AllIcons.Ide.Notification.CollapseHover);
+        }
+
+        text.setPreferredSize(size1);
+        text.setSize(size1);
+
+        if (!layoutData.showMinSize) {
+          size1 = new Dimension(size1.width, layoutData.maxScrollHeight);
+        }
+        pane.setPreferredSize(size1);
+
+        content.doLayout();
+        layoutData.doLayout.run();
+      });
+      expandAction.setHoveringIcon(AllIcons.Ide.Notification.ExpandHover);
+    }
+
+    final CenteredLayoutWithActions layout = new CenteredLayoutWithActions(text, layoutData);
+    JPanel centerPanel = new NonOpaquePanel(layout) {
+      @Override
+      protected void paintChildren(Graphics g) {
+        super.paintChildren(g);
+        Component title = layout.getTitle();
+
+        if (title != null && layoutData.showActions != null && layoutData.showActions.compute()) {
+          int width = layoutData.configuration.allActionsOffset;
+          int x = getWidth() - width - JBUI.scale(5);
+          int y = layoutData.configuration.topSpaceHeight;
+
+          int height = title instanceof JEditorPane ? getFirstLineHeight((JEditorPane)title) : title.getHeight();
+
+          g.setColor(layoutData.fillColor);
+          g.fillRect(x, y, width, height);
+
+          width = layoutData.configuration.beforeGearSpace;
+          x -= width;
+          ((Graphics2D)g).setPaint(new GradientPaint(x, y, ColorUtil.withAlpha(layoutData.fillColor, 0.2), x + width, y, layoutData.fillColor));
+          g.fillRect(x, y, width, height);
+        }
+      }
+    };
+    content.add(centerPanel, BorderLayout.CENTER);
+
+    if (notification.hasTitle()) {
+      String titleStyle = StringUtil.defaultIfEmpty(fontStyle, "") + "white-space:nowrap;";
+      String titleR = NotificationsUtil.buildHtml(notification, titleStyle, false, foregroundR, null);
+      String titleD = NotificationsUtil.buildHtml(notification, titleStyle, false, foregroundD, null);
+      JLabel title = new JLabel();
+      lafHandler.setTitle(title, titleR, titleD);
+      title.setOpaque(false);
+      if (UIUtil.isUnderNimbusLookAndFeel()) {
+        title.setBackground(UIUtil.TRANSPARENT_COLOR);
+      }
+      title.setForeground(foreground);
+      centerPanel.add(title, BorderLayout.NORTH);
+    }
+
+    if (expandAction != null) {
+      centerPanel.add(expandAction, BorderLayout.EAST);
+    }
+
+    if (notification.hasContent()) {
+      centerPanel.add(layoutData.welcomeScreen ? text : pane, BorderLayout.CENTER);
+    }
+
+    if (!layoutData.welcomeScreen) {
+      final Icon icon = NotificationsUtil.getIcon(notification);
+      JComponent iconComponent = new JComponent() {
+        @Override
+        protected void paintComponent(Graphics g) {
+          super.paintComponent(g);
+          icon.paintIcon(this, g, layoutData.configuration.iconOffset.width, layoutData.configuration.iconOffset.height);
+        }
+      };
+      iconComponent.setOpaque(false);
+      iconComponent
+              .setPreferredSize(new Dimension(layoutData.configuration.iconPanelWidth, 2 * layoutData.configuration.iconOffset.height + icon.getIconHeight()));
+
+      content.add(iconComponent, BorderLayout.WEST);
+    }
 
     JPanel buttons = createButtons(notification, content, listener);
+    if (buttons != null) {
+      layoutData.groupId = null;
+      layoutData.mergeData = null;
+      buttons.setBorder(new EmptyBorder(0, 0, JBUI.scale(5), JBUI.scale(7)));
+    }
 
-    Dimension preferredSize = text.getPreferredSize();
-    text.setSize(preferredSize);
+    HoverAdapter hoverAdapter = new HoverAdapter();
+    hoverAdapter.addSource(content);
+    hoverAdapter.addSource(centerPanel);
+    hoverAdapter.addSource(text);
+    hoverAdapter.addSource(pane);
+
+    if (buttons == null && actions) {
+      createActionPanel(notification, centerPanel, layoutData.configuration.actionGap, hoverAdapter);
+    }
+
+    if (expandAction != null) {
+      hoverAdapter.addComponent(expandAction, component -> {
+        Rectangle bounds;
+        Point location = SwingUtilities.convertPoint(content.getParent(), content.getLocation(), component.getParent());
+        if (layoutData.showMinSize) {
+          Component centerComponent = layoutData.welcomeScreen ? text : pane;
+          Point centerLocation = SwingUtilities.convertPoint(centerComponent.getParent(), centerComponent.getLocation(), component.getParent());
+          bounds = new Rectangle(location.x, centerLocation.y, content.getWidth(), centerComponent.getHeight());
+        }
+        else {
+          bounds = new Rectangle(location.x, component.getY(), content.getWidth(), component.getHeight());
+          JBInsets.addTo(bounds, JBUI.insets(5, 0, 7, 0));
+        }
+        return bounds;
+      });
+    }
+
+    hoverAdapter.initListeners();
+
+    if (layoutData.mergeData != null) {
+      createMergeAction(layoutData, content);
+    }
+
+    text.setSize(text.getPreferredSize());
 
     Dimension paneSize = new Dimension(text.getPreferredSize());
-
-    int maxHeight = JBUI.scale(400);
     int maxWidth = JBUI.scale(600);
-
     if (windowComponent != null) {
-      maxHeight = Math.min(maxHeight, windowComponent.getHeight() - 20);
       maxWidth = Math.min(maxWidth, windowComponent.getWidth() - 20);
     }
-
-    if (paneSize.height > maxHeight) {
-      pane.setPreferredSize(new Dimension(Math.min(maxWidth, paneSize.width + UIUtil.getScrollBarWidth()), maxHeight));
-    }
-    else if (paneSize.width > maxWidth) {
+    if (paneSize.width > maxWidth) {
       pane.setPreferredSize(new Dimension(maxWidth, paneSize.height + UIUtil.getScrollBarWidth()));
     }
 
     final BalloonBuilder builder = JBPopupFactory.getInstance().createBalloonBuilder(content);
-    builder.setFillColor(new JBColor(Gray._234, Gray._92))
-            .setCloseButtonEnabled(buttons == null)
-            .setShowCallout(showCallout)
-            .setShadow(false)
-            .setHideOnClickOutside(hideOnClickOutside)
-            .setHideOnAction(hideOnClickOutside)
-            .setHideOnKeyOutside(hideOnClickOutside)
-            .setHideOnFrameResize(false)
-            .setBorderColor(new JBColor(Gray._180, Gray._110));
+    builder.setFillColor(layoutData.fillColor).setCloseButtonEnabled(buttons == null).setShowCallout(showCallout).setShadow(false).setAnimationCycle(200)
+            .setHideOnClickOutside(hideOnClickOutside).setHideOnAction(hideOnClickOutside).setHideOnKeyOutside(hideOnClickOutside).setHideOnFrameResize(false)
+            .setBorderColor(layoutData.borderColor).setBorderInsets(JBUI.emptyInsets());
 
-    final Balloon balloon = builder.createBalloon();
+    if (layoutData.fadeoutTime != 0) {
+      builder.setFadeoutTime(layoutData.fadeoutTime);
+    }
+
+    final BalloonImpl balloon = (BalloonImpl)builder.createBalloon();
     balloon.setAnimationEnabled(false);
     notification.setBalloon(balloon);
+
+    balloon.setShadowBorderProvider(new NotificationBalloonShadowBorderProvider(layoutData.fillColor, layoutData.borderColor));
+
+    if (!layoutData.welcomeScreen && buttons == null) {
+      balloon.setActionProvider(new NotificationBalloonActionProvider(balloon, layout.getTitle(), layoutData, notification.getGroupId()));
+    }
+
     Disposer.register(parentDisposable, balloon);
     return balloon;
   }
 
   @Nullable
-  private static JPanel createButtons(@NotNull Notification notification,
-                                      @NotNull final JPanel content,
-                                      @Nullable HyperlinkListener listener) {
+  private static JPanel createButtons(@NotNull Notification notification, @NotNull final JPanel content, @Nullable HyperlinkListener listener) {
     if (notification instanceof NotificationActionProvider) {
       JPanel buttons = new JPanel(new HorizontalLayout(5));
       buttons.setOpaque(false);
       content.add(BorderLayout.SOUTH, buttons);
 
-      final Ref<JButton> defaultButton = new Ref<JButton>();
+      final Ref<JButton> defaultButton = new Ref<>();
 
       NotificationActionProvider provider = (NotificationActionProvider)notification;
       for (NotificationActionProvider.Action action : provider.getActions(listener)) {
@@ -504,381 +733,6 @@ public class NotificationsManagerImpl extends NotificationsManager {
   }
 
   @NotNull
-  private static Balloon createNewBalloon(@Nullable JComponent windowComponent,
-                                          @NotNull Notification notification,
-                                          boolean showCallout,
-                                          boolean hideOnClickOutside,
-                                          @NotNull Ref<Object> layoutDataRef,
-                                          @NotNull Disposable parentDisposable) {
-    final BalloonLayoutData layoutData = layoutDataRef.isNull() ? new BalloonLayoutData() : (BalloonLayoutData)layoutDataRef.get();
-    if (layoutData.groupId == null) {
-      if (NotificationsConfigurationImpl.getSettings(notification.getGroupId()).isShouldLog()) {
-        layoutData.groupId = notification.getGroupId();
-        layoutData.id = notification.id;
-      }
-    }
-    else {
-      layoutData.groupId = null;
-      layoutData.mergeData = null;
-    }
-    layoutDataRef.set(layoutData);
-
-    if (layoutData.fillColor == null) {
-      layoutData.fillColor = FILL_COLOR;
-    }
-    if (layoutData.borderColor == null) {
-      layoutData.borderColor = BORDER_COLOR;
-    }
-
-    boolean actions = !notification.getActions().isEmpty();
-    boolean showFullContent = layoutData.showFullContent || notification instanceof NotificationActionProvider;
-
-    Color foregroundR = Gray._0;
-    Color foregroundD = Gray._191;
-    final Color foreground = new JBColor(foregroundR, foregroundD);
-
-    final JEditorPane text = new JEditorPane() {
-      @Override
-      protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (layoutData.showMinSize) {
-          Point location = getCollapsedTextEndLocation(this, layoutData);
-          if (location != null) {
-            g.setColor(getForeground());
-            g.drawString("...", location.x, location.y + g.getFontMetrics().getAscent());
-          }
-        }
-      }
-    };
-    text.setEditorKit(new HTMLEditorKit() {
-      final HTMLEditorKit kit = UIUtil.getHTMLEditorKit();
-
-      final HTMLFactory factory = new HTMLFactory() {
-        @Override
-        public View create(Element e) {
-          View view = super.create(e);
-          if (view instanceof ParagraphView) {
-            // wrap too long words, for example: ATEST_TABLE_SIGNLE_ROW_UPDATE_AUTOCOMMIT_A_FIK
-            return new ParagraphView(e) {
-              @Override
-              protected SizeRequirements calculateMinorAxisRequirements(int axis, SizeRequirements r) {
-                if (r == null) {
-                  r = new SizeRequirements();
-                }
-                r.minimum = (int)layoutPool.getMinimumSpan(axis);
-                r.preferred = Math.max(r.minimum, (int)layoutPool.getPreferredSpan(axis));
-                r.maximum = Integer.MAX_VALUE;
-                r.alignment = 0.5f;
-                return r;
-              }
-            };
-          }
-          return view;
-        }
-      };
-
-      @Override
-      public StyleSheet getStyleSheet() {
-        return kit.getStyleSheet();
-      }
-
-      @Override
-      public ViewFactory getViewFactory() {
-        return factory;
-      }
-    });
-    text.setForeground(foreground);
-
-    final HyperlinkListener listener = NotificationsUtil.wrapListener(notification);
-    if (listener != null) {
-      text.addHyperlinkListener(listener);
-    }
-
-    String fontStyle = NotificationsUtil.getFontStyle();
-    int prefSize = new JLabel(NotificationsUtil.buildHtml(notification, null, true, null, fontStyle)).getPreferredSize().width;
-    String style = prefSize > BalloonLayoutConfiguration.MaxWidth ? BalloonLayoutConfiguration.MaxWidthStyle : null;
-
-    if (layoutData.showFullContent) {
-      style = prefSize > BalloonLayoutConfiguration.MaxFullContentWidth ? BalloonLayoutConfiguration.MaxFullContentWidthStyle : null;
-    }
-
-    String textR = NotificationsUtil.buildHtml(notification, style, true, foregroundR, fontStyle);
-    String textD = NotificationsUtil.buildHtml(notification, style, true, foregroundD, fontStyle);
-    LafHandler lafHandler = new LafHandler(text, textR, textD);
-    layoutData.lafHandler = lafHandler;
-
-    text.setEditable(false);
-    text.setOpaque(false);
-
-    if (UIUtil.isUnderNimbusLookAndFeel()) {
-      text.setBackground(UIUtil.TRANSPARENT_COLOR);
-    }
-
-    text.setBorder(null);
-
-    final JPanel content = new NonOpaquePanel(new BorderLayout());
-
-    if (text.getCaret() != null) {
-      text.setCaretPosition(0);
-    }
-
-    final JScrollPane pane = createBalloonScrollPane(text, false);
-
-    pane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-      @Override
-      public void adjustmentValueChanged(AdjustmentEvent e) {
-        JScrollBar scrollBar = pane.getVerticalScrollBar();
-        if (layoutData.showMinSize && scrollBar.getValue() > 0) {
-          scrollBar.removeAdjustmentListener(this);
-          scrollBar.setValue(0);
-          scrollBar.addAdjustmentListener(this);
-        }
-      }
-    });
-
-    LinkLabel<Void> expandAction = null;
-
-    int lines = 3;
-    if (notification.isTitle()) {
-      lines--;
-    }
-    if (actions) {
-      lines--;
-    }
-
-    layoutData.fullHeight = text.getPreferredSize().height;
-    layoutData.twoLineHeight = calculateContentHeight(lines);
-    layoutData.maxScrollHeight = Math.min(layoutData.fullHeight, calculateContentHeight(10));
-    layoutData.configuration = BalloonLayoutConfiguration.create(notification, layoutData, actions);
-
-    if (layoutData.welcomeScreen) {
-      layoutData.maxScrollHeight = layoutData.fullHeight;
-    }
-    else if (!showFullContent && layoutData.maxScrollHeight != layoutData.fullHeight) {
-      pane.setViewport(new GradientViewport(text, JBUI.insets(10, 0), true) {
-        @Nullable
-        @Override
-        protected Color getViewColor() {
-          return layoutData.fillColor;
-        }
-
-        @Override
-        protected void paintGradient(Graphics g) {
-          if (!layoutData.showMinSize) {
-            super.paintGradient(g);
-          }
-        }
-      });
-    }
-
-    configureBalloonScrollPane(pane, layoutData.fillColor);
-
-    if (showFullContent) {
-      pane.setPreferredSize(text.getPreferredSize());
-    }
-    else if (layoutData.twoLineHeight < layoutData.fullHeight) {
-      text.setPreferredSize(null);
-      Dimension size = text.getPreferredSize();
-      size.height = layoutData.twoLineHeight;
-      text.setPreferredSize(size);
-      text.setSize(size);
-      layoutData.showMinSize = true;
-
-      pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-      pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-      pane.setPreferredSize(size);
-
-      text.setCaret(new TextCaret(layoutData));
-
-      expandAction = new LinkLabel<Void>(null, AllIcons.Ide.Notification.Expand, new LinkListener<Void>() {
-        @Override
-        public void linkSelected(LinkLabel link, Void ignored) {
-          layoutData.showMinSize = !layoutData.showMinSize;
-
-          text.setPreferredSize(null);
-          Dimension size = text.getPreferredSize();
-
-          if (layoutData.showMinSize) {
-            size.height = layoutData.twoLineHeight;
-            pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-            link.setIcon(AllIcons.Ide.Notification.Expand);
-            link.setHoveringIcon(AllIcons.Ide.Notification.ExpandHover);
-          }
-          else {
-            text.select(0, 0);
-            size.height = layoutData.fullHeight;
-            pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-            link.setIcon(AllIcons.Ide.Notification.Collapse);
-            link.setHoveringIcon(AllIcons.Ide.Notification.CollapseHover);
-          }
-
-          text.setPreferredSize(size);
-          text.setSize(size);
-
-          if (!layoutData.showMinSize) {
-            size = new Dimension(size.width, layoutData.maxScrollHeight);
-          }
-          pane.setPreferredSize(size);
-
-          content.doLayout();
-          layoutData.doLayout.run();
-        }
-      });
-      expandAction.setHoveringIcon(AllIcons.Ide.Notification.ExpandHover);
-    }
-
-    final CenteredLayoutWithActions layout = new CenteredLayoutWithActions(text, layoutData);
-    JPanel centerPanel = new NonOpaquePanel(layout) {
-      @Override
-      protected void paintChildren(Graphics g) {
-        super.paintChildren(g);
-        Component title = layout.getTitle();
-
-        if (title != null && layoutData.showActions != null && layoutData.showActions.compute()) {
-          int width = layoutData.configuration.allActionsOffset;
-          int x = getWidth() - width - JBUI.scale(5);
-          int y = layoutData.configuration.topSpaceHeight;
-
-          int height = title instanceof JEditorPane ? getFirstLineHeight((JEditorPane)title) : title.getHeight();
-
-          g.setColor(layoutData.fillColor);
-          g.fillRect(x, y, width, height);
-
-          width = layoutData.configuration.beforeGearSpace;
-          x -= width;
-          ((Graphics2D)g)
-                  .setPaint(new GradientPaint(x, y, ColorUtil.withAlpha(layoutData.fillColor, 0.2), x + width, y, layoutData.fillColor));
-          g.fillRect(x, y, width, height);
-        }
-      }
-    };
-    content.add(centerPanel, BorderLayout.CENTER);
-
-    if (notification.isTitle()) {
-      String titleStyle = StringUtil.defaultIfEmpty(fontStyle, "") + "white-space:nowrap;";
-      String titleR = NotificationsUtil.buildHtml(notification, titleStyle, false, foregroundR, null);
-      String titleD = NotificationsUtil.buildHtml(notification, titleStyle, false, foregroundD, null);
-      JLabel title = new JLabel();
-      lafHandler.setTitle(title, titleR, titleD);
-      title.setOpaque(false);
-      if (UIUtil.isUnderNimbusLookAndFeel()) {
-        title.setBackground(UIUtil.TRANSPARENT_COLOR);
-      }
-      title.setForeground(foreground);
-      centerPanel.add(title, BorderLayout.NORTH);
-    }
-
-    if (expandAction != null) {
-      centerPanel.add(expandAction, BorderLayout.EAST);
-    }
-
-    if (notification.isContent()) {
-      centerPanel.add(layoutData.welcomeScreen ? text : pane, BorderLayout.CENTER);
-    }
-
-    if (!layoutData.welcomeScreen) {
-      final Icon icon = NotificationsUtil.getIcon(notification);
-      JComponent iconComponent = new JComponent() {
-        @Override
-        protected void paintComponent(Graphics g) {
-          super.paintComponent(g);
-          icon.paintIcon(this, g, layoutData.configuration.iconOffset.width, layoutData.configuration.iconOffset.height);
-        }
-      };
-      iconComponent.setOpaque(false);
-      iconComponent.setPreferredSize(
-              new Dimension(layoutData.configuration.iconPanelWidth, 2 * layoutData.configuration.iconOffset.height + icon.getIconHeight()));
-
-      content.add(iconComponent, BorderLayout.WEST);
-    }
-
-    JPanel buttons = createButtons(notification, content, listener);
-    if (buttons != null) {
-      layoutData.groupId = null;
-      layoutData.mergeData = null;
-      buttons.setBorder(new EmptyBorder(0, 0, JBUI.scale(5), JBUI.scale(7)));
-    }
-
-    HoverAdapter hoverAdapter = new HoverAdapter();
-    hoverAdapter.addSource(content);
-    hoverAdapter.addSource(centerPanel);
-    hoverAdapter.addSource(text);
-    hoverAdapter.addSource(pane);
-
-    if (expandAction != null) {
-      hoverAdapter.addComponent(expandAction, new Function<Component, Rectangle>() {
-        @Override
-        public Rectangle fun(Component component) {
-          Rectangle bounds;
-          Point location = SwingUtilities.convertPoint(content.getParent(), content.getLocation(), component.getParent());
-          if (layoutData.showMinSize) {
-            Component centerComponent = layoutData.welcomeScreen ? text : pane;
-            Point centerLocation = SwingUtilities.convertPoint(centerComponent.getParent(), centerComponent.getLocation(), component.getParent());
-            bounds = new Rectangle(location.x, centerLocation.y, content.getWidth(), centerComponent.getHeight());
-          }
-          else {
-            bounds = new Rectangle(location.x, component.getY(), content.getWidth(), component.getHeight());
-            JBInsets.addTo(bounds, JBUI.insets(5, 0, 7, 0));
-          }
-          return bounds;
-        }
-      });
-    }
-
-    if (buttons == null && actions) {
-      createActionPanel(notification, centerPanel, layoutData.configuration.actionGap, hoverAdapter);
-    }
-
-    hoverAdapter.initListeners();
-
-    if (layoutData.mergeData != null) {
-      createMergeAction(layoutData, content);
-    }
-
-    text.setSize(text.getPreferredSize());
-
-    Dimension paneSize = new Dimension(text.getPreferredSize());
-    int maxWidth = JBUI.scale(600);
-    if (windowComponent != null) {
-      maxWidth = Math.min(maxWidth, windowComponent.getWidth() - 20);
-    }
-    if (paneSize.width > maxWidth) {
-      pane.setPreferredSize(new Dimension(maxWidth, paneSize.height + UIUtil.getScrollBarWidth()));
-    }
-
-    final BalloonBuilder builder = JBPopupFactory.getInstance().createBalloonBuilder(content);
-    builder.setFillColor(layoutData.fillColor)
-            .setCloseButtonEnabled(buttons == null)
-            .setShowCallout(showCallout)
-            .setShadow(false)
-            .setAnimationCycle(200)
-            .setHideOnClickOutside(hideOnClickOutside)
-            .setHideOnAction(hideOnClickOutside)
-            .setHideOnKeyOutside(hideOnClickOutside)
-            .setHideOnFrameResize(false)
-            .setBorderColor(layoutData.borderColor)
-            .setBorderInsets(JBUI.emptyInsets());
-
-    if (layoutData.fadeoutTime != 0) {
-      builder.setFadeoutTime(layoutData.fadeoutTime);
-    }
-
-    final BalloonImpl balloon = (BalloonImpl)builder.createBalloon();
-    balloon.setAnimationEnabled(false);
-    notification.setBalloon(balloon);
-
-    balloon.setShadowBorderProvider(new NotificationBalloonShadowBorderProvider(layoutData.fillColor, layoutData.borderColor));
-
-    if (!layoutData.welcomeScreen && buttons == null) {
-      balloon.setActionProvider(
-              new NotificationBalloonActionProvider(balloon, layout.getTitle(), layoutData, notification.getGroupId()));
-    }
-
-    Disposer.register(parentDisposable, balloon);
-    return balloon;
-  }
-
-  @NotNull
   public static JScrollPane createBalloonScrollPane(@NotNull Component content, boolean configure) {
     JScrollPane pane = ScrollPaneFactory.createScrollPane(content, true);
     if (configure) {
@@ -895,30 +749,24 @@ public class NotificationsManagerImpl extends NotificationsManager {
     pane.getVerticalScrollBar().setBackground(fillColor);
   }
 
-  private static void createActionPanel(@NotNull final Notification notification,
-                                        @NotNull JPanel centerPanel,
-                                        int gap,
-                                        @NotNull HoverAdapter hoverAdapter) {
+  private static void createActionPanel(@NotNull final Notification notification, @NotNull JPanel centerPanel, int gap, @NotNull HoverAdapter hoverAdapter) {
     JPanel actionPanel = new NonOpaquePanel(new HorizontalLayout(gap, SwingConstants.CENTER));
     centerPanel.add(BorderLayout.SOUTH, actionPanel);
 
     List<AnAction> actions = notification.getActions();
 
     if (actions.size() > 2) {
-      DropDownAction action = new DropDownAction(notification.getDropDownText(), new LinkListener<Void>() {
-        @Override
-        public void linkSelected(LinkLabel link, Void ignored) {
-          Container parent = link.getParent();
-          int size = parent.getComponentCount();
-          DefaultActionGroup group = new DefaultActionGroup();
-          for (int i = 1; i < size; i++) {
-            Component component = parent.getComponent(i);
-            if (!component.isVisible()) {
-              group.add(((LinkLabel<AnAction>)component).getLinkData());
-            }
+      DropDownAction action = new DropDownAction(notification.getDropDownText(), (link, ignored) -> {
+        Container parent = link.getParent();
+        int size = parent.getComponentCount();
+        DefaultActionGroup group = new DefaultActionGroup();
+        for (int i = 1; i < size; i++) {
+          Component component = parent.getComponent(i);
+          if (!component.isVisible()) {
+            group.add(((LinkLabel<AnAction>)component).getLinkData());
           }
-          showPopup(link, group);
         }
+        showPopup(link, group);
       });
       action.setVisible(false);
       actionPanel.add(action);
@@ -926,14 +774,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     for (AnAction action : actions) {
       Presentation presentation = action.getTemplatePresentation();
-      actionPanel.add(
-              HorizontalLayout.LEFT,
-              new LinkLabel<AnAction>(presentation.getText(), presentation.getIcon(), new LinkListener<AnAction>() {
-                @Override
-                public void linkSelected(LinkLabel aSource, AnAction action) {
-                  Notification.fire(notification, action);
-                }
-              }, action));
+      actionPanel.add(HorizontalLayout.LEFT, new LinkLabel<AnAction>(presentation.getText(), presentation.getIcon(),
+                                                                     (aSource, action1) -> Notification.fire(notification, action1), action));
     }
 
     Insets hover = JBUI.insets(8, 5, 8, 7);
@@ -1067,14 +909,12 @@ public class NotificationsManagerImpl extends NotificationsManager {
       title.append(" from ").append(shortTitle);
     }
 
-    LinkLabel<BalloonLayoutData> action = new LinkLabel<BalloonLayoutData>(
-            title.toString(), null,
-            new LinkListener<BalloonLayoutData>() {
-              @Override
-              public void linkSelected(LinkLabel aSource, BalloonLayoutData layoutData) {
-                EventLog.showNotification(layoutData.project, layoutData.groupId, layoutData.getMergeIds());
-              }
-            }, layoutData) {
+    LinkLabel<BalloonLayoutData> action = new LinkLabel<BalloonLayoutData>(title.toString(), null, new LinkListener<BalloonLayoutData>() {
+      @Override
+      public void linkSelected(LinkLabel aSource, BalloonLayoutData layoutData) {
+        EventLog.showNotification(layoutData.project, layoutData.groupId, layoutData.getMergeIds());
+      }
+    }, layoutData) {
       @Override
       protected boolean isInClickableArea(Point pt) {
         return true;
@@ -1126,9 +966,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
   public static int calculateContentHeight(int lines) {
     JEditorPane text = new JEditorPane();
     text.setEditorKit(UIUtil.getHTMLEditorKit());
-    text
-            .setText(NotificationsUtil.buildHtml(null, null, "Content" + StringUtil.repeat("<br>\nContent", lines - 1), null, null, null,
-                                                 NotificationsUtil.getFontStyle()));
+    text.setText(NotificationsUtil
+                         .buildHtml(null, null, "Content" + StringUtil.repeat("<br>\nContent", lines - 1), null, null, null, NotificationsUtil.getFontStyle()));
     text.setEditable(false);
     text.setOpaque(false);
     text.setBorder(null);
@@ -1291,22 +1130,12 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     @Override
     public Dimension preferredLayoutSize(Container parent) {
-      return layoutSize(new Function<Component, Dimension>() {
-        @Override
-        public Dimension fun(Component component) {
-          return component.getPreferredSize();
-        }
-      });
+      return layoutSize(component -> component.getPreferredSize());
     }
 
     @Override
     public Dimension minimumLayoutSize(Container parent) {
-      return layoutSize(new Function<Component, Dimension>() {
-        @Override
-        public Dimension fun(Component component) {
-          return component.getMinimumSize();
-        }
-      });
+      return layoutSize(component -> component.getMinimumSize());
     }
 
     private Dimension layoutSize(@NotNull Function<Component, Dimension> size) {
@@ -1316,7 +1145,9 @@ public class NotificationsManagerImpl extends NotificationsManager {
       Dimension expandSize = myExpandAction == null || myLayoutData.showMinSize ? new Dimension() : size.fun(myExpandAction);
 
       int height = myLayoutData.configuration.topSpaceHeight +
-                   titleSize.height + centeredSize.height + Math.max(actionSize.height, expandSize.height) +
+                   titleSize.height +
+                   centeredSize.height +
+                   Math.max(actionSize.height, expandSize.height) +
                    myLayoutData.configuration.bottomSpaceHeight;
 
       if (titleSize.height > 0 && centeredSize.height > 0) {

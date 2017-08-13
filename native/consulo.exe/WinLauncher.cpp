@@ -35,13 +35,26 @@ std::wstring getParentPath()
 {
     WCHAR buffer[MAX_PATH];
 
-    GetModuleFileName(NULL, buffer, MAX_PATH);
+    GetModuleFileNameW(NULL, buffer, MAX_PATH);
 
 	std::wstring buff(buffer);
 
 	std::wstring::size_type pos = buff.find_last_of(L"\\/");
 
 	return buff.substr(0, pos);
+}
+
+WCHAR* toArray(std::wstring wstr)
+{
+	WCHAR* result = new WCHAR[wstr.length() + sizeof(WCHAR)];
+
+	const WCHAR* value = wstr.c_str();
+
+	wcsncpy(result, value, wstr.length());
+
+	result[wstr.length()] = '\0';
+
+	return result;
 }
 
 typedef int (__cdecl *launchConsulo)(
@@ -54,7 +67,44 @@ typedef int (__cdecl *launchConsulo)(
 					   WCHAR* moduleFile,
 					   WCHAR* workingDirectory,
 					   WCHAR* propertiesFile,
-					   WCHAR* vmOptionFile);
+					   WCHAR* vmOptionFile,
+					   WCHAR* appHomePath);
+
+void pushAppData(std::vector<std::wstring> *names)
+{
+	WIN32_FIND_DATA ffd;
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+
+	WCHAR buffer[MAX_PATH];
+	SHGetSpecialFolderPath(NULL,buffer, CSIDL_APPDATA, FALSE);
+
+	std::wstring str = std::wstring(buffer);
+
+	std::wstring directoryPath = (str + L"\\Consulo Platform\\*");
+
+	hFind = FindFirstFile(directoryPath.c_str(), &ffd);
+
+	if (INVALID_HANDLE_VALUE == hFind)
+	{
+		return;
+	}
+
+	while (FindNextFile(hFind, &ffd))
+	{
+		WCHAR* name;
+
+		name = ffd.cFileName;
+
+		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY && startsWith(name, L"build"))
+		{
+			std::wstring value(ffd.cFileName);
+
+			names->push_back(value);
+		}
+	}
+
+	FindClose(hFind);
+}
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                        HINSTANCE hPrevInstance,
@@ -65,31 +115,35 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 
 	hFind = FindFirstFile(L"platform\\*", &ffd);
-	
-	if (INVALID_HANDLE_VALUE == hFind) 
+
+	if (INVALID_HANDLE_VALUE == hFind)
 	{
-		MessageBox(NULL, L"'platform' directory not found", L"Consulo", MB_OK);
+		MessageBox(NULL, L"'platform' directory not found. Please visit https://consulo.io/trouble.html", L"Consulo", MB_OK);
+		ShellExecute(0, 0, L"https://consulo.io/trouble.htm", 0, 0, SW_SHOW);
 		return 1;
-	} 
-	
+	}
+
+	std::vector<std::wstring> bootBuilds;
 	std::vector<std::wstring> names;
 
-	int i = 0;
 	while (FindNextFile(hFind, &ffd))
 	{
 		WCHAR* name;
 
 		name = ffd.cFileName;
-		
+
 		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY && startsWith(name, L"build"))
 		{
 			std::wstring value(ffd.cFileName);
 
 			names.push_back(value);
+			bootBuilds.push_back(value);
 		}
 	}
 
 	FindClose(hFind);
+
+	pushAppData(&names);
 
 	if(names.size() == 0)
 	{
@@ -101,9 +155,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	std::wstring last = names.back();
 
-	TCHAR buffer[_MAX_PATH];
+	WCHAR buffer[MAX_PATH];
 
-	GetModuleFileName(NULL, buffer, _MAX_PATH);
+	GetModuleFileName(NULL, buffer, MAX_PATH);
 	std::wstring module(buffer);
 
 	std::wstring vmOptionsFile = module + L".vmoptions";
@@ -121,7 +175,20 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		return 4;
     }
 
-	std::wstring workDirectory = getParentPath() +  L"\\platform\\" + last;
+	std::wstring workDirectory;
+
+	if(std::find(bootBuilds.begin(), bootBuilds.end(), last) != bootBuilds.end())
+	{
+		workDirectory = getParentPath() +  L"\\platform\\" + last;
+	}
+	else
+	{
+		WCHAR buffer[MAX_PATH];
+		SHGetSpecialFolderPath(NULL,buffer, CSIDL_APPDATA,FALSE);
+
+		std::wstring str = std::wstring(buffer);
+		workDirectory = str + L"\\Consulo Platform\\" + last;
+	}
 
 	std::wstring targetLibrary = workDirectory + L"\\bin\\" + TARGET_LIBRARY;
 
@@ -132,16 +199,17 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		return 5;
 	}
 
-	launchConsulo func = (launchConsulo)GetProcAddress(libraryHandle, "launchConsulo");
+	launchConsulo func = (launchConsulo)GetProcAddress(libraryHandle, "launchConsulo2");
 	if(!func)
 	{
-		MessageBox(NULL, L"'launchConsulo' function is not found", L"Consulo", MB_OK);
+		MessageBox(NULL, L"'launchConsulo2' function is not found", L"Consulo", MB_OK);
 		return 6;
 	}
 
-	WCHAR* vmOptionFileW = (WCHAR*)vmOptionsFile.c_str();
-	WCHAR* workDirectoryW = (WCHAR*)workDirectory.c_str();
-	WCHAR* propertiesFileW = (WCHAR*)propertiesFile.c_str();
+	WCHAR* vmOptionFileW = toArray(vmOptionsFile);
+	WCHAR* workDirectoryW = toArray(workDirectory);
+	WCHAR* propertiesFileW = toArray(propertiesFile);
+	WCHAR* appHomePath = toArray(getParentPath());
 
-	return func(hInstance, hPrevInstance, lpCmdLine, nCmdShow, __argc, __wargv, buffer, workDirectoryW, propertiesFileW, vmOptionFileW);
+	return func(hInstance, hPrevInstance, lpCmdLine, nCmdShow, __argc, __wargv, buffer, workDirectoryW, propertiesFileW, vmOptionFileW, appHomePath);
 }

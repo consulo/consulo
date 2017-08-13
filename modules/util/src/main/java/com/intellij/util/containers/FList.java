@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,12 @@
  */
 package com.intellij.util.containers;
 
-import java.util.*;
+import com.intellij.openapi.util.Comparing;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.AbstractList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Immutable list in functional style
@@ -23,18 +28,15 @@ import java.util.*;
  * @author nik
  */
 public class FList<E> extends AbstractList<E> {
-  private static final FList<?> EMPTY_LIST = new FList();
-  private E myHead;
-  private FList<E> myTail;
-  private int mySize;
+  @SuppressWarnings("unchecked") private static final FList<?> EMPTY_LIST = new FList(null, null, 0);
+  private final E myHead;
+  private final FList<E> myTail;
+  private final int mySize;
 
-  private FList() {
-  }
-
-  private FList(E head, FList<E> tail) {
+  private FList(E head, FList<E> tail, int size) {
     myHead = head;
     myTail = tail;
-    mySize = tail.size()+1;
+    mySize = size;
   }
 
   @Override
@@ -56,7 +58,7 @@ public class FList<E> extends AbstractList<E> {
   }
 
   public FList<E> prepend(E elem) {
-    return new FList<E>(elem, this);
+    return new FList<E>(elem, this, mySize + 1);
   }
 
   public FList<E> without(E elem) {
@@ -79,12 +81,13 @@ public class FList<E> extends AbstractList<E> {
     return this;
   }
 
+  @NotNull
   @Override
   public Iterator<E> iterator() {
     return new Iterator<E>() {
-      
+
       private FList<E> list = FList.this;
-      
+
       @Override
       public boolean hasNext() {
         return list.size() > 0;
@@ -93,11 +96,11 @@ public class FList<E> extends AbstractList<E> {
       @Override
       public E next() {
         if (list.size() == 0) throw new NoSuchElementException();
-        
+
         E res = list.myHead;
         list = list.getTail();
         assert list != null;
-        
+
         return res;
       }
 
@@ -117,7 +120,48 @@ public class FList<E> extends AbstractList<E> {
     return mySize;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o instanceof FList) {
+      FList list1 = this;
+      FList list2 = (FList)o;
+      if (mySize != list2.mySize) return false;
+      while (list1 != null) {
+        if (!Comparing.equal(list1.myHead, list2.myHead)) return false;
+        list1 = list1.getTail();
+        list2 = list2.getTail();
+        if (list1 == list2) return true;
+      }
+      return true;
+    }
+    return super.equals(o);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = 1;
+    FList each = this;
+    while (each != null) {
+      result = result * 31 + (each.myHead != null ? each.myHead.hashCode() : 0);
+      each = each.getTail();
+    }
+    return result;
+  }
+
   public static <E> FList<E> emptyList() {
+    //noinspection unchecked
     return (FList<E>)EMPTY_LIST;
+  }
+
+  /**
+   * Creates an FList object with the elements of the given sequence in the reversed order, i.e. the last element of {@code from} will be the result's {@link #getHead()}
+   */
+  public static <E> FList<E> createFromReversed(Iterable<E> from) {
+    FList<E> result = emptyList();
+    for (E e : from) {
+      result = result.prepend(e);
+    }
+    return result;
   }
 }

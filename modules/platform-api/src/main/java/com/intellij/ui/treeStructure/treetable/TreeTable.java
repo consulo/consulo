@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,11 @@
  */
 package com.intellij.ui.treeStructure.treetable;
 
+import com.intellij.ui.TableUtil;
 import com.intellij.ui.table.JBTable;
+import com.intellij.util.ObjectUtil;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.accessibility.ScreenReader;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -28,9 +32,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.EventObject;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 /**
  * This example shows how to create a simple JTreeTable component,
@@ -47,10 +50,12 @@ public class TreeTable extends JBTable {
   private TreeTableTree myTree;
   private TreeTableModel myTableModel;
   private PropertyChangeListener myTreeRowHeightPropertyListener;
+  // If a screen reader is present, it is better to let the left/right cursor keys
+  // be routed to the JTable, as opposed to expand/collapse tree nodes.
+  private boolean myProcessCursorKeys = !ScreenReader.isActive();
 
   public TreeTable(TreeTableModel treeTableModel) {
     super();
-
     setModel(treeTableModel);
   }
 
@@ -62,9 +67,10 @@ public class TreeTable extends JBTable {
     myTree = new TreeTableTree(treeTableModel, this);
     setRowHeight(myTree.getRowHeight());
     myTreeRowHeightPropertyListener = new PropertyChangeListener() {
+      @Override
       public void propertyChange(PropertyChangeEvent evt) {
         int treeRowHeight = myTree.getRowHeight();
-        if (treeRowHeight == getRowHeight() - 3) return;
+        if (treeRowHeight == getRowHeight()) return;
         setRowHeight(treeRowHeight);
       }
     };
@@ -90,7 +96,7 @@ public class TreeTable extends JBTable {
 
     // And update the height of the trees row to match that of the table.
     if (myTree.getRowHeight() < 1) {
-      setRowHeight(18);  // Metal looks better like this.
+      setRowHeight(JBUI.scale(18));  // Metal looks better like this.
     }
     else {
       setRowHeight(getRowHeight());
@@ -127,6 +133,7 @@ public class TreeTable extends JBTable {
    * Since the tree is not actually in the component hierarchy it will
    * never receive this unless we forward it in this manner.
    */
+  @Override
   public void updateUI() {
     super.updateUI();
     if (myTree!= null) {
@@ -144,18 +151,19 @@ public class TreeTable extends JBTable {
    * is not the right thing to do for an editor. Returning -1 for the
    * editing row in this case, ensures the editor is never painted.
    */
+  @Override
   public int getEditingRow() {
-    return (isTreeColumn(editingColumn)) ? -1 :
-        editingRow;
+    return editingColumn == -1 || isTreeColumn(editingColumn) ? -1 : editingRow;
   }
 
   /**
    * Overridden to pass the new rowHeight to the tree.
    */
+  @Override
   public void setRowHeight(int rowHeight) {
     super.setRowHeight(rowHeight);
     if (myTree != null && myTree.getRowHeight() < rowHeight) {
-      myTree.setRowHeight(getRowHeight() - 3);
+      myTree.setRowHeight(getRowHeight());
     }
   }
 
@@ -166,19 +174,36 @@ public class TreeTable extends JBTable {
     return myTree;
   }
 
+  @Override
   protected void processKeyEvent(KeyEvent e){
+    if (!myProcessCursorKeys) {
+      super.processKeyEvent(e);
+      return;
+    }
+
     int keyCode = e.getKeyCode();
     final int selColumn = columnModel.getSelectionModel().getAnchorSelectionIndex();
-    boolean treeHasFocus = selColumn >= 0 && isTreeColumn(selColumn);
+    boolean treeHasFocus = selColumn == -1 || selColumn >= 0 && isTreeColumn(selColumn);
     boolean oneRowSelected = getSelectedRowCount() == 1;
     if(treeHasFocus && oneRowSelected && ((keyCode == KeyEvent.VK_LEFT) || (keyCode == KeyEvent.VK_RIGHT))){
-      TreePath selectionPath = myTree.getSelectionPath();
       myTree._processKeyEvent(e);
-      myTree.setSelectionPath(selectionPath);
+      int rowToSelect = ObjectUtil.notNull(myTree.getSelectionRows())[0];
+      getSelectionModel().setSelectionInterval(rowToSelect, rowToSelect);
+      TableUtil.scrollSelectionToVisible(this);
     }
     else{
       super.processKeyEvent(e);
     }
+  }
+
+  /**
+   * Enable or disable processing of left/right cursor keys to expand/collapse
+   * nodes in the tree column. Disabling these keys can be useful to improve
+   * accessibility support when the left/right cursor keys are better suited to
+   * navigate to the previous/next cell of a given row.
+   */
+  public void setProcessCursorKeys(boolean processCursorKeys) {
+    myProcessCursorKeys = processCursorKeys;
   }
 
   /**
@@ -210,11 +235,12 @@ public class TreeTable extends JBTable {
      * and message super. This is the only place DefaultTreeSelectionModel
      * alters the ListSelectionModel.
      */
+    @Override
     public void resetRowSelection() {
       if (!updatingListSelectionModel) {
         updatingListSelectionModel = true;
         try {
-          Set<Integer> selectedRows = new HashSet<Integer>();
+          Set<Integer> selectedRows = new HashSet<>();
           int min = listSelectionModel.getMinSelectionIndex();
           int max = listSelectionModel.getMaxSelectionIndex();
 
@@ -268,14 +294,18 @@ public class TreeTable extends JBTable {
 
           clearSelection();
           if (min != -1 && max != -1) {
+            List<TreePath> selectionPaths = new ArrayList<>();
             for (int counter = min; counter <= max; counter++) {
               if (listSelectionModel.isSelectedIndex(counter)) {
                 TreePath selPath = myTree.getPathForRow(counter);
 
                 if (selPath != null) {
-                  addSelectionPath(selPath);
+                  selectionPaths.add(selPath);
                 }
               }
+            }
+            if (!selectionPaths.isEmpty()) {
+              addSelectionPaths(selectionPaths.toArray(new TreePath[selectionPaths.size()]));
             }
           }
         }
@@ -290,12 +320,14 @@ public class TreeTable extends JBTable {
      * when the selection of the list changse.
      */
     class ListSelectionHandler implements ListSelectionListener {
+      @Override
       public void valueChanged(ListSelectionEvent e) {
         updateSelectedPathsFromSelectedRows();
       }
     }
   }
 
+  @Override
   public boolean editCellAt(int row, int column, EventObject e) {
     boolean editResult = super.editCellAt(row, column, e);
     if (e instanceof MouseEvent && isTreeColumn(column)){
@@ -310,10 +342,10 @@ public class TreeTable extends JBTable {
       }
 
       MouseEvent newEvent = new MouseEvent(myTree, me.getID(),
-        me.getWhen(), me.getModifiers(),
-        me.getX() - getCellRect(0, column, true).x,
-        y, me.getClickCount(),
-        me.isPopupTrigger()
+                                           me.getWhen(), me.getModifiers(),
+                                           me.getX() - getCellRect(0, column, true).x,
+                                           y, me.getClickCount(),
+                                           me.isPopupTrigger()
       );
       myTree.dispatchEvent(newEvent);
 
@@ -323,20 +355,20 @@ public class TreeTable extends JBTable {
       // event sequense. Therefore we send "synthetic" release event.
       if (newEvent.getID()==MouseEvent.MOUSE_PRESSED) {
         MouseEvent newME2 = new MouseEvent(
-          myTree,
-          MouseEvent.MOUSE_RELEASED,
-          me.getWhen(), me.getModifiers(),
-          me.getX() - getCellRect(0, column, true).x,
-          y - getCellRect(0, column, true).y, me.getClickCount(),
-          me.isPopupTrigger()
+                myTree,
+                MouseEvent.MOUSE_RELEASED,
+                me.getWhen(), me.getModifiers(),
+                me.getX() - getCellRect(0, column, true).x,
+                y - getCellRect(0, column, true).y, me.getClickCount(),
+                me.isPopupTrigger()
         );
         myTree.dispatchEvent(newME2);
       }
-    }    
+    }
     return editResult;
   }
 
-  private boolean isTreeColumn(int column) {
+  protected boolean isTreeColumn(int column) {
     return TreeTableModel.class.isAssignableFrom(getColumnClass(column));
   }
 

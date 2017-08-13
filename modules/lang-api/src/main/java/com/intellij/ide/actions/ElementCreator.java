@@ -52,12 +52,12 @@ public abstract class ElementCreator implements WriteActionAware {
   }
 
   protected abstract PsiElement[] create(String newName) throws Exception;
+
   protected abstract String getActionName(String newName);
 
   public PsiElement[] tryCreate(@NotNull final String inputString) {
     if (inputString.length() == 0) {
-      Messages.showMessageDialog(myProject, IdeBundle.message("error.name.should.be.specified"), CommonBundle.getErrorTitle(),
-                                 Messages.getErrorIcon());
+      Messages.showMessageDialog(myProject, IdeBundle.message("error.name.should.be.specified"), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
       return PsiElement.EMPTY_ARRAY;
     }
 
@@ -83,7 +83,8 @@ public abstract class ElementCreator implements WriteActionAware {
       try {
         if (startInWriteAction()) {
           WriteAction.run(invokeCreate);
-        } else {
+        }
+        else {
           invokeCreate.run();
         }
       }

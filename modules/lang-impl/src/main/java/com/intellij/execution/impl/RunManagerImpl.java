@@ -35,7 +35,6 @@ import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeat
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.IconDeferrer;
-import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
@@ -92,8 +91,6 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   private final JDOMExternalizableStringList myOrder = new JDOMExternalizableStringList();
   private final ArrayList<RunConfiguration> myRecentlyUsedTemporaries = new ArrayList<>();
   private boolean myOrdered = true;
-
-  private final EventDispatcher<RunManagerListener> myDispatcher = EventDispatcher.create(RunManagerListener.class);
 
   public RunManagerImpl(@NotNull Project project, @NotNull PropertiesComponent propertiesComponent) {
     myConfig = new RunManagerConfig(propertiesComponent);
@@ -354,10 +351,10 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     setBeforeRunTasks(configuration, tasks, addEnabledTemplateTasksIfAbsent);
 
     if (existingSettings == settings) {
-      myDispatcher.getMulticaster().runConfigurationChanged(settings, existingId);
+      getEventPublisher().runConfigurationChanged(settings, existingId);
     }
     else {
-      myDispatcher.getMulticaster().runConfigurationAdded(settings);
+      getEventPublisher().runConfigurationAdded(settings);
     }
   }
 
@@ -438,7 +435,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         mySharedConfigurations.remove(settings.getUniqueID());
         myConfigurationToBeforeTasksMap.remove(settings.getConfiguration());
         myRecentlyUsedTemporaries.remove(settings.getConfiguration());
-        myDispatcher.getMulticaster().runConfigurationRemoved(configuration);
+        getEventPublisher().runConfigurationRemoved(configuration);
         break;
       }
     }
@@ -450,7 +447,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
           iterator.remove();
           RunnerAndConfigurationSettings changedSettings = getSettings(entry.getKey());
           if (changedSettings != null) {
-            myDispatcher.getMulticaster().runConfigurationChanged(changedSettings, null);
+            getEventPublisher().runConfigurationChanged(changedSettings, null);
           }
         }
       }
@@ -1287,42 +1284,37 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   }
 
   public void fireBeginUpdate() {
-    myDispatcher.getMulticaster().beginUpdate();
+    getEventPublisher().beginUpdate();
   }
 
   public void fireEndUpdate() {
-    myDispatcher.getMulticaster().endUpdate();
+    getEventPublisher().endUpdate();
   }
 
   public void fireRunConfigurationChanged(@NotNull RunnerAndConfigurationSettings settings) {
-    myDispatcher.getMulticaster().runConfigurationChanged(settings, null);
+    getEventPublisher().runConfigurationChanged(settings, null);
   }
 
   private void fireRunConfigurationsRemoved(@Nullable List<RunnerAndConfigurationSettings> removed) {
     if (!ContainerUtil.isEmpty(removed)) {
       myRecentlyUsedTemporaries.removeAll(removed);
       for (RunnerAndConfigurationSettings settings : removed) {
-        myDispatcher.getMulticaster().runConfigurationRemoved(settings);
+        getEventPublisher().runConfigurationRemoved(settings);
       }
     }
   }
 
   private void fireRunConfigurationSelected() {
-    myDispatcher.getMulticaster().runConfigurationSelected();
+    getEventPublisher().runConfigurationSelected();
   }
 
   @Override
   public void addRunManagerListener(RunManagerListener listener) {
-    myDispatcher.addListener(listener);
-  }
-
-  @Override
-  public void removeRunManagerListener(RunManagerListener listener) {
-    myDispatcher.removeListener(listener);
+    myProject.getMessageBus().connect().subscribe(RunManagerListener.TOPIC, listener);
   }
 
   public void fireBeforeRunTasksUpdated() {
-    myDispatcher.getMulticaster().beforeRunTasksChanged();
+    getEventPublisher().beforeRunTasksChanged();
   }
 
   private Map<Key<? extends BeforeRunTask>, BeforeRunTaskProvider> myBeforeStepsMap;
@@ -1360,5 +1352,10 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
       myBeforeStepsMap.put(id, provider);
       myProviderKeysMap.put(id.toString(), id);
     }
+  }
+  
+  @NotNull
+  private RunManagerListener getEventPublisher() {
+    return myProject.getMessageBus().syncPublisher(RunManagerListener.TOPIC);
   }
 }

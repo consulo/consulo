@@ -22,12 +22,11 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
+import consulo.util.ui.tree.TreeDecorationUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -56,12 +55,8 @@ public class BreakpointItemsTreeController implements BreakpointsCheckboxTree.De
 
   public void setTreeView(JTree treeView) {
     myTreeView = treeView;
-    myTreeView.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-      @Override
-      public void valueChanged(TreeSelectionEvent event) {
-        selectionChanged();
-      }
-    });
+    TreeDecorationUtil.decorateTree(treeView);
+    myTreeView.getSelectionModel().addTreeSelectionListener(event -> selectionChanged());
     if (treeView instanceof BreakpointsCheckboxTree) {
       ((BreakpointsCheckboxTree)treeView).setDelegate(this);
     }

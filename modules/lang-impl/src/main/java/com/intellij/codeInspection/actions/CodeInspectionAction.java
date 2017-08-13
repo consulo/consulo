@@ -184,6 +184,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     public MySingleConfigurableEditor(final Project project, final ErrorsConfigurable configurable, InspectionManagerEx manager) {
       super(project, configurable, createDimensionKey(configurable));
       myManager = manager;
+      setTitle(configurable.getDisplayName());
     }
 
 

@@ -71,8 +71,7 @@ import java.util.*;
 public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileEx, PsiElementWithSubtreeChangeNotifier, PsiFileWithStubSupport, Queryable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.PsiFileImpl");
   public static final String STUB_PSI_MISMATCH = "stub-psi mismatch";
-  private static final AtomicFieldUpdater<PsiFileImpl, FileTrees> ourTreeUpdater =
-          AtomicFieldUpdater.forFieldOfType(PsiFileImpl.class, FileTrees.class);
+  private static final AtomicFieldUpdater<PsiFileImpl, FileTrees> ourTreeUpdater = AtomicFieldUpdater.forFieldOfType(PsiFileImpl.class, FileTrees.class);
 
   private IElementType myElementType;
   protected IElementType myContentElementType;
@@ -87,6 +86,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   private final ThreadLocal<FileElement> myFileElementBeingLoaded = new ThreadLocal<>();
   protected final PsiManagerEx myManager;
   public static final Key<Boolean> BUILDING_STUB = new Key<>("Don't use stubs mark!");
+  private final PsiLock myPsiLock = new PsiLock();
 
   protected PsiFileImpl(@NotNull IElementType elementType, IElementType contentElementType, @NotNull FileViewProvider provider) {
     this(provider);
@@ -102,6 +102,11 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   public void setContentElementType(final IElementType contentElementType) {
     LOG.assertTrue(contentElementType instanceof ILazyParseableElementType, contentElementType);
     myContentElementType = contentElementType;
+  }
+
+  @NotNull
+  public PsiLock getFilePsiLock() {
+    return myPsiLock;
   }
 
   public IElementType getContentElementType() {
@@ -211,7 +216,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
                                         @NotNull FileElement treeElement,
                                         @NotNull FileTrees trees,
                                         @NotNull List<Pair<StubBasedPsiElementBase, AstPath>> bindings) {
-    synchronized (PsiLock.LOCK) {
+    synchronized (myPsiLock) {
       FileElement existing = derefTreeElement();
       if (existing != null) {
         return existing;
@@ -321,7 +326,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     if (stubs.hasNext()) {
       reportStubAstMismatch("Stub list in " + getName() + " has more elements than PSI", stubTree);
     }
-    synchronized (PsiLock.LOCK) {
+    synchronized (myPsiLock) {
       return ContainerUtil.map(result, pair -> {
         StubElement stub = pair.first;
         PsiElement psi = stub.getPsi();
@@ -435,7 +440,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
       tree.clearCaches();
     }
 
-    synchronized (PsiLock.LOCK) {
+    synchronized (myPsiLock) {
       updateTrees(myTrees.clearStub(reason));
     }
     clearCaches();
@@ -714,7 +719,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     final FileViewProvider viewProvider = getViewProvider();
     final List<Pair<IStubFileElementType, PsiFile>> roots = StubTreeBuilder.getStubbedRoots(viewProvider);
 
-    synchronized (PsiLock.LOCK) {
+    synchronized (myPsiLock) {
       if (getTreeElement() != null || hasUnbindableCachedPsi()) return null;
 
       final StubTree derefdOnLock = derefStub();
@@ -1170,7 +1175,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
   public final void beforeAstChange() {
     if (!useStrongRefs()) {
-      synchronized (PsiLock.LOCK) {
+      synchronized (myPsiLock) {
         for (PsiFile root : myViewProvider.getAllFiles()) {
           if ((root instanceof PsiFileImpl)) {
             ((PsiFileImpl)root).switchToStrongRefs();
@@ -1196,7 +1201,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     StubBasedPsiElementBase<?> psi = myRefToPsi.getCachedPsi(path);
     if (psi != null) return psi;
 
-    synchronized (PsiLock.LOCK) {
+    synchronized (myPsiLock) {
       psi = myRefToPsi.getCachedPsi(path);
       return psi != null ? psi : myRefToPsi.cachePsi(path, creator.create());
     }

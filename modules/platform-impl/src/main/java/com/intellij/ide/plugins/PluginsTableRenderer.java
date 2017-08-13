@@ -16,19 +16,26 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IdeBundle;
+import com.intellij.ide.ui.UISettings;
+import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.Set;
 
 /**
  * @author Konstantin Bulenkov
@@ -47,7 +54,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
   private JPanel myInfoPanel;
   private final IdeaPluginDescriptor myPluginDescriptor;
 
-  public PluginsTableRenderer(IdeaPluginDescriptor pluginDescriptor, boolean showFullInfo) {
+  public PluginsTableRenderer(IdeaPluginDescriptor pluginDescriptor, boolean availableRender) {
     myPluginDescriptor = pluginDescriptor;
 
     final Font smallFont;
@@ -55,21 +62,17 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
       smallFont = UIUtil.getLabelFont(UIUtil.FontSize.MINI);
     }
     else {
-      smallFont = UIUtil.getLabelFont().deriveFont(Math.max(UIUtil.getLabelFont().getSize() - 2, 11f));
+      smallFont = UIUtil.getLabelFont().deriveFont(Math.max(UISettings.getInstance().getFontSize() - JBUI.scale(3), JBUI.scaleFontSize(10)));
     }
-    myName.setFont(UIUtil.getLabelFont().deriveFont(UIUtil.getLabelFont().getSize() + 1.0f));
+    myName.setFont(UIUtil.getLabelFont().deriveFont(UISettings.getInstance().getFontSize()));
     myStatus.setFont(smallFont);
     myCategory.setFont(smallFont);
     myDownloads.setFont(smallFont);
     myStatus.setText("");
     myCategory.setText("");
     myLastUpdated.setFont(smallFont);
-    if (!showFullInfo || !(pluginDescriptor instanceof PluginNode)) {
+    if (!availableRender || !(pluginDescriptor instanceof PluginNode)) {
       myPanel.remove(myRightPanel);
-    }
-
-    if (!showFullInfo) {
-      myInfoPanel.remove(myBottomPanel);
     }
 
     myPanel.setBorder(UIUtil.isRetina() ? JBUI.Borders.empty(4, 3, 4, 3) : JBUI.Borders.empty(2, 3, 2, 3));
@@ -114,28 +117,65 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
       myLastUpdated.setText(DateFormatUtil.formatBetweenDates(pluginNode.getDate(), System.currentTimeMillis()));
     }
 
-    updatePresentation(isSelected, pluginNode);
+    updatePresentation(isSelected, myPluginDescriptor, table.getModel());
 
     return myPanel;
   }
 
-  protected void updatePresentation(boolean isSelected, PluginNode pluginNode) {
+  protected void updatePresentation(boolean isSelected, @NotNull IdeaPluginDescriptor pluginNode, TableModel model) {
     final IdeaPluginDescriptor installed = PluginManager.getPlugin(myPluginDescriptor.getPluginId());
-    if ((pluginNode != null && PluginManagerColumnInfo.isDownloaded(pluginNode)) ||
-        (installed != null && InstalledPluginsTableModel.wasUpdated(installed.getPluginId()))) {
-      if (!isSelected) myName.setForeground(FileStatus.ADDED.getColor());
+    if (PluginManagerColumnInfo.isDownloaded(pluginNode) || installed != null && InstalledPluginsTableModel.wasUpdated(installed.getPluginId())) {
+      if (!isSelected) {
+        myName.setForeground(FileStatus.ADDED.getColor());
+      }
     }
-    else if (pluginNode != null && pluginNode.getStatus() == PluginNode.STATUS_INSTALLED) {
+    else if (pluginNode instanceof PluginNode && ((PluginNode)pluginNode).getStatus() == PluginNode.STATUS_INSTALLED || installed != null) {
       PluginId pluginId = pluginNode.getPluginId();
       final boolean hasNewerVersion = InstalledPluginsTableModel.hasNewerVersion(pluginId);
-      if (!isSelected) myName.setForeground(FileStatus.MODIFIED.getColor());
       if (hasNewerVersion) {
         if (!isSelected) {
-          myName.setForeground(JBColor.RED);
+          myName.setForeground(FileStatus.MODIFIED.getColor());
         }
         myStatus.setIcon(AllIcons.Nodes.Pluginobsolete);
       }
     }
+
+    if (isIncompatible(myPluginDescriptor, model)) {
+      myPanel.setToolTipText(whyIncompatible(myPluginDescriptor, model));
+      if (!isSelected) {
+        myName.setForeground(JBColor.RED);
+      }
+    }
+  }
+
+  private static boolean isIncompatible(IdeaPluginDescriptor descriptor, TableModel model) {
+    return PluginManagerCore.isIncompatible(descriptor) ||
+           model instanceof InstalledPluginsTableModel && ((InstalledPluginsTableModel)model).hasProblematicDependencies(descriptor.getPluginId());
+  }
+
+  private static String whyIncompatible(IdeaPluginDescriptor descriptor, TableModel model) {
+    if (model instanceof InstalledPluginsTableModel) {
+      InstalledPluginsTableModel installedModel = (InstalledPluginsTableModel)model;
+      Set<PluginId> required = installedModel.getRequiredPlugins(descriptor.getPluginId());
+
+      if (required != null && required.size() > 0) {
+        StringBuilder sb = new StringBuilder();
+
+        if (!installedModel.isLoaded(descriptor.getPluginId())) {
+          sb.append(IdeBundle.message("plugin.manager.incompatible.not.loaded.tooltip")).append('\n');
+        }
+
+        String deps = StringUtil.join(required, id -> {
+          IdeaPluginDescriptor plugin = PluginManager.getPlugin(id);
+          return plugin != null ? plugin.getName() : id.getIdString();
+        }, ", ");
+        sb.append(IdeBundle.message("plugin.manager.incompatible.deps.tooltip", required.size(), deps));
+
+        return sb.toString();
+      }
+    }
+
+    return IdeBundle.message("plugin.manager.incompatible.tooltip", ApplicationNamesInfo.getInstance().getFullProductName());
   }
 
   private void createUIComponents() {

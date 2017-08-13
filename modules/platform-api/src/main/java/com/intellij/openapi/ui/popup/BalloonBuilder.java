@@ -98,16 +98,25 @@ public interface BalloonBuilder {
   @NotNull
   BalloonBuilder setRequestFocus(boolean requestFocus);
 
+  @NotNull
+  default BalloonBuilder setPointerSize(Dimension size) {
+    return this;
+  }
+
+  default BalloonBuilder setCornerToPointerDistance(int distance) {
+    return this;
+  }
+
   BalloonBuilder setHideOnCloseClick(boolean hideOnCloseClick);
 
   /**
    * Links target balloon life cycle to the given object. I.e. current balloon will be auto-hide and collected as soon
    * as given anchor is disposed.
-   * <p/>
+   * <p>
    * <b>Note:</b> given disposable anchor is assumed to correctly implement {@link #hashCode()} and {@link #equals(Object)}.
    *
-   * @param anchor  target anchor to link to
-   * @return        balloon builder which produces balloon linked to the given object life cycle
+   * @param anchor target anchor to link to
+   * @return balloon builder which produces balloon linked to the given object life cycle
    */
   @NotNull
   BalloonBuilder setDisposable(@NotNull Disposable anchor);

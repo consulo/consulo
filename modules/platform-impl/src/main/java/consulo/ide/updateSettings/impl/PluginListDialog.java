@@ -41,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -64,7 +65,7 @@ public class PluginListDialog extends DialogWrapper {
     public TableCellRenderer getRenderer(final IdeaPluginDescriptor pluginDescriptor) {
       return new PluginsTableRenderer(pluginDescriptor, true) {
         @Override
-        protected void updatePresentation(boolean isSelected, PluginNode pluginNode) {
+        protected void updatePresentation(boolean isSelected, @NotNull IdeaPluginDescriptor pluginNode, TableModel model) {
           Couple<IdeaPluginDescriptor> couple = ContainerUtil.find(myNodes, it -> it.getSecond() == pluginDescriptor);
           assert couple != null;
           IdeaPluginDescriptor oldPlugin = couple.getFirst();

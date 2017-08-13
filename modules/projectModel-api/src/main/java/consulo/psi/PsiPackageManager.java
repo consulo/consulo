@@ -19,11 +19,12 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
+import consulo.annotations.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL
@@ -47,7 +48,13 @@ public abstract class PsiPackageManager {
 
   @Nullable
   @RequiredReadAction
-  public abstract PsiPackage findAnyPackage(@NotNull PsiDirectory directory);
+  public PsiPackage findAnyPackage(@NotNull PsiDirectory directory) {
+    return findAnyPackage(directory.getVirtualFile());
+  }
+
+  @Nullable
+  @RequiredReadAction
+  public abstract PsiPackage findAnyPackage(@NotNull VirtualFile directory);
 
   @Nullable
   @RequiredReadAction

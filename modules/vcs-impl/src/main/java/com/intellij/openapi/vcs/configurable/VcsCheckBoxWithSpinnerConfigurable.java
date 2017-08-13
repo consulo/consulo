@@ -17,11 +17,11 @@ package com.intellij.openapi.vcs.configurable;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.ui.JBUI;
+import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,11 +42,7 @@ public abstract class VcsCheckBoxWithSpinnerConfigurable implements Configurable
     myMeasure = measure;
   }
 
-  @Override
-  public String getHelpTopic() {
-    return null;
-  }
-
+  @RequiredDispatchThread
   @Override
   public JComponent createComponent() {
     JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -55,21 +51,12 @@ public abstract class VcsCheckBoxWithSpinnerConfigurable implements Configurable
     wrapper.add(myHighlightRecentlyChanged);
     wrapper.add(myHighlightInterval);
     final JLabel days = new JLabel(myMeasure);
-    days.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
+    days.setBorder(JBUI.Borders.empty(0, 1));
     wrapper.add(days);
 
-    myHighlightRecentlyChanged.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myHighlightInterval.setEnabled(myHighlightRecentlyChanged.isSelected());
-      }
-    });
+    myHighlightRecentlyChanged.addActionListener(e -> myHighlightInterval.setEnabled(myHighlightRecentlyChanged.isSelected()));
     return wrapper;
   }
 
   protected abstract SpinnerNumberModel createSpinnerModel();
-
-  @Override
-  public void disposeUIResources() {
-  }
 }

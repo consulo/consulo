@@ -33,7 +33,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.ui.ListScrollingUtil;
+import com.intellij.ui.ScrollingUtil;
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
 
@@ -74,7 +74,7 @@ public class ClickNavigator {
       if (o instanceof EditorSchemeAttributeDescriptor) {
         if (type.equals(((EditorSchemeAttributeDescriptor)o).getType())) {
           if (select) {
-            ListScrollingUtil.selectItem(myOptionsList, i);
+            ScrollingUtil.selectItem(myOptionsList, i);
           }
           return true;
         }

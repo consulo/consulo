@@ -93,8 +93,7 @@ public class OrderEntryUtil {
     if (orderEntry1 instanceof ModuleExtensionWithSdkOrderEntry && orderEntry2 instanceof ModuleExtensionWithSdkOrderEntry) {
       final ModuleExtensionWithSdkOrderEntry sdkOrderEntry1 = (ModuleExtensionWithSdkOrderEntry)orderEntry1;
       final ModuleExtensionWithSdkOrderEntry sdkOrderEntry2 = (ModuleExtensionWithSdkOrderEntry)orderEntry2;
-      return Comparing.equal(sdkOrderEntry1.getSdk(), sdkOrderEntry2.getSdk()) &&
-             Comparing.strEqual(sdkOrderEntry1.getSdkName(), sdkOrderEntry2.getSdkName());
+      return Comparing.equal(sdkOrderEntry1.getSdk(), sdkOrderEntry2.getSdk()) && Comparing.strEqual(sdkOrderEntry1.getSdkName(), sdkOrderEntry2.getSdkName());
     }
     if (orderEntry1 instanceof LibraryOrderEntry && orderEntry2 instanceof LibraryOrderEntry) {
       final LibraryOrderEntry jdkOrderEntry1 = (LibraryOrderEntry)orderEntry1;
@@ -138,10 +137,14 @@ public class OrderEntryUtil {
   public static void addLibraryToRoots(final LibraryOrderEntry libraryOrderEntry, final Module module) {
     Library library = libraryOrderEntry.getLibrary();
     if (library == null) return;
+    addLibraryToRoots(module, library);
+  }
+
+  public static void addLibraryToRoots(@NotNull Module module, @NotNull Library library) {
     final ModuleRootManager manager = ModuleRootManager.getInstance(module);
     final ModifiableRootModel rootModel = manager.getModifiableModel();
 
-    if (libraryOrderEntry.isModuleLevel()) {
+    if (library.getTable() == null) {
       final Library jarLibrary = rootModel.getModuleLibraryTable().createLibrary();
       final Library.ModifiableModel libraryModel = jarLibrary.getModifiableModel();
       for (OrderRootType orderRootType : OrderRootType.getAllTypes()) {
@@ -168,16 +171,14 @@ public class OrderEntryUtil {
         final OrderEntry[] newEntries = new OrderEntry[entries.length];
         System.arraycopy(entries, 0, newEntries, 0, i);
         newEntries[i] = newEntry;
-        System.arraycopy(entries, i, newEntries, i+1, entries.length - i - 1);
+        System.arraycopy(entries, i, newEntries, i + 1, entries.length - i - 1);
         model.rearrangeOrderEntries(newEntries);
         return;
       }
     }
   }
 
-  public static <T extends OrderEntry> void processOrderEntries(@NotNull Module module,
-                                                                @NotNull Class<T> orderEntryClass,
-                                                                @NotNull Processor<T> processor) {
+  public static <T extends OrderEntry> void processOrderEntries(@NotNull Module module, @NotNull Class<T> orderEntryClass, @NotNull Processor<T> processor) {
     OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
     for (OrderEntry orderEntry : orderEntries) {
       if (orderEntryClass.isInstance(orderEntry)) {

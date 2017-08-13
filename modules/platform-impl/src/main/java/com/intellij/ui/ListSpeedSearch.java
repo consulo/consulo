@@ -44,7 +44,7 @@ public class ListSpeedSearch extends SpeedSearchBase<JList> {
 
   @Override
   protected void selectElement(Object element, String selectedText) {
-    ListScrollingUtil.selectItem(myComponent, element);
+    ScrollingUtil.selectItem(myComponent, element);
   }
 
   @Override

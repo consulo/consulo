@@ -31,6 +31,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.PsiParameterizedCachedValue;
 import com.intellij.psi.impl.source.DummyHolder;
@@ -393,19 +394,24 @@ public class InjectedLanguageUtil {
     VirtualFileWindowImpl virtualFile = (VirtualFileWindowImpl)injected.getVirtualFile();
     PsiManagerEx psiManagerEx = (PsiManagerEx)injected.getManager();
     if (psiManagerEx.getProject().isDisposed()) return;
-    psiManagerEx.getFileManager().setViewProvider(virtualFile, null);
-    PsiElement context = InjectedLanguageManager.getInstance(injected.getProject()).getInjectionHost(injected);
-    PsiFile hostFile;
-    if (context != null) {
-      hostFile = context.getContainingFile();
+
+    DebugUtil.startPsiModification("injected clearCaches");
+    try {
+      psiManagerEx.getFileManager().setViewProvider(virtualFile, null);
     }
-    else {
-      VirtualFile delegate = virtualFile.getDelegate();
-      hostFile = delegate.isValid() ? psiManagerEx.findFile(delegate) : null;
+    finally {
+      DebugUtil.finishPsiModification();
     }
-    if (hostFile != null) {
+
+    VirtualFile delegate = virtualFile.getDelegate();
+    if (!delegate.isValid()) return;
+
+    FileViewProvider viewProvider = psiManagerEx.getFileManager().findCachedViewProvider(delegate);
+    if (!(viewProvider instanceof SingleRootFileViewProvider)) return;
+
+    for (PsiFile hostFile : ((SingleRootFileViewProvider)viewProvider).getCachedPsiFiles()) {
       // modification of cachedInjectedDocuments must be under PsiLock
-      synchronized (PsiLock.LOCK) {
+      synchronized (InjectedLanguageManagerImpl.ourInjectionPsiLock) {
         List<DocumentWindow> cachedInjectedDocuments = getCachedInjectedDocuments(hostFile);
         for (int i = cachedInjectedDocuments.size() - 1; i >= 0; i--) {
           DocumentWindow cachedInjectedDocument = cachedInjectedDocuments.get(i);
@@ -416,7 +422,6 @@ public class InjectedLanguageUtil {
       }
     }
   }
-
 
   public static Editor openEditorFor(@NotNull PsiFile file, @NotNull Project project) {
     Document document = PsiDocumentManager.getInstance(project).getDocument(file);

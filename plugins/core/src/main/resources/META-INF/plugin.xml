@@ -1311,6 +1311,8 @@
     <applicationService serviceInterface="com.intellij.openapi.keymap.impl.DefaultKeymap"
                         serviceImplementation="com.intellij.openapi.keymap.impl.DefaultKeymap"/>
 
+    <applicationService serviceImplementation="consulo.ide.plugins.InstalledPluginsState" />
+
     <applicationService serviceInterface="com.intellij.ide.passwordSafe.impl.providers.masterKey.PasswordDatabase"
                         serviceImplementation="com.intellij.ide.passwordSafe.impl.providers.masterKey.PasswordDatabase"/>
     <applicationService serviceInterface="com.intellij.ide.passwordSafe.config.PasswordSafeSettings"
@@ -1483,7 +1485,7 @@
     <editorNotificationProvider implementation="com.intellij.openapi.editor.impl.ForcedSoftWrapsNotificationProvider"/>
     <editorNotificationProvider implementation="com.intellij.ide.FileChangedNotificationProvider"/>
     <editorNotificationProvider
-        implementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.PluginAdvertiserEditorNotificationProvider"/>
+        implementation="com.intellij.ide.plugins.pluginsAdvertisement.PluginAdvertiserEditorNotificationProvider"/>
 
     <getDataRule key="context.ProjectFileDirectory" implementationClass="com.intellij.ide.impl.dataRules.ProjectFileDirectoryRule"/>
 
@@ -2145,6 +2147,8 @@
 
     <customPasteProvider implementation="com.intellij.ide.actions.PasteReferenceProvider"/>
 
+    <referenceInjector implementation="com.intellij.codeInsight.daemon.impl.analysis.encoding.EncodingReferenceInjector"/>
+
     <usageFilteringRuleProvider implementation="com.intellij.usages.impl.UsageFilteringRuleProviderImpl"/>
     <usageGroupingRuleProvider implementation="com.intellij.usages.impl.UsageGroupingRuleProviderImpl"/>
 
@@ -2498,12 +2502,12 @@
                     serviceImplementation="com.intellij.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile"/>
 
     <projectService serviceImplementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector"/>
-    <postStartupActivity implementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.PluginsAdvertiser"/>
+    <postStartupActivity implementation="com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiser"/>
 
     <moduleService serviceInterface="consulo.compiler.ModuleCompilerPathsManager"
                    serviceImplementation="consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
 
-    <qualifiedNameProvider implementation="consulo.ide.actions.PsiPackageQualifiedNameProvider"/>
+    <qualifiedNameProvider implementation="consulo.ide.actions.DefaultPackageQualifiedNameProvider" id="defaultPackage" order="last"/>
 
     <pathMacroExpendableProtocol protocol="zip"/>
 

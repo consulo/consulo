@@ -20,13 +20,13 @@ import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ide.ui.laf.DPIAwareArrowButton;
 import sun.swing.DefaultLookup;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.DimensionUIResource;
-import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
@@ -87,7 +87,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
   protected JButton createArrowButton() {
     final Color bg = myComboBox.getBackground();
     final Color fg = myComboBox.getForeground();
-    JButton button = new BasicArrowButton(SwingConstants.SOUTH, bg, fg, fg, fg) {
+    JButton button = new DPIAwareArrowButton(SwingConstants.SOUTH, bg, fg, fg, fg) {
 
       @Override
       public void paint(Graphics g2) {
@@ -312,7 +312,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
     paintCurrentValue(g, r, hasFocus);
 
     if (hasFocus) {
-      DarculaUIUtil.paintFocusRing(g, JBUI.scale(2), JBUI.scale(2), width - JBUI.scale(4), height - JBUI.scale(4));
+      DarculaUIUtil.paintFocusRing(g, new Rectangle(JBUI.scale(2), JBUI.scale(2), width - JBUI.scale(4), height - JBUI.scale(4)));
     }
     else {
       g.setColor(borderColor);

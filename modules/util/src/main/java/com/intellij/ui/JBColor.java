@@ -31,7 +31,7 @@ import java.awt.image.ColorModel;
 @SuppressWarnings("UseJBColor")
 public class JBColor extends Color {
 
-  private static volatile boolean DARK = UIUtil.isUnderDarcula();
+  private static volatile boolean DARK = UIUtil.isUnderDarkTheme();
 
   private final Color darkColor;
   private final NotNullProducer<Color> func;
@@ -44,7 +44,7 @@ public class JBColor extends Color {
     super(regular.getRGB(), regular.getAlpha() != 255);
     darkColor = dark;
     //noinspection AssignmentToStaticFieldFromInstanceMethod
-    DARK = UIUtil.isUnderDarcula(); //Double check. Sometimes DARK != isDarcula() after dialogs appear on splash screen
+    DARK = UIUtil.isUnderDarkTheme(); //Double check. Sometimes DARK != isDarcula() after dialogs appear on splash screen
     func = null;
   }
 
@@ -69,7 +69,8 @@ public class JBColor extends Color {
   Color getColor() {
     if (func != null) {
       return func.produce();
-    } else {
+    }
+    else {
       return DARK ? getDarkVariant() : this;
     }
   }
@@ -278,7 +279,6 @@ public class JBColor extends Color {
       @NotNull
       @Override
       public Color produce() {
-        //noinspection deprecation
         return UIUtil.getBorderColor();
       }
     });

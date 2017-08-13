@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
-import com.intellij.notification.impl.NotificationsManagerImpl;
+import com.intellij.ide.ui.UISettings;
+import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.application.ApplicationManager;
@@ -46,7 +47,7 @@ import java.io.File;
 /**
  * @author Konstantin Bulenkov
  */
-public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, AccessibleContextAccessor {
+public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, AccessibleContextAccessor, UISettingsListener {
   @NotNull
   public static Dimension getDefaultWindowSize() {
     return JBUI.size(777, 460);
@@ -69,6 +70,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
     setContentPane(myScreen);
     setDefaultTitle();
     AppUIUtil.updateWindowIcon(this);
+    UIUtil.resetRootPaneAppearance(rootPane);
     setSize(getDefaultWindowSize());
     setResizable(false);
     Point location = DimensionService.getInstance().getLocationNoRealKey(WelcomeFrame.DIMENSION_KEY);
@@ -82,12 +84,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
       }
     }, this);
 
-    if (NotificationsManagerImpl.newEnabled()) {
-      myBalloonLayout = new WelcomeBalloonLayoutImpl(rootPane, JBUI.insets(8), myScreen.getMainWelcomePanel().myEventListener, myScreen.getMainWelcomePanel().myEventLocation);
-    }
-    else {
-      myBalloonLayout = new BalloonLayoutImpl(rootPane, JBUI.insets(8));
-    }
+    myBalloonLayout = new WelcomeBalloonLayoutImpl(rootPane, JBUI.insets(8), myScreen.getMainWelcomePanel().myEventListener, myScreen.getMainWelcomePanel().myEventLocation);
 
     WelcomeFrame.setupCloseAction(this);
     MnemonicHelper.init(this);
@@ -129,10 +126,6 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
 
   public static Color getLinkNormalColor() {
     return new JBColor(Gray._0, Gray.xBB);
-  }
-
-  public static Color getListSelectionColor(boolean hasFocus) {
-    return hasFocus ? new JBColor(0x3875d6, 0x4b6eaf) : new JBColor(Gray.xDD, Gray.x45);
   }
 
   public static Color getActionLinkSelectionColor() {
@@ -186,5 +179,10 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
   @Override
   public JComponent getComponent() {
     return getRootPane();
+  }
+
+  @Override
+  public void uiSettingsChanged(UISettings source) {
+    UIUtil.resetRootPaneAppearance(getRootPane());
   }
 }

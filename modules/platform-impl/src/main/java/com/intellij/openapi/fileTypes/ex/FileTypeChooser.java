@@ -15,17 +15,18 @@
  */
 package com.intellij.openapi.fileTypes.ex;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiser;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.impl.FileTypeRenderer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
-import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.DoubleClickListener;
@@ -33,56 +34,67 @@ import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
+import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 public class FileTypeChooser extends DialogWrapper {
-  private JList myList;
+  private JList<FileType> myList;
   private JLabel myTitleLabel;
-  private ComboBox myPattern;
+  private ComboBox<String> myPattern;
   private JPanel myPanel;
   private JRadioButton myOpenInIdea;
   private JRadioButton myOpenAsNative;
   private JBScrollPane myListScrollPanel;
+  private JRadioButton myInstallPluginFromRepository;
   private final String myFileName;
+
+  private final Set<IdeaPluginDescriptor> myFeaturePlugins;
 
   private FileTypeChooser(@NotNull List<String> patterns, @NotNull String fileName) {
     super(true);
     myFileName = fileName;
 
-    myOpenInIdea.setText("Open matching files in " + ApplicationNamesInfo.getInstance().getFullProductName() + ":");
-
     FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
-    Arrays.sort(fileTypes, new Comparator<FileType>() {
-      @Override
-      public int compare(final FileType fileType1, final FileType fileType2) {
-        if (fileType1 == null) {
-          return 1;
-        }
-        if (fileType2 == null) {
-          return -1;
-        }
-        return fileType1.getDescription().compareToIgnoreCase(fileType2.getDescription());
+    Arrays.sort(fileTypes, (fileType1, fileType2) -> {
+      if (fileType1 == null) {
+        return 1;
       }
+      if (fileType2 == null) {
+        return -1;
+      }
+      return fileType1.getDescription().compareToIgnoreCase(fileType2.getDescription());
     });
 
-    final DefaultListModel model = new DefaultListModel();
+    final DefaultListModel<FileType> model = new DefaultListModel<>();
     for (FileType type : fileTypes) {
       if (!type.isReadOnly() && type != UnknownFileType.INSTANCE && !(type instanceof NativeFileType)) {
         model.addElement(type);
       }
     }
     myList.setModel(model);
-    myPattern.setModel(
-            new CollectionComboBoxModel(ContainerUtil.map(patterns, FunctionUtil.<String>id()), patterns.get(0)));
+    myPattern.setModel(new CollectionComboBoxModel<>(ContainerUtil.map(patterns, FunctionUtil.<String>id()), patterns.get(0)));
+
+    UnknownExtension fileFeatureForChecking = new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP.getName(), fileName);
+    List<IdeaPluginDescriptor> allPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
+    myFeaturePlugins = PluginsAdvertiser.findByFeature(allPlugins, fileFeatureForChecking);
+
+    if (!myFeaturePlugins.isEmpty()) {
+      myInstallPluginFromRepository.setSelected(true);
+      myInstallPluginFromRepository.setText(FileTypesBundle.message("filetype.chooser.install.plugin"));
+    }
+    else {
+      myInstallPluginFromRepository.setVisible(false);
+    }
 
     setTitle(FileTypesBundle.message("filetype.chooser.title"));
     init();
@@ -103,18 +115,14 @@ public class FileTypeChooser extends DialogWrapper {
       }
     }.installOn(myList);
 
-    myList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        updateButtonsState();
-      }
-    });
+    myList.getSelectionModel().addListSelectionListener(e -> updateButtonsState());
 
     ScrollingUtil.selectItem(myList, PlainTextFileType.INSTANCE);
 
     return myPanel;
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myList;
@@ -129,8 +137,22 @@ public class FileTypeChooser extends DialogWrapper {
     return "#com.intellij.fileTypes.FileTypeChooser";
   }
 
+  @Nullable
   public FileType getSelectedType() {
-    return myOpenAsNative.isSelected() ? NativeFileType.INSTANCE : (FileType)myList.getSelectedValue();
+    if (myInstallPluginFromRepository.isSelected()) {
+      return null;
+    }
+
+    return myOpenAsNative.isSelected() ? NativeFileType.INSTANCE : myList.getSelectedValue();
+  }
+
+  /**
+   * Speculates if file with newName would have known file type
+   */
+  @Nullable
+  @RequiredDispatchThread
+  public static FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile parent, @NotNull String newName, @Nullable Project project) {
+    return getKnownFileTypeOrAssociate(new FakeVirtualFile(parent, newName), project);
   }
 
   /**
@@ -140,9 +162,10 @@ public class FileTypeChooser extends DialogWrapper {
    * @return Known file type or null. Never returns {@link UnknownFileType#INSTANCE}.
    */
   @Nullable
+  @RequiredDispatchThread
   public static FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile file, @Nullable Project project) {
     if (project != null && !(file instanceof FakeVirtualFile)) {
-      ((PsiManagerEx)PsiManager.getInstance(project)).getFileManager().findFile(file); // autodetect text file if needed
+      PsiManagerEx.getInstanceEx(project).getFileManager().findFile(file); // autodetect text file if needed
     }
     FileType type = file.getFileType();
     if (type == UnknownFileType.INSTANCE) {
@@ -152,6 +175,7 @@ public class FileTypeChooser extends DialogWrapper {
   }
 
   @Nullable
+  @RequiredDispatchThread
   public static FileType getKnownFileTypeOrAssociate(@NotNull String fileName) {
     FileTypeManager fileTypeManager = FileTypeManager.getInstance();
     FileType type = fileTypeManager.getFileTypeByFileName(fileName);
@@ -162,20 +186,25 @@ public class FileTypeChooser extends DialogWrapper {
   }
 
   @Nullable
+  @RequiredDispatchThread
   public static FileType associateFileType(@NotNull final String fileName) {
     final FileTypeChooser chooser = new FileTypeChooser(suggestPatterns(fileName), fileName);
     if (!chooser.showAndGet()) {
       return null;
     }
     final FileType type = chooser.getSelectedType();
-    if (type == UnknownFileType.INSTANCE) return null;
+    if (type == null) {
+      final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, new ArrayList<>(chooser.myFeaturePlugins));
+      advertiserDialog.show();
+      return null;
+    }
 
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        FileTypeManagerEx.getInstanceEx().associatePattern(type, (String)chooser.myPattern.getSelectedItem());
-      }
-    });
+    if (type == UnknownFileType.INSTANCE) {
+      return null;
+    }
+
+    ApplicationManager.getApplication()
+            .runWriteAction(() -> FileTypeManagerEx.getInstanceEx().associatePattern(type, (String)chooser.myPattern.getSelectedItem()));
 
     return type;
   }

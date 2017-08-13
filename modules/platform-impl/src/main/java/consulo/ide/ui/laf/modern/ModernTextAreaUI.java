@@ -22,37 +22,49 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicTextAreaUI;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 /**
  * @author VISTALL
  * @since 05.08.14
  */
 public class ModernTextAreaUI extends BasicTextAreaUI implements ModernTextBorder.ModernTextUI {
-  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
   public static ComponentUI createUI(final JComponent c) {
-    final ModernTextAreaUI ui = new ModernTextAreaUI(c);
-    c.addFocusListener(new FocusAdapter() {
+    return new ModernTextAreaUI(c);
+  }
+
+  private boolean myFocused;
+  private MouseEnterHandler myMouseEnterHandler;
+  private FocusListener myFocusListener;
+
+  public ModernTextAreaUI(JComponent c) {
+    myMouseEnterHandler = new MouseEnterHandler(c);
+  }
+
+  @Override
+  public void installUI(JComponent c) {
+    super.installUI(c);
+    myMouseEnterHandler.replace(null, c);
+    c.addFocusListener(myFocusListener = new FocusAdapter() {
       @Override
       public void focusGained(FocusEvent e) {
-        ui.myFocused = true;
+        myFocused = true;
         c.repaint();
       }
 
       @Override
       public void focusLost(FocusEvent e) {
-        ui.myFocused = false;
+        myFocused = false;
         c.repaint();
       }
     });
-
-    return ui;
   }
 
-  private boolean myFocused;
-  private MouseEnterHandler myMouseEnterHandler;
-
-  public ModernTextAreaUI(JComponent c) {
-    myMouseEnterHandler = new MouseEnterHandler(c);
+  @Override
+  public void uninstallUI(JComponent c) {
+    super.uninstallUI(c);
+    c.removeFocusListener(myFocusListener);
+    myMouseEnterHandler.replace(c, null);
   }
 
   @Override

@@ -88,8 +88,8 @@ public class BalloonLayoutConfiguration {
   public static BalloonLayoutConfiguration create(@NotNull Notification notification,
                                                   @NotNull BalloonLayoutData layoutData,
                                                   boolean actions) {
-    boolean title = notification.isTitle();
-    boolean content = notification.isContent();
+    boolean title = notification.hasTitle();
+    boolean content = notification.hasContent();
     if (title && content && actions) {
       return treeLines();
     }

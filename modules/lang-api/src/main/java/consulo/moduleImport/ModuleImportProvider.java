@@ -46,6 +46,13 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
     return (C)new ModuleImportContext();
   }
 
+  /**
+   * If return false - this provider will be avaliable from 'Import Module' action from project structore
+   */
+  default boolean isOnlyForNewImport() {
+    return true;
+  }
+
   @NotNull
   abstract String getName();
 

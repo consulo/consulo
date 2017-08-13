@@ -20,7 +20,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.SystemProperties;
 import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
@@ -106,17 +105,23 @@ public class PathManager {
    */
   @NotNull
   public static File getExternalPlatformDirectory() {
-    if (SystemInfo.isMac && !SandboxUtil.isInsideSandbox()) {
-      return new File(SystemProperties.getUserHome(), "Library/Application Support/Consulo Platform");
+    File defaultPath = new File(getAppHomeDirectory(), PLATFORM_FOLDER);
+
+    // force platform inside distribution directory
+    if (Boolean.getBoolean(ApplicationProperties.CONSULO_NO_EXTERNAL_PLATFORM) || SandboxUtil.isInsideSandbox()) {
+      return defaultPath;
     }
-    return new File(getDistributionDirectory(), PLATFORM_FOLDER);
+    return DefaultPaths.getInstance().getExternalPlatformDirectory(defaultPath);
   }
 
+  /**
+   * @return app home, equal IDE installation path
+   */
   @NotNull
-  public static File getDistributionDirectory() {
-    String macAppHomePath = System.getProperty(MAC_APP_HOME_PATH);
-    if (macAppHomePath != null) {
-      return new File(macAppHomePath, "Contents");
+  public static File getAppHomeDirectory() {
+    String appHomePath = System.getProperty(ApplicationProperties.CONSULO_APP_HOME_PATH);
+    if (appHomePath != null) {
+      return new File(getAbsolutePath(trimPathQuotes(appHomePath)));
     }
 
     File homeDir = new File(getHomePath());

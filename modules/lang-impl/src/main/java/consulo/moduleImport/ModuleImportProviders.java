@@ -16,7 +16,6 @@
 package consulo.moduleImport;
 
 import com.intellij.projectImport.ProjectImportProvider;
-import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -28,9 +27,18 @@ import java.util.List;
  */
 public class ModuleImportProviders {
   @NotNull
-  public static List<ModuleImportProvider> getExtensions() {
+  public static List<ModuleImportProvider> getExtensions(boolean forImportAction) {
     List<ModuleImportProvider> list = new ArrayList<>();
-    ContainerUtil.addAll(list, ModuleImportProvider.EP_NAME.getExtensions());
+    for (ModuleImportProvider<?> provider : ModuleImportProvider.EP_NAME.getExtensions()) {
+      if (forImportAction) {
+        if (!provider.isOnlyForNewImport()) {
+          list.add(provider);
+        }
+      }
+      else {
+        list.add(provider);
+      }
+    }
     for (ProjectImportProvider provider : ProjectImportProvider.EP_NAME.getExtensions()) {
       list.add(new LegacyModuleImportProvider(provider));
     }

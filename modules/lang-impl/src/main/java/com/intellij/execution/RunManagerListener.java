@@ -15,11 +15,14 @@
  */
 package com.intellij.execution;
 
+import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EventListener;
 
 public interface RunManagerListener extends EventListener {
+  Topic<RunManagerListener> TOPIC = new Topic<>("RunManager", RunManagerListener.class);
+
   default void runConfigurationSelected() {
   }
 

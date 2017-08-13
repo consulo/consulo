@@ -16,6 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.ide.BrowserUtil;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -739,7 +740,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
     final List<Object[]> searchMatches = new ArrayList<Object[]>();
 
-    UIUtil.applyRenderingHints(g);
     applyAdditionalHints(g);
     final Font ownFont = getFont();
     if (ownFont != null) {
@@ -907,6 +907,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   }
 
   protected void applyAdditionalHints(@NotNull Graphics2D g) {
+    UISettings.setupAntialiasing(g);
   }
 
   @Override

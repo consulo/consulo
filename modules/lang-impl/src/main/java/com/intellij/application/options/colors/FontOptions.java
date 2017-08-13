@@ -18,8 +18,6 @@ package com.intellij.application.options.colors;
 
 import com.intellij.application.options.OptionsConstants;
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.ui.AntialiasingType;
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -54,8 +52,8 @@ import java.util.Set;
 public class FontOptions extends JPanel implements OptionsPanel{
   private static final FontInfoRenderer RENDERER = new FontInfoRenderer() {
     @Override
-    protected AntialiasingType getAntialiasingType() {
-      return UISettings.getShadowInstance().EDITOR_AA_TYPE;
+    protected boolean isEditorFont() {
+      return true;
     }
   };
   private static final String HELP_URL = "https://confluence.jetbrains.com/display/IDEADEV/Support+for+Ligatures+in+Editor";

@@ -19,11 +19,11 @@ import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
 
@@ -36,10 +36,10 @@ public class DarculaSpinnerBorder implements Border, UIResource {
   public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
     final JSpinner spinner = (JSpinner)c;
     final JFormattedTextField editor = UIUtil.findComponentOfType(spinner, JFormattedTextField.class);
-    final int x1 = x + 3;
-    final int y1 = y + 3;
-    final int width1 = width - 8;
-    final int height1 = height - 6;
+    final int x1 = x + JBUI.scale(3);
+    final int y1 = y + JBUI.scale(3);
+    final int width1 = width - JBUI.scale(8);
+    final int height1 = height - JBUI.scale(6);
     final boolean focused = c.isEnabled() && c.isVisible() && editor != null && editor.hasFocus();
     final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
 
@@ -49,13 +49,13 @@ public class DarculaSpinnerBorder implements Border, UIResource {
     }
 
     g.setColor(UIUtil.getTextFieldBackground());
-    g.fillRoundRect(x1, y1, width1, height1, 5, 5);
+    g.fillRoundRect(x1, y1, width1, height1, JBUI.scale(5), JBUI.scale(5));
     g.setColor(UIUtil.getPanelBackground());
     if (editor != null) {
-      final int off = editor.getBounds().x + editor.getWidth() + ((JSpinner)c).getInsets().left + 1;
-      g.fillRect(off, y1, 17, height1);
+      final int off = editor.getBounds().x + editor.getWidth() + ((JSpinner)c).getInsets().left + JBUI.scale(1);
+      g.fillRect(off, y1, JBUI.scale(17), height1);
       g.setColor(Gray._100);
-      g.drawLine(off, y1, off, height1+2);
+      g.drawLine(off, y1, off, height1 + JBUI.scale(2));
     }
 
     if (!c.isEnabled()) {
@@ -63,17 +63,18 @@ public class DarculaSpinnerBorder implements Border, UIResource {
     }
 
     if (focused) {
-      DarculaUIUtil.paintFocusRing(g, x1, y1, width1, height1);
-    } else {
+      DarculaUIUtil.paintFocusRing(g, new Rectangle(x1, y1, width1, height1));
+    }
+    else {
       g.setColor(Gray._100);
-      g.drawRoundRect(x1, y1, width1, height1, 5, 5);
+      g.drawRoundRect(x1, y1, width1, height1, JBUI.scale(5), JBUI.scale(5));
     }
     config.restore();
   }
 
   @Override
   public Insets getBorderInsets(Component c) {
-    return new InsetsUIResource(6, 7, 6, 7);
+    return JBUI.insets(6, 7, 6, 7).asUIResource();
   }
 
   @Override

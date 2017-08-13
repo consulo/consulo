@@ -17,6 +17,7 @@ package com.intellij.util.io;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -90,8 +91,13 @@ public class ZipUtil {
     }
     zos.putNextEntry(e);
     if (!isDir) {
-      try (InputStream is = contentProcessor.getContent(file)) {
+      InputStream is = null;
+      try {
+        is = contentProcessor.getContent(file);
         FileUtil.copy(is, zos);
+      }
+      finally {
+        StreamUtil.closeStream(is);
       }
     }
     zos.closeEntry();
@@ -138,8 +144,12 @@ public class ZipUtil {
   }
 
   public static void extract(@NotNull File file, @NotNull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
-    try (ZipFile zipFile = new ZipFile(file)) {
+    ZipFile zipFile = new ZipFile(file);
+    try {
       extract(zipFile, outputDir, filenameFilter, overwrite);
+    }
+    finally {
+      zipFile.close();
     }
   }
 
@@ -175,14 +185,21 @@ public class ZipUtil {
       file.mkdir();
     }
     else {
-      try (BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file)); BufferedInputStream is = new BufferedInputStream(inputStream)) {
+      final BufferedInputStream is = new BufferedInputStream(inputStream);
+      final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+      try {
         FileUtil.copy(is, os);
+      }
+      finally {
+        os.close();
+        is.close();
       }
     }
   }
 
   public static boolean isZipContainsFolder(File zip) throws IOException {
-    try (ZipFile zipFile = new ZipFile(zip)) {
+    ZipFile zipFile = new ZipFile(zip);
+    try {
       Enumeration en = zipFile.entries();
 
       while (en.hasMoreElements()) {
@@ -195,13 +212,16 @@ public class ZipUtil {
           return true;
         }
       }
-      zipFile.close();
       return false;
+    }
+    finally {
+      zipFile.close();
     }
   }
 
   public static boolean isZipContainsEntry(File zip, String relativePath) throws IOException {
-    try (ZipFile zipFile = new ZipFile(zip)) {
+    ZipFile zipFile = new ZipFile(zip);
+    try {
       Enumeration en = zipFile.entries();
 
       while (en.hasMoreElements()) {
@@ -210,8 +230,10 @@ public class ZipUtil {
           return true;
         }
       }
-      zipFile.close();
       return false;
+    }
+    finally {
+      zipFile.close();
     }
   }
 
@@ -219,8 +241,12 @@ public class ZipUtil {
    * update an existing jar file. Adds/replace files specified in relpathToFile map
    */
   public static void update(InputStream in, OutputStream out, Map<String, File> relpathToFile) throws IOException {
+    ZipInputStream zis = null;
+    ZipOutputStream zos = null;
+    try {
+      zis = new ZipInputStream(in);
+      zos = new ZipOutputStream(out);
 
-    try (ZipInputStream zis = new ZipInputStream(in); ZipOutputStream zos = new ZipOutputStream(out)) {
       // put the old entries first, replace if necessary
       ZipEntry e;
       while ((e = zis.getNextEntry()) != null) {
@@ -253,6 +279,10 @@ public class ZipUtil {
         File file = relpathToFile.get(path);
         addFileToZip(zos, file, path, null, null);
       }
+    }
+    finally {
+      StreamUtil.closeStream(zis);
+      StreamUtil.closeStream(zos);
     }
   }
 }

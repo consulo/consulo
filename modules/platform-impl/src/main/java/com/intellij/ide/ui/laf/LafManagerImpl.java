@@ -21,9 +21,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.laf.darcula.DarculaEditorTabsPainter;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
-import com.intellij.ide.ui.laf.intellij.DefaultEditorTabsPainter;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
 import com.intellij.notification.Notification;
@@ -60,12 +58,16 @@ import consulo.actionSystem.ex.ComboBoxButtonUI;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
 import consulo.ide.ui.laf.MacDefaultLookAndFeelInfo;
+import consulo.ide.ui.laf.darcula.DarculaEditorTabsUI;
 import consulo.ide.ui.laf.intellij.ActionButtonUI;
+import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
+import consulo.ide.ui.laf.mac.MacButtonlessScrollbarUI;
+import consulo.ide.ui.laf.mac.MacEditorTabsUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
 import consulo.ui.GTKPlusUIUtil;
-import consulo.ui.laf.MacButtonlessScrollbarUI;
+import consulo.ui.laf.UIModificationTracker;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -75,6 +77,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.synth.Region;
@@ -90,8 +93,10 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Eugene Belyaev
@@ -115,7 +120,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
                   "MenuBar.font", "MenuItem.font", "MenuItem.acceleratorFont", "RadioButtonMenuItem.font", "CheckBoxMenuItem.font", "Menu.font",
                   "PopupMenu.font", "OptionPane.font", "Panel.font", "ProgressBar.font", "ScrollPane.font", "Viewport.font", "TabbedPane.font", "Table.font",
                   "TableHeader.font", "TextField.font", "PasswordField.font", "TextArea.font", "TextPane.font", "EditorPane.font", "TitledBorder.font",
-                  "ToolBar.font", "ToolTip.font", "Tree.font"};
+                  "ToolBar.font", "ToolTip.font", "Tree.font", "FormattedTextField.font", "Spinner.font"};
 
   @NonNls
   private static final String[] ourFileChooserTextKeys =
@@ -336,6 +341,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
 
       boolean dark = laf instanceof BuildInLookAndFeel && ((BuildInLookAndFeel)laf).isDark();
       JBColor.setDark(dark);
+      UIModificationTracker.getInstance().incModificationCount();
       IconLoader.setUseDarkIcons(dark);
       fireUpdate();
       UIManager.setLookAndFeel(laf);
@@ -462,6 +468,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       uiDefaults.put("ScrollBarUI", MacButtonlessScrollbarUI.class.getName());
       uiDefaults.put("ComboBoxButtonUI", ComboBoxButtonUI.class.getName());
       uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
+      uiDefaults.put("JBEditorTabsUI", MacEditorTabsUI.class.getName());
     }
     else if (UIUtil.isWinLafOnVista()) {
       uiDefaults.put("ComboBox.border", null);
@@ -475,6 +482,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
 
     patchLafFonts(uiDefaults);
 
+    patchHiDPI(uiDefaults);
+
     patchOptionPaneIcons(uiDefaults);
 
     fixSeparatorColor(uiDefaults);
@@ -486,9 +495,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       uiDefaults.put("ActionButtonUI", ActionButtonUI.class.getName());
     }
 
-    if (uiDefaults.get("jbeditor.tabs.painter") == null) {
-      uiDefaults.put("jbeditor.tabs.painter",
-                     UIUtil.isUnderDarkBuildInLaf() ? DarculaEditorTabsPainter.class.getName() : DefaultEditorTabsPainter.class.getName());
+    if (uiDefaults.get("JBEditorTabsUI") == null) {
+      uiDefaults.put("JBEditorTabsUI", UIUtil.isUnderDarkTheme() ? DarculaEditorTabsUI.class.getName() : IntelliJEditorTabsUI.class.getName());
     }
 
     updateToolWindows();
@@ -610,6 +618,41 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
     new JBPopupMenu();  // invokes updateUI() -> updateStyle()
 
     SynthLookAndFeel.setStyleFactory(original);
+  }
+
+  private static void patchHiDPI(UIDefaults defaults) {
+    Object prevScaleVal = defaults.get("hidpi.scaleFactor");
+    // used to normalize previously patched values
+    float prevScale = prevScaleVal != null ? (Float)prevScaleVal : 1f;
+
+    if (prevScale == JBUI.scale(1f) && prevScaleVal != null) return;
+
+    List<String> myIntKeys = Arrays.asList("Tree.leftChildIndent", "Tree.rightChildIndent", "Tree.rowHeight");
+
+    List<String> myDimensionKeys = Arrays.asList("Slider.horizontalSize", "Slider.verticalSize", "Slider.minimumHorizontalSize", "Slider.minimumVerticalSize");
+
+    for (Map.Entry<Object, Object> entry : defaults.entrySet()) {
+      Object value = entry.getValue();
+      String key = entry.getKey().toString();
+      if (value instanceof Dimension) {
+        if (value instanceof UIResource || myDimensionKeys.contains(key)) {
+          entry.setValue(JBUI.size((Dimension)value).asUIResource());
+        }
+      }
+      else if (value instanceof Insets) {
+        if (value instanceof UIResource) {
+          entry.setValue(JBUI.insets(((Insets)value)).asUIResource());
+        }
+      }
+      else if (value instanceof Integer) {
+        // FIXME [VISTALL] we already fix maxGutterIconWidth with UI classes
+        if (/*key.endsWith(".maxGutterIconWidth") || */myIntKeys.contains(key)) {
+          int normValue = (int)((Integer)value / prevScale);
+          entry.setValue(Integer.valueOf(JBUI.scale(normValue)));
+        }
+      }
+    }
+    defaults.put("hidpi.scaleFactor", JBUI.scale(1f));
   }
 
   private static void patchFileChooserStrings(final UIDefaults defaults) {

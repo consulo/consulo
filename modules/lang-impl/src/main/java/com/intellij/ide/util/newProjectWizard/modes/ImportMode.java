@@ -50,7 +50,7 @@ public class ImportMode implements Disposable {
   public String getDescription(final WizardContext context) {
     final String productName = ApplicationNamesInfo.getInstance().getFullProductName();
     return ProjectBundle.message("project.new.wizard.import.description", productName, context.getPresentationName(),
-                                 StringUtil.join(ModuleImportProviders.getExtensions(), ModuleImportProvider::getName, ", "));
+                                 StringUtil.join(ModuleImportProviders.getExtensions(false), ModuleImportProvider::getName, ", "));
   }
 
   @Nullable

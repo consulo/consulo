@@ -15,8 +15,11 @@
  */
 package com.intellij.openapi.vfs;
 
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
+@DeprecationInfo("Use VirtualFileListener instead")
 public abstract class VirtualFileAdapter implements VirtualFileListener {
   @Override
   public void propertyChanged(@NotNull VirtualFilePropertyEvent event){

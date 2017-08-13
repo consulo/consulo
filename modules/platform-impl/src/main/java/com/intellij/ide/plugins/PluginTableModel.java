@@ -31,12 +31,12 @@ import java.util.Set;
  * @author stathik
  * @author Konstantin Bulenkov
  */
-abstract public class PluginTableModel extends AbstractTableModel implements SortableColumnModel {
+public abstract class PluginTableModel extends AbstractTableModel implements SortableColumnModel {
   protected static final String NAME = "Name";
   protected ColumnInfo[] columns;
   protected List<IdeaPluginDescriptor> view;
   private RowSorter.SortKey myDefaultSortKey;
-  protected final List<IdeaPluginDescriptor> filtered = new ArrayList<IdeaPluginDescriptor>();
+  protected final List<IdeaPluginDescriptor> filtered = new ArrayList<>();
   private boolean mySortByStatus;
   private boolean mySortByRating;
   private boolean mySortByDownloads;
@@ -105,7 +105,7 @@ abstract public class PluginTableModel extends AbstractTableModel implements Sor
   }
 
   public ArrayList<IdeaPluginDescriptorImpl> dependent(IdeaPluginDescriptorImpl plugin) {
-    ArrayList<IdeaPluginDescriptorImpl> list = new ArrayList<IdeaPluginDescriptorImpl>();
+    ArrayList<IdeaPluginDescriptorImpl> list = new ArrayList<>();
     for (IdeaPluginDescriptor any : getAllPlugins()) {
       if (any instanceof IdeaPluginDescriptorImpl) {
         PluginId[] dep = any.getDependentPluginIds();
@@ -130,7 +130,7 @@ abstract public class PluginTableModel extends AbstractTableModel implements Sor
     final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
     final Set<String> search = optionsRegistrar.getProcessedWords(filter);
 
-    final ArrayList<IdeaPluginDescriptor> desc = new ArrayList<IdeaPluginDescriptor>();
+    final ArrayList<IdeaPluginDescriptor> desc = new ArrayList<>();
 
     final List<IdeaPluginDescriptor> toProcess = toProcess();
     for (IdeaPluginDescriptor descriptor : filtered) {
@@ -152,7 +152,7 @@ abstract public class PluginTableModel extends AbstractTableModel implements Sor
   }
 
   protected ArrayList<IdeaPluginDescriptor> toProcess() {
-    return new ArrayList<IdeaPluginDescriptor>(view);
+    return new ArrayList<>(view);
   }
 
   public abstract int getNameColumn();
@@ -197,7 +197,7 @@ abstract public class PluginTableModel extends AbstractTableModel implements Sor
   }
 
   public List<IdeaPluginDescriptor> getAllPlugins() {
-    final ArrayList<IdeaPluginDescriptor> list = new ArrayList<IdeaPluginDescriptor>();
+    final ArrayList<IdeaPluginDescriptor> list = new ArrayList<>();
     list.addAll(view);
     list.addAll(filtered);
     return list;

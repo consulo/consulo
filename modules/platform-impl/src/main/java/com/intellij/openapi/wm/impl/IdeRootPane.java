@@ -109,7 +109,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     IdeGlassPaneImpl glassPane = new IdeGlassPaneImpl(this, true);
     setGlassPane(glassPane);
     myGlassPaneInitialized = true;
-
+    UIUtil.resetRootPaneAppearance(this);
     glassPane.setVisible(false);
   }
 
@@ -289,6 +289,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
 
   @Override
   public void uiSettingsChanged(UISettings uiSettings) {
+    UIUtil.resetRootPaneAppearance(this);
     setMemoryIndicatorVisible(uiSettings.getShowMemoryIndicator());
     updateToolbarVisibility();
     updateStatusBarVisibility();

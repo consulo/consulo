@@ -48,7 +48,7 @@ public class UnitTestPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(@NotNull CommandLineArgs args) {
+  public void main(boolean newConfigFolder, @NotNull CommandLineArgs args) {
     IdeaPluginDescriptorImpl plugin = (IdeaPluginDescriptorImpl)PluginManager.getPlugin(PluginManagerCore.UNIT_TEST_PLUGIN);
     assert plugin != null;
     PluginClassLoader pluginClassLoader = (PluginClassLoader)plugin.getPluginClassLoader();

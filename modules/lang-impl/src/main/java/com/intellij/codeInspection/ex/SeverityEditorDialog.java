@@ -138,7 +138,7 @@ public class SeverityEditorDialog extends DialogWrapper {
           ((DefaultListModel)myOptionsList.getModel()).addElement(newSeverityBasedTextAttributes);
 
           myOptionsList.clearSelection();
-          ListScrollingUtil.selectItem(myOptionsList, newSeverityBasedTextAttributes);
+          ScrollingUtil.selectItem(myOptionsList, newSeverityBasedTextAttributes);
         }
       }).setMoveUpAction(new AnActionButtonRunnable() {
         @Override

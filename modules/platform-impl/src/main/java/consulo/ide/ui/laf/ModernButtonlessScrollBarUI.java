@@ -15,55 +15,44 @@
  */
 package consulo.ide.ui.laf;
 
-import com.intellij.openapi.util.Factory;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
 import com.intellij.util.ui.JBUI;
-import consulo.util.ui.OwnScrollBarUI;
 import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import consulo.ui.plaf.ScrollBarUIConstants;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.util.function.Supplier;
 
 /**
  * @author max
  * @author Konstantin Bulenkov
  * @author VISTALL
  */
-public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements OwnScrollBarUI {
-  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
+public class ModernButtonlessScrollBarUI extends BasicScrollBarUI {
   public static ComponentUI createUI(JComponent c) {
     return new ModernButtonlessScrollBarUI();
   }
 
-  private static Factory<JButton> EMPTY_BUTTON_FACTORY = new Factory<JButton>() {
-    @Override
-    public JButton create() {
-      return new EmptyButton();
-    }
-  };
-
   private final AdjustmentListener myAdjustmentListener;
   private final MouseMotionAdapter myMouseMotionListener;
   private final MouseAdapter myMouseListener;
-  private Factory<JButton> myIncreaseButtonFactory = EMPTY_BUTTON_FACTORY;
+  private Supplier<JButton> myIncreaseButtonFactory = EmptyButton::new;
 
   private boolean myMouseIsOverThumb = false;
 
   protected ModernButtonlessScrollBarUI() {
-    myAdjustmentListener = new AdjustmentListener() {
-      @Override
-      public void adjustmentValueChanged(AdjustmentEvent e) {
-        repaint();
-      }
-    };
+    myAdjustmentListener = e -> repaint();
 
     myMouseMotionListener = new MouseMotionAdapter() {
       @Override
@@ -175,7 +164,7 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
     g.setColor(new JBColor(LightColors.SLIGHTLY_GRAY, UIUtil.getListBackground()));
     g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
-    RegionPainter<Object> painter = UIUtil.getClientProperty(c, TRACK);
+    RegionPainter<Object> painter = UIUtil.getClientProperty(c, ScrollBarUIConstants.TRACK);
     if (painter != null) {
       painter.paint((Graphics2D)g, bounds.x, bounds.y, bounds.width, bounds.height, null);
     }
@@ -277,17 +266,13 @@ public class ModernButtonlessScrollBarUI extends BasicScrollBarUI implements Own
 
   @Override
   protected JButton createIncreaseButton(int orientation) {
-    return myIncreaseButtonFactory.create();
+    Supplier<? extends JButton> property = UIUtil.getClientProperty(scrollbar, ScrollBarUIConstants.INCREASE_BUTTON_FACTORY);
+    return property == null ? new EmptyButton() : property.get();
   }
 
   @Override
   protected JButton createDecreaseButton(int orientation) {
     return new EmptyButton();
-  }
-
-  @Override
-  public void setIncreaseButtonFactory(@NotNull Factory<JButton> buttonFactory) {
-    myIncreaseButtonFactory = buttonFactory;
   }
 
   private static class EmptyButton extends JButton {

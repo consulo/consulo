@@ -37,24 +37,27 @@ import java.util.List;
 import java.util.Map;
 
 public class BalloonPopupBuilderImpl implements BalloonBuilder {
-  @Nullable private final Map<Disposable, List<Balloon>> myStorage;
-  @Nullable private Disposable myAnchor;
+  @Nullable
+  private final Map<Disposable, List<Balloon>> myStorage;
+  @Nullable
+  private Disposable myAnchor;
 
   private final JComponent myContent;
 
-  private Color   myBorder             = IdeTooltipManager.getInstance().getBorderColor(true);
-  @Nullable private Insets myBorderInsets = null;
-  private Color   myFill               = MessageType.INFO.getPopupBackground();
+  private Color myBorder = IdeTooltipManager.getInstance().getBorderColor(true);
+  @Nullable
+  private Insets myBorderInsets = null;
+  private Color myFill = MessageType.INFO.getPopupBackground();
   private boolean myHideOnMouseOutside = true;
-  private boolean myHideOnKeyOutside   = true;
-  private long    myFadeoutTime        = -1;
-  private boolean myShowCallout        = true;
+  private boolean myHideOnKeyOutside = true;
+  private long myFadeoutTime = -1;
+  private boolean myShowCallout = true;
   private boolean myCloseButtonEnabled = false;
-  private boolean myHideOnFrameResize  = true;
-  private boolean myHideOnLinkClick    = false;
+  private boolean myHideOnFrameResize = true;
+  private boolean myHideOnLinkClick = false;
 
   private ActionListener myClickHandler;
-  private boolean        myCloseOnClick;
+  private boolean myCloseOnClick;
   private int myAnimationCycle = 500;
 
   private int myCalloutShift;
@@ -63,10 +66,13 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
   private boolean myHideOnAction = true;
   private boolean myHideOnCloseClick = true;
   private boolean myDialogMode;
-  private String  myTitle;
-  private Insets  myContentInsets = JBUI.insets(2);
-  private boolean myShadow        = UIUtil.isUnderDarcula();
-  private boolean mySmallVariant  = false;
+  private String myTitle;
+  private Insets myContentInsets = JBUI.insets(2);
+  private boolean myShadow = UIUtil.isUnderDarcula();
+  private boolean mySmallVariant = false;
+
+  private Dimension myPointerSize;
+  private int myCornerToPointerDistance = -1;
 
   private Balloon.Layer myLayer;
   private boolean myBlockClicks = false;
@@ -115,7 +121,7 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
   @NotNull
   @Override
   public BalloonBuilder setHideOnClickOutside(final boolean hide) {
-    myHideOnMouseOutside  = hide;
+    myHideOnMouseOutside = hide;
     return this;
   }
 
@@ -151,6 +157,20 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
   @Override
   public BalloonBuilder setRequestFocus(boolean requestFocus) {
     myRequestFocus = requestFocus;
+    return this;
+  }
+
+  @NotNull
+  @Override
+  public BalloonBuilder setPointerSize(Dimension size) {
+    myPointerSize = size;
+    return this;
+  }
+
+  @NotNull
+  @Override
+  public BalloonBuilder setCornerToPointerDistance(int distance) {
+    myCornerToPointerDistance = distance;
     return this;
   }
 
@@ -262,11 +282,11 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
   @NotNull
   @Override
   public Balloon createBalloon() {
-    final BalloonImpl result = new BalloonImpl(
-            myContent, myBorder, myBorderInsets, myFill, myHideOnMouseOutside, myHideOnKeyOutside, myHideOnAction, myHideOnCloseClick,
-            myShowCallout, myCloseButtonEnabled, myFadeoutTime, myHideOnFrameResize, myHideOnLinkClick, myClickHandler, myCloseOnClick,
-            myAnimationCycle, myCalloutShift, myPositionChangeXShift, myPositionChangeYShift, myDialogMode, myTitle, myContentInsets, myShadow,
-            mySmallVariant, myBlockClicks, myLayer, myRequestFocus);
+    final BalloonImpl result =
+            new BalloonImpl(myContent, myBorder, myBorderInsets, myFill, myHideOnMouseOutside, myHideOnKeyOutside, myHideOnAction, myHideOnCloseClick,
+                            myShowCallout, myCloseButtonEnabled, myFadeoutTime, myHideOnFrameResize, myHideOnLinkClick, myClickHandler, myCloseOnClick,
+                            myAnimationCycle, myCalloutShift, myPositionChangeXShift, myPositionChangeYShift, myDialogMode, myTitle, myContentInsets, myShadow,
+                            mySmallVariant, myBlockClicks, myLayer, myRequestFocus, myPointerSize, myCornerToPointerDistance);
 
     if (myStorage != null && myAnchor != null) {
       List<Balloon> balloons = myStorage.get(myAnchor);

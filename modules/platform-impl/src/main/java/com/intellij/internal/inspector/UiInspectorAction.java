@@ -75,8 +75,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         Toolkit.getDefaultToolkit().addAWTEventListener(myInspector, AWTEvent.MOUSE_EVENT_MASK);
       }
 
-      UiInspectorNotification[] existing =
-              NotificationsManager.getNotificationsManager().getNotificationsOfType(UiInspectorNotification.class, null);
+      UiInspectorNotification[] existing = NotificationsManager.getNotificationsManager().getNotificationsOfType(UiInspectorNotification.class, null);
       if (existing.length == 0) {
         Notifications.Bus.notify(new UiInspectorNotification(), null);
       }
@@ -92,8 +91,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
   private static class UiInspectorNotification extends Notification {
     private UiInspectorNotification() {
-      super(Notifications.SYSTEM_MESSAGES_GROUP_ID, "UI Inspector", "Control-Alt-Click to view component info!",
-            NotificationType.INFORMATION);
+      super(Notifications.SYSTEM_MESSAGES_GROUP_ID, "UI Inspector", "Control-Alt-Click to view component info!", NotificationType.INFORMATION);
     }
   }
 
@@ -227,7 +225,8 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
               glassPane.revalidate();
               glassPane.repaint();
             }
-          } else {
+          }
+          else {
             myHighlightComponent = new HighlightComponent(Color.GREEN);
 
             final Point pt = SwingUtilities.convertPoint(c, new Point(0, 0), rootPane);
@@ -254,13 +253,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    public Component getTreeCellRendererComponent(JTree tree,
-                                                  Object value,
-                                                  boolean selected,
-                                                  boolean expanded,
-                                                  boolean leaf,
-                                                  int row,
-                                                  boolean hasFocus) {
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       Color foreground = selected ? UIUtil.getTreeSelectionForeground() : UIUtil.getTreeForeground();
       Color background = selected ? UIUtil.getTreeSelectionBackground() : null;
       if (value instanceof HierarchyTree.ComponentNode) {
@@ -277,11 +270,12 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         if (!selected) {
           if (!component.isVisible()) {
             foreground = Color.GRAY;
-          } else if (component.getWidth() == 0 || component.getHeight() == 0) {
+          }
+          else if (component.getWidth() == 0 || component.getHeight() == 0) {
             foreground = new Color(128, 10, 0);
-          } else if (component.getPreferredSize() != null &&
-                     (component.getSize().width < component.getPreferredSize().width
-                      || component.getSize().height < component.getPreferredSize().height)) {
+          }
+          else if (component.getPreferredSize() != null &&
+                   (component.getSize().width < component.getPreferredSize().width || component.getSize().height < component.getPreferredSize().height)) {
             foreground = PlatformColors.BLUE;
           }
 
@@ -344,13 +338,13 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     public abstract void onComponentChanged(Component c);
 
-    private static class ComponentNode extends DefaultMutableTreeNode  {
+    private static class ComponentNode extends DefaultMutableTreeNode {
       private final Component myParent;
       private final Component myToSelect;
 
       private ComponentNode(Object userObject, Component parent) {
         super(userObject);
-        myParent = parent == null ? SwingUtilities.getWindowAncestor((Component) userObject) : parent;
+        myParent = parent == null ? SwingUtilities.getWindowAncestor((Component)userObject) : parent;
         myToSelect = (Component)userObject;
         children = prepareChildren(myToSelect, parent);
       }
@@ -381,7 +375,8 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
           for (Component component : root.getComponents()) {
             result.add(new ComponentNode(toSelect, component));
           }
-        } else {
+        }
+        else {
           if (parent instanceof Container) {
             for (Component component : ((Container)parent).getComponents()) {
               result.add(new ComponentNode(toSelect, component));
@@ -524,7 +519,16 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       drawInsets(g2d, fm, "insets", myInsets, 30, fontHeight, innerX, innerY, innerWidth, innerHeight);
     }
 
-    private static void drawInsets(Graphics2D g2d, FontMetrics fm, String name, Insets insets, int offset, int fontHeight, int innerX, int innerY, int innerWidth, int innerHeight) {
+    private static void drawInsets(Graphics2D g2d,
+                                   FontMetrics fm,
+                                   String name,
+                                   Insets insets,
+                                   int offset,
+                                   int fontHeight,
+                                   int innerX,
+                                   int innerY,
+                                   int innerWidth,
+                                   int innerHeight) {
       g2d.setColor(Color.BLACK);
       g2d.drawString(name, innerX - offset + 5, innerY - offset + fontHeight);
 
@@ -538,12 +542,14 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         final String right = Integer.toString(insets.right);
 
         g2d.drawString(top, innerX - offset + ((innerWidth + offset * 2) / 2 - fm.stringWidth(top) / 2), innerY - offset + fontHeight);
-        g2d.drawString(bottom, innerX - offset + ((innerWidth + offset * 2) / 2 - fm.stringWidth(bottom) / 2), innerY - offset  + innerHeight + offset*2 - 8 + fontHeight / 2);
+        g2d.drawString(bottom, innerX - offset + ((innerWidth + offset * 2) / 2 - fm.stringWidth(bottom) / 2),
+                       innerY - offset + innerHeight + offset * 2 - 8 + fontHeight / 2);
         g2d.drawString(left, innerX - offset + 7 - fm.stringWidth(left) / 2, innerY - offset + (innerHeight + offset * 2) / 2 + fontHeight / 2);
         g2d.drawString(right, innerX + innerWidth + offset - 7 - fm.stringWidth(right) / 2, innerY - offset + (innerHeight + offset * 2) / 2 + fontHeight / 2);
-      } else {
+      }
+      else {
         g2d.drawString("-", innerX - offset + ((innerWidth + offset * 2) / 2 - dashWidth / 2), innerY - offset + fontHeight);
-        g2d.drawString("-", innerX - offset + ((innerWidth + offset * 2) / 2 - dashWidth / 2), innerY - offset  + innerHeight + offset*2 - 8 + fontHeight / 2);
+        g2d.drawString("-", innerX - offset + ((innerWidth + offset * 2) / 2 - dashWidth / 2), innerY - offset + innerHeight + offset * 2 - 8 + fontHeight / 2);
         g2d.drawString("-", innerX - offset + 7 - dashWidth / 2, innerY - offset + (innerHeight + offset * 2) / 2 + fontHeight / 2);
         g2d.drawString("-", innerX + innerWidth + offset - 7 - dashWidth / 2, innerY - offset + (innerHeight + offset * 2) / 2 + fontHeight / 2);
       }
@@ -588,8 +594,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       }
 
       Renderer renderer = getRenderer(value.getClass());
-      if (renderer == null)
-        renderer = DEFAULT_RENDERER;
+      if (renderer == null) renderer = DEFAULT_RENDERER;
 
       JComponent result = renderer.setValue(value);
       result.setOpaque(false);
@@ -600,20 +605,16 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     @Nullable
     private static Renderer getRenderer(Class clazz) {
-      if (clazz == null)
-        return null;
+      if (clazz == null) return null;
       Renderer renderer = RENDERERS.get(clazz);
-      if (renderer != null)
-        return renderer;
+      if (renderer != null) return renderer;
       Class[] interfaces = clazz.getInterfaces();
       for (Class aClass : interfaces) {
         renderer = getRenderer(aClass);
-        if (renderer != null)
-          return renderer;
+        if (renderer != null) return renderer;
       }
       clazz = clazz.getSuperclass();
-      if (clazz != null)
-        return getRenderer(clazz);
+      if (clazz != null) return getRenderer(clazz);
       return null;
     }
   }
@@ -709,12 +710,11 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
   private static class InspectorTableModel extends AbstractTableModel {
 
-    private static final String[] JCOMPONENT_METHODS = new String[] {
-            "getLocation", "getLocationOnScreen", "getMinimumSize", "getMaximumSize", "getPreferredSize", "getSize",
-            "getAlignmentX", "getAlignmentY", "getTooltipText", "getVisibleRect", "getLayout",
-            "getForeground", "getBackground", "getFont", "isOpaque", "isFocusCycleRoot", "isValid", "isDisplayable",
-            "isShowing", "isEnabled", "isLightweight", "isFocusable", "isFocusOwner", "getToolTipText", "getText", "isEditable", "getIcon"
-    };
+    private static final String[] JCOMPONENT_METHODS =
+            new String[]{"getLocation", "getBorder", "getLocationOnScreen", "getMinimumSize", "getMaximumSize", "getPreferredSize", "getSize", "getAlignmentX",
+                    "getAlignmentY", "getTooltipText", "getVisibleRect", "getLayout", "getForeground", "getBackground", "getFont", "isOpaque",
+                    "isFocusCycleRoot", "isValid", "isDisplayable", "isShowing", "isEnabled", "isLightweight", "isFocusable", "isFocusOwner", "getToolTipText",
+                    "getText", "isEditable", "getIcon", "getUI"};
 
     private Component myComponent;
     private List<PropertyBean> myProperties = new ArrayList<PropertyBean>();
@@ -727,25 +727,21 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     private void fillTable() {
       final Class<? extends Component> cls = myComponent.getClass();
-      for (final String methodName: JCOMPONENT_METHODS) {
+      for (final String methodName : JCOMPONENT_METHODS) {
         try {
           final Method method = cls.getMethod(methodName);
           final Object result = method.invoke(myComponent);
 
-          final String propertyName = methodName.startsWith("is") ? StringUtil.decapitalize(methodName.substring(2)) : StringUtil.decapitalize(methodName.substring(3));
+          final String propertyName =
+                  methodName.startsWith("is") ? StringUtil.decapitalize(methodName.substring(2)) : StringUtil.decapitalize(methodName.substring(3));
           myProperties.add(new PropertyBean(propertyName, result, true));
         }
-        catch (NoSuchMethodException e) {
-          // skip
-        }
-        catch (InvocationTargetException e) {
-          // skip
-        }
-        catch (IllegalAccessException e) {
+        catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
           // skip
         }
       }
     }
+
     @Override
     @Nullable
     public Object getValueAt(int row, int column) {
@@ -807,7 +803,8 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       if (window != null) {
         window.setVisible(true);
         window.toFront();
-      } else {
+      }
+      else {
         window = new InspectorWindow(c, this);
         myComponentToInspector.put(c, window);
         window.pack();
@@ -824,7 +821,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
             case MouseEvent.MOUSE_CLICKED:
               if (me.getClickCount() == 1 && !me.isPopupTrigger()) {
                 Object source = me.getSource();
-                if (source instanceof JComponent) showInspector((JComponent) source);
+                if (source instanceof JComponent) showInspector((JComponent)source);
                 me.consume();
               }
 

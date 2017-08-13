@@ -25,7 +25,7 @@ import java.awt.event.KeyListener;
 /**
  * A simple way to delegate standard actions of a JList such as move up, down, home, end, page up, page down
  * to another component. Example, a focused textfield re-sends these actions to unfocused popup with a JList inside
- *
+ * <p>
  * Use returned ActionCallback object to unsubscribe the listener
  *
  * @author Konstantin Bulenkov
@@ -38,12 +38,24 @@ public class ListDelegationUtil {
         final int code = e.getKeyCode();
         final int modifiers = e.getModifiers();
         switch (code) {
-          case KeyEvent.VK_UP:         ListScrollingUtil.moveUp(delegateTo, modifiers);     break;
-          case KeyEvent.VK_DOWN:       ListScrollingUtil.moveDown(delegateTo, modifiers);   break;
-          case KeyEvent.VK_HOME:       ListScrollingUtil.moveHome(delegateTo);              break;
-          case KeyEvent.VK_END:        ListScrollingUtil.moveEnd(delegateTo);               break;
-          case KeyEvent.VK_PAGE_UP:    ListScrollingUtil.movePageUp(delegateTo);            break;
-          case KeyEvent.VK_PAGE_DOWN:  ListScrollingUtil.movePageDown(delegateTo);          break;
+          case KeyEvent.VK_UP:
+            ScrollingUtil.moveUp(delegateTo, modifiers);
+            break;
+          case KeyEvent.VK_DOWN:
+            ScrollingUtil.moveDown(delegateTo, modifiers);
+            break;
+          case KeyEvent.VK_HOME:
+            ScrollingUtil.moveHome(delegateTo);
+            break;
+          case KeyEvent.VK_END:
+            ScrollingUtil.moveEnd(delegateTo);
+            break;
+          case KeyEvent.VK_PAGE_UP:
+            ScrollingUtil.movePageUp(delegateTo);
+            break;
+          case KeyEvent.VK_PAGE_DOWN:
+            ScrollingUtil.movePageDown(delegateTo);
+            break;
         }
       }
     };
@@ -51,12 +63,7 @@ public class ListDelegationUtil {
     focusedComponent.addKeyListener(keyListener);
 
     final ActionCallback callback = new ActionCallback();
-    callback.doWhenProcessed(new Runnable() {
-      @Override
-      public void run() {
-        focusedComponent.removeKeyListener(keyListener);
-      }
-    });
+    callback.doWhenProcessed(() -> focusedComponent.removeKeyListener(keyListener));
     return callback;
   }
 }

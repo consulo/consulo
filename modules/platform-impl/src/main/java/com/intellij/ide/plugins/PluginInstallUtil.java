@@ -18,6 +18,7 @@ package com.intellij.ide.plugins;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.containers.ArrayListSet;
+import consulo.ide.plugins.InstalledPluginsState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,7 +64,7 @@ public class PluginInstallUtil {
                                      @NotNull Set<PluginNode> depends,
                                      @NotNull List<IdeaPluginDescriptor> repoPlugins) {
     PluginId[] dependentPluginIds = toInstall.getDependentPluginIds();
-    PluginManagerUISettings pluginManagerUISettings = PluginManagerUISettings.getInstance();
+    InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
 
     for (PluginId dependentPluginId : dependentPluginIds) {
 
@@ -72,7 +73,7 @@ public class PluginInstallUtil {
         continue;
       }
 
-      if (pluginManagerUISettings.getInstalledPlugins().contains(dependentPluginId.getIdString())) {
+      if (pluginsState.getInstalledPlugins().contains(dependentPluginId)) {
         // downloaded plugin
         continue;
       }

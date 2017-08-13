@@ -109,7 +109,7 @@ public abstract class ReorderableListController <T> {
       ((DefaultListModel)listModel).addElement(element);
     }
     myList.clearSelection();
-    ListScrollingUtil.selectItem(myList, element);
+    ScrollingUtil.selectItem(myList, element);
   }
 
   public static <T> ReorderableListController<T> create(final JList list, final DefaultActionGroup actionGroup) {

@@ -55,4 +55,22 @@ public interface ApplicationProperties {
   @NotNull
   @NonNls
   String CONSULO_INSTALL_PLUGINS_PATH = "consulo.install.plugins.path";
+
+  /**
+   * Disable using external platform directory for platform updates
+   *
+   * @type boolean
+   */
+  @NotNull
+  @NonNls
+  String CONSULO_NO_EXTERNAL_PLATFORM = "consulo.no.external.platform";
+
+  /**
+   * Path to boot application home
+   *
+   * @type String
+   */
+  @NotNull
+  @NonNls
+  String CONSULO_APP_HOME_PATH = "consulo.app.home.path";
 }

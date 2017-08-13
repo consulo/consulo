@@ -61,13 +61,8 @@ class EditCleanupProfileIntentionAction implements IntentionAction {
               protected boolean acceptTool(InspectionToolWrapper entry) {
                 return super.acceptTool(entry) && entry.isCleanupTool();
               }
-
-              @Override
-              public String getDisplayName() {
-                return CodeCleanupAction.CODE_CLEANUP_INSPECTIONS_DISPLAY_NAME;
-              }
             };
-    ShowSettingsUtil.getInstance().editConfigurable(project, configurable);
+    ShowSettingsUtil.getInstance().editConfigurable(CodeCleanupAction.CODE_CLEANUP_INSPECTIONS_DISPLAY_NAME,  project, configurable);
   }
 
   @Override

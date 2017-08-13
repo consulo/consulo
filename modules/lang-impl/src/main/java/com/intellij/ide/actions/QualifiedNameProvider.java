@@ -16,9 +16,10 @@
 
 package com.intellij.ide.actions;
 
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,5 +38,7 @@ public interface QualifiedNameProvider {
   @Nullable
   PsiElement qualifiedNameToElement(final String fqn, final Project project);
 
-  void insertQualifiedName(final String fqn, final PsiElement element, final Editor editor, final Project project);
+  default void insertQualifiedName(final String fqn, final PsiElement element, final Editor editor, final Project project) {
+    EditorModificationUtil.insertStringAtCaret(editor, fqn);
+  }
 }

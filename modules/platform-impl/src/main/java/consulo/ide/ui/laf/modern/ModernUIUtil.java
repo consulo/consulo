@@ -26,7 +26,7 @@ import java.lang.reflect.Field;
  * @author VISTALL
  * @since 02.08.14
  */
-public class ModernUIUtil {
+class ModernUIUtil {
   private static NotNullLazyValue<Field> ourUiField = new NotNullLazyValue<Field>() {
     @NotNull
     @Override

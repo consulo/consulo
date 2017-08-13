@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.intellij.openapi.fileTypes.ex.FileTypeChooser">
-  <grid id="27dc6" binding="myPanel" layout-manager="GridLayoutManager" row-count="5" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="myPanel" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
       <xy x="20" y="20" width="500" height="400"/>
@@ -56,7 +56,7 @@
         </constraints>
         <properties>
           <selected value="true"/>
-          <text value="Open matching files in PRODUCTNAME as type:"/>
+          <text value="Open matching files as type:"/>
         </properties>
       </component>
       <component id="d788a" class="javax.swing.JRadioButton" binding="myOpenAsNative">
@@ -67,12 +67,21 @@
           <text value="Open matching files in associated application"/>
         </properties>
       </component>
+      <component id="1ff92" class="javax.swing.JRadioButton" binding="myInstallPluginFromRepository">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Choose and install plugin from repository"/>
+        </properties>
+      </component>
     </children>
   </grid>
   <buttonGroups>
     <group name="buttonGroup1">
       <member id="7d3aa"/>
       <member id="d788a"/>
+      <member id="1ff92"/>
     </group>
   </buttonGroups>
 </form>

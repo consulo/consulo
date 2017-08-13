@@ -29,6 +29,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.EnvironmentUtil;
+import com.intellij.util.PairConsumer;
 import com.intellij.util.lang.UrlClassLoader;
 import com.sun.jna.Native;
 import consulo.start.CommandLineArgs;
@@ -64,7 +65,8 @@ public class StartupUtil {
     return ourSocketLock == null ? null : ourSocketLock.getServer();
   }
 
-  public static void prepareAndStart(String[] args, Consumer<CommandLineArgs> appStarter) {
+  public static void prepareAndStart(String[] args, PairConsumer<Boolean, CommandLineArgs> appStarter) {
+    boolean newConfigFolder = false;
     CommandLineArgs commandLineArgs = CommandLineArgs.parse(args);
 
     if (commandLineArgs.isShowHelp()) {
@@ -80,6 +82,7 @@ public class StartupUtil {
 
     if (!Main.isHeadless()) {
       AppUIUtil.updateFrameClass();
+      newConfigFolder = !new File(PathManager.getConfigPath()).exists();
     }
 
     // avoiding "log4j:WARN No appenders could be found"
@@ -115,7 +118,7 @@ public class StartupUtil {
       AppUIUtil.registerBundledFonts();
     }
 
-    appStarter.consume(commandLineArgs);
+    appStarter.consume(newConfigFolder, commandLineArgs);
   }
 
   private enum ActivationResult {

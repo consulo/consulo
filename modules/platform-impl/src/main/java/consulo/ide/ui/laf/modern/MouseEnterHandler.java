@@ -25,7 +25,7 @@ import java.awt.event.MouseEvent;
  * @author VISTALL
  * @since 02.08.14
  */
-public class MouseEnterHandler extends MouseAdapter {
+class MouseEnterHandler extends MouseAdapter {
   private static final int ENTERED = 1 << 0;
   private static final int PRESSED = 1 << 1;
 
@@ -64,15 +64,14 @@ public class MouseEnterHandler extends MouseAdapter {
         component.repaint();
       }
     };
-    replace(null, component);
   }
 
   public void replace(Component oldComponent, Component newComponent) {
-    if(oldComponent != null) {
+    if (oldComponent != null) {
       oldComponent.removeMouseListener(myMouseAdapter);
     }
 
-    if(newComponent != null) {
+    if (newComponent != null) {
       newComponent.addMouseListener(myMouseAdapter);
     }
   }

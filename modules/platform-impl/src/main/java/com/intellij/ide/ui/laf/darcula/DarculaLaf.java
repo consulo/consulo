@@ -17,7 +17,7 @@ package com.intellij.ide.ui.laf.darcula;
 
 import com.intellij.ide.ui.laf.DarculaMetalTheme;
 import com.intellij.ide.ui.laf.LafManagerImpl;
-import com.intellij.ide.ui.laf.ideaOld.IdeaLaf;
+import com.intellij.ide.ui.laf.ideaOld.IntelliJMetalLookAndFeel;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
@@ -58,7 +58,7 @@ public class DarculaLaf extends BasicLookAndFeel implements BuildInLookAndFeel {
   public DarculaLaf() {
     try {
       if (SystemInfo.isWindows || SystemInfo.isLinux) {
-        base = new IdeaLaf();
+        base = new IntelliJMetalLookAndFeel();
       } else {
         final String name = UIManager.getSystemLookAndFeelClassName();
         base = (BasicLookAndFeel)Class.forName(name).newInstance();

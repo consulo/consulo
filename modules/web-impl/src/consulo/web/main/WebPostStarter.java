@@ -37,7 +37,7 @@ public class WebPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(CommandLineArgs args) {
+  public void main(boolean newConfigFolder, CommandLineArgs args) {
     /*ApplicationManager.getApplication().invokeAndWait(new Runnable() {
       @Override
       public void run() {

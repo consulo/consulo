@@ -64,7 +64,7 @@ public class OutputFiltersDialog extends DialogWrapper {
         append(info.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
       }
     });
-    ListScrollingUtil.ensureSelectionExists(myFiltersList);
+    ScrollingUtil.ensureSelectionExists(myFiltersList);
   }
 
   private String suggestFilterName() {

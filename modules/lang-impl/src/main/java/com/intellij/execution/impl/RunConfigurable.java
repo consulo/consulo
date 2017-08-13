@@ -49,12 +49,10 @@ import com.intellij.util.config.StorageAccessors;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.ui.EditableModel;
-import com.intellij.util.ui.EmptyIcon;
-import com.intellij.util.ui.GridBag;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.util.ui.tree.TreeDecorationUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -126,6 +124,7 @@ class RunConfigurable extends BaseConfigurable {
   private void initTree() {
     myTree.setRootVisible(false);
     myTree.setShowsRootHandles(true);
+    TreeDecorationUtil.decorateTree(myTree);
     UIUtil.setLineStyleAngled(myTree);
     TreeUtil.installActions(myTree);
     new TreeSpeedSearch(myTree, new Convertor<TreePath, String>() {
@@ -541,7 +540,9 @@ class RunConfigurable extends BaseConfigurable {
             .setAddAction(myAddAction).setAddActionName(ExecutionBundle.message("add.new.run.configuration.acrtion.name"))
             .setRemoveAction(removeAction).setRemoveActionUpdater(removeAction)
             .setRemoveActionName(ExecutionBundle.message("remove.run.configuration.action.name"))
-            .setPanelBorder(new EmptyBorder(0, 0, 0, 0))
+            .setPanelBorder(JBUI.Borders.empty())
+            .setToolbarBorder(JBUI.Borders.empty())
+            .setToolbarBackgroundColor(TreeDecorationUtil.getTreeBackground())
             .setMoveUpAction(moveUpAction).setMoveUpActionName(ExecutionBundle.message("move.up.action.name")).setMoveUpActionUpdater(moveUpAction)
             .setMoveDownAction(moveDownAction).setMoveDownActionName(ExecutionBundle.message("move.down.action.name")).setMoveDownActionUpdater(moveDownAction)
             .addExtraAction(AnActionButton.fromAction(new MyCopyAction()))

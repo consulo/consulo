@@ -44,25 +44,21 @@ public class DarculaUIUtil implements SwingConstants {
   private static final JBColor DEFAULT_INACTIVE_ERROR_COLOR = new JBColor(0xebbcbc, 0x725252);
 
   @SuppressWarnings("UseJBColor")
-  private static final Color MAC_REGULAR_COLOR = new Color(0x80479cfc, true);
+  public static final Color MAC_REGULAR_COLOR = new Color(0x80479cfc, true);
 
   @SuppressWarnings("UseJBColor")
-  private static final Color MAC_GRAPHITE_COLOR = new Color(0x8099979d, true);
+  public static final Color MAC_GRAPHITE_COLOR = new Color(0x8099979d, true);
 
   private static final Color ACTIVE_ERROR_COLOR = new JBColor(() -> UIUtil.isUnderDefaultMacTheme() ? MAC_ACTIVE_ERROR_COLOR : DEFAULT_ACTIVE_ERROR_COLOR);
   private static final Color INACTIVE_ERROR_COLOR =
           new JBColor(() -> UIUtil.isUnderDefaultMacTheme() ? MAC_INACTIVE_ERROR_COLOR : DEFAULT_INACTIVE_ERROR_COLOR);
 
-  public static void paintFocusRing(Graphics g, int x, int y, int width, int height) {
-    MacUIUtil.paintFocusRing((Graphics2D)g, getGlow(), new Rectangle(x, y, width, height));
+  public static void paintFocusRing(Graphics g, Rectangle bounds) {
+    MacUIUtil.paintFocusRing((Graphics2D)g, GLOW_COLOR, bounds);
   }
 
   public static void paintFocusOval(Graphics g, int x, int y, int width, int height) {
-    MacUIUtil.paintFocusRing((Graphics2D)g, getGlow(), new Rectangle(x, y, width, height), true);
-  }
-
-  private static Color getGlow() {
-    return new JBColor(new Color(35, 121, 212), new Color(96, 175, 255));
+    MacUIUtil.paintFocusRing((Graphics2D)g, GLOW_COLOR, new Rectangle(x, y, width, height), true);
   }
 
   public static void paintSearchFocusRing(Graphics2D g, Rectangle bounds, Component component) {

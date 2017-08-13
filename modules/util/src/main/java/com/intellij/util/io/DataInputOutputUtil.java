@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package com.intellij.util.io;
 
+import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.openapi.util.io.DataInputOutputUtilRt;
+import com.intellij.util.ThrowableConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,11 +28,21 @@ import java.io.IOException;
 /**
  * @author max
  */
-public class DataInputOutputUtil {
+@SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
+public class DataInputOutputUtil extends DataInputOutputUtilRt {
   public static final long timeBase = 33L * 365L * 24L * 3600L * 1000L;
 
-  private DataInputOutputUtil() {}
+  private DataInputOutputUtil() { }
 
+  public static int readINT(@NotNull DataInput record) throws IOException {
+    return DataInputOutputUtilRt.readINT(record);
+  }
+
+  public static void writeINT(@NotNull DataOutput record, int val) throws IOException {
+    DataInputOutputUtilRt.writeINT(record, val);
+  }
+
+  @Nullable
   public static StringRef readNAME(@NotNull DataInput record, @NotNull AbstractStringEnumerator nameStore) throws IOException {
     return StringRef.fromStream(record, nameStore);
   }
@@ -37,22 +50,6 @@ public class DataInputOutputUtil {
   public static void writeNAME(@NotNull DataOutput record, @Nullable String name, @NotNull AbstractStringEnumerator nameStore) throws IOException {
     final int nameId = name != null ? nameStore.enumerate(name) : 0;
     writeINT(record, nameId);
-  }
-
-  public static int readINT(@NotNull DataInput record) throws IOException {
-    final int val = record.readUnsignedByte();
-    if (val < 192) {
-      return val;
-    }
-
-    int res = val - 192;
-    for (int sh = 6; ; sh += 7) {
-      int next = record.readUnsignedByte();
-      res |= (next & 0x7F) << sh;
-      if ((next & 0x80) == 0) {
-        return res;
-      }
-    }
   }
 
   public static long readLONG(@NotNull DataInput record) throws IOException {
@@ -68,21 +65,6 @@ public class DataInputOutputUtil {
       if ((next & 0x80) == 0) {
         return res;
       }
-    }
-  }
-
-  public static void writeINT(@NotNull DataOutput record, int val) throws IOException {
-    if (0 <= val && val < 192) {
-      record.writeByte(val);
-    }
-    else {
-      record.writeByte(192 + (val & 0x3F));
-      val >>>= 6;
-      while (val >= 128) {
-        record.writeByte((val & 0x7F) | 0x80);
-        val >>>= 7;
-      }
-      record.writeByte(val);
     }
   }
 
@@ -137,5 +119,24 @@ public class DataInputOutputUtil {
       final int fifth = record.readUnsignedByte();
       return ((((long)((first << 8) | second)) << 24) | (third | fourth | fifth)) + timeBase;
     }
+  }
+
+  /**
+   * Writes the given (possibly null) element to the output using the given procedure to write the element if it's not null.
+   * Should be coupled with {@link #readNullable}
+   */
+  public static <T> void writeNullable(@NotNull DataOutput out, @Nullable T value, @NotNull ThrowableConsumer<T, IOException> writeValue)
+          throws IOException {
+    out.writeBoolean(value != null);
+    if (value != null) writeValue.consume(value);
+  }
+
+  /**
+   * Reads an element from the stream, using the given function to read it when a not-null element is expected, or returns null otherwise.
+   * Should be coupled with {@link #writeNullable}
+   */
+  @Nullable
+  public static <T> T readNullable(@NotNull DataInput in, @NotNull ThrowableComputable<T, IOException> readValue) throws IOException {
+    return in.readBoolean() ? readValue.compute() : null;
   }
 }

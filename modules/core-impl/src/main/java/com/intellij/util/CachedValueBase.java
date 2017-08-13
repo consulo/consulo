@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,22 +35,43 @@ import java.util.List;
  */
 public abstract class CachedValueBase<T> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.CachedValueImpl");
-  private volatile SoftReference<Data<T>> myData = null;
+  private volatile SoftReference<Data<T>> myData;
 
-  protected Data<T> computeData(T value, Object[] dependencies) {
+  private Data<T> computeData(@Nullable CachedValueProvider.Result<T> result) {
+    T value = result == null ? null : result.getValue();
+    Object[] dependencies = getDependencies(result);
     if (dependencies == null) {
-      return new Data<T>(value, null, null);
+      return new Data<>(value, null, null);
     }
 
     TLongArrayList timeStamps = new TLongArrayList(dependencies.length);
-    List<Object> deps = new ArrayList<Object>(dependencies.length);
+    List<Object> deps = new ArrayList<>(dependencies.length);
     collectDependencies(timeStamps, deps, dependencies);
 
-    return new Data<T>(value, ArrayUtil.toObjectArray(deps), timeStamps.toNativeArray());
+    return new Data<>(value, ArrayUtil.toObjectArray(deps), timeStamps.toNativeArray());
   }
 
-  protected void setValue(final T value, final CachedValueProvider.Result<T> result) {
-    myData = new SoftReference<Data<T>>(computeData(value == null ? (T)ObjectUtil.NULL : value, getDependencies(result)));
+  @Nullable
+  private synchronized Data<T> cacheOrGetData(@Nullable Data<T> expected, @Nullable Data<T> updatedValue) {
+    if (expected != getRawData()) return null;
+
+    if (updatedValue != null) {
+      myData = new SoftReference<>(updatedValue);
+      return updatedValue;
+    }
+    return expected;
+  }
+
+  private synchronized void setData(@Nullable Data<T> data) {
+    myData = new SoftReference<>(data);
+  }
+
+  private synchronized boolean compareAndClearData(Data<T> expected) {
+    if (getRawData() == expected) {
+      myData = null;
+      return true;
+    }
+    return false;
   }
 
   @Nullable
@@ -66,12 +87,12 @@ public abstract class CachedValueBase<T> {
     else {
       Object[] items = result.getDependencyItems();
       T value = result.getValue();
-      return value == null ? items : items == null ? new Object[] {value}: ArrayUtil.append(items, value);
+      return value == null ? items : ArrayUtil.append(items, value);
     }
   }
 
   public void clear() {
-    myData = null;
+    setData(null);
   }
 
   public boolean hasUpToDateValue() {
@@ -79,25 +100,23 @@ public abstract class CachedValueBase<T> {
   }
 
   @Nullable
-  private T getUpToDateOrNull(boolean dispose) {
-    final Data<T> data = getData();
+  private Data<T> getUpToDateOrNull(boolean dispose) {
+    final Data<T> data = getRawData();
 
     if (data != null) {
-      T value = data.myValue;
       if (isUpToDate(data)) {
-        return value;
+        return data;
       }
-      if (dispose && value instanceof Disposable) {
-        Disposer.dispose((Disposable)value);
+      if (dispose && data.myValue instanceof Disposable && compareAndClearData(data)) {
+        Disposer.dispose((Disposable)data.myValue);
       }
     }
     return null;
   }
 
   @Nullable
-  private Data<T> getData() {
-    final SoftReference<Data<T>> ref = myData;
-    return ref == null ? null : ref.get();
+  final Data<T> getRawData() {
+    return SoftReference.dereference(myData);
   }
 
   protected boolean isUpToDate(@NotNull Data data) {
@@ -122,7 +141,7 @@ public abstract class CachedValueBase<T> {
 
   private void collectDependencies(TLongArrayList timeStamps, List<Object> resultingDeps, Object[] dependencies) {
     for (Object dependency : dependencies) {
-      if (dependency == null || dependency == ObjectUtil.NULL) continue;
+      if (dependency == null || dependency == ObjectUtils.NULL) continue;
       if (dependency instanceof Object[]) {
         collectDependencies(timeStamps, resultingDeps, (Object[])dependency);
       }
@@ -161,10 +180,13 @@ public abstract class CachedValueBase<T> {
   }
 
   public T setValue(final CachedValueProvider.Result<T> result) {
-    T value = result == null ? null : result.getValue();
-    setValue(value, result);
-    return value;
+    Data<T> data = computeData(result);
+    setData(data);
+    valueUpdated(result.getDependencyItems());
+    return data.myValue;
   }
+
+  protected void valueUpdated(@Nullable Object[] dependencies) {}
 
   public abstract boolean isFromMyProject(Project project);
 
@@ -189,20 +211,28 @@ public abstract class CachedValueBase<T> {
 
   @Nullable
   protected <P> T getValueWithLock(P param) {
-    T value = getUpToDateOrNull(true);
-    if (value != null) {
-      return value == ObjectUtil.NULL ? null : value;
+    Data<T> data = getUpToDateOrNull(true);
+    if (data != null) {
+      return data.myValue;
     }
 
     RecursionGuard.StackStamp stamp = RecursionManager.createGuard("cachedValue").markStack();
 
     // compute outside lock to avoid deadlock
-    CachedValueProvider.Result<T> result = doCompute(param);
+    data = computeData(doCompute(param));
 
     if (stamp.mayCacheNow()) {
-      return setValue(result);
+      while (true) {
+        Data<T> alreadyComputed = getRawData();
+        boolean reuse = alreadyComputed != null && isUpToDate(alreadyComputed);
+        Data<T> toReturn = cacheOrGetData(alreadyComputed, reuse ? null : data);
+        if (toReturn != null) {
+          valueUpdated(toReturn.myDependencies);
+          return toReturn.myValue;
+        }
+      }
     }
-    return result == null ? null : result.getValue();
+    return data.myValue;
   }
 
   protected abstract <P> CachedValueProvider.Result<T> doCompute(P param);

@@ -193,7 +193,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
 
       @Override
       protected Color getListBackground(boolean isSelected, boolean hasFocus) {
-        return isSelected ? FlatWelcomeFrame.getListSelectionColor(hasFocus) : FlatWelcomeFrame.getProjectsBackground();
+        return UIUtil.getListBackground(isSelected && hasFocus);
       }
 
       @Override

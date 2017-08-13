@@ -59,9 +59,10 @@ public class BalloonTest {
           //pane.add(pane2, BorderLayout.SOUTH);
           //pane.setBorder(new LineBorder(Color.blue));
 
-          balloon.set(new BalloonImpl(
-                  new JLabel("Content"), Color.black, null , MessageType.ERROR.getPopupBackground(), true, true, true, true, true, true, 0, true, false, null,
-                  false, 500, 25, 0, 0, false, "This is the title", JBUI.insets(2), true, false, false, Balloon.Layer.normal, false));
+          balloon.set(
+                  new BalloonImpl(new JLabel("Content"), Color.black, null, MessageType.ERROR.getPopupBackground(), true, true, true, true, true, true, 0, true,
+                                  false, null, false, 500, 25, 0, 0, false, "This is the title", JBUI.insets(2), true, false, false, Balloon.Layer.normal,
+                                  false, null, -1));
           balloon.get().setShowPointer(true);
 
           if (e.isShiftDown()) {

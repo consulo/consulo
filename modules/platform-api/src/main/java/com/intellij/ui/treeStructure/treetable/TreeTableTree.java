@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@ package com.intellij.ui.treeStructure.treetable;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
+import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -41,7 +42,7 @@ public class TreeTableTree extends Tree {
     super(model);
     myTreeTable = treeTable;
     setCellRenderer(getCellRenderer());
-    putClientProperty(WideSelectionTreeUI.TREE_TABLE_TREE_KEY, Boolean.TRUE);
+    putClientProperty(WideSelectionTreeUI.TREE_TABLE_TREE_KEY, treeTable);
   }
 
   public TreeTable getTreeTable() {
@@ -104,7 +105,7 @@ public class TreeTableTree extends Tree {
   public void setVisibleRow(int row) {
     myVisibleRow = row;
     final Rectangle rowBounds = getRowBounds(myVisibleRow);
-    final int indent = rowBounds.x - getVisibleRect().x;
+    final int indent = rowBounds.x - getVisibleRect().x - getTreeColumnOffsetX();
     setPreferredSize(new Dimension(getRowBounds(myVisibleRow).width + indent, getPreferredSize().height));
   }
 
@@ -118,11 +119,29 @@ public class TreeTableTree extends Tree {
 
   @Override
   public void setCellRenderer(final TreeCellRenderer x) {
-    super.setCellRenderer(new TreeCellRenderer() {
-      @Override
-      public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-        return x.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, myCellFocused);
+    super.setCellRenderer((tree, value, selected, expanded, leaf, row, hasFocus) -> x
+            .getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, myCellFocused));
+  }
+
+  @Nullable
+  @Override
+  public Rectangle getPathBounds(TreePath path) {
+    Rectangle bounds = super.getPathBounds(path);
+    if (bounds == null) {
+      return null;
+    }
+    bounds.x += getTreeColumnOffsetX();
+    return bounds;
+  }
+
+  protected int getTreeColumnOffsetX() {
+    int offsetX = 0;
+    for (int i = 0; i < myTreeTable.getColumnCount(); i++) {
+      if (myTreeTable.isTreeColumn(i)) {
+        break;
       }
-    });
+      offsetX += myTreeTable.getColumnModel().getColumn(i).getWidth();
+    }
+    return offsetX;
   }
 }

@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.options.newEditor;
 
+import com.intellij.ide.ui.UISettings;
+import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.ide.ui.search.ConfigurableHit;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
@@ -55,6 +57,7 @@ import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.util.ui.tree.TreeDecorationUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -71,7 +74,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.List;
 
-public class OptionsEditor implements DataProvider, Place.Navigator, Disposable, AWTEventListener {
+public class OptionsEditor implements DataProvider, Place.Navigator, Disposable, AWTEventListener, UISettingsListener {
   public static DataKey<OptionsEditor> KEY = DataKey.create("options.editor");
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.options.newEditor.OptionsEditor");
@@ -178,32 +181,6 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       }
     });
 
-
-    /* [back/forward]
-    final DefaultActionGroup toolbarActions = new DefaultActionGroup();
-    toolbarActions.add(new BackAction(myTree));
-    toolbarActions.add(new ForwardAction(myTree));
-    toolbarActions.addSeparator();
-    toolbarActions.add(new ShowSearchFieldAction(this));
-    myToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarActions, true);
-    myToolbar.setTargetComponent(this);
-    myToolbarComponent = myToolbar.getComponent();
-
-    myHistory.addListener(new HistoryListener.Adapter() {
-      @Override
-      public void navigationFinished(final Place from, final Place to) {
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-          public void run() {
-            if (myToolbarComponent.isShowing()) {
-              myToolbar.updateActionsImmediately();
-            }
-          }
-        });
-      }
-    }, this);
-    */
-
-
     myLeftSide = new JPanel(new BorderLayout()) {
       @Override
       public Dimension getMinimumSize() {
@@ -213,18 +190,10 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       }
     };
 
-    /* [back/forward]
-
-    final NonOpaquePanel toolbarPanel = new NonOpaquePanel(new BorderLayout());
-    toolbarPanel.add(myToolbarComponent, BorderLayout.WEST);
-    toolbarPanel.add(mySearchWrapper, BorderLayout.CENTER);
-    */
-
     myLeftSide.add(mySearchWrapper, BorderLayout.NORTH);
     myLeftSide.add(myTree, BorderLayout.CENTER);
 
     myLoadingDecorator = new LoadingDecorator(myOwnDetails.getComponent(), this, 150);
-    //myMainSplitter.setProportion(readProportion(0.3f, MAIN_SPLITTER_PROPORTION));
     myContentWrapper.mySplitter.setProportion(readProportion(0.2f, DETAILS_SPLITTER_PROPORTION));
 
     MyColleague colleague = new MyColleague();
@@ -260,14 +229,9 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
     IdeGlassPaneUtil.installPainter(myOwnDetails.getContentGutter(), mySpotlightPainter, this);
 
-    /*
-    String visible = PropertiesComponent.getInstance(myProject).getValue(SEARCH_VISIBLE);
-    if (visible == null) {
-      visible = "true";
-    }
-    */
-
     setFilterFieldVisible(true, false, false);
+
+    uiSettingsChanged(UISettings.getInstance());
 
     new UiNotifyConnector.Once(myRootPanel, new Activatable() {
       @Override
@@ -279,6 +243,15 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       public void hideNotify() {
       }
     });
+  }
+
+  @Override
+  public void uiSettingsChanged(UISettings source) {
+    mySearchWrapper.setBorder(JBUI.Borders.empty(10, 5));
+
+    mySearch.setBackground(TreeDecorationUtil.getTreeBackground());
+    mySearchWrapper.setBackground(TreeDecorationUtil.getTreeBackground());
+    myLeftSide.setBackground(TreeDecorationUtil.getTreeBackground());
   }
 
   public JPanel getLeftSide() {

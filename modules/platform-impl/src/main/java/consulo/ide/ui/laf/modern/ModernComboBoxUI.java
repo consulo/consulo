@@ -33,11 +33,14 @@ import java.awt.*;
 /**
  * @author VISTALL
  * @since 02.08.14
- *
+ * <p>
  * Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaComboBoxUI}
  */
-@SuppressWarnings("GtkPreferredJComboBoxRenderer")
 public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
+  public static ComponentUI createUI(final JComponent c) {
+    return new ModernComboBoxUI(((JComboBox)c));
+  }
+
   private final JComboBox myComboBox;
   // Flag for calculating the display size
   private boolean myDisplaySizeDirty = true;
@@ -54,9 +57,17 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
     myComboBox.setBorder(this);
   }
 
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-  public static ComponentUI createUI(final JComponent c) {
-    return new ModernComboBoxUI(((JComboBox)c));
+  @Override
+  public void installUI(JComponent c) {
+    super.installUI(c);
+    myMouseEnterHandler.replace(null, c);
+  }
+
+  @Override
+  public void uninstallUI(JComponent c) {
+    super.uninstallUI(c);
+
+    myMouseEnterHandler.replace(c, null);
   }
 
   @Override

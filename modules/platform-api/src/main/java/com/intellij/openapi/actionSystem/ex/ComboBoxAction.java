@@ -49,6 +49,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
     button.showPopup();
   }
 
+  @NotNull
   @Override
   public JComponent createCustomComponent(Presentation presentation) {
     JPanel panel = new JPanel(new GridBagLayout());

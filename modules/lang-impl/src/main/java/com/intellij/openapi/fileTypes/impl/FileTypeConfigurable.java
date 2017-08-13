@@ -317,7 +317,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
       updateExtensionList();
       final int index = myPatterns.getListModel().indexOf(matcher.getPresentableString());
       if (index >= 0) {
-        ListScrollingUtil.selectItem(myPatterns.myPatternsList, index);
+        ScrollingUtil.selectItem(myPatterns.myPatternsList, index);
       }
       IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myPatterns.myPatternsList);
     }
@@ -529,7 +529,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
           listModel.addElement(type);
         }
       }
-      ListScrollingUtil.ensureSelectionExists(myFileTypesList);
+      ScrollingUtil.ensureSelectionExists(myFileTypesList);
     }
 
     public int getSelectedIndex() {
@@ -600,12 +600,12 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     }
 
     public void ensureSelectionExists() {
-      ListScrollingUtil.ensureSelectionExists(myPatternsList);
+      ScrollingUtil.ensureSelectionExists(myPatternsList);
     }
 
     public void addPatternAndSelect(String pattern) {
       addPattern(pattern);
-      ListScrollingUtil.selectItem(myPatternsList, getListModel().getSize() - 1);
+      ScrollingUtil.selectItem(myPatternsList, getListModel().getSize() - 1);
     }
 
     public void select(final String pattern) {
@@ -614,7 +614,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
         if (at instanceof String) {
           final FileNameMatcher matcher = FileTypeManager.parseFromString((String)at);
           if (matcher != null && matcher.accept(pattern)) {
-            ListScrollingUtil.selectItem(myPatternsList, i);
+            ScrollingUtil.selectItem(myPatternsList, i);
             return;
           }
         }

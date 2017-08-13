@@ -15,14 +15,14 @@
  */
 package com.intellij.ide;
 
-import com.intellij.ide.presentation.*;
+import com.intellij.ide.presentation.Presentation;
+import com.intellij.ide.presentation.PresentationProvider;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FactoryMap;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -134,7 +134,7 @@ public class TypePresentationServiceImpl extends TypePresentationService {
   private final Map<String, NullableLazyValue<Icon>> myIcons = new HashMap<String, NullableLazyValue<Icon>>();
   private final Map<String, NullableLazyValue<String>> myNames = new HashMap<String, NullableLazyValue<String>>();
   @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
-  private final FactoryMap<Class, Set<PresentationTemplate>> mySuperClasses = new ConcurrentFactoryMap<Class, Set<PresentationTemplate>>() {
+  private final ConcurrentFactoryMap<Class, Set<PresentationTemplate>> mySuperClasses = new ConcurrentFactoryMap<Class, Set<PresentationTemplate>>() {
     @Override
     protected Set<PresentationTemplate> create(Class key) {
       LinkedHashSet<PresentationTemplate> templates = new LinkedHashSet<PresentationTemplate>();

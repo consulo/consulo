@@ -85,7 +85,7 @@ public class QualifiedNameProviders {
         break;
       }
     }
-    return theProvider == null ? null : new Pair<PsiElement, QualifiedNameProvider>(element, theProvider);
+    return theProvider == null ? null : Pair.create(element, theProvider);
   }
 
   @NotNull
