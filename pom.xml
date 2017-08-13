@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>consulo</groupId>
+  <artifactId>group</artifactId>
+  <version>2-SNAPSHOT</version>
+
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>arch/global</module>
+    <module>arch/ide</module>
+
+    <module>distribution</module>
+    <module>distribution-sandbox</module>
+
+    <module>plugins/core</module>
+    <module>plugins/sandLanguage</module>
+
+    <module>modules/annotations</module>
+    <module>modules/analysis-api</module>
+    <module>modules/analysis-impl</module>
+    <module>modules/boot</module>
+    <module>modules/bootstrap</module>
+    <module>modules/buildin-server-impl</module>
+    <module>modules/core-api</module>
+    <module>modules/core-impl</module>
+    <module>modules/compiler-api</module>
+    <module>modules/compiler-impl</module>
+    <module>modules/compiler-bridge-impl</module>
+    <module>modules/compiler-server-impl</module>
+    <module>modules/desktop-ui-impl</module>
+    <module>modules/diff-api</module>
+    <module>modules/diff-impl</module>
+    <module>modules/dvcs-api</module>
+    <module>modules/dvcs-impl</module>
+    <module>modules/dvcs-impl-testing</module>
+    <module>modules/editor-ui-api</module>
+    <module>modules/editor-ui-ex</module>
+    <module>modules/external-storage-impl</module>
+    <module>modules/external-system-api</module>
+    <module>modules/external-system-impl</module>
+    <module>modules/extensions</module>
+    <module>modules/graph-api</module>
+    <module>modules/graph-impl</module>
+    <module>modules/indexing-api</module>
+    <module>modules/indexing-impl</module>
+    <module>modules/platform-api</module>
+    <module>modules/platform-impl</module>
+    <module>modules/platform-main</module>
+    <module>modules/platform-resources</module>
+    <module>modules/platform-resources-en</module>
+    <module>modules/projectModel-api</module>
+    <module>modules/projectModel-impl</module>
+    <module>modules/lang-api</module>
+    <module>modules/lang-impl</module>
+    <module>modules/lang-impl-testing</module>
+    <module>modules/lvcs-api</module>
+    <module>modules/lvcs-impl</module>
+    <module>modules/lvcs-impl-testing</module>
+    <module>modules/slf4j-bind</module>
+    <module>modules/remote-servers-api</module>
+    <module>modules/remote-servers-agent-rt</module>
+    <module>modules/remote-servers-impl</module>
+    <module>modules/vcs-api</module>
+    <module>modules/vcs-api-core</module>
+    <module>modules/vcs-log-graph-api</module>
+    <module>modules/vcs-log-graph-impl</module>
+    <module>modules/vcs-log-graph-impl-testing</module>
+    <module>modules/vcs-log-api</module>
+    <module>modules/vcs-log-impl</module>
+    <module>modules/vcs-impl</module>
+    <module>modules/ui-api</module>
+    <module>modules/vcs-impl-testing</module>
+    <module>modules/usageView</module>
+    <module>modules/util</module>
+    <module>modules/util-rt</module>
+    <module>modules/util-testing</module>
+    <module>modules/xcoverage-impl</module>
+    <module>modules/xdebugger-api</module>
+    <module>modules/xdebugger-impl</module>
+    <module>modules/xtest-impl</module>
+    <module>modules/xtest-sm-impl</module>
+  </modules>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+          <fork>true</fork>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

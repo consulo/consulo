@@ -1,7 +1,0 @@
-<component name="libraryTable">
-  <library name="swingx">
-    <binaries>
-      <root url="jar://$PROJECT_DIR$/lib/swingx-core-1.6.2.jar!/" />
-    </binaries>
-  </library>
-</component>

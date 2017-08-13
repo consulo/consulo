@@ -1,0 +1,53 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>win</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}/boot/win/</directory>
+      <includes>
+        <include>*</include>
+      </includes>
+      <outputDirectory>/Consulo/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/shared/</directory>
+      <includes>
+        <include>*/*</include>
+      </includes>
+      <outputDirectory>/Consulo/platform/build${build.number}/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/win</directory>
+      <includes>
+        <include>*/*</include>
+      </includes>
+      <outputDirectory>/Consulo/platform/build${build.number}/</outputDirectory>
+    </fileSet>
+  </fileSets>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/Consulo/platform/build${build.number}/lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <excludes>
+        <exclude>consulo:consulo-bundle</exclude>
+        <exclude>consulo:consulo-core-plugin</exclude>
+      </excludes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/Consulo/platform/build${build.number}/plugins/core/lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <includes>
+        <include>consulo:consulo-core-plugin</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</assembly>

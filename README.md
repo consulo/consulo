@@ -1,9 +1,5 @@
 # Consulo - multi-language ide [![Build Status](https://ci.consulo.io/job/consulo/badge/icon)](https://ci.consulo.io/job/consulo/)
 
-## Versions & Branches
-
-Current stable version is **2.0**. Sources of this version you can found at **master** branch
-
 ## Goal
 
 Main goal - create **open** IDE where you don't need select IDE for different languages. Provide standart for language implementation inside IDE. 
@@ -14,11 +10,19 @@ If you can't describe issue, you can use our [forum](https://discuss.consulo.io/
 
 ## Building
 
-Please read conntribuing guide.
+First of all, you need those tools:
+ * Maven 3.3+
+ * JDK 1.8
 
-Use 'Build | Build Artifacts... | dist' to build the project
+Then execute from command line:
 
-To run the project, use the "Consulo" shared run configuration.
+> mvn package
+
+If you want run Consulo from repository execute:
+
+> mvn install
+
+> mvn consulo:run -pl:consulo-sandbox
 
 ## Links
 
