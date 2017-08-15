@@ -27,7 +27,6 @@ import com.intellij.diff.util.DiffPlaces;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.diff.DiffElement;
-import com.intellij.ide.diff.DirDiffElement;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
@@ -54,7 +53,6 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.ui.components.JBLoadingPanelListener;
 import com.intellij.ui.table.JBTable;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
@@ -73,6 +71,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.intellij.util.ArrayUtil.toObjectArray;
 
 /**
  * @author Konstantin Bulenkov
@@ -507,29 +507,13 @@ public class DirDiffPanel implements Disposable, DataProvider {
     else if (DIR_DIFF_TABLE.is(dataId)) {
       return myTable;
     }
-    else if (CommonDataKeys.NAVIGATABLE_ARRAY.is(dataId)) {
+    else if (DiffDataKeys.NAVIGATABLE_ARRAY.is(dataId)) {
       return getNavigatableArray();
-    }
-    else if (CommonDataKeys.NAVIGATABLE.is(dataId)) {
-      return getNavigatable();
     }
     else if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.is(dataId)) {
       return myPrevNextDifferenceIterable;
     }
     return null;
-  }
-
-  @Nullable
-  private Navigatable getNavigatable() {
-    Project project = myModel.getProject();
-    List<DirDiffElementImpl> elements = myModel.getSelectedElements();
-    if (elements.isEmpty()) return null;
-    DirDiffElement element = elements.get(0);
-    DiffElement source = element.getSource();
-    DiffElement target = element.getTarget();
-    Navigatable navigatable1 = source != null ? source.getNavigatable(project) : null;
-    Navigatable navigatable2 = target != null ? target.getNavigatable(project) : null;
-    return navigatable2 != null ? navigatable2 : navigatable1;
   }
 
   @Nullable
@@ -545,7 +529,7 @@ public class DirDiffPanel implements Disposable, DataProvider {
       if (navigatable1 != null) navigatables.add(navigatable1);
       if (navigatable2 != null) navigatables.add(navigatable2);
     }
-    return ContainerUtil.toArray(navigatables, new Navigatable[navigatables.size()]);
+    return toObjectArray(navigatables, Navigatable.class);
   }
 
   private class MyPrevNextDifferenceIterable implements PrevNextDifferenceIterable {

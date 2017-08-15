@@ -50,5 +50,7 @@
     <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="com.intellij.openapi.vcs.actions.AnnotateLocalFileAction$Provider"/>
     <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="com.intellij.openapi.vcs.actions.AnnotateVcsVirtualFileAction$Provider"/>
     <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="com.intellij.openapi.vcs.actions.AnnotateDiffViewerAction$Provider" order="first"/>
+
+    <getDataRule key="diff_navigatable_array" implementationClass="com.intellij.diff.actions.impl.DiffNavigatableArrayRule"/>
   </extensions>
 </idea-plugin>

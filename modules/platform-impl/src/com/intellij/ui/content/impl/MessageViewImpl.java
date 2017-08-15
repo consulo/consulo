@@ -55,12 +55,7 @@ public class MessageViewImpl implements MessageView {
       runnable.run();
     }
     else {
-      startupManager.registerPostStartupActivity(new Runnable(){
-        @Override
-        public void run() {
-          runnable.run();
-        }
-      });
+      startupManager.registerPostStartupActivity(runnable::run);
     }
 
   }

@@ -84,7 +84,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
     myToggleable = action instanceof Toggleable;
     myInsideCheckedGroup = insideCheckedGroup;
 
-    myEvent = new AnActionEvent(null, context, place, myPresentation, ActionManager.getInstance(), 0);
+    myEvent = new AnActionEvent(null, context, place, myPresentation, ActionManager.getInstance(), 0, true, false);
     addActionListener(new ActionTransmitter());
     setBorderPainted(false);
 
@@ -216,14 +216,14 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
 
   public void updateContext(@NotNull DataContext context) {
     myContext = context;
-    myEvent = new AnActionEvent(null, context, myPlace, myPresentation, ActionManager.getInstance(), 0);
+    myEvent = new AnActionEvent(null, context, myPlace, myPresentation, ActionManager.getInstance(), 0, true, false);
   }
 
   private final class ActionTransmitter implements ActionListener {
     /**
      * @param component component
      * @return whether the component in Swing tree or not. This method is more
-     *         weak then {@link Component#isShowing() }
+     * weak then {@link Component#isShowing() }
      */
     private boolean isInTree(final Component component) {
       if (component instanceof Window) {
@@ -245,10 +245,9 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
       }
       fm.typeAheadUntil(typeAhead, getText());
       fm.runOnOwnContext(myContext, () -> {
-        final AnActionEvent event = new AnActionEvent(
-                new MouseEvent(ActionMenuItem.this, MouseEvent.MOUSE_PRESSED, 0, e.getModifiers(), getWidth() / 2, getHeight() / 2, 1, false),
-                myContext, myPlace, myPresentation, ActionManager.getInstance(), e.getModifiers()
-        );
+        final AnActionEvent event =
+                new AnActionEvent(new MouseEvent(ActionMenuItem.this, MouseEvent.MOUSE_PRESSED, 0, e.getModifiers(), getWidth() / 2, getHeight() / 2, 1, false),
+                                  myContext, myPlace, myPresentation, ActionManager.getInstance(), e.getModifiers(), true, false);
         final AnAction menuItemAction = myAction.getAction();
         if (ActionUtil.lastUpdateAndCheckDumb(menuItemAction, event, false)) {
           ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
@@ -313,7 +312,8 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
   }
 
   private final class MenuItemSynchronizer implements PropertyChangeListener, Disposable {
-    @NonNls private static final String SELECTED = "selected";
+    @NonNls
+    private static final String SELECTED = "selected";
 
     private final Set<String> mySynchronized = new HashSet<String>();
 

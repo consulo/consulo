@@ -19,6 +19,7 @@ import com.intellij.diff.DiffContext;
 import com.intellij.diff.FrameDiffTool;
 import com.intellij.diff.FrameDiffTool.DiffViewer;
 import com.intellij.diff.requests.ContentDiffRequest;
+import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.diff.util.DiffTaskQueue;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
@@ -27,13 +28,16 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.vcs.CalledInBackground;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.*;
 import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -218,6 +222,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   protected void onAfterRediff() {
   }
 
+  @CalledInBackground
   @NotNull
   protected abstract Runnable performRediff(@NotNull ProgressIndicator indicator);
 
@@ -281,7 +286,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   @Nullable
   @Override
   public Object getData(@NonNls String dataId) {
-    if (CommonDataKeys.NAVIGATABLE.is(dataId)) {
+    if (DiffDataKeys.NAVIGATABLE.is(dataId)) {
       return getNavigatable();
     }
     else if (CommonDataKeys.PROJECT.is(dataId)) {

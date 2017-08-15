@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,9 +42,10 @@ import java.util.List;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public class Utils{
-  private static final Logger LOG=Logger.getInstance("#com.intellij.openapi.actionSystem.impl.Utils");
-  @NonNls public static final String NOTHING_HERE = "Nothing here";
+public class Utils {
+  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.actionSystem.impl.Utils");
+  @NonNls
+  public static final String NOTHING_HERE = "Nothing here";
   public static final AnAction EMPTY_MENU_FILLER = new AnAction(NOTHING_HERE) {
 
     {
@@ -62,7 +63,8 @@ public class Utils{
     }
   };
 
-  private Utils() {}
+  private Utils() {
+  }
 
   private static void handleUpdateException(AnAction action, Presentation presentation, Throwable exc) {
     String id = ActionManager.getInstance().getId(action);
@@ -81,12 +83,12 @@ public class Utils{
                                        PresentationFactory presentationFactory,
                                        @NotNull DataContext context,
                                        String place,
-                                       ActionManager actionManager){
+                                       ActionManager actionManager) {
     expandActionGroup(false, group, list, presentationFactory, context, place, actionManager, false, group instanceof CompactActionGroup);
   }
 
   /**
-   * @param list this list contains expanded actions.
+   * @param list          this list contains expanded actions.
    * @param actionManager manager
    */
   public static void expandActionGroup(boolean isInModalContext,
@@ -95,7 +97,7 @@ public class Utils{
                                        PresentationFactory presentationFactory,
                                        @NotNull DataContext context,
                                        String place,
-                                       ActionManager actionManager){
+                                       ActionManager actionManager) {
     expandActionGroup(isInModalContext, group, list, presentationFactory, context, place, actionManager, false, group instanceof CompactActionGroup);
   }
 
@@ -135,8 +137,9 @@ public class Utils{
     expandActionGroup(false, group, list, presentationFactory, context, place, actionManager, transparentOnly, hideDisabled);
   }
 
+
   /**
-   * @param list this list contains expanded actions.
+   * @param list          this list contains expanded actions.
    * @param actionManager manager
    */
   public static void expandActionGroup(boolean isInModalContext,
@@ -148,15 +151,26 @@ public class Utils{
                                        ActionManager actionManager,
                                        boolean transparentOnly,
                                        boolean hideDisabled) {
+    expandActionGroup(isInModalContext, group, list, presentationFactory, context, place, actionManager, transparentOnly, hideDisabled, false, false);
+  }
+
+  /**
+   * @param list          this list contains expanded actions.
+   * @param actionManager manager
+   */
+  public static void expandActionGroup(boolean isInModalContext,
+                                       @NotNull ActionGroup group,
+                                       List<AnAction> list,
+                                       PresentationFactory presentationFactory,
+                                       DataContext context,
+                                       @NotNull String place,
+                                       ActionManager actionManager,
+                                       boolean transparentOnly,
+                                       boolean hideDisabled,
+                                       boolean isContextMenuAction,
+                                       boolean isToolbarAction) {
     Presentation presentation = presentationFactory.getPresentation(group);
-    AnActionEvent e = new AnActionEvent(
-            null,
-            context,
-            place,
-            presentation,
-            actionManager,
-            0
-    );
+    AnActionEvent e = new AnActionEvent(null, context, place, presentation, actionManager, 0, isContextMenuAction, isToolbarAction);
     if (!doUpdate(isInModalContext, group, e, presentation)) return;
 
     if (!presentation.isVisible()) { // don't process invisible groups
@@ -172,7 +186,7 @@ public class Utils{
       }
 
       presentation = presentationFactory.getPresentation(child);
-      AnActionEvent e1 = new AnActionEvent(null, context, place, presentation, actionManager, 0);
+      AnActionEvent e1 = new AnActionEvent(null, context, place, presentation, actionManager, 0, isContextMenuAction, isToolbarAction);
       e1.setInjectedContext(child.isInInjectedContext());
 
       if (transparentOnly && child.isTransparentUpdate() || !transparentOnly) {
@@ -225,7 +239,8 @@ public class Utils{
   }
 
   // returns false if exception was thrown and handled
-  private static boolean doUpdate(boolean isInModalContext, final AnAction action, final AnActionEvent e, final Presentation presentation) throws ProcessCanceledException {
+  private static boolean doUpdate(boolean isInModalContext, final AnAction action, final AnActionEvent e, final Presentation presentation)
+          throws ProcessCanceledException {
     if (ApplicationManager.getApplication().isDisposed()) return false;
 
     long startTime = System.currentTimeMillis();
@@ -242,7 +257,7 @@ public class Utils{
     }
     long endTime = System.currentTimeMillis();
     if (endTime - startTime > 10 && LOG.isDebugEnabled()) {
-      LOG.debug("Action " + action + ": updated in " + (endTime-startTime) + " ms");
+      LOG.debug("Action " + action + ": updated in " + (endTime - startTime) + " ms");
     }
     return result;
   }
@@ -337,7 +352,8 @@ public class Utils{
     final boolean checked = group instanceof CheckedActionGroup;
 
     final ArrayList<AnAction> list = new ArrayList<>();
-    expandActionGroup(isInModalContext, group, list, presentationFactory, context, place, ActionManager.getInstance());
+    expandActionGroup(isInModalContext, group, list, presentationFactory, context, place, ActionManager.getInstance(), false,
+                      group instanceof CompactActionGroup, true, false);
 
     final boolean fixMacScreenMenu = SystemInfo.isMacSystemMenu && isWindowMenu && Registry.is("actionSystem.mac.screenMenuNotUpdatedFix");
     final ArrayList<Component> children = new ArrayList<>();
@@ -348,13 +364,21 @@ public class Utils{
         final String text = ((AnSeparator)action).getText();
         if (!StringUtil.isEmpty(text) || (i > 0 && i < size - 1)) {
           component.add(new JPopupMenu.Separator() {
+            private final JMenuItem myMenu = !StringUtil.isEmpty(text) ? new JMenuItem(text) : null;
+
             @Override
             public Insets getInsets() {
               final Insets insets = super.getInsets();
-              final boolean fix = UIUtil.isUnderGTKLookAndFeel() &&
-                                  getBorder() != null &&
-                                  insets.top + insets.bottom == 0;
+              final boolean fix = UIUtil.isUnderGTKLookAndFeel() && getBorder() != null && insets.top + insets.bottom == 0;
               return fix ? new Insets(2, insets.left, 3, insets.right) : insets;  // workaround for Sun bug #6636964
+            }
+
+            @Override
+            public void doLayout() {
+              super.doLayout();
+              if (myMenu != null) {
+                myMenu.setBounds(getBounds());
+              }
             }
 
             @Override
@@ -365,12 +389,16 @@ public class Utils{
               }
               super.paintComponent(g);
             }
+
+            @Override
+            public Dimension getPreferredSize() {
+              return myMenu != null ? myMenu.getPreferredSize() : super.getPreferredSize();
+            }
           });
         }
       }
       else if (action instanceof ActionGroup &&
-               !(((ActionGroup)action).canBePerformed(context) &&
-                 !hasVisibleChildren((ActionGroup)action, presentationFactory, context, place))) {
+               !(((ActionGroup)action).canBePerformed(context) && !hasVisibleChildren((ActionGroup)action, presentationFactory, context, place))) {
         ActionMenu menu = new ActionMenu(context, place, (ActionGroup)action, presentationFactory, enableMnemonics, false);
         component.add(menu);
         children.add(menu);
@@ -385,8 +413,8 @@ public class Utils{
 
     if (list.isEmpty()) {
       final ActionMenuItem each =
-              new ActionMenuItem(EMPTY_MENU_FILLER, presentationFactory.getPresentation(EMPTY_MENU_FILLER), place, context, enableMnemonics,
-                                 !fixMacScreenMenu, checked);
+              new ActionMenuItem(EMPTY_MENU_FILLER, presentationFactory.getPresentation(EMPTY_MENU_FILLER), place, context, enableMnemonics, !fixMacScreenMenu,
+                                 checked);
       component.add(each);
       children.add(each);
     }
@@ -419,7 +447,8 @@ public class Utils{
           for (Component each : children) {
             if (each instanceof ActionMenuItem) {
               ((ActionMenuItem)each).updateContext(context1);
-            } else if (each instanceof ActionMenu) {
+            }
+            else if (each instanceof ActionMenu) {
               ((ActionMenu)each).updateContext(context1);
             }
           }
