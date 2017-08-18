@@ -19,11 +19,12 @@ import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.impl.projectlevelman.NewMappings;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.project.ProjectKt;
+import com.intellij.util.PathUtilRt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author yole
@@ -33,27 +34,34 @@ public abstract class DefaultVcsRootPolicy {
     return PeriodicalTasksCloser.getInstance().safeGetService(project, DefaultVcsRootPolicy.class);
   }
 
-  public abstract void addDefaultVcsRoots(final NewMappings mappingList, @NotNull String vcsName, List<VirtualFile> result);
+  @NotNull
+  public abstract Collection<VirtualFile> getDefaultVcsRoots(@NotNull NewMappings mappingList, @NotNull String vcsName);
 
-  public abstract boolean matchesDefaultMapping(final VirtualFile file, final Object matchContext);
+  public abstract boolean matchesDefaultMapping(@NotNull VirtualFile file, final Object matchContext);
 
   @Nullable
   public abstract Object getMatchContext(final VirtualFile file);
 
   @Nullable
-  public abstract VirtualFile getVcsRootFor(final VirtualFile file);
+  public abstract VirtualFile getVcsRootFor(@NotNull VirtualFile file);
 
   @NotNull
   public abstract Collection<VirtualFile> getDirtyRoots();
 
-  public String getProjectConfigurationMessage(final Project project) {
-    final String[] parts = new String[] {"Content roots of all modules", "all immediate descendants of project base directory",
-      ".consulo directory contents"};
-    final StringBuilder sb = new StringBuilder(parts[0]);
-    sb.append(", ");
-    sb.append(parts[1]);
-    sb.append(", and ");
-    sb.append(parts[2]);
+  public String getProjectConfigurationMessage(@NotNull Project project) {
+    boolean isDirectoryBased = ProjectKt.isDirectoryBased(project);
+    final StringBuilder sb = new StringBuilder("Content roots of all modules");
+    if (isDirectoryBased) {
+      sb.append(", ");
+    }
+    else {
+      sb.append(", and ");
+    }
+    sb.append("all immediate descendants of project base directory");
+    if (isDirectoryBased) {
+      sb.append(", and ");
+      sb.append(PathUtilRt.getFileName(ProjectKt.getDirectoryStoreFile(project).getPresentableUrl())).append(" directory contents");
+    }
     return sb.toString();
   }
 }

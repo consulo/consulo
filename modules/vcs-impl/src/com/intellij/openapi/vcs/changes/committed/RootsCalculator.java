@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,81 +17,106 @@ package com.intellij.openapi.vcs.changes.committed;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.*;
+import com.intellij.openapi.vcs.AbstractVcs;
+import com.intellij.openapi.vcs.ProjectLevelVcsManager;
+import com.intellij.openapi.vcs.RepositoryLocation;
+import com.intellij.openapi.vcs.VcsDirectoryMapping;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.intellij.openapi.util.text.StringUtil.join;
+import static com.intellij.util.containers.ContainerUtil.addAll;
+import static com.intellij.util.containers.ContainerUtil.newArrayList;
+import static com.intellij.vcsUtil.VcsUtil.getFilePath;
+import static java.util.function.Function.identity;
 
 public class RootsCalculator {
-  private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.committed.RootsCalculator");
+  private final static Logger LOG = Logger.getInstance(RootsCalculator.class);
+
+  @NotNull
   private final Project myProject;
-  private final AbstractVcs myVcs;
+  @NotNull
+  private final AbstractVcs<?> myVcs;
+  @NotNull
   private final ProjectLevelVcsManager myPlManager;
-  private VirtualFile[] myContentRoots;
+  @NotNull
   private final RepositoryLocationCache myLocationCache;
 
-  public RootsCalculator(final Project project, final AbstractVcs vcs, final RepositoryLocationCache locationCache) {
+  public RootsCalculator(@NotNull Project project, @NotNull AbstractVcs vcs, @NotNull RepositoryLocationCache locationCache) {
     myProject = project;
     myLocationCache = locationCache;
     myPlManager = ProjectLevelVcsManager.getInstance(myProject);
     myVcs = vcs;
   }
 
+  @NotNull
   public Map<VirtualFile, RepositoryLocation> getRoots() {
-    myContentRoots = myPlManager.getRootsUnderVcs(myVcs);
+    LOG.debug("Collecting roots for " + myVcs);
+    // TODO: It is not quite clear why using just ProjectLevelVcsManager.getRootsUnderVcs() is not sufficient
+    List<VirtualFile> roots = getRootsFromMappings();
+    addAll(roots, myPlManager.getRootsUnderVcs(myVcs));
 
-    List<VirtualFile> roots = new ArrayList<VirtualFile>();
-    final List<VcsDirectoryMapping> mappings = myPlManager.getDirectoryMappings(myVcs);
-    for (VcsDirectoryMapping mapping : mappings) {
+    logRoots("Candidates", roots);
+
+    roots.removeIf(file -> getLocation(file) == null);
+
+    logRoots("Candidates with repository location", roots);
+
+    List<VirtualFile> list = myVcs.filterUniqueRoots(roots, identity());
+    Map<VirtualFile, RepositoryLocation> map = new LinkedHashMap<>();
+    for (VirtualFile file : list) {
+      if (map.containsKey(file)) {
+        continue;
+      }
+
+      RepositoryLocation location = getLocation(file);
+      if (location != null) {
+        map.put(file, location);
+      }
+    }
+    logRoots("Unique roots", map.keySet());
+    return map;
+  }
+
+  @NotNull
+  private List<VirtualFile> getRootsFromMappings() {
+    List<VirtualFile> result = newArrayList();
+
+    for (VcsDirectoryMapping mapping : myPlManager.getDirectoryMappings(myVcs)) {
       if (mapping.isDefaultMapping()) {
         if (myVcs.equals(myPlManager.getVcsFor(myProject.getBaseDir()))) {
-          roots.add(myProject.getBaseDir());
+          result.add(myProject.getBaseDir());
         }
       }
       else {
-        VirtualFile newFile = LocalFileSystem.getInstance().findFileByPath(mapping.getDirectory());
-        if (newFile == null) {
-          newFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(mapping.getDirectory());
-        }
+        VirtualFile newFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(mapping.getDirectory());
         if (newFile != null) {
-          roots.add(newFile);
+          result.add(newFile);
         }
         else {
-          LOG.info("Can not file virtual file for root: " + mapping.getDirectory());
+          LOG.info("Can not find virtual file for root: " + mapping.getDirectory());
         }
       }
     }
-    ContainerUtil.addAll(roots, myContentRoots);
-    final Map<VirtualFile, RepositoryLocation> result = new HashMap<VirtualFile, RepositoryLocation>();
-    for (Iterator<VirtualFile> iterator = roots.iterator(); iterator.hasNext();) {
-      final VirtualFile vf = iterator.next();
-      final RepositoryLocation location = myLocationCache.getLocation(myVcs, new FilePathImpl(vf), false);
-      if (location != null) {
-        result.put(vf, location);
-      }
-      else {
-        iterator.remove();
-      }
-    }
-    roots = myVcs.filterUniqueRoots(roots, IntoSelfVirtualFileConvertor.getInstance());
-    result.keySet().retainAll(roots);
 
-    logRoots(roots);
     return result;
   }
 
-  private void logRoots(final List<VirtualFile> roots) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Roots for committed changes load:\n");
-      for (VirtualFile root : roots) {
-        LOG.debug(root.getPath() + ", ");
-      }
-    }
+  @Nullable
+  private RepositoryLocation getLocation(@NotNull VirtualFile file) {
+    return myLocationCache.getLocation(myVcs, getFilePath(file), false);
   }
 
-  public VirtualFile[] getContentRoots() {
-    return myContentRoots;
+  private static void logRoots(@NotNull String prefix, @NotNull Collection<VirtualFile> roots) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(prefix + ": " + join(roots, VirtualFile::getPath, ", "));
+    }
   }
 }

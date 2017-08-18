@@ -76,13 +76,19 @@ import java.util.concurrent.TimeUnit;
 
 public class ShelveChangesManager extends AbstractProjectComponent implements JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.shelf.ShelveChangesManager");
-  @NonNls private static final String ELEMENT_CHANGELIST = "changelist";
-  @NonNls private static final String ELEMENT_RECYCLED_CHANGELIST = "recycled_changelist";
-  @NonNls private static final String DEFAULT_PATCH_NAME = "shelved";
-  @NonNls private static final String REMOVE_FILES_FROM_SHELF_STRATEGY = "remove_strategy";
+  @NonNls
+  private static final String ELEMENT_CHANGELIST = "changelist";
+  @NonNls
+  private static final String ELEMENT_RECYCLED_CHANGELIST = "recycled_changelist";
+  @NonNls
+  private static final String DEFAULT_PATCH_NAME = "shelved";
+  @NonNls
+  private static final String REMOVE_FILES_FROM_SHELF_STRATEGY = "remove_strategy";
 
-  @NotNull private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
-  @NotNull private final SchemesManager<ShelvedChangeList, ShelvedChangeList> mySchemeManager;
+  @NotNull
+  private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
+  @NotNull
+  private final SchemesManager<ShelvedChangeList, ShelvedChangeList> mySchemeManager;
   private ScheduledFuture<?> myCleaningFuture;
   private boolean myRemoveFilesFromShelf;
 
@@ -93,8 +99,10 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
   private static final String SHELVE_MANAGER_DIR_PATH = "shelf";
   private final MessageBus myBus;
 
-  @NonNls private static final String ATTRIBUTE_SHOW_RECYCLED = "show_recycled";
-  @NotNull private final CompoundShelfFileProcessor myFileProcessor;
+  @NonNls
+  private static final String ATTRIBUTE_SHOW_RECYCLED = "show_recycled";
+  @NotNull
+  private final CompoundShelfFileProcessor myFileProcessor;
 
   public static final Topic<ChangeListener> SHELF_TOPIC = new Topic<>("shelf updates", ChangeListener.class);
   private boolean myShowRecycled;
@@ -366,15 +374,12 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
       @Override
       public void run(@NotNull ProgressIndicator indicator) {
         for (ShelvedChangeList changeList : selectedChangeLists) {
-          List<ShelvedChange> changesForChangelist =
-                  ContainerUtil.newArrayList(ContainerUtil.intersection(changeList.getChanges(myProject), selectedChanges));
+          List<ShelvedChange> changesForChangelist = ContainerUtil.newArrayList(ContainerUtil.intersection(changeList.getChanges(myProject), selectedChanges));
           List<ShelvedBinaryFile> binariesForChangelist =
                   ContainerUtil.newArrayList(ContainerUtil.intersection(changeList.getBinaryFiles(), selectedBinaryChanges));
           boolean shouldUnshelveAllList = changesForChangelist.isEmpty() && binariesForChangelist.isEmpty();
-          unshelveChangeList(changeList, shouldUnshelveAllList ? null : changesForChangelist,
-                             shouldUnshelveAllList ? null : binariesForChangelist,
-                             forcePredefinedOneChangelist != null ? forcePredefinedOneChangelist : getChangeListUnshelveTo(changeList),
-                             true);
+          unshelveChangeList(changeList, shouldUnshelveAllList ? null : changesForChangelist, shouldUnshelveAllList ? null : binariesForChangelist,
+                             forcePredefinedOneChangelist != null ? forcePredefinedOneChangelist : getChangeListUnshelveTo(changeList), true);
         }
       }
     });
@@ -399,7 +404,7 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
 
   private void baseRevisionsOfDvcsIntoContext(List<Change> textChanges, CommitContext commitContext) {
     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
-    if (vcsManager.dvcsUsedInProject() && VcsConfiguration.getInstance(myProject).INCLUDE_TEXT_INTO_SHELF) {
+    if (dvcsUsedInProject() && VcsConfiguration.getInstance(myProject).INCLUDE_TEXT_INTO_SHELF) {
       final Set<Change> big = SelectFilesToAddTextsToPatchPanel.getBig(textChanges);
       final ArrayList<FilePath> toKeep = new ArrayList<>();
       for (Change change : textChanges) {
@@ -414,6 +419,11 @@ public class ShelveChangesManager extends AbstractProjectComponent implements JD
       commitContext.putUserData(BaseRevisionTextPatchEP.ourPutBaseRevisionTextKey, true);
       commitContext.putUserData(BaseRevisionTextPatchEP.ourBaseRevisionPaths, toKeep);
     }
+  }
+
+  private boolean dvcsUsedInProject() {
+    return Arrays.stream(ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss()).
+            anyMatch(vcs -> VcsType.distributed.equals(vcs.getType()));
   }
 
   public ShelvedChangeList importFilePatches(final String fileName, final List<FilePatch> patches, final PatchEP[] patchTransitExtensions) throws IOException {

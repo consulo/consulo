@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class ConfirmationDialog extends OptionsMessageDialog{
-
+public class ConfirmationDialog extends OptionsMessageDialog {
   private final VcsShowConfirmationOption myOption;
   private String myDoNotShowAgainMessage;
   private final String myOkActionName;
@@ -47,67 +46,79 @@ public class ConfirmationDialog extends OptionsMessageDialog{
                                                @Nullable String cancelActionName) {
     if (option.getValue() == VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY) return false;
     final ConfirmationDialog dialog = new ConfirmationDialog(project, message, title, icon, option, okActionName, cancelActionName);
-    if (! option.isPersistent()) {
+    if (!option.isPersistent()) {
       dialog.setDoNotAskOption(null);
-    } else {
+    }
+    else {
       dialog.setDoNotShowAgainMessage(CommonBundle.message("dialog.options.do.not.ask"));
     }
-    dialog.show();
-    return dialog.isOK();
+    return dialog.showAndGet();
   }
 
   public ConfirmationDialog(Project project, final String message, String title, final Icon icon, final VcsShowConfirmationOption option) {
     this(project, message, title, icon, option, null, null);
   }
 
-  public ConfirmationDialog(Project project, final String message, String title, final Icon icon, final VcsShowConfirmationOption option,
-                            @Nullable String okActionName, @Nullable String cancelActionName) {
+  public ConfirmationDialog(Project project,
+                            final String message,
+                            String title,
+                            final Icon icon,
+                            final VcsShowConfirmationOption option,
+                            @Nullable String okActionName,
+                            @Nullable String cancelActionName) {
     super(project, message, title, icon);
     myOption = option;
     myOkActionName = okActionName != null ? okActionName : CommonBundle.getYesButtonText();
     myCancelActionName = cancelActionName != null ? cancelActionName : CommonBundle.getNoButtonText();
     init();
   }
-  
+
   public void setDoNotShowAgainMessage(final String doNotShowAgainMessage) {
     myDoNotShowAgainMessage = doNotShowAgainMessage;
     myCheckBoxDoNotShowDialog.setText(doNotShowAgainMessage);
   }
 
+  @NotNull
   @Override
   protected String getDoNotShowMessage() {
     return myDoNotShowAgainMessage == null ? super.getDoNotShowMessage() : myDoNotShowAgainMessage;
   }
 
+  @Override
   protected String getOkActionName() {
     return myOkActionName;
   }
 
+  @Override
   protected String getCancelActionName() {
     return myCancelActionName;
   }
 
+  @Override
   protected boolean isToBeShown() {
     return myOption.getValue() == VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
   }
 
+  @Override
   protected void setToBeShown(boolean value, boolean onOk) {
     final VcsShowConfirmationOption.Value optionValue;
 
     if (value) {
       optionValue = VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
-    } else {
+    }
+    else {
       if (onOk) {
         optionValue = VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY;
-      } else {
+      }
+      else {
         optionValue = VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY;
       }
     }
 
     myOption.setValue(optionValue);
-
   }
 
+  @Override
   protected boolean shouldSaveOptionsOnCancel() {
     return true;
   }

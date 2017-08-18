@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -538,7 +538,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     /**
      * Initial size of the dialog. When the dialog is being closed and
      * current size of the dialog is not equals to the initial size then the
-     * current (changed) size is stored in the <code>DimensionService</code>.
+     * current (changed) size is stored in the {@code DimensionService}.
      */
     private Dimension myInitialSize;
     private String myDimensionServiceKey;

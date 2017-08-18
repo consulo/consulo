@@ -91,6 +91,7 @@ public abstract class ProjectLevelVcsManager {
 
   @Nullable
   public abstract VcsDescriptor getDescriptor(final String name);
+
   /**
    * Checks if all files in the specified array are managed by the specified VCS.
    *
@@ -105,7 +106,7 @@ public abstract class ProjectLevelVcsManager {
    *
    * @param file the file to check.
    * @return the VCS instance, or null if the file does not belong to any module or the module
-   *         it belongs to is not under version control.
+   * it belongs to is not under version control.
    */
   @Nullable
   public abstract AbstractVcs getVcsFor(@NotNull VirtualFile file);
@@ -115,7 +116,7 @@ public abstract class ProjectLevelVcsManager {
    *
    * @param file the file to check.
    * @return the VCS instance, or null if the file does not belong to any module or the module
-   *         it belongs to is not under version control.
+   * it belongs to is not under version control.
    */
   @Nullable
   public abstract AbstractVcs getVcsFor(FilePath file);
@@ -177,16 +178,13 @@ public abstract class ProjectLevelVcsManager {
   public abstract void addMessageToConsoleWindow(@Nullable String message, @NotNull ConsoleViewContentType contentType);
 
   @NotNull
-  public abstract VcsShowSettingOption getStandardOption(@NotNull VcsConfiguration.StandardOption option,
-                                                         @NotNull AbstractVcs vcs);
+  public abstract VcsShowSettingOption getStandardOption(@NotNull VcsConfiguration.StandardOption option, @NotNull AbstractVcs vcs);
 
   @NotNull
-  public abstract VcsShowConfirmationOption getStandardConfirmation(@NotNull VcsConfiguration.StandardConfirmation option,
-                                                                    AbstractVcs vcs);
+  public abstract VcsShowConfirmationOption getStandardConfirmation(@NotNull VcsConfiguration.StandardConfirmation option, AbstractVcs vcs);
 
   @NotNull
-  public abstract VcsShowSettingOption getOrCreateCustomOption(@NotNull String vcsActionName,
-                                                               @NotNull AbstractVcs vcs);
+  public abstract VcsShowSettingOption getOrCreateCustomOption(@NotNull String vcsActionName, @NotNull AbstractVcs vcs);
 
 
   public abstract void showProjectOperationInfo(final UpdatedFiles updatedFiles, String displayActionName);
@@ -195,8 +193,8 @@ public abstract class ProjectLevelVcsManager {
    * Adds a listener for receiving notifications about changes in VCS configuration for the project.
    *
    * @param listener the listener instance.
-   * @deprecated use {@link #VCS_CONFIGURATION_CHANGED} instead
    * @since 6.0
+   * @deprecated use {@link #VCS_CONFIGURATION_CHANGED} instead
    */
   public abstract void addVcsListener(VcsListener listener);
 
@@ -204,8 +202,8 @@ public abstract class ProjectLevelVcsManager {
    * Removes a listener for receiving notifications about changes in VCS configuration for the project.
    *
    * @param listener the listener instance.
-   * @deprecated use {@link #VCS_CONFIGURATION_CHANGED} instead
    * @since 6.0
+   * @deprecated use {@link #VCS_CONFIGURATION_CHANGED} instead
    */
   public abstract void removeVcsListener(VcsListener listener);
 
@@ -248,6 +246,7 @@ public abstract class ProjectLevelVcsManager {
   public abstract void updateActiveVcss();
 
   public abstract List<VcsDirectoryMapping> getDirectoryMappings();
+
   public abstract List<VcsDirectoryMapping> getDirectoryMappings(AbstractVcs vcs);
 
   @Nullable
@@ -262,25 +261,20 @@ public abstract class ProjectLevelVcsManager {
 
   public abstract void iterateVcsRoot(final VirtualFile root, final Processor<FilePath> iterator);
 
-  public abstract void iterateVcsRoot(final VirtualFile root, final Processor<FilePath> iterator,
-                                      @Nullable VirtualFileFilter directoryFilter);
+  public abstract void iterateVcsRoot(final VirtualFile root, final Processor<FilePath> iterator, @Nullable VirtualFileFilter directoryFilter);
 
   @Nullable
   public abstract AbstractVcs findVersioningVcs(VirtualFile file);
 
   public abstract CheckoutProvider.Listener getCompositeCheckoutListener();
 
-  // TODO: To be removed in IDEA 16.
-  @Deprecated
-  @Nullable
-  public abstract VcsEventsListenerManager getVcsEventsListenerManager();
-
   public abstract VcsHistoryCache getVcsHistoryCache();
-  public abstract ContentRevisionCache getContentRevisionCache();
-  public abstract boolean isFileInContent(final VirtualFile vf);
-  public abstract boolean isIgnored(VirtualFile vf);
 
-  public abstract boolean dvcsUsedInProject();
+  public abstract ContentRevisionCache getContentRevisionCache();
+
+  public abstract boolean isFileInContent(final VirtualFile vf);
+
+  public abstract boolean isIgnored(VirtualFile vf);
 
   @NotNull
   public abstract VcsAnnotationLocalChangesListener getAnnotationLocalChangesListener();
