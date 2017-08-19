@@ -23,7 +23,6 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiManager;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,12 +44,7 @@ public class NullFileReferenceHelper extends FileReferenceHelper {
   @Override
   @NotNull
   public Collection<PsiFileSystemItem> getRoots(@NotNull final Module module) {
-    return ContainerUtil.map(ModuleRootManager.getInstance(module).getContentRoots(), new Function<VirtualFile, PsiFileSystemItem>() {
-      @Override
-      public PsiFileSystemItem fun(VirtualFile virtualFile) {
-        return PsiManager.getInstance(module.getProject()).findDirectory(virtualFile);
-      }
-    });
+    return ContainerUtil.mapNotNull(ModuleRootManager.getInstance(module).getContentRoots(), virtualFile -> PsiManager.getInstance(module.getProject()).findDirectory(virtualFile));
   }
 
   @Override

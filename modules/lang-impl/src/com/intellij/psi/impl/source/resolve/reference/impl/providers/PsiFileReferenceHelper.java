@@ -114,16 +114,16 @@ public class PsiFileReferenceHelper extends FileReferenceHelper {
     Query<VirtualFile> query = DirectoryIndex.getInstance(module.getProject()).getDirectoriesByPackageName(packageName, false);
     PsiManager manager = null;
 
-    for(VirtualFile file:query) {
+    for (VirtualFile file : query) {
       if (scope != null && !scope.contains(file)) continue;
       if (result == null) {
-        result = new ArrayList<PsiFileSystemItem>();
+        result = new ArrayList<>();
         manager = PsiManager.getInstance(module.getProject());
       }
       PsiDirectory psiDirectory = manager.findDirectory(file);
       if (psiDirectory != null) result.add(psiDirectory);
     }
 
-    return result != null ? result:Collections.<PsiFileSystemItem>emptyList();
+    return result != null ? result : Collections.emptyList();
   }
 }

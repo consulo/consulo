@@ -2308,6 +2308,11 @@
 
     <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReferenceHelper"/>
     <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.JarFileReferenceHelper"/>
+    <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.HttpFileReferenceHelper"/>
+    <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.NullFileReferenceHelper" order="last"/>
+    <psi.referenceContributor implementation="com.intellij.psi.impl.source.resolve.reference.CommentsReferenceContributor"/>
+    <referenceProviderType key="commentsReferenceProvider"
+                           implementationClass="com.intellij.psi.impl.source.resolve.reference.ArbitraryPlaceUrlReferenceProvider"/>
 
     <uiDebuggerExtension implementation="com.intellij.ui.debugger.extensions.PlaybackDebugger"/>
     <uiDebuggerExtension implementation="com.intellij.ui.debugger.extensions.ActionTracer"/>
