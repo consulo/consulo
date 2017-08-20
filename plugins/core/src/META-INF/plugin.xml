@@ -155,7 +155,6 @@
     <extensionPoint name="cutElementMarker"
                     interface="com.intellij.openapi.ide.CutElementMarker"/>
 
-    <extensionPoint name="exportable" beanClass="com.intellij.openapi.components.ServiceBean"/>
     <extensionPoint name="schemeOwner" beanClass="com.intellij.openapi.components.ServiceBean"/>
 
     <extensionPoint name="ideRootPaneNorth" interface="com.intellij.openapi.wm.IdeRootPaneNorthExtension" area="PROJECT"/>
