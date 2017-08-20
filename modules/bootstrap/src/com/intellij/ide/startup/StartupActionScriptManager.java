@@ -233,14 +233,7 @@ public class StartupActionScriptManager {
       }
       else {
         try {
-          ZipUtil.extract(mySource, myDestination, new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-              boolean accept = myFilenameFilter.accept(dir, name);
-              logger.info("Unzip: " + name + ", accepted: " + accept);
-              return accept;
-            }
-          });
+          ZipUtil.extract(mySource, myDestination, myFilenameFilter);
         }
         catch (Exception ex) {
           logger.error(ex);
