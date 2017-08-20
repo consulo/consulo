@@ -24,6 +24,7 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 /**
  *  @author dsl
  */
+@State(name = "libraryTable", storages = @Storage(value = "applicationLibraries.xml", roamingType = RoamingType.DISABLED))
 public class ApplicationLibraryTable extends LibraryTableBase {
   private static final LibraryTablePresentation GLOBAL_LIBRARY_TABLE_PRESENTATION = new LibraryTablePresentation() {
     @Override

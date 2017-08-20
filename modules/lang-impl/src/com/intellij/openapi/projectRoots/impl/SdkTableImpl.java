@@ -17,10 +17,11 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -35,12 +36,11 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-@State(name = "SdkTable", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/sdk.table.xml", roamingType = RoamingType.DISABLED))
-public class SdkTableImpl extends SdkTable implements PersistentStateComponent<Element>, ExportableComponent {
+@State(name = "SdkTable", storages = @Storage(value = "sdk.table.xml", roamingType = RoamingType.DISABLED))
+public class SdkTableImpl extends SdkTable implements PersistentStateComponent<Element> {
   public static final Logger LOGGER = Logger.getInstance(SdkTableImpl.class);
 
   @NonNls
@@ -53,7 +53,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   public SdkTableImpl() {
     myMessageBus = ApplicationManager.getApplication().getMessageBus();
     // support external changes to sdk libraries (Endorsed Standards Override)
-    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileAdapter() {
+    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
       @Override
       public void fileCreated(@NotNull VirtualFileEvent event) {
         updateSdks(event.getFile());
@@ -78,18 +78,6 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
         }
       }
     });
-  }
-
-  @Override
-  @NotNull
-  public File[] getExportFiles() {
-    return new File[]{PathManager.getOptionsFile("sdk.table")};
-  }
-
-  @Override
-  @NotNull
-  public String getPresentableName() {
-    return ProjectBundle.message("sdk.table.settings");
   }
 
   @Override

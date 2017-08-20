@@ -15,15 +15,13 @@
  */
 package com.intellij.openapi.actionSystem.ex;
 
-import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.QuickSwitchSchemeAction;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.BundledQuickListsProvider;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ExportableApplicationComponent;
+import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
@@ -35,11 +33,10 @@ import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.Set;
 
-public class QuickListsManager implements ExportableApplicationComponent {
+public class QuickListsManager implements ApplicationComponent {
   static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + "/quicklists";
 
   private static final String LIST_TAG = "list";
@@ -67,18 +64,6 @@ public class QuickListsManager implements ExportableApplicationComponent {
 
   public static QuickListsManager getInstance() {
     return ApplicationManager.getApplication().getComponent(QuickListsManager.class);
-  }
-
-  @Override
-  @NotNull
-  public File[] getExportFiles() {
-    return new File[]{mySchemesManager.getRootDirectory()};
-  }
-
-  @NotNull
-  @Override
-  public String getPresentableName() {
-    return IdeBundle.message("quick.lists.presentable.name");
   }
 
   @NotNull

@@ -17,8 +17,10 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.InvalidDataException;
@@ -28,9 +30,6 @@ import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProfileManagerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
 
 @State(
   name="DaemonCodeAnalyzerSettings",
@@ -39,7 +38,7 @@ import java.io.File;
       file = StoragePathMacros.APP_CONFIG + "/editor.codeinsight.xml"
     )}
 )
-public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings implements PersistentStateComponent<Element>, Cloneable, ExportableComponent {
+public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings implements PersistentStateComponent<Element>, Cloneable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings");
   @NonNls private static final String ROOT_TAG = "root";
   @NonNls private static final String PROFILE_ATT = "profile";
@@ -47,18 +46,6 @@ public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings i
 
   public DaemonCodeAnalyzerSettingsImpl(InspectionProfileManager manager) {
     myManager = (InspectionProfileManagerImpl)manager;
-  }
-
-  @Override
-  @NotNull
-  public File[] getExportFiles() {
-    return new File[]{PathManager.getOptionsFile("editor.codeinsight")};
-  }
-
-  @Override
-  @NotNull
-  public String getPresentableName() {
-    return DaemonBundle.message("error.highlighting.settings");
   }
 
   @Override

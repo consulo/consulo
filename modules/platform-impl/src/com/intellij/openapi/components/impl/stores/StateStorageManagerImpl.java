@@ -76,9 +76,10 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   @NotNull
   protected abstract String getConfigurationMacro(boolean directorySpec);
 
+  @Override
   @NotNull
   @SuppressWarnings("deprecation")
-  private String buildFileSpec(@NotNull Storage storage) {
+  public String buildFileSpec(@NotNull Storage storage) {
     boolean directorySpec = !storage.stateSplitter().equals(StateSplitterEx.class);
 
     String file = storage.file();

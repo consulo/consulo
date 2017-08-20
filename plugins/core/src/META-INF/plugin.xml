@@ -1226,7 +1226,6 @@
                         serviceImplementation="com.intellij.openapi.application.TransactionGuardImpl"/>
 
     <applicationService serviceImplementation="com.intellij.ide.ui.customization.CustomActionsSchema"/>
-    <exportable serviceInterface="com.intellij.ide.ui.customization.CustomActionsSchema"/>
 
     <applicationService serviceInterface="com.intellij.openapi.project.DefaultProjectFactory"
                         serviceImplementation="com.intellij.openapi.project.DefaultProjectFactoryImpl"/>
@@ -1311,7 +1310,7 @@
     <applicationService serviceInterface="com.intellij.openapi.keymap.impl.DefaultKeymap"
                         serviceImplementation="com.intellij.openapi.keymap.impl.DefaultKeymap"/>
 
-    <applicationService serviceImplementation="consulo.ide.plugins.InstalledPluginsState" />
+    <applicationService serviceImplementation="consulo.ide.plugins.InstalledPluginsState"/>
 
     <applicationService serviceInterface="com.intellij.ide.passwordSafe.impl.providers.masterKey.PasswordDatabase"
                         serviceImplementation="com.intellij.ide.passwordSafe.impl.providers.masterKey.PasswordDatabase"/>
@@ -1683,7 +1682,6 @@
     <projectService serviceImplementation="com.intellij.ide.fileTemplates.impl.FileTemplateSettings"/>
     <applicationService serviceInterface="com.intellij.ide.fileTemplates.impl.ExportableFileTemplateSettings"
                         serviceImplementation="com.intellij.ide.fileTemplates.impl.ExportableFileTemplateSettings"/>
-    <exportable serviceInterface="com.intellij.ide.fileTemplates.impl.ExportableFileTemplateSettings"/>
 
     <applicationService serviceInterface="com.intellij.ide.PsiCopyPasteManager"
                         serviceImplementation="com.intellij.ide.PsiCopyPasteManager"/>
@@ -1723,10 +1721,8 @@
 
     <applicationService serviceInterface="com.intellij.codeEditor.printing.PrintSettings"
                         serviceImplementation="com.intellij.codeEditor.printing.PrintSettings"/>
-    <exportable serviceInterface="com.intellij.codeEditor.printing.PrintSettings"/>
     <applicationService serviceInterface="com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings"
                         serviceImplementation="com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl"/>
-    <exportable serviceInterface="com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings"/>
 
     <projectService serviceInterface="com.intellij.pom.references.PomService"
                     serviceImplementation="com.intellij.pom.references.PomServiceImpl"/>
@@ -1748,8 +1744,6 @@
 
     <applicationService serviceInterface="com.intellij.codeInsight.folding.CodeFoldingSettings"
                         serviceImplementation="com.intellij.codeInsight.folding.CodeFoldingSettingsImpl"/>
-    <exportable serviceInterface="com.intellij.codeInsight.folding.CodeFoldingSettings"/>
-
     <applicationService serviceInterface="com.intellij.psi.statistics.StatisticsManager"
                         serviceImplementation="com.intellij.psi.statistics.impl.StatisticsManagerImpl"/>
 
@@ -1763,11 +1757,12 @@
 
     <applicationService serviceInterface="com.intellij.codeInsight.CodeInsightSettings"
                         serviceImplementation="com.intellij.codeInsight.CodeInsightSettings"/>
-    <exportable serviceInterface="com.intellij.codeInsight.CodeInsightSettings"/>
 
     <applicationService serviceInterface="com.intellij.openapi.roots.impl.libraries.ApplicationLibraryTable"
-                        serviceImplementation="com.intellij.openapi.roots.impl.libraries.ExportableApplicationLibraryTable"/>
-    <exportable serviceInterface="com.intellij.openapi.roots.impl.libraries.ApplicationLibraryTable"/>
+                        serviceImplementation="com.intellij.openapi.roots.impl.libraries.ApplicationLibraryTable"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.actionSystem.AbbreviationManager"
+                        serviceImplementation="com.intellij.openapi.actionSystem.impl.AbbreviationManagerImpl"/>
 
     <applicationService serviceInterface="com.intellij.psi.codeStyle.CodeStyleSchemes"
                         serviceImplementation="com.intellij.psi.impl.source.codeStyle.PersistableCodeStyleSchemes"/>
@@ -2304,7 +2299,7 @@
                 factoryClass="com.intellij.ide.projectView.impl.FavoritesViewToolWindowFactory"/>
     <toolWindow id="Run Dashboard" anchor="bottom" icon="AllIcons.Toolwindows.ToolWindowRun"
                 factoryClass="com.intellij.execution.dashboard.RunDashboardToolWindowFactory"
-                conditionClass="com.intellij.execution.dashboard.RunDashboardToolWindowFactory" />
+                conditionClass="com.intellij.execution.dashboard.RunDashboardToolWindowFactory"/>
 
     <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReferenceHelper"/>
     <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.JarFileReferenceHelper"/>
@@ -2431,8 +2426,6 @@
                         serviceImplementation="com.intellij.packageDependencies.DependenciesVisitorFactory"/>
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.SdkTable"
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.SdkTableImpl"/>
-
-    <exportable serviceInterface="com.intellij.openapi.projectRoots.SdkTable"/>
 
     <projectService serviceInterface="com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy"
                     serviceImplementation="com.intellij.openapi.vcs.impl.ModuleDefaultVcsRootPolicy"/>
@@ -2604,6 +2597,7 @@
     <runDashboardGroupingRule implementation="com.intellij.execution.dashboard.tree.FolderDashboardGroupingRule"/>
     <runDashboardGroupingRule implementation="com.intellij.execution.dashboard.tree.RunConfigurationDashboardGroupingRule"/>
 
-    <editorActionHandler action="EditorEscape" implementationClass="com.intellij.refactoring.changeSignature.inplace.EscapeHandler" id="changeSignatureEscape" order="before hide-search"/>
+    <editorActionHandler action="EditorEscape" implementationClass="com.intellij.refactoring.changeSignature.inplace.EscapeHandler" id="changeSignatureEscape"
+                         order="before hide-search"/>
   </extensions>
 </idea-plugin>

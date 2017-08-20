@@ -26,6 +26,9 @@ import java.util.List;
 public interface StateStorageManager {
   void addMacro(@NotNull String macro, @NotNull String expansion);
 
+  @NotNull
+  String buildFileSpec(@NotNull Storage storage);
+
   @Nullable
   TrackingPathMacroSubstitutor getMacroSubstitutor();
 

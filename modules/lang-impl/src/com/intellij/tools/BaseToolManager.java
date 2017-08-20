@@ -18,20 +18,20 @@
 package com.intellij.tools;
 
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
-import com.intellij.openapi.components.ExportableApplicationComponent;
+import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.RoamingType;
-import com.intellij.openapi.options.*;
+import com.intellij.openapi.options.SchemeProcessor;
+import com.intellij.openapi.options.SchemesManager;
+import com.intellij.openapi.options.SchemesManagerFactory;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public abstract class BaseToolManager<T extends Tool> implements ExportableApplicationComponent {
+public abstract class BaseToolManager<T extends Tool> implements ApplicationComponent {
 
   private final ActionManagerEx myActionManager;
   private final SchemesManager<ToolsGroup<T>, ToolsGroup<T>> mySchemesManager;
@@ -54,26 +54,6 @@ public abstract class BaseToolManager<T extends Tool> implements ExportableAppli
   public static String convertString(String s) {
     if (s != null && s.trim().length() == 0) return null;
     return s;
-  }
-
-  @Override
-  @NotNull
-  public File[] getExportFiles() {
-    return new File[]{mySchemesManager.getRootDirectory()};
-  }
-
-  @Override
-  @NotNull
-  public String getPresentableName() {
-    return ToolsBundle.message("tools.settings");
-  }
-
-  @Override
-  public void disposeComponent() {
-  }
-
-  @Override
-  public void initComponent() {
   }
 
   public List<T> getTools() {

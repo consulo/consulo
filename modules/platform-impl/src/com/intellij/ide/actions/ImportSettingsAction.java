@@ -30,12 +30,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.components.ExportableComponent;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.util.Consumer;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
 import consulo.annotations.RequiredDispatchThread;
@@ -58,12 +56,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
     final DataContext dataContext = e.getDataContext();
     final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
     ChooseComponentsToExportDialog.chooseSettingsFile(PathManager.getConfigPath(), component, IdeBundle.message("title.import.file.location"),
-                                                      IdeBundle.message("prompt.choose.import.file.path")).doWhenDone(new Consumer<String>() {
-      @Override
-      public void consume(String path) {
-        doImport(path);
-      }
-    });
+                                                      IdeBundle.message("prompt.choose.import.file.path")).doWhenDone(ImportSettingsAction::doImport);
   }
 
   private static void doImport(String path) {
@@ -74,16 +67,19 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
         return;
       }
 
-      @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
-      final ZipEntry magicEntry = new ZipFile(saveFile).getEntry(ImportSettingsFilenameFilter.SETTINGS_JAR_MARKER);
+      ZipEntry magicEntry;
+      try (ZipFile zipFile = new ZipFile(saveFile)) {
+        magicEntry = zipFile.getEntry(ImportSettingsFilenameFilter.SETTINGS_JAR_MARKER);
+      }
+
       if (magicEntry == null) {
         Messages.showErrorDialog(IdeBundle.message("error.file.contains.no.settings.to.import", presentableFileName(saveFile), promptLocationMessage()),
                                  IdeBundle.message("title.invalid.file"));
         return;
       }
 
-      MultiMap<File, ExportableComponent> fileToComponents = ExportSettingsAction.getExportableComponentsMap(false, true);
-      List<ExportableComponent> components = getComponentsStored(saveFile, fileToComponents.values());
+      MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents = ExportSettingsAction.getExportableComponentsMap(false);
+      List<ExportSettingsAction.ExportableItem> components = getComponentsStored(saveFile, fileToComponents.values());
       fileToComponents.values().retainAll(components);
       final ChooseComponentsToExportDialog dialog =
               new ChooseComponentsToExportDialog(fileToComponents, false, IdeBundle.message("title.select.components.to.import"),
@@ -92,9 +88,9 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
         return;
       }
 
-      final Set<ExportableComponent> chosenComponents = dialog.getExportableComponents();
+      final Set<ExportSettingsAction.ExportableItem> chosenComponents = dialog.getExportableComponents();
       Set<String> relativeNamesToExtract = new HashSet<>();
-      for (final ExportableComponent chosenComponent : chosenComponents) {
+      for (ExportSettingsAction.ExportableItem chosenComponent : chosenComponents) {
         final File[] exportFiles = chosenComponent.getExportFiles();
         for (File exportFile : exportFiles) {
           final File configPath = new File(PathManager.getConfigPath());
@@ -112,6 +108,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
       File outDir = new File(PathManager.getConfigPath());
       final ImportSettingsFilenameFilter filenameFilter = new ImportSettingsFilenameFilter(relativeNamesToExtract);
       StartupActionScriptManager.ActionCommand unzip = new StartupActionScriptManager.UnzipCommand(tempFile, outDir, filenameFilter);
+
       StartupActionScriptManager.addActionCommand(unzip);
       // remove temp file
       StartupActionScriptManager.ActionCommand deleteTemp = new StartupActionScriptManager.DeleteCommand(tempFile);
@@ -148,11 +145,12 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
   }
 
   @NotNull
-  private static List<ExportableComponent> getComponentsStored(@NotNull File zipFile, @NotNull Collection<? extends ExportableComponent> registeredComponents)
+  private static List<ExportSettingsAction.ExportableItem> getComponentsStored(@NotNull File zipFile,
+                                                                               @NotNull Collection<? extends ExportSettingsAction.ExportableItem> registeredComponents)
           throws IOException {
     File configPath = new File(PathManager.getConfigPath());
-    List<ExportableComponent> components = new ArrayList<>();
-    for (ExportableComponent component : registeredComponents) {
+    List<ExportSettingsAction.ExportableItem> components = new ArrayList<>();
+    for (ExportSettingsAction.ExportableItem component : registeredComponents) {
       for (File exportFile : component.getExportFiles()) {
         String rPath = FileUtilRt.getRelativePath(configPath, exportFile);
         assert rPath != null;

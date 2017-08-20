@@ -16,40 +16,24 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.openapi.actionSystem.AbbreviationManager;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import gnu.trove.THashMap;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.*;
 
 /**
  * @author Konstantin Bulenkov
  */
-@State(name = "AbbreviationManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/abbreviations.xml", roamingType = RoamingType.PER_PLATFORM))
-public class AbbreviationManagerImpl extends AbbreviationManager implements ExportableApplicationComponent, PersistentStateComponent<Element> {
-  private final Map<String, List<String>> myAbbreviation2ActionId = new THashMap<String, List<String>>();
-  private final Map<String, LinkedHashSet<String>> myActionId2Abbreviations = new THashMap<String, LinkedHashSet<String>>();
-  private final Map<String, LinkedHashSet<String>> myPluginsActionId2Abbreviations = new THashMap<String, LinkedHashSet<String>>();
-
-  @Override
-  public void initComponent() {
-
-  }
-
-  @Override
-  public void disposeComponent() {
-
-  }
-
-  @NotNull
-  @Override
-  public String getComponentName() {
-    return "AbbreviationManager";
-  }
+@State(name = "AbbreviationManager", storages = @Storage(value = "abbreviations.xml", roamingType = RoamingType.PER_PLATFORM))
+public class AbbreviationManagerImpl extends AbbreviationManager implements PersistentStateComponent<Element> {
+  private final Map<String, List<String>> myAbbreviation2ActionId = new THashMap<>();
+  private final Map<String, LinkedHashSet<String>> myActionId2Abbreviations = new THashMap<>();
+  private final Map<String, LinkedHashSet<String>> myPluginsActionId2Abbreviations = new THashMap<>();
 
   @Nullable
   @Override
@@ -88,7 +72,7 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Expo
           final String actionId = action.getAttributeValue("id");
           LinkedHashSet<String> values = myActionId2Abbreviations.get(actionId);
           if (values == null) {
-            values = new LinkedHashSet<String>(1);
+            values = new LinkedHashSet<>(1);
             myActionId2Abbreviations.put(actionId, values);
           }
 
@@ -106,21 +90,9 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Expo
     }
   }
 
-  @NotNull
-  @Override
-  public File[] getExportFiles() {
-    return new File[]{PathManager.getOptionsFile("abbreviations")};
-  }
-
-  @NotNull
-  @Override
-  public String getPresentableName() {
-    return "Actions";
-  }
-
   @Override
   public Set<String> getAbbreviations() {
-    final Set<String> result = new HashSet<String>();
+    final Set<String> result = new HashSet<>();
     for (Set<String> abbrs : myActionId2Abbreviations.values()) {
       result.addAll(abbrs);
     }
@@ -146,7 +118,7 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Expo
   public void register(String abbreviation, String actionId, Map<String, LinkedHashSet<String>> storage) {
     LinkedHashSet<String> abbreviations = storage.get(actionId);
     if (abbreviations == null) {
-      abbreviations = new LinkedHashSet<String>(1);
+      abbreviations = new LinkedHashSet<>(1);
       storage.put(actionId, abbreviations);
     }
     abbreviations.add(abbreviation);
@@ -164,7 +136,7 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Expo
 
     List<String> ids = myAbbreviation2ActionId.get(abbreviation);
     if (ids == null) {
-      ids = new ArrayList<String>(0);
+      ids = new ArrayList<>(0);
       myAbbreviation2ActionId.put(abbreviation, ids);
     }
 
@@ -191,7 +163,7 @@ public class AbbreviationManagerImpl extends AbbreviationManager implements Expo
     else {
       final LinkedHashSet<String> abbrs = myActionId2Abbreviations.get(actionId);
       if (abbrs != null) {
-        final LinkedHashSet<String> customValues = new LinkedHashSet<String>(abbrs);
+        final LinkedHashSet<String> customValues = new LinkedHashSet<>(abbrs);
         customValues.remove(abbreviation);
         myActionId2Abbreviations.put(actionId, customValues);
       }

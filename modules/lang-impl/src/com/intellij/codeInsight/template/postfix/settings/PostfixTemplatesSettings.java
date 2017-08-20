@@ -19,7 +19,6 @@ import com.intellij.codeInsight.template.impl.TemplateSettings;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplatesUtils;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.containers.ContainerUtil;
@@ -30,24 +29,12 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.Map;
 import java.util.Set;
 
-@State(
-  name = "PostfixTemplatesSettings",
-  storages = {
-    @Storage(file = StoragePathMacros.APP_CONFIG + "/postfixTemplates.xml")
-  }
-)
-public class PostfixTemplatesSettings implements PersistentStateComponent<Element>, ExportableComponent {
+@State(name = "PostfixTemplatesSettings", storages = @Storage("postfixTemplates.xml"))
+public class PostfixTemplatesSettings implements PersistentStateComponent<Element> {
 
-  public static final Factory<Set<String>> SET_FACTORY = new Factory<Set<String>>() {
-    @Override
-    public Set<String> create() {
-      return ContainerUtil.newHashSet();
-    }
-  };
   private Map<String, Set<String>> myLangToDisabledTemplates = ContainerUtil.newHashMap();
 
   private boolean postfixTemplatesEnabled = true;
@@ -70,7 +57,7 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
   }
 
   public void disableTemplate(PostfixTemplate template, String langForProvider) {
-    Set<String> state = ContainerUtil.getOrCreate(myLangToDisabledTemplates, langForProvider, SET_FACTORY);
+    Set<String> state = ContainerUtil.getOrCreate(myLangToDisabledTemplates, langForProvider, (Factory<Set<String>>)ContainerUtil::newHashSet);
     state.add(template.getKey());
   }
 
@@ -80,7 +67,7 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
   }
 
   public void enableTemplate(PostfixTemplate template, String langForProvider) {
-    Set<String> state = ContainerUtil.getOrCreate(myLangToDisabledTemplates, langForProvider, SET_FACTORY);
+    Set<String> state = ContainerUtil.getOrCreate(myLangToDisabledTemplates, langForProvider, (Factory<Set<String>>)ContainerUtil::newHashSet);
     state.remove(template.getKey());
   }
 
@@ -132,17 +119,5 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
   @Override
   public void loadState(Element settings) {
     XmlSerializer.deserializeInto(this, settings);
-  }
-
-  @NotNull
-  @Override
-  public File[] getExportFiles() {
-    return new File[]{PathManager.getOptionsFile("postfixCompletion.xml")};
-  }
-
-  @NotNull
-  @Override
-  public String getPresentableName() {
-    return "Postfix Completion";
   }
 }

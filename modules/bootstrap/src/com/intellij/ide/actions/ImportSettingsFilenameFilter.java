@@ -32,12 +32,14 @@ import java.util.Set;
  */
 public class ImportSettingsFilenameFilter implements FilenameFilter, Serializable {
   private final Set<String> myRelativeNamesToExtract;
-  @NonNls static final String SETTINGS_JAR_MARKER = "IntelliJ IDEA Global Settings";
+  @NonNls
+  static final String SETTINGS_JAR_MARKER = "Consulo Global Settings";
 
   public ImportSettingsFilenameFilter(Set<String> relativeNamesToExtract) {
     myRelativeNamesToExtract = relativeNamesToExtract;
   }
 
+  @Override
   public boolean accept(File dir, String name) {
     if (name.equals(SETTINGS_JAR_MARKER)) return false;
     final File configPath = new File(PathManager.getConfigPath());

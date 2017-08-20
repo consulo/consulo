@@ -17,8 +17,10 @@
 package com.intellij.codeInsight;
 
 import com.intellij.codeInsight.editorActions.SmartBackspaceMode;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
@@ -30,36 +32,16 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 
-
-@State(
-        name = "CodeInsightSettings",
-        storages = {@Storage(
-                file = StoragePathMacros.APP_CONFIG + "/editor.codeinsight.xml")})
-public class CodeInsightSettings implements PersistentStateComponent<Element>, Cloneable, ExportableComponent {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.CodeInsightSettings");
-
-  @NonNls public static final String EXTERNAL_FILE_NAME = "editor.codeinsight";
+@State(name = "CodeInsightSettings", storages = @Storage("editor.codeinsight.xml"))
+public class CodeInsightSettings implements PersistentStateComponent<Element>, Cloneable {
+  private static final Logger LOG = Logger.getInstance(CodeInsightSettings.class);
 
   public static CodeInsightSettings getInstance() {
     return ServiceManager.getService(CodeInsightSettings.class);
-  }
-
-  @Override
-  @NotNull
-  public File[] getExportFiles() {
-    return new File[]{PathManager.getOptionsFile(EXTERNAL_FILE_NAME)};
-  }
-
-  @Override
-  @NotNull
-  public String getPresentableName() {
-    return CodeInsightBundle.message("codeinsight.settings");
   }
 
   @Override

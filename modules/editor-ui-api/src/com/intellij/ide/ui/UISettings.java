@@ -15,12 +15,12 @@
  */
 package com.intellij.ide.ui;
 
-import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.util.SystemInfo;
@@ -40,13 +40,11 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.util.Map;
 
 import static com.intellij.util.ui.UIUtil.isValidFont;
 
-@State(name = "UISettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/ui.lnf.xml")})
-public class UISettings extends SimpleModificationTracker implements PersistentStateComponent<UISettings>, ExportableApplicationComponent {
+@State(name = "UISettings", storages = @Storage("ui.lnf.xml"))
+public class UISettings extends SimpleModificationTracker implements PersistentStateComponent<UISettings> {
   /**
    * Not tabbed pane.
    */
@@ -285,38 +283,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     }
 
     setupFractionalMetrics(g2d);
-  }
-
-  /**
-   * @return true when Remote Desktop (i.e. Windows RDP) is connected
-   */
-  @Deprecated
-  @DeprecationInfo("Use RemoteDesktopDetector class - it should work in more cases")
-  public static boolean isRemoteDesktopConnected() {
-    if (System.getProperty("os.name").contains("Windows")) {
-      final Map map = (Map)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
-      return map != null && RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT.equals(map.get(RenderingHints.KEY_TEXT_ANTIALIASING));
-    }
-    return false;
-  }
-
-  @NotNull
-  @Override
-  public File[] getExportFiles() {
-    return new File[]{PathManager.getOptionsFile("ui.lnf")};
-  }
-
-  @NotNull
-  @Override
-  public String getPresentableName() {
-    return IdeBundle.message("ui.settings");
-  }
-
-  @NonNls
-  @NotNull
-  @Override
-  public String getComponentName() {
-    return "UISettings";
   }
 
   public int getEditorTabLimit() {

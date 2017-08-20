@@ -91,6 +91,12 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
         throw new UnsupportedOperationException("Method addMacro not implemented in " + getClass());
       }
 
+      @NotNull
+      @Override
+      public String buildFileSpec(@NotNull Storage storage) {
+        throw new UnsupportedOperationException("Method buildFileSpec not implemented in " + getClass());
+      }
+
       @Override
       @Nullable
       public TrackingPathMacroSubstitutor getMacroSubstitutor() {

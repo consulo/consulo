@@ -222,7 +222,7 @@ public class StartupActionScriptManager {
     }
 
     @Override
-    public void execute(Logger logger) throws IOException {
+    public void execute(final Logger logger) throws IOException {
       if (!mySource.exists()) {
         logger.error("Source file " + mySource.getAbsolutePath() + " does not exist for action " + this);
       }
@@ -233,7 +233,14 @@ public class StartupActionScriptManager {
       }
       else {
         try {
-          ZipUtil.extract(mySource, myDestination, myFilenameFilter);
+          ZipUtil.extract(mySource, myDestination, new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+              boolean accept = myFilenameFilter.accept(dir, name);
+              logger.info("Unzip: " + name + ", accepted: " + accept);
+              return accept;
+            }
+          });
         }
         catch (Exception ex) {
           logger.error(ex);
