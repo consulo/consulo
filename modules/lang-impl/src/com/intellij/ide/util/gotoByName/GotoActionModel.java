@@ -366,7 +366,6 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
                                                   ActionPlaces.UNKNOWN, new Presentation(), ActionManager.getInstance(),
                                                   0);
     ActionUtil.performDumbAwareUpdate(anAction, event, false);
-    ActionUtil.performDumbAwareUpdate(anAction, event, true);
     return event;
   }
 

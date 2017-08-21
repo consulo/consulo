@@ -245,7 +245,7 @@ public class ActionUtil {
   }
 
   public static boolean lastUpdateAndCheckDumb(AnAction action, AnActionEvent e, boolean visibilityMatters) {
-    performDumbAwareUpdate(action, e, true);
+    performDumbAwareUpdate(false, action, e, true);
 
     final Project project = e.getProject();
     if (project != null && DumbService.getInstance(project).isDumb() && !action.isDumbAware()) {

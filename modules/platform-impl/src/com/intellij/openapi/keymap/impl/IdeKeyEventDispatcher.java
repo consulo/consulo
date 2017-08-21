@@ -17,6 +17,7 @@ package com.intellij.openapi.keymap.impl;
 
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeEventQueue;
+import com.intellij.ide.ProhibitAWTEvents;
 import com.intellij.ide.impl.DataManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
@@ -24,6 +25,7 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.keymap.KeyMapBundle;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
@@ -608,7 +610,9 @@ public final class IdeKeyEventDispatcher implements Disposable {
       // Mouse modifiers are 0 because they have no any sense when action is invoked via keyboard
       final AnActionEvent actionEvent = processor.createEvent(e, myContext.getDataContext(), ActionPlaces.MAIN_MENU, presentation, ActionManager.getInstance());
 
-      ActionUtil.performDumbAwareUpdate(action, actionEvent, true);
+      try (AccessToken ignored = ProhibitAWTEvents.start("update")) {
+        ActionUtil.performDumbAwareUpdate(LaterInvocator.isInModalContext(), action, actionEvent, true);
+      }
 
       if (dumb && !action.isDumbAware()) {
         if (!Boolean.FALSE.equals(presentation.getClientProperty(ActionUtil.WOULD_BE_ENABLED_IF_NOT_DUMB_MODE))) {
@@ -875,7 +879,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
         final Presentation presentation = action.getTemplatePresentation().clone();
         AnActionEvent event = new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, presentation, ActionManager.getInstance(), 0);
 
-        ActionUtil.performDumbAwareUpdate(action, event, true);
+        ActionUtil.performDumbAwareUpdate(LaterInvocator.isInModalContext(), action, event, true);
         return presentation.isEnabled() && presentation.isVisible();
       })) {
         @Override

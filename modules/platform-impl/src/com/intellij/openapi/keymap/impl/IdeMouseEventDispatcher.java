@@ -34,6 +34,7 @@ import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.Nullable;
 
@@ -141,6 +142,7 @@ public final class IdeMouseEventDispatcher {
    *         If the method returns <code>false</code> then it means that the event should be delivered
    *         to normal event dispatching.
    */
+  @RequiredDispatchThread
   public boolean dispatchMouseEvent(MouseEvent e) {
     Component c = e.getComponent();
 
@@ -262,13 +264,14 @@ public final class IdeMouseEventDispatcher {
                                                       modifiers);
         action.beforeActionPerformedUpdate(actionEvent);
 
-        if (presentation.isEnabled()) {
+        if (ActionUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
           actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
           final Component context = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
 
           if (context != null && !context.isShowing()) continue;
 
-          action.actionPerformed(actionEvent);
+          ActionUtil.performActionDumbAware(action, actionEvent);
+          actionManager.fireAfterActionPerformed(action, dataContext, actionEvent);
           e.consume();
         }
       }
