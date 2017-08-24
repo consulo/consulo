@@ -43,7 +43,7 @@ public class ColorProgressBar extends JComponent {
     @NotNull
     @Override
     public Color produce() {
-      UISettings settings = UISettings.getInstance();
+      UISettings settings = UISettings.getInstanceOrNull();
       return settings == null || null == settings.COLOR_BLINDNESS
              ? new JBColor(new Color(0x6cad74), new Color(0x4a8c53))
              : new JBColor(new Color(0x6ca69c), new Color(0x639990));
@@ -53,7 +53,7 @@ public class ColorProgressBar extends JComponent {
     @NotNull
     @Override
     public Color produce() {
-      UISettings settings = UISettings.getInstance();
+      UISettings settings = UISettings.getInstanceOrNull();
       return settings == null || null == settings.COLOR_BLINDNESS
              ? new JBColor(new Color(0xd67b76), new Color(0xe55757))
              : new JBColor(new Color(0xcc7447), new Color(0xcc7447));

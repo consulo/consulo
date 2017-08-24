@@ -1282,6 +1282,7 @@
                         serviceImplementation="com.intellij.openapi.fileChooser.ex.FileSystemTreeFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.ide.plugins.PluginManagerUISettings"
                         serviceImplementation="com.intellij.ide.plugins.PluginManagerUISettings"/>
+    <applicationService serviceImplementation="com.intellij.ide.ui.UISettings"/>
     <applicationService serviceInterface="com.intellij.codeInsight.hint.HintManager"
                         serviceImplementation="com.intellij.codeInsight.hint.HintManagerImpl"/>
     <applicationService serviceInterface="com.intellij.codeInsight.hint.TooltipController"

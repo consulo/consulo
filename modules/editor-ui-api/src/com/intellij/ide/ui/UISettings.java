@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.util.Pair;
@@ -45,14 +46,18 @@ import static com.intellij.util.ui.UIUtil.isValidFont;
 
 @State(name = "UISettings", storages = @Storage("ui.lnf.xml"))
 public class UISettings extends SimpleModificationTracker implements PersistentStateComponent<UISettings> {
-  /**
-   * Not tabbed pane.
-   */
-  public static final int TABS_NONE = 0;
-  public static final int ANIMATION_DURATION = 300; // Milliseconds
+  private volatile static UISettings ourInstance;
 
+  @NotNull
   public static UISettings getInstance() {
-    return ApplicationManager.getApplication().getComponent(UISettings.class);
+    if(ourInstance != null) {
+      return ourInstance;
+    }
+    UISettings settings = getInstanceOrNull();
+    if(settings == null) {
+      throw new UnsupportedOperationException("Application is not initialized. Please call getInstanceOrNull()");
+    }
+    return settings;
   }
 
   /**
@@ -60,18 +65,31 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
    *
    * @return persisted UISettings instance or default values.
    */
+  @NotNull
   public static UISettings getShadowInstance() {
-    Application application = ApplicationManager.getApplication();
-    UISettings settings = application == null ? null : application.getComponent(UISettings.class);
+    UISettings settings = getInstanceOrNull();
     return settings == null ? new UISettings() : settings;
   }
 
-  @Nullable
+  @Nullable("null if application is not initialized")
   public static UISettings getInstanceOrNull() {
+    if(ourInstance != null) {
+      return ourInstance;
+    }
     Application application = ApplicationManager.getApplication();
-    UISettings settings = application == null ? null : application.getComponent(UISettings.class);
-    return settings == null ? null : settings;
+    if(application == null) {
+      return null;
+    }
+    UISettings settings = ServiceManager.getService(UISettings.class);
+    ourInstance = settings;
+    return settings;
   }
+
+  /**
+   * Not tabbed pane.
+   */
+  public static final int TABS_NONE = 0;
+  public static final int ANIMATION_DURATION = 300; // Milliseconds
 
   @Property(filter = FontFilter.class)
   public String FONT_FACE;
@@ -273,7 +291,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
       return;
     }
 
-    UISettings uiSettings = getInstance();
+    UISettings uiSettings = getInstanceOrNull();
 
     if (uiSettings != null) {
       g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, AntialiasingType.getKeyForCurrentScope(false));

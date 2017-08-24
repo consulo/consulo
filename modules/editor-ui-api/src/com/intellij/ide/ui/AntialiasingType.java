@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.ui;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.ui.GraphicsUtil;
 
 import java.awt.*;
@@ -26,7 +25,7 @@ public enum AntialiasingType {
   OFF("No antialiasing", RenderingHints.VALUE_TEXT_ANTIALIAS_OFF, false);
 
   public static Object getAAHintForSwingComponent() {
-    UISettings uiSettings = ApplicationManager.getApplication() == null ? null : UISettings.getInstance();
+    UISettings uiSettings = UISettings.getInstanceOrNull();
     if (uiSettings != null) {
       AntialiasingType type = uiSettings.IDE_AA_TYPE;
       if (type != null) return type.getTextInfo();
@@ -35,7 +34,7 @@ public enum AntialiasingType {
   }
 
   public static Object getKeyForCurrentScope(boolean inEditor) {
-    UISettings uiSettings = ApplicationManager.getApplication() == null ? null : UISettings.getInstance();
+    UISettings uiSettings = UISettings.getInstanceOrNull();
     if (uiSettings != null) {
       AntialiasingType type = inEditor ? uiSettings.EDITOR_AA_TYPE : uiSettings.IDE_AA_TYPE;
       if (type != null) return type.myHint;
