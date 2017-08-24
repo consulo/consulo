@@ -47,7 +47,7 @@ public class PluginsAdvertiser implements StartupActivity {
       return;
     }
 
-    PluginsAdvertiserHolder.initiaze(project, pluginDescriptors -> {
+    PluginsAdvertiserHolder.initialize(pluginDescriptors -> {
       UIUtil.invokeLaterIfNeeded(() -> {
         if (!project.isDisposed()) {
           EditorNotifications.getInstance(project).updateAllNotifications();

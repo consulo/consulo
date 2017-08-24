@@ -19,8 +19,6 @@ import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ide.plugins.InstalledPluginsState;
@@ -65,7 +63,7 @@ public class PluginsAdvertiserHolder {
     }
   }
 
-  public static void initiaze(@NotNull Project project, @NotNull Consumer<List<IdeaPluginDescriptor>> consumer) {
+  public static void initialize(@NotNull Consumer<List<IdeaPluginDescriptor>> consumer) {
     UpdateSettings updateSettings = UpdateSettings.getInstance();
     if (!updateSettings.isEnable()) {
       return;
@@ -76,21 +74,21 @@ public class PluginsAdvertiserHolder {
       return;
     }
 
-    Task.Backgroundable.queue(project, "Loading plugin list", false, indicator -> {
+    ApplicationManager.getApplication().executeOnPooledThread(() -> {
       List<IdeaPluginDescriptor> pluginDescriptors = Collections.emptyList();
       try {
-        pluginDescriptors = RepositoryHelper.loadPluginsFromRepository(indicator, updateSettings.getChannel());
-
-        update(pluginDescriptors);
-
-        if (pluginDescriptors.isEmpty()) {
-          return;
-        }
-
-        consumer.accept(pluginDescriptors);
+        pluginDescriptors = RepositoryHelper.loadPluginsFromRepository(null, updateSettings.getChannel());
       }
       catch (Exception ignored) {
       }
+
+      update(pluginDescriptors);
+
+      if (pluginDescriptors.isEmpty()) {
+        return;
+      }
+
+      consumer.accept(pluginDescriptors);
     });
   }
 }
