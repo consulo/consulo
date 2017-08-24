@@ -208,10 +208,23 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     }
 
     Module module = ModuleUtilCore.findModuleForFile(directory, myProject);
-    if (module == null) {
-      return null;
+    if (module != null) {
+      final PsiPackage aPackage = findForModule(packageName, module);
+      if (aPackage != null) return aPackage;
     }
+    else {
+      List<OrderEntry> orderEntriesForFile = ProjectFileIndex.getInstance(myProject).getOrderEntriesForFile(directory);
+      for (OrderEntry orderEntry : orderEntriesForFile) {
+        Module ownerModule = orderEntry.getOwnerModule();
+        return findForModule(packageName, ownerModule);
+      }
+    }
+    return null;
+  }
 
+  @Nullable
+  @RequiredReadAction
+  private PsiPackage findForModule(String packageName, Module module) {
     ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
     for (ModuleExtension<?> moduleExtension : rootManager.getExtensions()) {
       final PsiPackage aPackage = findPackage(packageName, moduleExtension.getClass());

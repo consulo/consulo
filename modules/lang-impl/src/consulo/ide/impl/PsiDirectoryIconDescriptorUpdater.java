@@ -73,7 +73,7 @@ public class PsiDirectoryIconDescriptorUpdater implements IconDescriptorUpdater 
             symbolIcon = contentFolder.getType().getIcon(contentFolder.getProperties());
           }
           else {
-            ContentFolderTypeProvider contentFolderTypeForFile = ProjectFileIndex.SERVICE.getInstance(project).getContentFolderTypeForFile(virtualFile);
+            ContentFolderTypeProvider contentFolderTypeForFile = ProjectFileIndex.getInstance(project).getContentFolderTypeForFile(virtualFile);
             symbolIcon = contentFolderTypeForFile != null ? contentFolderTypeForFile.getChildDirectoryIcon(psiDirectory) : AllIcons.Nodes.TreeClosed;
           }
         }
