@@ -73,7 +73,6 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
       }
     }, this);
 
-
     project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
