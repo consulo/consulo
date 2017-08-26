@@ -4,7 +4,6 @@
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="USE_ALT_CONSULO_SDK" value="true" />
     <option name="ALT_CONSULO_SDK_PATH" value="$PROJECT_DIR$/out/artifacts/distForRuntime" />
-    <option name="INTERNAL_MODE" value="true" />
     <java-sdk name="1.9" />
     <predefined_log_file id="IDEA_LOG" enabled="true" />
     <ConfigurationWrapper RunnerId="ConsuloDebuggerRunner" />
