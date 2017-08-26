@@ -16,7 +16,6 @@
 
 package com.maddyhome.idea.copyright.pattern;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -26,7 +25,6 @@ import org.apache.commons.collections.ExtendedProperties;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.log.SimpleLog4JLogSystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,12 +71,6 @@ public class VelocityHelper {
 
         extendedProperties.addProperty(RuntimeConstants.RESOURCE_LOADER, "file");
         extendedProperties.addProperty(RuntimeConstants.PARSER_POOL_SIZE, "1");
-
-        extendedProperties.addProperty("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
-        extendedProperties.addProperty("file.resource.loader.path", PathManager.getPluginsPath() + "/Copyright/resources");
-
-        extendedProperties.addProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, SimpleLog4JLogSystem.class.getName());
-        extendedProperties.addProperty("runtime.log.logsystem.log4j.category", CopyrightManager.class.getName());
 
         engine.setExtendedProperties(extendedProperties);
         engine.init();

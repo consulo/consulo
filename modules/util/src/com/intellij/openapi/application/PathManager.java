@@ -24,6 +24,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
+import consulo.annotations.DeprecationInfo;
 import consulo.application.ApplicationProperties;
 import consulo.application.DefaultPaths;
 import consulo.util.SandboxUtil;
@@ -48,7 +49,9 @@ public class PathManager {
   public static final String PROPERTY_SYSTEM_PATH = "idea.system.path";
   public static final String PROPERTY_SCRATCH_PATH = "idea.scratch.path";
   public static final String PROPERTY_CONFIG_PATH = "idea.config.path";
-  public static final String PROPERTY_PLUGINS_PATH = "idea.plugins.path";
+  @Deprecated
+  @DeprecationInfo("See ApplicationProperties#CONSULO_PLUGINS_PATHS")
+  public static final String PROPERTY_PLUGINS_PATH = ApplicationProperties.IDEA_PLUGINS_PATH;
   public static final String PROPERTY_HOME_PATH = "idea.home.path";
   public static final String PROPERTY_LOG_PATH = "idea.log.path";
 
@@ -62,8 +65,10 @@ public class PathManager {
   private static String ourSystemPath;
   private static String ourConfigPath;
   private static String ourScratchPath;
-  private static String ourPluginsPath;
   private static String ourLogPath;
+
+  private static String ourInstallPluginsPath;
+  private static String[] ourPluginsPaths;
 
   /**
    * @return home path of platform (in most cases path is $APP_HOME_PATH$/platform/$HOME_PATH$)
@@ -141,7 +146,6 @@ public class PathManager {
     return getHomePath() + File.separator + LIB_FOLDER;
   }
 
-  @SuppressWarnings("MethodNamesDifferingOnlyByCase")
   @NotNull
   public static String getPreInstalledPluginsPath() {
     return getHomePath() + File.separatorChar + PLUGINS_FOLDER;
@@ -157,6 +161,11 @@ public class PathManager {
     }
     else {
       ourConfigPath = DefaultPaths.getInstance().getRoamingSettingsDir();
+    }
+
+    if (SandboxUtil.isInsideSandbox()) {
+      //noinspection UseOfSystemOutOrSystemErr
+      System.out.println("Config Path: " + ourConfigPath);
     }
 
     return ourConfigPath;
@@ -191,21 +200,81 @@ public class PathManager {
   }
 
   @NotNull
-  public static String getPluginsPath() {
-    if (ourPluginsPath != null) return ourPluginsPath;
+  public static String getInstallPluginsPath() {
+    if (ourInstallPluginsPath != null) {
+      return ourInstallPluginsPath;
+    }
 
-    if (System.getProperty(PROPERTY_PLUGINS_PATH) != null) {
-      ourPluginsPath = getAbsolutePath(trimPathQuotes(System.getProperty(PROPERTY_PLUGINS_PATH)));
+    String property = System.getProperty(ApplicationProperties.CONSULO_INSTALL_PLUGINS_PATH);
+    if (property != null) {
+      ourInstallPluginsPath = getAbsolutePath(trimPathQuotes(property));
+    }
+    else {
+      String[] pluginsPaths = getPluginsPaths();
+      if (pluginsPaths.length != 1) {
+        throw new IllegalArgumentException("Plugins paths size is not equal one. Paths: " + Arrays.asList(pluginsPaths));
+      }
+
+      ourInstallPluginsPath = pluginsPaths[0];
+    }
+
+    if (SandboxUtil.isInsideSandbox()) {
+      //noinspection UseOfSystemOutOrSystemErr
+      System.out.println("Install Plugins Path: " + ourInstallPluginsPath);
+    }
+    return ourInstallPluginsPath;
+  }
+
+  @NotNull
+  public static String[] getPluginsPaths() {
+    if (ourPluginsPaths != null) return ourPluginsPaths;
+
+    String pathFromProperty = System.getProperty(ApplicationProperties.IDEA_PLUGINS_PATH);
+    if (pathFromProperty != null) {
+      pathFromProperty = getAbsolutePath(trimPathQuotes(pathFromProperty));
+
+      //noinspection UseOfSystemOutOrSystemErr
+      System.out.println("Using obsolete property: " + ApplicationProperties.IDEA_PLUGINS_PATH);
+
+      ourPluginsPaths = new String[]{getAbsolutePath(trimPathQuotes(pathFromProperty))};
+    }
+    else if (System.getProperty(ApplicationProperties.CONSULO_PLUGINS_PATHS) != null) {
+      pathFromProperty = System.getProperty(ApplicationProperties.CONSULO_PLUGINS_PATHS);
+
+      String[] splittedPaths = pathFromProperty.split(File.pathSeparator);
+      for (int i = 0; i < splittedPaths.length; i++) {
+        String splitValue = splittedPaths[i];
+
+        splittedPaths[i] = getAbsolutePath(trimPathQuotes(splitValue));
+      }
+
+      ourPluginsPaths = splittedPaths;
     }
     else if (System.getProperty(PROPERTY_CONFIG_PATH) != null) {
       // if config path overridden, use another logic for plugins
-      ourPluginsPath = getConfigPath() + File.separatorChar + "plugins";
+      ourPluginsPaths = new String[]{getConfigPath() + File.separatorChar + "plugins"};
     }
     else {
-      ourPluginsPath = DefaultPaths.getInstance().getRoamingPluginsDir();
+      ourPluginsPaths = new String[]{DefaultPaths.getInstance().getRoamingPluginsDir()};
     }
 
-    return ourPluginsPath;
+    if (SandboxUtil.isInsideSandbox()) {
+      //noinspection UseOfSystemOutOrSystemErr
+      System.out.println("Plugins Paths: " + Arrays.asList(ourPluginsPaths));
+    }
+    return ourPluginsPaths;
+  }
+
+  @NotNull
+  @Deprecated
+  @DeprecationInfo("Please use #getPluginsPaths()")
+  public static String getPluginsPath() {
+    String[] pluginsPaths = getPluginsPaths();
+    if (pluginsPaths.length == 0) {
+      throw new IllegalArgumentException("Plugins paths is empty");
+    }
+
+    return pluginsPaths[0];
   }
 
   // runtime paths
@@ -219,6 +288,11 @@ public class PathManager {
     }
     else {
       ourSystemPath = DefaultPaths.getInstance().getLocalSettingsDir();
+    }
+
+    if (SandboxUtil.isInsideSandbox()) {
+      //noinspection UseOfSystemOutOrSystemErr
+      System.out.println("System Path: " + ourSystemPath);
     }
 
     checkAndCreate(ourSystemPath, true);

@@ -24,20 +24,32 @@ import org.jetbrains.annotations.NotNull;
  * @since 04.04.2016
  */
 public interface ApplicationProperties {
+  /**
+   * @type boolean
+   */
   @NotNull
   @NonNls
   @Deprecated
   @DeprecationInfo("Use CONSULO_IN_SANDBOX")
   String IDEA_IS_INTERNAL = "idea.is.internal";
 
+  /**
+   * @type boolean
+   */
   @NotNull
   @NonNls
   String CONSULO_IN_SANDBOX = "consulo.in.sandbox";
 
+  /**
+   * @type boolean
+   */
   @NotNull
   @NonNls
   String CONSULO_IN_UNIT_TEST = "consulo.is.unit.test";
 
+  /**
+   * @type boolean
+   */
   @NotNull
   @NonNls
   String CONSULO_AS_WEB_APP = "consulo.as.web.app";
@@ -59,4 +71,24 @@ public interface ApplicationProperties {
   @NotNull
   @NonNls
   String CONSULO_APP_HOME_PATH = "consulo.app.home.path";
+
+  @NotNull
+  @NonNls
+  @Deprecated
+  @DeprecationInfo("Old idea plugins path. See #CONSULO_PLUGINS_PATHS")
+  String IDEA_PLUGINS_PATH = "idea.plugins.path";
+
+  /**
+   * @type
+   */
+  @NotNull
+  @NonNls
+  String CONSULO_INSTALL_PLUGINS_PATH = "consulo.install.plugins.path";
+
+  /**
+   * @type String[]
+   */
+  @NotNull
+  @NonNls
+  String CONSULO_PLUGINS_PATHS = "consulo.plugins.paths";
 }

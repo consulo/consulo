@@ -188,13 +188,13 @@ public class PluginDownloader {
   }
 
   public static void install(final File fromFile, final String pluginName, boolean deleteFromFile) throws IOException {
-    // add command to unzip file to the IDEA/plugins path
+    // add command to unzip file to the plugins path
     String unzipPath;
     if (ZipUtil.isZipContainsFolder(fromFile)) {
-      unzipPath = PathManager.getPluginsPath();
+      unzipPath = PathManager.getInstallPluginsPath();
     }
     else {
-      unzipPath = PathManager.getPluginsPath() + File.separator + pluginName;
+      unzipPath = PathManager.getInstallPluginsPath() + File.separator + pluginName;
     }
 
     StartupActionScriptManager.ActionCommand unzip = new StartupActionScriptManager.UnzipCommand(fromFile, new File(unzipPath));

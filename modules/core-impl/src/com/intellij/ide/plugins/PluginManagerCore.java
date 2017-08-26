@@ -737,10 +737,15 @@ public class PluginManagerCore {
   public static IdeaPluginDescriptorImpl[] loadDescriptors(@Nullable StartupProgress progress) {
     final List<IdeaPluginDescriptorImpl> result = new ArrayList<>();
 
-    int pluginsCount = countPlugins(PathManager.getPluginsPath()) + countPlugins(PathManager.getPreInstalledPluginsPath());
-    loadDescriptors(PathManager.getPluginsPath(), result, progress, pluginsCount);
+    int pluginsCount = countPlugins(PathManager.getPreInstalledPluginsPath());
+    String[] pluginsPaths = PathManager.getPluginsPaths();
+    for (String pluginsPath : pluginsPaths) {
+      pluginsCount += countPlugins(pluginsPath);
+    }
+    for (String pluginsPath : pluginsPaths) {
+      loadDescriptors(pluginsPath, result, progress, pluginsCount);
+    }
     loadDescriptors(PathManager.getPreInstalledPluginsPath(), result, progress, pluginsCount);
-    loadDescriptorsFromProperty(result);
 
     // insert dummy platform code
     insertPlatformPlugin(result);
