@@ -23,6 +23,7 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.fileTypes.FileNameMatcher;
 import com.intellij.openapi.fileTypes.FileNameMatcherFactory;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
@@ -37,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
 
-public class PluginsAdvertiser implements StartupActivity {
+public class PluginsAdvertiser implements StartupActivity, DumbAware {
   private static NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
 
   @Override
