@@ -18,7 +18,6 @@ package consulo.backgroundTaskByVfsChange;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -33,29 +32,13 @@ public abstract class BackgroundTaskByVfsChangeManager {
     return ServiceManager.getService(project, BackgroundTaskByVfsChangeManager.class);
   }
 
-  public interface Listener {
-    void taskAdded(@NotNull BackgroundTaskByVfsChangeTask task);
-
-    void taskChanged(@NotNull BackgroundTaskByVfsChangeTask task);
-
-    void taskCanceled(@NotNull BackgroundTaskByVfsChangeTask task);
-  }
-
-  public abstract static class ListenerAdapter implements Listener {
-    @Override
-    public void taskAdded(@NotNull BackgroundTaskByVfsChangeTask task) {
-      taskChanged(task);
-    }
-
-    @Override
-    public void taskCanceled(@NotNull BackgroundTaskByVfsChangeTask task) {
-      taskChanged(task);
-    }
-  }
-
-  public static final Topic<Listener> TOPIC =
-          Topic.create("background.task.change.listener", Listener.class);
-
+  /**
+   * Create task without adding to list
+   */
+  @NotNull
+  public abstract BackgroundTaskByVfsChangeTask createTask(@NotNull BackgroundTaskByVfsChangeProvider provider,
+                                                           @NotNull VirtualFile virtualFile,
+                                                           @NotNull String name);
 
   public abstract void openManageDialog(@NotNull VirtualFile virtualFile);
 
@@ -70,7 +53,7 @@ public abstract class BackgroundTaskByVfsChangeManager {
 
   public abstract void runTasks(@NotNull VirtualFile virtualFile);
 
-  public abstract boolean cancelTask(@NotNull BackgroundTaskByVfsChangeTask task);
+  public abstract boolean removeTask(@NotNull BackgroundTaskByVfsChangeTask task);
 
   public abstract void registerTask(@NotNull BackgroundTaskByVfsChangeTask task);
 }

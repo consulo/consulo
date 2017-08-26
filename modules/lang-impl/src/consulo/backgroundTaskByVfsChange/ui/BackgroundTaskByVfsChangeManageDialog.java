@@ -25,7 +25,10 @@ import com.intellij.openapi.ui.popup.ListPopupStep;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.*;
+import com.intellij.ui.CheckBoxList;
+import com.intellij.ui.EditorNotifications;
+import com.intellij.ui.ScrollingUtil;
+import com.intellij.ui.ToolbarDecorator;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.backgroundTaskByVfsChange.*;
@@ -54,14 +57,13 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
     myProject = project;
     myVirtualFile = virtualFile;
 
-
     myVfsChangePanel = new BackgroundTaskByVfsChangePanel(project);
     myVfsChangePanel.reset(BackgroundTaskByVfsParametersImpl.EMPTY);
 
     myBoxlist = new CheckBoxList<>();
     myBoxlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     myBoxlist.setCheckBoxListListener((index, value) -> {
-      BackgroundTaskByVfsChangeTask task = (BackgroundTaskByVfsChangeTask)myBoxlist.getItemAt(index);
+      BackgroundTaskByVfsChangeTask task = myBoxlist.getItemAt(index);
       if (task == null) {
         return;
       }
@@ -77,7 +79,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
         myVfsChangePanel.reset(BackgroundTaskByVfsParametersImpl.EMPTY);
         return;
       }
-      BackgroundTaskByVfsChangeTask task = (BackgroundTaskByVfsChangeTask)myBoxlist.getItemAt(myBoxlist.getSelectedIndex());
+      BackgroundTaskByVfsChangeTask task = myBoxlist.getItemAt(myBoxlist.getSelectedIndex());
       if (task == null) {
         myVfsChangePanel.reset(BackgroundTaskByVfsParametersImpl.EMPTY);
         return;
@@ -122,16 +124,14 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
       cloneTasks.add(task.clone());
     }
 
-    set(cloneTasks);
+    myBoxlist.setItems(cloneTasks, BackgroundTaskByVfsChangeTask::getName, BackgroundTaskByVfsChangeTask::isEnabled);
+
+    ScrollingUtil.ensureSelectionExists(myBoxlist);
 
     myPanel.add(decorator.createPanel());
     myPanel.add(myVfsChangePanel);
     setTitle("Manage Background Tasks");
     init();
-  }
-
-  private void set(List<BackgroundTaskByVfsChangeTask> cloneTasks) {
-    myBoxlist.setItems(cloneTasks, BackgroundTaskByVfsChangeTask::getName, BackgroundTaskByVfsChangeTask::isEnabled);
   }
 
   private void add(@NotNull BackgroundTaskByVfsChangeProvider provider) {
@@ -140,24 +140,18 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
       return;
     }
 
-    List<BackgroundTaskByVfsChangeTask> tasks = getTasks();
+    BackgroundTaskByVfsChangeTask task = BackgroundTaskByVfsChangeManager.getInstance(myProject).createTask(provider, myVirtualFile, name);
 
-    BackgroundTaskByVfsParametersImpl parameters = new BackgroundTaskByVfsParametersImpl(myProject);
-    provider.setDefaultParameters(myProject, myVirtualFile, parameters);
-
-    BackgroundTaskByVfsChangeManagerImpl manager = (BackgroundTaskByVfsChangeManagerImpl)BackgroundTaskByVfsChangeManagerImpl.getInstance(myProject);
-    BackgroundTaskByVfsChangeTaskImpl e = new BackgroundTaskByVfsChangeTaskImpl(myProject, myVirtualFile, manager, provider, name, parameters);
-    e.setEnabled(true);
-    tasks.add(e);
-
-    set(tasks);
+    myBoxlist.addItem(task, task.getName(), task.isEnabled());
+    // select last item - selected item
+    myBoxlist.setSelectedIndex(myBoxlist.getItemsCount() - 1);
   }
 
   @NotNull
   private List<BackgroundTaskByVfsChangeTask> getTasks() {
     List<BackgroundTaskByVfsChangeTask> list = new ArrayList<>();
     for (int i = 0; i < myBoxlist.getItemsCount(); i++) {
-      BackgroundTaskByVfsChangeTask task = (BackgroundTaskByVfsChangeTask)myBoxlist.getItemAt(i);
+      BackgroundTaskByVfsChangeTask task = myBoxlist.getItemAt(i);
       list.add(task);
     }
     return list;
@@ -173,7 +167,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
 
     List<BackgroundTaskByVfsChangeTask> originalTasks = vfsChangeManager.findTasks(myVirtualFile);
     for (BackgroundTaskByVfsChangeTask originalTask : originalTasks) {
-      vfsChangeManager.cancelTask(originalTask);
+      vfsChangeManager.removeTask(originalTask);
     }
 
     List<BackgroundTaskByVfsChangeTask> tasks = getTasks();

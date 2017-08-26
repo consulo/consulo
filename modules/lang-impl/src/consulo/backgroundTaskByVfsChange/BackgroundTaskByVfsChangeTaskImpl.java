@@ -257,7 +257,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     if (generatedFilePaths.length == 0) {
       return VirtualFile.EMPTY_ARRAY;
     }
-    List<VirtualFile> list = new ArrayList<VirtualFile>();
+    List<VirtualFile> list = new ArrayList<>();
     for (String generatedFilePath : generatedFilePaths) {
       VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(generatedFilePath);
       if (fileByPath != null) {
@@ -310,6 +310,5 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
 
   public void parameterUpdated() {
     myGeneratedFilePaths = null;
-    myManager.taskChanged(this);
   }
 }
