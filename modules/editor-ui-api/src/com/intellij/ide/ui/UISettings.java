@@ -422,6 +422,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return SHOW_ICONS_IN_QUICK_NAVIGATION;
   }
 
+  public boolean getDndWithPressedAltOnly() {
+    return DND_WITH_PRESSED_ALT_ONLY;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

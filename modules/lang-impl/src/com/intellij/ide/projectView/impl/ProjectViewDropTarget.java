@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,16 +81,11 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     final Point point = event.getPoint();
     final TreeNode targetNode = getTargetNode(point);
 
-    if (targetNode == null || (dropAction & DnDConstants.ACTION_COPY_OR_MOVE) == 0) {
-      return false;
-    }
-    else if (sourceNodes == null && !FileCopyPasteUtil.isFileListFlavorAvailable(event)) {
-      return false;
-    }
-    else if (sourceNodes != null && ArrayUtilRt.find(sourceNodes, targetNode) != -1) {
-      return false;
-    }
-    else if (sourceNodes != null && !dropHandler.isValidSource(sourceNodes, targetNode)) {
+    if (targetNode == null ||
+        (dropAction & DnDConstants.ACTION_COPY_OR_MOVE) == 0 ||
+        sourceNodes == null && !FileCopyPasteUtil.isFileListFlavorAvailable(event) ||
+        sourceNodes != null && ArrayUtilRt.find(sourceNodes, targetNode) != -1 ||
+        sourceNodes != null && !dropHandler.isValidSource(sourceNodes, targetNode)) {
       return false;
     }
 
@@ -114,6 +109,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     }
 
     final Rectangle pathBounds = myTree.getPathBounds(myTree.getClosestPathForLocation(point.x, point.y));
+    if (pathBounds != null && pathBounds.y + pathBounds.height < point.y) return false;
     event.setHighlighting(new RelativeRectangle(myTree, pathBounds), DnDEvent.DropTargetHighlightingType.RECTANGLE);
     event.setDropPossible(true);
     return false;
@@ -161,16 +157,14 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     return path == null ? null : (TreeNode)path.getLastPathComponent();
   }
 
-  private boolean doDrop(@NotNull final TreeNode[] sourceNodes, @NotNull final TreeNode targetNode, final int dropAction) {
+  private void doDrop(@NotNull final TreeNode[] sourceNodes, @NotNull final TreeNode targetNode, final int dropAction) {
     TreeNode validTargetNode = getValidTargetNode(sourceNodes, targetNode, dropAction);
     if (validTargetNode != null) {
       final TreeNode[] filteredSourceNodes = removeRedundantSourceNodes(sourceNodes, validTargetNode, dropAction);
       if (filteredSourceNodes.length != 0) {
         getDropHandler(dropAction).doDrop(filteredSourceNodes, validTargetNode);
-        return true;
       }
     }
-    return false;
   }
 
   @Nullable
@@ -189,7 +183,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
 
   private TreeNode[] removeRedundantSourceNodes(@NotNull final TreeNode[] sourceNodes, @NotNull final TreeNode targetNode, final int dropAction) {
     final DropHandler dropHandler = getDropHandler(dropAction);
-    List<TreeNode> result = new ArrayList<TreeNode>(sourceNodes.length);
+    List<TreeNode> result = new ArrayList<>(sourceNodes.length);
     for (TreeNode sourceNode : sourceNodes) {
       if (!dropHandler.isDropRedundant(sourceNode, targetNode)) {
         result.add(sourceNode);
@@ -259,7 +253,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
   @Nullable
   protected PsiFileSystemItem[] getPsiFiles(@Nullable List<File> fileList) {
     if (fileList == null) return null;
-    List<PsiFileSystemItem> sourceFiles = new ArrayList<PsiFileSystemItem>();
+    List<PsiFileSystemItem> sourceFiles = new ArrayList<>();
     for (File file : fileList) {
       final VirtualFile vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
       if (vFile != null) {

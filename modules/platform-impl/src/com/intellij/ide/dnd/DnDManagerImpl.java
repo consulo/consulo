@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.dnd;
 
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
@@ -44,14 +45,14 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   @NonNls private static final String SOURCE_KEY = "DnD Source";
   @NonNls private static final String TARGET_KEY = "DnD Target";
 
-  public static final Key<Pair<Image, Point>> DRAGGED_IMAGE_KEY = new Key<Pair<Image, Point>>("draggedImage");
+  public static final Key<Pair<Image, Point>> DRAGGED_IMAGE_KEY = new Key<>("draggedImage");
 
   private DnDEventImpl myCurrentEvent;
   private DnDEvent myLastHighlightedEvent;
 
   private static final DnDTarget NULL_TARGET = new NullTarget();
 
-  private WeakReference<DnDTarget> myLastProcessedTarget = new WeakReference<DnDTarget>(NULL_TARGET);
+  private WeakReference<DnDTarget> myLastProcessedTarget = new WeakReference<>(NULL_TARGET);
   private DragSourceContext myCurrentDragContext;
 
   private Component myLastProcessedOverComponent;
@@ -112,13 +113,11 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   }
 
   private void cleanup(@Nullable final DnDSource source, @Nullable final DnDTarget target, @Nullable final JComponent targetComponent) {
-    Runnable cleanup = new Runnable() {
-      public void run() {
-        if (shouldCancelCurrentDnDOperation(source, target, targetComponent)) {
-          myLastProcessedOverComponent = null;
-          myCurrentDragContext = null;
-          resetEvents("cleanup");
-        }
+    Runnable cleanup = () -> {
+      if (shouldCancelCurrentDnDOperation(source, target, targetComponent)) {
+        myLastProcessedOverComponent = null;
+        myCurrentDragContext = null;
+        resetEvents("cleanup");
       }
     };
 
@@ -287,7 +286,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
       }
     }
 
-    myLastProcessedTarget = new WeakReference<DnDTarget>(target);
+    myLastProcessedTarget = new WeakReference<>(target);
     myLastProcessedPoint = currentEvent.getPoint();
     myLastProcessedOverComponent = currentEvent.getCurrentOverComponent();
     myLastProcessedAction = currentEvent.getAction().getActionId();
@@ -423,16 +422,14 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   }
 
   private void queueTooltip(final DnDEvent aEvent, final JLayeredPane aLayeredPane, final Rectangle aRectangle) {
-    myHighlighterShowRequest = new Runnable() {
-      public void run() {
-        if (myCurrentEvent != aEvent) return;
-        Highlighters.hide(DnDEvent.DropTargetHighlightingType.TEXT | DnDEvent.DropTargetHighlightingType.ERROR_TEXT);
-        if (aEvent.isDropPossible()) {
-          Highlighters.show(DnDEvent.DropTargetHighlightingType.TEXT, aLayeredPane, aRectangle, aEvent);
-        }
-        else {
-          Highlighters.show(DnDEvent.DropTargetHighlightingType.ERROR_TEXT, aLayeredPane, aRectangle, aEvent);
-        }
+    myHighlighterShowRequest = () -> {
+      if (myCurrentEvent != aEvent) return;
+      Highlighters.hide(DnDEvent.DropTargetHighlightingType.TEXT | DnDEvent.DropTargetHighlightingType.ERROR_TEXT);
+      if (aEvent.isDropPossible()) {
+        Highlighters.show(DnDEvent.DropTargetHighlightingType.TEXT, aLayeredPane, aRectangle, aEvent);
+      }
+      else {
+        Highlighters.show(DnDEvent.DropTargetHighlightingType.ERROR_TEXT, aLayeredPane, aRectangle, aEvent);
       }
     };
     myTooltipTimer.restart();
@@ -585,12 +582,13 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
 
   private static DnDAction getDnDActionForPlatformAction(int platformAction) {
     DnDAction action = null;
+    boolean altOnly = UISettings.getInstance().getDndWithPressedAltOnly();
     switch (platformAction) {
       case DnDConstants.ACTION_COPY:
-        action = DnDAction.COPY;
+        action = altOnly ? DnDAction.MOVE : DnDAction.COPY;
         break;
       case DnDConstants.ACTION_MOVE:
-        action = DnDAction.MOVE;
+        action = altOnly? DnDAction.COPY : DnDAction.MOVE;
         break;
       case DnDConstants.ACTION_LINK:
         action = DnDAction.LINK;
@@ -736,7 +734,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     if (c == null) {
       myLastDropHandler = null;
     } else {
-      myLastDropHandler = new WeakReference<Component>(c);
+      myLastDropHandler = new WeakReference<>(c);
     }
   }
 

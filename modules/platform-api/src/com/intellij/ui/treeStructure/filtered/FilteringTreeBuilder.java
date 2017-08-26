@@ -45,14 +45,8 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
 
   private MergingUpdateQueue myRefilterQueue;
 
-  public FilteringTreeBuilder(Tree tree,
-                              ElementFilter filter,
-                              AbstractTreeStructure structure,
-                              @Nullable Comparator<NodeDescriptor> comparator) {
-    super(tree,
-          (DefaultTreeModel)tree.getModel(),
-          structure instanceof FilteringTreeStructure ? structure
-                                                      : new FilteringTreeStructure(filter, structure),
+  public FilteringTreeBuilder(Tree tree, ElementFilter filter, AbstractTreeStructure structure, @Nullable Comparator<NodeDescriptor> comparator) {
+    super(tree, (DefaultTreeModel)tree.getModel(), structure instanceof FilteringTreeStructure ? structure : new FilteringTreeStructure(filter, structure),
           comparator);
 
     myTree = tree;
@@ -60,6 +54,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
 
     if (filter instanceof ElementFilter.Active) {
       ((ElementFilter.Active)filter).addListener(new ElementFilter.Listener() {
+        @Override
         public ActionCallback update(final Object preferredSelection, final boolean adjustSelection, final boolean now) {
           return refilter(preferredSelection, adjustSelection, now);
         }
@@ -67,6 +62,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
     }
 
     myTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
+      @Override
       public void valueChanged(TreeSelectionEvent e) {
         TreePath newPath = e.getNewLeadSelectionPath();
         if (newPath != null) {
@@ -79,10 +75,12 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
     });
   }
 
+  @Override
   public boolean isAlwaysShowPlus(NodeDescriptor nodeDescriptor) {
     return false;
   }
 
+  @Override
   public boolean isAutoExpandNode(NodeDescriptor nodeDescriptor) {
     return true;
   }
@@ -129,6 +127,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
         }
         else {
           myRefilterQueue.queue(new Update(this) {
+            @Override
             public void run() {
               refilterNow(preferredSelection, adjustSelection).notifyWhenDone(callback);
             }
@@ -145,7 +144,8 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
     if (!isDisposed()) {
       if (!ApplicationManager.getApplication().isUnitTestMode()) {
         getUi().cancelUpdate().doWhenProcessed(afterCancelUpdate);
-      } else {
+      }
+      else {
         afterCancelUpdate.run();
       }
     }
@@ -159,56 +159,56 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
 
     getFilteredStructure().refilter();
     getUi().updateSubtree(getRootNode(), false);
-    final Runnable selectionRunnable = new Runnable() {
-      public void run() {
-        revalidateTree();
+    final Runnable selectionRunnable = () -> {
+      revalidateTree();
 
-        Object toSelect = preferredSelection != null ? preferredSelection : myLastSuccessfulSelect;
+      Object toSelect = preferredSelection != null ? preferredSelection : myLastSuccessfulSelect;
 
-        if (adjustSelection && toSelect != null) {
-          final FilteringTreeStructure.FilteringNode nodeToSelect = getFilteredStructure().getVisibleNodeFor(toSelect);
+      if (adjustSelection && toSelect != null) {
+        final FilteringTreeStructure.FilteringNode nodeToSelect = getFilteredStructure().getVisibleNodeFor(toSelect);
 
-          if (nodeToSelect != null) {
-            select(nodeToSelect, new Runnable() {
-              public void run() {
-                if (getSelectedElements().contains(nodeToSelect)) {
-                  myLastSuccessfulSelect = getOriginalNode(nodeToSelect);
-                }
-                selectionDone.setDone();
-              }
-            });
-          }
-          else {
-            TreeUtil.ensureSelection(myTree);
+        if (nodeToSelect != null) {
+          select(nodeToSelect, () -> {
+            if (getSelectedElements().contains(nodeToSelect)) {
+              myLastSuccessfulSelect = getOriginalNode(nodeToSelect);
+            }
             selectionDone.setDone();
-          }
+          });
         }
         else {
+          TreeUtil.ensureSelection(myTree);
           selectionDone.setDone();
         }
+      }
+      else {
+        selectionDone.setDone();
       }
     };
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       queueUpdate().doWhenProcessed(selectionRunnable);
-    } else {
+    }
+    else {
       selectionRunnable.run();
     }
 
     final ActionCallback result = new ActionCallback();
 
     selectionDone.doWhenDone(new Runnable() {
+      @Override
       public void run() {
         if (!ApplicationManager.getApplication().isUnitTestMode()) {
           scrollSelectionToVisible(new Runnable() {
+            @Override
             public void run() {
               getReady(this).notify(result);
             }
           }, false);
-        } else {
+        }
+        else {
           result.setDone();
         }
       }
-    }).doWhenRejected(result.createSetRejectedRunnable());
+    }).notifyWhenRejected(result);
 
     return result;
   }
@@ -239,7 +239,8 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
     if (isSimpleTree()) {
       FilteringTreeStructure.FilteringNode selected = (FilteringTreeStructure.FilteringNode)((SimpleTree)myTree).getSelectedNode();
       return selected != null ? selected.getDelegate() : null;
-    } else {
+    }
+    else {
       final Object[] nodes = myTree.getSelectedNodes(Object.class, null);
       return nodes.length > 0 ? nodes[0] : null;
     }

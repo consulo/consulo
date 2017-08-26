@@ -29,6 +29,11 @@ import com.intellij.refactoring.copy.CopyHandler;
 
 public class CopyElementAction extends AnAction {
   @Override
+  public boolean startInTransaction() {
+    return true;
+  }
+
+  @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     final Project project = CommonDataKeys.PROJECT.getData(dataContext);
@@ -40,8 +45,8 @@ public class CopyElementAction extends AnAction {
       @Override
       public void run() {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
-      }}, "", null
-    );
+      }
+    }, "", null);
     final Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
     PsiElement[] elements;
 
@@ -55,7 +60,8 @@ public class CopyElementAction extends AnAction {
         elements = new PsiElement[]{file};
       }
       defaultTargetDirectory = file.getContainingDirectory();
-    } else {
+    }
+    else {
       PsiElement element = LangDataKeys.TARGET_PSI_ELEMENT.getData(dataContext);
       defaultTargetDirectory = element instanceof PsiDirectory ? (PsiDirectory)element : null;
       elements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
@@ -68,7 +74,7 @@ public class CopyElementAction extends AnAction {
   }
 
   @Override
-  public void update(AnActionEvent event){
+  public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
     Project project = CommonDataKeys.PROJECT.getData(dataContext);
@@ -112,7 +118,7 @@ public class CopyElementAction extends AnAction {
     presentation.setVisible(true);
   }
 
-  protected void updateForToolWindow(String toolWindowId, DataContext dataContext,Presentation presentation) {
+  protected void updateForToolWindow(String toolWindowId, DataContext dataContext, Presentation presentation) {
     PsiElement[] elements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
     presentation.setEnabled(elements != null && CopyHandler.canCopy(elements));
   }

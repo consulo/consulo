@@ -21,10 +21,15 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import consulo.roots.ui.configuration.ProjectStructureDialog;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.roots.ui.configuration.ProjectStructureDialog;
 
 public class ShowStructureSettingsAction extends AnAction implements DumbAware {
+  @Override
+  public boolean startInTransaction() {
+    return true;
+  }
+
   @RequiredDispatchThread
   @Override
   public void actionPerformed(AnActionEvent e) {

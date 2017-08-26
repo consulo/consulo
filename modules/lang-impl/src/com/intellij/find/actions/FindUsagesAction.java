@@ -42,6 +42,11 @@ public class FindUsagesAction extends AnAction {
   }
 
   @Override
+  public boolean startInTransaction() {
+    return true;
+  }
+
+  @Override
   public void actionPerformed(AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
@@ -76,16 +81,13 @@ public class FindUsagesAction extends AnAction {
   }
 
   @Override
-  public void update(AnActionEvent event){
+  public void update(AnActionEvent event) {
     FindUsagesInFileAction.updateFindUsagesAction(event);
   }
 
-  static void chooseAmbiguousTargetAndPerform(@NotNull final Project project,
-                                              final Editor editor,
-                                              @NotNull PsiElementProcessor<PsiElement> processor) {
+  static void chooseAmbiguousTargetAndPerform(@NotNull final Project project, final Editor editor, @NotNull PsiElementProcessor<PsiElement> processor) {
     if (editor == null) {
-      Messages.showMessageDialog(project, FindBundle.message("find.no.usages.at.cursor.error"), CommonBundle.getErrorTitle(),
-                                 Messages.getErrorIcon());
+      Messages.showMessageDialog(project, FindBundle.message("find.no.usages.at.cursor.error"), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
     }
     else {
       int offset = editor.getCaretModel().getOffset();

@@ -62,7 +62,7 @@ public abstract class MouseDragHelper implements MouseListener, MouseMotionListe
    * @return false if Settings -> Appearance -> Drag-n-Drop with ALT pressed only is selected but event doesn't have ALT modifier
    */
   public static boolean checkModifiers(InputEvent event) {
-    if (event == null || !UISettings.getInstance().DND_WITH_PRESSED_ALT_ONLY) return true;
+    if (event == null || !UISettings.getInstance().getDndWithPressedAltOnly()) return true;
     return (event.getModifiers() & InputEvent.ALT_MASK) != 0;
   }
 

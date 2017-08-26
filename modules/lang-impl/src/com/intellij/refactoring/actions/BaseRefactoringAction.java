@@ -41,27 +41,31 @@ import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseRefactoringAction extends AnAction {
-  private final Condition<Language> myLanguageCondition = new Condition<Language>() {
-    @Override
-    public boolean value(Language language) {
-      return isAvailableForLanguage(language);
-    }
-  };
+  private final Condition<Language> myLanguageCondition = language -> isAvailableForLanguage(language);
+
+  @Override
+  public boolean startInTransaction() {
+    return true;
+  }
+
 
   protected abstract boolean isAvailableInEditorOnly();
 
   protected abstract boolean isEnabledOnElements(@NotNull PsiElement[] elements);
 
-  protected boolean isAvailableOnElementInEditorAndFile(@NotNull PsiElement element, @NotNull Editor editor, @NotNull PsiFile file, @NotNull DataContext context) {
+  protected boolean isAvailableOnElementInEditorAndFile(@NotNull PsiElement element,
+                                                        @NotNull Editor editor,
+                                                        @NotNull PsiFile file,
+                                                        @NotNull DataContext context) {
     return true;
   }
 
@@ -101,8 +105,9 @@ public abstract class BaseRefactoringAction extends AnAction {
       return;
     }
     if (handler == null) {
-      CommonRefactoringUtil.showErrorHint(project, editor, RefactoringBundle.getCannotRefactorMessage(RefactoringBundle.message(
-              "error.wrong.caret.position.symbol.to.refactor")), RefactoringBundle.getCannotRefactorMessage(null), null);
+      CommonRefactoringUtil.showErrorHint(project, editor, RefactoringBundle
+                                                  .getCannotRefactorMessage(RefactoringBundle.message("error.wrong.caret.position.symbol.to.refactor")),
+                                          RefactoringBundle.getCannotRefactorMessage(null), null);
       return;
     }
 
