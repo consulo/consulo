@@ -28,6 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,7 +64,9 @@ public final class StoreUtil {
                          NotificationType.ERROR).notify(project);
       }
       else {
-        PluginManagerCore.disablePlugin(pluginId.getIdString());
+        if(!SandboxUtil.isInsideSandbox()) {
+          PluginManagerCore.disablePlugin(pluginId.getIdString());
+        }
 
         new Notification("Settings Error", "Unable to save plugin settings",
                          "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been disabled." + messagePostfix,

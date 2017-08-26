@@ -36,6 +36,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -235,7 +236,9 @@ public class PluginManager extends PluginManagerCore {
     if (pluginId != null && !CORE_PLUGIN.equals(pluginId)) {
       getLogger().warn(t);
 
-      disablePlugin(pluginId.getIdString());
+      if(!SandboxUtil.isInsideSandbox()) {
+        disablePlugin(pluginId.getIdString());
+      }
 
       StringWriter message = new StringWriter();
       message.append("Plugin '").append(pluginId.getIdString()).append("' failed to initialize and will be disabled. ");
