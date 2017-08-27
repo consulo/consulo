@@ -102,7 +102,7 @@
           <orderEntry type="module" module-name="platform-resources" />
           <orderEntry type="module" module-name="platform-resources-en" />
           <orderEntry type="module" module-name="testFramework" />
-          <orderEntry type="module" module-name="testRunner" />
+          <orderEntry type="module" module-name="xtest-impl" />
           <orderEntry type="module" module-name="usage-view" />
           <orderEntry type="module" module-name="util" />
           <orderEntry type="module" module-name="vcs-api" />
@@ -110,7 +110,7 @@
           <orderEntry type="module" module-name="xdebugger-api" />
           <orderEntry type="module" module-name="xdebugger-impl" />
           <orderEntry type="module" module-name="core" />
-          <orderEntry type="module" module-name="smRunner" />
+          <orderEntry type="module" module-name="xtest-sm-impl" />
           <orderEntry type="module" module-name="platform-tests" />
           <orderEntry type="module" module-name="remote-servers-api" />
           <orderEntry type="module" module-name="remote-servers-impl" />
@@ -535,25 +535,6 @@
           <orderEntry type="module" module-name="compiler-impl" />
         </module-layer>
       </module>
-      <module name="impl/smRunner" dirurl="file://$PROJECT_DIR$/modules/smRunner" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="lang-impl" />
-          <orderEntry type="module" module-name="testRunner" exported="" />
-          <orderEntry type="module" module-name="xdebugger-api" />
-          <orderEntry type="module" module-name="platform-impl" />
-          <orderEntry type="library" exploded="" name="tcServiceMessages" level="project" />
-          <orderEntry type="module" module-name="annotations" />
-          <orderEntry type="module" module-name="testFramework" />
-          <orderEntry type="library" name="thrift" level="project" />
-          <orderEntry type="library" name="slf4j-api" level="project" />
-        </module-layer>
-      </module>
       <module name="impl/testFramework" dirurl="file://$PROJECT_DIR$/modules/testFramework" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
@@ -575,20 +556,6 @@
           <orderEntry type="module" module-name="platform-resources" exported="" />
           <orderEntry type="module" module-name="compiler-api" />
           <orderEntry type="library" name="tcServiceMessages" level="project" />
-        </module-layer>
-      </module>
-      <module name="impl/testRunner" dirurl="file://$PROJECT_DIR$/modules/testRunner" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="lang-impl" />
-          <orderEntry type="module" module-name="platform-impl" />
-          <orderEntry type="module" module-name="xdebugger-api" />
-          <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
       <module name="impl/util" dirurl="file://$PROJECT_DIR$/modules/independent/util" current-layer="Default">
@@ -1027,7 +994,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lang-impl" />
-          <orderEntry type="module" module-name="testRunner" />
+          <orderEntry type="module" module-name="xtest-impl" />
         </module-layer>
       </module>
       <module name="api/project-model-api" dirurl="file://$PROJECT_DIR$/modules/independent/project-model-api" current-layer="Default">
@@ -1067,6 +1034,39 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lang-api" />
           <orderEntry type="module" module-name="platform-impl" />
+        </module-layer>
+      </module>
+      <module name="impl/xtest-impl" dirurl="file://$PROJECT_DIR$/modules/xtest-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/src/main/java" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="xdebugger-api" />
+          <orderEntry type="module" module-name="diff-impl" />
+        </module-layer>
+      </module>
+      <module name="impl/xtest-sm-impl" dirurl="file://$PROJECT_DIR$/modules/xtest-sm-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="xtest-impl" exported="" />
+          <orderEntry type="module" module-name="xdebugger-api" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="library" exploded="" name="tcServiceMessages" level="project" />
+          <orderEntry type="module" module-name="annotations" />
+          <orderEntry type="module" module-name="testFramework" />
+          <orderEntry type="library" name="thrift" level="project" />
+          <orderEntry type="library" name="slf4j-api" level="project" />
         </module-layer>
       </module>
     </modules>

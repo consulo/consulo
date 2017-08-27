@@ -83,8 +83,8 @@
         <element id="module-output" name="remote-servers-api" />
       </element>
       <element id="jar-archive" name="consulo-xtest-impl.jar">
-        <element id="module-output" name="testRunner" />
-        <element id="module-output" name="smRunner" />
+        <element id="module-output" name="xtest-impl" />
+        <element id="module-output" name="xtest-sm-impl" />
       </element>
       <element id="zip-archive" name="consulo-resources.jar">
         <element id="module-production-resource-output" name="icons" />
