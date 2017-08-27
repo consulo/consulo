@@ -58,7 +58,6 @@
         <element id="module-output" name="lang-impl" />
         <element id="module-output" name="platform-impl" />
         <element id="module-production-resource-output" name="platform-impl" />
-        <element id="module-output" name="platform-main" />
         <element id="module-output" name="project-model-impl" />
         <element id="module-output" name="remote-servers-impl" />
         <element id="module-production-resource-output" name="remote-servers-impl" />

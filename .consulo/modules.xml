@@ -100,7 +100,6 @@
           <orderEntry type="module" module-name="lvcs-impl" />
           <orderEntry type="module" module-name="platform-api" />
           <orderEntry type="module" module-name="platform-impl" />
-          <orderEntry type="module" module-name="platform-main" />
           <orderEntry type="module" module-name="platform-resources" />
           <orderEntry type="module" module-name="platform-resources-en" />
           <orderEntry type="module" module-name="testFramework" />
@@ -467,18 +466,6 @@
           <orderEntry type="library" name="args4j" level="project" />
           <orderEntry type="library" name="javasysmon" level="project" />
           <orderEntry type="module" module-name="desktop-ui-laf-impl" />
-        </module-layer>
-      </module>
-      <module name="impl/platform-main" dirurl="file://$PROJECT_DIR$/modules/platform-main" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="platform-impl" />
-          <orderEntry type="module" module-name="bootstrap" />
         </module-layer>
       </module>
       <module name="impl/platform-resources" dirurl="file://$PROJECT_DIR$/modules/platform-resources" current-layer="Default">
