@@ -215,7 +215,7 @@
           <orderEntry type="library" name="Mocks" level="project" />
         </module-layer>
       </module>
-      <module name="api/external-system-api" dirurl="file://$PROJECT_DIR$/modules/external-system-api" current-layer="Default">
+      <module name="api/external-system-api" dirurl="file://$PROJECT_DIR$/modules/independent/external-system-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -232,7 +232,7 @@
           <orderEntry type="module" module-name="compiler-api" exported="" />
         </module-layer>
       </module>
-      <module name="impl/external-system-impl" dirurl="file://$PROJECT_DIR$/modules/external-system-impl" current-layer="Default">
+      <module name="impl/external-system-impl" dirurl="file://$PROJECT_DIR$/modules/independent/external-system-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
