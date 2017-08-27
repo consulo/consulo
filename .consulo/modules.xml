@@ -292,7 +292,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="api/indexing-api" dirurl="file://$PROJECT_DIR$/modules/indexing-api" current-layer="Default">
+      <module name="api/indexing-api" dirurl="file://$PROJECT_DIR$/modules/independent/indexing-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -305,7 +305,7 @@
           <orderEntry type="library" name="NanoXML" level="project" />
         </module-layer>
       </module>
-      <module name="impl/indexing-impl" dirurl="file://$PROJECT_DIR$/modules/indexing-impl" current-layer="Default">
+      <module name="impl/indexing-impl" dirurl="file://$PROJECT_DIR$/modules/independent/indexing-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
