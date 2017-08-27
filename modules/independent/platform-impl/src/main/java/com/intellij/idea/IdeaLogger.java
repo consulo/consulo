@@ -25,7 +25,6 @@ import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.text.StringUtil;
-import org.apache.log4j.Level;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -159,10 +158,5 @@ public class IdeaLogger extends Logger {
         return info.getFullApplicationName() + "  " + "Build #" + info.getBuild().asString();
       }
     };
-  }
-
-  @Override
-  public void setLevel(Level level) {
-    myLogger.setLevel(level);
   }
 }

@@ -159,9 +159,4 @@ public abstract class Logger {
   public boolean assertTrue(boolean value) {
     return value || assertTrue(false, null);
   }
-
-  @Deprecated
-  public void setLevel(Level level) {
-    // deprecated
-  }
 }

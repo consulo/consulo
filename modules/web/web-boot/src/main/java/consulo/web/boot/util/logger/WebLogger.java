@@ -16,7 +16,6 @@
 package consulo.web.boot.util.logger;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.apache.log4j.Level;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -72,9 +71,5 @@ public class WebLogger extends Logger {
     if (t != null) {
       t.printStackTrace();
     }
-  }
-
-  @Override
-  public void setLevel(Level level) {
   }
 }

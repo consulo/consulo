@@ -27,7 +27,6 @@ import consulo.web.gwt.server.GwtTransportServiceImpl;
 import consulo.web.servlet.AppUIBuilder;
 import consulo.web.servlet.ui.UIIconServlet;
 import consulo.web.servlet.ui.UIWebSocketHandler;
-import org.apache.log4j.Level;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -92,10 +91,6 @@ public class WebLoader {
           if (t != null) {
             t.printStackTrace();
           }
-        }
-
-        @Override
-        public void setLevel(Level level) {
         }
       };
     }

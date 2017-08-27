@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.diagnostic;
 
-import org.apache.log4j.Level;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,9 +64,5 @@ public class DefaultLogger extends Logger {
 
   @Override
   public void warn(@NonNls String message, Throwable t) {
-  }
-
-  @Override
-  public void setLevel(Level level) {
   }
 }

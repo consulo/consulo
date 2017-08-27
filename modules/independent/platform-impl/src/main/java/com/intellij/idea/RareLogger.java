@@ -34,7 +34,7 @@ public class RareLogger extends Logger {
 
   private RareLogger(final Logger logger, final boolean fairSynch) {
     myLogger = logger;
-    
+
     final Object lock = new Object();
     myCache = new SLRUMap<Object, Long>(64, 32) {
       @Override
@@ -69,7 +69,7 @@ public class RareLogger extends Logger {
       }
     };
     myConvertors = new LinkedList<LogFilter>();
-    
+
     // just passes to parent logger
     myProxy = new LogFilter() {
       @Override
@@ -77,18 +77,19 @@ public class RareLogger extends Logger {
       public Integer getAllowedLoggingInterval(Level level, String message, Throwable t, String[] details) {
         return -1;
       }
+
       @Override
-      public Object getKey(@NotNull Level level,
-                           @NonNls String message,
-                           @Nullable Throwable t,
-                           @NonNls String... details) {
+      public Object getKey(@NotNull Level level, @NonNls String message, @Nullable Throwable t, @NonNls String... details) {
         if (Level.DEBUG.equals(level)) {
           logger.debug(message, t);
-        } else if (Level.INFO.equals(level)) {
+        }
+        else if (Level.INFO.equals(level)) {
           logger.info(message, t);
-        } else if (Level.WARN.equals(level)) {
+        }
+        else if (Level.WARN.equals(level)) {
           logger.warn(message, t);
-        } else if (Level.ERROR.equals(level)) {
+        }
+        else if (Level.ERROR.equals(level)) {
           logger.error(message, t, details);
         }
         return null;
@@ -152,20 +153,16 @@ public class RareLogger extends Logger {
     process(Level.WARN, message, t);
   }
 
-  @Override
-  public void setLevel(Level level) {
-    myLogger.setLevel(level);
-  }
-
   private void process(@NotNull final Level level, @NonNls @Nullable final String message, @Nullable final Throwable t, @NonNls final String... details) {
-    if (! Level.ERROR.equals(level)) {
+    if (!Level.ERROR.equals(level)) {
       for (LogFilter convertor : myConvertors) {
         final Object key = convertor.getKey(level, message, t, details);
         if (key != null) {
           final Long latestMoment = myCache.get(key);
           if (latestMoment != null && ((System.currentTimeMillis() - latestMoment) < convertor.getAllowedLoggingInterval(level, message, t, details))) {
             return;
-          } else {
+          }
+          else {
             // log and put to cache
             myCache.put(key, System.currentTimeMillis());
             break;
@@ -180,6 +177,7 @@ public class RareLogger extends Logger {
   public interface LogFilter {
     @Nullable
     Object getKey(@NotNull final Level level, @NonNls final String message, @Nullable final Throwable t, @NonNls final String... details);
+
     @NotNull
     Integer getAllowedLoggingInterval(Level level, String message, Throwable t, String[] details);
   }

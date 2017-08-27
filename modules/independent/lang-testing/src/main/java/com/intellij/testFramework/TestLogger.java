@@ -70,9 +70,4 @@ public class TestLogger extends com.intellij.openapi.diagnostic.Logger {
   public Level getLevel() {
     return myLogger.getLevel();
   }
-
-  @Override
-  public void setLevel(Level level) {
-    myLogger.setLevel(level);
-  }
 }
