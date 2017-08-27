@@ -38,7 +38,7 @@ import java.util.List;
  * @since 30-Jan-17
  */
 @Deprecated
-@DeprecationInfo("Bringe from ProjectImportProvider to ModuleImportProvider, until all usage will be replaced")
+@DeprecationInfo("Bridge from ProjectImportProvider to ModuleImportProvider, until all usage will be replaced")
 public class LegacyModuleImportProvider implements ModuleImportProvider<ModuleImportContext> {
   private ProjectImportProvider myProvider;
 
