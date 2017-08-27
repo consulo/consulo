@@ -19,6 +19,7 @@
             <element id="dir-copy" path="$PROJECT_DIR$/lib" />
             <element id="zip-archive" name="boot.jar">
               <element id="module-output" name="boot" />
+              <element id="module-production-resource-output" name="boot" />
             </element>
             <element id="zip-archive" name="bootstrap.jar">
               <element id="module-output" name="bootstrap" />
