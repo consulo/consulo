@@ -165,7 +165,7 @@
           <orderEntry type="library" name="Guava" level="project" />
         </module-layer>
       </module>
-      <module name="api/editor-ui-api" dirurl="file://$PROJECT_DIR$/modules/editor-ui-api" current-layer="Default">
+      <module name="api/editor-ui-api" dirurl="file://$PROJECT_DIR$/modules/independent/editor-ui-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -180,7 +180,7 @@
           <orderEntry type="module" module-name="indexing-api" />
         </module-layer>
       </module>
-      <module name="api/editor-ui-ex" dirurl="file://$PROJECT_DIR$/modules/editor-ui-ex" current-layer="Default">
+      <module name="api/editor-ui-ex" dirurl="file://$PROJECT_DIR$/modules/independent/editor-ui-ex" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
