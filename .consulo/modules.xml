@@ -764,7 +764,7 @@
           <orderEntry type="module" module-name="lang-impl" />
         </module-layer>
       </module>
-      <module name="api/xdebugger-api" dirurl="file://$PROJECT_DIR$/modules/xdebugger-api" current-layer="Default">
+      <module name="api/xdebugger-api" dirurl="file://$PROJECT_DIR$/modules/independent/xdebugger-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -775,7 +775,7 @@
           <orderEntry type="module" module-name="lang-api" exported="" />
         </module-layer>
       </module>
-      <module name="impl/xdebugger-impl" dirurl="file://$PROJECT_DIR$/modules/xdebugger-impl" current-layer="Default">
+      <module name="impl/xdebugger-impl" dirurl="file://$PROJECT_DIR$/modules/independent/xdebugger-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
