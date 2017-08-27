@@ -1067,11 +1067,11 @@
           <orderEntry type="module" module-name="compiler-api" />
         </module-layer>
       </module>
-      <module name="impl/usage-view" dirurl="file://$PROJECT_DIR$/modules/usage-view" current-layer="Default">
+      <module name="impl/usage-view" dirurl="file://$PROJECT_DIR$/modules/independent/usage-view" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
