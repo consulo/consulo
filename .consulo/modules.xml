@@ -961,7 +961,7 @@
           <orderEntry type="module" module-name="util-rt" />
         </module-layer>
       </module>
-      <module name="impl/external-storage-impl" dirurl="file://$PROJECT_DIR$/modules/external-storage-impl" current-layer="Default">
+      <module name="impl/external-storage-impl" dirurl="file://$PROJECT_DIR$/modules/independent/external-storage-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
