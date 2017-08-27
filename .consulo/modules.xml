@@ -875,7 +875,7 @@
           <orderEntry type="library" name="slf4j-api" level="project" />
         </module-layer>
       </module>
-      <module name="impl/diff-impl" dirurl="file://$PROJECT_DIR$/modules/diff-impl" current-layer="Default">
+      <module name="impl/diff-impl" dirurl="file://$PROJECT_DIR$/modules/independent/diff-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -891,7 +891,7 @@
           <orderEntry type="module" module-name="vcs-api" />
         </module-layer>
       </module>
-      <module name="api/diff-api" dirurl="file://$PROJECT_DIR$/modules/diff-api" current-layer="Default">
+      <module name="api/diff-api" dirurl="file://$PROJECT_DIR$/modules/independent/diff-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
