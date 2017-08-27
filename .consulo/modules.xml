@@ -694,12 +694,10 @@
           <orderEntry type="module" module-name="annotations" />
         </module-layer>
       </module>
-      <module name="api/vcs-api" dirurl="file://$PROJECT_DIR$/modules/vcs-api" current-layer="Default">
+      <module name="api/vcs-api" dirurl="file://$PROJECT_DIR$/modules/independent/vcs-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
+          <content url="file://$MODULE_DIR$" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-api" exported="" />
@@ -707,12 +705,10 @@
           <orderEntry type="module" module-name="vcs-api-core" exported="" />
         </module-layer>
       </module>
-      <module name="impl/vcs-impl" dirurl="file://$PROJECT_DIR$/modules/vcs-impl" current-layer="Default">
+      <module name="impl/vcs-impl" dirurl="file://$PROJECT_DIR$/modules/independent/vcs-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
+          <content url="file://$MODULE_DIR$" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="vcs-api" exported="" />
@@ -726,13 +722,10 @@
           <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
-      <module name="api/vcs-log-api" dirurl="file://$PROJECT_DIR$/modules/vcs-log-api" current-layer="Default">
+      <module name="api/vcs-log-api" dirurl="file://$PROJECT_DIR$/modules/independent/vcs-log-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-            <content-folder type="TEST" url="file://$MODULE_DIR$/../../platform/vcs-log/api/test" />
-          </content>
+          <content url="file://$MODULE_DIR$" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="util-rt" />
@@ -742,14 +735,11 @@
           <orderEntry type="module" module-name="vcs-log-graph-api" />
         </module-layer>
       </module>
-      <module name="impl/vcs-log-impl" dirurl="file://$PROJECT_DIR$/modules/vcs-log-impl" current-layer="Default">
+      <module name="impl/vcs-log-impl" dirurl="file://$PROJECT_DIR$/modules/independent/vcs-log-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-            <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/../../platform/vcs-log/impl/icons" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/../../../platform/vcs-log/impl/icons" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
@@ -805,12 +795,10 @@
           <orderEntry type="module" module-name="compiler-impl" />
         </module-layer>
       </module>
-      <module name="api/dvcs-api" dirurl="file://$PROJECT_DIR$/modules/dvcs-api" current-layer="Default">
+      <module name="api/dvcs-api" dirurl="file://$PROJECT_DIR$/modules/independent/dvcs-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
+          <content url="file://$MODULE_DIR$" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="util-rt" />
@@ -818,25 +806,20 @@
           <orderEntry type="module" module-name="vcs-api" />
         </module-layer>
       </module>
-      <module name="api/vcs-log-graph-api" dirurl="file://$PROJECT_DIR$/modules/vcs-log-graph-api" current-layer="Default">
+      <module name="api/vcs-log-graph-api" dirurl="file://$PROJECT_DIR$/modules/independent/vcs-log-graph-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
+          <content url="file://$MODULE_DIR$" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" />
           <orderEntry type="module" module-name="util-rt" />
         </module-layer>
       </module>
-      <module name="impl/dvcs-impl" dirurl="file://$PROJECT_DIR$/modules/dvcs-impl" current-layer="Default">
+      <module name="impl/dvcs-impl" dirurl="file://$PROJECT_DIR$/modules/independent/dvcs-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
+          <content url="file://$MODULE_DIR$" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dvcs-api" />
@@ -849,13 +832,10 @@
           <orderEntry type="module" module-name="lang-impl" />
         </module-layer>
       </module>
-      <module name="impl/vcs-log-graph-impl" dirurl="file://$PROJECT_DIR$/modules/vcs-log-graph-impl" current-layer="Default">
+      <module name="impl/vcs-log-graph-impl" dirurl="file://$PROJECT_DIR$/modules/independent/vcs-log-graph-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-            <content-folder type="TEST" url="file://$MODULE_DIR$/test" />
-          </content>
+          <content url="file://$MODULE_DIR$" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="vcs-log-graph-api" exported="" />
@@ -905,12 +885,10 @@
           <orderEntry type="module" module-name="vcs-api-core" exported="" />
         </module-layer>
       </module>
-      <module name="api/vcs-api-core" dirurl="file://$PROJECT_DIR$/modules/vcs-api-core" current-layer="Default">
+      <module name="api/vcs-api-core" dirurl="file://$PROJECT_DIR$/modules/independent/vcs-api-core" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
+          <content url="file://$MODULE_DIR$" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
