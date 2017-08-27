@@ -195,7 +195,7 @@
           <orderEntry type="module" module-name="project-model-impl" />
         </module-layer>
       </module>
-      <module name="impl/extensions" dirurl="file://$PROJECT_DIR$/modules/extensions" current-layer="Default">
+      <module name="impl/extensions" dirurl="file://$PROJECT_DIR$/modules/independent/extensions" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
