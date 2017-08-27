@@ -82,6 +82,10 @@ public class PluginsAdvertiserHolder {
       catch (Exception ignored) {
       }
 
+      if(ApplicationManager.getApplication().isDisposed()) {
+        return;
+      }
+
       update(pluginDescriptors);
 
       if (pluginDescriptors.isEmpty()) {
