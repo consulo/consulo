@@ -1008,7 +1008,7 @@
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <extension id="java-web" />
-          <extension id="javaee-google-gwt" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-output-url="file://$MODULE_DIR$/../../web-impl/gwt-out" compiler-max-heap-size="512" compiler-parameters="-draftCompile" compiler-vm-parameters="" />
+          <extension id="javaee-google-gwt" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-output-url="file://$MODULE_DIR$/gwt-out" compiler-max-heap-size="512" compiler-parameters="-draftCompile" compiler-vm-parameters="" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-out" />
             <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-unitCache" />
