@@ -9,7 +9,7 @@
         <element id="module-output" name="util" />
         <element id="module-output" name="util-rt" />
         <element id="module-output" name="boot" />
-        <element id="module-output" name="testFramework" />
+        <element id="module-output" name="lang-testing" />
         <element id="module-production-resource-output" name="platform-resources-en" />
         <element id="module-production-resource-output" name="util" />
       </element>
