@@ -132,7 +132,7 @@
           <orderEntry type="module" module-name="lang-impl" />
         </module-layer>
       </module>
-      <module name="api/core-api" dirurl="file://$PROJECT_DIR$/modules/core-api" current-layer="Default">
+      <module name="api/core-api" dirurl="file://$PROJECT_DIR$/modules/independent/core-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
@@ -150,7 +150,7 @@
           <orderEntry type="library" name="CGLIB" level="project" />
         </module-layer>
       </module>
-      <module name="impl/core-impl" dirurl="file://$PROJECT_DIR$/modules/core-impl" current-layer="Default">
+      <module name="impl/core-impl" dirurl="file://$PROJECT_DIR$/modules/independent/core-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
@@ -1027,7 +1027,7 @@
           </orderEntry>
         </module-layer>
       </module>
-      <module name="impl/analysis-impl" dirurl="file://$PROJECT_DIR$/modules/analysis-impl" current-layer="Default">
+      <module name="impl/analysis-impl" dirurl="file://$PROJECT_DIR$/modules/independent/analysis-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -1045,7 +1045,7 @@
           <orderEntry type="module" module-name="indexing-impl" />
         </module-layer>
       </module>
-      <module name="api/analysis-api" dirurl="file://$PROJECT_DIR$/modules/analysis-api" current-layer="Default">
+      <module name="api/analysis-api" dirurl="file://$PROJECT_DIR$/modules/independent/analysis-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
