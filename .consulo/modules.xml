@@ -816,13 +816,13 @@
           <orderEntry type="module" module-name="ui-api" />
         </module-layer>
       </module>
-      <module name="impl/web-boot" dirurl="file://$PROJECT_DIR$/modules/web-boot" current-layer="Default">
+      <module name="impl/web-boot" dirurl="file://$PROJECT_DIR$/modules/web/web-boot" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-name="1.8" language-level-name="JDK_1_8" bytecode-version="1.8" />
           <extension id="java-web" />
           <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-            <content-folder type="WEB_RESOURCES" url="file://$MODULE_DIR$/webapp" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
+            <content-folder type="WEB_RESOURCES" url="file://$MODULE_DIR$/src/main/webapp" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
@@ -1031,8 +1031,8 @@
               <sources>
                 <root url="file://$MODULE_DIR$/lib" />
               </sources>
-              <jarDirectory url="file://$MODULE_DIR$/../../web-impl/lib" recursive="false" />
-              <jarDirectory url="file://$MODULE_DIR$/../../web-impl/lib" recursive="false" type="sources" />
+              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
+              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" type="sources" />
             </library>
           </orderEntry>
         </module-layer>
