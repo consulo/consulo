@@ -366,7 +366,7 @@
           <orderEntry type="library" name="apache-httpclient" level="project" />
         </module-layer>
       </module>
-      <module name="api/lvcs-api" dirurl="file://$PROJECT_DIR$/modules/lvcs-api" current-layer="Default">
+      <module name="api/lvcs-api" dirurl="file://$PROJECT_DIR$/modules/independent/lvcs-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -377,7 +377,7 @@
           <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
-      <module name="impl/lvcs-impl" dirurl="file://$PROJECT_DIR$/modules/lvcs-impl" current-layer="Default">
+      <module name="impl/lvcs-impl" dirurl="file://$PROJECT_DIR$/modules/independent/lvcs-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
