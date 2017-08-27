@@ -34,13 +34,13 @@
           </element>
           <element id="artifact" artifact-name="crossPlatformLibraries" />
           <element id="zip-archive" name="consulo-web-impl.jar">
-            <element id="module-output" name="web-impl" />
+            <element id="module-output" name="web-ui-impl" />
           </element>
-          <element id="dir-copy" path="$PROJECT_DIR$/modules/web-impl/lib" />
+          <element id="dir-copy" path="$PROJECT_DIR$/modules/web/web-ui-impl/lib" />
           <element id="file-copy" path="$PROJECT_DIR$/modules/web-boot/lib/javax.servlet-api-3.1.0.jar" />
           <element id="zip-archive" name="consulo-web-resources.jar">
             <element id="directory" name="webResources">
-              <element id="dir-copy" path="$PROJECT_DIR$/modules/web-impl/gwt-out" />
+              <element id="dir-copy" path="$PROJECT_DIR$/modules/web/web-ui-impl/gwt-out" />
             </element>
           </element>
         </element>

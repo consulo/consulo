@@ -762,39 +762,6 @@
           <orderEntry type="module" module-name="editor-ui-api" />
         </module-layer>
       </module>
-      <module name="impl/web-impl" dirurl="file://$PROJECT_DIR$/modules/web-impl" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
-          <extension id="java-web" />
-          <extension id="javaee-google-gwt" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-output-url="file://$MODULE_DIR$/gwt-out" compiler-max-heap-size="512" compiler-parameters="-draftCompile" compiler-vm-parameters="" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-out" />
-            <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-unitCache" />
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="module-extension-sdk" extension-id="javaee-google-gwt" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="bootstrap" />
-          <orderEntry type="module" module-name="core-impl" />
-          <orderEntry type="library" name="Log4J" level="project" />
-          <orderEntry type="module" module-name="platform-impl" />
-          <orderEntry type="module" module-name="lang-impl" />
-          <orderEntry type="module" module-name="ui-api" />
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="file://$MODULE_DIR$/lib" />
-              </binaries>
-              <sources>
-                <root url="file://$MODULE_DIR$/lib" />
-              </sources>
-              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
-              <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" type="sources" />
-            </library>
-          </orderEntry>
-        </module-layer>
-      </module>
       <module name="api/ui-api" dirurl="file://$PROJECT_DIR$/modules/independent/ui-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
@@ -1035,6 +1002,39 @@
           <orderEntry type="module" module-name="compiler-api" />
           <orderEntry type="library" name="tcServiceMessages" level="project" />
           <orderEntry type="module" module-name="diff-impl" />
+        </module-layer>
+      </module>
+      <module name="impl/web-ui-impl" dirurl="file://$PROJECT_DIR$/modules/web/web-ui-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
+          <extension id="java-web" />
+          <extension id="javaee-google-gwt" sdk-name="gwt-2.7.0" output-style="PRETTY" compiler-output-url="file://$MODULE_DIR$/../../web-impl/gwt-out" compiler-max-heap-size="512" compiler-parameters="-draftCompile" compiler-vm-parameters="" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-out" />
+            <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/gwt-unitCache" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="module-extension-sdk" extension-id="javaee-google-gwt" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="bootstrap" />
+          <orderEntry type="module" module-name="core-impl" />
+          <orderEntry type="library" name="Log4J" level="project" />
+          <orderEntry type="module" module-name="platform-impl" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="ui-api" />
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="file://$MODULE_DIR$/lib" />
+              </binaries>
+              <sources>
+                <root url="file://$MODULE_DIR$/lib" />
+              </sources>
+              <jarDirectory url="file://$MODULE_DIR$/../../web-impl/lib" recursive="false" />
+              <jarDirectory url="file://$MODULE_DIR$/../../web-impl/lib" recursive="false" type="sources" />
+            </library>
+          </orderEntry>
         </module-layer>
       </module>
     </modules>
