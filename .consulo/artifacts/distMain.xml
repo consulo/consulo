@@ -36,9 +36,6 @@
             <element id="zip-archive" name="extensions.jar">
               <element id="module-output" name="extensions" />
             </element>
-            <element id="zip-archive" name="forms_rt.jar">
-              <element id="module-output" name="forms_rt" />
-            </element>
             <element id="artifact" artifact-name="crossPlatformLibraries" />
             <element id="zip-archive" name="consulo-desktop-impl.jar">
               <element id="module-output" name="desktop-ui-impl" />

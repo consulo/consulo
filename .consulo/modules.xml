@@ -92,7 +92,6 @@
           <orderEntry type="module" module-name="boot" />
           <orderEntry type="module" module-name="bootstrap" />
           <orderEntry type="module" module-name="extensions" />
-          <orderEntry type="module" module-name="forms_rt" />
           <orderEntry type="module" module-name="icons" />
           <orderEntry type="module" module-name="lang-api" />
           <orderEntry type="module" module-name="lang-impl" />
@@ -247,16 +246,6 @@
           <orderEntry type="module" module-name="xdebugger-impl" />
         </module-layer>
       </module>
-      <module name="impl/forms_rt" dirurl="file://$PROJECT_DIR$/modules/forms_rt" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-        </module-layer>
-      </module>
       <module name="api/graph-api" dirurl="file://$PROJECT_DIR$/modules/graph-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
@@ -406,7 +395,6 @@
           <orderEntry type="module" module-name="core-api" exported="" />
           <orderEntry type="library" exploded="" name="picocontainer" level="project" />
           <orderEntry type="module" module-name="bootstrap" />
-          <orderEntry type="module" module-name="forms_rt" exported="" />
           <orderEntry type="library" exploded="" name="commons-codec" level="project" />
           <orderEntry type="module" module-name="platform-resources-en" exported="" />
           <orderEntry type="library" name="OroMatcher" level="project" />
@@ -418,6 +406,7 @@
           <orderEntry type="module" module-name="analysis-api" exported="" />
           <orderEntry type="library" name="pty4" level="project" />
           <orderEntry type="library" name="apache-httpclient" level="project" />
+          <orderEntry type="library" exploded="" name="forms_rt" level="project" />
         </module-layer>
       </module>
       <module name="impl/platform-impl" dirurl="file://$PROJECT_DIR$/modules/independent/platform-impl" current-layer="Default">
@@ -510,7 +499,9 @@
       <module name="impl/remote-servers-agent-rt" dirurl="file://$PROJECT_DIR$/modules/independent/remote-servers-agent-rt" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
+          </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
         </module-layer>
@@ -606,6 +597,8 @@
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src/main/resources" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/src/test/java" />
+            <content-folder type="TEST_RESOURCE" url="file://$MODULE_DIR$/src/test/resources" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
