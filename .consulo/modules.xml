@@ -813,7 +813,7 @@
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
