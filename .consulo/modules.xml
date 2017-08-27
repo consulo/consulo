@@ -1036,7 +1036,7 @@
           <orderEntry type="module" module-name="platform-impl" />
         </module-layer>
       </module>
-      <module name="impl/xtest-impl" dirurl="file://$PROJECT_DIR$/modules/xtest-impl" current-layer="Default">
+      <module name="impl/xtest-impl" dirurl="file://$PROJECT_DIR$/modules/independent/xtest-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -1050,7 +1050,7 @@
           <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
-      <module name="impl/xtest-sm-impl" dirurl="file://$PROJECT_DIR$/modules/xtest-sm-impl" current-layer="Default">
+      <module name="impl/xtest-sm-impl" dirurl="file://$PROJECT_DIR$/modules/independent/xtest-sm-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
