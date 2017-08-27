@@ -104,7 +104,7 @@
           <orderEntry type="module" module-name="platform-resources-en" />
           <orderEntry type="module" module-name="testFramework" />
           <orderEntry type="module" module-name="testRunner" />
-          <orderEntry type="module" module-name="usageView" />
+          <orderEntry type="module" module-name="usage-view" />
           <orderEntry type="module" module-name="util" />
           <orderEntry type="module" module-name="vcs-api" />
           <orderEntry type="module" module-name="vcs-impl" />
@@ -351,7 +351,7 @@
           <orderEntry type="library" name="JUnit4" level="project" />
           <orderEntry type="library" name="Velocity" level="project" />
           <orderEntry type="module" module-name="platform-impl" exported="" />
-          <orderEntry type="module" module-name="usageView" exported="" />
+          <orderEntry type="module" module-name="usage-view" exported="" />
           <orderEntry type="library" name="xpp3-1.1.4-min" level="project" />
           <orderEntry type="module" module-name="indexing-api" />
           <orderEntry type="module" module-name="indexing-impl" exported="" />
@@ -601,18 +601,6 @@
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="xdebugger-api" />
           <orderEntry type="module" module-name="diff-impl" />
-        </module-layer>
-      </module>
-      <module name="impl/usageView" dirurl="file://$PROJECT_DIR$/modules/usageView" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="lang-api" />
-          <orderEntry type="module" module-name="platform-impl" />
         </module-layer>
       </module>
       <module name="impl/util" dirurl="file://$PROJECT_DIR$/modules/independent/util" current-layer="Default">
@@ -1077,6 +1065,18 @@
           <orderEntry type="module" module-name="core-impl" />
           <orderEntry type="library" name="Snappy-Java" level="project" />
           <orderEntry type="module" module-name="compiler-api" />
+        </module-layer>
+      </module>
+      <module name="impl/usage-view" dirurl="file://$PROJECT_DIR$/modules/usage-view" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="lang-api" />
+          <orderEntry type="module" module-name="platform-impl" />
         </module-layer>
       </module>
     </modules>

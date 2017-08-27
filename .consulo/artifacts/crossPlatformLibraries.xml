@@ -61,7 +61,7 @@
         <element id="module-output" name="project-model-impl" />
         <element id="module-output" name="remote-servers-impl" />
         <element id="module-production-resource-output" name="remote-servers-impl" />
-        <element id="module-output" name="usageView" />
+        <element id="module-output" name="usage-view" />
         <element id="module-output" name="testFramework" />
         <element id="module-output" name="buildin-server-impl" />
       </element>
