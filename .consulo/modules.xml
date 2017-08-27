@@ -1066,7 +1066,7 @@
           <orderEntry type="module" module-name="testRunner" />
         </module-layer>
       </module>
-      <module name="api/project-model-api" dirurl="file://$PROJECT_DIR$/modules/project-model-api" current-layer="Default">
+      <module name="api/project-model-api" dirurl="file://$PROJECT_DIR$/modules/independent/project-model-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -1079,7 +1079,7 @@
           <orderEntry type="module" module-name="ui-api" exported="" />
         </module-layer>
       </module>
-      <module name="impl/project-model-impl" dirurl="file://$PROJECT_DIR$/modules/project-model-impl" current-layer="Default">
+      <module name="impl/project-model-impl" dirurl="file://$PROJECT_DIR$/modules/independent/project-model-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
