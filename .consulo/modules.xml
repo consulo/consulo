@@ -92,7 +92,6 @@
           <orderEntry type="module" module-name="boot" />
           <orderEntry type="module" module-name="bootstrap" />
           <orderEntry type="module" module-name="extensions" />
-          <orderEntry type="module" module-name="icons" />
           <orderEntry type="module" module-name="lang-api" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="lvcs-api" />
@@ -269,16 +268,6 @@
           <orderEntry type="module" module-name="graph-api" />
         </module-layer>
       </module>
-      <module name="impl/icons" dirurl="file://$PROJECT_DIR$/modules/icons" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-        </module-layer>
-      </module>
       <module name="api/indexing-api" dirurl="file://$PROJECT_DIR$/modules/independent/indexing-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
@@ -398,7 +387,6 @@
           <orderEntry type="library" exploded="" name="commons-codec" level="project" />
           <orderEntry type="module" module-name="platform-resources-en" exported="" />
           <orderEntry type="library" name="OroMatcher" level="project" />
-          <orderEntry type="module" module-name="icons" />
           <orderEntry type="module" module-name="project-model-api" exported="" />
           <orderEntry type="library" name="Netty" level="project" />
           <orderEntry type="library" name="proxy-vole" level="project" />
@@ -460,7 +448,7 @@
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src" />
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/src/main/resources" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
@@ -581,7 +569,6 @@
           <orderEntry type="library" name="OroMatcher" level="project" />
           <orderEntry type="library" name="JUnit4" level="project" />
           <orderEntry type="library" name="Guava" level="project" />
-          <orderEntry type="module" module-name="icons" />
           <orderEntry type="library" name="Snappy-Java" level="project" />
           <orderEntry type="library" exploded="" name="imgscalr" level="project" />
           <orderEntry type="module" module-name="ui-api" />

@@ -87,7 +87,6 @@
         <element id="module-output" name="xtest-sm-impl" />
       </element>
       <element id="zip-archive" name="consulo-resources.jar">
-        <element id="module-production-resource-output" name="icons" />
         <element id="module-production-resource-output" name="platform-resources" />
         <element id="module-production-resource-output" name="platform-resources-en" />
       </element>
