@@ -978,7 +978,7 @@
           <orderEntry type="module" module-name="util" />
         </module-layer>
       </module>
-      <module name="impl/buildin-server-impl" dirurl="file://$PROJECT_DIR$/modules/buildin-server-impl" current-layer="Default">
+      <module name="impl/buildin-server-impl" dirurl="file://$PROJECT_DIR$/modules/independent/buildin-server-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-name="JDK_1_8" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
