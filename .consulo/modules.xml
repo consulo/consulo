@@ -2,7 +2,7 @@
 <project>
   <component name="ModuleManager">
     <modules>
-      <module name="impl/boot" dirurl="file://$PROJECT_DIR$/modules/boot" current-layer="Default">
+      <module name="impl/boot" dirurl="file://$PROJECT_DIR$/modules/desktop/boot" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-name="1.8" language-level-name="JDK_1_8" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
@@ -13,7 +13,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="impl/bootstrap" dirurl="file://$PROJECT_DIR$/modules/bootstrap" current-layer="Default">
+      <module name="impl/bootstrap" dirurl="file://$PROJECT_DIR$/modules/desktop/bootstrap" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-name="JDK_1_6" bytecode-version="1.6" />
           <content url="file://$MODULE_DIR$">
