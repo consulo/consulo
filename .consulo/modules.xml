@@ -992,7 +992,7 @@
           <orderEntry type="library" name="XmlRPC" level="project" />
         </module-layer>
       </module>
-      <module name="impl/desktop-ui-impl" dirurl="file://$PROJECT_DIR$/modules/desktop-ui-impl" current-layer="Default">
+      <module name="impl/desktop-ui-impl" dirurl="file://$PROJECT_DIR$/modules/desktop/desktop-ui-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
@@ -1072,7 +1072,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="impl/desktop-ui-laf-impl" dirurl="file://$PROJECT_DIR$/modules/desktop-ui-laf-impl" current-layer="Default">
+      <module name="impl/desktop-ui-laf-impl" dirurl="file://$PROJECT_DIR$/modules/desktop/desktop-ui-laf-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
