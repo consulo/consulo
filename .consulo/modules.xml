@@ -507,17 +507,15 @@
           <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
-      <module name="impl/remote-servers-agent-rt" dirurl="file://$PROJECT_DIR$/modules/remote-servers-agent-rt" current-layer="Default">
+      <module name="impl/remote-servers-agent-rt" dirurl="file://$PROJECT_DIR$/modules/independent/remote-servers-agent-rt" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
-          </content>
+          <content url="file://$MODULE_DIR$" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="api/remote-servers-api" dirurl="file://$PROJECT_DIR$/modules/remote-servers-api" current-layer="Default">
+      <module name="api/remote-servers-api" dirurl="file://$PROJECT_DIR$/modules/independent/remote-servers-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -531,7 +529,7 @@
           <orderEntry type="module" module-name="lang-api" />
         </module-layer>
       </module>
-      <module name="impl/remote-servers-impl" dirurl="file://$PROJECT_DIR$/modules/remote-servers-impl" current-layer="Default">
+      <module name="impl/remote-servers-impl" dirurl="file://$PROJECT_DIR$/modules/independent/remote-servers-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
