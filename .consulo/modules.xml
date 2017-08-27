@@ -809,7 +809,7 @@
           <orderEntry type="library" name="Guava" level="project" />
         </module-layer>
       </module>
-      <module name="impl/slf4j-bind" dirurl="file://$PROJECT_DIR$/modules/slf4j-bind" current-layer="Default">
+      <module name="impl/slf4j-bind" dirurl="file://$PROJECT_DIR$/modules/independent/slf4j-bind" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
