@@ -75,7 +75,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="platform-impl" />
-          <orderEntry type="module" module-name="lang-testing" />
+          <orderEntry type="module" module-name="lang-testing" scope="TEST" />
           <orderEntry type="module" module-name="compiler-impl" />
           <orderEntry type="module" module-name="compiler-bridge-impl" />
         </module-layer>
@@ -110,7 +110,6 @@
           <orderEntry type="module" module-name="xdebugger-impl" />
           <orderEntry type="module" module-name="core" />
           <orderEntry type="module" module-name="xtest-sm-impl" />
-          <orderEntry type="module" module-name="platform-tests" />
           <orderEntry type="module" module-name="remote-servers-api" />
           <orderEntry type="module" module-name="remote-servers-impl" />
           <orderEntry type="module" module-name="compiler-bridge-impl" />
@@ -464,26 +463,6 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="impl/platform-tests" dirurl="file://$PROJECT_DIR$/modules/platform-tests" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="library" name="Mocks" level="project" />
-          <orderEntry type="module" module-name="lang-impl" />
-          <orderEntry type="library" name="JUnit4" level="project" />
-          <orderEntry type="module" module-name="lang-testing" />
-          <orderEntry type="library" name="EasyMock" level="project" />
-          <orderEntry type="module" module-name="lvcs-impl" />
-          <orderEntry type="module" module-name="vcs-impl" />
-          <orderEntry type="module" module-name="platform-resources" />
-          <orderEntry type="module" module-name="xdebugger-impl" />
-          <orderEntry type="module" module-name="diff-impl" />
-        </module-layer>
-      </module>
       <module name="impl/remote-servers-agent-rt" dirurl="file://$PROJECT_DIR$/modules/independent/remote-servers-agent-rt" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
@@ -652,7 +631,7 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="xdebugger-api" exported="" />
           <orderEntry type="module" module-name="lang-impl" />
-          <orderEntry type="module" module-name="lang-testing" />
+          <orderEntry type="module" module-name="lang-testing" scope="TEST" />
           <orderEntry type="module" module-name="platform-resources" />
           <orderEntry type="module" module-name="diff-api" />
         </module-layer>
@@ -1028,7 +1007,7 @@
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="library" exploded="" name="tcServiceMessages" level="project" />
           <orderEntry type="module" module-name="annotations" />
-          <orderEntry type="module" module-name="lang-testing" />
+          <orderEntry type="module" module-name="lang-testing" scope="TEST" />
           <orderEntry type="library" name="thrift" level="project" />
           <orderEntry type="library" name="slf4j-api" level="project" />
         </module-layer>
@@ -1039,6 +1018,7 @@
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
             <content-folder type="TEST" url="file://$MODULE_DIR$/src/test/java" />
+            <content-folder type="TEST_RESOURCE" url="file://$MODULE_DIR$/src/test/resources" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
@@ -1054,6 +1034,7 @@
           <orderEntry type="module" module-name="platform-resources" exported="" />
           <orderEntry type="module" module-name="compiler-api" />
           <orderEntry type="library" name="tcServiceMessages" level="project" />
+          <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
     </modules>
