@@ -59,7 +59,7 @@
         <element id="module-output" name="platform-impl" />
         <element id="module-production-resource-output" name="platform-impl" />
         <element id="module-output" name="platform-main" />
-        <element id="module-output" name="projectModel-impl" />
+        <element id="module-output" name="project-model-impl" />
         <element id="module-output" name="remote-servers-impl" />
         <element id="module-production-resource-output" name="remote-servers-impl" />
         <element id="module-output" name="usageView" />
@@ -80,7 +80,7 @@
         <element id="module-output" name="indexing-api" />
         <element id="module-output" name="platform-api" />
         <element id="module-output" name="lang-api" />
-        <element id="module-output" name="projectModel-api" />
+        <element id="module-output" name="project-model-api" />
         <element id="module-output" name="remote-servers-api" />
       </element>
       <element id="jar-archive" name="consulo-xtest-impl.jar">

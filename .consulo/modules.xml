@@ -33,7 +33,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
-          <orderEntry type="module" module-name="projectModel-api" />
+          <orderEntry type="module" module-name="project-model-api" />
           <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
@@ -62,7 +62,7 @@
           <orderEntry type="library" name="OroMatcher" level="project" />
           <orderEntry type="module" module-name="compiler-bridge-impl" />
           <orderEntry type="module" module-name="indexing-impl" />
-          <orderEntry type="module" module-name="projectModel-impl" />
+          <orderEntry type="module" module-name="project-model-impl" />
           <orderEntry type="module" module-name="lang-api" />
         </module-layer>
       </module>
@@ -176,7 +176,7 @@
           <orderEntry type="module" module-name="core-api" />
           <orderEntry type="module" module-name="util" />
           <orderEntry type="module" module-name="annotations" />
-          <orderEntry type="module" module-name="projectModel-api" />
+          <orderEntry type="module" module-name="project-model-api" />
           <orderEntry type="module" module-name="indexing-api" />
         </module-layer>
       </module>
@@ -193,7 +193,7 @@
           <orderEntry type="module" module-name="annotations" exported="" />
           <orderEntry type="module" module-name="core-impl" exported="" />
           <orderEntry type="module" module-name="indexing-impl" />
-          <orderEntry type="module" module-name="projectModel-impl" />
+          <orderEntry type="module" module-name="project-model-impl" />
         </module-layer>
       </module>
       <module name="impl/extensions" dirurl="file://$PROJECT_DIR$/modules/extensions" current-layer="Default">
@@ -226,7 +226,7 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="annotations" exported="" />
           <orderEntry type="module" module-name="util" exported="" />
-          <orderEntry type="module" module-name="projectModel-api" exported="" />
+          <orderEntry type="module" module-name="project-model-api" exported="" />
           <orderEntry type="module" module-name="platform-api" exported="" />
           <orderEntry type="module" module-name="lang-api" exported="" />
           <orderEntry type="module" module-name="compiler-api" exported="" />
@@ -242,7 +242,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="external-system-api" exported="" />
-          <orderEntry type="module" module-name="projectModel-impl" />
+          <orderEntry type="module" module-name="project-model-impl" />
           <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="vcs-impl" />
@@ -301,7 +301,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-api" exported="" />
-          <orderEntry type="module" module-name="projectModel-api" />
+          <orderEntry type="module" module-name="project-model-api" />
           <orderEntry type="library" name="NanoXML" level="project" />
         </module-layer>
       </module>
@@ -315,7 +315,7 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="core-impl" />
           <orderEntry type="module" module-name="indexing-api" exported="" />
-          <orderEntry type="module" module-name="projectModel-impl" />
+          <orderEntry type="module" module-name="project-model-impl" />
         </module-layer>
       </module>
       <module name="api/lang-api" dirurl="file://$PROJECT_DIR$/modules/independent/lang-api" current-layer="Default">
@@ -330,7 +330,7 @@
           <orderEntry type="module" module-name="lvcs-api" exported="" />
           <orderEntry type="library" exploded="" name="NanoXML" level="project" />
           <orderEntry type="module" module-name="indexing-api" exported="" />
-          <orderEntry type="module" module-name="projectModel-api" exported="" />
+          <orderEntry type="module" module-name="project-model-api" exported="" />
           <orderEntry type="library" name="JUnit4" level="project" />
           <orderEntry type="library" name="Mocks" level="project" />
           <orderEntry type="module" module-name="analysis-api" exported="" />
@@ -357,7 +357,7 @@
           <orderEntry type="module" module-name="indexing-api" />
           <orderEntry type="module" module-name="indexing-impl" exported="" />
           <orderEntry type="library" name="Snappy-Java" level="project" />
-          <orderEntry type="module" module-name="projectModel-impl" exported="" />
+          <orderEntry type="module" module-name="project-model-impl" exported="" />
           <orderEntry type="library" name="swingx" level="project" />
           <orderEntry type="library" name="Guava" level="project" />
           <orderEntry type="library" name="gson" level="project" />
@@ -413,7 +413,7 @@
           <orderEntry type="module" module-name="platform-resources-en" exported="" />
           <orderEntry type="library" name="OroMatcher" level="project" />
           <orderEntry type="module" module-name="icons" />
-          <orderEntry type="module" module-name="projectModel-api" exported="" />
+          <orderEntry type="module" module-name="project-model-api" exported="" />
           <orderEntry type="library" name="Netty" level="project" />
           <orderEntry type="library" name="proxy-vole" level="project" />
           <orderEntry type="library" name="miglayout-swing" level="project" />
@@ -452,7 +452,7 @@
           <orderEntry type="library" exploded="" name="miglayout-swing" level="project" />
           <orderEntry type="module" module-name="indexing-api" />
           <orderEntry type="module" module-name="indexing-impl" />
-          <orderEntry type="module" module-name="projectModel-impl" />
+          <orderEntry type="module" module-name="project-model-impl" />
           <orderEntry type="library" name="Snappy-Java" level="project" />
           <orderEntry type="library" name="Netty" level="project" />
           <orderEntry type="library" name="Sanselan" level="project" />
@@ -519,33 +519,6 @@
           <orderEntry type="module" module-name="platform-resources" />
           <orderEntry type="module" module-name="xdebugger-impl" />
           <orderEntry type="module" module-name="diff-impl" />
-        </module-layer>
-      </module>
-      <module name="api/projectModel-api" dirurl="file://$PROJECT_DIR$/modules/projectModel-api" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="core-api" exported="" />
-          <orderEntry type="library" exploded="" name="Guava" level="project" />
-          <orderEntry type="module" module-name="ui-api" exported="" />
-        </module-layer>
-      </module>
-      <module name="impl/projectModel-impl" dirurl="file://$PROJECT_DIR$/modules/projectModel-impl" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="projectModel-api" exported="" />
-          <orderEntry type="module" module-name="core-impl" />
-          <orderEntry type="library" name="Snappy-Java" level="project" />
-          <orderEntry type="module" module-name="compiler-api" />
         </module-layer>
       </module>
       <module name="impl/remote-servers-agent-rt" dirurl="file://$PROJECT_DIR$/modules/remote-servers-agent-rt" current-layer="Default">
@@ -1038,7 +1011,7 @@
           <orderEntry type="module" module-name="core-impl" />
           <orderEntry type="module" module-name="util" />
           <orderEntry type="module" module-name="extensions" />
-          <orderEntry type="module" module-name="projectModel-impl" />
+          <orderEntry type="module" module-name="project-model-impl" />
           <orderEntry type="module" module-name="editor-ui-ex" />
           <orderEntry type="module" module-name="indexing-impl" />
         </module-layer>
@@ -1056,7 +1029,7 @@
           <orderEntry type="library" name="JDOM" level="project" />
           <orderEntry type="module" module-name="extensions" />
           <orderEntry type="module" module-name="core-api" />
-          <orderEntry type="module" module-name="projectModel-api" />
+          <orderEntry type="module" module-name="project-model-api" />
           <orderEntry type="module" module-name="editor-ui-api" exported="" />
         </module-layer>
       </module>
@@ -1091,6 +1064,33 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="lang-impl" />
           <orderEntry type="module" module-name="testRunner" />
+        </module-layer>
+      </module>
+      <module name="api/project-model-api" dirurl="file://$PROJECT_DIR$/modules/project-model-api" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="core-api" exported="" />
+          <orderEntry type="library" exploded="" name="Guava" level="project" />
+          <orderEntry type="module" module-name="ui-api" exported="" />
+        </module-layer>
+      </module>
+      <module name="impl/project-model-impl" dirurl="file://$PROJECT_DIR$/modules/project-model-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="project-model-api" exported="" />
+          <orderEntry type="module" module-name="core-impl" />
+          <orderEntry type="library" name="Snappy-Java" level="project" />
+          <orderEntry type="module" module-name="compiler-api" />
         </module-layer>
       </module>
     </modules>
