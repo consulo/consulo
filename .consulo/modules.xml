@@ -1012,7 +1012,7 @@
           <orderEntry type="library" name="slf4j-api" level="project" />
         </module-layer>
       </module>
-      <module name="impl/lang-testing" dirurl="file://$PROJECT_DIR$/modules/lang-testing" current-layer="Default">
+      <module name="impl/lang-testing" dirurl="file://$PROJECT_DIR$/modules/independent/lang-testing" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
