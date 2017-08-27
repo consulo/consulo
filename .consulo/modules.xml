@@ -395,7 +395,7 @@
           <orderEntry type="module" module-name="diff-impl" />
         </module-layer>
       </module>
-      <module name="api/platform-api" dirurl="file://$PROJECT_DIR$/modules/platform-api" current-layer="Default">
+      <module name="api/platform-api" dirurl="file://$PROJECT_DIR$/modules/independent/platform-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -422,7 +422,7 @@
           <orderEntry type="library" name="apache-httpclient" level="project" />
         </module-layer>
       </module>
-      <module name="impl/platform-impl" dirurl="file://$PROJECT_DIR$/modules/platform-impl" current-layer="Default">
+      <module name="impl/platform-impl" dirurl="file://$PROJECT_DIR$/modules/independent/platform-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
