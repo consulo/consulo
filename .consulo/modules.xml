@@ -245,7 +245,7 @@
           <orderEntry type="module" module-name="xdebugger-impl" />
         </module-layer>
       </module>
-      <module name="api/graph-api" dirurl="file://$PROJECT_DIR$/modules/graph-api" current-layer="Default">
+      <module name="api/graph-api" dirurl="file://$PROJECT_DIR$/modules/independent/graph-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -256,7 +256,7 @@
           <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
-      <module name="impl/graph-impl" dirurl="file://$PROJECT_DIR$/modules/graph-impl" current-layer="Default">
+      <module name="impl/graph-impl" dirurl="file://$PROJECT_DIR$/modules/independent/graph-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
