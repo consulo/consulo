@@ -102,7 +102,7 @@
         <element id="module-output" name="compiler-api" />
       </element>
       <element id="zip-archive" name="consulo-xcoverage-impl.jar">
-        <element id="module-output" name="coverage-impl" />
+        <element id="module-output" name="xcoverage-impl" />
       </element>
       <element id="zip-archive" name="consulo-external-storage-impl.jar">
         <element id="module-output" name="external-storage-impl" />

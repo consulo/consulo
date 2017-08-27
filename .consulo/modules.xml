@@ -805,18 +805,6 @@
           <orderEntry type="module" module-name="compiler-impl" />
         </module-layer>
       </module>
-      <module name="impl/coverage-impl" dirurl="file://$PROJECT_DIR$/modules/coverage-impl" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="lang-impl" />
-          <orderEntry type="module" module-name="testRunner" />
-        </module-layer>
-      </module>
       <module name="api/dvcs-api" dirurl="file://$PROJECT_DIR$/modules/dvcs-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
@@ -1093,6 +1081,18 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
+        </module-layer>
+      </module>
+      <module name="impl/xcoverage-impl" dirurl="file://$PROJECT_DIR$/modules/xcoverage-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src/main/java" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="lang-impl" />
+          <orderEntry type="module" module-name="testRunner" />
         </module-layer>
       </module>
     </modules>
