@@ -24,7 +24,7 @@
           <orderEntry type="module" module-name="util" />
         </module-layer>
       </module>
-      <module name="api/compiler-api" dirurl="file://$PROJECT_DIR$/modules/compiler-api" current-layer="Default">
+      <module name="api/compiler-api" dirurl="file://$PROJECT_DIR$/modules/independent/compiler-api" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -37,7 +37,7 @@
           <orderEntry type="module" module-name="platform-api" />
         </module-layer>
       </module>
-      <module name="impl/compiler-bridge-impl" dirurl="file://$PROJECT_DIR$/modules/compiler-bridge-impl" current-layer="Default">
+      <module name="impl/compiler-bridge-impl" dirurl="file://$PROJECT_DIR$/modules/independent/compiler-bridge-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -48,7 +48,7 @@
           <orderEntry type="module" module-name="compiler-api" />
         </module-layer>
       </module>
-      <module name="impl/compiler-impl" dirurl="file://$PROJECT_DIR$/modules/compiler-impl" current-layer="Default">
+      <module name="impl/compiler-impl" dirurl="file://$PROJECT_DIR$/modules/independent/compiler-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -66,7 +66,7 @@
           <orderEntry type="module" module-name="lang-api" />
         </module-layer>
       </module>
-      <module name="impl/compiler-server-impl" dirurl="file://$PROJECT_DIR$/modules/compiler-server-impl" current-layer="Default">
+      <module name="impl/compiler-server-impl" dirurl="file://$PROJECT_DIR$/modules/independent/compiler-server-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
