@@ -5,7 +5,6 @@
       <root url="jar://$PROJECT_DIR$/lib/httpclient-4.3.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/httpcore-4.3.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/fluent-hc-4.3.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.1.jar!/" />
     </binaries>
     <sources>
       <root url="zip://$PROJECT_DIR$/libSrc/httpcomponents-core-4.3.3-src.zip!/httpcomponents-core-4.3.3/httpcore/src/main/java" />
@@ -15,7 +14,6 @@
       <root url="zip://$PROJECT_DIR$/libSrc/httpcomponents-client-4.3.6-src.zip!/httpcomponents-client-4.3.6/httpclient/src/main/java" />
       <root url="zip://$PROJECT_DIR$/libSrc/httpcomponents-client-4.3.6-src.zip!/httpcomponents-client-4.3.6/httpclient-win/src/main/java" />
       <root url="zip://$PROJECT_DIR$/libSrc/httpcomponents-client-4.3.6-src.zip!/httpcomponents-client-4.3.6/httpclient-cache/src/main/java" />
-      <root url="zip://$PROJECT_DIR$/libSrc/commons-logging-1.1.1-src.zip!/commons-logging-1.1.1-src/src/java" />
     </sources>
   </library>
 </component>

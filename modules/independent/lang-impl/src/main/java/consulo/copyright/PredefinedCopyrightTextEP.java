@@ -44,13 +44,13 @@ public class PredefinedCopyrightTextEP extends AbstractExtensionPointBean {
       InputStream resourceAsStream = getLoaderForClass().getResourceAsStream(file);
       if (resourceAsStream == null) {
         LOGGER.error("Copyright file " + file + " not found");
-        return "not find";
+        return "not find file: " + file;
       }
-      return FileUtil.loadTextAndClose(resourceAsStream);
+      return FileUtil.loadTextAndClose(resourceAsStream, true);
     }
     catch (IOException e) {
       LOGGER.error(e);
-      return "not loaded";
+      return "not loaded file: " + file;
     }
   });
 

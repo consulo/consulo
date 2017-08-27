@@ -21,7 +21,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import com.maddyhome.idea.copyright.CopyrightManager;
-import org.apache.commons.collections.ExtendedProperties;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -29,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.StringWriter;
+import java.util.Properties;
 
 public class VelocityHelper {
   private static VelocityEngine instance;
@@ -66,13 +66,15 @@ public class VelocityHelper {
   private static synchronized VelocityEngine getEngine() {
     if (instance == null) {
       try {
-        VelocityEngine engine = new VelocityEngine();
-        ExtendedProperties extendedProperties = new ExtendedProperties();
+        Properties extendedProperties = new Properties();
 
-        extendedProperties.addProperty(RuntimeConstants.RESOURCE_LOADER, "file");
-        extendedProperties.addProperty(RuntimeConstants.PARSER_POOL_SIZE, "1");
+        extendedProperties.setProperty(RuntimeConstants.RESOURCE_LOADER, "file");
+        extendedProperties.setProperty(RuntimeConstants.PARSER_POOL_SIZE, "1");
 
-        engine.setExtendedProperties(extendedProperties);
+        extendedProperties.setProperty("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        extendedProperties.setProperty("file.resource.loader.path", "resources");
+
+        VelocityEngine engine = new VelocityEngine(extendedProperties);
         engine.init();
 
         instance = engine;
