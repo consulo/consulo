@@ -1062,7 +1062,7 @@
           <orderEntry type="module" module-name="editor-ui-api" exported="" />
         </module-layer>
       </module>
-      <module name="api/annotations" dirurl="file://$PROJECT_DIR$/modules/annotations" current-layer="Default">
+      <module name="api/annotations" dirurl="file://$PROJECT_DIR$/modules/independent/annotations" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-name="JDK_1_6" bytecode-version="1.6" />
           <content url="file://$MODULE_DIR$">
