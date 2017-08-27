@@ -444,7 +444,7 @@
           <orderEntry type="module" module-name="desktop-ui-laf-impl" />
         </module-layer>
       </module>
-      <module name="impl/platform-resources" dirurl="file://$PROJECT_DIR$/modules/platform-resources" current-layer="Default">
+      <module name="impl/platform-resources" dirurl="file://$PROJECT_DIR$/modules/independent/platform-resources" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
@@ -454,7 +454,7 @@
           <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
-      <module name="impl/platform-resources-en" dirurl="file://$PROJECT_DIR$/modules/platform-resources-en" current-layer="Default">
+      <module name="impl/platform-resources-en" dirurl="file://$PROJECT_DIR$/modules/independent/platform-resources-en" current-layer="Default">
         <module-layer name="Default">
           <extension id="java" sdk-module-name="consulo" language-level-module-name="consulo" />
           <content url="file://$MODULE_DIR$">
