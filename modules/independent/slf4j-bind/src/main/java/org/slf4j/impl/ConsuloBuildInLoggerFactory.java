@@ -15,8 +15,6 @@
  */
 package org.slf4j.impl;
 
-import com.intellij.util.containers.ConcurrentFactoryMap;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
@@ -24,18 +22,8 @@ import org.slf4j.Logger;
  * @author VISTALL
  */
 public class ConsuloBuildInLoggerFactory implements ILoggerFactory {
-
-  private ConcurrentFactoryMap<String, Logger> myLoggerCache = new ConcurrentFactoryMap<String, Logger>() {
-    @Nullable
-    @Override
-    protected Logger create(String key) {
-      com.intellij.openapi.diagnostic.Logger logger = com.intellij.openapi.diagnostic.Logger.getInstance(key);
-      return new ConsuloBuildInLoggerAdapter(logger);
-    }
-  };
-
   @Override
   public Logger getLogger(String name) {
-    return myLoggerCache.get(name);
+    return new ConsuloBuildInLoggerAdapter(com.intellij.openapi.diagnostic.Logger.getInstance(name));
   }
 }
