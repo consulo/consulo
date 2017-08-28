@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <groupId>consulo</groupId>
+    <artifactId>arch.ide</artifactId>
+    <version>2-SNAPSHOT</version>
+    <relativePath>../arch/ide/pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>consulo-bundle</artifactId>
+  <version>2-SNAPSHOT</version>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2-beta-5</version>
+        <executions>
+          <execution>
+            <id>create-archive-win</id>
+            <configuration>
+              <descriptor>src/assembly/win.xml</descriptor>
+            </configuration>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>create-archive-linux</id>
+            <configuration>
+              <descriptor>src/assembly/linux.xml</descriptor>
+            </configuration>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>create-archive-mac</id>
+            <configuration>
+              <descriptor>src/assembly/mac.xml</descriptor>
+            </configuration>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>consulo-core-plugin</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>
