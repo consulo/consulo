@@ -16,7 +16,6 @@
 package consulo.compiler.server;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.apache.log4j.Level;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,10 +74,6 @@ public class CompilerServerLoggerFactory implements Logger.Factory {
         if (t != null) {
           t.printStackTrace();
         }
-      }
-
-      @Override
-      public void setLevel(Level level) {
       }
     };
   }

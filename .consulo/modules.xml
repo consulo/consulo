@@ -74,10 +74,10 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="platform-impl" />
           <orderEntry type="module" module-name="lang-testing" scope="TEST" />
           <orderEntry type="module" module-name="compiler-impl" />
           <orderEntry type="module" module-name="compiler-bridge-impl" />
+          <orderEntry type="module" module-name="lang-impl" />
         </module-layer>
       </module>
       <module name="consulo" dirurl="file://$PROJECT_DIR$" current-layer="Default">
