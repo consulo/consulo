@@ -42,7 +42,7 @@ public class ArrangementSettingsSerializationTest {
     settings.addRule(new StdArrangementMatchRule(new StdArrangementEntryMatcher(condition), BY_NAME));
 
     Element holder = new Element("holder");
-    ArrangementSettingsSerializer instance = DefaultArrangementSettingsSerializer.INSTANCE;
+    ArrangementSettingsSerializer instance = new DefaultArrangementSettingsSerializer(settings);
     instance.serialize(settings, holder);
     ArrangementSettings restored = instance.deserialize(holder);
     assertEquals(settings, restored);

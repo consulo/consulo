@@ -1,8 +1,0 @@
-<component name="libraryTable">
-  <library name="JMock1">
-    <binaries>
-      <root url="jar://$PROJECT_DIR$/libDev/jmock-1.0.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libDev/jmock-cglib-1.0.1.jar!/" />
-    </binaries>
-  </library>
-</component>

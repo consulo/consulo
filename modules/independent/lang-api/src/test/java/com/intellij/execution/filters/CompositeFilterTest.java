@@ -16,8 +16,11 @@
 package com.intellij.execution.filters;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.project.DumbModeTask;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.ModificationTracker;
 import junit.framework.Assert;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +38,11 @@ public class CompositeFilterTest {
   public void setUp() throws Exception {
     myCompositeFilter = new CompositeFilter(new DumbService() {
       @Override
+      public ModificationTracker getModificationTracker() {
+        return null;
+      }
+
+      @Override
       public boolean isDumb() {
         return false;
       }
@@ -45,6 +53,31 @@ public class CompositeFilterTest {
 
       @Override
       public void waitForSmartMode() {
+      }
+
+      @Override
+      public void smartInvokeLater(@NotNull Runnable runnable) {
+
+      }
+
+      @Override
+      public void smartInvokeLater(@NotNull Runnable runnable, @NotNull ModalityState modalityState) {
+
+      }
+
+      @Override
+      public void queueTask(@NotNull DumbModeTask task) {
+
+      }
+
+      @Override
+      public void cancelTask(@NotNull DumbModeTask task) {
+
+      }
+
+      @Override
+      public void completeJustSubmittedTasks() {
+
       }
 
       @Override
@@ -59,6 +92,16 @@ public class CompositeFilterTest {
       @Override
       public Project getProject() {
         return null;
+      }
+
+      @Override
+      public void setAlternativeResolveEnabled(boolean enabled) {
+
+      }
+
+      @Override
+      public boolean isAlternativeResolveEnabled() {
+        return false;
       }
     });
   }

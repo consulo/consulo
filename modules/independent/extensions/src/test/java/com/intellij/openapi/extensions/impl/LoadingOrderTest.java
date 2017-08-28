@@ -19,16 +19,14 @@ import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.extensions.SortingException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jmock.cglib.Mock;
-import org.jmock.cglib.MockObjectTestCase;
-import org.jmock.core.stub.ReturnStub;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 
 /**
  * @author Alexander Kireyev
  */
-public class LoadingOrderTest extends MockObjectTestCase {
+public class LoadingOrderTest extends Assert {
   public void testSimpleSorting() {
     ArrayList<LoadingOrder.Orderable> target = new ArrayList<LoadingOrder.Orderable>();
     target.add(createElement(LoadingOrder.ANY, null, "any"));
@@ -152,12 +150,23 @@ public class LoadingOrderTest extends MockObjectTestCase {
     checkSortingFailure(array);
   }
 
-  private LoadingOrder.Orderable createElement(LoadingOrder order, @NonNls String idString, @NonNls String elementId) {
-    Mock mock = new Mock(LoadingOrder.Orderable.class);
-    mock.stubs().method("getOrder").withNoArguments().will(new ReturnStub(order));
-    mock.stubs().method("getOrderId").withNoArguments().will(returnValue(idString));
-    mock.stubs().method("getDescribingElement").withNoArguments().will(new ReturnStub(new MyElement(elementId)));
-    return (LoadingOrder.Orderable) mock.proxy();
+  private static LoadingOrder.Orderable createElement(final LoadingOrder order, final String idString, final String elementId) {
+    return new LoadingOrder.Orderable() {
+      @Override
+      public String getOrderId() {
+        return idString;
+      }
+
+      @Override
+      public LoadingOrder getOrder() {
+        return order;
+      }
+
+      @Override
+      public Element getDescribingElement() {
+        return new MyElement(elementId);
+      }
+    };
   }
 
   private static class MyElement extends Element {

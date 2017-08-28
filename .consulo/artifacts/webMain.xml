@@ -12,7 +12,6 @@
             <element id="module-output" name="util" />
             <element id="module-output" name="util-rt" />
           </element>
-          <element id="library" level="project" name="Trove4j" />
           <element id="zip-archive" name="consulo-web-boot.jar">
             <element id="module-output" name="web-boot" />
           </element>
