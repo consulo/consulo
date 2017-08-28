@@ -43,7 +43,7 @@
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>consulo-projectModel-api</artifactId>
+      <artifactId>consulo-project-model-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

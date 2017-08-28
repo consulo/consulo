@@ -54,7 +54,7 @@
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>consulo-usageView</artifactId>
+      <artifactId>consulo-usage-view</artifactId>
       <version>${project.version}</version>
     </dependency>
     <!--internal dependencies-->

@@ -16,16 +16,20 @@
 package com.intellij.execution.testframework.sm.runner;
 
 import com.intellij.execution.testframework.sm.runner.events.*;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.testIntegration.TestLocationProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
 * @author Roman.Chernyatchik
 */
-public class MockGeneralTestEventsProcessorAdapter implements GeneralTestEventsProcessor {
+public class MockGeneralTestEventsProcessorAdapter extends GeneralTestEventsProcessor {
   private final StringBuilder myOutputBuffer = new StringBuilder();
+
+  public MockGeneralTestEventsProcessorAdapter(Project project, @NotNull String testFrameworkName) {
+    super(project, testFrameworkName);
+  }
 
   @Override
   public void onStartTesting() {
@@ -89,7 +93,8 @@ public class MockGeneralTestEventsProcessorAdapter implements GeneralTestEventsP
   }
 
   @Override
-  public void setLocator(@NotNull TestLocationProvider locator) {
+  public void setLocator(@NotNull SMTestLocator locator) {
+
   }
 
   @Override

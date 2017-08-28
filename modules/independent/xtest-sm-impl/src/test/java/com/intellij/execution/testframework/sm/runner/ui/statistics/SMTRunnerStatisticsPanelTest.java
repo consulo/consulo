@@ -15,7 +15,6 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui.statistics;
 
-import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.sm.Marker;
 import com.intellij.execution.testframework.sm.runner.BaseSMTRunnerTestCase;
@@ -47,12 +46,7 @@ public class SMTRunnerStatisticsPanelTest extends BaseSMTRunnerTestCase {
     myRootSuite = createSuiteProxy("root");
 
     final TestConsoleProperties consoleProperties = createConsoleProperties();
-    final ExecutionEnvironment environment = new ExecutionEnvironment();
-    myResultsForm = new SMTestRunnerResultsForm(consoleProperties.getConfiguration(),
-                                                new JLabel(),
-                                                consoleProperties,
-                                                environment.getRunnerSettings(),
-                                                environment.getConfigurationSettings());
+    myResultsForm = new SMTestRunnerResultsForm(new JLabel(), consoleProperties);
     myResultsForm.initUI();
     myStatisticsPanel = myResultsForm.getStatisticsPane();
     myTestEventsListener = myStatisticsPanel.createTestEventsListener();
@@ -175,8 +169,7 @@ public class SMTRunnerStatisticsPanelTest extends BaseSMTRunnerTestCase {
 
     myStatisticsPanel.addPropagateSelectionListener(new PropagateSelectionHandler() {
       @Override
-      public void handlePropagateSelectionRequest(@Nullable final SMTestProxy selectedTestProxy, @NotNull final Object sender,
-                                    final boolean requestFocus) {
+      public void handlePropagateSelectionRequest(@Nullable final SMTestProxy selectedTestProxy, @NotNull final Object sender, final boolean requestFocus) {
         onSelectedHappend.set();
         proxyRef.set(selectedTestProxy);
         focusRequestedRef.set(requestFocus);
