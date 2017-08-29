@@ -21,8 +21,8 @@
     <module>plugins/core</module>
     <module>plugins/sandLanguage</module>
 
-    <module>modules/desktop/boot</module>
-    <module>modules/desktop/bootstrap</module>
+    <module>modules/desktop/desktop-boot</module>
+    <module>modules/desktop/desktop-bootstrap</module>
     <module>modules/desktop/desktop-ui-impl</module>
 
     <module>modules/independent/annotations</module>
