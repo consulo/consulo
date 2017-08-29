@@ -24,6 +24,7 @@
     <module>modules/desktop/desktop-boot</module>
     <module>modules/desktop/desktop-bootstrap</module>
     <module>modules/desktop/desktop-ui-impl</module>
+    <module>modules/desktop/desktop-ui-laf-impl</module>
 
     <module>modules/independent/annotations</module>
     <module>modules/independent/analysis-api</module>
