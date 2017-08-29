@@ -70,7 +70,7 @@
     <module>modules/independent/vcs-api-core</module>
     <module>modules/independent/vcs-log-graph-api</module>
     <module>modules/independent/vcs-log-graph-impl</module>
-    <!--<module>modules/independent/vcs-log-graph-impl-testing</module>-->
+    <module>modules/independent/vcs-log-graph-impl-testing</module>
     <module>modules/independent/vcs-log-api</module>
     <module>modules/independent/vcs-log-impl</module>
     <module>modules/independent/vcs-impl</module>
