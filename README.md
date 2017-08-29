@@ -1,4 +1,4 @@
-# Consulo - multi-language ide [![Build Status](https://ci.consulo.io/job/consulo/badge/icon)](https://ci.consulo.io/job/consulo/)
+# Consulo - multi-language ide [![Build Status](https://img.shields.io/jenkins/s/https/ci.consulo.io/job/consulo+maven.svg?style=flat-square)](https://ci.consulo.io/job/consulo/)  [![Test Status](https://img.shields.io/jenkins/t/https/ci.consulo.io/job/consulo+maven.svg?style=flat-square)](https://ci.consulo.io/job/consulo/)
 
 ## Goal
 
