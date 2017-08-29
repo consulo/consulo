@@ -51,7 +51,7 @@
       <outputDirectory>/Consulo.app/Contents/platform/build${build.number}/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
-      <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <excludes>
         <exclude>consulo:consulo-bundle</exclude>
         <exclude>consulo:consulo-core-plugin</exclude>
@@ -61,7 +61,7 @@
       <outputDirectory>/Consulo.app/Contents/platform/build${build.number}/plugins/core/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
-      <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <includes>
         <include>consulo:consulo-core-plugin</include>
       </includes>
