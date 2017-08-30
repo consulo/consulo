@@ -35,7 +35,7 @@
       <includes>
         <include>*/*</include>
       </includes>
-      <outputDirectory>/Consulo/platform/build${build.number}/</outputDirectory>
+      <outputDirectory>/Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/platform/linux</directory>
@@ -45,13 +45,13 @@
       <excludes>
         <exclude>/bin/.gitignore</exclude>
       </excludes>
-      <outputDirectory>/Consulo/platform/build${build.number}/</outputDirectory>
+      <outputDirectory>/Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
   </fileSets>
 
   <dependencySets>
     <dependencySet>
-      <outputDirectory>/Consulo/platform/build${build.number}/lib</outputDirectory>
+      <outputDirectory>/Consulo/platform/buildSNAPSHOT/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
@@ -61,7 +61,7 @@
       </excludes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>/Consulo/platform/build${build.number}/plugins/core/lib</outputDirectory>
+      <outputDirectory>/Consulo/platform/buildSNAPSHOT/plugins/core/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
