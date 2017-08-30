@@ -17,7 +17,7 @@ typedef jint (JNICALL* fun_ptr_t_CreateJavaVM)(JavaVM** pvm, void** env, void* a
 NSBundle* vm;
 NSString* minRequiredJavaVersion = @"1.8";
 NSString* ourRequiredJavaVersions = @"1.8+,1.8*";
-NSString* ourBootclasspath = @"$CONSULO_HOME/lib/bootstrap.jar:$CONSULO_HOME/lib/extensions.jar:$CONSULO_HOME/lib/util.jar:$CONSULO_HOME/lib/jdom.jar:$CONSULO_HOME/lib/log4j.jar:$CONSULO_HOME/lib/trove4j.jar:$CONSULO_HOME/lib/jna.jar:$CONSULO_HOME/lib/jna-platform.jar";
+NSString* ourBootclasspath = @"$CONSULO_HOME/lib/consulo-desktop-bootstrap.jar:$CONSULO_HOME/lib/consulo-extensions.jar:$CONSULO_HOME/lib/consulo-util.jar:$CONSULO_HOME/lib/consulo-util-rt.jar:$CONSULO_HOME/lib/jdom.jar:$CONSULO_HOME/lib/trove4j.jar:$CONSULO_HOME/lib/jna.jar:$CONSULO_HOME/lib/jna-platform.jar";
 
 @interface NSString (CustomReplacements)
 - (NSString*)replaceAll:(NSString*)pattern to:(NSString*)replacement;
@@ -259,7 +259,7 @@ NSArray* parseVMOptions(NSString* vmOptionsFile) {
 
     [args_array addObject:[NSString stringWithFormat:@"-Djava.class.path=%@", ourBootclasspath]];
     [args_array addObjectsFromArray:parseVMOptions(myVmOptionsFile)];
-    [args_array addObjectsFromArray:[@"-Dfile.encoding=UTF-8 -XX:+UseConcMarkSweepGC -XX:SoftRefLRUPolicyMSPerMB=50 -ea -Dsun.io.useCanonCaches=false -Djava.net.preferIPv4Stack=true -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -XX:MaxJavaStackTraceDepth=-1 -Xverify:none -Xbootclasspath/a:$CONSULO_HOME/lib/boot.jar" componentsSeparatedByString:@" "]];
+    [args_array addObjectsFromArray:[@"-Dfile.encoding=UTF-8 -XX:+UseConcMarkSweepGC -XX:SoftRefLRUPolicyMSPerMB=50 -ea -Dsun.io.useCanonCaches=false -Djava.net.preferIPv4Stack=true -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -XX:MaxJavaStackTraceDepth=-1 -Xverify:none -Xbootclasspath/a:$CONSULO_HOME/lib/consulo-desktop-boot.jar" componentsSeparatedByString:@" "]];
     [args_array addObject:[NSString stringWithFormat:@"-Didea.properties.file=%@", myPropertiesFile]];
     [args_array addObject:[NSString stringWithFormat:@"-Didea.home.path=%@", myWorkingDirectory]];
     [args_array addObject:[NSString stringWithFormat:@"-Dconsulo.app.home.path=%@/Contents", myAppHome]];

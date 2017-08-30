@@ -114,7 +114,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	WIN32_FIND_DATA ffd;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 
-	hFind = FindFirstFile(L"platform\\*", &ffd);
+	std::wstring platformPath = getParentPath() + L"\\platform\\*";
+	hFind = FindFirstFile(platformPath.c_str(), &ffd);
 
 	if (INVALID_HANDLE_VALUE == hFind)
 	{
@@ -202,7 +203,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	launchConsulo func = (launchConsulo)GetProcAddress(libraryHandle, "launchConsulo2");
 	if(!func)
 	{
-		MessageBox(NULL, L"'launchConsulo2' function is not found", L"Consulo", MB_OK);
+		MessageBox(NULL, L"'launchConsulo2' function is not found. Please visit https://consulo.io/trouble.html", L"Consulo", MB_OK);
+		ShellExecute(0, 0, L"https://consulo.io/trouble.htm", 0, 0, SW_SHOW);
 		return 6;
 	}
 
