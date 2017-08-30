@@ -40,7 +40,8 @@ HANDLE hEvent;
 HANDLE hSingleInstanceWatcherThread;
 const int FILE_MAPPING_SIZE = 16000;
 
-#define BOOTCLASSPATH "bootstrap.jar;extensions.jar;util.jar;jdom.jar;log4j.jar;trove4j.jar;jna.jar;jna-platform.jar"
+#define BOOT "consulo-desktop-boot.jar"
+#define BOOTCLASSPATH "consulo-desktop-bootstrap.jar;consulo-extensions.jar;consulo-util.jar;consulo-util-rt.jar;jdom.jar;trove4j.jar;jna.jar;jna-platform.jar"
 #define CONSULO_JRE "CONSULO_JRE"
 
 #ifdef _M_X64
@@ -344,7 +345,7 @@ bool AddClassPathOptions(std::vector<std::string>& vmOptionLines)
   if (classPath.size() == 0) return false;
   vmOptionLines.push_back(std::string("-Djava.class.path=") + classPath);
 
-  std::string bootClassPathLibs = LoadStdString(IDS_BOOTCLASSPATH_LIBS);
+  std::string bootClassPathLibs = std::string(BOOT);
   std::string bootClassPath = CollectLibJars(bootClassPathLibs);
   if (bootClassPath.size() > 0)
   {
