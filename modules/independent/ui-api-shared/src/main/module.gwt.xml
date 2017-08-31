@@ -15,7 +15,5 @@
   - limitations under the License.
   -->
 <module>
-  <collapse-all-properties/>
-
-  <source path="shared"/>
+  <source path="ui"/>
 </module>

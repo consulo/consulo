@@ -15,7 +15,22 @@
   - limitations under the License.
   -->
 <module>
-  <collapse-all-properties/>
+  <inherits name="com.sksamuel.gwt.GwtWebsockets"/>
+  <inherits name="org.gwt.advanced.Grid"/>
+  <inherits name="consulo.ui"/>
+
+  <entry-point class='consulo.web.gwt.client.UIEntryPoint'/>
 
   <source path=""/>
+
+  <public path="consulo/web/gwt/client/resource"/>
+
+  <stylesheet src="css/advanced-gwt-custom.css"/>
+  <stylesheet src="css/advanced-gwt.css"/>
+  <stylesheet src="css/gwt.css"/>
+  <stylesheet src="css/ui.css"/>
+
+  <generate-with class="consulo.web.gwt.UIFactoryGenerator">
+    <when-type-assignable class="consulo.web.gwt.client.ui.UIFactory"/>
+  </generate-with>
 </module>

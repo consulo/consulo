@@ -76,6 +76,13 @@
     </dependency>
 
     <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>consulo-web-ui-impl-shared</artifactId>
+      <version>${project.version}</version>
+      <classifier>sources</classifier>
+    </dependency>
+
+    <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
     </dependency>
