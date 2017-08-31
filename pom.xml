@@ -17,7 +17,8 @@
     <module>arch/ide</module>
 
     <module>distribution</module>
-    <module>distribution-sandbox</module>
+
+    <module>sandbox/desktop</module>
 
     <module>plugins/core</module>
     <module>plugins/sandLanguage</module>

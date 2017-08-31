@@ -22,7 +22,7 @@ If you want run Consulo from repository execute:
 
 > mvn install
 
-> mvn consulo:run -pl:consulo-sandbox
+> mvn consulo:run -pl:consulo-sandbox-desktop
 
 ## Links
 
