@@ -1,6 +1,6 @@
-# Consulo - multi-language ide [![Build Status](https://img.shields.io/jenkins/s/https/ci.consulo.io/job/consulo+maven.svg?style=flat-square)](https://ci.consulo.io/job/consulo/)  [![Test Status](https://img.shields.io/jenkins/t/https/ci.consulo.io/job/consulo+maven.svg?style=flat-square)](https://ci.consulo.io/job/consulo/)
+## About [![Build Status](https://img.shields.io/jenkins/s/https/ci.consulo.io/job/consulo+maven.svg?style=flat-square)](https://ci.consulo.io/job/consulo/) [![Test Status](https://img.shields.io/jenkins/t/https/ci.consulo.io/job/consulo+maven.svg?style=flat-square)](https://ci.consulo.io/job/consulo/)
 
-## Goal
+Consulo - multi-language ide. Project was started in 2013 year by forking [IDEA Community Edition](https://github.com/JetBrains/intellij-community).
 
 Main goal - create **open** IDE where you don't need select IDE for different languages. Provide standart for language implementation inside IDE.
 
@@ -8,9 +8,10 @@ Main goal - create **open** IDE where you don't need select IDE for different la
 
 If you can't describe issue, you can use our [forum](https://discuss.consulo.io/), or you can read [contributing guide](https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md)  and report issue at GitHub
 
-## Building
+## Building & Running
 
 First of all, you need those tools:
+
  * Maven 3.3+
  * JDK 1.8
 
@@ -30,6 +31,12 @@ If you want run Consulo from repository
    > mvn install
 
    > mvn consulo:run -pl:consulo-sandbox-web
+
+## Sandbox Projects
+
+ * Consulo as Web application [link](https://github.com/consulo/consulo/tree/maven-new/modules/web)
+ * Profiler API [link](https://github.com/consulo/profiler-sandbox)
+ * Diagram support [link](https://github.com/consulo/consulo/tree/master/modules/independent/graph-api)
 
 ## Links
 
