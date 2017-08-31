@@ -79,5 +79,11 @@
         <include>consulo:consulo-sand-language-plugin</include>
       </includes>
     </dependencySet>
+    <dependencySet>
+      <outputDirectory>/webapp/</outputDirectory>
+      <includes>
+        <include>consulo:consulo-web-boot:war</include>
+      </includes>
+    </dependencySet>
   </dependencySets>
 </assembly>
