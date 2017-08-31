@@ -44,8 +44,7 @@
         <configuration>
           <sourceLevel>1.8</sourceLevel>
           <failOnError>true</failOnError>
-          <moduleName>pw.ohm.App</moduleName>
-          <moduleShortName>ancore</moduleShortName>
+          <moduleName>consulo.web.ui</moduleName>
         </configuration>
       </plugin>
     </plugins>
