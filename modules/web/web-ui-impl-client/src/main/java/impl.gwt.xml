@@ -27,7 +27,6 @@
   <source path=""/>
 
   <public path="consulo/web/gwt/client/resource"/>
-  <public path="consulo/web/gwtUI/client/resource"/>
 
   <stylesheet src="css/advanced-gwt-custom.css"/>
   <stylesheet src="css/advanced-gwt.css"/>
