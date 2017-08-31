@@ -64,7 +64,6 @@
         <exclude>consulo:consulo-core-plugin</exclude>
         <exclude>consulo:consulo-sand-language-plugin</exclude>
         <exclude>consulo:consulo-web-boot</exclude>
-        <exclude>consulo:consulo-sandbox-web</exclude>
       </excludes>
     </dependencySet>
     <dependencySet>
