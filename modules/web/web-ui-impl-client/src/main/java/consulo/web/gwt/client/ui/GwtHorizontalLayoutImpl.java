@@ -18,7 +18,7 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;

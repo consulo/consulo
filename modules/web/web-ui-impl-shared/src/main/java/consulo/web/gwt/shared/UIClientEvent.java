@@ -13,27 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.shared;
-
-
-import com.google.gwt.user.client.rpc.IsSerializable;
-
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
+package consulo.web.gwt.shared;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class UIVariablesOwner implements Serializable, IsSerializable {
-  private LinkedHashMap<String, Serializable> myVariables;
+public class UIClientEvent extends UIVariablesOwner {
+  private UIClientEventType myType;
+  private String mySessionId;
 
-  public Map<String, Serializable> getVariables() {
-    return myVariables;
+  public void setType(UIClientEventType type) {
+    myType = type;
   }
 
-  public void setVariables(Map<String, Serializable> map) {
-    myVariables = new LinkedHashMap<>(map);
+  public UIClientEventType getType() {
+    return myType;
+  }
+
+  public void setSessionId(String id) {
+    mySessionId = id;
+  }
+
+  public String getSessionId() {
+    return mySessionId;
   }
 }

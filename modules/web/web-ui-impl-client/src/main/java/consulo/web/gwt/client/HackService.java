@@ -19,8 +19,8 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import consulo.ui.RGBColor;
 import consulo.ui.Size;
-import consulo.web.gwtUI.shared.UIClientEvent;
-import consulo.web.gwtUI.shared.UIServerEvent;
+import consulo.web.gwt.shared.UIClientEvent;
+import consulo.web.gwt.shared.UIServerEvent;
 
 /**
  * @author VISTALL

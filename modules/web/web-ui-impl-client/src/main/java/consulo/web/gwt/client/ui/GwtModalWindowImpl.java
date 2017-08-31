@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PopupPanel;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.client.util.GwtUIUtil2;
-import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;

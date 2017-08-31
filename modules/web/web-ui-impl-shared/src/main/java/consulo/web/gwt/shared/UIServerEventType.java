@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.shared;
+package consulo.web.gwt.shared;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public enum UIClientEventType {
-  sessionOpen,
-  invokeEvent
+public enum UIServerEventType {
+  createRoot,
+  stateChanged,
+  showModal
 }

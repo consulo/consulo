@@ -22,10 +22,9 @@ import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import com.sksamuel.gwt.websockets.Websocket;
 import com.sksamuel.gwt.websockets.WebsocketListener;
-import consulo.web.gwt.client.UIEntryPoint;
 import consulo.web.gwt.client.util.Log;
-import consulo.web.gwtUI.shared.UIClientEvent;
-import consulo.web.gwtUI.shared.UIClientEventType;
+import consulo.web.gwt.shared.UIClientEvent;
+import consulo.web.gwt.shared.UIClientEventType;
 
 /**
  * @author VISTALL

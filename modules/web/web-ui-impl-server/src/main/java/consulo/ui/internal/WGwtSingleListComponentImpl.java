@@ -20,7 +20,7 @@ import consulo.ui.ListItemRenders;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.model.ListModel;
-import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

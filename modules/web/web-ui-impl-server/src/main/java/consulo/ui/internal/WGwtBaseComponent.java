@@ -21,7 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Size;
-import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwt.shared.UIComponent;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -19,10 +19,10 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ConcurrentHashMap;
 import consulo.ui.internal.WGwtBaseComponent;
 import consulo.ui.internal.WGwtWindowImpl;
-import consulo.web.gwtUI.shared.UIClientEvent;
-import consulo.web.gwtUI.shared.UIComponent;
-import consulo.web.gwtUI.shared.UIServerEvent;
-import consulo.web.gwtUI.shared.UIServerEventType;
+import consulo.web.gwt.shared.UIClientEvent;
+import consulo.web.gwt.shared.UIComponent;
+import consulo.web.gwt.shared.UIServerEvent;
+import consulo.web.gwt.shared.UIServerEventType;
 
 import javax.websocket.Session;
 import java.io.Serializable;

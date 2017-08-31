@@ -17,7 +17,7 @@ package consulo.web.servlet.ui;
 
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamReader;
-import consulo.web.gwtUI.shared.UIClientEvent;
+import consulo.web.gwt.shared.UIClientEvent;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;

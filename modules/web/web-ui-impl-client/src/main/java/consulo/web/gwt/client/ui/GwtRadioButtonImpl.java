@@ -19,8 +19,8 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.RadioButton;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwtUI.shared.UIClientEvent;
-import consulo.web.gwtUI.shared.UIClientEventType;
+import consulo.web.gwt.shared.UIClientEvent;
+import consulo.web.gwt.shared.UIClientEventType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;

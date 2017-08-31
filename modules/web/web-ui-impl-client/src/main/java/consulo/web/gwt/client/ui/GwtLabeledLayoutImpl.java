@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;

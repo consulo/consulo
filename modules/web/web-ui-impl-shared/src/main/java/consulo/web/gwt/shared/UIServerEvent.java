@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwtUI.shared;
+package consulo.web.gwt.shared;
+
+import consulo.web.gwt.shared.UIComponent;
+import consulo.web.gwt.shared.UIServerEventType;
 
 import java.io.Serializable;
 import java.util.LinkedList;

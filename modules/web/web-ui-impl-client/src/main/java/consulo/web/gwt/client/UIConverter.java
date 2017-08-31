@@ -18,7 +18,7 @@ package consulo.web.gwt.client;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
 import consulo.web.gwt.client.ui.*;
-import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwt.shared.UIComponent;
 
 import java.io.Serializable;
 import java.util.Collections;

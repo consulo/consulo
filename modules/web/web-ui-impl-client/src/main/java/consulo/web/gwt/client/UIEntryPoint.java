@@ -29,10 +29,10 @@ import consulo.web.gwt.client.util.Log;
 import consulo.web.gwt.client.ui.GwtModalWindowImpl;
 import consulo.web.gwt.client.ui.InternalGwtComponent;
 import consulo.web.gwt.client.util.GwtUIUtil2;
-import consulo.web.gwtUI.shared.UIClientEvent;
-import consulo.web.gwtUI.shared.UIClientEventType;
-import consulo.web.gwtUI.shared.UIComponent;
-import consulo.web.gwtUI.shared.UIServerEvent;
+import consulo.web.gwt.shared.UIClientEvent;
+import consulo.web.gwt.shared.UIClientEventType;
+import consulo.web.gwt.shared.UIComponent;
+import consulo.web.gwt.shared.UIServerEvent;
 import org.gwt.advanced.client.util.ThemeHelper;
 
 import java.io.Serializable;

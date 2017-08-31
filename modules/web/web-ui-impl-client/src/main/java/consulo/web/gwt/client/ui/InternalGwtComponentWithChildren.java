@@ -16,8 +16,7 @@
 package consulo.web.gwt.client.ui;
 
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.client.ui.InternalGwtComponent;
-import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwt.shared.UIComponent;
 
 import java.util.List;
 

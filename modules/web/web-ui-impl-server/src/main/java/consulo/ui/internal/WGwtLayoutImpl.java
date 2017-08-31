@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import com.intellij.codeInspection.SmartHashMap;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import consulo.ui.Component;
-import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwt.shared.UIComponent;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 

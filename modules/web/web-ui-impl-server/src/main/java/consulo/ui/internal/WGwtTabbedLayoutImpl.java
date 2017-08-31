@@ -20,7 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
-import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwt.shared.UIComponent;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 

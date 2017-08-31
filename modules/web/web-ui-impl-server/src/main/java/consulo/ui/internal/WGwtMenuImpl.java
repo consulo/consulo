@@ -17,7 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
-import consulo.web.gwtUI.shared.UIComponent;
+import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
