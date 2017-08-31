@@ -44,7 +44,7 @@
         <configuration>
           <sourceLevel>1.8</sourceLevel>
           <failOnError>true</failOnError>
-          <moduleName>consulo.web.ui</moduleName>
+          <moduleName>consulo.web.gwt.impl</moduleName>
         </configuration>
       </plugin>
     </plugins>

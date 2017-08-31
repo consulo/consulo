@@ -24,7 +24,7 @@
 
   <entry-point class='consulo.web.gwt.client.UIEntryPoint'/>
 
-  <source path=""/>
+  <source path="client"/>
 
   <public path="consulo/web/gwt/client/resource"/>
 

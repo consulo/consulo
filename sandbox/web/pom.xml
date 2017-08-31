@@ -74,11 +74,5 @@
       <artifactId>consulo-sand-language-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>consulo</groupId>
-      <artifactId>consulo-web-boot</artifactId>
-      <version>${project.version}</version>
-      <type>war</type>
-    </dependency>
   </dependencies>
 </project>
