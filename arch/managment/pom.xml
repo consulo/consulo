@@ -77,7 +77,7 @@
   <repositories>
     <repository>
       <id>consulo</id>
-      <url>https://nexus.consulo.io/repository/consulo/</url>
+      <url>https://maven.consulo.io/repository/consulo/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
@@ -87,7 +87,7 @@
   <pluginRepositories>
     <pluginRepository>
       <id>consulo-plugin</id>
-      <url>https://nexus.consulo.io/repository/consulo/</url>
+      <url>https://maven.consulo.io/repository/consulo/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
