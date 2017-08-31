@@ -20,7 +20,7 @@
   <inherits name='com.google.gwt.user.User'/>
   <inherits name="com.sksamuel.gwt.GwtWebsockets"/>
   <inherits name="org.gwt.advanced.Grid"/>
-  <inherits name="consulo.ui.api"/>
+  <inherits name="consulo.ui.api-shared"/>
 
   <entry-point class='consulo.web.gwtUI.client.UIEntryPoint'/>
 

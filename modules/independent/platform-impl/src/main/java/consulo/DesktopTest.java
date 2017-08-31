@@ -18,7 +18,7 @@ package consulo;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.Window;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

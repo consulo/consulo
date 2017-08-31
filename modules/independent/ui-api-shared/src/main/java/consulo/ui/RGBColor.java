@@ -13,33 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.shared;
+package consulo.ui;
 
 import java.io.Serializable;
 
 /**
  * @author VISTALL
- * @since 16-Jun-16
+ * @since 21-Jun-16
  */
-public class Size implements Serializable {
-  public static final Size UNDEFINED = new Size(-1, -1);
+public class RGBColor implements Serializable {
+  private int myRed;
+  private int myGreed;
+  private int myBlue;
 
-  private int myWidth;
-  private int myHeight;
-
-  private Size() {
+  private RGBColor() {
   }
 
-  public Size(int width, int height) {
-    myWidth = width;
-    myHeight = height;
+  public RGBColor(int red, int greed, int blue) {
+    myRed = red;
+    myGreed = greed;
+    myBlue = blue;
   }
 
-  public int getWidth() {
-    return myWidth;
+  public int getRed() {
+    return myRed;
   }
 
-  public int getHeight() {
-    return myHeight;
+  public int getGreed() {
+    return myGreed;
+  }
+
+  public int getBlue() {
+    return myBlue;
   }
 }

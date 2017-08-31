@@ -15,7 +15,6 @@
  */
 package consulo.ui;
 
-import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -20,7 +20,7 @@ import com.intellij.util.SmartList;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 import consulo.web.gwtUI.shared.UIComponent;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.NotNull;

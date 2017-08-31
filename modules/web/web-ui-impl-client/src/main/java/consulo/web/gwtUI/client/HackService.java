@@ -17,8 +17,8 @@ package consulo.web.gwtUI.client;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import consulo.ui.shared.RGBColor;
-import consulo.ui.shared.Size;
+import consulo.ui.RGBColor;
+import consulo.ui.Size;
 import consulo.web.gwtUI.shared.UIClientEvent;
 import consulo.web.gwtUI.shared.UIServerEvent;
 

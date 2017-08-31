@@ -18,7 +18,7 @@ package consulo.web.gwtUI.client.ui;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.UIObject;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 
 import java.io.Serializable;
 import java.util.Map;
