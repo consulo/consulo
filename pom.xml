@@ -27,6 +27,7 @@
     <module>modules/desktop/desktop-ui-impl</module>
     <module>modules/desktop/desktop-ui-laf-impl</module>
 
+    <module>modules/web/web-boot</module>
     <module>modules/web/web-ui-impl-client</module>
     <module>modules/web/web-ui-impl-shared</module>
     <module>modules/web/web-ui-impl-server</module>
