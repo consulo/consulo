@@ -16,6 +16,7 @@
 package consulo.web.gwt.client.util;
 
 import com.google.gwt.core.shared.GWT;
+import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.service.FetchService;
 import consulo.web.gwt.shared.GwtTransportService;
 import consulo.web.gwt.shared.GwtTransportServiceAsync;
@@ -27,6 +28,8 @@ import java.util.Map;
  * @author VISTALL
  * @since 19-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class GwtUtil {
   private static final GwtTransportServiceAsync ourAsyncService = GWT.create(GwtTransportService.class);
 

@@ -54,6 +54,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.*;
 import com.intellij.util.BitUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
 import consulo.web.gwt.shared.GwtTransportService;
 import consulo.web.gwt.shared.transport.*;
@@ -72,6 +73,8 @@ import java.util.List;
  * @author VISTALL
  * @since 15-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 @WebServlet(urlPatterns = "/consulo/transport")
 public class GwtTransportServiceImpl extends RemoteServiceServlet implements GwtTransportService {
 

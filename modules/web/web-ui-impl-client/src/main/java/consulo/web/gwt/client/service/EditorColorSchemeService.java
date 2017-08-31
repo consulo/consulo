@@ -15,6 +15,7 @@
  */
 package consulo.web.gwt.client.service;
 
+import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.util.AsyncCallbackAdapter;
 import consulo.web.gwt.client.util.GwtUtil;
 import consulo.web.gwt.shared.transport.GwtEditorColorScheme;
@@ -26,6 +27,8 @@ import java.util.List;
  * @author VISTALL
  * @since 20-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class EditorColorSchemeService implements FetchService {
   public interface Listener {
     void schemeChanged(GwtEditorColorScheme scheme);

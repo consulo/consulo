@@ -16,6 +16,7 @@
 package consulo.web.gwt.shared.transport;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import consulo.annotations.DeprecationInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,8 @@ import java.util.Map;
  * @author VISTALL
  * @since 20-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class GwtEditorColorScheme implements IsSerializable {
   public static final String LINE_NUMBERS_COLOR = "LINE_NUMBERS_COLOR";
   public static final String GUTTER_BACKGROUND = "GUTTER_BACKGROUND";

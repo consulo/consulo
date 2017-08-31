@@ -33,6 +33,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.TreeViewModel;
+import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.service.EditorColorSchemeListService;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
 import consulo.web.gwt.client.service.FetchService;
@@ -52,6 +53,8 @@ import java.util.List;
  * @author VISTALL
  * @since 15-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class GwtMain implements EntryPoint {
   @Override
   public void onModuleLoad() {

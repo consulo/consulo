@@ -17,6 +17,7 @@ package consulo.web.gwt.client.ui;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.InlineHTML;
+import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.util.BitUtil;
 import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.shared.transport.GwtColor;
@@ -34,6 +35,8 @@ import java.util.Map;
  * @author VISTALL
  * @since 19-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class EditorSegmentBuilder {
   public static class CharSpan extends InlineHTML {
     public static class StyleInfo {

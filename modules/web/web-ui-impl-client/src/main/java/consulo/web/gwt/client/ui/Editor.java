@@ -23,6 +23,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
+import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
 import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.client.util.GwtUIUtil;
@@ -38,6 +39,8 @@ import java.util.List;
  * @author VISTALL
  * @since 17-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   private static class CodeLinePanel extends FlowPanel implements WidgetWithUpdateUI {
     private Editor myEditor;

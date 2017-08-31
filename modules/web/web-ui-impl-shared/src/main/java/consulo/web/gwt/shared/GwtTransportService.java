@@ -17,6 +17,7 @@ package consulo.web.gwt.shared;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.shared.transport.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +28,8 @@ import java.util.List;
  * @author VISTALL
  * @since 15-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 @RemoteServiceRelativePath("transport")
 public interface GwtTransportService extends RemoteService {
   boolean getApplicationStatus();

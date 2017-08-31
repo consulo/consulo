@@ -25,6 +25,7 @@ import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.DeprecationInfo;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.web.gwt.shared.transport.GwtVirtualFile;
 
@@ -35,6 +36,8 @@ import java.util.List;
  * @author VISTALL
  * @since 18-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class GwtVirtualFileUtil {
   public static GwtVirtualFile createVirtualFile(final Project project, final VirtualFile virtualFile) {
     final GwtVirtualFile gwtVirtualFile = new GwtVirtualFile();

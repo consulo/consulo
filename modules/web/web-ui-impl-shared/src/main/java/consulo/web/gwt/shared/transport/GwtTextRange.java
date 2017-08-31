@@ -16,11 +16,14 @@
 package consulo.web.gwt.shared.transport;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import consulo.annotations.DeprecationInfo;
 
 /**
  * @author VISTALL
  * @since 17-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class GwtTextRange implements IsSerializable {
   private int myStartOffset;
   private int myEndOffset;

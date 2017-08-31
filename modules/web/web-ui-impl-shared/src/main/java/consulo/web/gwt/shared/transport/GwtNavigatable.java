@@ -16,11 +16,14 @@
 package consulo.web.gwt.shared.transport;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import consulo.annotations.DeprecationInfo;
 
 /**
  * @author VISTALL
  * @since 19-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class GwtNavigatable implements IsSerializable {
   private GwtVirtualFile myFile;
   private int myOffset;

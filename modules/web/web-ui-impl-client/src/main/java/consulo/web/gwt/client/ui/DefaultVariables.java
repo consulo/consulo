@@ -19,8 +19,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.UIObject;
 import consulo.ui.Size;
-import consulo.web.gwt.client.ui.GwtModalWindowImpl;
-import consulo.web.gwt.client.ui.InternalGwtComponent;
 
 import java.io.Serializable;
 import java.util.Map;

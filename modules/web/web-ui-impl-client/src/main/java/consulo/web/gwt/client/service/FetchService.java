@@ -16,12 +16,15 @@
 package consulo.web.gwt.client.service;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.util.Log;
 
 /**
  * @author VISTALL
  * @since 20-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public interface FetchService {
   abstract class ServiceCallback<T> implements AsyncCallback<T> {
     private Runnable myOnError;

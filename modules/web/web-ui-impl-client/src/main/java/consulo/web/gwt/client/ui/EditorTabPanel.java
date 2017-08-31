@@ -17,7 +17,11 @@ package consulo.web.gwt.client.ui;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.TabPanel;
+import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.client.util.GwtUtil;
 import consulo.web.gwt.client.util.ReportableCallable;
@@ -30,6 +34,8 @@ import java.util.Map;
  * @author VISTALL
  * @since 19-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class EditorTabPanel extends TabPanel {
   private Map<String, Editor> myOpenedFiles = new HashMap<String, Editor>();
 

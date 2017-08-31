@@ -15,10 +15,14 @@
  */
 package consulo.web.gwt.client.ui;
 
+import consulo.annotations.DeprecationInfo;
+
 /**
  * @author VISTALL
  * @since 20-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public interface WidgetWithUpdateUI {
   void updateUI();
 }

@@ -16,12 +16,15 @@
 package consulo.web.gwt.shared;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.shared.transport.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public interface GwtTransportServiceAsync {
 
   void getApplicationStatus(AsyncCallback<Boolean> async);
