@@ -17,7 +17,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.managment</artifactId>
@@ -51,7 +51,6 @@
     </plugins>
   </build>
 
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -66,12 +65,31 @@
 
   <dependencies>
     <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>consulo-web-ui-impl-shared</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sksamuel.gwt</groupId>
+      <artifactId>gwt-websockets</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.advanced-gwt</groupId>
+      <artifactId>advanced-gwt</artifactId>
+      <version>2.0.8</version>
     </dependency>
   </dependencies>
 </project>
