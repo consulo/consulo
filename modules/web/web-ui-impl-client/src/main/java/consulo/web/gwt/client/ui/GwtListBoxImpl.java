@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwtUI.client.ui.advancedGwt.ComboBoxSelectItem;
+import consulo.web.gwt.client.ui.advancedGwt.ComboBoxSelectItem;
 import consulo.web.gwt.shared.UIClientEvent;
 import consulo.web.gwt.shared.UIClientEventType;
 import consulo.web.gwt.shared.UIComponent;

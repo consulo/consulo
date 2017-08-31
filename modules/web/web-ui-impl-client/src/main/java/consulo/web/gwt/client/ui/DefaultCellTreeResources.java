@@ -25,6 +25,6 @@ public interface DefaultCellTreeResources extends CellTree.Resources {
   /**
    * The styles used in this widget.
    */
-  @Source("consulo/web/gwtUI/client/resource/css/gwt-cell-tree.css")
+  @Source("consulo/web/gwt/client/resource/css/gwt-cell-tree.css")
   CellTree.Style cellTreeStyle();
 }

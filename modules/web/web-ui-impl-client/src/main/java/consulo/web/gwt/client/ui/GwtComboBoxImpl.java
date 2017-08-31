@@ -18,7 +18,7 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwtUI.client.ui.advancedGwt.WidgetComboBox;
+import consulo.web.gwt.client.ui.advancedGwt.WidgetComboBox;
 import consulo.web.gwt.shared.UIClientEvent;
 import consulo.web.gwt.shared.UIClientEventType;
 import consulo.web.gwt.shared.UIComponent;
