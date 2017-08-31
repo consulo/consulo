@@ -19,6 +19,7 @@
     <module>distribution</module>
 
     <module>sandbox/desktop</module>
+    <module>sandbox/web</module>
 
     <module>plugins/core</module>
     <module>plugins/sandLanguage</module>

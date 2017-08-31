@@ -18,11 +18,18 @@ Then execute from command line:
 
 > mvn package
 
-If you want run Consulo from repository execute:
+If you want run Consulo from repository
+ * as desktop application execute
 
-> mvn install
+   > mvn install
 
-> mvn consulo:run -pl:consulo-sandbox-desktop
+   > mvn consulo:run -pl:consulo-sandbox-desktop
+
+ * as web application execute
+
+   > mvn install
+
+   > mvn consulo:run -pl:consulo-sandbox-web
 
 ## Links
 
