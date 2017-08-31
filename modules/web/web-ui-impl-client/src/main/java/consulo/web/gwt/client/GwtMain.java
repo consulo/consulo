@@ -36,7 +36,7 @@ import com.google.gwt.view.client.TreeViewModel;
 import consulo.web.gwt.client.service.EditorColorSchemeListService;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
 import consulo.web.gwt.client.service.FetchService;
-import consulo.web.gwtUI.client.ui.DefaultCellTreeResources;
+import consulo.web.gwt.client.ui.DefaultCellTreeResources;
 import consulo.web.gwt.client.ui.EditorTabPanel;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.client.util.GwtUtil;
