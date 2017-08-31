@@ -47,6 +47,8 @@
     <websocket.version>1.1</websocket.version>
 
     <build.number>SNAPSHOT</build.number>
+
+    <maven.gwt.plugin>1.0-rc-8</maven.gwt.plugin>
   </properties>
 
   <profiles>

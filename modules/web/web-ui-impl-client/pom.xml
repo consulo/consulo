@@ -38,7 +38,7 @@
       <plugin>
         <groupId>net.ltgt.gwt.maven</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>1.0-rc-8</version>
+        <version>${maven.gwt.plugin}</version>
         <extensions>true</extensions>
 
         <configuration>
