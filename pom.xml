@@ -12,6 +12,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>arch/managment</module>
     <module>arch/global</module>
     <module>arch/ide</module>
 
@@ -25,6 +26,9 @@
     <module>modules/desktop/desktop-bootstrap</module>
     <module>modules/desktop/desktop-ui-impl</module>
     <module>modules/desktop/desktop-ui-laf-impl</module>
+
+    <module>modules/web/web-ui-impl-client</module>
+    <module>modules/web/web-ui-impl-server</module>
 
     <module>modules/independent/annotations</module>
     <module>modules/independent/analysis-api</module>
