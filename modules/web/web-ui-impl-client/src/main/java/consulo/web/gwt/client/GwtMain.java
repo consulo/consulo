@@ -59,7 +59,7 @@ public class GwtMain implements EntryPoint {
   @Override
   public void onModuleLoad() {
     final RootPanel rootPanel = RootPanel.get();
-    rootPanel.add(GwtUIUtil.loadingPanel());
+    rootPanel.add(GwtUIUtil.loadingPanelDeprecated());
 
     fetchAppStatus(rootPanel);
   }
@@ -238,7 +238,7 @@ public class GwtMain implements EntryPoint {
 
     final EditorTabPanel editorTabPanel = GwtUIUtil.fillAndReturn(new EditorTabPanel());
 
-    splitPanel.setLeftWidget(GwtUIUtil.loadingPanel());
+    splitPanel.setLeftWidget(GwtUIUtil.loadingPanelDeprecated());
     splitPanel.setRightWidget(editorTabPanel);
 
     Element parentElement = editorTabPanel.getElement().getParentElement();

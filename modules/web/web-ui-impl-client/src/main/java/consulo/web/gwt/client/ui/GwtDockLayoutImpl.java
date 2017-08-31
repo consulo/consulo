@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.client.util.GwtUIUtil2;
+import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponentWithChildren {
   public GwtDockLayoutImpl() {
-    GwtUIUtil2.fill(this);
+    GwtUIUtil.fill(this);
     setHorizontalAlignment(ALIGN_LEFT);
     setVerticalAlignment(ALIGN_TOP);
   }

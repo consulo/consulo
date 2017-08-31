@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.client.util.GwtUIUtil2;
+import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,7 +55,7 @@ public class GwtHorizontalSplitLayoutImpl implements InternalGwtComponentWithChi
       boolean first = (Boolean)child.getVariables().get("position");
 
       final Widget component = UIConverter.create(proxy, child.getComponent()).asWidget();
-      GwtUIUtil2.fillAndReturn(component);
+      GwtUIUtil.fillAndReturn(component);
 
       if (first) {
         component.addAttachHandler(new AttachEvent.Handler() {

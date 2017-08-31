@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.*;
+import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
 
 import java.util.List;
@@ -29,6 +30,29 @@ import java.util.List;
  */
 public class GwtUIUtil {
   public static Widget loadingPanel() {
+    // http://tobiasahlin.com/spinkit/
+    // MIT
+    FlowPanel flowPanel = new FlowPanel();
+    flowPanel.addStyleName("sk-cube-grid");
+
+    for(int i = 1; i <= 9; i++) {
+      FlowPanel child = new FlowPanel();
+      child.addStyleName("sk-cube sk-cube" + i);
+      flowPanel.add(child);
+    }
+
+    FlowPanel container = GwtUIUtil.fillAndReturn(new FlowPanel());
+    container.getElement().getStyle().setProperty("display", "flex");
+    container.getElement().getStyle().setProperty("justifyContent", "center");
+
+    flowPanel.getElement().getStyle().setProperty("alignSelf", "center");
+    container.add(flowPanel);
+    return container;
+  }
+
+  @Deprecated
+  @DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
+  public static Widget loadingPanelDeprecated() {
     VerticalPanel verticalPanel = fillAndReturn(new VerticalPanel());
     verticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
     verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -63,6 +87,8 @@ public class GwtUIUtil {
     return panel;
   }
 
+  @Deprecated
+  @DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
   public static void updateUI(Widget widget) {
     if (widget instanceof WidgetWithUpdateUI) {
       ((WidgetWithUpdateUI)widget).updateUI();

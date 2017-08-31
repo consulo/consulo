@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.SimplePanel;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.client.util.GwtUIUtil2;
+import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,14 +33,14 @@ import java.util.Map;
  * @since 11-Jun-16
  */
 public class GwtVerticalLayoutImpl extends Grid implements InternalGwtComponentWithChildren {
-  private SimplePanel myPanel = GwtUIUtil2.fillAndReturn(new SimplePanel());
+  private SimplePanel myPanel = GwtUIUtil.fillAndReturn(new SimplePanel());
 
   public GwtVerticalLayoutImpl() {
     super(1, 1);
 
     updateLastRow(-1);
 
-    GwtUIUtil2.fill(this);
+    GwtUIUtil.fill(this);
   }
 
   @Override

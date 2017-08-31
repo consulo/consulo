@@ -19,7 +19,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Grid;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.client.util.GwtUIUtil2;
+import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +34,7 @@ import java.util.Map;
 public class GwtWindowImpl extends Grid implements InternalGwtComponentWithChildren {
   public GwtWindowImpl() {
     super(2, 1);
-    GwtUIUtil2.fill(this);
+    GwtUIUtil.fill(this);
   }
 
   @Override

@@ -25,10 +25,10 @@ import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.sksamuel.gwt.websockets.WebsocketListener;
+import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.client.util.Log;
 import consulo.web.gwt.client.ui.GwtModalWindowImpl;
 import consulo.web.gwt.client.ui.InternalGwtComponent;
-import consulo.web.gwt.client.util.GwtUIUtil2;
 import consulo.web.gwt.shared.UIClientEvent;
 import consulo.web.gwt.shared.UIClientEventType;
 import consulo.web.gwt.shared.UIComponent;
@@ -52,7 +52,7 @@ public class UIEntryPoint implements EntryPoint {
     ThemeHelper.getInstance().setThemeName("classic");
 
     final RootPanel rootPanel = RootPanel.get();
-    rootPanel.add(GwtUIUtil2.loadingPanel());
+    rootPanel.add(GwtUIUtil.loadingPanel());
 
     final String consuloSessionId = Cookies.getCookie("ConsuloSessionId");
     if (consuloSessionId == null) {

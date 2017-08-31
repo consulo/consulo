@@ -248,7 +248,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     GwtUIUtil.fill(this);
 
-    setWidget(GwtUIUtil.loadingPanel());
+    setWidget(GwtUIUtil.loadingPanelDeprecated());
 
     Scheduler.get().scheduleDeferred(new Command() {
       @Override

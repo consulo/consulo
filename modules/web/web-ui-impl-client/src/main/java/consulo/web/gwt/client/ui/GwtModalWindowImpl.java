@@ -18,7 +18,7 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PopupPanel;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.client.util.GwtUIUtil2;
+import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +31,7 @@ import java.util.Map;
  * @since 16-Jun-16
  */
 public class GwtModalWindowImpl extends PopupPanel implements InternalGwtComponentWithChildren {
-  private Grid myGrid = GwtUIUtil2.fillAndReturn(new Grid(2, 1));
+  private Grid myGrid = GwtUIUtil.fillAndReturn(new Grid(2, 1));
 
   public GwtModalWindowImpl() {
     super(false, true);

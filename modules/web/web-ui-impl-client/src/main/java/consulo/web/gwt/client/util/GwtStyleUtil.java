@@ -15,12 +15,15 @@
  */
 package consulo.web.gwt.client.util;
 
+import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.shared.transport.GwtColor;
 
 /**
  * @author VISTALL
  * @since 20-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class GwtStyleUtil {
   public static String toString(GwtColor color) {
     return "rgb(" + color.getRed() + ", " + color.getGreen() + ", " + color.getBlue() + ")";
