@@ -22,6 +22,7 @@
   <entry-point class='consulo.web.gwt.client.UIEntryPoint'/>
 
   <source path="">
+    <!--exclude generator class due source path is global-->
     <exclude name="**/UIFactoryGenerator.java" />
   </source>
 
