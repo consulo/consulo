@@ -236,7 +236,8 @@ public class SmartList<E> extends AbstractList<E> {
     }
   }
 
-  public void sort(@NotNull Comparator<? super E> comparator) {
+  @Override
+  public void sort(Comparator<? super E> comparator) {
     if (mySize >= 2) {
       Arrays.sort((E[])myElem, 0, mySize, comparator);
     }
