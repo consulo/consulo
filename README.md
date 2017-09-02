@@ -1,4 +1,4 @@
-## About [![Build Status](https://img.shields.io/jenkins/s/https/ci.consulo.io/job/consulo+maven.svg?style=flat-square)](https://ci.consulo.io/job/consulo/) [![Test Status](https://img.shields.io/jenkins/t/https/ci.consulo.io/job/consulo+maven.svg?style=flat-square)](https://ci.consulo.io/job/consulo/)
+## About [![Build Status](https://img.shields.io/jenkins/s/https/ci.consulo.io/job/consulo.svg?style=flat-square)](https://ci.consulo.io/job/consulo/) [![Test Status](https://img.shields.io/jenkins/t/https/ci.consulo.io/job/consulo.svg?style=flat-square)](https://ci.consulo.io/job/consulo/)
 
 Consulo - multi-language ide. Project was started in 2013 year by forking [IDEA Community Edition](https://github.com/JetBrains/intellij-community).
 
