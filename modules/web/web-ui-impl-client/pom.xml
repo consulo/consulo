@@ -44,7 +44,7 @@
         <configuration>
           <sourceLevel>1.8</sourceLevel>
           <failOnError>true</failOnError>
-          <moduleName>consulo.web.gwt.impl</moduleName>
+          <moduleName>consulo.web.gwt</moduleName>
         </configuration>
       </plugin>
     </plugins>
@@ -73,13 +73,6 @@
       <groupId>consulo</groupId>
       <artifactId>consulo-web-ui-impl-shared</artifactId>
       <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>consulo</groupId>
-      <artifactId>consulo-web-ui-impl-shared</artifactId>
-      <version>${project.version}</version>
-      <classifier>sources</classifier>
     </dependency>
 
     <dependency>

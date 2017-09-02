@@ -29,7 +29,7 @@
   <artifactId>consulo-ui-api-shared</artifactId>
   <version>2-SNAPSHOT</version>
 
-  <packaging>gwt-lib</packaging>
+  <packaging>jar</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -51,6 +51,31 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <id>copy-sources</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.build.sourceDirectory}</directory>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>net.ltgt.gwt.maven</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <version>${maven.gwt.plugin}</version>
@@ -58,6 +83,16 @@
         <configuration>
           <moduleName>consulo.ui</moduleName>
         </configuration>
+        <executions>
+          <execution>
+            <id>generate</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>generate-module</goal>
+              <goal>generate-module-metadata</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

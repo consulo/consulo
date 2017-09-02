@@ -82,7 +82,8 @@
       <id>consulo</id>
       <url>https://maven.consulo.io/repository/consulo/</url>
       <snapshots>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
       </snapshots>
     </repository>
   </repositories>
@@ -92,7 +93,8 @@
       <id>consulo-plugin</id>
       <url>https://maven.consulo.io/repository/consulo/</url>
       <snapshots>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
@@ -147,6 +149,19 @@
             <goals>
               <goal>instrument</goal>
               <goal>test-instrument</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.0.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
             </goals>
           </execution>
         </executions>
