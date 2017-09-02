@@ -10,9 +10,9 @@
           </option>
           <option name="goals">
             <list>
-              <option value="jetty:run-exploded" />
-              <option value="-pl" />
-              <option value=":consulo-sandbox-web" />
+              <option value="consulo:run" />
+              <option value="-pl:consulo-sandbox-web" />
+              <option value="-am" />
             </list>
           </option>
           <option name="profilesMap">

@@ -28,7 +28,7 @@
       <includes>
         <include>*</include>
       </includes>
-      <outputDirectory>/Consulo/</outputDirectory>
+      <outputDirectory>Consulo/</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/../../distribution/platform/shared/</directory>
@@ -42,7 +42,7 @@
       <includes>
         <include>*/*</include>
       </includes>
-      <outputDirectory>/Consulo/platform/buildSNAPSHOT/</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/../../distribution/platform/linux</directory>
@@ -59,13 +59,13 @@
       <includes>
         <include>*/*</include>
       </includes>
-      <outputDirectory>/Consulo/platform/buildSNAPSHOT/</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
   </fileSets>
 
   <dependencySets>
     <dependencySet>
-      <outputDirectory>/Consulo/platform/buildSNAPSHOT/lib</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
@@ -83,7 +83,7 @@
       </includes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>/Consulo/platform/buildSNAPSHOT/plugins/sand-language/lib</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/sand-language/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>

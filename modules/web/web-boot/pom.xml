@@ -29,6 +29,16 @@
   <version>2-SNAPSHOT</version>
   <packaging>war</packaging>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>9.4.6.v20170531</version>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>consulo</groupId>
