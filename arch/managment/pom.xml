@@ -49,6 +49,7 @@
     <build.number>SNAPSHOT</build.number>
 
     <maven.gwt.plugin>1.0-rc-8</maven.gwt.plugin>
+    <maven.assembly.plugin>3.1.0</maven.assembly.plugin>
   </properties>
 
   <profiles>

@@ -38,12 +38,14 @@
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2-beta-5</version>
+        <version>${maven.assembly.plugin}</version>
         <executions>
           <execution>
             <id>create-sandbox</id>
             <configuration>
-              <descriptor>src/assembly/sandbox.xml</descriptor>
+              <descriptors>
+                <descriptor>src/assembly/sandbox.xml</descriptor>
+              </descriptors>
             </configuration>
             <phase>package</phase>
             <goals>
@@ -57,7 +59,7 @@
         <artifactId>consulo-maven-plugin</artifactId>
         <version>2.0</version>
         <configuration>
-          <buildDirectory>${project.build.directory}/consulo-sandbox-desktop-${project.version}</buildDirectory>
+          <buildDirectory>${project.build.directory}/consulo-sandbox-desktop-${project.version}-main</buildDirectory>
         </configuration>
       </plugin>
     </plugins>

@@ -22,32 +22,16 @@
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2-beta-5</version>
+        <version>${maven.assembly.plugin}</version>
         <executions>
           <execution>
             <id>create-archive-win</id>
             <configuration>
-              <descriptor>src/assembly/win.xml</descriptor>
-            </configuration>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>create-archive-linux</id>
-            <configuration>
-              <descriptor>src/assembly/linux.xml</descriptor>
-            </configuration>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>create-archive-mac</id>
-            <configuration>
-              <descriptor>src/assembly/mac.xml</descriptor>
+              <descriptors>
+                <descriptor>${project.basedir}/src/assembly/win.xml</descriptor>
+                <descriptor>${project.basedir}/src/assembly/linux.xml</descriptor>
+                <descriptor>${project.basedir}/src/assembly/mac.xml</descriptor>
+              </descriptors>
             </configuration>
             <phase>package</phase>
             <goals>
