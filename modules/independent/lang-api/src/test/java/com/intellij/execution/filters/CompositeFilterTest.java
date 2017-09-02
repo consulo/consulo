@@ -23,7 +23,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ModificationTracker;
 import junit.framework.Assert;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -146,34 +145,18 @@ public class CompositeFilterTest {
   }
 
   private Filter returnNullFilter() {
-    return new Filter() {
-      @Nullable
-      @Override
-      public Result applyFilter(String line, int entireLength) {
-        return null;
-      }
-    };
+    return (line, entireLength) -> null;
   }
 
   private Filter returnResultFilter() {
-    return new Filter() {
-      @Nullable
-      @Override
-      public Result applyFilter(String line, int entireLength) {
-        return createResult();
-      }
-    };
+    return (line, entireLength) -> createResult();
   }
 
   private Filter returnContinuingResultFilter() {
-    return new Filter() {
-      @Nullable
-      @Override
-      public Result applyFilter(String line, int entireLength) {
-        Result result = createResult();
-        result.setNextAction(NextAction.CONTINUE_FILTERING);
-        return result;
-      }
+    return (line, entireLength) -> {
+      Filter.Result result = createResult();
+      result.setNextAction(Filter.NextAction.CONTINUE_FILTERING);
+      return result;
     };
   }
 

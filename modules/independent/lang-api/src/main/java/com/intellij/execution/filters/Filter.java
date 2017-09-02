@@ -15,6 +15,7 @@
  */
 package com.intellij.execution.filters;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -39,13 +40,13 @@ public interface Filter {
 
     private static final Map<TextAttributesKey, TextAttributes> GRAYED_BY_NORMAL_CACHE = ContainerUtil.newConcurrentMap(2);
     static {
-      EditorColorsManager.getInstance().addEditorColorsListener(new EditorColorsListener() {
-        @Override
-        public void globalSchemeChange(EditorColorsScheme scheme) {
+      Application application = ApplicationManager.getApplication();
+      if(application != null) {
+        application.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, scheme -> {
           // invalidate cache on Appearance Theme/Editor Scheme change
           GRAYED_BY_NORMAL_CACHE.clear();
-        }
-      }, ApplicationManager.getApplication());
+        });
+      }
     }
 
     protected NextAction myNextAction = NextAction.EXIT;
