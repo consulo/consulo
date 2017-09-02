@@ -28,14 +28,14 @@
       <includes>
         <include>*</include>
       </includes>
-      <outputDirectory>/Consulo/</outputDirectory>
+      <outputDirectory>${file.separator}Consulo${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/platform/shared/</directory>
       <includes>
         <include>*/*</include>
       </includes>
-      <outputDirectory>/Consulo/platform/buildSNAPSHOT/</outputDirectory>
+      <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/platform/linux</directory>
@@ -45,13 +45,13 @@
       <excludes>
         <exclude>/bin/.gitignore</exclude>
       </excludes>
-      <outputDirectory>/Consulo/platform/buildSNAPSHOT/</outputDirectory>
+      <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
     </fileSet>
   </fileSets>
 
   <dependencySets>
     <dependencySet>
-      <outputDirectory>/Consulo/platform/buildSNAPSHOT/lib</outputDirectory>
+      <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
@@ -61,7 +61,7 @@
       </excludes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>/Consulo/platform/buildSNAPSHOT/plugins/core/lib</outputDirectory>
+      <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}plugins${file.separator}core${file.separator}lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
