@@ -271,7 +271,7 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
         if (parsedHost.hasPort()) {
           return false;
         }
-        host = parsedHost.getHostText();
+        host = parsedHost.getHost();
 
         try {
           InetAddresses.forString(host);
