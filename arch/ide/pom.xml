@@ -43,6 +43,16 @@
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
+      <artifactId>consulo-desktop-boot</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>consulo-desktop-bootstrap</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
       <artifactId>consulo-core-impl</artifactId>
       <version>${project.version}</version>
     </dependency>

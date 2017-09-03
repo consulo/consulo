@@ -119,5 +119,9 @@
       <groupId>org.jvnet.winp</groupId>
       <artifactId>winp</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-compress</artifactId>
+    </dependency>
   </dependencies>
 </project>
