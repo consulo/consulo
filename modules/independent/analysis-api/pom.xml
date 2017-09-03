@@ -51,7 +51,5 @@
       <artifactId>consulo-editor-ui-api</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!--internal dependencies-->
-    <!--external dependencies-->
   </dependencies>
 </project>

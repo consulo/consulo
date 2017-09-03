@@ -37,11 +37,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-    </dependency>
-    <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-util</artifactId>
       <version>${project.version}</version>

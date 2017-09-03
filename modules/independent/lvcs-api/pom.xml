@@ -41,7 +41,5 @@
       <artifactId>consulo-core-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!--internal dependencies-->
-    <!--external dependencies-->
   </dependencies>
 </project>

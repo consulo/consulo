@@ -56,34 +56,11 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>build.serviceMessages</artifactId>
-      <version>1.0</version>
-      <exclusions>
-        <!--FIXME [VISTALL] tempolary solution until we make depend to our library-->
-        <exclusion>
-          <groupId>org.jetbrains</groupId>
-          <artifactId>annotations-java5</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <!--external dependencies-->
     <dependency>
       <groupId>org.apache.thrift</groupId>
       <artifactId>libthrift</artifactId>
-      <version>0.9.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.httpcomponents</groupId>
-          <artifactId>httpclient</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.httpcomponents</groupId>
-          <artifactId>httpcore</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-lang3</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
 </project>

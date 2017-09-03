@@ -35,19 +35,15 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>forms_rt</artifactId>
       <version>1.0</version>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.10</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.jmock</groupId>

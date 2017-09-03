@@ -35,12 +35,10 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>jdom</artifactId>
-      <version>${jdom.version}</version>
     </dependency>
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>trove4j</artifactId>
-      <version>${trove4j.version}</version>
     </dependency>
     <!--external dependencies-->
     <dependency>

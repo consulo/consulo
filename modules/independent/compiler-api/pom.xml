@@ -51,7 +51,5 @@
       <artifactId>consulo-platform-api</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!--internal dependencies-->
-    <!--external dependencies-->
   </dependencies>
 </project>

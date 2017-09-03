@@ -50,20 +50,6 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>build.serviceMessages</artifactId>
-      <version>1.0</version>
-      <exclusions>
-        <!--FIXME [VISTALL] tempolary solution until we make depend to our library-->
-        <exclusion>
-          <groupId>org.jetbrains</groupId>
-          <artifactId>annotations-java5</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <!--External dependencies-->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
     </dependency>
   </dependencies>
 </project>
