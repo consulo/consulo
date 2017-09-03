@@ -87,6 +87,10 @@
       <artifactId>javasysmon</artifactId>
       <version>0.3.6</version>
     </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>eawtstub</artifactId>
+    </dependency>
     <!--extenal libraries-->
     <dependency>
       <groupId>com.google.code.gson</groupId>

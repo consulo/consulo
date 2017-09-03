@@ -55,7 +55,6 @@ import static com.intellij.ui.mac.foundation.Foundation.invoke;
  */
 public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettingsListener {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.mac.MacMainFrameDecorator");
-  private final static boolean ORACLE_BUG_ID_8003173 = SystemInfo.isJavaVersionAtLeast("1.7");
 
   private final FullscreenQueue<Runnable> myFullscreenQueue = new FullscreenQueue<Runnable>();
 

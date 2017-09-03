@@ -55,6 +55,12 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>consulo.internal</groupId>
+        <artifactId>eawtstub</artifactId>
+        <version>1.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
         <groupId>picocontainer</groupId>
         <artifactId>picocontainer</artifactId>
         <version>${picocontainer.version}</version>

@@ -51,8 +51,6 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>eawtstub</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
     </dependency>
     <!--external-->
     <dependency>
