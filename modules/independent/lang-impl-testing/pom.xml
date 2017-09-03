@@ -46,6 +46,11 @@
       <artifactId>consulo-util-testing</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>compile</scope>
+    </dependency>
     <!--Internal dependencies-->
     <dependency>
       <groupId>consulo.internal</groupId>
