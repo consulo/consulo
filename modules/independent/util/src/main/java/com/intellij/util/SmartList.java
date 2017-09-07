@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.intellij.util;
 import com.intellij.util.containers.EmptyIterator;
 import com.intellij.util.containers.SingletonIteratorBase;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.TestOnly;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -26,10 +27,10 @@ import java.util.*;
  * A List which is optimised for the sizes of 0 and 1,
  * in which cases it would not allocate array at all.
  */
-@SuppressWarnings({"unchecked"})
-public class SmartList<E> extends AbstractList<E> {
-  private int mySize = 0;
-  private Object myElem = null; // null if mySize==0, (E)elem if mySize==1, Object[] if mySize>=2
+@SuppressWarnings("unchecked")
+public class SmartList<E> extends AbstractList<E> implements RandomAccess {
+  private int mySize;
+  private Object myElem; // null if mySize==0, (E)elem if mySize==1, Object[] if mySize>=2
 
   public SmartList() { }
 
@@ -236,14 +237,14 @@ public class SmartList<E> extends AbstractList<E> {
     }
   }
 
-  @Override
   public void sort(Comparator<? super E> comparator) {
     if (mySize >= 2) {
       Arrays.sort((E[])myElem, 0, mySize, comparator);
     }
   }
 
-  public int getModificationCount() {
+  @TestOnly
+  int getModificationCount() {
     return modCount;
   }
 
@@ -288,5 +289,95 @@ public class SmartList<E> extends AbstractList<E> {
       modCount++;
       myElem = Arrays.copyOf(array, mySize);
     }
+  }
+
+  @Override
+  public int indexOf(Object o) {
+    if (mySize == 0) {
+      return -1;
+    }
+    if (mySize == 1) {
+      if (o == null) {
+        return myElem == null ? 0 : -1;
+      }
+      else {
+        return o.equals(myElem) ? 0 : -1;
+      }
+    }
+
+    Object[] array = (Object[])myElem;
+    if (o == null) {
+      for (int i = 0; i < mySize; i++) {
+        if (array[i] == null) {
+          return i;
+        }
+      }
+    }
+    else {
+      for (int i = 0; i < mySize; i++) {
+        if (o.equals(array[i])) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
+
+  @Override
+  public boolean contains(Object o) {
+    return indexOf(o) >= 0;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+
+    if (o instanceof SmartList) {
+      return equalsWithSmartList((SmartList)o);
+    }
+
+    if (o instanceof ArrayList) {
+      return equalsWithArrayList((ArrayList)o);
+    }
+
+    return super.equals(o);
+  }
+
+  private boolean equalsWithSmartList(SmartList that) {
+    if (mySize != that.mySize) {
+      return false;
+    }
+
+    if (mySize == 1) {
+      return myElem == null ? that.myElem == null : myElem.equals(that.myElem);
+    }
+
+    return compareOneByOne(that);
+  }
+
+  private boolean equalsWithArrayList(ArrayList that) {
+    if (mySize != that.size()) {
+      return false;
+    }
+
+    if (mySize == 1) {
+      Object o = that.get(0);
+      return myElem == null ? o == null : myElem.equals(o);
+    }
+
+    return compareOneByOne(that);
+  }
+
+  private boolean compareOneByOne(List that) {
+    for (int i = 0; i < mySize; i++) {
+      E o1 = get(i);
+      Object o2 = that.get(i);
+      if (o1 == null ? o2 != null : !o1.equals(o2)) {
+        return false;
+      }
+    }
+    return true;
   }
 }
