@@ -15,6 +15,8 @@
  */
 package com.intellij.notification;
 
+import com.google.common.util.concurrent.Atomics;
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.diagnostic.Logger;
@@ -25,7 +27,7 @@ import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,9 +35,20 @@ import javax.swing.*;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
+ * Notification bean class contains <b>title:</b>subtitle, content (plain text or HTML) and actions.
+ * <br><br>
+ * The notifications, generally, are shown in the balloons that appear on the screen when the corresponding events take place.<br>
+ * Notification balloon is of two types: two or three lines.<br>
+ * Two lines: title and content line; title and actions; content line and actions; contents on two lines.<br>
+ * Three lines: title and content line and actions; contents on two lines and actions; contents on three lines or more; etc.
+ * <br><br>
+ * Warning: be careful not to use the links in HTML content, use {@link #addAction(AnAction)}
+ *
  * @author spleaner
+ * @author Alexander Lobas
  */
 public class Notification {
   private static final Logger LOG = Logger.getInstance("#com.intellij.notification.Notification");
@@ -54,18 +67,28 @@ public class Notification {
   private String myDropDownText;
   private List<AnAction> myActions;
 
-  private boolean myExpired;
+  private AtomicReference<Boolean> myExpired = Atomics.newReference(false);
   private Runnable myWhenExpired;
   private Boolean myImportant;
   private WeakReference<Balloon> myBalloonRef;
   private final long myTimestamp;
 
-  public Notification(@NotNull String groupDisplayId, @NotNull Icon icon, @NotNull NotificationType type) {
+  public Notification(@NotNull String groupDisplayId, @Nullable Icon icon, @NotNull NotificationType type) {
     this(groupDisplayId, icon, null, null, null, type, null);
   }
 
+  /**
+   * @param groupDisplayId this should be a human-readable, capitalized string like "Facet Detector".
+   *                       It will appear in "Notifications" configurable.
+   * @param icon           notification icon, if <b>null</b> used icon from type
+   * @param title          notification title
+   * @param subtitle       notification subtitle
+   * @param content        notification content
+   * @param type           notification type
+   * @param listener       notification lifecycle listener
+   */
   public Notification(@NotNull String groupDisplayId,
-                      @NotNull Icon icon,
+                      @Nullable Icon icon,
                       @Nullable String title,
                       @Nullable String subtitle,
                       @Nullable String content,
@@ -81,9 +104,8 @@ public class Notification {
     myIcon = icon;
     mySubtitle = subtitle;
 
-    LOG.assertTrue(hasTitle() || hasContent(), "Notification should have title: " + title + " and/or subtitle and/or content groupId: " + myGroupId);
-
-    id = String.valueOf(System.currentTimeMillis()) + "." + String.valueOf(System.identityHashCode(this));
+    assertHasTitleOrContent();
+    id = calculateId(this);
   }
 
   public Notification(@NotNull String groupDisplayId, @NotNull String title, @NotNull String content, @NotNull NotificationType type) {
@@ -110,8 +132,8 @@ public class Notification {
     myListener = listener;
     myTimestamp = System.currentTimeMillis();
 
-    LOG.assertTrue(hasContent(), "Notification should have content, title: " + title + ", groupId: " + myGroupId);
-    id = String.valueOf(System.currentTimeMillis()) + "." + String.valueOf(hashCode());
+    assertHasTitleOrContent();
+    id = calculateId(this);
   }
 
   /**
@@ -206,16 +228,23 @@ public class Notification {
   }
 
   public static void fire(@NotNull final Notification notification, @NotNull AnAction action) {
-    AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.UNKNOWN, new DataContext() {
-      @Nullable
-      @Override
-      public Object getData(@NonNls String dataId) {
-        return KEY.getName().equals(dataId) ? notification : null;
+    fire(notification, action, null);
+  }
+
+  public static void fire(@NotNull final Notification notification, @NotNull AnAction action, @Nullable DataContext context) {
+    AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.UNKNOWN, dataId -> {
+      if (KEY.is(dataId)) {
+        return notification;
       }
+      return context == null ? null : context.getData(dataId);
     });
     if (ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
       ActionUtil.performActionDumbAware(action, event);
     }
+  }
+
+  public static void setDataProvider(@NotNull Notification notification, @NotNull JComponent component) {
+    DataManager.registerDataProvider(component, dataId -> KEY.getName().equals(dataId) ? notification : null);
   }
 
   @NotNull
@@ -226,6 +255,9 @@ public class Notification {
     return myDropDownText;
   }
 
+  /**
+   * @param dropDownText text for popup when all actions collapsed (when all actions width more notification width)
+   */
   @NotNull
   public Notification setDropDownText(@NotNull String dropDownText) {
     myDropDownText = dropDownText;
@@ -235,7 +267,7 @@ public class Notification {
   @NotNull
   public Notification addAction(@NotNull AnAction action) {
     if (myActions == null) {
-      myActions = new ArrayList<AnAction>();
+      myActions = new ArrayList<>();
     }
     myActions.add(action);
     return this;
@@ -247,13 +279,14 @@ public class Notification {
   }
 
   public boolean isExpired() {
-    return myExpired;
+    return myExpired.get();
   }
 
   public void expire() {
+    if (!myExpired.compareAndSet(false, true)) return;
+
+    UIUtil.invokeLaterIfNeeded(() -> hideBalloon());
     NotificationsManager.getNotificationsManager().expire(this);
-    hideBalloon();
-    myExpired = true;
 
     Runnable whenExpired = myWhenExpired;
     if (whenExpired != null) whenExpired.run();
@@ -276,7 +309,7 @@ public class Notification {
 
   public void setBalloon(@NotNull final Balloon balloon) {
     hideBalloon();
-    myBalloonRef = new WeakReference<Balloon>(balloon);
+    myBalloonRef = new WeakReference<>(balloon);
     balloon.addListener(new JBPopupAdapter() {
       @Override
       public void onClosed(LightweightWindowEvent event) {
@@ -307,5 +340,15 @@ public class Notification {
     }
 
     return getListener() != null || !ContainerUtil.isEmpty(myActions);
+  }
+
+  @NotNull
+  private static String calculateId(@NotNull Object notification) {
+    return String.valueOf(System.currentTimeMillis()) + "." + String.valueOf(System.identityHashCode(notification));
+  }
+
+  private void assertHasTitleOrContent() {
+    LOG.assertTrue(hasTitle() || hasContent(),
+                   "Notification should have title: [" + myTitle + "] and/or content: [" + myContent + "]; groupId: " + myGroupId);
   }
 }
