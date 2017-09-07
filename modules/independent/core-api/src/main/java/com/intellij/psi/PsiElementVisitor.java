@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,9 @@ import com.intellij.psi.templateLanguages.OuterLanguageElement;
  * @see PsiRecursiveElementVisitor
  */
 public abstract class PsiElementVisitor {
+  public static final PsiElementVisitor EMPTY_VISITOR = new PsiElementVisitor() {
+  };
+
   public void visitElement(PsiElement element) {
     ProgressIndicatorProvider.checkCanceled();
   }
@@ -32,11 +35,11 @@ public abstract class PsiElementVisitor {
     visitElement(file);
   }
 
-  public void visitBinaryFile(PsiBinaryFile file){
+  public void visitBinaryFile(PsiBinaryFile file) {
     visitFile(file);
   }
 
-  public void visitPlainTextFile(PsiPlainTextFile file){
+  public void visitPlainTextFile(PsiPlainTextFile file) {
     visitFile(file);
   }
 
