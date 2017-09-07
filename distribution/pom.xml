@@ -32,6 +32,7 @@
                 <descriptor>${project.basedir}/src/assembly/linux.xml</descriptor>
                 <descriptor>${project.basedir}/src/assembly/mac.xml</descriptor>
               </descriptors>
+              <attach>false</attach>
             </configuration>
             <phase>package</phase>
             <goals>

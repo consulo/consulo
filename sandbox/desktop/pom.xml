@@ -46,6 +46,7 @@
               <descriptors>
                 <descriptor>src/assembly/sandbox.xml</descriptor>
               </descriptors>
+              <attach>false</attach>
             </configuration>
             <phase>package</phase>
             <goals>
