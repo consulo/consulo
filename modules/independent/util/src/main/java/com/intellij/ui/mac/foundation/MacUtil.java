@@ -23,12 +23,14 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import sun.awt.AWTAccessor;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
+import java.awt.peer.ComponentPeer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -155,10 +157,10 @@ public class MacUtil {
     ID windowId = null;
     if (SystemInfo.isJavaVersionAtLeast("1.7") && Registry.is("skip.untitled.windows.for.mac.messages")) {
       try {
-        //noinspection deprecation
-        Class <?> cWindowPeerClass  = w.getPeer().getClass();
+        ComponentPeer peer = AWTAccessor.getComponentAccessor().getPeer(w);
+        Class <?> cWindowPeerClass = peer.getClass();
         Method getPlatformWindowMethod = cWindowPeerClass.getDeclaredMethod("getPlatformWindow");
-        Object cPlatformWindow = getPlatformWindowMethod.invoke(w.getPeer());
+        Object cPlatformWindow = getPlatformWindowMethod.invoke(peer);
         Class <?> cPlatformWindowClass = cPlatformWindow.getClass();
         Method getNSWindowPtrMethod = cPlatformWindowClass.getDeclaredMethod("getNSWindowPtr");
         windowId = new ID((Long)getNSWindowPtrMethod.invoke(cPlatformWindow));
