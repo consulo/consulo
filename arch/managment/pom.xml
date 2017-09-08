@@ -50,6 +50,7 @@
 
     <maven.gwt.plugin>1.0-rc-8</maven.gwt.plugin>
     <maven.assembly.plugin>3.1.0</maven.assembly.plugin>
+    <maven.compile.plugin>3.7.0</maven.compile.plugin>
   </properties>
 
   <dependencyManagement>
@@ -438,7 +439,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.1</version>
+        <version>${maven.compile.plugin}</version>
         <configuration>
           <source>${java.level}</source>
           <target>${java.level}</target>
