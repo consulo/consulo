@@ -17,20 +17,41 @@ First of all, you need those tools:
 
 Then execute from command line:
 
-> mvn package
+```sh
+mvn package
+```
 
 If you want run Consulo from repository
  * as desktop application
 
-   > mvn install
+   ```sh
+    mvn install
 
-   > mvn consulo:run -pl:consulo-sandbox-desktop
+    mvn consulo:run -pl:consulo-sandbox-desktop
+   ```
 
  * as web application
 
-   > mvn install
+   first need build web sandbox
+   ```
+   mvn package -am -pl consulo:consulo-sandbox-web
+   ```
 
-   > mvn consulo:run -pl:consulo-sandbox-web
+   then need start code server (since we used gwt as frontend)
+
+   ```sh
+   cd modules/web/web-ui-impl-client
+
+   mvn -am gwt:codeserver
+   ```
+
+   and start web server
+
+   ```sh
+   cd modules/web/web-boot
+
+   mvn -am jetty:run
+   ```
 
 ## Sandbox Projects
 

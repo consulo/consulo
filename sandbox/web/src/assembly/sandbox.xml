@@ -63,6 +63,8 @@
       <excludes>
         <exclude>consulo:consulo-core-plugin</exclude>
         <exclude>consulo:consulo-sand-language-plugin</exclude>
+        <exclude>consulo:consulo-desktop-ui-impl</exclude>
+        <exclude>consulo:consulo-desktop-ui-laf-impl</exclude>
       </excludes>
     </dependencySet>
     <dependencySet>

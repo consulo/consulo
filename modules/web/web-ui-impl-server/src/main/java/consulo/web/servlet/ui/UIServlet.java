@@ -29,7 +29,7 @@ import java.util.UUID;
  * @since 09-Jun-16
  */
 public abstract class UIServlet extends HttpServlet {
-  private static final String ourGwtModuleName = "consulo.web.gwtUI.impl";
+  private static final String ourGwtModuleName = "consulo.web.gwt";
 
   private final Class<? extends UIBuilder> myClass;
 
@@ -52,7 +52,7 @@ public abstract class UIServlet extends HttpServlet {
     writer.println("<title>Project</title>");
     writer.println("</head>");
     writer.println("<body>");
-    writer.println("<script type='text/javascript' src='/res/" + ourGwtModuleName + "/" + ourGwtModuleName + ".nocache.js?" + System.currentTimeMillis() +
+    writer.println("<script type='text/javascript' src='/webResources/" + ourGwtModuleName + "/" + ourGwtModuleName + ".nocache.js?" + System.currentTimeMillis() +
                    "'></script>");
     writer.println("</body>");
     writer.println("</html>");

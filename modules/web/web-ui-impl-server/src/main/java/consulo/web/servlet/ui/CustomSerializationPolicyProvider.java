@@ -21,6 +21,7 @@ import com.google.gwt.user.server.rpc.SerializationPolicyLoader;
 import com.google.gwt.user.server.rpc.SerializationPolicyProvider;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Set;
 
 /**
@@ -37,9 +38,9 @@ public class CustomSerializationPolicyProvider implements SerializationPolicyPro
   @Override
   public SerializationPolicy getSerializationPolicy(String moduleBaseURL, String serializationPolicyStrongName) {
     try {
-      String rpc = "/webResources/consulo.web.gwtUI.impl/" + serializationPolicyStrongName + ".gwt.rpc";
+      String rpc = moduleBaseURL + "/" + serializationPolicyStrongName + ".gwt.rpc";
 
-      InputStream resourceAsStream = myClassLoader.getResourceAsStream(rpc);
+      InputStream resourceAsStream = new URL(rpc).openStream();
       SerializationPolicy serializationPolicy = SerializationPolicyLoader.loadFromStream(resourceAsStream, null);
 
       return new SerializationPolicy() {

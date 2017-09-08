@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="consulo-sandbox-web" type="MavenRunConfiguration" factoryName="Maven" singleton="true">
+  <configuration default="false" name="consulo-web-boot [jetty:run] no-platform-build" type="MavenRunConfiguration" factoryName="Maven" singleton="true">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -10,22 +10,20 @@
           </option>
           <option name="goals">
             <list>
-              <option value="consulo:run" />
-              <option value="-pl:consulo-sandbox-web" />
-              <option value="-am" />
+              <option value="-T" />
+              <option value="1C" />
+              <option value="jetty:run" />
             </list>
           </option>
           <option name="profilesMap">
             <map />
           </option>
-          <option name="resolveToWorkspace" value="true" />
-          <option name="workingDirPath" value="$PROJECT_DIR$" />
+          <option name="resolveToWorkspace" value="false" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/modules/web/web-boot" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
     <ConfigurationWrapper RunnerId="Debug" />
-    <method>
-      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="-Dmaven.test.skip=true package -pl :consulo-sandbox-web -am" />
-    </method>
+    <method />
   </configuration>
 </component>

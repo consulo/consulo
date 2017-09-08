@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
+<project>
   <component name="ProjectCodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS">
       <value>
@@ -18,7 +18,7 @@
         <option name="LINE_SEPARATOR" value="&#10;" />
         <option name="FIELD_NAME_PREFIX" value="my" />
         <option name="STATIC_FIELD_NAME_PREFIX" value="our" />
-        <option name="RIGHT_MARGIN" value="160" />
+        <option name="RIGHT_MARGIN" value="200" />
         <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="true" />
         <option name="LINE_COMMENT_AT_FIRST_COLUMN" value="false" />
         <option name="BLOCK_COMMENT_AT_FIRST_COLUMN" value="false" />

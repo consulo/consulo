@@ -44,18 +44,24 @@ public class Initializer implements ServletContextListener {
   public void contextInitialized(ServletContextEvent servletContextEvent) {
     ServletContext servletContext = servletContextEvent.getServletContext();
 
-    String platformPath = servletContext.getRealPath("/platform");
+    File platformDirectory = null;
 
-    File file = new File(platformPath).listFiles()[0];
+    String workDirectoryProperty = System.getProperty("consulo.web.work.directory");
+    if(workDirectoryProperty != null) {
+       platformDirectory = new File(workDirectoryProperty, "platform").listFiles()[0];
+    }
+    else {
+      String platformPath = servletContext.getRealPath("/platform");
+      platformDirectory = new File(platformPath).listFiles()[0];
+    }
 
     Logger.setFactory(WebLoggerFactory.class);
     try {
-      initApplication(file, servletContext);
+      initApplication(platformDirectory, servletContext);
     }
     catch (Exception e) {
       e.printStackTrace();
     }
-
 
     servletContext.setAttribute(INITIALIZED, Boolean.TRUE);
   }
@@ -68,11 +74,6 @@ public class Initializer implements ServletContextListener {
       File[] files = libFile.listFiles();
       for (File child : files) {
         String name = child.getName();
-        if (name.startsWith("javax.servlet-api") || name.startsWith("javax.websocket-api")) {
-          System.out.println("skip: " + child.getPath());
-          continue;
-        }
-
         if (name.endsWith(".jar")) {
           libs.add(child.toURI().toURL());
         }
@@ -114,7 +115,7 @@ public class Initializer implements ServletContextListener {
       System.out.println(aClass.getName() + " registered to: " + Arrays.asList(urls));
     }
 
-    servletContext.addServlet("ResourcesServlet", new ResourcesServlet(urlClassLoader)).addMapping("/res/*");
+    servletContext.addServlet("ResourcesServlet", new ResourcesServlet(libFile, urlClassLoader)).addMapping("/webResources/*");
 
     ServerContainer serverContainer = (ServerContainer)servletContext.getAttribute("javax.websocket.server.ServerContainer");
 

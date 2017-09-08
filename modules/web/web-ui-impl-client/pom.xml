@@ -45,6 +45,8 @@
           <sourceLevel>1.8</sourceLevel>
           <failOnError>true</failOnError>
           <moduleName>consulo.web.gwt</moduleName>
+          <!-- -> web ->  modules -> consulo -> sandbox -> web-->
+          <launcherDir>${project.basedir}/../../../sandbox/web/target/consulo-sandbox-web-${project.version}-main/workdir/platform/buildSNAPSHOT/lib/gwt/</launcherDir>
         </configuration>
       </plugin>
     </plugins>
@@ -101,6 +103,13 @@
       <groupId>net.sf.advanced-gwt</groupId>
       <artifactId>advanced-gwt</artifactId>
       <version>2.0.8</version>
+    </dependency>
+
+    <!--dependency just for codeserver-->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 </project>

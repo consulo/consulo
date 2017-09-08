@@ -1,0 +1,31 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="consulo-web-boot [jetty:run]" type="MavenRunConfiguration" factoryName="Maven" singleton="true">
+    <MavenSettings>
+      <option name="myGeneralSettings" />
+      <option name="myRunnerSettings" />
+      <option name="myRunnerParameters">
+        <MavenRunnerParameters>
+          <option name="profiles">
+            <set />
+          </option>
+          <option name="goals">
+            <list>
+              <option value="-T" />
+              <option value="1C" />
+              <option value="jetty:run" />
+            </list>
+          </option>
+          <option name="profilesMap">
+            <map />
+          </option>
+          <option name="resolveToWorkspace" value="false" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/modules/web/web-boot" />
+        </MavenRunnerParameters>
+      </option>
+    </MavenSettings>
+    <ConfigurationWrapper RunnerId="Debug" />
+    <method>
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="package -am -pl consulo:consulo-sandbox-web" />
+    </method>
+  </configuration>
+</component>

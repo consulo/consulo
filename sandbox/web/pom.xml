@@ -55,14 +55,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>9.4.6.v20170531</version>
-        <configuration>
-          <war>${project.build.directory}/consulo-sandbox-web-${project.version}-main/webapp</war>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
@@ -79,9 +71,8 @@
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
-      <artifactId>consulo-web-ui-impl-client</artifactId>
+      <artifactId>consulo-web-ui-impl-server</artifactId>
       <version>${project.version}</version>
-      <type>war</type>
     </dependency>
   </dependencies>
 </project>

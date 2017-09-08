@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 
 /**
@@ -34,9 +35,11 @@ import java.nio.file.Files;
  * @since 16-May-17
  */
 public class ResourcesServlet extends HttpServlet {
+  private File myGWTPath;
   private UrlClassLoader myUrlClassLoader;
 
-  public ResourcesServlet(UrlClassLoader urlClassLoader) {
+  public ResourcesServlet(File libFile, UrlClassLoader urlClassLoader) {
+    myGWTPath = new File(libFile, "gwt");
     myUrlClassLoader = urlClassLoader;
   }
 
@@ -44,12 +47,22 @@ public class ResourcesServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String url = req.getRequestURI();
 
-    url = url.replace("/res/", "/webResources/");
+    url = url.replace("/webResources/", "");
 
+    URL resourceURL = null;
+    if (myGWTPath.exists()) {
+      url = URLDecoder.decode(url, "UTF-8");
+      File child = new File(myGWTPath, url);
+      if (child.exists()) {
+        resourceURL = child.toURI().toURL();
+      }
+    }
 
-    URL resource = myUrlClassLoader.findResource(url);
+    if (resourceURL == null) {
+      resourceURL = myUrlClassLoader.findResource(url);
+    }
 
-    if (resource == null) {
+    if (resourceURL == null) {
       resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
@@ -66,7 +79,7 @@ public class ResourcesServlet extends HttpServlet {
       e.printStackTrace();
     }
 
-    try (OutputStream stream = resp.getOutputStream(); InputStream inputStream = resource.openStream()) {
+    try (OutputStream stream = resp.getOutputStream(); InputStream inputStream = resourceURL.openStream()) {
       StreamUtil.copyStreamContent(inputStream, stream);
     }
   }

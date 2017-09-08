@@ -25,6 +25,7 @@ import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.sksamuel.gwt.websockets.WebsocketListener;
+import consulo.web.gwt.client.util.ExceptionUtil;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.client.util.Log;
 import consulo.web.gwt.client.ui.GwtModalWindowImpl;
@@ -74,7 +75,7 @@ public class UIEntryPoint implements EntryPoint {
           event = (UIServerEvent)streamReader.readObject();
         }
         catch (SerializationException e) {
-          Window.alert(e.getMessage());
+          Window.alert("Failed to serialize " + ExceptionUtil.toString(e));
           e.printStackTrace();
           return;
         }
