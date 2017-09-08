@@ -449,6 +449,14 @@
           <meminitial>2048</meminitial>
           <maxmem>4096</maxmem>
         </configuration>
+        <!--workaround for java 9-->
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-archiver</artifactId>
+            <version>2.4.4</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -457,6 +465,14 @@
         <configuration>
           <testFailureIgnore>true</testFailureIgnore>
         </configuration>
+        <!--workaround for java 9-->
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-archiver</artifactId>
+            <version>2.4.4</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>consulo.maven</groupId>
@@ -508,6 +524,14 @@
             </goals>
           </execution>
         </executions>
+        <!--workaround for java 9-->
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-archiver</artifactId>
+            <version>2.4.4</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
