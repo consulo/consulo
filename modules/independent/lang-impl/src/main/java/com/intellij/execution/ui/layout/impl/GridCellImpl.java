@@ -86,7 +86,7 @@ public class GridCellImpl implements GridCell {
       public void updateUI() {
         super.updateUI();
 
-        getUI().setModifyTabColor(UIManager.getColor("runner.grid.tabs.color"));
+        getUIInternal().setModifyTabColor(UIManager.getColor("runner.grid.tabs.color"));
       }
 
       @Override

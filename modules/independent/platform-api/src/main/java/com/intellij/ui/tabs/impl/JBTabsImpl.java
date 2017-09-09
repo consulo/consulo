@@ -56,7 +56,6 @@ import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.PanelUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -1660,7 +1659,7 @@ public abstract class JBTabsImpl extends JComponent
   protected void paintChildren(final Graphics g) {
     super.paintChildren(g);
 
-    getUI().paintChildren(this, g);
+    getUIInternal().paintChildren(this, g);
   }
 
   private Max computeMaxSize() {
@@ -1771,10 +1770,13 @@ public abstract class JBTabsImpl extends JComponent
     updateAll(false, false);
 
     // avoid leaks
-    getUI().clearLastPaintedTab();
+    getUIInternal().clearLastPaintedTab();
   }
 
-  protected JBEditorTabsUI getUI() {
+  /**
+   * return ui object. Do not rename it to 'getUI' due it will conflict on Java 9
+   */
+  protected JBEditorTabsUI getUIInternal() {
     return (JBEditorTabsUI)ui;
   }
 
