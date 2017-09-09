@@ -19,8 +19,8 @@ import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.MethodInvocator;
 import com.intellij.util.PairConsumer;
+import consulo.util.ui.PreJava9UIUtil;
 import org.jetbrains.annotations.NotNull;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +34,8 @@ public class GraphicsUtil {
   private static final MethodInvocator ourSafelyGetGraphicsMethod = new MethodInvocator(JComponent.class, "safelyGetGraphics", Component.class);
 
   @SuppressWarnings("UndesirableClassUsage")
-  private static final Graphics2D ourGraphics = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB).createGraphics();
+  private static final Graphics2D ourGraphics = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).createGraphics();
+
   static {
     setupFractionalMetrics(ourGraphics);
     setupAntialiasing(ourGraphics, true, true);
@@ -57,11 +58,11 @@ public class GraphicsUtil {
     return ourGraphics.getFontMetrics(font).charsWidth(data, off, len);
   }
 
-  public static int charWidth(char ch,Font font) {
+  public static int charWidth(char ch, Font font) {
     return ourGraphics.getFontMetrics(font).charWidth(ch);
   }
 
-  public static int charWidth(int ch,Font font) {
+  public static int charWidth(int ch, Font font) {
     return ourGraphics.getFontMetrics(font).charWidth(ch);
   }
 
@@ -74,9 +75,9 @@ public class GraphicsUtil {
 
       if (map != null && !ignoreSystemSettings) {
         g.addRenderingHints(map);
-      } else {
-        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                           enableAA ? RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+      }
+      else {
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, enableAA ? RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
       }
     }
   }
@@ -100,50 +101,48 @@ public class GraphicsUtil {
   /**
    * Invoking {@link Component#getGraphics()} disables true double buffering withing {@link JRootPane},
    * even if no subsequent drawing is actually performed.
-   * <p>
+   * <p/>
    * This matters only if we use the default {@link RepaintManager} and {@code swing.bufferPerWindow = true}.
-   * <p>
+   * <p/>
    * True double buffering is needed to eliminate tearing on blit-accelerated scrolling and to restore
    * frame buffer content without the usual repainting, even when the EDT is blocked.
-   * <p>
+   * <p/>
    * As a rule of thumb, you should never invoke neither {@link Component#getGraphics()}
    * nor {@link GraphicsUtil#safelyGetGraphics(Component)} unless you really need to perform some drawing.
-   * <p>
+   * <p/>
    * Under the hood, "getGraphics" is actually "createGraphics" - it creates a new object instance and allocates native resources,
    * that should be subsequently released by calling {@link Graphics#dispose()} (called from {@link Graphics#finalize()},
    * but there's no need to retain resources unnecessarily).
-   * <p>
+   * <p/>
    * If you need {@link GraphicsConfiguration}, rely on {@link Component#getGraphicsConfiguration()},
    * instead of {@link Graphics2D#getDeviceConfiguration()}.
-   * <p>
+   * <p/>
    * If you absolutely have to acquire an instance of {@link Graphics}, do that via {@link GraphicsUtil#safelyGetGraphics(Component)}
    * and don't forget to invoke {@link Graphics#dispose()} afterwards.
    *
    * @see JRootPane#disableTrueDoubleBuffering()
    */
   public static Graphics safelyGetGraphics(Component c) {
-    return ourSafelyGetGraphicsMethod.isAvailable()
-           ? (Graphics)ourSafelyGetGraphicsMethod.invoke(null, c)
-           : c.getGraphics();
+    return ourSafelyGetGraphicsMethod.isAvailable() ? (Graphics)ourSafelyGetGraphicsMethod.invoke(null, c) : c.getGraphics();
   }
 
   public static Object getAntialiasingType(@NotNull JComponent list) {
-    return SystemInfo.IS_AT_LEAST_JAVA9 ? null : list.getClientProperty(SwingUtilities2.AA_TEXT_PROPERTY_KEY);
+    return SystemInfo.IS_AT_LEAST_JAVA9 ? null : list.getClientProperty(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY());
   }
 
   public static void setAntialiasingType(@NotNull JComponent list, Object type) {
     if (!SystemInfo.IS_AT_LEAST_JAVA9) {
-      list.putClientProperty(SwingUtilities2.AA_TEXT_PROPERTY_KEY, type);
+      list.putClientProperty(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY(), type);
     }
   }
 
   public static void generatePropertiesForAntialiasing(Object type, @NotNull PairConsumer<Object, Object> propertySetter) {
     if (!SystemInfo.IS_AT_LEAST_JAVA9) {
-      propertySetter.consume(SwingUtilities2.AA_TEXT_PROPERTY_KEY, type);
+      propertySetter.consume(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY(), type);
     }
   }
 
   public static Object createAATextInfo(@NotNull Object hint) {
-    return SystemInfo.IS_AT_LEAST_JAVA9 ? null : new SwingUtilities2.AATextInfo(hint, UIUtil.getLcdContrastValue());
+    return SystemInfo.IS_AT_LEAST_JAVA9 ? null : PreJava9UIUtil.newAATextInfo(hint, UIUtil.getLcdContrastValue());
   }
 }
