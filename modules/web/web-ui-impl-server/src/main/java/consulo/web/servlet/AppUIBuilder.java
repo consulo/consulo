@@ -15,9 +15,12 @@
  */
 package consulo.web.servlet;
 
+import com.google.gwt.thirdparty.guava.common.base.Strings;
+import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.application.TransactionGuardImpl;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.project.Project;
@@ -29,6 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.*;
 import consulo.ui.internal.WGwtTreeImpl;
+import consulo.ui.internal.WGwtTreeModelImpl;
 import consulo.web.servlet.ui.UIBuilder;
 import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
@@ -139,7 +143,24 @@ public class AppUIBuilder extends UIBuilder {
 
     ProjectViewProjectNode rootNode = new ProjectViewProjectNode(project, ourViewSettings);
 
-    WGwtTreeImpl<AbstractTreeNode<?>> tree = new WGwtTreeImpl<AbstractTreeNode<?>>(rootNode);
+    WGwtTreeModelImpl<AbstractTreeNode> model = new WGwtTreeModelImpl<AbstractTreeNode>() {
+      @NotNull
+      @Override
+      public AbstractTreeNode fetchRootNode() {
+        return rootNode;
+      }
+
+      @Override
+      public void renderNode(@NotNull AbstractTreeNode node, @NotNull ListItemPresentation presentation) {
+        PresentationData o = node.getPresentation();
+        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+          node.update();
+        });
+        presentation.append(Strings.nullToEmpty(o.getPresentableText()));
+      }
+    };
+
+    WGwtTreeImpl<AbstractTreeNode> tree = new WGwtTreeImpl<>(model);
 
     splitLayout.setFirstComponent(tree);
     splitLayout.setSecondComponent(tabbed);
@@ -162,9 +183,9 @@ public class AppUIBuilder extends UIBuilder {
       }
     }
 
-    UIUtil.invokeLaterIfNeeded(() -> {
+    TransactionGuardImpl.getInstance().submitTransactionAndWait(() -> {
       try {
-         projectManager.loadAndOpenProject(path);
+        projectManager.loadAndOpenProject(path);
       }
       catch (Exception e) {
         e.printStackTrace();

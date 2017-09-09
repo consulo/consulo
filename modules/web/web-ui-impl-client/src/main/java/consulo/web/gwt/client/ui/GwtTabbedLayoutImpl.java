@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.TabPanel;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.shared.UIComponent;
+import consulo.web.gwt.shared.state.UIComponentState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtTabbedLayoutImpl extends TabPanel implements InternalGwtComponentWithChildren {
+public class GwtTabbedLayoutImpl extends TabPanel implements InternalGwtComponentWithChildren<UIComponentState> {
   @Override
   public void updateState(@NotNull Map<String, Object> map) {
     selectTab((Integer)map.get("selected"));

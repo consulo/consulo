@@ -21,6 +21,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.model.ListModel;
 import consulo.web.gwt.shared.UIComponent;
+import consulo.web.gwt.shared.ui.InternalEventTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +35,7 @@ import java.util.Map;
  */
 public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent implements ValueComponent<E> {
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
-  private List<ValueListener<E>> myValueListeners = new ArrayList<ValueListener<E>>();
+  private List<ValueListener<E>> myValueListeners = new ArrayList<>();
   private ListModel<E> myModel;
   private int myIndex = -1;
 
@@ -64,7 +65,7 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
 
   @Override
   protected void initChildren(List<UIComponent.Child> children) {
-    if(needRenderNullValue()) {
+    if (needRenderNullValue()) {
       // need render null value
       renderItem(children, -1, null);
     }
@@ -90,9 +91,10 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
     children.add(child);
   }
 
+  @RequiredUIAccess
   @Override
-  public void invokeListeners(String type, Map<String, Object> variables) {
-    if ("select".equals(type)) {
+  public void invokeListeners(long type, Map<String, Object> variables) {
+    if (type == InternalEventTypes.SELECT) {
       myIndex = (Integer)variables.get("index");
 
       setValueImpl(myModel.get(myIndex));
@@ -102,11 +104,15 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
   @Override
   public void addValueListener(@NotNull ValueListener<E> valueListener) {
     myValueListeners.add(valueListener);
+    enableNotify(InternalEventTypes.SELECT);
   }
 
   @Override
   public void removeValueListener(@NotNull ValueComponent.ValueListener<E> valueListener) {
     myValueListeners.remove(valueListener);
+    if (myValueListeners.isEmpty()) {
+      disableNotify(InternalEventTypes.SELECT);
+    }
   }
 
   @Nullable
@@ -143,7 +149,7 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
       myIndex = i;
     }
 
-    final ValueEvent<E> event = new ValueEvent<E>(this, value);
+    final ValueEvent<E> event = new ValueEvent<>(this, value);
     for (ValueListener<E> valueListener : myValueListeners) {
       valueListener.valueChanged(event);
     }

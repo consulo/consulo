@@ -15,41 +15,24 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.CheckBox;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.shared.UIClientEvent;
-import consulo.web.gwt.shared.UIClientEventType;
+import consulo.web.gwt.shared.state.UIComponentState;
+import consulo.web.gwt.shared.ui.InternalEventTypes;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponentWithListeners {
+public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponentWithListeners<UIComponentState> {
   @Override
   public void setupListeners(final WebSocketProxy proxy, final long componentId) {
-    addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-      @Override
-      public void onValueChange(final ValueChangeEvent<Boolean> event) {
-        proxy.send(UIClientEventType.invokeEvent, new WebSocketProxy.Consumer<UIClientEvent>() {
-          @Override
-          public void consume(UIClientEvent clientEvent) {
-            Map<String, Object> vars = new HashMap<String, Object>();
-            vars.put("type", "select");
-            vars.put("componentId", componentId);
-            vars.put("selected", event.getValue());
-
-            clientEvent.setVariables(vars);
-          }
-        });
-      }
-    });
+    addValueChangeHandler(event -> proxy.sendFireListener(componentId, InternalEventTypes.SELECT, map -> {
+      map.put("selected", event.getValue());
+    }));
   }
 
   @Override

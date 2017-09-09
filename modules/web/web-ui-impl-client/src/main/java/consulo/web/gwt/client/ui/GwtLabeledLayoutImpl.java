@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.shared.UIComponent;
+import consulo.web.gwt.shared.state.UIComponentState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 15-Jun-16
  */
-public class GwtLabeledLayoutImpl extends CaptionPanel implements InternalGwtComponentWithChildren {
+public class GwtLabeledLayoutImpl extends CaptionPanel implements InternalGwtComponentWithChildren<UIComponentState> {
   public GwtLabeledLayoutImpl() {
     final SimplePanel widget = (SimplePanel)getWidget();
 

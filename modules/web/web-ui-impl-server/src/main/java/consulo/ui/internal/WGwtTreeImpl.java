@@ -15,31 +15,63 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.util.NotNullFunction;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
+import consulo.web.gwt.shared.UIComponent;
+import consulo.web.gwt.shared.ui.InternalEventTypes;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class WGwtTreeImpl<N> extends WGwtBaseComponent {
-  private N myRootNode;
-  private NotNullFunction<N, Collection<N>> myNodeResolver = new NotNullFunction<N, Collection<N>>() {
-    @NotNull
-    @Override
-    public Collection<N> fun(N dom) {
-      return Collections.emptyList();
-    }
-  };
+public class WGwtTreeImpl<NODE> extends WGwtBaseComponent {
+  private WGwtTreeModelImpl<NODE> myModel;
 
-  public WGwtTreeImpl(N rootNode) {
-    myRootNode = rootNode;
+  private List<WGwtTreeNodeImpl<NODE>> myChildren = new ArrayList<>();
+
+  public WGwtTreeImpl(WGwtTreeModelImpl<NODE> model) {
+    myModel = model;
+
+    enableNotify(InternalEventTypes.SHOW);
   }
 
-  public void setNodeResolver(@NotNull NotNullFunction<N, Collection<N>> resolver) {
-    myNodeResolver = resolver;
+  @RequiredUIAccess
+  @Override
+  public void invokeListeners(long type, Map<String, Object> variables) {
+    UIAccess uiAccess = UIAccess.get();
+
+    if (type == InternalEventTypes.SHOW) {
+      AppExecutorUtil.getAppExecutorService().execute(() -> {
+        NODE node = myModel.fetchRootNode();
+
+        WGwtTreeNodeImpl<NODE> treeNode = new WGwtTreeNodeImpl<>(null, node);
+
+        uiAccess.give(() -> {
+          myModel.renderNode(node, treeNode.getPresentation());
+
+          myChildren.add(treeNode);
+
+          markAsChanged(CHILDREN_CHANGED);
+        });
+      });
+    }
+  }
+
+  @Override
+  protected void initChildren(List<UIComponent.Child> children) {
+    for (WGwtTreeNodeImpl<NODE> child : myChildren) {
+      UIComponent.Child e = new UIComponent.Child();
+      e.setComponent(child.getPresentation().getLayout().convert());
+
+      e.setVariables(Collections.singletonMap("parentId", child.getParentId()));
+
+      children.add(e);
+    }
   }
 }

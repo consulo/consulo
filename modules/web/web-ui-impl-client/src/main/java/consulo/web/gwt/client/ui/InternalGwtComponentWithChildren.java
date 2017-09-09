@@ -17,6 +17,7 @@ package consulo.web.gwt.client.ui;
 
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.shared.UIComponent;
+import consulo.web.gwt.shared.state.UIComponentState;
 
 import java.util.List;
 
@@ -24,6 +25,9 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public interface InternalGwtComponentWithChildren extends InternalGwtComponent {
+public interface InternalGwtComponentWithChildren<T extends UIComponentState> extends InternalGwtComponent<T> {
+  default void clear() {
+  }
+
   void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children);
 }

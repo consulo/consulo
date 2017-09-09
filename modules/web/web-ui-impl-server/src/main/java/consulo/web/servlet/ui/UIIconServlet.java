@@ -20,7 +20,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.io.URLUtil;
 import consulo.ui.internal.WGwtImageRefUrls;
-import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -31,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author VISTALL
@@ -38,19 +38,15 @@ import java.net.URL;
  */
 @WebServlet(urlPatterns = "/icon/")
 public class UIIconServlet extends HttpServlet {
-  private static ConcurrentFactoryMap<URL, byte[]> ourCache = new ConcurrentFactoryMap<URL, byte[]>() {
-    @Nullable
-    @Override
-    protected byte[] create(URL key) {
-      try {
-        final InputStream inputStream = URLUtil.openStream(key);
-        return FileUtil.loadBytes(inputStream);
-      }
-      catch (IOException e) {
-        return new byte[0];
-      }
+  private static ConcurrentMap<URL, byte[]> ourCache = ConcurrentFactoryMap.createMap(k -> {
+    try {
+      final InputStream inputStream = URLUtil.openStream(k);
+      return FileUtil.loadBytes(inputStream);
     }
-  };
+    catch (IOException e) {
+      return new byte[0];
+    }
+  });
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -21,24 +21,18 @@ import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.UIComponent;
-import org.jetbrains.annotations.NotNull;
+import consulo.web.gwt.shared.state.UIComponentState;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtWindowImpl extends Grid implements InternalGwtComponentWithChildren {
+public class GwtWindowImpl extends Grid implements InternalGwtComponentWithChildren<UIComponentState> {
   public GwtWindowImpl() {
     super(2, 1);
     GwtUIUtil.fill(this);
-  }
-
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-
   }
 
   @Override

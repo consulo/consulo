@@ -15,13 +15,21 @@
  */
 package consulo.web.gwt.shared;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UIComponent extends UIVariablesOwner {
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @JsonIgnoreProperties(ignoreUnknown = true)
   public static class Child extends UIVariablesOwner {
     private UIComponent myComponent;
 
@@ -36,6 +44,7 @@ public class UIComponent extends UIVariablesOwner {
 
   private long myId;
   private String myType;
+  private long eventBits;
   private List<Child> myChildren;
 
   public long getId() {
@@ -46,6 +55,14 @@ public class UIComponent extends UIVariablesOwner {
     myId = id;
   }
 
+  public long getEventBits() {
+    return eventBits;
+  }
+
+  public void setEventBits(long eventBits) {
+    this.eventBits = eventBits;
+  }
+
   public String getType() {
     return myType;
   }
@@ -54,6 +71,7 @@ public class UIComponent extends UIVariablesOwner {
     myType = type;
   }
 
+  @Nullable
   public List<Child> getChildren() {
     return myChildren;
   }

@@ -16,6 +16,7 @@
 package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import consulo.web.gwt.shared.state.UIComponentState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -24,7 +25,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public interface InternalGwtComponent extends IsWidget {
+public interface InternalGwtComponent<T extends UIComponentState> extends IsWidget {
   default void updateState(@NotNull Map<String, Object> map) {
   }
 }

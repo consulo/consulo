@@ -29,23 +29,20 @@ public class UIAccessHelper {
 
   private Executor myUIExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-  private static ThreadLocal<GwtUIAccess> ourLocal = new ThreadLocal<GwtUIAccess>();
+  private static ThreadLocal<GwtUIAccess> ourLocal = new ThreadLocal<>();
 
   public void run(final GwtUIAccess context, @RequiredUIAccess final Runnable runnable) {
     if (!context.getSession().isOpen()) {
       return;
     }
-    myUIExecutor.execute(new Runnable() {
-      @Override
-      public void run() {
-        ourLocal.set(context);
+    myUIExecutor.execute(() -> {
+      ourLocal.set(context);
 
-        runnable.run();
+      runnable.run();
 
-        context.repaint();
+      context.repaint();
 
-        ourLocal.set(null);
-      }
+      ourLocal.set(null);
     });
   }
 

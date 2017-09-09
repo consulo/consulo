@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,47 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.shared;
+package consulo.web.gwt.shared.state;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 09-Sep-17
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UIServerEvent implements Serializable {
-  private UIServerEventType myType;
-  private String myId;
-  private LinkedList<UIComponent> myComponents;
+public class UIComponentState {
+  private long myId;
+  private String myType;
+  private long myEventBits;
 
-  public void setType(UIServerEventType type) {
-    myType = type;
-  }
-
-  public UIServerEventType getType() {
-    return myType;
-  }
-
-  public void setSessionId(String id) {
-    myId = id;
-  }
-
-  public String getSessionId() {
+  public long getId() {
     return myId;
   }
 
-  public List<UIComponent> getComponents() {
-    return myComponents;
+  public void setId(long id) {
+    myId = id;
   }
 
-  public void setComponents(List<UIComponent> components) {
-    myComponents = new LinkedList<>(components);
+  public String getType() {
+    return myType;
+  }
+
+  public void setType(String type) {
+    myType = type;
+  }
+
+  public long getEventBits() {
+    return myEventBits;
+  }
+
+  public void setEventBits(long eventBits) {
+    this.myEventBits = eventBits;
   }
 }

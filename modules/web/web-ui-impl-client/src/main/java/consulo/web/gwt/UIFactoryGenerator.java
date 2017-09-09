@@ -17,13 +17,16 @@ package consulo.web.gwt;
 
 import com.google.gwt.core.ext.*;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import consulo.web.gwt.client.ui.InternalGwtComponent;
 import consulo.web.gwt.client.ui.UIFactory;
+import consulo.web.gwt.shared.state.UIComponentState;
 
 import java.io.PrintWriter;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,16 +45,27 @@ public class UIFactoryGenerator extends IncrementalGenerator {
       return null;
     }
 
-    Map<String, String> targets = new HashMap<String, String>();
+    Map<String, Map.Entry<String, String>> targets = new HashMap<>();
     for (JClassType classType : typeOracle.getTypes()) {
       if (classType.isAbstract()) {
         continue;
       }
 
       if (classType.isAssignableTo(marker)) {
+        String stateType = UIComponentState.class.getName();
+
+        JClassType[] implementedInterfaces = classType.getImplementedInterfaces();
+        for (JClassType implementedInterface : implementedInterfaces) {
+          if (implementedInterface.isAssignableFrom(marker) && implementedInterface instanceof JParameterizedType) {
+            JClassType paramType = ((JParameterizedType)implementedInterface).getTypeArgs()[0];
+
+            stateType = paramType.getQualifiedSourceName();
+          }
+        }
+
         final String name = classType.getName();
 
-        targets.put("consulo.ui.internal.W" + name, classType.getQualifiedSourceName());
+        targets.put("consulo.ui.internal.W" + name, new AbstractMap.SimpleEntry<>(name, stateType));
       }
     }
 
@@ -65,7 +79,7 @@ public class UIFactoryGenerator extends IncrementalGenerator {
 
       SourceWriter sourceWriter = composer.createSourceWriter(generatorContext, printWriter);
 
-      genClass(implClassName, composer, sourceWriter, treeLogger, targets);
+      genClass(implClassName, sourceWriter, treeLogger, targets);
     }
 
     return new RebindResult(RebindMode.USE_ALL_NEW, composer.getCreatedClassName());
@@ -76,20 +90,24 @@ public class UIFactoryGenerator extends IncrementalGenerator {
     return 1;
   }
 
-  private void genClass(String implClassName,
-                        ClassSourceFileComposerFactory composer,
-                        SourceWriter sourceWriter,
-                        TreeLogger logger,
-                        Map<String, String> allInstantiableClasses) {
-    sourceWriter.println("public " + implClassName + "( ) {}");
+  private void genClass(String implClassName, SourceWriter sourceWriter, TreeLogger logger, Map<String, Map.Entry<String, String>> allInstantiableClasses) {
+    sourceWriter.println("private java.util.Map<String, Class> myStateClassMap = new java.util.HashMap<>();");
+    sourceWriter.println("public " + implClassName + "( ) {");
+    for (Map.Entry<String, Map.Entry<String, String>> entry : allInstantiableClasses.entrySet()) {
+      sourceWriter.indent();
+
+      sourceWriter.println("myStateClassMap.put(\"" + entry.getKey() + "\", " + entry.getValue().getValue() + ".class);");
+    }
+    sourceWriter.println("}");
     sourceWriter.println();
+    sourceWriter.println("public Class<?> getStateType(String type) { return myStateClassMap.get(type); }");
 
     genMethod(allInstantiableClasses, sourceWriter);
 
     sourceWriter.commit(logger);
   }
 
-  private void genMethod(Map<String, String> targets, SourceWriter sourceWriter) {
+  private void genMethod(Map<String, Map.Entry<String, String>> targets, SourceWriter sourceWriter) {
     sourceWriter.println("public InternalGwtComponent create(String type) {");
     sourceWriter.indent();
     sourceWriter.println("if (type == null) {");
@@ -99,11 +117,11 @@ public class UIFactoryGenerator extends IncrementalGenerator {
     sourceWriter.println("}");
     sourceWriter.outdent();
 
-    for (Map.Entry<String, String> entry : targets.entrySet()) {
+    for (Map.Entry<String, Map.Entry<String, String>> entry : targets.entrySet()) {
       sourceWriter.indent();
       sourceWriter.println("else if (type.equals(\"" + entry.getKey() + "\")) {");
       sourceWriter.indent();
-      sourceWriter.println("return new " + entry.getValue() + "( );");
+      sourceWriter.println("return new " + entry.getValue().getKey() + "( );");
       sourceWriter.outdent();
       sourceWriter.println("}");
       sourceWriter.outdent();

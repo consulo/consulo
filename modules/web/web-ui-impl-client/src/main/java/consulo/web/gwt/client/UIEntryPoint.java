@@ -23,16 +23,15 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.sksamuel.gwt.websockets.WebsocketListener;
 import consulo.web.gwt.client.ui.GwtModalWindowImpl;
 import consulo.web.gwt.client.ui.InternalGwtComponent;
+import consulo.web.gwt.client.ui.InternalGwtComponentWithChildren;
 import consulo.web.gwt.client.util.ExceptionUtil;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.client.util.Log;
-import consulo.web.gwt.shared.UIClientEvent;
 import consulo.web.gwt.shared.UIClientEventType;
 import consulo.web.gwt.shared.UIComponent;
 import consulo.web.gwt.shared.UIServerEvent;
 import org.gwt.advanced.client.util.ThemeHelper;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -102,10 +101,21 @@ public class UIEntryPoint implements EntryPoint {
           case stateChanged:
             if (components != null) {
               for (UIComponent component : components) {
-                final InternalGwtComponent temp = UIConverter.get(component.getId());
+                final InternalGwtComponent<?> temp = UIConverter.get(component.getId());
 
                 final Map<String, Object> variables = component.getVariables();
-                temp.updateState(variables == null ? Collections.<String, Object>emptyMap() : variables);
+                if(variables != null) {
+                  temp.updateState(variables);
+                }
+
+                if (temp instanceof InternalGwtComponentWithChildren) {
+                  List<UIComponent.Child> children = component.getChildren();
+
+                  if(children != null) {
+                    ((InternalGwtComponentWithChildren)temp).clear();
+                    ((InternalGwtComponentWithChildren)temp).addChildren(proxy, children);
+                  }
+                }
               }
             }
             break;
@@ -117,11 +127,7 @@ public class UIEntryPoint implements EntryPoint {
 
       @Override
       public void onOpen() {
-        proxy.send(UIClientEventType.sessionOpen, new WebSocketProxy.Consumer<UIClientEvent>() {
-          @Override
-          public void consume(UIClientEvent value) {
-            // nothing
-          }
+        proxy.send(UIClientEventType.sessionOpen, value -> {
         });
       }
     });

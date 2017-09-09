@@ -16,6 +16,7 @@
 package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.InlineHTML;
+import consulo.web.gwt.shared.state.UIComponentState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -24,7 +25,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class GwtHtmlLabelImpl extends InlineHTML implements InternalGwtComponent {
+public class GwtHtmlLabelImpl extends InlineHTML implements InternalGwtComponent<UIComponentState> {
   public GwtHtmlLabelImpl() {
     setHorizontalAlignment(ALIGN_CENTER);
   }

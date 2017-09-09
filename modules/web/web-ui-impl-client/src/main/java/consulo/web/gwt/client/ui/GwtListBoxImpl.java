@@ -15,21 +15,19 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.client.ui.advancedGwt.ComboBoxSelectItem;
-import consulo.web.gwt.shared.UIClientEvent;
 import consulo.web.gwt.shared.UIClientEventType;
 import consulo.web.gwt.shared.UIComponent;
+import consulo.web.gwt.shared.state.UIComponentState;
+import consulo.web.gwt.shared.ui.InternalEventTypes;
 import org.gwt.advanced.client.datamodel.ListModelEvent;
 import org.gwt.advanced.client.datamodel.ListModelListener;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +37,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class GwtListBoxImpl extends FlowPanel implements InternalGwtComponentWithChildren, InternalGwtComponentWithListeners {
+public class GwtListBoxImpl extends FlowPanel implements InternalGwtComponentWithChildren<UIComponentState>, InternalGwtComponentWithListeners<UIComponentState> {
   /**
    * Item list with by index
    */
@@ -47,9 +45,9 @@ public class GwtListBoxImpl extends FlowPanel implements InternalGwtComponentWit
 
   private int mySelectedIndex = -1;
 
-  private List<ComboBoxSelectItem> myList = new ArrayList<ComboBoxSelectItem>();
+  private List<ComboBoxSelectItem> myList = new ArrayList<>();
 
-  private List<ListModelListener> myModelListeners = new ArrayList<ListModelListener>();
+  private List<ListModelListener> myModelListeners = new ArrayList<>();
 
   public GwtListBoxImpl() {
   }
@@ -68,12 +66,7 @@ public class GwtListBoxImpl extends FlowPanel implements InternalGwtComponentWit
       comboBoxSelectItem.setWidth("100%");
 
       comboBoxSelectItem.setWidget(widget);
-      comboBoxSelectItem.addClickHandler(new ClickHandler() {
-        @Override
-        public void onClick(ClickEvent event) {
-          setSelectedIndex(index);
-        }
-      });
+      comboBoxSelectItem.addClickHandler(event -> setSelectedIndex(index));
 
 
       add(comboBoxSelectItem);
@@ -111,22 +104,16 @@ public class GwtListBoxImpl extends FlowPanel implements InternalGwtComponentWit
 
   @Override
   public void setupListeners(final WebSocketProxy proxy, final long componentId) {
-    myModelListeners.add(new ListModelListener() {
-      @Override
-      public void onModelEvent(final ListModelEvent event) {
-        if (event.getType() == ListModelEvent.SELECT_ITEM) {
-          proxy.send(UIClientEventType.invokeEvent, new WebSocketProxy.Consumer<UIClientEvent>() {
-            @Override
-            public void consume(UIClientEvent clientEvent) {
-              Map<String, Object> vars = new HashMap<String, Object>();
-              vars.put("type", "select");
-              vars.put("componentId", componentId);
-              vars.put("index", event.getItemIndex());
+    myModelListeners.add(event -> {
+      if (event.getType() == ListModelEvent.SELECT_ITEM) {
+        proxy.send(UIClientEventType.invokeEvent, clientEvent -> {
+          Map<String, Object> vars = new HashMap<>();
+          vars.put("type", InternalEventTypes.SELECT);
+          vars.put("componentId", componentId);
+          vars.put("index", event.getItemIndex());
 
-              clientEvent.setVariables(vars);
-            }
-          });
-        }
+          clientEvent.setVariables(vars);
+        });
       }
     });
   }

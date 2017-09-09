@@ -18,7 +18,9 @@ package consulo.web.gwt.client;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
 import consulo.web.gwt.client.ui.*;
+import consulo.web.gwt.client.util.BitUtil;
 import consulo.web.gwt.shared.UIComponent;
+import consulo.web.gwt.shared.ui.InternalEventTypes;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +34,7 @@ import java.util.Map;
 public class UIConverter {
   private static final UIFactory ourFactory = GWT.create(UIFactory.class);
 
-  private static Map<Long, InternalGwtComponent> ourCache = new HashMap<Long, InternalGwtComponent>();
+  private static Map<Long, InternalGwtComponent> ourCache = new HashMap<>();
 
   public static InternalGwtComponent create(WebSocketProxy proxy, UIComponent uiComponent) {
     final String type = uiComponent.getType();
@@ -58,6 +60,14 @@ public class UIConverter {
     if (widget instanceof InternalGwtComponentWithListeners) {
       ((InternalGwtComponentWithListeners)widget).setupListeners(proxy, uiComponent.getId());
     }
+
+    if (BitUtil.isSet(uiComponent.getEventBits(), InternalEventTypes.SHOW)) {
+      widget.asWidget().addAttachHandler(event -> {
+        proxy.sendFireListener(uiComponent.getId(), InternalEventTypes.SHOW, vars -> {
+        });
+      });
+    }
+
     return widget;
   }
 

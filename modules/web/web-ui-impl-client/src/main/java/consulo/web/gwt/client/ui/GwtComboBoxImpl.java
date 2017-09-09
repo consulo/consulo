@@ -19,16 +19,15 @@ import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.client.ui.advancedGwt.WidgetComboBox;
-import consulo.web.gwt.shared.UIClientEvent;
 import consulo.web.gwt.shared.UIClientEventType;
 import consulo.web.gwt.shared.UIComponent;
+import consulo.web.gwt.shared.state.UIComponentState;
+import consulo.web.gwt.shared.ui.InternalEventTypes;
 import org.gwt.advanced.client.datamodel.ListDataModel;
 import org.gwt.advanced.client.datamodel.ListModelEvent;
-import org.gwt.advanced.client.datamodel.ListModelListener;
 import org.gwt.advanced.client.ui.widget.combo.ListItemFactory;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,13 +37,13 @@ import java.util.Map;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtComponentWithListeners, InternalGwtComponentWithChildren {
+public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtComponentWithListeners<UIComponentState>, InternalGwtComponentWithChildren<UIComponentState> {
   /**
    * Item list with by index
-   * <p/>
+   * <p>
    * Contains null item too, that why - get component by index, need +1
    */
-  private List<UIComponent.Child> myItemsWithNullItem = new ArrayList<UIComponent.Child>();
+  private List<UIComponent.Child> myItemsWithNullItem = new ArrayList<>();
   private WebSocketProxy myProxy;
 
   public GwtComboBoxImpl() {
@@ -68,22 +67,16 @@ public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtCompon
 
   @Override
   public void setupListeners(final WebSocketProxy proxy, final long componentId) {
-    getModel().addListModelListener(new ListModelListener() {
-      @Override
-      public void onModelEvent(final ListModelEvent event) {
-        if (event.getType() == ListModelEvent.SELECT_ITEM) {
-          proxy.send(UIClientEventType.invokeEvent, new WebSocketProxy.Consumer<UIClientEvent>() {
-            @Override
-            public void consume(UIClientEvent clientEvent) {
-              Map<String, Object> vars = new HashMap<String, Object>();
-              vars.put("type", "select");
-              vars.put("componentId", componentId);
-              vars.put("index", event.getItemIndex());
+    getModel().addListModelListener(event -> {
+      if (event.getType() == ListModelEvent.SELECT_ITEM) {
+        proxy.send(UIClientEventType.invokeEvent, clientEvent -> {
+          Map<String, Object> vars = new HashMap<>();
+          vars.put("type", InternalEventTypes.SELECT);
+          vars.put("componentId", componentId);
+          vars.put("index", event.getItemIndex());
 
-              clientEvent.setVariables(vars);
-            }
-          });
-        }
+          clientEvent.setVariables(vars);
+        });
       }
     });
   }
@@ -99,6 +92,11 @@ public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtCompon
     }
 
     setSelectedIndex((Integer)map.get("index"));
+  }
+
+  @Override
+  public void clear() {
+    myItemsWithNullItem.clear();
   }
 
   @Override

@@ -16,6 +16,7 @@
 package consulo.ui.internal;
 
 import com.intellij.openapi.util.Comparing;
+import com.intellij.util.BitUtil;
 import com.intellij.util.SmartList;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
@@ -38,44 +39,52 @@ import java.util.concurrent.atomic.AtomicLong;
 public class WGwtBaseComponent implements Component {
   private static final AtomicLong ourIndex = new AtomicLong();
 
+  protected static final int VARIABLES_CHANGED = 1 << 0;
+  protected static final int CHILDREN_CHANGED = 1 << 1;
+
+  protected static final int ALL = VARIABLES_CHANGED | CHILDREN_CHANGED;
+
   private long myId = ourIndex.incrementAndGet();
   protected boolean myVisible = true;
   private boolean myEnabled = true;
   private Size mySize = Size.UNDEFINED;
   private Component myParent;
 
-  private UIComponent myNotifyComponent;
+  private long myChangeBits = 0;
+
+  private long myEventBits = 0;
 
   public long getId() {
     return myId;
   }
 
+  public void enableNotify(long mask) {
+    myEventBits = BitUtil.set(myEventBits, mask, true);
+  }
+
+  public void disableNotify(long mask) {
+    myEventBits = BitUtil.set(myEventBits, mask, false);
+  }
+
   @RequiredUIAccess
   protected void markAsChanged() {
+    markAsChanged(VARIABLES_CHANGED);
+  }
+
+  @RequiredUIAccess
+  protected void markAsChanged(int mask) {
     UIAccess.assertIsUIThread();
-
-    if (myNotifyComponent != null) {
-      final HashMap<String, Object> map = new HashMap<String, Object>();
-      getState(map);
-      myNotifyComponent.setVariables(map);
-    }
-    else {
-      myNotifyComponent = new UIComponent();
-      myNotifyComponent.setId(getId());
-
-      final HashMap<String, Object> map = new HashMap<String, Object>();
-
-      getState(map);
-
-      myNotifyComponent.setVariables(map);
-    }
+    myChangeBits = BitUtil.set(myChangeBits, mask, true);
   }
 
   @Nullable
   public UIComponent getNotifyComponentAndClear() {
-    final UIComponent notifyComponent = myNotifyComponent;
-    myNotifyComponent = null;
-    return notifyComponent;
+    if(myChangeBits != 0) {
+      UIComponent convert = convert(myChangeBits);
+      myChangeBits = 0;
+      return convert;
+    }
+    return null;
   }
 
   @Override
@@ -138,22 +147,30 @@ public class WGwtBaseComponent implements Component {
     markAsChanged();
   }
 
+  @NotNull
   public UIComponent convert() {
+    return convert(ALL);
+  }
+
+  @NotNull
+  public UIComponent convert(long bits) {
     UIComponent component = new UIComponent();
     component.setType(getClass().getName());
     component.setId(myId);
 
-    Map<String, Object> map = new HashMap<String, Object>();
-    getState(map);
-    if (!map.isEmpty()) {
+    if(BitUtil.isSet(bits, VARIABLES_CHANGED)) {
+      Map<String, Object> map = new HashMap<>();
+      getState(map);
       component.setVariables(map);
     }
 
-    List<UIComponent.Child> children = new SmartList<UIComponent.Child>();
-    initChildren(children);
-    if (!children.isEmpty()) {
+    if(BitUtil.isSet(bits, CHILDREN_CHANGED)) {
+      List<UIComponent.Child> children = new SmartList<>();
+      initChildren(children);
       component.setChildren(children);
     }
+
+    component.setEventBits(myEventBits);
     return component;
   }
 
@@ -169,7 +186,8 @@ public class WGwtBaseComponent implements Component {
     }
   }
 
-  public void invokeListeners(String type, Map<String, Object> variables) {
+  @RequiredUIAccess
+  public void invokeListeners(long type, Map<String, Object> variables) {
 
   }
 

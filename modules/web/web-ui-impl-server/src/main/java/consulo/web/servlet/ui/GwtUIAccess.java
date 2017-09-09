@@ -15,6 +15,7 @@
  */
 package consulo.web.servlet.ui;
 
+import com.intellij.openapi.diagnostic.Logger;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
@@ -25,7 +26,6 @@ import consulo.web.gwt.shared.UIComponent;
 import consulo.web.gwt.shared.UIServerEvent;
 import consulo.web.gwt.shared.UIServerEventType;
 import gnu.trove.TLongObjectHashMap;
-import gnu.trove.TObjectProcedure;
 import org.jetbrains.annotations.NotNull;
 
 import javax.websocket.Session;
@@ -37,7 +37,10 @@ import java.util.*;
  * @since 16-Jun-16
  */
 public class GwtUIAccess extends UIAccess {
+  private static final Logger LOGGER = Logger.getInstance(GwtUIAccess.class);
+
   @NotNull
+  @RequiredUIAccess
   public static GwtUIAccess get() {
     return (GwtUIAccess)UIAccess.get();
   }
@@ -83,6 +86,7 @@ public class GwtUIAccess extends UIAccess {
   /**
    * Must be called inside write executor
    */
+  @RequiredUIAccess
   public void send(UIServerEvent bean) {
     if (myDisposed) {
       return;
@@ -108,6 +112,7 @@ public class GwtUIAccess extends UIAccess {
     }
   }
 
+  @RequiredUIAccess
   public void repaint() {
     if (myDisposed) {
       return;
@@ -132,6 +137,7 @@ public class GwtUIAccess extends UIAccess {
     }
   }
 
+  @RequiredUIAccess
   public void showModal(WGwtModalWindowImpl modalWindow) {
     if (myDisposed) {
       return;
@@ -161,18 +167,15 @@ public class GwtUIAccess extends UIAccess {
       }
     }
 
-    myComponents.forEachValue(new TObjectProcedure<WGwtBaseComponent>() {
-      @Override
-      public boolean execute(WGwtBaseComponent object) {
-        try {
-          object.dispose();
-        }
-        catch (Exception e) {
-          e.printStackTrace();
-        }
-
-        return true;
+    myComponents.forEachValue(object -> {
+      try {
+        object.dispose();
       }
+      catch (Exception e) {
+        LOGGER.error(e);
+      }
+
+      return true;
     });
 
     myWindows.clear();

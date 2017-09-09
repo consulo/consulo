@@ -23,15 +23,15 @@ import consulo.web.gwt.client.util.Log;
 import consulo.web.gwt.shared.UIClientEvent;
 import consulo.web.gwt.shared.UIClientEventType;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
 public class WebSocketProxy {
-  public interface Consumer<T> {
-    void consume(T value);
-  }
-
   private final Websocket myWebsocket;
   private final String mySessionId;
 
@@ -51,6 +51,18 @@ public class WebSocketProxy {
     myWebsocket.addListener(websocketListener);
   }
 
+  public void sendFireListener(long componentId, long mask, Consumer<Map<String, Object>> varSet) {
+    send(UIClientEventType.invokeEvent, clientEvent -> {
+      Map<String, Object> vars = new HashMap<>();
+      vars.put("type", mask);
+      vars.put("componentId", componentId);
+
+      varSet.accept(vars);
+
+      clientEvent.setVariables(vars);
+    });
+  }
+
   public void send(UIClientEventType eventType, Consumer<UIClientEvent> consumer) {
     try {
       final UIClientEvent clientEvent = new UIClientEvent();
@@ -58,7 +70,7 @@ public class WebSocketProxy {
       clientEvent.setSessionId(mySessionId);
       clientEvent.setType(eventType);
 
-      consumer.consume(clientEvent);
+      consumer.accept(clientEvent);
 
       final String data = UIMappers.ourUIClientEventMapper.write(clientEvent);
 

@@ -18,6 +18,7 @@ package consulo.ui.internal;
 import com.intellij.util.SmartList;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
+import consulo.web.gwt.shared.ui.InternalEventTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +31,7 @@ import java.util.Map;
  */
 public class WGwtBooleanValueComponentImpl extends WGwtBaseComponent implements ValueComponent<Boolean> {
   private boolean mySelected;
-  private List<ValueComponent.ValueListener<Boolean>> myValueListeners = new SmartList<ValueComponent.ValueListener<Boolean>>();
+  private List<ValueComponent.ValueListener<Boolean>> myValueListeners = new SmartList<>();
 
   public WGwtBooleanValueComponentImpl(boolean selected) {
     mySelected = selected;
@@ -43,9 +44,10 @@ public class WGwtBooleanValueComponentImpl extends WGwtBaseComponent implements 
     putIfNotDefault("selected", mySelected, true, map);
   }
 
+  @RequiredUIAccess
   @Override
-  public void invokeListeners(String type, Map<String, Object> variables) {
-    if ("select".equals(type)) {
+  public void invokeListeners(long type, Map<String, Object> variables) {
+    if (type == InternalEventTypes.SELECT) {
       mySelected = (Boolean)variables.get("selected");
 
       fireValueListeners();
@@ -86,10 +88,14 @@ public class WGwtBooleanValueComponentImpl extends WGwtBaseComponent implements 
   @Override
   public void addValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
     myValueListeners.add(valueListener);
+    enableNotify(InternalEventTypes.SELECT);
   }
 
   @Override
   public void removeValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
     myValueListeners.remove(valueListener);
+    if (myValueListeners.isEmpty()) {
+      disableNotify(InternalEventTypes.SELECT);
+    }
   }
 }

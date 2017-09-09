@@ -20,20 +20,15 @@ import com.google.gwt.user.client.ui.MenuItem;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.shared.UIComponent;
-import org.jetbrains.annotations.NotNull;
+import consulo.web.gwt.shared.state.UIComponentState;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtMenuBarImpl extends MenuBar implements InternalGwtComponent, InternalGwtComponentWithChildren {
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-  }
-
+public class GwtMenuBarImpl extends MenuBar implements InternalGwtComponentWithChildren<UIComponentState> {
   @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
     for (UIComponent.Child child : children) {

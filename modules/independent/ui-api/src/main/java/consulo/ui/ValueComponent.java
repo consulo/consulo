@@ -42,7 +42,7 @@ public interface ValueComponent<V> extends Component {
     }
   }
 
-  interface ValueListener<V> extends EventListener{
+  interface ValueListener<V> extends EventListener {
     @RequiredUIAccess
     void valueChanged(@NotNull ValueEvent<V> event);
   }

@@ -15,12 +15,12 @@
  */
 package consulo.web.gwt.client.ui;
 
-import consulo.web.gwt.client.ui.InternalGwtComponent;
-
 /**
  * @author VISTALL
  * @since 19-Jun-16
  */
 public interface UIFactory {
-  InternalGwtComponent create(String type);
+  InternalGwtComponent<?> create(String type);
+
+  Class<?> getStateType(String type);
 }

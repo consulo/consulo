@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.ui.internal;
 
-import com.google.gwt.user.client.ui.Label;
-import consulo.web.gwt.shared.state.UIComponentState;
+import consulo.ui.ListItemPresentation;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 09-Sep-17
  */
-public class GwtLabelImpl extends Label implements InternalGwtComponent<UIComponentState> {
-  public GwtLabelImpl() {
-    setHorizontalAlignment(ALIGN_CENTER);
+public abstract class WGwtTreeModelImpl<N> {
+  @NotNull
+  public abstract N fetchRootNode();
+
+  @NotNull
+  public List<N> fetchChildNodes(N node) {
+    return Collections.emptyList();
   }
 
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-    final String text = (String)map.get("text");
-    if (text != null) {
-      setText(text);
-    }
+  public void renderNode(@NotNull N node, @NotNull ListItemPresentation presentation) {
+    presentation.append(node.toString());
   }
 }

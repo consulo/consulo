@@ -20,7 +20,6 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.internal.WGwtBaseComponent;
 import consulo.ui.internal.WGwtWindowImpl;
 import consulo.web.gwt.shared.UIClientEvent;
-import consulo.web.gwt.shared.UIComponent;
 import consulo.web.gwt.shared.UIServerEvent;
 import consulo.web.gwt.shared.UIServerEventType;
 
@@ -59,26 +58,23 @@ public class UISessionManager {
 
     uiAccess.setSession(session);
 
-    UIAccessHelper.ourInstance.run(uiAccess, new Runnable() {
-      @Override
-      public void run() {
-        WGwtWindowImpl window = new WGwtWindowImpl();
-        uiAccess.setWindow(window);
+    UIAccessHelper.ourInstance.run(uiAccess, () -> {
+      WGwtWindowImpl window = new WGwtWindowImpl();
+      uiAccess.setWindow(window);
 
-        uiBuilder.build(window);
+      uiBuilder.build(window);
 
-        window.registerComponent(uiAccess.getComponents());
+      window.registerComponent(uiAccess.getComponents());
 
-        UIServerEvent serverEvent = new UIServerEvent();
-        serverEvent.setSessionId(clientEvent.getSessionId());
-        serverEvent.setType(UIServerEventType.createRoot);
-        serverEvent.setComponents(Arrays.asList(window.convert()));
+      UIServerEvent serverEvent = new UIServerEvent();
+      serverEvent.setSessionId(clientEvent.getSessionId());
+      serverEvent.setType(UIServerEventType.createRoot);
+      serverEvent.setComponents(Arrays.asList(window.convert()));
 
-        // we don't interest in first states - because they will send anyway to client
-        window.visitChanges(new ArrayList<UIComponent>());
+      // we don't interest in first states - because they will send anyway to client
+      window.visitChanges(new ArrayList<>());
 
-        uiAccess.send(serverEvent);
-      }
+      uiAccess.send(serverEvent);
     });
   }
 
@@ -97,18 +93,15 @@ public class UISessionManager {
       return;
     }
 
-    UIAccessHelper.ourInstance.run(uiAccess, new Runnable() {
-      @Override
-      public void run() {
-        final Map<String, Object> variables = clientEvent.getVariables();
+    UIAccessHelper.ourInstance.run(uiAccess, () -> {
+      final Map<String, Object> variables = clientEvent.getVariables();
 
-        final Number componentId = (Number)variables.get("componentId");
-        final String type = (String)variables.get("type");
+      final Number componentId = (Number)variables.get("componentId");
+      final Number type = (Number)variables.get("type");
 
-        final WGwtBaseComponent gwtComponent = uiAccess.getComponents().get(componentId.longValue());
-        if (gwtComponent != null) {
-          gwtComponent.invokeListeners(type, variables);
-        }
+      final WGwtBaseComponent gwtComponent = uiAccess.getComponents().get(componentId.longValue());
+      if (gwtComponent != null) {
+        gwtComponent.invokeListeners(type.longValue(), variables);
       }
     });
   }
