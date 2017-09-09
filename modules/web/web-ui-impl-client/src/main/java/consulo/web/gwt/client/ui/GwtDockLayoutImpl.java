@@ -39,15 +39,15 @@ public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponent
   }
 
   @Override
-  public void updateState(@NotNull Map<String, Serializable> map) {
+  public void updateState(@NotNull Map<String, Object> map) {
   }
 
   @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
     for (UIComponent.Child child : children) {
-      final Map<String, Serializable> variables = child.getVariables();
+      final Map<String, Object> variables = child.getVariables();
 
-      final Serializable side = variables.get("side");
+      final Object side = variables.get("side");
       DockLayoutConstant direction = null;
       if (side.equals("top")) {
         direction = NORTH;

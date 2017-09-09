@@ -22,7 +22,6 @@ import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +47,7 @@ public class GwtLabeledLayoutImpl extends CaptionPanel implements InternalGwtCom
   }
 
   @Override
-  public void updateState(@NotNull Map<String, Serializable> map) {
+  public void updateState(@NotNull Map<String, Object> map) {
     setCaptionText((String)map.get("text"));
   }
 }

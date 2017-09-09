@@ -18,7 +18,6 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.ui.InlineHTML;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -31,7 +30,7 @@ public class GwtHtmlLabelImpl extends InlineHTML implements InternalGwtComponent
   }
 
   @Override
-  public void updateState(@NotNull Map<String, Serializable> map) {
+  public void updateState(@NotNull Map<String, Object> map) {
     final String text = (String)map.get("text");
     if (text != null) {
       setHTML(text);

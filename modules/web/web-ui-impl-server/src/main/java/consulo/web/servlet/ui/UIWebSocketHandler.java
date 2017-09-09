@@ -15,8 +15,7 @@
  */
 package consulo.web.servlet.ui;
 
-import com.google.gwt.user.client.rpc.SerializationException;
-import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamReader;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import consulo.web.gwt.shared.UIClientEvent;
 
 import javax.websocket.*;
@@ -28,6 +27,7 @@ import javax.websocket.server.ServerEndpoint;
  */
 @ServerEndpoint(value = "/ws")
 public class UIWebSocketHandler {
+  public static final ObjectMapper ourObjectMapper = new ObjectMapper();
 
   @OnOpen
   public void onOpen(Session session) {
@@ -49,14 +49,10 @@ public class UIWebSocketHandler {
   }
 
   private static UIClientEvent decode(String data) {
-    ClassLoader classLoader = UIWebSocketHandler.class.getClassLoader();
-    final ServerSerializationStreamReader streamReader =
-            new ServerSerializationStreamReader(classLoader, new CustomSerializationPolicyProvider(classLoader));
     try {
-      streamReader.prepareToRead(data);
-      return (UIClientEvent)streamReader.readObject();
+      return ourObjectMapper.readValue(data, UIClientEvent.class);
     }
-    catch (SerializationException e) {
+    catch (Exception e) {
       e.printStackTrace();
       throw new Error(e);
     }

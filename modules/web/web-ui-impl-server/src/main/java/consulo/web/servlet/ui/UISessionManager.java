@@ -16,7 +16,7 @@
 package consulo.web.servlet.ui;
 
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.containers.ConcurrentHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.internal.WGwtBaseComponent;
 import consulo.ui.internal.WGwtWindowImpl;
 import consulo.web.gwt.shared.UIClientEvent;
@@ -25,7 +25,6 @@ import consulo.web.gwt.shared.UIServerEvent;
 import consulo.web.gwt.shared.UIServerEventType;
 
 import javax.websocket.Session;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
@@ -38,9 +37,9 @@ public class UISessionManager {
 
   public static final UISessionManager ourInstance = new UISessionManager();
 
-  private Map<String, GwtUIAccess> myUIs = new ConcurrentHashMap<String, GwtUIAccess>();
+  private Map<String, GwtUIAccess> myUIs = ContainerUtil.newConcurrentMap();
 
-  private Map<String, Class<? extends UIBuilder>> myTempSessions = new ConcurrentHashMap<String, Class<? extends UIBuilder>>();
+  private Map<String, Class<? extends UIBuilder>> myTempSessions = ContainerUtil.newConcurrentMap();
 
   public void registerInitialSession(String id, Class<? extends UIBuilder> builderClass) {
     myTempSessions.put(id, builderClass);
@@ -101,12 +100,12 @@ public class UISessionManager {
     UIAccessHelper.ourInstance.run(uiAccess, new Runnable() {
       @Override
       public void run() {
-        final Map<String, Serializable> variables = clientEvent.getVariables();
+        final Map<String, Object> variables = clientEvent.getVariables();
 
-        final long componentId = (Long)variables.get("componentId");
+        final Number componentId = (Number)variables.get("componentId");
         final String type = (String)variables.get("type");
 
-        final WGwtBaseComponent gwtComponent = uiAccess.getComponents().get(componentId);
+        final WGwtBaseComponent gwtComponent = uiAccess.getComponents().get(componentId.longValue());
         if (gwtComponent != null) {
           gwtComponent.invokeListeners(type, variables);
         }

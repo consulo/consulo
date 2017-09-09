@@ -20,7 +20,6 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -39,7 +38,7 @@ public class GwtMenuItemImpl extends MenuItem implements InternalGwtComponent {
   }
 
   @Override
-  public void updateState(@NotNull Map<String, Serializable> map) {
+  public void updateState(@NotNull Map<String, Object> map) {
     setText((String)map.get("text"));
   }
 

@@ -24,7 +24,6 @@ import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,7 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
   protected abstract boolean needRenderNullValue();
 
   @Override
-  protected void getState(Map<String, Serializable> map) {
+  protected void getState(Map<String, Object> map) {
     super.getState(map);
     map.put("size", myModel.getSize());
     map.put("index", myIndex);
@@ -92,7 +91,7 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
   }
 
   @Override
-  public void invokeListeners(String type, Map<String, Serializable> variables) {
+  public void invokeListeners(String type, Map<String, Object> variables) {
     if ("select".equals(type)) {
       myIndex = (Integer)variables.get("index");
 

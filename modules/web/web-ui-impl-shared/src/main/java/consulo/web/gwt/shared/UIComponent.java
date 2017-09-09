@@ -15,7 +15,6 @@
  */
 package consulo.web.gwt.shared;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -37,8 +36,7 @@ public class UIComponent extends UIVariablesOwner {
 
   private long myId;
   private String myType;
-  private LinkedList<Child> myChildren;
-
+  private List<Child> myChildren;
 
   public long getId() {
     return myId;
@@ -61,6 +59,6 @@ public class UIComponent extends UIVariablesOwner {
   }
 
   public void setChildren(List<Child> children) {
-    myChildren = new LinkedList<>(children);
+    myChildren = children;
   }
 }

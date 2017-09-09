@@ -21,7 +21,6 @@ import consulo.ui.ValueComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -38,14 +37,14 @@ public class WGwtBooleanValueComponentImpl extends WGwtBaseComponent implements 
   }
 
   @Override
-  protected void getState(Map<String, Serializable> map) {
+  protected void getState(Map<String, Object> map) {
     super.getState(map);
 
     putIfNotDefault("selected", mySelected, true, map);
   }
 
   @Override
-  public void invokeListeners(String type, Map<String, Serializable> variables) {
+  public void invokeListeners(String type, Map<String, Object> variables) {
     if ("select".equals(type)) {
       mySelected = (Boolean)variables.get("selected");
 

@@ -17,10 +17,8 @@ package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
-import consulo.web.gwt.client.ui.InternalGwtComponent;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -33,7 +31,7 @@ public class GwtLayeredImageImpl extends FlowPanel implements InternalGwtCompone
   }
 
   @Override
-  public void updateState(@NotNull Map<String, Serializable> map) {
+  public void updateState(@NotNull Map<String, Object> map) {
     final int width = (Integer)map.get("width");
     setWidth(width + "px");
     final int height = (Integer)map.get("height");

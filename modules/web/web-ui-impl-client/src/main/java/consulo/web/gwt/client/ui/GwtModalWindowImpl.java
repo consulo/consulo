@@ -22,7 +22,6 @@ import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.UIComponent;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +44,7 @@ public class GwtModalWindowImpl extends PopupPanel implements InternalGwtCompone
   }
 
   @Override
-  public void updateState(@NotNull Map<String, Serializable> map) {
+  public void updateState(@NotNull Map<String, Object> map) {
     final boolean visible = DefaultVariables.parseBoolAsTrue(map, "visible");
 
     if (visible) {

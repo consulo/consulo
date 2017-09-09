@@ -15,13 +15,10 @@
  */
 package consulo.web.gwt.client;
 
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.SerializationException;
-import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import com.sksamuel.gwt.websockets.Websocket;
 import com.sksamuel.gwt.websockets.WebsocketListener;
+import consulo.web.gwt.client.util.ExceptionUtil;
 import consulo.web.gwt.client.util.Log;
 import consulo.web.gwt.shared.UIClientEvent;
 import consulo.web.gwt.shared.UIClientEventType;
@@ -43,12 +40,7 @@ public class WebSocketProxy {
     String url = "ws://" + Window.Location.getHost() + "/ws";
     myWebsocket = new Websocket(url);
 
-    Window.addCloseHandler(new CloseHandler<Window>() {
-      @Override
-      public void onClose(CloseEvent<Window> event) {
-        myWebsocket.close();
-      }
-    });
+    Window.addCloseHandler(event -> myWebsocket.close());
   }
 
   public void open() {
@@ -68,17 +60,14 @@ public class WebSocketProxy {
 
       consumer.consume(clientEvent);
 
-      final SerializationStreamWriter writer = UIEntryPoint.factory.createStreamWriter();
-      writer.writeObject(clientEvent);
-      // Sending serialized object content
-      final String data = writer.toString();
+      final String data = UIMappers.ourUIClientEventMapper.write(clientEvent);
 
       Log.log("send: " + data);
 
       myWebsocket.send(data);
     }
-    catch (SerializationException e) {
-      e.printStackTrace();
+    catch (Exception e) {
+      Window.alert("Failed to serialize " + ExceptionUtil.toString(e));
     }
   }
 }

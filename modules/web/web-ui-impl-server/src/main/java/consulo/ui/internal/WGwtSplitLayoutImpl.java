@@ -20,7 +20,6 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.SplitLayout;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -31,13 +30,13 @@ public abstract class WGwtSplitLayoutImpl extends WGwtLayoutImpl<Boolean> implem
   private int myProportion = 50;
 
   @Override
-  protected void getState(Map<String, Serializable> map) {
+  protected void getState(Map<String, Object> map) {
     super.getState(map);
     map.put("proportion", myProportion);
   }
 
   @Override
-  protected void convertConstraint(Map<String, Serializable> map, Boolean constraint) {
+  protected void convertConstraint(Map<String, Object> map, Boolean constraint) {
     map.put("position", constraint);
   }
 

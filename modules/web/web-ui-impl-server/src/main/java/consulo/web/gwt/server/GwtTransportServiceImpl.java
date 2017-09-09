@@ -75,7 +75,7 @@ import java.util.List;
  */
 @Deprecated
 @DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
-@WebServlet(urlPatterns = "/consulo/transport")
+@WebServlet(urlPatterns = "/webResources/consulo/transport")
 public class GwtTransportServiceImpl extends RemoteServiceServlet implements GwtTransportService {
 
   private Project getProject() {

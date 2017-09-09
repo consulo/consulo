@@ -17,7 +17,6 @@ package consulo.ui.internal;
 
 import consulo.ui.ImageRef;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -32,7 +31,7 @@ public class WGwtLayeredImageImpl extends WGwtBaseComponent {
   }
 
   @Override
-  protected void getState(Map<String, Serializable> map) {
+  protected void getState(Map<String, Object> map) {
     super.getState(map);
     map.put("size", myImageRefs.length);
     map.put("height", myImageRefs[0].getHeight());

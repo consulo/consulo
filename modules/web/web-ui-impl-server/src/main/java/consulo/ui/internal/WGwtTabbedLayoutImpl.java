@@ -24,7 +24,6 @@ import consulo.web.gwt.shared.UIComponent;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +53,7 @@ public class WGwtTabbedLayoutImpl extends WGwtBaseComponent implements TabbedLay
   }
 
   @Override
-  protected void getState(Map<String, Serializable> map) {
+  protected void getState(Map<String, Object> map) {
     super.getState(map);
     map.put("selected", mySelected);
   }

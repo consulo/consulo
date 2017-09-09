@@ -20,7 +20,6 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.UIObject;
 import consulo.ui.Size;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -28,7 +27,7 @@ import java.util.Map;
  * @since 12-Jun-16
  */
 public class DefaultVariables {
-  public static void updateState(Map<String, Serializable> map, InternalGwtComponent component) {
+  public static void updateState(Map<String, Object> map, InternalGwtComponent component) {
     UIObject widget = component.asWidget();
     if (widget == null) {
       if (component instanceof UIObject) {
@@ -63,7 +62,7 @@ public class DefaultVariables {
     }
   }
 
-  public static boolean parseBoolAsTrue(Map<String, Serializable> map, String key) {
+  public static boolean parseBoolAsTrue(Map<String, Object> map, String key) {
     final Boolean temp = (Boolean)map.get(key);
     return temp == null || temp;
   }

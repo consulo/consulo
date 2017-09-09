@@ -78,6 +78,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.github.nmorel.gwtjackson</groupId>
+      <artifactId>gwt-jackson</artifactId>
+      <version>0.14.2</version>
+    </dependency>
+    
+    <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
     </dependency>

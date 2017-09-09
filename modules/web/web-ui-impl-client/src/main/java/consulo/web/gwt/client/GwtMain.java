@@ -64,7 +64,7 @@ public class GwtMain implements EntryPoint {
     fetchAppStatus(rootPanel);
   }
 
-  private static void fetchAppStatus(final RootPanel rootPanel) {
+  public static void fetchAppStatus(final RootPanel rootPanel) {
     GwtUtil.rpc().getApplicationStatus(new ReportableCallable<Boolean>() {
       @Override
       public void onSuccess(Boolean result) {

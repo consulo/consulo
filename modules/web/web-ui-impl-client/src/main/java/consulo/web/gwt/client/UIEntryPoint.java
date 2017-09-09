@@ -16,27 +16,22 @@
 package consulo.web.gwt.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.SerializationException;
-import com.google.gwt.user.client.rpc.SerializationStreamFactory;
-import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.sksamuel.gwt.websockets.WebsocketListener;
+import consulo.web.gwt.client.ui.GwtModalWindowImpl;
+import consulo.web.gwt.client.ui.InternalGwtComponent;
 import consulo.web.gwt.client.util.ExceptionUtil;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.client.util.Log;
-import consulo.web.gwt.client.ui.GwtModalWindowImpl;
-import consulo.web.gwt.client.ui.InternalGwtComponent;
 import consulo.web.gwt.shared.UIClientEvent;
 import consulo.web.gwt.shared.UIClientEventType;
 import consulo.web.gwt.shared.UIComponent;
 import consulo.web.gwt.shared.UIServerEvent;
 import org.gwt.advanced.client.util.ThemeHelper;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +41,6 @@ import java.util.Map;
  * @since 11-Jun-16
  */
 public class UIEntryPoint implements EntryPoint {
-  public static final SerializationStreamFactory factory = (SerializationStreamFactory)GWT.create(HackService.class);
-
   @Override
   public void onModuleLoad() {
     ThemeHelper.getInstance().setThemeName("classic");
@@ -66,15 +59,14 @@ public class UIEntryPoint implements EntryPoint {
       }
 
       @Override
-      public void onMessage(String msg) {
-        Log.log("receive: " + msg);
+      public void onMessage(String json) {
+        Log.log("receive: " + json);
 
         final UIServerEvent event;
         try {
-          final SerializationStreamReader streamReader = factory.createStreamReader(msg);
-          event = (UIServerEvent)streamReader.readObject();
+          event = UIMappers.ourUIServerEventMapper.read(json);
         }
-        catch (SerializationException e) {
+        catch (Exception e) {
           Window.alert("Failed to serialize " + ExceptionUtil.toString(e));
           e.printStackTrace();
           return;
@@ -112,8 +104,8 @@ public class UIEntryPoint implements EntryPoint {
               for (UIComponent component : components) {
                 final InternalGwtComponent temp = UIConverter.get(component.getId());
 
-                final Map<String, Serializable> variables = component.getVariables();
-                temp.updateState(variables == null ? Collections.<String, Serializable>emptyMap() : variables);
+                final Map<String, Object> variables = component.getVariables();
+                temp.updateState(variables == null ? Collections.<String, Object>emptyMap() : variables);
               }
             }
             break;

@@ -44,7 +44,7 @@ public class GwtRadioButtonImpl extends RadioButton implements InternalGwtCompon
         proxy.send(UIClientEventType.invokeEvent, new WebSocketProxy.Consumer<UIClientEvent>() {
           @Override
           public void consume(UIClientEvent clientEvent) {
-            Map<String, Serializable> vars = new HashMap<String, Serializable>();
+            Map<String, Object> vars = new HashMap<String, Object>();
             vars.put("type", "select");
             vars.put("componentId", componentId);
             vars.put("selected", event.getValue());
@@ -57,7 +57,7 @@ public class GwtRadioButtonImpl extends RadioButton implements InternalGwtCompon
   }
 
   @Override
-  public void updateState(@NotNull Map<String, Serializable> map) {
+  public void updateState(@NotNull Map<String, Object> map) {
     final String text = (String)map.get("text");
     if(text != null) {
       setText(text);

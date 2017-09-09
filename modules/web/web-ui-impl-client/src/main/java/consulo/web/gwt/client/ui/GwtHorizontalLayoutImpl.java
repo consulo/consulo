@@ -19,11 +19,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.shared.UIComponent;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
@@ -32,10 +29,6 @@ import java.util.Map;
 public class GwtHorizontalLayoutImpl extends HorizontalPanel implements InternalGwtComponentWithChildren {
   public GwtHorizontalLayoutImpl() {
     setHorizontalAlignment(ALIGN_CENTER);
-  }
-
-  @Override
-  public void updateState(@NotNull Map<String, Serializable> map) {
   }
 
   @Override

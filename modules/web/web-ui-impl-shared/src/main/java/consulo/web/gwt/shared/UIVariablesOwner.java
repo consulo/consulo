@@ -19,7 +19,6 @@ package consulo.web.gwt.shared;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -27,13 +26,13 @@ import java.util.Map;
  * @since 11-Jun-16
  */
 public class UIVariablesOwner implements Serializable, IsSerializable {
-  private LinkedHashMap<String, Serializable> myVariables;
+  private Map<String, Object> myVariables;
 
-  public Map<String, Serializable> getVariables() {
+  public Map<String, Object> getVariables() {
     return myVariables;
   }
 
-  public void setVariables(Map<String, Serializable> map) {
-    myVariables = new LinkedHashMap<>(map);
+  public void setVariables(Map<String, Object> map) {
+    myVariables = map;
   }
 }

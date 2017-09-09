@@ -19,7 +19,6 @@ import consulo.ui.Image;
 import consulo.ui.ImageRef;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -34,7 +33,7 @@ public class WGwtImageImpl extends WGwtBaseComponent implements Image {
   }
 
   @Override
-  protected void getState(Map<String, Serializable> map) {
+  protected void getState(Map<String, Object> map) {
     super.getState(map);
     map.put("url",  WGwtImageRefUrls.getUrlForBrowser(myImageRef));
   }

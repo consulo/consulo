@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,23 @@
  */
 package consulo.web.gwt.client;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import consulo.ui.RGBColor;
-import consulo.ui.Size;
+import com.github.nmorel.gwtjackson.client.ObjectMapper;
+import com.google.gwt.core.client.GWT;
 import consulo.web.gwt.shared.UIClientEvent;
 import consulo.web.gwt.shared.UIServerEvent;
 
 /**
  * @author VISTALL
- * @since 15-Jun-16
- * <p/>
- * this is hack service - gwt will generate serialize reader/writer for types
+ * @since 09-Sep-17
  */
-@RemoteServiceRelativePath("HackService")
-public interface HackService extends RemoteService {
-  UIClientEvent clientEvent(UIClientEvent event);
+public class UIMappers {
+  public static interface UIServerEventMapper extends ObjectMapper<UIServerEvent> {
+  }
 
-  UIServerEvent serverEvent(UIServerEvent event);
+  public static interface UIClientEventMapper extends ObjectMapper<UIClientEvent> {
+  }
 
-  Size size(Size size);
+  public static final UIServerEventMapper ourUIServerEventMapper = GWT.create(UIServerEventMapper.class);
 
-  RGBColor rgbColor(RGBColor size);
+  public static final UIClientEventMapper ourUIClientEventMapper = GWT.create(UIClientEventMapper.class);
 }

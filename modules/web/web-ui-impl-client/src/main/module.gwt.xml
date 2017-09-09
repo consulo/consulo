@@ -18,7 +18,7 @@
   <inherits name="com.sksamuel.gwt.GwtWebsockets"/>
   <inherits name="org.gwt.advanced.Grid"/>
   <inherits name="consulo.ui"/>
-  <inherits name="com.google.web.bindery.autobean.AutoBean"/>
+  <inherits name="com.github.nmorel.gwtjackson.GwtJackson" />
 
   <entry-point class='consulo.web.gwt.client.UIEntryPoint'/>
 
@@ -27,14 +27,12 @@
     <exclude name="**/UIFactoryGenerator.java"/>
   </source>
 
-  <public path="consulo/web/gwt/client/resource"/>
+  <public path="gwt/client/resource"/>
 
-  <stylesheet src="consulo/web/gwt/client/resource/css/advanced-gwt-custom.css"/>
-  <stylesheet src="consulo/web/gwt/client/resource/css/advanced-gwt.css"/>
-  <stylesheet src="consulo/web/gwt/client/resource/css/gwt.css"/>
-  <stylesheet src="consulo/web/gwt/client/resource/css/ui.css"/>
-
-  <extend-configuration-property name="document.compatMode" value="BackCompat"/>
+  <stylesheet src="css/advanced-gwt-custom.css"/>
+  <stylesheet src="css/advanced-gwt.css"/>
+  <stylesheet src="css/gwt.css"/>
+  <stylesheet src="css/ui.css"/>
 
   <generate-with class="consulo.web.gwt.UIFactoryGenerator">
     <when-type-assignable class="consulo.web.gwt.client.ui.UIFactory"/>

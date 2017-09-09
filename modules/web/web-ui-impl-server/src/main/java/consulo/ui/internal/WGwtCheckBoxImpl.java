@@ -19,7 +19,6 @@ import com.intellij.openapi.util.Comparing;
 import consulo.ui.CheckBox;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -52,7 +51,7 @@ public class WGwtCheckBoxImpl extends WGwtBooleanValueComponentImpl implements C
   }
 
   @Override
-  protected void getState(Map<String, Serializable> map) {
+  protected void getState(Map<String, Object> map) {
     super.getState(map);
 
     map.put("text", myText);

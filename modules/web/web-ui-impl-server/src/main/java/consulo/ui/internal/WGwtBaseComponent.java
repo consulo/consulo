@@ -19,14 +19,13 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.SmartList;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.UIAccess;
 import consulo.ui.Size;
+import consulo.ui.UIAccess;
 import consulo.web.gwt.shared.UIComponent;
 import gnu.trove.TLongObjectHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +55,7 @@ public class WGwtBaseComponent implements Component {
     UIAccess.assertIsUIThread();
 
     if (myNotifyComponent != null) {
-      final HashMap<String, Serializable> map = new HashMap<String, Serializable>();
+      final HashMap<String, Object> map = new HashMap<String, Object>();
       getState(map);
       myNotifyComponent.setVariables(map);
     }
@@ -64,7 +63,7 @@ public class WGwtBaseComponent implements Component {
       myNotifyComponent = new UIComponent();
       myNotifyComponent.setId(getId());
 
-      final HashMap<String, Serializable> map = new HashMap<String, Serializable>();
+      final HashMap<String, Object> map = new HashMap<String, Object>();
 
       getState(map);
 
@@ -144,7 +143,7 @@ public class WGwtBaseComponent implements Component {
     component.setType(getClass().getName());
     component.setId(myId);
 
-    Map<String, Serializable> map = new HashMap<String, Serializable>();
+    Map<String, Object> map = new HashMap<String, Object>();
     getState(map);
     if (!map.isEmpty()) {
       component.setVariables(map);
@@ -162,7 +161,7 @@ public class WGwtBaseComponent implements Component {
 
   }
 
-  protected void getState(Map<String, Serializable> map) {
+  protected void getState(Map<String, Object> map) {
     putIfNotDefault("visible", myVisible, true, map);
     putIfNotDefault("enabled", myEnabled, true, map);
     if (mySize != Size.UNDEFINED) {
@@ -170,7 +169,7 @@ public class WGwtBaseComponent implements Component {
     }
   }
 
-  public void invokeListeners(String type, Map<String, Serializable> variables) {
+  public void invokeListeners(String type, Map<String, Object> variables) {
 
   }
 
@@ -181,13 +180,13 @@ public class WGwtBaseComponent implements Component {
     }
   }
 
-  protected <T> void putIfNotDefault(String key, T value, T defaultValue, Map<String, Serializable> map) {
+  protected <T> void putIfNotDefault(String key, T value, T defaultValue, Map<String, Object> map) {
     if (!Comparing.equal(value, defaultValue)) {
       map.put(key, String.valueOf(value));
     }
   }
 
-  protected void putIfNotDefault(String key, boolean value, boolean defaultValue, Map<String, Serializable> map) {
+  protected void putIfNotDefault(String key, boolean value, boolean defaultValue, Map<String, Object> map) {
     if (value != defaultValue) {
       map.put(key, value);
     }

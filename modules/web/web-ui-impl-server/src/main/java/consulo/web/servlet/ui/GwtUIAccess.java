@@ -15,8 +15,6 @@
  */
 package consulo.web.servlet.ui;
 
-import com.google.gwt.user.client.rpc.SerializationException;
-import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamWriter;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
@@ -48,9 +46,9 @@ public class GwtUIAccess extends UIAccess {
   private Session mySession;
   private boolean myDisposed;
 
-  private TLongObjectHashMap<WGwtBaseComponent> myComponents = new TLongObjectHashMap<WGwtBaseComponent>();
+  private TLongObjectHashMap<WGwtBaseComponent> myComponents = new TLongObjectHashMap<>();
 
-  private Deque<WGwtWindowImpl> myWindows = new ArrayDeque<WGwtWindowImpl>();
+  private Deque<WGwtWindowImpl> myWindows = new ArrayDeque<>();
 
   public GwtUIAccess(String cookieId, Session session) {
     myCookieId = cookieId;
@@ -102,12 +100,9 @@ public class GwtUIAccess extends UIAccess {
 
   private static String encode(final UIServerEvent messageDto) {
     try {
-      final ServerSerializationStreamWriter serverSerializationStreamWriter = new ServerSerializationStreamWriter(new SimpleSerializationPolicy());
-
-      serverSerializationStreamWriter.writeObject(messageDto);
-      return serverSerializationStreamWriter.toString();
+      return UIWebSocketHandler.ourObjectMapper.writeValueAsString(messageDto);
     }
-    catch (SerializationException e) {
+    catch (Exception e) {
       e.printStackTrace();
       throw new Error(e);
     }
@@ -121,7 +116,7 @@ public class GwtUIAccess extends UIAccess {
     UIAccess.assertIsUIThread();
 
 
-    List<UIComponent> components = new ArrayList<UIComponent>();
+    List<UIComponent> components = new ArrayList<>();
 
     for (WGwtWindowImpl window : myWindows) {
       window.visitChanges(components);
@@ -150,7 +145,7 @@ public class GwtUIAccess extends UIAccess {
     serverEvent.setComponents(Arrays.asList(modalWindow.convert()));
 
     // we don't interest in first states - because they will send anyway to client
-    modalWindow.visitChanges(new ArrayList<UIComponent>());
+    modalWindow.visitChanges(new ArrayList<>());
 
     myWindows.addLast(modalWindow);
 

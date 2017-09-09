@@ -18,7 +18,6 @@ package consulo.ui.internal;
 import consulo.ui.MenuItem;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -39,7 +38,7 @@ public class WGwtMenuItemImpl extends WGwtBaseComponent implements MenuItem {
   }
 
   @Override
-  protected void getState(Map<String, Serializable> map) {
+  protected void getState(Map<String, Object> map) {
     super.getState(map);
     map.put("text", myText);
   }

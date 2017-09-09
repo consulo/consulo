@@ -18,7 +18,6 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -26,5 +25,6 @@ import java.util.Map;
  * @since 11-Jun-16
  */
 public interface InternalGwtComponent extends IsWidget {
-  void updateState(@NotNull Map<String, Serializable> map);
+  default void updateState(@NotNull Map<String, Object> map) {
+  }
 }

@@ -23,7 +23,6 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.TreeViewModel;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
@@ -55,7 +54,7 @@ public class GwtTreeImpl extends CellTree implements InternalGwtComponent {
   }
 
   @Override
-  public void updateState(@NotNull Map<String, Serializable> map) {
+  public void updateState(@NotNull Map<String, Object> map) {
 
   }
 }
