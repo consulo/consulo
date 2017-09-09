@@ -23,9 +23,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.application.ApplicationProperties;
 import consulo.start.CommandLineArgs;
-import consulo.web.gwt.server.GwtTransportServiceImpl;
-import consulo.web.servlet.AppUIBuilder;
-import consulo.web.servlet.ui.UIIconServlet;
+import consulo.web.servlet.NewAppUIBuilder;
 import consulo.web.servlet.ui.UIWebSocketHandler;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -124,7 +122,7 @@ public class WebLoader {
   @NotNull
   @SuppressWarnings("unchecked")
   public Class<? extends Servlet>[] getServletClasses() {
-    return new Class[]{AppUIBuilder.Servlet.class, UIIconServlet.class, GwtTransportServiceImpl.class};
+    return new Class[]{NewAppUIBuilder.Servlet.class};
   }
 
   @NotNull

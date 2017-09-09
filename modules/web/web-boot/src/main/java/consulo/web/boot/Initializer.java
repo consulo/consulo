@@ -24,7 +24,6 @@ import consulo.web.boot.util.logger.WebLoggerFactory;
 import javax.servlet.*;
 import javax.servlet.annotation.WebListener;
 import javax.servlet.annotation.WebServlet;
-import javax.websocket.server.ServerContainer;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -117,12 +116,12 @@ public class Initializer implements ServletContextListener {
 
     servletContext.addServlet("ResourcesServlet", new ResourcesServlet(libFile, urlClassLoader)).addMapping("/webResources/*");
 
-    ServerContainer serverContainer = (ServerContainer)servletContext.getAttribute("javax.websocket.server.ServerContainer");
+  /*  ServerContainer serverContainer = (ServerContainer)servletContext.getAttribute("javax.websocket.server.ServerContainer");
 
     Method getWebsockerEndpoint = webMain.getDeclaredMethod("getWebsockerEndpoint");
 
     Class<?> invoke = (Class<?>)getWebsockerEndpoint.invoke(webLoader);
-    serverContainer.addEndpoint(invoke);
+    serverContainer.addEndpoint(invoke);  */
   }
 
   @Override
