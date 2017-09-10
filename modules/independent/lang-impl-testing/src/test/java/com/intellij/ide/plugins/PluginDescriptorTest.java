@@ -1,21 +1,22 @@
 package com.intellij.ide.plugins;
 
-import consulo.testFramework.util.TestPathUtil;
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
-import java.io.File;
+import java.net.URL;
+import java.nio.file.Paths;
 
 /**
  * @author Dmitry Avdeev
  *         Date: 7/14/11
  */
-public class PluginDescriptorTest extends TestCase {
-
+public class PluginDescriptorTest extends Assert {
+  @Test
   public void testDescriptorLoading() throws Exception {
-    String path = TestPathUtil.getTestDataPath().replace(File.separatorChar, '/') + "/ide/plugins/pluginDescriptor";
-    File file = new File(path + "/asp.jar");
-    assertTrue(file + " not exist", file.exists());
-    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(file);
+    URL url = PluginDescriptorTest.class.getResource("/ide/plugins/pluginDescriptor/asp.jar");
+    assertNotNull(url);
+
+    IdeaPluginDescriptorImpl descriptor = PluginManagerCore.loadDescriptorFromJar(Paths.get(url.toURI()).toFile());
     assertNotNull(descriptor);
   }
 }

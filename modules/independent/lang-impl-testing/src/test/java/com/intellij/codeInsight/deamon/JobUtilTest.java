@@ -24,8 +24,8 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.util.Processor;
+import consulo.testFramework.MockApplicationTestCase;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,12 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class JobUtilTest extends PlatformTestCase {
-  @Override
-  protected boolean isRunInWriteAction() {
-    return false;
-  }
-
+public class JobUtilTest extends MockApplicationTestCase {
   public void testUnbalancedTaskJobUtilPerformance() {
     List<Integer> things = new ArrayList<Integer>(Collections.<Integer>nCopies(10000, null));
     int sum = 0;

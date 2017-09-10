@@ -18,10 +18,10 @@ package com.intellij.openapi.vfs;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.vfs.ex.dummy.DummyFileSystem;
-import com.intellij.testFramework.PlatformLangTestCase;
+import consulo.testFramework.MockApplicationTestCase;
 import org.jetbrains.annotations.NotNull;
 
-public class DummyFileSystemTest extends PlatformLangTestCase {
+public class DummyFileSystemTest extends MockApplicationTestCase {
   private DummyFileSystem fs;
 
   @Override
@@ -41,7 +41,7 @@ public class DummyFileSystemTest extends PlatformLangTestCase {
     }.execute().getResultObject();
 
     final VirtualFileEvent[] events = new VirtualFileEvent[2];
-    fs.addVirtualFileListener(new VirtualFileAdapter() {
+    fs.addVirtualFileListener(new VirtualFileListener() {
       @Override
       public void fileDeleted(@NotNull VirtualFileEvent e) {
         events[0] = e;

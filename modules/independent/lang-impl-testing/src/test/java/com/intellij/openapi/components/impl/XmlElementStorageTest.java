@@ -23,11 +23,11 @@ import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.stores.StorageData;
 import com.intellij.openapi.components.impl.stores.XmlElementStorage;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.testFramework.LightPlatformLangTestCase;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.testFramework.MockApplicationTestCase;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -39,7 +39,7 @@ import static com.intellij.openapi.util.JDOMBuilder.tag;
 /**
  * @author mike
  */
-public class XmlElementStorageTest extends LightPlatformLangTestCase {
+public class XmlElementStorageTest extends MockApplicationTestCase {
   private Disposable myParentDisposable;
 
   @RequiredDispatchThread

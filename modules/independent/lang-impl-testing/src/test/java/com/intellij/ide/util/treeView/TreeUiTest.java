@@ -2741,10 +2741,10 @@ public class TreeUiTest extends AbstractTreeBuilderTest {
   public static TestSuite suite() {
     TestSuite suite = new TestSuite();
 
-    suite.addTestSuite(PassThrough.class);
+    /*suite.addTestSuite(PassThrough.class);
     suite.addTestSuite(SyncUpdate.class);
     suite.addTestSuite(YieldingUpdate.class);
-    suite.addTestSuite(BgLoadingSyncUpdate.class);
+    suite.addTestSuite(BgLoadingSyncUpdate.class); */
 
     // to run on suspecting of race conditions in background loading
     //suite.addTestSuite(VeryQuickBgLoadingSyncUpdate.class);

@@ -25,8 +25,12 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.ASTStructure;
-import com.intellij.psi.tree.*;
-import com.intellij.testFramework.LightPlatformTestCase;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.IFileElementType;
+import com.intellij.psi.tree.ILazyParseableElementType;
+import com.intellij.psi.tree.ILightLazyParseableElementType;
+import com.intellij.psi.tree.TokenSet;
+import com.intellij.testFramework.FlyIdeaTestCase;
 import com.intellij.util.ThreeState;
 import com.intellij.util.diff.DiffTree;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
@@ -42,7 +46,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
-public class PsiBuilderQuickTest extends LightPlatformTestCase {
+public class PsiBuilderQuickTest extends FlyIdeaTestCase {
   private static final IFileElementType ROOT = new IFileElementType("ROOT", Language.ANY);
 
   private static final IElementType LETTER = new IElementType("LETTER", Language.ANY);
@@ -68,11 +72,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
           builder.advanceLexer();
         }
       }
-    }, "Element(ROOT)\n" +
-       "  PsiElement(LETTER)('a')\n" +
-       "  PsiElement(OTHER)('<')\n" +
-       "  PsiElement(OTHER)('<')\n" +
-       "  PsiElement(LETTER)('b')\n");
+    }, "Element(ROOT)\n" + "  PsiElement(LETTER)('a')\n" + "  PsiElement(OTHER)('<')\n" + "  PsiElement(OTHER)('<')\n" + "  PsiElement(LETTER)('b')\n");
   }
 
   public void testComposites() {
@@ -129,11 +129,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
         marker2.collapse(COLLAPSED);
         PsiBuilderUtil.advance(builder, 1);
       }
-    }, "Element(ROOT)\n" +
-       "  PsiElement(LETTER)('a')\n" +
-       "  PsiElement(COLLAPSED)('<<')\n" +
-       "  PsiElement(COLLAPSED)('>>')\n" +
-       "  PsiElement(LETTER)('b')\n");
+    }, "Element(ROOT)\n" + "  PsiElement(LETTER)('a')\n" + "  PsiElement(COLLAPSED)('<<')\n" + "  PsiElement(COLLAPSED)('>>')\n" + "  PsiElement(LETTER)('b')\n");
   }
 
   public void testDoneAndError() {
@@ -563,9 +559,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
         return null;
       }
     };
-    return new PsiBuilderImpl(getProject(), null, parserDefinition,
-                              parserDefinition.createLexer(MockPsiFile.DUMMY_LANG_VERSION), MockPsiFile.DUMMY_LANG_VERSION,
-                              null, text, null, null);
+    return new PsiBuilderImpl(null, null, parserDefinition, parserDefinition.createLexer(MockPsiFile.DUMMY_LANG_VERSION), MockPsiFile.DUMMY_LANG_VERSION, null, text, null, null);
   }
 
   private interface Parser {
@@ -595,37 +589,36 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
     parser.parse(builder2);
     rootMarker2.done(ROOT);
     DiffTree.diff(new ASTStructure(root), builder2.getLightTree(), new ShallowNodeComparator<ASTNode, LighterASTNode>() {
-                    @Override
-                    public ThreeState deepEqual(ASTNode oldNode, LighterASTNode newNode) {
-                      return ThreeState.UNSURE;
-                    }
+      @Override
+      public ThreeState deepEqual(ASTNode oldNode, LighterASTNode newNode) {
+        return ThreeState.UNSURE;
+      }
 
-                    @Override
-                    public boolean typesEqual(ASTNode oldNode, LighterASTNode newNode) {
-                      return true;
-                    }
+      @Override
+      public boolean typesEqual(ASTNode oldNode, LighterASTNode newNode) {
+        return true;
+      }
 
-                    @Override
-                    public boolean hashCodesEqual(ASTNode oldNode, LighterASTNode newNode) {
-                      return true;
-                    }
-                  }, new DiffTreeChangeBuilder<ASTNode, LighterASTNode>() {
-                    @Override
-                    public void nodeReplaced(@NotNull ASTNode oldChild, @NotNull LighterASTNode newChild) {
-                      fail("replaced(" + oldChild + "," + newChild.getTokenType() + ")");
-                    }
+      @Override
+      public boolean hashCodesEqual(ASTNode oldNode, LighterASTNode newNode) {
+        return true;
+      }
+    }, new DiffTreeChangeBuilder<ASTNode, LighterASTNode>() {
+      @Override
+      public void nodeReplaced(@NotNull ASTNode oldChild, @NotNull LighterASTNode newChild) {
+        fail("replaced(" + oldChild + "," + newChild.getTokenType() + ")");
+      }
 
-                    @Override
-                    public void nodeDeleted(@NotNull ASTNode oldParent, @NotNull ASTNode oldNode) {
-                      fail("deleted(" + oldParent + "," + oldNode + ")");
-                    }
+      @Override
+      public void nodeDeleted(@NotNull ASTNode oldParent, @NotNull ASTNode oldNode) {
+        fail("deleted(" + oldParent + "," + oldNode + ")");
+      }
 
-                    @Override
-                    public void nodeInserted(@NotNull ASTNode oldParent, @NotNull LighterASTNode newNode, int pos) {
-                      fail("inserted(" + oldParent + "," + newNode.getTokenType() + ")");
-                    }
-                  }
-    , root.getText());
+      @Override
+      public void nodeInserted(@NotNull ASTNode oldParent, @NotNull LighterASTNode newNode, int pos) {
+        fail("inserted(" + oldParent + "," + newNode.getTokenType() + ")");
+      }
+    }, root.getText());
   }
 
   private static void doFailTest(@NonNls final String text, final Parser parser, @NonNls final String expected) {
@@ -688,8 +681,7 @@ public class PsiBuilderQuickTest extends LightPlatformTestCase {
             return null;
           }
         };
-        final PsiBuilder builder =
-          PsiBuilderFactory.getInstance().createBuilder(parserDefinition, new MyTestLexer(), MockPsiFile.DUMMY_LANG_VERSION, text);
+        final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(parserDefinition, new MyTestLexer(), MockPsiFile.DUMMY_LANG_VERSION, text);
         builder.setDebugMode(true);
         parser.parse(builder);
         builder.getLightTree();

@@ -440,7 +440,7 @@ public final class LoadTextUtil {
     return lineSeparator;
   }
 
-  static String getDetectedLineSeparator(@NotNull VirtualFile file) {
+  public static String getDetectedLineSeparator(@NotNull VirtualFile file) {
     return file.getDetectedLineSeparator();
   }
 

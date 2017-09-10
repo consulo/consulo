@@ -15,17 +15,21 @@
  */
 package com.intellij.util.ui.tree;
 
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.ui.TreeExpandCollapse;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Assertion;
+import consulo.testFramework.MockApplicationTestCase;
 
 import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class TreeUtilTest extends PlatformTestCase {
+public class TreeUtilTest extends MockApplicationTestCase {
   private final Assertion CHECK = new Assertion();
 
   public void testFindNodeWithObject() {

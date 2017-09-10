@@ -20,7 +20,11 @@ import com.intellij.concurrency.AsyncFuture;
 import com.intellij.concurrency.AsyncUtil;
 import com.intellij.concurrency.Job;
 import com.intellij.concurrency.JobLauncher;
-import com.intellij.lang.*;
+import com.intellij.lang.Language;
+import com.intellij.lang.LanguageExtension;
+import com.intellij.lang.LanguageParserDefinitions;
+import com.intellij.lang.ParserDefinition;
+import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.lang.impl.PsiBuilderFactoryImpl;
 import com.intellij.mock.MockApplication;
 import com.intellij.mock.MockApplicationEx;
@@ -33,7 +37,6 @@ import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.CoreCommandProcessor;
 import com.intellij.openapi.components.ExtensionAreas;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -42,7 +45,6 @@ import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeExtension;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
@@ -66,8 +68,13 @@ import com.intellij.psi.meta.MetaDataRegistrar;
 import com.intellij.psi.stubs.CoreStubTreeLoader;
 import com.intellij.psi.stubs.StubTreeLoader;
 import com.intellij.util.Consumer;
-import com.intellij.util.Function;
 import com.intellij.util.Processor;
+import consulo.psi.tree.ASTCompositeFactory;
+import consulo.psi.tree.ASTLazyFactory;
+import consulo.psi.tree.ASTLeafFactory;
+import consulo.psi.tree.impl.DefaultASTCompositeFactory;
+import consulo.psi.tree.impl.DefaultASTLazyFactory;
+import consulo.psi.tree.impl.DefaultASTLeafFactory;
 import org.jetbrains.annotations.NotNull;
 import org.picocontainer.MutablePicoContainer;
 
@@ -93,7 +100,7 @@ public class CoreApplicationEnvironment {
 
     myApplication = createApplication(myParentDisposable);
     ApplicationManager.setApplication(myApplication,
-                                      new StaticGetter<FileTypeRegistry>(myFileTypeRegistry),
+                                      new StaticGetter<>(myFileTypeRegistry),
                                       myParentDisposable);
     myLocalFileSystem = createLocalFileSystem();
     myJarFileSystem = createJarFileSystem();
@@ -101,16 +108,19 @@ public class CoreApplicationEnvironment {
     Extensions.registerAreaClass(ExtensionAreas.PROJECT, null);
 
     final MutablePicoContainer appContainer = myApplication.getPicoContainer();
-    registerComponentInstance(appContainer, FileDocumentManager.class, new MockFileDocumentManagerImpl(new Function<CharSequence, Document>() {
-      @Override
-      public Document fun(CharSequence charSequence) {
-        return new DocumentImpl(charSequence);
-      }
-    }, null));
+    registerComponentInstance(appContainer, FileDocumentManager.class, new MockFileDocumentManagerImpl(DocumentImpl::new, null));
 
     VirtualFileSystem[] fs = {myLocalFileSystem, myJarFileSystem};
     VirtualFileManagerImpl virtualFileManager = new VirtualFileManagerImpl(fs, myApplication.getMessageBus());
     registerComponentInstance(appContainer, VirtualFileManager.class, virtualFileManager);
+
+    registerApplicationExtensionPoint(ASTLazyFactory.EP.getExtensionPointName(), ASTLazyFactory.class);
+    registerApplicationExtensionPoint(ASTLeafFactory.EP.getExtensionPointName(), ASTLeafFactory.class);
+    registerApplicationExtensionPoint(ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
+
+    addExtension(ASTLazyFactory.EP.getExtensionPointName(), new DefaultASTLazyFactory());
+    addExtension(ASTLeafFactory.EP.getExtensionPointName(), new DefaultASTLeafFactory());
+    addExtension(ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory());
 
     registerApplicationService(EncodingManager.class, new CoreEncodingRegistry());
     registerApplicationService(VirtualFilePointerManager.class, createVirtualFilePointerManager());

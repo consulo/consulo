@@ -15,6 +15,7 @@
   - limitations under the License.
   -->
 <module>
+  <inherits name="com.google.gwt.core.Core" />
   <inherits name="com.sksamuel.gwt.GwtWebsockets"/>
   <inherits name="org.gwt.advanced.Grid"/>
   <inherits name="consulo.ui"/>

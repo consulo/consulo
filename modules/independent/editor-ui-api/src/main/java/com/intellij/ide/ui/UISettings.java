@@ -50,11 +50,11 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   @NotNull
   public static UISettings getInstance() {
-    if(ourInstance != null) {
+    if (ourInstance != null) {
       return ourInstance;
     }
     UISettings settings = getInstanceOrNull();
-    if(settings == null) {
+    if (settings == null) {
       throw new UnsupportedOperationException("Application is not initialized. Please call getInstanceOrNull()");
     }
     return settings;
@@ -73,11 +73,11 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   @Nullable("null if application is not initialized")
   public static UISettings getInstanceOrNull() {
-    if(ourInstance != null) {
+    if (ourInstance != null) {
       return ourInstance;
     }
     Application application = ApplicationManager.getApplication();
-    if(application == null) {
+    if (application == null) {
       return null;
     }
     UISettings settings = ServiceManager.getService(UISettings.class);
@@ -424,6 +424,22 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public boolean getDndWithPressedAltOnly() {
     return DND_WITH_PRESSED_ALT_ONLY;
+  }
+
+  public void setDisableMnemonics(boolean value) {
+    DISABLE_MNEMONICS = value;
+  }
+
+  public void setDisableMnemonicsInControls(boolean value) {
+    DISABLE_MNEMONICS_IN_CONTROLS = value;
+  }
+
+  public boolean getDisableMnemonics() {
+    return DISABLE_MNEMONICS;
+  }
+
+  public boolean getDisableMnemonicsInControls() {
+    return DISABLE_MNEMONICS_IN_CONTROLS;
   }
 
   /**

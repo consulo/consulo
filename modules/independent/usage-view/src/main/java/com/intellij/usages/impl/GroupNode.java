@@ -69,8 +69,11 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
   }
 
   @NotNull
-  List<Node> getSwingChildren() {
-    return ObjectUtils.notNull(children, Collections.emptyList());
+  @SuppressWarnings("unchecked")
+  List<? extends TreeNode> getSwingChildren() {
+    // on java 9 - children is Vector<TreeNode>
+    List<TreeNode> children = this.children;
+    return ObjectUtils.notNull(children, Collections.<Node>emptyList());
   }
 
   @NotNull
@@ -87,13 +90,13 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
   }
 
   // >= 0 if found, < 0 if not found
-  private static int getNodeIndex(@NotNull Node newNode, @NotNull List<Node> children) {
+  private static int getNodeIndex(@NotNull Node newNode, @NotNull List<? extends TreeNode> children) {
     int low = 0;
     int high = children.size() - 1;
     while (low <= high) {
       int mid = (low + high) / 2;
-      Node child = children.get(mid);
-      int cmp = COMPARATOR.compare(child, newNode);
+      TreeNode child = children.get(mid);
+      int cmp = COMPARATOR.compare((DefaultMutableTreeNode)child, newNode);
       if (cmp < 0) {
         low = mid + 1;
       }
@@ -109,7 +112,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
   }
 
   // always >= 0
-  private static int getNodeInsertionIndex(@NotNull Node node, @NotNull List<Node> children) {
+  private static int getNodeInsertionIndex(@NotNull Node node, @NotNull List<? extends TreeNode> children) {
     int i = getNodeIndex(node, children);
     return i >= 0 ? i : -i - 1;
   }

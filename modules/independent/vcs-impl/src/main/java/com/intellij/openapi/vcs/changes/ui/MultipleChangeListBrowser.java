@@ -44,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -266,7 +267,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   @Nullable
   private ChangesBrowserUnversionedFilesNode findUnversionedFilesNode() {
     //noinspection unchecked
-    Enumeration<ChangesBrowserNode> nodes = myViewer.getRoot().breadthFirstEnumeration();
+    Enumeration<TreeNode> nodes = myViewer.getRoot().breadthFirstEnumeration();
 
     return ContainerUtil.findInstance(ContainerUtil.iterate(nodes), ChangesBrowserUnversionedFilesNode.class);
   }

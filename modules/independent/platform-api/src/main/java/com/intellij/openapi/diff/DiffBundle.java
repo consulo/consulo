@@ -21,7 +21,7 @@ import org.jetbrains.annotations.PropertyKey;
 /**
  * @author lesya
  */
-public class DiffBundle extends AbstractBundle{
+public class DiffBundle extends AbstractBundle {
   private static final DiffBundle ourInstance = new DiffBundle();
 
   private DiffBundle() {

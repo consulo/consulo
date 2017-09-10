@@ -20,6 +20,7 @@ import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.CheckedTreeNode;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
@@ -28,6 +29,7 @@ import consulo.roots.ui.configuration.ExtensionEditor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.tree.TreeNode;
 import java.util.*;
 
 /**
@@ -35,13 +37,13 @@ import java.util.*;
  * @since 11:42/19.05.13
  */
 public class ExtensionCheckedTreeNode extends CheckedTreeNode {
-  private static class ExtensionProviderEPComparator implements Comparator<ExtensionCheckedTreeNode> {
-    private static final Comparator<ExtensionCheckedTreeNode> INSTANCE = new ExtensionProviderEPComparator();
+  private static class ExtensionProviderEPComparator implements Comparator<TreeNode> {
+    private static final Comparator<TreeNode> INSTANCE = new ExtensionProviderEPComparator();
 
     @Override
-    public int compare(ExtensionCheckedTreeNode o1, ExtensionCheckedTreeNode o2) {
-      final ModuleExtensionProviderEP i1 = o1.myProviderEP;
-      final ModuleExtensionProviderEP i2 = o2.myProviderEP;
+    public int compare(TreeNode o1, TreeNode o2) {
+      final ModuleExtensionProviderEP i1 = ((ExtensionCheckedTreeNode)o1).myProviderEP;
+      final ModuleExtensionProviderEP i2 = ((ExtensionCheckedTreeNode)o2).myProviderEP;
       return StringUtil.compare(i1.getName(), i2.getName(), true);
     }
   }
@@ -70,7 +72,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
     }
 
     setAllowsChildren(true);
-    List<ExtensionCheckedTreeNode> child = new ArrayList<ExtensionCheckedTreeNode>();
+    Vector<TreeNode> child = new Vector<>();
     for (ModuleExtensionProviderEP ep : ModuleExtensionProviders.getProviders()) {
       if (Comparing.equal(ep.parentKey, parentKey)) {
         final ExtensionCheckedTreeNode e = new ExtensionCheckedTreeNode(ep, state, myExtensionEditor);
@@ -81,10 +83,13 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
     }
     Collections.sort(child, ExtensionProviderEPComparator.INSTANCE);
     setUserObject(myExtension);
-    children = child.isEmpty() ? null : new Vector<ExtensionCheckedTreeNode>(child);
+    // at java 9 children is Vector<TreeNode>()
+    //noinspection Convert2Diamond
+    children = child.isEmpty() ? null : child;
   }
 
   @Override
+  @RequiredDispatchThread
   public void setChecked(boolean enabled) {
     if (myExtension == null) {
       return;

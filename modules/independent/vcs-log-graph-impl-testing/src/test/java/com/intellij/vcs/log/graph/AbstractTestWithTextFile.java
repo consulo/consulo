@@ -17,21 +17,19 @@ package com.intellij.vcs.log.graph;
 
 import com.intellij.openapi.util.io.FileUtil;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 abstract class AbstractTestWithTextFile {
-  public static final String BASE_DIRECTORY = "platform/vcs-log/graph/testData/";
 
   protected final String myDirectory;
 
-  @SuppressWarnings("JUnitTestCaseWithNonTrivialConstructors")
   protected AbstractTestWithTextFile(String directory) {
-    this.myDirectory = BASE_DIRECTORY + directory;
+    myDirectory = "/" + directory;
   }
 
   protected String loadText(String filename) throws IOException {
-    return FileUtil.loadFile(new File(myDirectory, filename), true);
+    InputStream resourceAsStream = AbstractTestWithTextFile.class.getResourceAsStream(myDirectory + "/" + filename);
+    return FileUtil.loadTextAndClose(resourceAsStream, true);
   }
-
 }

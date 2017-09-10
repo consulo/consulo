@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.Enumeration;
@@ -81,12 +82,12 @@ public class DuplicateNodeRenderer {
     return r1.union(r2);
   }
 
-  private static Rectangle getExpandedNodesRect(JTree tree, DefaultMutableTreeNode node, TreePath path) {
+  private static Rectangle getExpandedNodesRect(JTree tree, TreeNode node, TreePath path) {
     Rectangle rect = tree.getRowBounds(tree.getRowForPath(path));
     if (tree.isExpanded(path)) {
-      Enumeration<DefaultMutableTreeNode> children = node.children();
+      Enumeration<? extends TreeNode> children = node.children();
       while (children.hasMoreElements()) {
-        DefaultMutableTreeNode child = children.nextElement();
+        TreeNode child = children.nextElement();
         TreePath childPath = path.pathByAddingChild(child);
         assert !path.equals(childPath) : path+";"+child;
         rect = union(rect, getExpandedNodesRect(tree, child, childPath));

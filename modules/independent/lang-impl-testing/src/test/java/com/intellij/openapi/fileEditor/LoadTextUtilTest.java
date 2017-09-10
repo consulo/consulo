@@ -2,13 +2,14 @@ package com.intellij.openapi.fileEditor;
 
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.testFramework.LightPlatformTestCase;
+import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.testFramework.LightVirtualFile;
+import consulo.testFramework.MockApplicationTestCase;
 
-public class LoadTextUtilTest extends LightPlatformTestCase {
+public class LoadTextUtilTest extends MockApplicationTestCase {
   private static void doTest(String source, String expected, String expectedSeparator) {
     final LightVirtualFile vFile = new LightVirtualFile("test.txt");
-    final CharSequence real = LoadTextUtil.getTextByBinaryPresentation(source.getBytes(), vFile);
+    final CharSequence real = LoadTextUtil.getTextByBinaryPresentation(source.getBytes(CharsetToolkit.US_ASCII_CHARSET), vFile);
     assertTrue("content", Comparing.equal(expected, real));
     if (expectedSeparator != null) {
       assertEquals("detected line separator", expectedSeparator, FileDocumentManager.getInstance().getLineSeparator(vFile, null));

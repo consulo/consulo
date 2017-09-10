@@ -36,7 +36,7 @@ public class ExpectedHighlightingDataTest {
 
   @BeforeClass
   public static void setUp() {
-    TYPES = new HashMap<String, ExpectedHighlightingData.ExpectedHighlightingSet>();
+    TYPES = new HashMap<>();
     TYPES.put("err", new ExpectedHighlightingData.ExpectedHighlightingSet(HighlightSeverity.ERROR, false, true));
     TYPES.put("warn", new ExpectedHighlightingData.ExpectedHighlightingSet(HighlightSeverity.WARNING, false, true));
     TYPES.put("eol_err", new ExpectedHighlightingData.ExpectedHighlightingSet(HighlightSeverity.ERROR, true, true));
@@ -146,13 +146,13 @@ public class ExpectedHighlightingDataTest {
     HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR);
     builder.range(start, end);
     builder.descriptionAndTooltip(description);
-    return builder.create();
+    return builder.createUnconditionally();
   }
   private static HighlightInfo warning(int start, int end, @NotNull String description) {
     HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.WARNING);
     builder.range(start, end);
     builder.descriptionAndTooltip(description);
-    return builder.create();
+    return builder.createUnconditionally();
   }
 
   private static HighlightInfo eolError(int start, int end, @NotNull String description) {
@@ -160,6 +160,6 @@ public class ExpectedHighlightingDataTest {
     builder.range(start, end);
     builder.description(description);
     builder.endOfLine();
-    return builder.create();
+    return builder.createUnconditionally();
   }
 }
