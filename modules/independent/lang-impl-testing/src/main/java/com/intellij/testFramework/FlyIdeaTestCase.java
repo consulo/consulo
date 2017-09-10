@@ -5,6 +5,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import junit.framework.TestCase;
@@ -29,12 +31,13 @@ public abstract class FlyIdeaTestCase extends TestCase {
         return old != null ? old.executeOnPooledThread(action) : super.executeOnPooledThread(action);
       }
     };
+    app.registerService(ProgressManager.class, CoreProgressManager.class);
     ApplicationManager.setApplication(app, myRootDisposable);
   }
 
   public File getTempDir() throws IOException {
     if (myTempDir == null) {
-      myTempDir = FileUtil.createTempDirectory(getName(), getClass().getName(),false);
+      myTempDir = FileUtil.createTempDirectory(getName(), getClass().getName(), false);
     }
 
     return myTempDir;
