@@ -48,7 +48,7 @@ public final class MacroManager {
     return ServiceManager.getService(MacroManager.class);
   }
 
-  private MacroManager() {
+  public MacroManager() {
     registerMacro(new SourcepathMacro());
     registerMacro(new FileDirMacro());
     registerMacro(new FileDirNameMacro());

@@ -108,7 +108,7 @@ public class MockFileDocumentManagerImpl extends FileDocumentManager {
   @Override
   @NotNull
   public String getLineSeparator(VirtualFile file, Project project) {
-    return "";
+    return LoadTextUtil.getDetectedLineSeparator(file);
   }
 
   @Override
