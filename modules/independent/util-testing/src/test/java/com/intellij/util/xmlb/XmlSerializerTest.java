@@ -984,13 +984,13 @@ public class XmlSerializerTest extends TestCase {
   }
 
   public static class BeanWithSetKeysInMap {
-    public Map<Collection<String>, String> myMap = new HashMap<Collection<String>, String>();
+    public Map<Collection<String>, String> myMap = new LinkedHashMap<>();
   }
 
   public void testSetKeysInMap() {
     final BeanWithSetKeysInMap bean = new BeanWithSetKeysInMap();
-    bean.myMap.put(new HashSet<String>(Arrays.asList("1", "2", "3")), "numbers");
     bean.myMap.put(new HashSet<String>(Arrays.asList("a", "b", "c")), "letters");
+    bean.myMap.put(new HashSet<String>(Arrays.asList("1", "2", "3")), "numbers");
 
     BeanWithSetKeysInMap bb = (BeanWithSetKeysInMap)doSerializerTest(
       "<BeanWithSetKeysInMap>\n" +
