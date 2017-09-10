@@ -56,7 +56,6 @@ public class ReorderJarsTest {
   }
 
   @Test
-  @Ignore // ignore it due java 9 bug
   public void testReordering() throws IOException {
     String path = getTestDataPath() + "/ide/plugins/reorderJars";
 
