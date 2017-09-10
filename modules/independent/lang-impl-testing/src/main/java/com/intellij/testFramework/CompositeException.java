@@ -15,6 +15,7 @@
  */
 package com.intellij.testFramework;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
@@ -27,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CompositeException extends Exception {
-  private final List<Throwable> myExceptions = new ArrayList<Throwable>();
+  private final List<Throwable> myExceptions = new ArrayList<>();
   public CompositeException(@NotNull Throwable... e) {
     myExceptions.addAll(Arrays.asList(e));
   }
@@ -47,65 +48,38 @@ public class CompositeException extends Exception {
 
   @Override
   public String getMessage() {
-    return processAll(new Function<Throwable, String>() {
-      @Override
-      public String fun(Throwable throwable) {
-        return throwable.getMessage();
-      }
-    }, CommonProcessors.<String>alwaysTrue());
+    return processAll(Throwable::getMessage, CommonProcessors.<String>alwaysTrue());
   }
 
   @Override
   public String getLocalizedMessage() {
-    return processAll(new Function<Throwable, String>() {
-      @Override
-      public String fun(Throwable throwable) {
-        return throwable.getLocalizedMessage();
-      }
-    }, CommonProcessors.<String>alwaysTrue());
+    return processAll(Throwable::getLocalizedMessage, CommonProcessors.<String>alwaysTrue());
   }
 
   @Override
   public String toString() {
-    return processAll(new Function<Throwable, String>() {
-      @Override
-      public String fun(Throwable throwable) {
-        return throwable.toString();
-      }
-    }, CommonProcessors.<String>alwaysTrue());
+    return processAll(Throwable::toString, CommonProcessors.<String>alwaysTrue());
   }
 
   @Override
   public void printStackTrace(final PrintStream s) {
-    processAll(new Function<Throwable, String>() {
-      @Override
-      public String fun(Throwable throwable) {
-        throwable.printStackTrace(s);
-        return "";
-      }
-    }, new Processor<String>() {
-      @Override
-      public boolean process(String str) {
-        s.print(str);
-        return false;
-      }
+    processAll(throwable -> {
+      throwable.printStackTrace(s);
+      return "";
+    }, str -> {
+      s.print(str);
+      return false;
     });
   }
 
   @Override
   public void printStackTrace(final PrintWriter s) {
-    processAll(new Function<Throwable, String>() {
-      @Override
-      public String fun(Throwable throwable) {
-        throwable.printStackTrace(s);
-        return "";
-      }
-    }, new Processor<String>() {
-      @Override
-      public boolean process(String str) {
-        s.print(str);
-        return false;
-      }
+    processAll(throwable -> {
+      throwable.printStackTrace(s);
+      return "";
+    }, str -> {
+      s.print(str);
+      return false;
     });
   }
 
@@ -129,7 +103,7 @@ public class CompositeException extends Exception {
       stringProcessor.process(line);
       sb.append(line);
 
-      line = exceptionProcessor.fun(exception);
+      line = StringUtil.notNullize(exceptionProcessor.fun(exception));
       if (!line.endsWith("\n")) line += '\n';
       stringProcessor.process(line);
       sb.append(line);
