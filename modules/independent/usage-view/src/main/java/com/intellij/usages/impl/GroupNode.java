@@ -71,7 +71,8 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
   @NotNull
   @SuppressWarnings("unchecked")
   List<Node> getSwingChildren() {
-    // do not delete <Node> - java 9 compilation 
+    // do not delete - java 9 compilation
+    List<Node> children = (List<Node>) this.children;
     return ObjectUtils.notNull(children, Collections.<Node>emptyList());
   }
 
