@@ -18,8 +18,8 @@ package consulo.testFramework;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.testFramework.UsefulTestCase;
 import consulo.testFramework.application.MockApplicationEnvironment;
-import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,12 +28,13 @@ import java.io.IOException;
  * @author VISTALL
  * @since 10-Sep-17
  */
-public class MockApplicationTestCase extends TestCase {
+public class MockApplicationTestCase extends UsefulTestCase {
   protected Disposable myRootDisposable;
   private File myTempDir;
 
   @Override
   protected void setUp() throws Exception {
+    super.setUp();
     myRootDisposable = Disposer.newDisposable();
     new MockApplicationEnvironment(myRootDisposable);
   }
@@ -51,7 +52,14 @@ public class MockApplicationTestCase extends TestCase {
   }
 
   @Override
+  protected boolean shouldContainTempFiles() {
+    return false;
+  }
+
+  @Override
   protected void tearDown() throws Exception {
+    super.tearDown();
+
     if (myTempDir != null) {
       FileUtil.asyncDelete(myTempDir);
     }

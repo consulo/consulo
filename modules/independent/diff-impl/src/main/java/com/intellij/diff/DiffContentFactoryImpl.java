@@ -16,7 +16,15 @@
 package com.intellij.diff;
 
 import com.intellij.diff.actions.DocumentFragmentContent;
-import com.intellij.diff.contents.*;
+import com.intellij.diff.contents.DiffContent;
+import com.intellij.diff.contents.DiffPsiFileSupport;
+import com.intellij.diff.contents.DirectoryContentImpl;
+import com.intellij.diff.contents.DocumentContent;
+import com.intellij.diff.contents.DocumentContentImpl;
+import com.intellij.diff.contents.EmptyContent;
+import com.intellij.diff.contents.FileContent;
+import com.intellij.diff.contents.FileContentImpl;
+import com.intellij.diff.contents.FileDocumentContentImpl;
 import com.intellij.diff.tools.util.DiffNotifications;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.DiffUtil;
@@ -52,7 +60,6 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 
 public class DiffContentFactoryImpl extends DiffContentFactoryEx {
@@ -361,14 +368,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
     if (isBOM) charset = bomCharset;
 
     boolean malformedContent = false;
-    String text;
-    try {
-      text = CharsetToolkit.tryDecodeString(content, charset);
-    }
-    catch (CharacterCodingException e) {
-      text = CharsetToolkit.decodeString(content, charset);
-      malformedContent = true;
-    }
+    String text = CharsetToolkit.tryDecodeString(content, charset);
 
     LineSeparator separator = StringUtil.detectSeparators(text);
     String correctedContent = StringUtil.convertLineSeparators(text);

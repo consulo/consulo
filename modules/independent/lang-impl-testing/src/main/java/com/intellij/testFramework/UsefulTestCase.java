@@ -67,6 +67,7 @@ import java.util.regex.Pattern;
 /**
  * @author peter
  */
+@SuppressWarnings("unused")
 public abstract class UsefulTestCase extends TestCase {
   public static final String TEMP_DIR_MARKER = "unitTest_";
 
@@ -202,7 +203,7 @@ public abstract class UsefulTestCase extends TestCase {
     try {
       Element newS = new Element("temp");
       settings.writeExternal(newS);
-      Assert.assertEquals("Code insight settings damaged", DEFAULT_SETTINGS_EXTERNALIZED, JDOMUtil.writeElement(newS, "\n"));
+      assertEquals("Code insight settings damaged", DEFAULT_SETTINGS_EXTERNALIZED, JDOMUtil.writeElement(newS, "\n"));
     }
     catch (AssertionError error) {
       CodeInsightSettings clean = new CodeInsightSettings();
@@ -369,8 +370,8 @@ public abstract class UsefulTestCase extends TestCase {
   }
 
   public static <T> void assertOrderedEquals(final String errorMsg, @NotNull Iterable<T> actual, @NotNull T... expected) {
-    Assert.assertNotNull(actual);
-    Assert.assertNotNull(expected);
+    assertNotNull(actual);
+    assertNotNull(expected);
     assertOrderedEquals(errorMsg, actual, Arrays.asList(expected));
   }
 
@@ -388,13 +389,13 @@ public abstract class UsefulTestCase extends TestCase {
     if (!list.equals(new ArrayList<T>(expected))) {
       String expectedString = toString(expected);
       String actualString = toString(actual);
-      Assert.assertEquals(erroMsg, expectedString, actualString);
-      Assert.fail("Warning! 'toString' do not reflect the difference.\nExpected: " + expectedString + "\nActual: " + actualString);
+      assertEquals(erroMsg, expectedString, actualString);
+      fail("Warning! 'toString' do not reflect the difference.\nExpected: " + expectedString + "\nActual: " + actualString);
     }
   }
 
   public static <T> void assertOrderedCollection(T[] collection, @NotNull Consumer<T>... checkers) {
-    Assert.assertNotNull(collection);
+    assertNotNull(collection);
     assertOrderedCollection(Arrays.asList(collection), checkers);
   }
 
@@ -414,8 +415,8 @@ public abstract class UsefulTestCase extends TestCase {
     assertNotNull(collection);
     assertNotNull(expected);
     if (collection.size() != expected.size() || !new HashSet<T>(expected).equals(new HashSet<T>(collection))) {
-      Assert.assertEquals(message, toString(expected, "\n"), toString(collection, "\n"));
-      Assert.assertEquals(message, new HashSet<T>(expected), new HashSet<T>(collection));
+      assertEquals(message, toString(expected, "\n"), toString(collection, "\n"));
+      assertEquals(message, new HashSet<T>(expected), new HashSet<T>(collection));
     }
   }
 
@@ -474,9 +475,9 @@ public abstract class UsefulTestCase extends TestCase {
   }
 
   public static <T> void assertOrderedCollection(Collection<? extends T> collection, Consumer<T>... checkers) {
-    Assert.assertNotNull(collection);
+    assertNotNull(collection);
     if (collection.size() != checkers.length) {
-      Assert.fail(toString(collection));
+      fail(toString(collection));
     }
     int i = 0;
     for (final T actual : collection) {
@@ -496,9 +497,9 @@ public abstract class UsefulTestCase extends TestCase {
   }
 
   public static <T> void assertUnorderedCollection(Collection<? extends T> collection, Consumer<T>... checkers) {
-    Assert.assertNotNull(collection);
+    assertNotNull(collection);
     if (collection.size() != checkers.length) {
-      Assert.fail(toString(collection));
+      fail(toString(collection));
     }
     Set<Consumer<T>> checkerSet = new HashSet<Consumer<T>>(Arrays.asList(checkers));
     int i = 0;
@@ -518,7 +519,7 @@ public abstract class UsefulTestCase extends TestCase {
       }
       if (flag) {
         lastError.printStackTrace();
-        Assert.fail("Incorrect element(" + i + "): " + actual);
+        fail("Incorrect element(" + i + "): " + actual);
       }
       i++;
     }
@@ -535,20 +536,20 @@ public abstract class UsefulTestCase extends TestCase {
   }
 
   public static <T> T assertInstanceOf(Object o, Class<T> aClass) {
-    Assert.assertNotNull("Expected instance of: " + aClass.getName() + " actual: " + null, o);
-    Assert.assertTrue("Expected instance of: " + aClass.getName() + " actual: " + o.getClass().getName(), aClass.isInstance(o));
+    assertNotNull("Expected instance of: " + aClass.getName() + " actual: " + null, o);
+    assertTrue("Expected instance of: " + aClass.getName() + " actual: " + o.getClass().getName(), aClass.isInstance(o));
     return (T)o;
   }
 
   public static <T> T assertOneElement(Collection<T> collection) {
-    Assert.assertNotNull(collection);
-    Assert.assertEquals(toString(collection), 1, collection.size());
+    assertNotNull(collection);
+    assertEquals(toString(collection), 1, collection.size());
     return collection.iterator().next();
   }
 
   public static <T> T assertOneElement(T[] ts) {
-    Assert.assertNotNull(ts);
-    Assert.assertEquals(Arrays.asList(ts).toString(), 1, ts.length);
+    assertNotNull(ts);
+    assertEquals(Arrays.asList(ts).toString(), 1, ts.length);
     return ts[0];
   }
 
@@ -559,7 +560,7 @@ public abstract class UsefulTestCase extends TestCase {
         found = true;
       }
     }
-    Assert.assertTrue("" + value + " should be equal to one of " + Arrays.toString(values), found);
+    assertTrue("" + value + " should be equal to one of " + Arrays.toString(values), found);
   }
 
   public static void printThreadDump() {
@@ -603,7 +604,7 @@ public abstract class UsefulTestCase extends TestCase {
   public static void assertSameLines(String expected, String actual) {
     String expectedText = StringUtil.convertLineSeparators(expected.trim());
     String actualText = StringUtil.convertLineSeparators(actual.trim());
-    Assert.assertEquals(expectedText, actualText);
+    assertEquals(expectedText, actualText);
   }
 
   protected String getTestName(boolean lowercaseFirstLetter) {
@@ -702,7 +703,7 @@ public abstract class UsefulTestCase extends TestCase {
 
     String newString = JDOMUtil.writeElement(newS, "\n");
     String oldString = JDOMUtil.writeElement(oldS, "\n");
-    Assert.assertEquals(message, oldString, newString);
+    assertEquals(message, oldString, newString);
   }
 
   public boolean isPerformanceTest() {

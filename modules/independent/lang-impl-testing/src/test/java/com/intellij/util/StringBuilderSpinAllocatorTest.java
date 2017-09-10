@@ -16,15 +16,15 @@
 package com.intellij.util;
 
 import com.intellij.concurrency.JobLauncher;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.PlatformTestUtil;
+import consulo.testFramework.MockApplicationTestCase;
 
 import java.util.Collections;
 import java.util.Random;
 
 import static org.junit.Assume.assumeTrue;
 
-public class StringBuilderSpinAllocatorTest extends PlatformTestCase {
+public class StringBuilderSpinAllocatorTest extends MockApplicationTestCase {
 
   public static final int THREADS = 1000;
 
@@ -103,10 +103,5 @@ public class StringBuilderSpinAllocatorTest extends PlatformTestCase {
     long spinTime = (System.nanoTime() - start) / 1000;
     randomField++;
     return spinTime;
-  }
-
-  @Override
-  protected boolean isRunInWriteAction() {
-    return false;
   }
 }

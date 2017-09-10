@@ -19,6 +19,7 @@ import com.intellij.application.options.PathMacrosImpl;
 import com.intellij.core.CoreApplicationEnvironment;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacroManager;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
@@ -42,5 +43,6 @@ public class MockApplicationEnvironment extends CoreApplicationEnvironment {
 
     registerApplicationComponent(PathMacros.class, new PathMacrosImpl());
     registerApplicationService(MacroManager.class, new MacroManager());
+    registerApplicationService(UISettings.class, new UISettings());
   }
 }
