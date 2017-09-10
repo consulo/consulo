@@ -392,7 +392,7 @@ public class UsageViewImpl implements UsageView {
     TIntArrayList indicesToFire = new TIntArrayList();
     List<Node> nodesToFire = new ArrayList<>();
     for (Node parentNode : insertedUnder) {
-      List<Node> swingChildren = ((GroupNode)parentNode).getSwingChildren();
+      List<? extends TreeNode> swingChildren = ((GroupNode)parentNode).getSwingChildren();
       synchronized (parentNode) {
         List<Node> modelChildren = ((GroupNode)parentNode).getChildren();
         assert modelChildren.size() >= swingChildren.size();
@@ -400,7 +400,7 @@ public class UsageViewImpl implements UsageView {
         int k = 0; // index in swingChildren
         for (int i = 0; i < modelChildren.size(); i++) {
           Node modelNode = modelChildren.get(i);
-          Node swingNode = k >= swingChildren.size() ? null : swingChildren.get(k);
+          TreeNode swingNode = k >= swingChildren.size() ? null : swingChildren.get(k);
           if (swingNode == modelNode) {
             k++;
             continue;
