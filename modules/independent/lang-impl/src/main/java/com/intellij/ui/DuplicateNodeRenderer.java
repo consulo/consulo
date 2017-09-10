@@ -85,7 +85,7 @@ public class DuplicateNodeRenderer {
   private static Rectangle getExpandedNodesRect(JTree tree, TreeNode node, TreePath path) {
     Rectangle rect = tree.getRowBounds(tree.getRowForPath(path));
     if (tree.isExpanded(path)) {
-      Enumeration<TreeNode> children = node.children();
+      Enumeration<? extends TreeNode> children = node.children();
       while (children.hasMoreElements()) {
         TreeNode child = children.nextElement();
         TreePath childPath = path.pathByAddingChild(child);
