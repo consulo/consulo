@@ -18,12 +18,17 @@ package com.intellij.module;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.module.*;
+import com.intellij.openapi.module.ModifiableModuleModel;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.testFramework.PlatformTestCase;
 import consulo.util.pointers.NamedPointer;
 
 /**
  * @author nik
+ *
+ *  Do not change import layout - it will conflict with {@link java.lang.Module} on java 9
  */
 public class ModulePointerTest extends PlatformTestCase {
   public void testCreateByName() throws Exception {
