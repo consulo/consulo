@@ -20,7 +20,6 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.Predicate;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -29,34 +28,30 @@ import java.util.Map;
  * @since 1:53/02.04.13
  */
 public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType>> {
+  @NotNull
   public static <E extends Predicate<IElementType>> ElementTypeEntryExtensionCollector<E> create(@NotNull String epName) {
-    return new ElementTypeEntryExtensionCollector<E>(epName);
+    return new ElementTypeEntryExtensionCollector<>(epName);
   }
 
-  private final ExtensionPointName<E> myExtensionPointName;
-
-  @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-  private final Map<IElementType, E> myMap = new ConcurrentFactoryMap<IElementType, E>() {
-    @Nullable
-    @Override
-    protected E create(IElementType elementType) {
-      E factory = null;
-      for (E e : myExtensionPointName.getExtensions()) {
-        if (e.apply(elementType)) {
-          factory = e;
-          break;
-        }
-      }
-      if (factory == null) {
-        throw new IllegalArgumentException("ElementType " + elementType + " is not handled in " + myExtensionPointName);
-      }
-      return factory;
-    }
-  };
+  private ExtensionPointName<E> myExtensionPointName;
 
   private ElementTypeEntryExtensionCollector(@NotNull String epName) {
     myExtensionPointName = ExtensionPointName.create(epName);
   }
+
+  private final Map<IElementType, E> myMap = ConcurrentFactoryMap.createMap(elementType -> {
+    E factory = null;
+    for (E e : myExtensionPointName.getExtensions()) {
+      if (e.apply(elementType)) {
+        factory = e;
+        break;
+      }
+    }
+    if (factory == null) {
+      throw new IllegalArgumentException("ElementType " + elementType + " is not handled in " + myExtensionPointName);
+    }
+    return factory;
+  });
 
   @NotNull
   public E getValue(@NotNull IElementType elementType) {

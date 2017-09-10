@@ -1,38 +1,22 @@
 package com.intellij.testFramework;
 
-import com.intellij.mock.MockApplicationEx;
+import com.intellij.core.CoreApplicationEnvironment;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import junit.framework.TestCase;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.Future;
 
 public abstract class FlyIdeaTestCase extends TestCase {
-
   private Disposable myRootDisposable;
   private File myTempDir;
 
   @Override
   protected void setUp() throws Exception {
-    final Application old = ApplicationManagerEx.getApplication();
     myRootDisposable = Disposer.newDisposable();
-    MockApplicationEx app = new MockApplicationEx(getRootDisposable()) {
-      @Override
-      public Future<?> executeOnPooledThread(@NotNull Runnable action) {
-        return old != null ? old.executeOnPooledThread(action) : super.executeOnPooledThread(action);
-      }
-    };
-    app.registerService(ProgressManager.class, CoreProgressManager.class);
-    ApplicationManager.setApplication(app, myRootDisposable);
+    new CoreApplicationEnvironment(myRootDisposable);
   }
 
   public File getTempDir() throws IOException {
@@ -49,7 +33,6 @@ public abstract class FlyIdeaTestCase extends TestCase {
 
   @Override
   protected void tearDown() throws Exception {
-    super.tearDown();
     if (myTempDir != null) {
       FileUtil.asyncDelete(myTempDir);
     }
