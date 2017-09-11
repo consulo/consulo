@@ -21,8 +21,8 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
-import consulo.web.gwt.shared.ui.state.UICheckBoxRpc;
-import consulo.web.gwt.shared.ui.state.UICheckBoxState;
+import consulo.web.gwt.shared.ui.state.checkbox.UICheckBoxRpc;
+import consulo.web.gwt.shared.ui.state.checkbox.UICheckBoxState;
 
 /**
  * @author VISTALL

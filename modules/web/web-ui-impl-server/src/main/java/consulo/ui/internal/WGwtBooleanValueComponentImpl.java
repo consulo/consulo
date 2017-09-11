@@ -22,8 +22,8 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
-import consulo.web.gwt.shared.ui.state.UICheckBoxRpc;
-import consulo.web.gwt.shared.ui.state.UICheckBoxState;
+import consulo.web.gwt.shared.ui.state.checkbox.UICheckBoxRpc;
+import consulo.web.gwt.shared.ui.state.checkbox.UICheckBoxState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

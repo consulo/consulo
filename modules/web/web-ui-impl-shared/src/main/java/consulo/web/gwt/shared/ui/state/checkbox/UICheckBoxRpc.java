@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.shared.ui.state;
+package consulo.web.gwt.shared.ui.state.checkbox;
 
-import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.annotations.Delayed;
+import com.vaadin.shared.communication.ServerRpc;
 
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
-public class UICheckBoxState extends AbstractComponentState {
-  public boolean checked;
+public interface UICheckBoxRpc extends ServerRpc {
+  @Delayed
+  void setValue(boolean value);
 }
