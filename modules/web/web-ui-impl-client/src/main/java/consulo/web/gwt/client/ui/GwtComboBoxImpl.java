@@ -17,8 +17,8 @@ package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import consulo.web.gwt.client.ui.advancedGwt.ComboBoxDataModel2;
 import consulo.web.gwt.client.ui.advancedGwt.WidgetComboBox;
-import org.gwt.advanced.client.datamodel.ListDataModel;
 import org.gwt.advanced.client.ui.widget.combo.ListItemFactory;
 import org.gwt.advanced.client.util.ThemeHelper;
 
@@ -51,7 +51,7 @@ public class GwtComboBoxImpl extends WidgetComboBox {
         int index = value == null ? 0 : ((Integer)value + 1);
         final Widget child = myItemsWithNullItem.isEmpty() ? null : myItemsWithNullItem.get(index);
         if (child == null) {
-          return new Label("dummy");
+          return new Label(""); // empty item when no items
         }
         return child;
       }
@@ -67,14 +67,13 @@ public class GwtComboBoxImpl extends WidgetComboBox {
     myItemsWithNullItem.clear();
     myItemsWithNullItem.addAll(widgets);
 
-    final ListDataModel model = getModel();
-    model.clear();
+    final ComboBoxDataModel2 model = (ComboBoxDataModel2)getModel();
 
     Map<String, Object> map = new LinkedHashMap<>();
     for (int i = 0; i < (widgets.size() - 1); i++) {
       map.put(String.valueOf(i), i);
     }
-    model.add(map);
+    model.set(map);
   }
 
   @Override

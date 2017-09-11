@@ -43,15 +43,14 @@ import java.util.Set;
  * By VISTALL. This is copy-paste version of {@link org.gwt.advanced.client.ui.widget.ComboBox}  with change:
  * - Current item is Widget too as List Items (in original current item is TextEditor),
  * this need for show current item as in list, not only text variant
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * This is a combo box widget implementation.
  *
  * @author <a href="mailto:sskladchikov@gmail.com">Sergey Skladchikov</a>
  * @since 1.2.0
  */
-public class WidgetComboBox extends WidgetButtonPanel
-        implements HasAllFocusHandlers, HasAllKeyHandlers, HasClickHandlers, ListModelListener, HasChangeHandlers {
+public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHandlers, HasAllKeyHandlers, HasClickHandlers, ListModelListener, HasChangeHandlers {
   /**
    * a combo box data model
    */
@@ -309,6 +308,7 @@ public class WidgetComboBox extends WidgetButtonPanel
   /**
    * {@inheritDoc}
    */
+  @Override
   public void cleanSelection() {
     super.cleanSelection();
     getModel().clear();
@@ -421,19 +421,30 @@ public class WidgetComboBox extends WidgetButtonPanel
   /**
    * {@inheritDoc}
    */
+  @Override
   public void onModelEvent(ListModelEvent event) {
     if (event.getType() == ListModelEvent.ADD_ITEM) {
       add(event);
+
+      // refresh current item
+      prepareSelectedValue();
     }
     else if (event.getType() == ListModelEvent.CLEAN) {
       clean(event);
+
+      // refresh current item
+      prepareSelectedValue();
     }
     else if (event.getType() == ListModelEvent.REMOVE_ITEM) {
       remove(event);
+
+      // refresh current item
+      prepareSelectedValue();
     }
     else if (event.getType() == ListModelEvent.SELECT_ITEM) {
       select(event);
     }
+
     getListPanel().adjustSize();
   }
 
@@ -555,6 +566,7 @@ public class WidgetComboBox extends WidgetButtonPanel
   /**
    * {@inheritDoc}
    */
+  @Override
   protected String getDefaultImageName() {
     return "drop-down.gif";
   }
@@ -580,6 +592,7 @@ public class WidgetComboBox extends WidgetButtonPanel
   /**
    * {@inheritDoc}
    */
+  @Override
   protected void prepareSelectedValue() {
     super.prepareSelectedValue();
     final Widget widget = getListItemFactory().createWidget(getModel().getSelected());
@@ -589,6 +602,7 @@ public class WidgetComboBox extends WidgetButtonPanel
   /**
    * {@inheritDoc}
    */
+  @Override
   protected void addComponentListeners() {
     ComboBoxSelectItem value = getSelectedValue();
     ToggleButton button = getChoiceButton();

@@ -75,6 +75,12 @@ public class ComboBoxDataModel2 implements ListDataModel {
     add(id, item);
   }
 
+  public void set(Map<String, Object> items) {
+    getItemIds().clear();
+
+    add(items);
+  }
+
   /**
    * {@inheritDoc}
    */
