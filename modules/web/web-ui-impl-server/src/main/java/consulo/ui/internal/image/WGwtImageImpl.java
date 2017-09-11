@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.internal.image;
 
 import com.intellij.openapi.util.IconLoader;
-import consulo.ui.ImageRef;
+import com.vaadin.ui.UI;
+import consulo.ui.image.Image;
+import consulo.web.gwt.shared.ui.state.image.ImageState;
+import consulo.web.gwt.shared.ui.state.image.MultiImageState;
+import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -26,17 +30,13 @@ import java.net.URL;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class WGwtImageRefImpl implements ImageRef {
+public class WGwtImageImpl implements Image, WGwtImageWithState {
   private Icon myIcon;
-  private int myHashCode;
+  private int myURLHash;
 
-  public WGwtImageRefImpl(@NotNull URL url) {
+  public WGwtImageImpl(@NotNull URL url) {
     myIcon = IconLoader.findIcon(url);
-    WGwtImageRefUrls.ourURLCache.putIfAbsent(myHashCode = WGwtImageRefUrls.hashCode(url), url);
-  }
-
-  public int getHashCode() {
-    return myHashCode;
+    myURLHash = WGwtImageUrlCache.hashCode(url);
   }
 
   @Override
@@ -47,5 +47,14 @@ public class WGwtImageRefImpl implements ImageRef {
   @Override
   public int getWidth() {
     return myIcon.getIconWidth();
+  }
+
+  @Override
+  public void toState(MultiImageState m) {
+    ImageState state = new ImageState();
+    UIServlet.UIImpl current = (UIServlet.UIImpl)UI.getCurrent();
+    state.myURL = WGwtImageUrlCache.createURL(myURLHash, current.getURLPrefix());
+
+    m.myImageState = state;
   }
 }

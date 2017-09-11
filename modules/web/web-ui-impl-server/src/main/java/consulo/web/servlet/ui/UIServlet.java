@@ -31,11 +31,17 @@ import java.util.Properties;
  * @since 11-Sep-17
  */
 public class UIServlet extends VaadinServlet {
-  private static class UIImpl extends UI {
+  public static class UIImpl extends UI {
+    private String myURLPrefix;
     private final UIBuilder myBuilder;
 
-    public UIImpl(UIBuilder builder) {
+    public UIImpl(String urlPrefix, UIBuilder builder) {
+      myURLPrefix = urlPrefix;
       myBuilder = builder;
+    }
+
+    public String getURLPrefix() {
+      return myURLPrefix;
     }
 
     @Override
@@ -46,11 +52,11 @@ public class UIServlet extends VaadinServlet {
   }
 
   private final Class<? extends UIBuilder> myClass;
-  private final String myUrl;
+  private final String myURLPrefix;
 
-  public UIServlet(Class<? extends UIBuilder> aClass, String url) {
+  public UIServlet(Class<? extends UIBuilder> aClass, String urlPrefix) {
     myClass = aClass;
-    myUrl = url;
+    myURLPrefix = urlPrefix;
   }
 
   @Override
@@ -58,7 +64,7 @@ public class UIServlet extends VaadinServlet {
     return new DefaultDeploymentConfiguration(getClass(), initParameters) {
       @Override
       public String getResourcesPath() {
-        return myUrl;
+        return myURLPrefix;
       }
 
       @Override
@@ -105,7 +111,7 @@ public class UIServlet extends VaadinServlet {
 
         @Override
         public UI createInstance(UICreateEvent event) {
-          return new UIImpl(ReflectionUtil.newInstance(myClass));
+          return new UIImpl(myURLPrefix, ReflectionUtil.newInstance(myClass));
         }
       });
     });

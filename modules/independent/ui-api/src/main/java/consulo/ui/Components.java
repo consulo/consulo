@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.image.Image;
 import consulo.ui.model.ImmutableListModel;
 import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
@@ -65,6 +66,7 @@ public class Components {
     return _UIInternals.get()._Components_htmlLabel(html);
   }
 
+  @SafeVarargs
   @NotNull
   public static <E> ComboBox<E> comboBox(@NotNull E... elements) {
     return _UIInternals.get()._Components_comboBox(new ImmutableListModel<E>(elements));
@@ -76,7 +78,7 @@ public class Components {
   }
 
   @NotNull
-  public static Image image(@NotNull ImageRef imageRef) {
-    return _UIInternals.get()._Components_image(imageRef);
+  public static ImageBox imageBox(@NotNull Image image) {
+    return _UIInternals.get()._Components_imageBox(image);
   }
 }

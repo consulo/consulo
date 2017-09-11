@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
-
-import com.google.gwt.user.client.ui.Image;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
+package consulo.web.gwt.shared.ui.state.image;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 11-Sep-17
  */
-public class GwtImageImpl extends Image implements InternalGwtComponent {
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-    setUrl((String)map.get("url"));
-  }
+public class FoldedImageState extends ImageStateBase {
+  private static final long serialVersionUID = -6661638521685939456L;
+
+  public MultiImageState[] myChildren;
 }

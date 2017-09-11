@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
-
-import consulo.ui.image.Image;
-import org.jetbrains.annotations.NotNull;
+package consulo.ui.image;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 13-Jun-16
  */
-public interface ListItemPresentation {
-  void setIcon(@NotNull Image image);
+public interface Image {
+  int getHeight();
 
-  void append(@NotNull String text);
-
-  void append(@NotNull String text, @NotNull TextStyle... styles);
+  int getWidth();
 }

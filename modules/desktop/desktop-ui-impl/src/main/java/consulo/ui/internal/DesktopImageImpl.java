@@ -15,32 +15,37 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.ImageRef;
+import com.intellij.openapi.util.IconLoader;
+import consulo.ui.image.Image;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
+import javax.swing.*;
+import java.net.URL;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class WGwtLayeredImageImpl extends WGwtBaseComponent {
-  private ImageRef[] myImageRefs;
+public class DesktopImageImpl implements Image, SwingIconWrapper {
+  private Icon myIcon;
 
-  public WGwtLayeredImageImpl(ImageRef[] imageRefs) {
-    myImageRefs = imageRefs;
+  public DesktopImageImpl(URL url) {
+    myIcon = IconLoader.findIcon(url);
   }
 
   @Override
-  protected void getState(Map<String, Object> map) {
-    super.getState(map);
-    map.put("size", myImageRefs.length);
-    map.put("height", myImageRefs[0].getHeight());
-    map.put("width", myImageRefs[0].getWidth());
+  public int getHeight() {
+    return myIcon.getIconHeight();
+  }
 
-    for (int i = 0; i < myImageRefs.length; i++) {
-      WGwtImageRefImpl imageRef = (WGwtImageRefImpl)myImageRefs[i];
+  @Override
+  public int getWidth() {
+    return myIcon.getIconWidth();
+  }
 
-      map.put("url" + i, WGwtImageRefUrls.getUrlForBrowser(imageRef));
-    }
+  @NotNull
+  @Override
+  public Icon toSwingIcon() {
+    return myIcon;
   }
 }

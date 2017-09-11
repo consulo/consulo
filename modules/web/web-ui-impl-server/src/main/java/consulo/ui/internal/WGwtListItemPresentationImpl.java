@@ -15,10 +15,11 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.ImageRef;
 import consulo.ui.ListItemPresentation;
 import consulo.ui.TextStyle;
-import consulo.web.gwt.shared.ui.state.combobox.UIComboBoxState;
+import consulo.ui.image.Image;
+import consulo.ui.internal.image.WGwtImageUrlCache;
+import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,28 +27,29 @@ import org.jetbrains.annotations.NotNull;
  * @since 12-Jun-16
  */
 class WGwtListItemPresentationImpl implements ListItemPresentation {
-  private UIComboBoxState.Item myItem = new UIComboBoxState.Item();
+  private ComboBoxState.Item myItem = new ComboBoxState.Item();
 
   @Override
-  public void append(@NotNull ImageRef... imageRefs) {
+  public void setIcon(@NotNull Image image) {
+    myItem.myImageState = WGwtImageUrlCache.fixSwingImageRef(image).getState();
   }
 
   @Override
   public void append(@NotNull String text) {
-    UIComboBoxState.ItemSegment segment = new UIComboBoxState.ItemSegment();
+    ComboBoxState.ItemSegment segment = new ComboBoxState.ItemSegment();
     segment.myText = text;
     myItem.myItemSegments.add(segment);
   }
 
   @Override
   public void append(@NotNull String text, @NotNull TextStyle... styles) {
-    UIComboBoxState.ItemSegment segment = new UIComboBoxState.ItemSegment();
+    ComboBoxState.ItemSegment segment = new ComboBoxState.ItemSegment();
     segment.myText = text;
     //TODO [VISTALL] style!
     myItem.myItemSegments.add(segment);
   }
 
-  public UIComboBoxState.Item getItem() {
+  public ComboBoxState.Item getItem() {
     return myItem;
   }
 }

@@ -19,7 +19,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.io.URLUtil;
-import consulo.ui.internal.WGwtImageRefUrls;
+import consulo.ui.internal.image.WGwtImageUrlCache;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author VISTALL
  * @since 13-Jun-16
  */
-@WebServlet(urlPatterns = "/icon/")
+@WebServlet(urlPatterns = "/app/image")
 public class UIIconServlet extends HttpServlet {
   private static ConcurrentMap<URL, byte[]> ourCache = ConcurrentFactoryMap.createMap(k -> {
     try {
@@ -56,7 +56,7 @@ public class UIIconServlet extends HttpServlet {
       return;
     }
 
-    final URL url = WGwtImageRefUrls.ourURLCache.get(Integer.parseInt(StringUtil.unquoteString(urlHash)));
+    final URL url = WGwtImageUrlCache.ourURLCache.get(Integer.parseInt(StringUtil.unquoteString(urlHash)));
     if (url == null) {
       resp.sendError(HttpServletResponse.SC_NOT_FOUND);
       return;

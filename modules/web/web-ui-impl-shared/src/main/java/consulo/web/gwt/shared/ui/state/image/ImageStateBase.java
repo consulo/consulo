@@ -13,26 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.shared.ui.state.combobox;
-
-import com.vaadin.shared.AbstractComponentState;
+package consulo.web.gwt.shared.ui.state.image;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
-public class UIComboBoxState extends AbstractComponentState {
-  public static class ItemSegment implements Serializable {
-    public String myText;
-  }
-
-  public static class Item implements Serializable {
-    public List<ItemSegment> myItemSegments = new ArrayList<>();
-  }
-
-  public List<Item> myItems = new ArrayList<>();
+public abstract class ImageStateBase implements Serializable {
 }

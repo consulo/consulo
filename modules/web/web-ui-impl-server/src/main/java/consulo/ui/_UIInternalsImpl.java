@@ -17,7 +17,11 @@ package consulo.ui;
 
 import com.intellij.openapi.util.IconLoader;
 import com.vaadin.ui.UI;
+import consulo.ui.image.FoldedImage;
+import consulo.ui.image.Image;
 import consulo.ui.internal.*;
+import consulo.ui.internal.image.WGwtFoldedImageImpl;
+import consulo.ui.internal.image.WGwtImageImpl;
 import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
 
@@ -103,13 +107,18 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  Image _Components_image(ImageRef imageRef) {
-    return new WGwtImageImpl((WGwtImageRefImpl)imageRef);
+  ImageBox _Components_imageBox(Image image) {
+    return new WGwtImageBoxImpl(image);
   }
 
   @Override
-  ImageRef _Images_imageRef(URL url) {
-    return new WGwtImageRefImpl(url);
+  public Image _Images_image(URL url) {
+    return new WGwtImageImpl(url);
+  }
+
+  @Override
+  public FoldedImage _Images_foldedImage(Image[] images) {
+    return new WGwtFoldedImageImpl(images);
   }
 
   @Override

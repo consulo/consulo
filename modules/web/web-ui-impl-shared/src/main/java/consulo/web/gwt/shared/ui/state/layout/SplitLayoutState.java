@@ -22,5 +22,7 @@ import com.vaadin.shared.ui.AbstractLayoutState;
  * @since 11-Sep-17
  */
 public class SplitLayoutState extends AbstractLayoutState {
+  private static final long serialVersionUID = -6403922484792137131L;
+
   public int myProportion;
 }

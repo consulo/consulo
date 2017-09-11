@@ -13,14 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.image;
+
+import consulo.ui._UIInternals;
+import org.jetbrains.annotations.NotNull;
+
+import java.net.URL;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public interface ImageRef {
-  int getHeight();
+public class Images {
+  @NotNull
+  public static Image fromURL(@NotNull URL url) {
+    return _UIInternals.get()._Images_image(url);
+  }
 
-  int getWidth();
+  @NotNull
+  public static FoldedImage fold(@NotNull Image... images) {
+    if(images.length == 0) {
+      throw new IllegalArgumentException("empty array");
+    }
+    return _UIInternals.get()._Images_foldedImage(images);
+  }
 }

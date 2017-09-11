@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,32 +15,15 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.Image;
-import consulo.ui.ImageRef;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 11-Sep-17
  */
-public class WGwtImageImpl extends WGwtBaseComponent implements Image {
-  private WGwtImageRefImpl myImageRef;
-
-  public WGwtImageImpl(WGwtImageRefImpl imageRef) {
-    myImageRef = imageRef;
-  }
-
-  @Override
-  protected void getState(Map<String, Object> map) {
-    super.getState(map);
-    map.put("url",  WGwtImageRefUrls.getUrlForBrowser(myImageRef));
-  }
-
+public interface SwingIconWrapper {
   @NotNull
-  @Override
-  public ImageRef getImageRef() {
-    return myImageRef;
-  }
+  Icon toSwingIcon();
 }

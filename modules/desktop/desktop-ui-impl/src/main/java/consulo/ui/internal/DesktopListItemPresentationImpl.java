@@ -16,9 +16,7 @@
 package consulo.ui.internal;
 
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.SimpleTextAttributes;
-import consulo.ui.ImageRef;
 import consulo.ui.ListItemPresentation;
 import consulo.ui.TextStyle;
 import org.jetbrains.annotations.NotNull;
@@ -39,25 +37,8 @@ public class DesktopListItemPresentationImpl<E> implements ListItemPresentation 
   }
 
   @Override
-  public void append(@NotNull ImageRef... imageRefs) {
-    if (imageRefs.length == 0) {
-      throw new IllegalArgumentException();
-    }
-
-    Icon icon = null;
-    if (imageRefs.length == 1) {
-      icon = ((DesktopImageRefImpl)imageRefs[0]).getIcon();
-    }
-    else {
-      LayeredIcon layeredIcon = new LayeredIcon(imageRefs.length);
-      icon = layeredIcon;
-      for (int i = 0; i < imageRefs.length; i++) {
-        ImageRef imageRef = imageRefs[i];
-        layeredIcon.setIcon(((DesktopImageRefImpl)imageRef).getIcon(), i);
-      }
-    }
-
-    myRenderer.setIcon(icon);
+  public void setIcon(@NotNull consulo.ui.image.Image icon) {
+    myRenderer.setIcon((Icon)icon);
   }
 
   @Override

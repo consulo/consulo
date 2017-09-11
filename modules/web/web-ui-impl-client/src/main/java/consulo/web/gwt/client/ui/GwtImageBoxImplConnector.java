@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.shared.ui.state.layout;
+package consulo.web.gwt.client.ui;
 
-import com.vaadin.shared.ui.AbstractLayoutState;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.shared.ui.Connect;
 
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
-public class DockLayoutState extends AbstractLayoutState {
-  private static final long serialVersionUID = -3882314231208864241L;
+@Connect(canonicalName = "consulo.ui.internal.WGwtImageBoxImpl")
+public class GwtImageBoxImplConnector extends AbstractComponentConnector {
+  @Override
+  public void onStateChanged(StateChangeEvent stateChangeEvent) {
+    super.onStateChanged(stateChangeEvent);
 
-  public enum Constraint {
-    TOP,
-    BOTTOM,
-    LEFT,
-    RIGHT,
-    CENTER
   }
 
-  public List<Constraint> myConstraints = new ArrayList<>();
+  @Override
+  public GwtImageBoxImpl getWidget() {
+    return (GwtImageBoxImpl)super.getWidget();
+  }
 }

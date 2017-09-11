@@ -21,8 +21,8 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
-import consulo.web.gwt.shared.ui.state.checkbox.UICheckBoxRpc;
-import consulo.web.gwt.shared.ui.state.checkbox.UICheckBoxState;
+import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxRpc;
+import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxState;
 
 /**
  * @author VISTALL
@@ -40,8 +40,8 @@ public class GwtCheckBoxImplConnector extends AbstractComponentConnector impleme
 
   @Override
   public void onValueChange(ValueChangeEvent<Boolean> event) {
-    getState().checked = event.getValue();
-    getRpcProxy(UICheckBoxRpc.class).setValue(event.getValue());
+    getState().myChecked = event.getValue();
+    getRpcProxy(CheckBoxRpc.class).setValue(event.getValue());
     getConnection().sendPendingVariableChanges();
   }
 
@@ -56,7 +56,7 @@ public class GwtCheckBoxImplConnector extends AbstractComponentConnector impleme
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
-    getWidget().setValue(getState().checked);
+    getWidget().setValue(getState().myChecked);
     getWidget().setText(getState().caption);
   }
 
@@ -66,7 +66,7 @@ public class GwtCheckBoxImplConnector extends AbstractComponentConnector impleme
   }
 
   @Override
-  public UICheckBoxState getState() {
-    return (UICheckBoxState)super.getState();
+  public CheckBoxState getState() {
+    return (CheckBoxState)super.getState();
   }
 }

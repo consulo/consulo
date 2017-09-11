@@ -22,8 +22,8 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
-import consulo.web.gwt.shared.ui.state.checkbox.UICheckBoxRpc;
-import consulo.web.gwt.shared.ui.state.checkbox.UICheckBoxState;
+import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxRpc;
+import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,23 +36,23 @@ import java.util.List;
 public class WGwtBooleanValueComponentImpl extends AbstractComponent implements ValueComponent<Boolean> {
   private List<ValueComponent.ValueListener<Boolean>> myValueListeners = new SmartList<>();
 
-  private final UICheckBoxRpc myRpc = value -> setValueImpl(value);
+  private final CheckBoxRpc myRpc = value -> setValueImpl(value);
 
   public WGwtBooleanValueComponentImpl(boolean selected) {
-    getState().checked = selected;
+    getState().myChecked = selected;
 
     registerRpc(myRpc);
   }
 
   @Override
-  protected UICheckBoxState getState() {
-    return (UICheckBoxState)super.getState();
+  protected CheckBoxState getState() {
+    return (CheckBoxState)super.getState();
   }
 
   @NotNull
   @Override
   public Boolean getValue() {
-    return getState().checked;
+    return getState().myChecked;
   }
 
   @Override
@@ -64,7 +64,7 @@ public class WGwtBooleanValueComponentImpl extends AbstractComponent implements 
       throw new IllegalArgumentException();
     }
 
-    if (getState().checked == value) {
+    if (getState().myChecked == value) {
       return;
     }
 
@@ -74,7 +74,7 @@ public class WGwtBooleanValueComponentImpl extends AbstractComponent implements 
   }
 
   private void setValueImpl(@Nullable Boolean value) {
-    getState().checked = value;
+    getState().myChecked = value;
 
     for (ValueListener<Boolean> valueListener : myValueListeners) {
       valueListener.valueChanged(new ValueEvent<>(this, value));

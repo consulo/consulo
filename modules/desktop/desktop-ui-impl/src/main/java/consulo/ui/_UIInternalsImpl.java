@@ -16,7 +16,10 @@
 package consulo.ui;
 
 import com.intellij.openapi.util.IconLoader;
+import consulo.ui.image.FoldedImage;
+import consulo.ui.image.Image;
 import consulo.ui.internal.*;
+import consulo.ui.internal.icon.DesktopFoldedIconImpl;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -32,8 +35,13 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  ImageRef _Images_imageRef(URL url) {
-    return new DesktopImageRefImpl(url);
+  public Image _Images_image(URL url) {
+    return new DesktopImageImpl(url);
+  }
+
+  @Override
+  public FoldedImage _Images_foldedImage(Image[] images) {
+    return new DesktopFoldedIconImpl();
   }
 
   @Override
@@ -129,7 +137,7 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  Image _Components_image(ImageRef imageRef) {
+  ImageBox _Components_imageBox(Image image) {
     return null;
   }
 

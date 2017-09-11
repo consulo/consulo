@@ -23,7 +23,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.ValueComponent;
 import consulo.ui.model.ListModel;
-import consulo.web.gwt.shared.ui.state.combobox.UIComboBoxState;
+import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,25 +67,25 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
   public void beforeClientResponse(boolean initial) {
     super.beforeClientResponse(initial);
 
-    UIComboBoxState state = getState();
+    ComboBoxState state = getState();
     state.myItems.clear();
     buildState(state.myItems);
   }
 
-  protected void buildState(List<UIComboBoxState.Item> children) {
+  protected void buildState(List<ComboBoxState.Item> children) {
     // need render null value
     if (needRenderNullValue()) {
-      renderItem(children, -1, null);
+      buildItem(children, -1, null);
     }
 
     for (int i = 0; i < myModel.getSize(); i++) {
       E value = myModel.get(i);
 
-      renderItem(children, i, value);
+      buildItem(children, i, value);
     }
   }
 
-  private void renderItem(List<UIComboBoxState.Item> children, int i, @Nullable E e) {
+  private void buildItem(List<ComboBoxState.Item> children, int i, @Nullable E e) {
     WGwtListItemPresentationImpl presentation = new WGwtListItemPresentationImpl();
     myRender.render(presentation, i, e);
 
@@ -93,8 +93,8 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
   }
 
   @Override
-  protected UIComboBoxState getState() {
-    return (UIComboBoxState)super.getState();
+  protected ComboBoxState getState() {
+    return (ComboBoxState)super.getState();
   }
 
   @Override

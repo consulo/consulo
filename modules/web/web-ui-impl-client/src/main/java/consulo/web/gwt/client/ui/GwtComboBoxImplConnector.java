@@ -20,7 +20,10 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
-import consulo.web.gwt.shared.ui.state.combobox.UIComboBoxState;
+import consulo.web.gwt.client.ui.image.ImageConverter;
+import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
+import consulo.web.gwt.shared.ui.state.image.ImageStateBase;
+import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,19 +45,24 @@ public class GwtComboBoxImplConnector extends AbstractComponentConnector {
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
-    List<UIComboBoxState.Item> items = getState().myItems;
+    List<ComboBoxState.Item> items = getState().myItems;
     List<Widget> widgets = new ArrayList<>(items.size());
-    for (UIComboBoxState.Item item : items) {
+    for (ComboBoxState.Item item : items) {
       widgets.add(buildItem(item));
     }
 
     getWidget().setItems(widgets);
   }
 
-  public Widget buildItem(UIComboBoxState.Item item) {
+  public Widget buildItem(ComboBoxState.Item item) {
     GwtHorizontalLayoutImpl layout = new GwtHorizontalLayoutImpl();
 
-    for (UIComboBoxState.ItemSegment segment : item.myItemSegments) {
+    MultiImageState imageState = item.myImageState;
+    if (imageState != null) {
+      layout.add(ImageConverter.create(imageState));
+    }
+
+    for (ComboBoxState.ItemSegment segment : item.myItemSegments) {
       GwtLabelImpl label = new GwtLabelImpl();
       label.setText(segment.myText);
       layout.add(label);
@@ -69,7 +77,7 @@ public class GwtComboBoxImplConnector extends AbstractComponentConnector {
   }
 
   @Override
-  public UIComboBoxState getState() {
-    return (UIComboBoxState)super.getState();
+  public ComboBoxState getState() {
+    return (ComboBoxState)super.getState();
   }
 }

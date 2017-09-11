@@ -13,36 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui;
 
-import com.intellij.openapi.util.IconLoader;
-import consulo.ui.ImageRef;
-
-import javax.swing.*;
-import java.net.URL;
+import consulo.ui.image.Image;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class DesktopImageRefImpl implements ImageRef {
-  private Icon myIcon;
-
-  public DesktopImageRefImpl(URL url) {
-    myIcon = IconLoader.findIcon(url);
-  }
-
-  @Override
-  public int getHeight() {
-    return myIcon.getIconHeight();
-  }
-
-  @Override
-  public int getWidth() {
-    return myIcon.getIconWidth();
-  }
-
-  public Icon getIcon() {
-    return myIcon;
-  }
+public interface ImageBox extends Component {
+  @NotNull
+  Image getImage();
 }

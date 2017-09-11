@@ -22,7 +22,7 @@ import com.vaadin.shared.communication.ServerRpc;
  * @author VISTALL
  * @since 11-Sep-17
  */
-public interface UICheckBoxRpc extends ServerRpc {
+public interface CheckBoxRpc extends ServerRpc {
   @Delayed
   void setValue(boolean value);
 }

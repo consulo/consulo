@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.shared.ui.state.checkbox;
-
-import com.vaadin.shared.AbstractComponentState;
+package consulo.web.gwt.shared.ui.state.image;
 
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
-public class UICheckBoxState extends AbstractComponentState {
-  public boolean checked;
+public class ImageState extends ImageStateBase {
+  private static final long serialVersionUID = 8417412269533764848L;
+
+  public String myURL;
 }

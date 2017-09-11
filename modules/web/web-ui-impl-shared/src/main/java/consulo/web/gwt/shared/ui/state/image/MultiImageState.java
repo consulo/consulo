@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.web.gwt.shared.ui.state.image;
 
-import consulo.ui.image.Image;
-import org.jetbrains.annotations.NotNull;
+import java.io.Serializable;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 11-Sep-17
  */
-public interface ListItemPresentation {
-  void setIcon(@NotNull Image image);
+public class MultiImageState implements Serializable {
+  private static final long serialVersionUID = 8759685748025803776L;
 
-  void append(@NotNull String text);
+  public ImageState myImageState;
 
-  void append(@NotNull String text, @NotNull TextStyle... styles);
+  public FoldedImageState myFoldedImageState;
+
+  public int myHeight;
+
+  public int myWidth;
 }

@@ -15,6 +15,9 @@
  */
 package consulo.ui;
 
+import consulo.annotations.Internal;
+import consulo.ui.image.FoldedImage;
+import consulo.ui.image.Image;
 import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,8 +27,9 @@ import java.net.URL;
  * @author VISTALL
  * @since 09-Jun-16
  */
-abstract class _UIInternals {
-  static _UIInternals get() {
+@Internal
+public abstract class _UIInternals {
+  public static _UIInternals get() {
     return Holder.ourInstance;
   }
 
@@ -74,9 +78,11 @@ abstract class _UIInternals {
 
   abstract RadioButton _Components_radioButton(String text, boolean selected);
 
-  abstract Image _Components_image(ImageRef imageRef);
+  abstract ImageBox _Components_imageBox(Image image);
 
-  abstract ImageRef _Images_imageRef(URL url);
+  public abstract Image _Images_image(URL url);
+
+  public abstract FoldedImage _Images_foldedImage(Image[] images);
 
   abstract MenuItem _MenuItems_item(String text);
 

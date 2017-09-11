@@ -40,6 +40,17 @@
     background: #e7e7e7;
     line-height: 0px;
   }
+
+  .ui-layered-image {
+    position: relative;
+  }
+
+  .ui-layered-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
 }
 
 .consulo {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.internal.image;
 
-import org.jetbrains.annotations.NotNull;
+import consulo.ui.image.Image;
+import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 11-Sep-17
  */
-public interface Image extends Component {
-  @NotNull
-  ImageRef getImageRef();
+public interface WGwtImageWithState extends Image {
+  void toState(MultiImageState state);
+
+  default MultiImageState getState() {
+    MultiImageState state = new MultiImageState();
+    state.myHeight = getHeight();
+    state.myWidth = getWidth();
+
+    toState(state);
+
+    return state;
+  }
 }

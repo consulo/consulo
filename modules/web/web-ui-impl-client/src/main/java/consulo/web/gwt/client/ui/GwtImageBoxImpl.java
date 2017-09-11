@@ -15,34 +15,11 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class GwtLayeredImageImpl extends FlowPanel implements InternalGwtComponent {
-  public GwtLayeredImageImpl() {
-    setStyleName("gwtLayeredImage");
-  }
-
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-    final int width = (Integer)map.get("width");
-    setWidth(width + "px");
-    final int height = (Integer)map.get("height");
-    setHeight(height + "px");
-
-    final int size = (Integer)map.get("size");
-    for (int i = 0; i < size; i++) {
-      final String url = (String)map.get("url" + i);
-
-      Image image = new Image(url);
-      add(image);
-    }
-  }
+public class GwtImageBoxImpl extends Image {
 }
