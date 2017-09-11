@@ -31,7 +31,7 @@ public class GwtLabeledLayoutImpl extends CaptionPanel implements InternalGwtCom
   public GwtLabeledLayoutImpl() {
     final SimplePanel widget = (SimplePanel)getWidget();
 
-    widget.addStyleName("consuloLabeledLayout");
+    widget.setStyleName("ui-labeled-layout");
   }
 
   @Override

@@ -17,7 +17,6 @@ package consulo.ui.internal;
 
 import com.intellij.openapi.util.EmptyRunnable;
 import consulo.ui.RequiredUIAccess;
-import consulo.web.servlet.ui.GwtUIAccess;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -62,8 +61,6 @@ public class WGwtModalWindowImpl extends WGwtWindowImpl {
     myVisible = value;
 
     if (myVisible) {
-      GwtUIAccess gwtUIAccess = GwtUIAccess.get();
-      gwtUIAccess.showModal(this);
     }
     else {
       disposeImpl();

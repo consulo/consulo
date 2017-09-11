@@ -137,7 +137,7 @@ class _UIInternalsImpl extends _UIInternals {
   @NotNull
   @Override
   UIAccess _UIAccess_get() {
-    return DesktopUIAccessImpl.ourInstance;
+    return AWTUIAccessImpl.ourInstance;
   }
 
   @Override

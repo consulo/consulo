@@ -34,11 +34,8 @@ import consulo.ui.*;
 import consulo.ui.internal.WGwtTreeImpl;
 import consulo.ui.internal.WGwtTreeModelImpl;
 import consulo.web.servlet.ui.UIBuilder;
-import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.servlet.annotation.WebServlet;
 
 public class AppUIBuilder extends UIBuilder {
   private static final ViewSettings ourViewSettings = new ViewSettings() {
@@ -84,12 +81,6 @@ public class AppUIBuilder extends UIBuilder {
     }
   };
 
-  @WebServlet(urlPatterns = "/app")
-  public static class Servlet extends UIServlet {
-    public Servlet() {
-      super(AppUIBuilder.class);
-    }
-  }
 
   @RequiredUIAccess
   @Override

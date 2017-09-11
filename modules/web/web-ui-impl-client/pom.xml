@@ -36,6 +36,29 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compile.plugin}</version>
+        <configuration>
+          <source>${java.level}</source>
+          <target>${java.level}</target>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+          <fork>true</fork>
+          <meminitial>2048</meminitial>
+          <maxmem>4096</maxmem>
+          <skip>true</skip>
+        </configuration>
+        <!--workaround for java 9-->
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-archiver</artifactId>
+            <version>2.4.4</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-maven-plugin</artifactId>
         <version>${maven.vaadin.plugin}</version>

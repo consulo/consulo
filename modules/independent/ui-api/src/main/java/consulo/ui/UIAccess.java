@@ -21,11 +21,11 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public abstract class UIAccess {
+public interface UIAccess {
   /**
    * @return if current thread can access to ui write mode
    */
-  public static boolean isUIThread() {
+  static boolean isUIThread() {
     return _UIInternals.get()._UIAccess_isUIThread();
   }
 
@@ -36,18 +36,20 @@ public abstract class UIAccess {
    */
   @RequiredUIAccess
   @NotNull
-  public static UIAccess get() {
+  static UIAccess get() {
     assertIsUIThread();
 
     return _UIInternals.get()._UIAccess_get();
   }
 
   @RequiredUIAccess
-  public static void assertIsUIThread() {
+  static void assertIsUIThread() {
     if (!isUIThread()) {
       throw new IllegalArgumentException("Call must be wrapped inside UI thread");
     }
   }
 
-  public abstract void give(@RequiredUIAccess @NotNull Runnable runnable);
+  void give(@RequiredUIAccess @NotNull Runnable runnable);
+
+  void giveAndWait(@RequiredUIAccess @NotNull Runnable runnable);
 }

@@ -16,24 +16,15 @@
 package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.Label;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class GwtLabelImpl extends Label implements InternalGwtComponent {
+public class GwtLabelImpl extends Label {
   public GwtLabelImpl() {
     setHorizontalAlignment(ALIGN_CENTER);
-  }
 
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-    final String text = (String)map.get("text");
-    if (text != null) {
-      setText(text);
-    }
+    setStyleName("ui-label");
   }
 }

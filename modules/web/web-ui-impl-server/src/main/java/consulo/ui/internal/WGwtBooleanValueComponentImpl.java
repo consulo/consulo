@@ -16,86 +16,77 @@
 package consulo.ui.internal;
 
 import com.intellij.util.SmartList;
+import com.vaadin.ui.AbstractComponent;
+import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
+import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
-import consulo.web.gwt.shared.ui.InternalEventTypes;
+import consulo.web.gwt.shared.ui.state.UICheckBoxState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtBooleanValueComponentImpl extends WGwtBaseComponent implements ValueComponent<Boolean> {
-  private boolean mySelected;
+public class WGwtBooleanValueComponentImpl extends AbstractComponent implements ValueComponent<Boolean> {
   private List<ValueComponent.ValueListener<Boolean>> myValueListeners = new SmartList<>();
 
   public WGwtBooleanValueComponentImpl(boolean selected) {
-    mySelected = selected;
+    getState().checked = selected;
   }
 
   @Override
-  protected void getState(Map<String, Object> map) {
-    super.getState(map);
-
-    putIfNotDefault("selected", mySelected, true, map);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void invokeListeners(long type, Map<String, Object> variables) {
-    if (type == InternalEventTypes.SELECT) {
-      mySelected = (Boolean)variables.get("selected");
-
-      fireValueListeners();
-    }
-  }
-
-  private void fireValueListeners() {
-    ValueEvent<Boolean> event = new ValueEvent<Boolean>(this, getValue());
-    for (ValueComponent.ValueListener<Boolean> valueListener : myValueListeners) {
-      valueListener.valueChanged(event);
-    }
+  protected UICheckBoxState getState() {
+    return (UICheckBoxState)super.getState();
   }
 
   @NotNull
   @Override
   public Boolean getValue() {
-    return mySelected;
+    return getState().checked;
   }
 
   @Override
   @RequiredUIAccess
   public void setValue(@Nullable final Boolean value) {
+    UIAccess.assertIsUIThread();
+
     if (value == null) {
       throw new IllegalArgumentException();
     }
 
-    if (mySelected == value) {
+    if (getState().checked == value) {
       return;
     }
 
-    mySelected = value;
+    getState().checked = value;
 
-    fireValueListeners();
-
-    markAsChanged();
+    markAsDirty();
   }
 
   @Override
   public void addValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
     myValueListeners.add(valueListener);
-    enableNotify(InternalEventTypes.SELECT);
   }
 
   @Override
   public void removeValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
     myValueListeners.remove(valueListener);
-    if (myValueListeners.isEmpty()) {
-      disableNotify(InternalEventTypes.SELECT);
-    }
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)getParent();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
+
   }
 }

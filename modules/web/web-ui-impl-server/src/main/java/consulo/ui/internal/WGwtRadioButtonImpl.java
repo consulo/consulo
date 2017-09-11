@@ -17,43 +17,34 @@ package consulo.ui.internal;
 
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.RadioButton;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public class WGwtRadioButtonImpl extends WGwtBooleanValueComponentImpl implements RadioButton {
-  private String myText;
-
   public WGwtRadioButtonImpl(boolean selected, String text) {
     super(selected);
-    myText = text;
+    getState().caption = text;
   }
 
   @Override
   @NotNull
   public String getText() {
-    return myText;
+    return getState().caption;
   }
 
+  @RequiredUIAccess
   @Override
   public void setText(@NotNull final String text) {
-    if (Comparing.equal(myText, text)) {
+    if (Comparing.equal(getState().caption, text)) {
       return;
     }
 
-    myText = text;
+    getState().caption = text;
 
-    markAsChanged();
-  }
-
-  @Override
-  protected void getState(Map<String, Object> map) {
-    super.getState(map);
-
-    map.put("text", myText);
+    markAsDirty();
   }
 }

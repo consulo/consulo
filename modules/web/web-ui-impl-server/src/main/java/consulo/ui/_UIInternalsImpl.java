@@ -16,9 +16,10 @@
 package consulo.ui;
 
 import com.intellij.openapi.util.IconLoader;
+import com.vaadin.ui.UI;
 import consulo.ui.internal.*;
 import consulo.ui.model.ListModel;
-import consulo.web.servlet.ui.UIAccessHelper;
+import consulo.web.servlet.ui.VaadinUIAccessImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
@@ -148,11 +149,21 @@ class _UIInternalsImpl extends _UIInternals {
   @NotNull
   @Override
   UIAccess _UIAccess_get() {
-    return UIAccessHelper.ourInstance.get();
+    UI ui = UI.getCurrent();
+    assert ui != null;
+    Object data = ui.getData();
+    if(data != null) {
+      return (UIAccess)data;
+    }
+    else {
+      VaadinUIAccessImpl access = new VaadinUIAccessImpl(ui);
+      ui.setData(access);
+      return access;
+    }
   }
 
   @Override
   boolean _UIAccess_isUIThread() {
-    return UIAccessHelper.ourInstance.isUIThread();
+    return UI.getCurrent() != null;
   }
 }

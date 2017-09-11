@@ -18,19 +18,30 @@ package consulo.ui;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class DesktopUIAccessImpl extends UIAccess {
-  public static UIAccess ourInstance = new DesktopUIAccessImpl();
+public class AWTUIAccessImpl implements UIAccess {
+  public static UIAccess ourInstance = new AWTUIAccessImpl();
 
-  private DesktopUIAccessImpl() {
+  private AWTUIAccessImpl() {
   }
 
   @Override
   public void give(@RequiredUIAccess @NotNull Runnable runnable) {
     SwingUtilities.invokeLater(runnable);
+  }
+
+  @Override
+  public void giveAndWait(@NotNull Runnable runnable) {
+    try {
+      SwingUtilities.invokeAndWait(runnable);
+    }
+    catch (InterruptedException | InvocationTargetException e) {
+      //
+    }
   }
 }

@@ -13,43 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.web.servlet.ui;
 
-import com.intellij.openapi.util.Comparing;
-import consulo.ui.CheckBox;
+import com.intellij.openapi.diagnostic.Logger;
+import com.vaadin.ui.UI;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 16-Jun-16
  */
-public class WGwtCheckBoxImpl extends WGwtBooleanValueComponentImpl implements CheckBox {
-  public WGwtCheckBoxImpl(boolean selected, String text) {
-    super(selected);
-    getState().caption = text;
+public class VaadinUIAccessImpl implements UIAccess {
+  private static final Logger LOGGER = Logger.getInstance(VaadinUIAccessImpl.class);
+
+  private final UI myUI;
+
+  public VaadinUIAccessImpl(UI ui) {
+    myUI = ui;
   }
 
   @Override
-  @NotNull
-  public String getText() {
-    return getState().caption;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setText(@NotNull final String text) {
-    UIAccess.assertIsUIThread();
-
-    if (Comparing.equal(getState().caption, text)) {
-      return;
+  public void give(@RequiredUIAccess @NotNull Runnable runnable) {
+    if (myUI.isAttached()) {
+      myUI.access(runnable);
     }
+  }
 
-    getState().caption = text;
-
-    getState().caption = text;
-
-    markAsDirty();
+  @Override
+  public void giveAndWait(@NotNull Runnable runnable) {
+    if (myUI.isAttached()) {
+      myUI.accessSynchronously(runnable);
+    }
   }
 }

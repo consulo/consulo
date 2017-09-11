@@ -18,20 +18,16 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.SimplePanel;
-import consulo.web.gwt.client.UIConverter;
-import consulo.web.gwt.client.WebSocketProxy;
+import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.util.GwtUIUtil;
-import consulo.web.gwt.shared.UIComponent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class GwtVerticalLayoutImpl extends Grid implements InternalGwtComponentWithChildren {
+public class GwtVerticalLayoutImpl extends Grid {
   private SimplePanel myPanel = GwtUIUtil.fillAndReturn(new SimplePanel());
 
   public GwtVerticalLayoutImpl() {
@@ -42,18 +38,15 @@ public class GwtVerticalLayoutImpl extends Grid implements InternalGwtComponentW
     GwtUIUtil.fill(this);
   }
 
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-  }
+  public void setChildren(List<Widget> widgets) {
+    clear();
 
-  @Override
-  public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
     //FIXME [VISTALL] improve, we can call resizeRows once at time
-    for (UIComponent.Child child : children) {
+    for (Widget child : widgets) {
       final int rowCount = getRowCount();
       resizeRows(rowCount + 1);
 
-      setWidget(rowCount - 1, 0, UIConverter.create(proxy, child.getComponent()));
+      setWidget(rowCount - 1, 0, child);
 
       updateLastRow(rowCount - 1);
     }

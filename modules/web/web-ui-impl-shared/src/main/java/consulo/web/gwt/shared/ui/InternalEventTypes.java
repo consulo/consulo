@@ -19,6 +19,7 @@ package consulo.web.gwt.shared.ui;
  * @author VISTALL
  * @since 09-Sep-17
  */
+@Deprecated
 public interface InternalEventTypes {
   long UNREGISTERED = 1 << 0;
   long SHOW = 1 << 1;

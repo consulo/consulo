@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.web.gwt.shared.ui.state;
 
-import com.google.gwt.user.client.ui.CheckBox;
+import com.vaadin.shared.AbstractComponentState;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 11-Sep-17
  */
-public class GwtCheckBoxImpl extends CheckBox {
-  public GwtCheckBoxImpl() {
-    setStyleName("ui-check-box");
-  }
+public class UICheckBoxState extends AbstractComponentState {
+  public boolean checked;
 }

@@ -18,9 +18,14 @@ package consulo.web.servlet;
 import com.vaadin.server.*;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
+import consulo.SomeTestUIBuilder;
+import consulo.ui.Component;
+import consulo.ui.MenuBar;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.internal.WGwtLabelImpl;
-import consulo.ui.internal.WGwtLabeledLayoutImpl;
+import consulo.ui.Size;
+import consulo.ui.Window;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -98,8 +103,53 @@ public class NewAppUIBuilder extends UI {
   @Override
   @RequiredUIAccess
   protected void init(VaadinRequest request) {
-    WGwtLabeledLayoutImpl test = new WGwtLabeledLayoutImpl("test");
-    test.set(new WGwtLabelImpl("Test"));
-    setContent(test);
+
+    SomeTestUIBuilder.build(new Window() {
+      @RequiredUIAccess
+      @Override
+      public void setContent(@NotNull Component content) {
+        NewAppUIBuilder.this.setContent((com.vaadin.ui.Component)content);
+      }
+
+      @RequiredUIAccess
+      @Override
+      public void setMenuBar(@Nullable MenuBar menuBar) {
+
+      }
+
+      @Override
+      public boolean isVisible() {
+        return NewAppUIBuilder.this.isVisible();
+      }
+
+      @RequiredUIAccess
+      @Override
+      public void setVisible(boolean value) {
+
+      }
+
+      @Override
+      public boolean isEnabled() {
+        return false;
+      }
+
+      @RequiredUIAccess
+      @Override
+      public void setEnabled(boolean value) {
+
+      }
+
+      @Nullable
+      @Override
+      public Component getParentComponent() {
+        return null;
+      }
+
+      @RequiredUIAccess
+      @Override
+      public void setSize(@NotNull Size size) {
+
+      }
+    });
   }
 }

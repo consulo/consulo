@@ -17,6 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.web.gwt.shared.UIComponent;
 import gnu.trove.TLongObjectHashMap;
@@ -33,6 +34,7 @@ public class WGwtWindowImpl extends WGwtBaseComponent implements Window {
   private WGwtBaseComponent myContent;
   private MenuBar myMenuBar;
 
+  @RequiredUIAccess
   @Override
   public void setContent(@NotNull Component content) {
     if (myContent != null) {
@@ -41,6 +43,7 @@ public class WGwtWindowImpl extends WGwtBaseComponent implements Window {
     myContent = (WGwtBaseComponent)content;
   }
 
+  @RequiredUIAccess
   @Override
   public void setMenuBar(@Nullable MenuBar menuBar) {
     myMenuBar = menuBar;
