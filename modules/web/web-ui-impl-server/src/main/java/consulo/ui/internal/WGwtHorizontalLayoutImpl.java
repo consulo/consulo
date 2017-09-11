@@ -45,11 +45,17 @@ public class WGwtHorizontalLayoutImpl extends AbstractLayout implements Horizont
   }
 
   @Override
+  public void removeComponent(com.vaadin.ui.Component c) {
+    myChildren.remove(c);
+    super.removeComponent(c);
+  }
+
+  @Override
   public void replaceComponent(com.vaadin.ui.Component component, com.vaadin.ui.Component newComponent) {
-    myChildren.remove(component);
+    removeComponent(component);
 
     add((Component)newComponent);
-      }
+  }
 
   @Override
   public int getComponentCount() {

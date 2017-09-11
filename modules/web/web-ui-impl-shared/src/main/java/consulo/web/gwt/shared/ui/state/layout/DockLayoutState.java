@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.web.gwt.shared.ui.state.layout;
 
-import com.google.gwt.user.client.ui.DockPanel;
-import consulo.web.gwt.client.util.GwtUIUtil;
+import com.vaadin.shared.ui.AbstractLayoutState;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 11-Sep-17
  */
-public class GwtDockLayoutImpl extends DockPanel {
-  public GwtDockLayoutImpl() {
-    GwtUIUtil.fill(this);
-    setHorizontalAlignment(ALIGN_LEFT);
-    setVerticalAlignment(ALIGN_TOP);
+public class DockLayoutState extends AbstractLayoutState {
+  public enum Constraint {
+    TOP,
+    BOTTOM,
+    LEFT,
+    RIGHT,
+    CENTER
   }
+
+  public List<Constraint> myConstraints = new ArrayList<>();
 }

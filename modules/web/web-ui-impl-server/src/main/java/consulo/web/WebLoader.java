@@ -24,6 +24,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import consulo.application.ApplicationProperties;
 import consulo.start.CommandLineArgs;
 import consulo.web.servlet.NewAppUIBuilder;
+import consulo.web.servlet.ui.UIIconServlet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -121,6 +122,6 @@ public class WebLoader {
   @NotNull
   @SuppressWarnings("unchecked")
   public Class<? extends Servlet>[] getServletClasses() {
-    return new Class[]{NewAppUIBuilder.Servlet.class};
+    return new Class[]{NewAppUIBuilder.Servlet.class, UIIconServlet.class};
   }
 }
