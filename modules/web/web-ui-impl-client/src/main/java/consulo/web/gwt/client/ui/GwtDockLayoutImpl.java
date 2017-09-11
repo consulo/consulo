@@ -21,7 +21,6 @@ import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.UIComponent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -30,18 +29,13 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponentWithChildren {
+public class GwtDockLayoutImpl extends DockPanel {
   public GwtDockLayoutImpl() {
     GwtUIUtil.fill(this);
     setHorizontalAlignment(ALIGN_LEFT);
     setVerticalAlignment(ALIGN_TOP);
   }
 
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-  }
-
-  @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
     for (UIComponent.Child child : children) {
       final Map<String, Object> variables = child.getVariables();

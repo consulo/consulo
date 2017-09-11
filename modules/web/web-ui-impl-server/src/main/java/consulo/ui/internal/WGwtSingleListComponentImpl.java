@@ -15,24 +15,26 @@
  */
 package consulo.ui.internal;
 
+import com.vaadin.ui.AbstractComponent;
+import consulo.ui.Component;
 import consulo.ui.ListItemRender;
 import consulo.ui.ListItemRenders;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
 import consulo.ui.ValueComponent;
 import consulo.ui.model.ListModel;
-import consulo.web.gwt.shared.UIComponent;
+import consulo.web.gwt.shared.ui.state.combobox.UIComboBoxState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 16-Jun-16
  */
-public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent implements ValueComponent<E> {
+public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent implements ValueComponent<E> {
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
   private List<ValueListener<E>> myValueListeners = new ArrayList<>();
   private ListModel<E> myModel;
@@ -44,11 +46,10 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
 
   protected abstract boolean needRenderNullValue();
 
+  @Nullable
   @Override
-  protected void getState(Map<String, Object> map) {
-    super.getState(map);
-    map.put("size", myModel.getSize());
-    map.put("index", myIndex);
+  public Component getParentComponent() {
+    return (Component)getParent();
   }
 
   @NotNull
@@ -63,9 +64,17 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
   }
 
   @Override
-  protected void initChildren(List<UIComponent.Child> children) {
+  public void beforeClientResponse(boolean initial) {
+    super.beforeClientResponse(initial);
+
+    UIComboBoxState state = getState();
+    state.myItems.clear();
+    buildState(state.myItems);
+  }
+
+  protected void buildState(List<UIComboBoxState.Item> children) {
+    // need render null value
     if (needRenderNullValue()) {
-      // need render null value
       renderItem(children, -1, null);
     }
 
@@ -76,14 +85,16 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
     }
   }
 
-  private void renderItem(List<UIComponent.Child> children, int i, @Nullable E e) {
-;
+  private void renderItem(List<UIComboBoxState.Item> children, int i, @Nullable E e) {
+    WGwtListItemPresentationImpl presentation = new WGwtListItemPresentationImpl();
+    myRender.render(presentation, i, e);
+
+    children.add(presentation.getItem());
   }
 
-  @RequiredUIAccess
   @Override
-  public void invokeListeners(long type, Map<String, Object> variables) {
-
+  protected UIComboBoxState getState() {
+    return (UIComboBoxState)super.getState();
   }
 
   @Override
@@ -111,11 +122,16 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
     setValue(myModel.get(index));
   }
 
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
+
+  }
+
   @Override
   @RequiredUIAccess
   public void setValue(@Nullable E value) {
     setValueImpl(value);
-    markAsChanged();
   }
 
   public void setValueImpl(@Nullable E value) {
@@ -134,5 +150,7 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
     for (ValueListener<E> valueListener : myValueListeners) {
       valueListener.valueChanged(event);
     }
+
+    markAsDirty();
   }
 }

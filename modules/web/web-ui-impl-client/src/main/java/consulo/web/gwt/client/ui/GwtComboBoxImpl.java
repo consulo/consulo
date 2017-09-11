@@ -15,16 +15,15 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import consulo.web.gwt.client.UIConverter;
-import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.client.ui.advancedGwt.WidgetComboBox;
-import consulo.web.gwt.shared.UIComponent;
 import org.gwt.advanced.client.datamodel.ListDataModel;
 import org.gwt.advanced.client.ui.widget.combo.ListItemFactory;
-import org.jetbrains.annotations.NotNull;
+import org.gwt.advanced.client.util.ThemeHelper;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,25 +31,29 @@ import java.util.Map;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtComponentWithListeners, InternalGwtComponentWithChildren {
+public class GwtComboBoxImpl extends WidgetComboBox {
+  static {
+    ThemeHelper.getInstance().setThemeName("classic");
+ }
+
   /**
    * Item list with by index
    * <p>
    * Contains null item too, that why - get component by index, need +1
    */
-  private List<UIComponent.Child> myItemsWithNullItem = new ArrayList<>();
-  private WebSocketProxy myProxy;
+  private List<Widget> myItemsWithNullItem = new ArrayList<>();
 
   public GwtComboBoxImpl() {
     setLazyRenderingEnabled(false);
-
     setListItemFactory(new ListItemFactory() {
       @Override
       public Widget createWidget(Object value) {
         int index = value == null ? 0 : ((Integer)value + 1);
-        final UIComponent.Child child = myItemsWithNullItem.get(index);
-        assert child != null;
-        return UIConverter.create(myProxy, child.getComponent()).asWidget();
+        final Widget child = myItemsWithNullItem.isEmpty() ? null : myItemsWithNullItem.get(index);
+        if (child == null) {
+          return new Label("dummy");
+        }
+        return child;
       }
 
       @Override
@@ -60,33 +63,24 @@ public class GwtComboBoxImpl extends WidgetComboBox implements InternalGwtCompon
     });
   }
 
-  @Override
-  public void setupListeners(final WebSocketProxy proxy, final long componentId) {
-  }
-
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-    final int size = (Integer)map.get("size");
+  public void setItems(List<Widget> widgets) {
+    myItemsWithNullItem.clear();
+    myItemsWithNullItem.addAll(widgets);
 
     final ListDataModel model = getModel();
     model.clear();
-    for (int i = 0; i < size; i++) {
-      model.add(String.valueOf(i), i);
-    }
 
-    setSelectedIndex((Integer)map.get("index"));
+    Map<String, Object> map = new LinkedHashMap<>();
+    for (int i = 0; i < (widgets.size() - 1); i++) {
+      map.put(String.valueOf(i), i);
+    }
+    model.add(map);
   }
 
   @Override
   public void clear() {
-    myItemsWithNullItem.clear();
-  }
+    super.clear();
 
-  @Override
-  public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
-    myProxy = proxy;
-    for (UIComponent.Child child : children) {
-      myItemsWithNullItem.add(child);
-    }
+    myItemsWithNullItem.clear();
   }
 }

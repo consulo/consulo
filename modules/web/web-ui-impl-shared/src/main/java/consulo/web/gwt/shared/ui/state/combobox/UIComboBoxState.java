@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.web.gwt.shared.ui.state.combobox;
 
-import com.google.gwt.user.client.ui.CaptionPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.vaadin.shared.AbstractComponentState;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 15-Jun-16
+ * @since 11-Sep-17
  */
-public class GwtLabeledLayoutImpl extends CaptionPanel {
-  public GwtLabeledLayoutImpl() {
-    final SimplePanel widget = (SimplePanel)getWidget();
-
-    widget.setStyleName("ui-labeled-layout");
+public class UIComboBoxState extends AbstractComponentState {
+  public static class ItemSegment implements Serializable {
+    public String myText;
   }
+
+  public static class Item implements Serializable {
+    public List<ItemSegment> myItemSegments = new ArrayList<>();
+  }
+
+  public List<Item> myItems = new ArrayList<>();
 }

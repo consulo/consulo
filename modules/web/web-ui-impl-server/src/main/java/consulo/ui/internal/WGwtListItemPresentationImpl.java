@@ -18,45 +18,36 @@ package consulo.ui.internal;
 import consulo.ui.ImageRef;
 import consulo.ui.ListItemPresentation;
 import consulo.ui.TextStyle;
+import consulo.web.gwt.shared.ui.state.combobox.UIComboBoxState;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class WGwtListItemPresentationImpl implements ListItemPresentation {
-  private WGwtHorizontalLayoutImpl myLayout = new WGwtHorizontalLayoutImpl();
+class WGwtListItemPresentationImpl implements ListItemPresentation {
+  private UIComboBoxState.Item myItem = new UIComboBoxState.Item();
 
   @Override
   public void append(@NotNull ImageRef... imageRefs) {
-    if (imageRefs.length == 0) {
-      throw new IllegalArgumentException();
-    }
-
-    if (imageRefs.length == 1) {
-      myLayout.add(new WGwtImageImpl((WGwtImageRefImpl)imageRefs[0]));
-    }
-    else {
-      myLayout.add(new WGwtLayeredImageImpl(imageRefs));
-    }
   }
 
   @Override
   public void append(@NotNull String text) {
-    myLayout.add(new WGwtLabelImpl(text));
+    UIComboBoxState.ItemSegment segment = new UIComboBoxState.ItemSegment();
+    segment.myText = text;
+    myItem.myItemSegments.add(segment);
   }
 
   @Override
   public void append(@NotNull String text, @NotNull TextStyle... styles) {
-    if (styles[0] == TextStyle.BOLD) {
-      myLayout.add(new WGwtHtmlLabelImpl("<b>" + text + "</b>"));
-    }
-    else {
-      append(text);
-    }
+    UIComboBoxState.ItemSegment segment = new UIComboBoxState.ItemSegment();
+    segment.myText = text;
+    //TODO [VISTALL] style!
+    myItem.myItemSegments.add(segment);
   }
 
-  public WGwtHorizontalLayoutImpl getLayout() {
-    return myLayout;
+  public UIComboBoxState.Item getItem() {
+    return myItem;
   }
 }
