@@ -60,7 +60,7 @@ public class WGwtTabbedLayoutImpl extends WGwtBaseComponent implements TabbedLay
 
   @Override
   protected void initChildren(List<UIComponent.Child> children) {
-    for (Map.Entry<Tab, WGwtBaseComponent> entry : myTabs.entrySet()) {
+    /*for (Map.Entry<Tab, WGwtBaseComponent> entry : myTabs.entrySet()) {
       // send tab
       UIComponent.Child child = new UIComponent.Child();
       child.setComponent(((WGwtTabImpl)entry.getKey()).getLayout().convert());
@@ -70,7 +70,7 @@ public class WGwtTabbedLayoutImpl extends WGwtBaseComponent implements TabbedLay
       child = new UIComponent.Child();
       child.setComponent(entry.getValue().convert());
       children.add(child);
-    }
+    } */
   }
 
   @RequiredUIAccess

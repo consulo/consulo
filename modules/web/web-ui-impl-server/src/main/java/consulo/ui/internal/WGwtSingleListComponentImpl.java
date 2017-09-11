@@ -78,17 +78,7 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
   }
 
   private void renderItem(List<UIComponent.Child> children, int i, @Nullable E e) {
-    WGwtListItemPresentationImpl render;
-    render = new WGwtListItemPresentationImpl();
-    myRender.render(render, i, e);
-
-    final UIComponent component = render.getLayout().convert();
-    component.setId(-1);
-
-    final UIComponent.Child child = new UIComponent.Child();
-    child.setComponent(component);
-
-    children.add(child);
+;
   }
 
   @RequiredUIAccess

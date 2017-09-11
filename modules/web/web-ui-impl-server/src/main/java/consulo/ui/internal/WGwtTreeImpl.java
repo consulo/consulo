@@ -22,7 +22,6 @@ import consulo.web.gwt.shared.UIComponent;
 import consulo.web.gwt.shared.ui.InternalEventTypes;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -66,12 +65,12 @@ public class WGwtTreeImpl<NODE> extends WGwtBaseComponent {
   @Override
   protected void initChildren(List<UIComponent.Child> children) {
     for (WGwtTreeNodeImpl<NODE> child : myChildren) {
-      UIComponent.Child e = new UIComponent.Child();
+      /*UIComponent.Child e = new UIComponent.Child();
       e.setComponent(child.getPresentation().getLayout().convert());
 
       e.setVariables(Collections.singletonMap("parentId", child.getParentId()));
 
-      children.add(e);
+      children.add(e);  */
     }
   }
 }

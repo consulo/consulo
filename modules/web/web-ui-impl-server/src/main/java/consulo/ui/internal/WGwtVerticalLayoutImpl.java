@@ -40,6 +40,8 @@ public class WGwtVerticalLayoutImpl extends AbstractLayout implements VerticalLa
   public VerticalLayout add(@NotNull Component component) {
     addComponent((com.vaadin.ui.Component)component);
     myChildren.add((com.vaadin.ui.Component)component);
+
+    markAsDirtyRecursive();
     return this;
   }
 
