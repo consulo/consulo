@@ -15,10 +15,13 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.shared.ui.state.UICheckBoxRpc;
 import consulo.web.gwt.shared.ui.state.UICheckBoxState;
 
 /**
@@ -26,7 +29,22 @@ import consulo.web.gwt.shared.ui.state.UICheckBoxState;
  * @since 11-Sep-17
  */
 @Connect(canonicalName = "consulo.ui.internal.WGwtCheckBoxImpl")
-public class GwtCheckBoxImplConnector extends AbstractComponentConnector {
+public class GwtCheckBoxImplConnector extends AbstractComponentConnector implements ValueChangeHandler<Boolean> {
+  @Override
+  protected void init() {
+    super.init();
+
+    getWidget().addValueChangeHandler(this);
+  }
+
+
+  @Override
+  public void onValueChange(ValueChangeEvent<Boolean> event) {
+    getState().checked = event.getValue();
+    getRpcProxy(UICheckBoxRpc.class).setValue(event.getValue());
+    getConnection().sendPendingVariableChanges();
+  }
+
   @Override
   protected void updateWidgetStyleNames() {
     super.updateWidgetStyleNames();

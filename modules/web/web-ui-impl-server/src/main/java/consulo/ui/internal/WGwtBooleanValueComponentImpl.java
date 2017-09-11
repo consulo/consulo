@@ -22,6 +22,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
+import consulo.web.gwt.shared.ui.state.UICheckBoxRpc;
 import consulo.web.gwt.shared.ui.state.UICheckBoxState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,8 +36,12 @@ import java.util.List;
 public class WGwtBooleanValueComponentImpl extends AbstractComponent implements ValueComponent<Boolean> {
   private List<ValueComponent.ValueListener<Boolean>> myValueListeners = new SmartList<>();
 
+  private final UICheckBoxRpc myRpc = value -> setValueImpl(value);
+
   public WGwtBooleanValueComponentImpl(boolean selected) {
     getState().checked = selected;
+
+    registerRpc(myRpc);
   }
 
   @Override
@@ -63,9 +68,17 @@ public class WGwtBooleanValueComponentImpl extends AbstractComponent implements 
       return;
     }
 
-    getState().checked = value;
+    setValueImpl(value);
 
     markAsDirty();
+  }
+
+  private void setValueImpl(@Nullable Boolean value) {
+    getState().checked = value;
+
+    for (ValueListener<Boolean> valueListener : myValueListeners) {
+      valueListener.valueChanged(new ValueEvent<>(this, value));
+    }
   }
 
   @Override
