@@ -15,15 +15,12 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.shared.ui.Connect;
-
-import java.util.ArrayList;
-import java.util.List;
+import consulo.web.gwt.client.util.GwtUIUtil;
 
 /**
  * @author VISTALL
@@ -40,12 +37,7 @@ public class GwtHorizontalLayoutImplConnector extends AbstractLayoutConnector {
 
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
-    List<Widget> widgets = new ArrayList<>();
-    for (ComponentConnector connector : getChildComponents()) {
-      widgets.add(connector.getWidget());
-    }
-
-    getWidget().setChildren(widgets);
+    getWidget().setChildren(GwtUIUtil.remapWidgets(this));
   }
 
   @Override

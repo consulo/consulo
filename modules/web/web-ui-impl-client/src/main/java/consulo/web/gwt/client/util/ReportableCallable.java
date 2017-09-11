@@ -19,11 +19,14 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.Label;
+import consulo.annotations.DeprecationInfo;
 
 /**
  * @author VISTALL
  * @since 19-May-16
  */
+@Deprecated
+@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public abstract class ReportableCallable<T> implements AsyncCallback<T> {
   @Override
   public void onFailure(Throwable caught) {

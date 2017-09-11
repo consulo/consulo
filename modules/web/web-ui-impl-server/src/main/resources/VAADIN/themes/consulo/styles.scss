@@ -30,6 +30,16 @@
   .ui-html-label {
   
   }
+
+  .ui-horizontal-split-panel {
+  }
+
+  .ui-horizontal-split-panel .hsplitter {
+    cursor: move;
+    border: 0px;
+    background: #e7e7e7;
+    line-height: 0px;
+  }
 }
 
 .consulo {

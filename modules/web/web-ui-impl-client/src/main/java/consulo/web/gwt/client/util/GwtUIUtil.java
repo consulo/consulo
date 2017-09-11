@@ -19,9 +19,13 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.*;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ui.AbstractLayoutConnector;
 import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,6 +64,16 @@ public class GwtUIUtil {
     verticalPanel.add(new Label("Loading..."));
 
     return verticalPanel;
+  }
+
+  @NotNull
+  public static List<Widget> remapWidgets(AbstractLayoutConnector abstractLayout) {
+    List<Widget> widgets = new ArrayList<>();
+    for (ComponentConnector connector : abstractLayout.getChildComponents()) {
+      widgets.add(connector.getWidget());
+    }
+
+    return widgets;
   }
 
   public static Widget getWidget(Element element) {

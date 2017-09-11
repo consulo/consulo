@@ -68,7 +68,7 @@
           <webappDirectory>${basedir}/target/classes/VAADIN/widgetsets</webappDirectory>
           <draftCompile>false</draftCompile>
           <compileReport>false</compileReport>
-          <style>OBF</style>
+          <style>DETAILED</style>
           <strict>true</strict>
         </configuration>
 
@@ -104,6 +104,12 @@
       <artifactId>vaadin-client</artifactId>
       <version>${vaadin.version}</version>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.vaadin</groupId>
+          <artifactId>vaadin-server</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
