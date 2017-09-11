@@ -16,20 +16,12 @@
 package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.UIObject;
-import com.google.gwt.user.client.ui.Widget;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtMenuSeparatorImpl extends UIObject implements InternalGwtComponent {
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-
-  }
+public class GwtMenuSeparatorImpl extends UIObject {
 
   @Override
   public void setWidth(String width) {
@@ -49,10 +41,5 @@ public class GwtMenuSeparatorImpl extends UIObject implements InternalGwtCompone
   @Override
   public boolean isVisible() {
     return true;
-  }
-
-  @Override
-  public Widget asWidget() {
-    return null;
   }
 }

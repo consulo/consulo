@@ -18,36 +18,22 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.shared.UIComponent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtMenuImpl extends MenuItem implements InternalGwtComponentWithChildren {
+public class GwtMenuImpl extends MenuItem {
 
   public GwtMenuImpl() {
     super("", (Scheduler.ScheduledCommand)null);
   }
 
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-    setText((String)map.get("text"));
-  }
-
-  @Override
-  public Widget asWidget() {
-    return null;
-  }
-
-  @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
     MenuBar bar = new MenuBar(true);
     for (UIComponent.Child child : children) {

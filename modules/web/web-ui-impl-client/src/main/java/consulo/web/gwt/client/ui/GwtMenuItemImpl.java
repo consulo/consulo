@@ -17,7 +17,6 @@ package consulo.web.gwt.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.Widget;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -26,7 +25,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtMenuItemImpl extends MenuItem implements InternalGwtComponent {
+public class GwtMenuItemImpl extends MenuItem  {
 
   public GwtMenuItemImpl() {
     super("", new Scheduler.ScheduledCommand() {
@@ -37,13 +36,7 @@ public class GwtMenuItemImpl extends MenuItem implements InternalGwtComponent {
     });
   }
 
-  @Override
   public void updateState(@NotNull Map<String, Object> map) {
     setText((String)map.get("text"));
-  }
-
-  @Override
-  public Widget asWidget() {
-    return null;
   }
 }

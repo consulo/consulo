@@ -17,41 +17,18 @@ package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PopupPanel;
-import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.client.util.GwtUIUtil;
-import consulo.web.gwt.shared.UIComponent;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class GwtModalWindowImpl extends PopupPanel implements InternalGwtComponentWithChildren {
+public class GwtModalWindowImpl extends PopupPanel  {
   private Grid myGrid = GwtUIUtil.fillAndReturn(new Grid(2, 1));
 
   public GwtModalWindowImpl() {
     super(false, true);
     setWidget(myGrid);
     setGlassEnabled(true);
-  }
-
-  @Override
-  public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
-    GwtWindowImpl.handleComponents(proxy, myGrid, children);
-  }
-
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-    final boolean visible = DefaultVariables.parseBoolAsTrue(map, "visible");
-
-    if (visible) {
-      center();
-    }
-    else {
-      hide();
-    }
   }
 }

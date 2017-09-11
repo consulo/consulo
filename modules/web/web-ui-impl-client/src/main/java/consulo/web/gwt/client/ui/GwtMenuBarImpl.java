@@ -16,24 +16,10 @@
 package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
-import consulo.web.gwt.client.UIConverter;
-import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.shared.UIComponent;
-
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtMenuBarImpl extends MenuBar implements InternalGwtComponentWithChildren {
-  @Override
-  public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
-    for (UIComponent.Child child : children) {
-      final InternalGwtComponent component = UIConverter.create(proxy, child.getComponent());
-
-      addItem((MenuItem)component);
-    }
-  }
+public class GwtMenuBarImpl extends MenuBar {
 }
