@@ -16,24 +16,15 @@
 package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.InlineHTML;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class GwtHtmlLabelImpl extends InlineHTML implements InternalGwtComponent {
+public class GwtHtmlLabelImpl extends InlineHTML {
   public GwtHtmlLabelImpl() {
     setHorizontalAlignment(ALIGN_CENTER);
-  }
 
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-    final String text = (String)map.get("text");
-    if (text != null) {
-      setHTML(text);
-    }
+    setStyleName("ui-html-label");
   }
 }
