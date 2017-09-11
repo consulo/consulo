@@ -41,6 +41,8 @@ public class GwtVerticalLayoutImpl extends Grid {
   public void setChildren(List<Widget> widgets) {
     clear();
 
+    resizeRows(1);
+
     //FIXME [VISTALL] improve, we can call resizeRows once at time
     for (Widget child : widgets) {
       final int rowCount = getRowCount();
