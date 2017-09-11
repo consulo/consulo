@@ -1,3 +1,7 @@
+$v-font-family: sans-serif;
+$v-font-size: 12px;
+$v-app-background-color: #ffffff;
+
 @import "../valo/valo.scss";
 
 
@@ -20,6 +24,13 @@
   }
 
   .ui-check-box-disabled {
+    color: #888;
+  }
+
+  .ui-radio-button {
+  }
+
+  .ui-radio-button-disabled {
     color: #888;
   }
 
