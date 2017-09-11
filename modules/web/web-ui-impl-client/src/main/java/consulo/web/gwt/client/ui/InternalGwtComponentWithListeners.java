@@ -23,5 +23,6 @@ import consulo.web.gwt.client.WebSocketProxy;
  */
 @Deprecated
 public interface InternalGwtComponentWithListeners extends InternalGwtComponent {
-  void setupListeners(final WebSocketProxy proxy, final long componentId);
+  default void setupListeners(final WebSocketProxy proxy, final long componentId) {
+  }
 }

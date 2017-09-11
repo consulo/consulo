@@ -97,9 +97,4 @@ public class GwtListBoxImpl extends FlowPanel implements InternalGwtComponentWit
       modelListener.onModelEvent(event);
     }
   }
-
-  @Override
-  public void setupListeners(final WebSocketProxy proxy, final long componentId) {
-
-  }
 }
