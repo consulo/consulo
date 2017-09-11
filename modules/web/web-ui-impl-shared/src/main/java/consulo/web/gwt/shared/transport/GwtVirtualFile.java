@@ -15,9 +15,9 @@
  */
 package consulo.web.gwt.shared.transport;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
 import consulo.annotations.DeprecationInfo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Deprecated
 @DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
-public class GwtVirtualFile implements IsSerializable {
+public class GwtVirtualFile implements Serializable {
   public String url;
 
   public List<String> iconLayers = new ArrayList<String>();

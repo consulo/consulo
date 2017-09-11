@@ -16,8 +16,6 @@
 package consulo.web.gwt.shared;
 
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-
 import java.io.Serializable;
 import java.util.Map;
 
@@ -25,7 +23,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class UIVariablesOwner implements Serializable, IsSerializable {
+public class UIVariablesOwner implements Serializable {
   private Map<String, Object> myVariables;
 
   public Map<String, Object> getVariables() {

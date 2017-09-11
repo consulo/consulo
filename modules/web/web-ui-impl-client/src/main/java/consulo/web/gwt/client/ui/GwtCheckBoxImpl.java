@@ -17,7 +17,6 @@ package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.shared.state.UIComponentState;
 import consulo.web.gwt.shared.ui.InternalEventTypes;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +26,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponentWithListeners<UIComponentState> {
+public class GwtCheckBoxImpl extends CheckBox implements InternalGwtComponentWithListeners {
   @Override
   public void setupListeners(final WebSocketProxy proxy, final long componentId) {
     addValueChangeHandler(event -> proxy.sendFireListener(componentId, InternalEventTypes.SELECT, map -> {

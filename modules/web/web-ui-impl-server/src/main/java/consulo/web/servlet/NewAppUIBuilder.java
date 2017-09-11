@@ -16,8 +16,11 @@
 package consulo.web.servlet;
 
 import com.vaadin.server.*;
-import com.vaadin.ui.Label;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.internal.WGwtLabelImpl;
+import consulo.ui.internal.WGwtLabeledLayoutImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,6 +41,16 @@ public class NewAppUIBuilder extends UI {
         @Override
         public String getResourcesPath() {
           return "/app";
+        }
+
+        @Override
+        public String getWidgetset(String defaultValue) {
+          return "consulo.web.gwt.UI";
+        }
+
+        @Override
+        public PushMode getPushMode() {
+          return PushMode.AUTOMATIC;
         }
       };
     }
@@ -69,6 +82,11 @@ public class NewAppUIBuilder extends UI {
           }
 
           @Override
+          public String getTheme(UICreateEvent event) {
+            return "consulo";
+          }
+
+          @Override
           public UI createInstance(UICreateEvent event) {
             return new NewAppUIBuilder();
           }
@@ -78,7 +96,10 @@ public class NewAppUIBuilder extends UI {
   }
 
   @Override
+  @RequiredUIAccess
   protected void init(VaadinRequest request) {
-    setContent(new Label("Test"));
+    WGwtLabeledLayoutImpl test = new WGwtLabeledLayoutImpl("test");
+    test.set(new WGwtLabelImpl("Test"));
+    setContent(test);
   }
 }

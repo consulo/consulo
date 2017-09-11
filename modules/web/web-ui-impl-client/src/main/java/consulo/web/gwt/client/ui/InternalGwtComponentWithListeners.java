@@ -16,12 +16,11 @@
 package consulo.web.gwt.client.ui;
 
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.shared.state.UIComponentState;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
-public interface InternalGwtComponentWithListeners<T extends UIComponentState> extends InternalGwtComponent<T> {
+public interface InternalGwtComponentWithListeners extends InternalGwtComponent {
   void setupListeners(final WebSocketProxy proxy, final long componentId);
 }

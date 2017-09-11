@@ -17,7 +17,6 @@ package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
-import consulo.web.gwt.shared.state.UIComponentState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -26,7 +25,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class GwtLayeredImageImpl extends FlowPanel implements InternalGwtComponent<UIComponentState> {
+public class GwtLayeredImageImpl extends FlowPanel implements InternalGwtComponent {
   public GwtLayeredImageImpl() {
     setStyleName("gwtLayeredImage");
   }

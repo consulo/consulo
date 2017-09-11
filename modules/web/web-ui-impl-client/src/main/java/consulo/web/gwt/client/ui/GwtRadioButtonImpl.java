@@ -18,7 +18,6 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.ui.RadioButton;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.shared.UIClientEventType;
-import consulo.web.gwt.shared.state.UIComponentState;
 import consulo.web.gwt.shared.ui.InternalEventTypes;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +28,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtRadioButtonImpl extends RadioButton implements InternalGwtComponentWithListeners<UIComponentState> {
+public class GwtRadioButtonImpl extends RadioButton implements InternalGwtComponentWithListeners {
   public GwtRadioButtonImpl() {
     super(null);
   }

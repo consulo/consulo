@@ -56,7 +56,7 @@ import com.intellij.psi.*;
 import com.intellij.util.BitUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
-import consulo.web.gwt.shared.GwtTransportService;
+import consulo.web.gwt.client.GwtTransportService;
 import consulo.web.gwt.shared.transport.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

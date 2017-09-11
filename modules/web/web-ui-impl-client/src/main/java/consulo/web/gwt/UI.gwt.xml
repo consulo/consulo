@@ -15,29 +15,12 @@
   - limitations under the License.
   -->
 <module>
-  <inherits name="com.google.gwt.core.Core" />
+  <inherits name="com.vaadin.DefaultWidgetSet" />
   <inherits name="com.sksamuel.gwt.GwtWebsockets"/>
   <inherits name="org.gwt.advanced.Grid"/>
   <inherits name="consulo.ui"/>
-  <inherits name="com.github.nmorel.gwtjackson.GwtJackson" />
 
-  <entry-point class='consulo.web.gwt.client.UIEntryPoint'/>
-
-  <source path="">
-    <!--exclude generator class due source path is global-->
-    <exclude name="**/UIFactoryGenerator.java"/>
-  </source>
-
-  <public path="gwt/client/resource"/>
-
-  <stylesheet src="css/advanced-gwt-custom.css"/>
-  <stylesheet src="css/advanced-gwt.css"/>
-  <stylesheet src="css/gwt.css"/>
-  <stylesheet src="css/ui.css"/>
-
-  <generate-with class="consulo.web.gwt.UIFactoryGenerator">
-    <when-type-assignable class="consulo.web.gwt.client.ui.UIFactory"/>
-  </generate-with>
+  <source path=""/>
 
   <set-property name="user.agent" value="ie10,gecko1_8,safari"/>
 </module>

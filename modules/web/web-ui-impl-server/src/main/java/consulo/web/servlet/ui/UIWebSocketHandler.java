@@ -15,10 +15,11 @@
  */
 package consulo.web.servlet.ui;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import consulo.web.gwt.shared.UIClientEvent;
-
-import javax.websocket.*;
+import javax.websocket.CloseReason;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 /**
@@ -27,39 +28,17 @@ import javax.websocket.server.ServerEndpoint;
  */
 @ServerEndpoint(value = "/ws")
 public class UIWebSocketHandler {
-  public static final ObjectMapper ourObjectMapper = new ObjectMapper();
 
   @OnOpen
   public void onOpen(Session session) {
-    System.out.println("Connected ... " + session.getId());
   }
 
   @OnMessage
   public void onMessage(String message, Session session) {
-    UIClientEvent clientEvent = decode(message);
 
-    switch (clientEvent.getType()) {
-      case sessionOpen:
-        UISessionManager.ourInstance.onSessionOpen(session, clientEvent);
-        break;
-      case invokeEvent:
-        UISessionManager.ourInstance.onInvokeEvent(session, clientEvent);
-        break;
-    }
-  }
-
-  private static UIClientEvent decode(String data) {
-    try {
-      return ourObjectMapper.readValue(data, UIClientEvent.class);
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-      throw new Error(e);
-    }
   }
 
   @OnClose
   public void onClose(Session session, CloseReason closeReason) {
-    UISessionManager.ourInstance.onClose(session);
   }
 }

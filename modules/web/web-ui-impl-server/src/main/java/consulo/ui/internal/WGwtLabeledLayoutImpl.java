@@ -15,35 +15,41 @@
  */
 package consulo.ui.internal;
 
+import com.vaadin.ui.AbstractSingleComponentContainer;
 import consulo.ui.Component;
 import consulo.ui.LabeledLayout;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 15-Jun-16
  */
-public class WGwtLabeledLayoutImpl extends WGwtLayoutImpl<Object> implements LabeledLayout {
-  private String myText;
-
+public class WGwtLabeledLayoutImpl extends AbstractSingleComponentContainer implements LabeledLayout {
   public WGwtLabeledLayoutImpl(String text) {
-    myText = text;
-  }
-
-  @Override
-  protected void getState(Map<String, Object> map) {
-    super.getState(map);
-    map.put("text", myText);
+    getState().caption = text;
   }
 
   @RequiredUIAccess
   @NotNull
   @Override
   public LabeledLayout set(@NotNull Component component) {
-    addChild((WGwtBaseComponent)component, new Object());
+    setContent((com.vaadin.ui.Component)component);
+    markAsDirtyRecursive();
     return this;
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)getParent();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
+
   }
 }

@@ -20,7 +20,6 @@ import com.google.gwt.user.client.ui.MenuItem;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.shared.UIComponent;
-import consulo.web.gwt.shared.state.UIComponentState;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtMenuBarImpl extends MenuBar implements InternalGwtComponentWithChildren<UIComponentState> {
+public class GwtMenuBarImpl extends MenuBar implements InternalGwtComponentWithChildren {
   @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
     for (UIComponent.Child child : children) {

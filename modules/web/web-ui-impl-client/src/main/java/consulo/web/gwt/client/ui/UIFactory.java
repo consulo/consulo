@@ -20,7 +20,7 @@ package consulo.web.gwt.client.ui;
  * @since 19-Jun-16
  */
 public interface UIFactory {
-  InternalGwtComponent<?> create(String type);
+  InternalGwtComponent create(String type);
 
   Class<?> getStateType(String type);
 }

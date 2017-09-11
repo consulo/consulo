@@ -18,7 +18,6 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
-import consulo.web.gwt.shared.state.UIComponentState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -27,7 +26,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtMenuItemImpl extends MenuItem implements InternalGwtComponent<UIComponentState> {
+public class GwtMenuItemImpl extends MenuItem implements InternalGwtComponent {
 
   public GwtMenuItemImpl() {
     super("", new Scheduler.ScheduledCommand() {

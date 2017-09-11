@@ -18,8 +18,8 @@ package consulo.web.gwt.client.util;
 import com.google.gwt.core.shared.GWT;
 import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.service.FetchService;
-import consulo.web.gwt.shared.GwtTransportService;
-import consulo.web.gwt.shared.GwtTransportServiceAsync;
+import consulo.web.gwt.client.GwtTransportService;
+import consulo.web.gwt.client.GwtTransportServiceAsync;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -26,7 +26,6 @@ import com.google.gwt.view.client.TreeViewModel;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.shared.UIComponent;
-import consulo.web.gwt.shared.state.UIComponentState;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,7 +36,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 19-Jun-16
  */
-public class GwtTreeImpl extends CellTree implements InternalGwtComponentWithChildren<UIComponentState> {
+public class GwtTreeImpl extends CellTree implements InternalGwtComponentWithChildren {
   private static class OurModel implements TreeViewModel {
     private Map<String, UIComponent.Child> myChildren = new HashMap<>();
     private WebSocketProxy myProxy;

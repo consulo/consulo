@@ -18,7 +18,7 @@
           <option name="profilesMap">
             <map />
           </option>
-          <option name="resolveToWorkspace" value="false" />
+          <option name="resolveToWorkspace" value="true" />
           <option name="workingDirPath" value="$PROJECT_DIR$/modules/web/web-boot" />
         </MavenRunnerParameters>
       </option>

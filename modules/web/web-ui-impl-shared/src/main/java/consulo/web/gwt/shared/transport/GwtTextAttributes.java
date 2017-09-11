@@ -15,8 +15,9 @@
  */
 package consulo.web.gwt.shared.transport;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
 import consulo.annotations.DeprecationInfo;
+
+import java.io.Serializable;
 
 /**
  * @author VISTALL
@@ -24,7 +25,7 @@ import consulo.annotations.DeprecationInfo;
  */
 @Deprecated
 @DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
-public class GwtTextAttributes implements IsSerializable {
+public class GwtTextAttributes implements Serializable {
   public static int BOLD = 1 << 1;
   public static int ITALIC = 1 << 2;
   public static int UNDERLINE = 1 << 3;

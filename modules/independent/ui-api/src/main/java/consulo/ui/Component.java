@@ -39,5 +39,6 @@ public interface Component {
   @RequiredUIAccess
   void setSize(@NotNull Size size);
 
-  void dispose();
+  default void dispose() {
+  }
 }

@@ -70,16 +70,12 @@
       <artifactId>consulo-ui-api-shared</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-servlet</artifactId>
-      <version>${gwt.version}</version>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-shared</artifactId>
+      <version>${vaadin.version}</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
-      <version>${jackson.version}</version>
     </dependency>
   </dependencies>
 </project>

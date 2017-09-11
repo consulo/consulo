@@ -20,21 +20,18 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.shared.UIComponent;
-import consulo.web.gwt.shared.state.UIComponentState;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 15-Jun-16
  */
-public class GwtLabeledLayoutImpl extends CaptionPanel implements InternalGwtComponentWithChildren<UIComponentState> {
+public class GwtLabeledLayoutImpl extends CaptionPanel implements InternalGwtComponentWithChildren {
   public GwtLabeledLayoutImpl() {
     final SimplePanel widget = (SimplePanel)getWidget();
 
-    widget.addStyleName("gwtLabeledLayout");
+    widget.addStyleName("consuloLabeledLayout");
   }
 
   @Override
@@ -45,10 +42,5 @@ public class GwtLabeledLayoutImpl extends CaptionPanel implements InternalGwtCom
       final InternalGwtComponent childComponent = UIConverter.create(proxy, child.getComponent());
       add(childComponent);
     }
-  }
-
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-    setCaptionText((String)map.get("text"));
   }
 }

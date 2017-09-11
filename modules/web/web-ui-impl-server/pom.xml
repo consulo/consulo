@@ -77,36 +77,29 @@
       <artifactId>vaadin-server</artifactId>
       <version>${vaadin.version}</version>
     </dependency>
+
     <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-push</artifactId>
       <version>${vaadin.version}</version>
     </dependency>
+
     <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-themes</artifactId>
       <version>${vaadin.version}</version>
     </dependency>
+
     <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-client-compiled</artifactId>
       <version>${vaadin.version}</version>
     </dependency>
 
-
-
-
-    
     <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-servlet</artifactId>
-      <version>${gwt.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
+      <groupId>consulo</groupId>
+      <artifactId>consulo-web-ui-impl-client</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>

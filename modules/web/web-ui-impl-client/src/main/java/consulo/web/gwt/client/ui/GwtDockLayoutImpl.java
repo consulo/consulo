@@ -21,7 +21,6 @@ import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.UIComponent;
-import consulo.web.gwt.shared.state.UIComponentState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -31,7 +30,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponentWithChildren<UIComponentState> {
+public class GwtDockLayoutImpl extends DockPanel implements InternalGwtComponentWithChildren {
   public GwtDockLayoutImpl() {
     GwtUIUtil.fill(this);
     setHorizontalAlignment(ALIGN_LEFT);

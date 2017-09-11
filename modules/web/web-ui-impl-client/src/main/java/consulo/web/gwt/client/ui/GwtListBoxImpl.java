@@ -22,7 +22,6 @@ import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.client.ui.advancedGwt.ComboBoxSelectItem;
 import consulo.web.gwt.shared.UIClientEventType;
 import consulo.web.gwt.shared.UIComponent;
-import consulo.web.gwt.shared.state.UIComponentState;
 import consulo.web.gwt.shared.ui.InternalEventTypes;
 import org.gwt.advanced.client.datamodel.ListModelEvent;
 import org.gwt.advanced.client.datamodel.ListModelListener;
@@ -37,7 +36,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class GwtListBoxImpl extends FlowPanel implements InternalGwtComponentWithChildren<UIComponentState>, InternalGwtComponentWithListeners<UIComponentState> {
+public class GwtListBoxImpl extends FlowPanel implements InternalGwtComponentWithChildren, InternalGwtComponentWithListeners {
   /**
    * Item list with by index
    */

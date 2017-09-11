@@ -15,44 +15,45 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.openapi.util.Comparing;
+import com.vaadin.ui.AbstractComponent;
+import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class WGwtLabelImpl extends WGwtBaseComponent implements Label {
-  private String myText;
-
+public class WGwtLabelImpl extends AbstractComponent implements Label {
   public WGwtLabelImpl(String text) {
-    myText = text;
+    getState().caption = text;
   }
 
   @NotNull
   @Override
   public String getText() {
-    return myText;
+    return getState().caption;
   }
 
+  @RequiredUIAccess
   @Override
   public void setText(@NotNull String text) {
-    if (Comparing.equal(myText, text)) {
-      return;
-    }
-
-    myText = text;
-
-    markAsChanged();
+    getState().caption = text;
+    markAsDirty();
   }
 
+  @Nullable
   @Override
-  protected void getState(Map<String, Object> map) {
-    super.getState(map);
+  public Component getParentComponent() {
+    return null;
+  }
 
-    map.put("text", myText);
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
+
   }
 }

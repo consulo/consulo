@@ -18,8 +18,6 @@ package consulo.web.gwt.client;
 import com.google.gwt.user.client.Window;
 import com.sksamuel.gwt.websockets.Websocket;
 import com.sksamuel.gwt.websockets.WebsocketListener;
-import consulo.web.gwt.client.util.ExceptionUtil;
-import consulo.web.gwt.client.util.Log;
 import consulo.web.gwt.shared.UIClientEvent;
 import consulo.web.gwt.shared.UIClientEventType;
 
@@ -64,22 +62,5 @@ public class WebSocketProxy {
   }
 
   public void send(UIClientEventType eventType, Consumer<UIClientEvent> consumer) {
-    try {
-      final UIClientEvent clientEvent = new UIClientEvent();
-
-      clientEvent.setSessionId(mySessionId);
-      clientEvent.setType(eventType);
-
-      consumer.accept(clientEvent);
-
-      final String data = UIMappers.ourUIClientEventMapper.write(clientEvent);
-
-      Log.log("send: " + data);
-
-      myWebsocket.send(data);
-    }
-    catch (Exception e) {
-      Window.alert("Failed to serialize " + ExceptionUtil.toString(e));
-    }
   }
 }

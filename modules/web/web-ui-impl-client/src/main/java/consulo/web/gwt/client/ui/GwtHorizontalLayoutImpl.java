@@ -19,7 +19,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.shared.UIComponent;
-import consulo.web.gwt.shared.state.UIComponentState;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ import java.util.List;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class GwtHorizontalLayoutImpl extends HorizontalPanel implements InternalGwtComponentWithChildren<UIComponentState> {
+public class GwtHorizontalLayoutImpl extends HorizontalPanel implements InternalGwtComponentWithChildren {
   public GwtHorizontalLayoutImpl() {
     setHorizontalAlignment(ALIGN_CENTER);
   }

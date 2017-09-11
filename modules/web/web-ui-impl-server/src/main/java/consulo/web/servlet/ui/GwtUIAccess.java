@@ -103,13 +103,7 @@ public class GwtUIAccess extends UIAccess {
   }
 
   private static String encode(final UIServerEvent messageDto) {
-    try {
-      return UIWebSocketHandler.ourObjectMapper.writeValueAsString(messageDto);
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-      throw new Error(e);
-    }
+    return null;
   }
 
   @RequiredUIAccess
