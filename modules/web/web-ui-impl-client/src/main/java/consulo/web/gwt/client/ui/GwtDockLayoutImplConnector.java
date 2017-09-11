@@ -18,8 +18,6 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.StyleConstants;
-import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
@@ -30,14 +28,7 @@ import java.util.List;
  * @since 11-Sep-17
  */
 @Connect(canonicalName = "consulo.ui.internal.WGwtDockLayoutImpl")
-public class GwtDockLayoutImplConnector extends AbstractLayoutConnector {
-  @Override
-  protected void updateWidgetStyleNames() {
-    super.updateWidgetStyleNames();
-
-    setWidgetStyleName(StyleConstants.UI_WIDGET, false);
-  }
-
+public class GwtDockLayoutImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
     getWidget().clear();
@@ -68,10 +59,6 @@ public class GwtDockLayoutImplConnector extends AbstractLayoutConnector {
           break;
       }
     }
-  }
-
-  @Override
-  public void updateCaption(ComponentConnector componentConnector) {
   }
 
   @Override

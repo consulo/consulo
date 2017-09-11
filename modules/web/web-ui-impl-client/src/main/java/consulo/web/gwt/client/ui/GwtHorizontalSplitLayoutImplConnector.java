@@ -18,11 +18,8 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.layout.SplitLayoutState;
@@ -35,19 +32,14 @@ import java.util.List;
  * @since 11-Sep-17
  */
 @Connect(canonicalName = "consulo.ui.internal.WGwtHorizontalSplitLayoutImpl")
-public class GwtHorizontalSplitLayoutImplConnector extends AbstractLayoutConnector {
-  @Override
-  protected void updateWidgetStyleNames() {
-    super.updateWidgetStyleNames();
-
-    setWidgetStyleName(StyleConstants.UI_WIDGET, false);
-  }
-
+public class GwtHorizontalSplitLayoutImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
     List<Widget> widgets = GwtUIUtil.remapWidgets(this);
 
     setWidget(getWidget(), safeGet(widgets, 0), safeGet(widgets, 1));
+
+    resize();
   }
 
   @Override
@@ -55,10 +47,6 @@ public class GwtHorizontalSplitLayoutImplConnector extends AbstractLayoutConnect
     super.onStateChanged(stateChangeEvent);
 
     getWidget().setSplitPosition(getState().myProportion + "%");
-  }
-
-  @Override
-  public void updateCaption(ComponentConnector componentConnector) {
   }
 
   @Override
@@ -76,7 +64,22 @@ public class GwtHorizontalSplitLayoutImplConnector extends AbstractLayoutConnect
     HorizontalSplitPanel widget = new HorizontalSplitPanel();
     widget.setStyleName("ui-horizontal-split-panel");
     widget.setHeight(null);
+
     return widget;
+  }
+
+  private void resize() {
+    HorizontalSplitPanel widget = getWidget();
+    final String height = widget.getElement().getStyle().getHeight();
+
+    Widget o1 = widget.getLeftWidget();
+    if (o1 == null) {
+      return;
+    }
+
+    if (height == null || height.isEmpty()) {
+      widget.setHeight(o1.getOffsetHeight() + "px");
+    }
   }
 
   @Nullable
@@ -90,15 +93,6 @@ public class GwtHorizontalSplitLayoutImplConnector extends AbstractLayoutConnect
     if (o1 != null) {
       GwtUIUtil.fill(o1);
 
-      o1.addAttachHandler(event -> {
-        final int height = panel.getElement().getClientHeight();
-        Window.alert("attach " + o1.getOffsetHeight() + o1.getElement().getClientHeight());
-
-        if (height != 0) {
-          Window.alert("set " + o1.getElement().getClientHeight());
-          panel.setHeight(o1.getElement().getClientHeight() + "px");
-        }
-      });
       panel.setLeftWidget(o1);
     }
     else {

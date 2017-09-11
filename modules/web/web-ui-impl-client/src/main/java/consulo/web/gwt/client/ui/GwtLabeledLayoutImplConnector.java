@@ -35,6 +35,11 @@ public class GwtLabeledLayoutImplConnector extends AbstractSingleComponentContai
   }
 
   @Override
+  protected void updateComponentSize() {
+    // nothing
+  }
+
+  @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
     getWidget().clear();
     getWidget().add(getContentWidget());

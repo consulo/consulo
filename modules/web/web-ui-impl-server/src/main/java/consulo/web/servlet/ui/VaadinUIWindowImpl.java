@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author VISTALL
  * @since 11-Sep-17
- *
+ * <p>
  * TODO [VISTALL] support menu bar
  */
 class VaadinUIWindowImpl implements Window {
@@ -74,6 +74,7 @@ class VaadinUIWindowImpl implements Window {
   @RequiredUIAccess
   @Override
   public void setContent(@NotNull Component content) {
+    myUI.setSizeFull();
     myUI.setContent((com.vaadin.ui.Component)content);
   }
 

@@ -22,7 +22,6 @@ import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.ui.image.ImageConverter;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
-import consulo.web.gwt.shared.ui.state.image.ImageStateBase;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 import java.util.ArrayList;
@@ -34,6 +33,11 @@ import java.util.List;
  */
 @Connect(canonicalName = "consulo.ui.internal.WGwtComboBoxImpl")
 public class GwtComboBoxImplConnector extends AbstractComponentConnector {
+  @Override
+  protected void updateComponentSize() {
+    // nothing
+  }
+
   @Override
   protected void updateWidgetStyleNames() {
     super.updateWidgetStyleNames();

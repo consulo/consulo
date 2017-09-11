@@ -37,6 +37,10 @@ public class GwtCheckBoxImplConnector extends AbstractComponentConnector impleme
     getWidget().addValueChangeHandler(this);
   }
 
+  @Override
+  protected void updateComponentSize() {
+    // nothing
+  }
 
   @Override
   public void onValueChange(ValueChangeEvent<Boolean> event) {

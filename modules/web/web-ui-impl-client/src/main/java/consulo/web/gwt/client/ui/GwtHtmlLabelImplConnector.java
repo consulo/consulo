@@ -34,6 +34,11 @@ public class GwtHtmlLabelImplConnector extends AbstractComponentConnector {
   }
 
   @Override
+  protected void updateComponentSize() {
+    // nothing
+  }
+
+  @Override
   public GwtHtmlLabelImpl getWidget() {
     return (GwtHtmlLabelImpl)super.getWidget();
   }

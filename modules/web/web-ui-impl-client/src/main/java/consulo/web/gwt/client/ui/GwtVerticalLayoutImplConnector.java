@@ -15,10 +15,7 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.StyleConstants;
-import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.util.GwtUIUtil;
 
@@ -27,21 +24,10 @@ import consulo.web.gwt.client.util.GwtUIUtil;
  * @since 11-Sep-17
  */
 @Connect(canonicalName = "consulo.ui.internal.WGwtVerticalLayoutImpl")
-public class GwtVerticalLayoutImplConnector extends AbstractLayoutConnector {
-  @Override
-  protected void updateWidgetStyleNames() {
-    super.updateWidgetStyleNames();
-
-    setWidgetStyleName(StyleConstants.UI_WIDGET, false);
-  }
-
+public class GwtVerticalLayoutImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
     getWidget().setChildren(GwtUIUtil.remapWidgets(this));
-  }
-
-  @Override
-  public void updateCaption(ComponentConnector componentConnector) {
   }
 
   @Override

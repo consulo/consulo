@@ -15,22 +15,15 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.StyleConstants;
-import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.shared.ui.Connect;
+import com.vaadin.client.ui.AbstractLayoutConnector;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 12-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtLabelImpl")
-public class GwtLabelImplConnector extends AbstractComponentConnector {
-  @Override
-  protected void updateComponentSize() {
-    // nothing
-  }
-
+public abstract class GwtLayoutConnector extends AbstractLayoutConnector {
   @Override
   protected void updateWidgetStyleNames() {
     super.updateWidgetStyleNames();
@@ -39,15 +32,11 @@ public class GwtLabelImplConnector extends AbstractComponentConnector {
   }
 
   @Override
-  public GwtLabelImpl getWidget() {
-    return (GwtLabelImpl)super.getWidget();
+  protected void updateComponentSize() {
+    // nothing
   }
 
   @Override
-  public void onStateChanged(StateChangeEvent stateChangeEvent) {
-    super.onStateChanged(stateChangeEvent);
-
-    final String text = getState().caption;
-    getWidget().setText(text);
+  public void updateCaption(ComponentConnector componentConnector) {
   }
 }
