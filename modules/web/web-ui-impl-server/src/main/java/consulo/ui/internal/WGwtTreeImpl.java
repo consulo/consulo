@@ -15,11 +15,9 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.web.gwt.shared.UIComponent;
-import consulo.web.gwt.shared.ui.InternalEventTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +34,6 @@ public class WGwtTreeImpl<NODE> extends WGwtBaseComponent {
 
   public WGwtTreeImpl(WGwtTreeModelImpl<NODE> model) {
     myModel = model;
-
-    enableNotify(InternalEventTypes.SHOW);
   }
 
   @RequiredUIAccess
@@ -45,7 +41,7 @@ public class WGwtTreeImpl<NODE> extends WGwtBaseComponent {
   public void invokeListeners(long type, Map<String, Object> variables) {
     UIAccess uiAccess = UIAccess.get();
 
-    if (type == InternalEventTypes.SHOW) {
+    /*if (type == InternalEventTypes.SHOW) {
       AppExecutorUtil.getAppExecutorService().execute(() -> {
         NODE node = myModel.fetchRootNode();
 
@@ -59,7 +55,7 @@ public class WGwtTreeImpl<NODE> extends WGwtBaseComponent {
           markAsChanged(CHILDREN_CHANGED);
         });
       });
-    }
+    }*/
   }
 
   @Override

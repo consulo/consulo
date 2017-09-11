@@ -23,6 +23,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
+@Deprecated
 public class UIVariablesOwner implements Serializable {
   private Map<String, Object> myVariables;
 

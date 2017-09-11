@@ -18,21 +18,13 @@ package consulo.web.gwt.client;
 import consulo.web.gwt.client.ui.InternalGwtComponent;
 import consulo.web.gwt.shared.UIComponent;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
+@Deprecated
 public class UIConverter {
-  private static Map<Long, InternalGwtComponent> ourCache = new HashMap<>();
-
   public static InternalGwtComponent create(WebSocketProxy proxy, UIComponent uiComponent) {
     return null;
-  }
-
-  public static InternalGwtComponent get(long id) {
-    return ourCache.get(id);
   }
 }

@@ -24,6 +24,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 11-Jun-16
  */
+@Deprecated
 public interface InternalGwtComponent extends IsWidget {
   default void updateState(@NotNull Map<String, Object> map) {
   }

@@ -23,6 +23,7 @@ import java.util.List;
  * @author VISTALL
  * @since 11-Jun-16
  */
+@Deprecated
 public class UIComponent extends UIVariablesOwner {
   public static class Child extends UIVariablesOwner {
     private UIComponent myComponent;

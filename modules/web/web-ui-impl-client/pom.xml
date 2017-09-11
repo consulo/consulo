@@ -107,12 +107,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.sksamuel.gwt</groupId>
-      <artifactId>gwt-websockets</artifactId>
-      <version>1.0.4</version>
-    </dependency>
-
-    <dependency>
       <groupId>net.sf.advanced-gwt</groupId>
       <artifactId>advanced-gwt</artifactId>
       <version>2.0.8</version>

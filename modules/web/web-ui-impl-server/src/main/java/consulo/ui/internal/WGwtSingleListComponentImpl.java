@@ -21,7 +21,6 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.model.ListModel;
 import consulo.web.gwt.shared.UIComponent;
-import consulo.web.gwt.shared.ui.InternalEventTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -84,25 +83,17 @@ public abstract class WGwtSingleListComponentImpl<E> extends WGwtBaseComponent i
   @RequiredUIAccess
   @Override
   public void invokeListeners(long type, Map<String, Object> variables) {
-    if (type == InternalEventTypes.SELECT) {
-      myIndex = (Integer)variables.get("index");
 
-      setValueImpl(myModel.get(myIndex));
-    }
   }
 
   @Override
   public void addValueListener(@NotNull ValueListener<E> valueListener) {
     myValueListeners.add(valueListener);
-    enableNotify(InternalEventTypes.SELECT);
   }
 
   @Override
   public void removeValueListener(@NotNull ValueComponent.ValueListener<E> valueListener) {
     myValueListeners.remove(valueListener);
-    if (myValueListeners.isEmpty()) {
-      disableNotify(InternalEventTypes.SELECT);
-    }
   }
 
   @Nullable

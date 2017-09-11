@@ -18,6 +18,7 @@ package consulo.ui.internal;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.BitUtil;
 import com.intellij.util.SmartList;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
@@ -36,6 +37,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author VISTALL
  * @since 11-Jun-16
  */
+@Deprecated
+@DeprecationInfo("Old our Consulo <-> GWT transport")
 public class WGwtBaseComponent implements Component {
   private static final AtomicLong ourIndex = new AtomicLong();
 

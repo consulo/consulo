@@ -17,11 +17,8 @@ package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.RadioButton;
 import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.shared.UIClientEventType;
-import consulo.web.gwt.shared.ui.InternalEventTypes;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,14 +32,7 @@ public class GwtRadioButtonImpl extends RadioButton implements InternalGwtCompon
 
   @Override
   public void setupListeners(final WebSocketProxy proxy, final long componentId) {
-    addValueChangeHandler(event -> proxy.send(UIClientEventType.invokeEvent, clientEvent -> {
-      Map<String, Object> vars = new HashMap<>();
-      vars.put("type", InternalEventTypes.SELECT);
-      vars.put("componentId", componentId);
-      vars.put("selected", event.getValue());
 
-      clientEvent.setVariables(vars);
-    }));
   }
 
   @Override

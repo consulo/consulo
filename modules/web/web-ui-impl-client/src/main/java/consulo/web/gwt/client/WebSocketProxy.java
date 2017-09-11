@@ -15,52 +15,10 @@
  */
 package consulo.web.gwt.client;
 
-import com.google.gwt.user.client.Window;
-import com.sksamuel.gwt.websockets.Websocket;
-import com.sksamuel.gwt.websockets.WebsocketListener;
-import consulo.web.gwt.shared.UIClientEvent;
-import consulo.web.gwt.shared.UIClientEventType;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
-
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
+@Deprecated
 public class WebSocketProxy {
-  private final Websocket myWebsocket;
-  private final String mySessionId;
-
-  public WebSocketProxy(String consuloSessionId) {
-    mySessionId = consuloSessionId;
-    String url = "ws://" + Window.Location.getHost() + "/ws";
-    myWebsocket = new Websocket(url);
-
-    Window.addCloseHandler(event -> myWebsocket.close());
-  }
-
-  public void open() {
-    myWebsocket.open();
-  }
-
-  public void addListener(WebsocketListener websocketListener) {
-    myWebsocket.addListener(websocketListener);
-  }
-
-  public void sendFireListener(long componentId, long mask, Consumer<Map<String, Object>> varSet) {
-    send(UIClientEventType.invokeEvent, clientEvent -> {
-      Map<String, Object> vars = new HashMap<>();
-      vars.put("type", mask);
-      vars.put("componentId", componentId);
-
-      varSet.accept(vars);
-
-      clientEvent.setVariables(vars);
-    });
-  }
-
-  public void send(UIClientEventType eventType, Consumer<UIClientEvent> consumer) {
-  }
 }

@@ -24,6 +24,7 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Jun-16
  */
+@Deprecated
 public interface InternalGwtComponentWithChildren extends InternalGwtComponent {
   default void clear() {
   }

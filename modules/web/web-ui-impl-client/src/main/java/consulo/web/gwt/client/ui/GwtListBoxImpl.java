@@ -20,15 +20,12 @@ import com.google.gwt.user.client.ui.IsWidget;
 import consulo.web.gwt.client.UIConverter;
 import consulo.web.gwt.client.WebSocketProxy;
 import consulo.web.gwt.client.ui.advancedGwt.ComboBoxSelectItem;
-import consulo.web.gwt.shared.UIClientEventType;
 import consulo.web.gwt.shared.UIComponent;
-import consulo.web.gwt.shared.ui.InternalEventTypes;
 import org.gwt.advanced.client.datamodel.ListModelEvent;
 import org.gwt.advanced.client.datamodel.ListModelListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -103,17 +100,6 @@ public class GwtListBoxImpl extends FlowPanel implements InternalGwtComponentWit
 
   @Override
   public void setupListeners(final WebSocketProxy proxy, final long componentId) {
-    myModelListeners.add(event -> {
-      if (event.getType() == ListModelEvent.SELECT_ITEM) {
-        proxy.send(UIClientEventType.invokeEvent, clientEvent -> {
-          Map<String, Object> vars = new HashMap<>();
-          vars.put("type", InternalEventTypes.SELECT);
-          vars.put("componentId", componentId);
-          vars.put("index", event.getItemIndex());
 
-          clientEvent.setVariables(vars);
-        });
-      }
-    });
   }
 }
