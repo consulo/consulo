@@ -18,10 +18,13 @@ package consulo.web.boot;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.lang.UrlClassLoader;
-import consulo.web.boot.servlet.ResourcesServlet;
 import consulo.web.boot.util.logger.WebLoggerFactory;
 
-import javax.servlet.*;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.ServletRegistration;
 import javax.servlet.annotation.WebListener;
 import javax.servlet.annotation.WebServlet;
 import java.io.File;
@@ -113,15 +116,6 @@ public class Initializer implements ServletContextListener {
 
       System.out.println(aClass.getName() + " registered to: " + Arrays.asList(urls));
     }
-
-    servletContext.addServlet("ResourcesServlet", new ResourcesServlet(libFile, urlClassLoader)).addMapping("/webResources/*");
-
-  /*  ServerContainer serverContainer = (ServerContainer)servletContext.getAttribute("javax.websocket.server.ServerContainer");
-
-    Method getWebsockerEndpoint = webMain.getDeclaredMethod("getWebsockerEndpoint");
-
-    Class<?> invoke = (Class<?>)getWebsockerEndpoint.invoke(webLoader);
-    serverContainer.addEndpoint(invoke);  */
   }
 
   @Override

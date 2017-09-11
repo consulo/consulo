@@ -13,32 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.servlet.ui;
+package consulo.ui;
 
-import javax.websocket.CloseReason;
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.server.ServerEndpoint;
+import com.vaadin.ui.UI;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 16-Jun-16
  */
-@ServerEndpoint(value = "/ws")
-public class UIWebSocketHandler {
+class VaadinUIAccessImpl implements UIAccess {
+  private final UI myUI;
 
-  @OnOpen
-  public void onOpen(Session session) {
+  public VaadinUIAccessImpl(UI ui) {
+    myUI = ui;
   }
 
-  @OnMessage
-  public void onMessage(String message, Session session) {
-
+  @Override
+  public void give(@RequiredUIAccess @NotNull Runnable runnable) {
+    if (myUI.isAttached()) {
+      myUI.access(runnable);
+    }
   }
 
-  @OnClose
-  public void onClose(Session session, CloseReason closeReason) {
+  @Override
+  public void giveAndWait(@NotNull Runnable runnable) {
+    if (myUI.isAttached()) {
+      myUI.accessSynchronously(runnable);
+    }
   }
 }

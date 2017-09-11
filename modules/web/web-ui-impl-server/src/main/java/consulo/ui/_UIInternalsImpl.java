@@ -19,7 +19,6 @@ import com.intellij.openapi.util.IconLoader;
 import com.vaadin.ui.UI;
 import consulo.ui.internal.*;
 import consulo.ui.model.ListModel;
-import consulo.web.servlet.ui.VaadinUIAccessImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
