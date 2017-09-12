@@ -15,9 +15,11 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.image.ImageConverter;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
 
 import java.util.Map;
@@ -37,7 +39,17 @@ public class GwtTabbedLayoutImpl extends TabPanel {
     clear();
 
     for (Map.Entry<TabbedLayoutState.TabState, Widget> entry : map.entrySet()) {
-      add(entry.getValue(), GwtComboBoxImplConnector.buildItem(entry.getKey()));
+      TabbedLayoutState.TabState state = entry.getKey();
+      GwtHorizontalLayoutImpl tabWidget = GwtComboBoxImplConnector.buildItem(state);
+      if(state.myCloseButton != null) {
+        Widget closeIcon = ImageConverter.create(state.myCloseButton);
+        tabWidget.add(closeIcon);
+        tabWidget.setCellHorizontalAlignment(closeIcon, HasHorizontalAlignment.ALIGN_RIGHT);
+      }
+      else {
+        tabWidget.addStyleName("gwt-TabBarItem-no-close-button");
+      }
+      add(entry.getValue(), tabWidget);
     }
 
     selectTab(index);

@@ -17,6 +17,7 @@ package consulo.web.gwt.shared.ui.state.tab;
 
 import com.vaadin.shared.ui.AbstractComponentContainerState;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
+import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,8 @@ public class TabbedLayoutState extends AbstractComponentContainerState {
 
   public static class TabState extends ComboBoxState.Item {
     private static final long serialVersionUID = -8442971060081651491L;
+
+    public MultiImageState myCloseButton;
   }
 
   public List<TabState> myTabStates = new ArrayList<>();

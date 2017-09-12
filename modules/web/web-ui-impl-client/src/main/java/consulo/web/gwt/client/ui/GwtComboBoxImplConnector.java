@@ -58,7 +58,7 @@ public class GwtComboBoxImplConnector extends AbstractComponentConnector {
     getWidget().setItems(widgets);
   }
 
-  public static Widget buildItem(ComboBoxState.Item item) {
+  public static GwtHorizontalLayoutImpl buildItem(ComboBoxState.Item item) {
     GwtHorizontalLayoutImpl layout = new GwtHorizontalLayoutImpl();
     layout.setHorizontalAlignment(GwtHorizontalLayoutImpl.ALIGN_LEFT);
 

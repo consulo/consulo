@@ -18,6 +18,7 @@ package consulo.web.gwt.client.ui.image;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,7 @@ public class ImageConverter {
       box.setStyleName("ui-image");
       box.setUrl(state.myImageState.myURL);
 
-      widget = box;
+      widget = new SimplePanel(box);
     }
     else if (state.myFoldedImageState != null) {
       FlowPanel flowPanel = new FlowPanel();

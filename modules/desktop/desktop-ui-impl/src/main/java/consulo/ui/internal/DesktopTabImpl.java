@@ -15,10 +15,14 @@
  */
 package consulo.ui.internal;
 
+import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextStyle;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
@@ -37,6 +41,11 @@ public class DesktopTabImpl implements Tab {
 
   @Override
   public void append(@NotNull String text, @NotNull TextStyle... styles) {
+
+  }
+
+  @Override
+  public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
 
   }
 }

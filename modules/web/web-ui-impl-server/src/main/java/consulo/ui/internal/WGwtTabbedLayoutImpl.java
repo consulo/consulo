@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.vaadin.ui.AbstractComponentContainer;
 import consulo.ui.Component;
@@ -22,12 +23,14 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
+import consulo.ui.internal.image.WGwtImageUrlCache;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
@@ -49,6 +52,10 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
       TabbedLayoutState.TabState tabState = new TabbedLayoutState.TabState();
       tabState.myImageState = tab.getItem().myImageState;
       tabState.myItemSegments = tab.getItem().myItemSegments;
+      BiConsumer<Tab, Component> closeHandler = tab.getCloseHandler();
+      if (closeHandler != null) {
+        tabState.myCloseButton = WGwtImageUrlCache.fixSwingImageRef(AllIcons.Actions.CloseNew).getState();
+      }
 
       getState().myTabStates.add(tabState);
     }

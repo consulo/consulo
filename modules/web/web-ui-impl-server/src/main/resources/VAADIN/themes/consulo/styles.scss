@@ -239,7 +239,7 @@ $v-app-background-color: #ffffff;
   border-top: #e0e0e0 solid 1px;
   border-left: #e0e0e0 solid 1px;
   border-right: #e0e0e0 solid 1px;
-  padding: 4px 8px 4px 8px;
+  padding: 4px 0px 4px 4px;
 
   cursor: default;
   background: #d6d6d6;
@@ -253,6 +253,10 @@ $v-app-background-color: #ffffff;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.gwt-TabBarItem-no-close-button {
+  padding-right: 4px;
 }
 
 .gwt-TabBar .gwt-TabBarItem-selected {

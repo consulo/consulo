@@ -36,6 +36,7 @@ public class SomeTestUIBuilder {
 
     Tab okey = tabbed.addTab("Test Me", Components.label("Okey"));
     okey.setIcon(AllIcons.Nodes.Class);
+    okey.setCloseHandler((tab, component) -> {});
 
     DockLayout tabDock = Layouts.dock();
     build(tabDock);

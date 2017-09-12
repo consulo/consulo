@@ -15,11 +15,25 @@
  */
 package consulo.ui.internal;
 
+import consulo.ui.Component;
 import consulo.ui.Tab;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public class WGwtTabImpl extends WGwtItemPresentationImpl implements Tab {
+  private BiConsumer<Tab, Component> myCloseHandler;
+
+  @Override
+  public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
+    myCloseHandler = closeHandler;
+  }
+
+  public BiConsumer<Tab, Component> getCloseHandler() {
+    return myCloseHandler;
+  }
 }
