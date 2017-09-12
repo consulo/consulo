@@ -44,6 +44,7 @@ public class WGwtMenuImpl extends AbstractComponentContainer implements Menu {
   @Override
   public Menu add(@NotNull MenuItem menuItem) {
     myMenuItems.add((Component)menuItem);
+    addComponent((Component)menuItem);
     return this;
   }
 
@@ -57,17 +58,17 @@ public class WGwtMenuImpl extends AbstractComponentContainer implements Menu {
 
   @Override
   public void replaceComponent(Component oldComponent, Component newComponent) {
-
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public int getComponentCount() {
-    return 0;
+    return myMenuItems.size();
   }
 
   @Override
   public Iterator<Component> iterator() {
-    return null;
+    return myMenuItems.iterator();
   }
 
   @NotNull

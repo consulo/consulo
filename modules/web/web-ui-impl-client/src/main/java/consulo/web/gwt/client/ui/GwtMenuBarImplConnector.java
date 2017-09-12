@@ -15,14 +15,13 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.util.GwtUIUtil;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import java.util.function.Consumer;
 public class GwtMenuBarImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
-    addItems(GwtUIUtil.remapWidgets(this), getWidget()::addItem);
+    addItems(GwtUIUtil.remapWidgets(this), getWidget());
   }
 
   @Override
@@ -40,10 +39,16 @@ public class GwtMenuBarImplConnector extends GwtLayoutConnector {
     return (GwtMenuBarImpl)super.getWidget();
   }
 
-  public static void addItems(List<Widget> child, Consumer<MenuItem> itemConsumer) {
+  public static void addItems(List<Widget> child, MenuBar bar) {
     for (Widget widget : child) {
       if (widget instanceof GwtMenuItemImpl) {
-        itemConsumer.accept(((GwtMenuItemImpl)widget).getItem());
+        bar.addItem(((GwtMenuItemImpl)widget).getItem());
+      }
+      else if (widget instanceof GwtMenuSeparatorImpl) {
+        bar.addSeparator();
+      }
+      else if(widget instanceof GwtMenuImpl) {
+        bar.addItem(((GwtMenuImpl)widget).getMenu());
       }
     }
   }

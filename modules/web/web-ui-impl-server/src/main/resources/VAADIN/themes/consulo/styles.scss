@@ -146,6 +146,8 @@ table, tr, td {
 }
 .gwt-MenuBar-vertical .gwt-MenuItem {
   padding: 2px 40px 2px 1px;
+  font-size: $v-font-size;
+  font-weight: 400;
 }
 .gwt-MenuBar-vertical .gwt-MenuItemSeparator {
   padding: 2px 0px;

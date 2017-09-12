@@ -15,31 +15,13 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
+ *
+ * just stub object
  */
-public class GwtMenuSeparatorImpl extends UIObject {
-
-  @Override
-  public void setWidth(String width) {
-    // can't change
-  }
-
-  @Override
-  public void setHeight(String height) {
-    // can't change
-  }
-
-  @Override
-  public void setVisible(boolean visible) {
-    // can't change
-  }
-
-  @Override
-  public boolean isVisible() {
-    return true;
-  }
+public class GwtMenuSeparatorImpl extends SimplePanel {
 }

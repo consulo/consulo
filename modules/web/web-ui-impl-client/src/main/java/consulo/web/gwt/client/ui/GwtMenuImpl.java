@@ -18,9 +18,8 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
-import consulo.web.gwt.client.UIConverter;
-import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.shared.UIComponent;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import java.util.List;
 
@@ -28,24 +27,22 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtMenuImpl extends MenuItem {
+public class GwtMenuImpl extends SimplePanel {
+  private MenuItem myMenu;
 
   public GwtMenuImpl() {
-    super("", (Scheduler.ScheduledCommand)null);
+    myMenu = new MenuItem("", (Scheduler.ScheduledCommand)null);
   }
 
-  public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
-    MenuBar bar = new MenuBar(true);
-    for (UIComponent.Child child : children) {
-      final InternalGwtComponent component = UIConverter.create(proxy, child.getComponent());
+  public MenuItem getMenu() {
+    return myMenu;
+  }
 
-      if(component instanceof GwtMenuSeparatorImpl) {
-        bar.addSeparator();
-      }
-      else {
-        bar.addItem((MenuItem)component);
-      }
-    }
-    setSubMenu(bar);
+  public void setChildren(List<Widget> children) {
+    MenuBar bar = new MenuBar(true);
+
+    GwtMenuBarImplConnector.addItems(children, bar);
+
+    myMenu.setSubMenu(bar);
   }
 }

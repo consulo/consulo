@@ -21,14 +21,15 @@ import com.google.gwt.user.client.ui.SimplePanel;
 /**
  * @author VISTALL
  * @since 14-Jun-16
- *
+ * <p>
  * wrapper for menu item
  */
 public class GwtMenuItemImpl extends SimplePanel {
   private final MenuItem myItem;
 
   public GwtMenuItemImpl() {
-    myItem = new MenuItem("", () -> {});
+    myItem = new MenuItem("", () -> {
+    });
   }
 
   public MenuItem getItem() {
