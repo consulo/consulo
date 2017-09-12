@@ -52,16 +52,6 @@ $v-app-background-color: #ffffff;
     line-height: 0px;
   }
 
-  .ui-layered-image {
-    position: relative;
-  }
-
-  .ui-layered-image img {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
   .ui-list-box {
     border: 0;
     padding: 0;
@@ -89,6 +79,25 @@ $v-app-background-color: #ffffff;
   @include consulo;
 }
 
+
+.ui-layered-image {
+  position: relative;
+}
+
+.ui-layered-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ui-tabbed-layout {
+}
+
+.ui-tabbed-layout-bottom {
+  display: block;
+  height: 100%;
+  overflow: auto;
+}
 
 /** main combo box style */
 .advanced-WidgetButtonPanel {
@@ -213,4 +222,45 @@ $v-app-background-color: #ffffff;
 /** icon item label style **/
 .advanced-ListPopupPanel .list .selected-row .icon-item div {
     color: white;
+}
+
+.gwt-TabBar {
+  border-bottom: #e0e0e0 solid 1px;
+}
+
+.gwt-TabBar .gwt-TabBarFirst {
+  width: 0px;
+}
+
+.gwt-TabBar .gwt-TabBarRest {
+}
+
+.gwt-TabBar .gwt-TabBarItem {
+  border-top: #e0e0e0 solid 1px;
+  border-left: #e0e0e0 solid 1px;
+  border-right: #e0e0e0 solid 1px;
+  padding: 4px 8px 4px 8px;
+
+  cursor: default;
+  background: #d6d6d6;
+  color: black;
+  white-space: nowrap;
+
+  outline: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.gwt-TabBar .gwt-TabBarItem-selected {
+  cursor: default;
+  background: white;
+  color: black;
+}
+
+.gwt-TabBar .gwt-TabBarItem-disabled {
+  cursor: default;
 }

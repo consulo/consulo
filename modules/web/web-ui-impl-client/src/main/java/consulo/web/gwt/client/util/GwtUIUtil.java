@@ -20,7 +20,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.*;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ui.AbstractLayoutConnector;
+import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +67,7 @@ public class GwtUIUtil {
   }
 
   @NotNull
-  public static List<Widget> remapWidgets(AbstractLayoutConnector abstractLayout) {
+  public static List<Widget> remapWidgets(AbstractComponentContainerConnector abstractLayout) {
     List<Widget> widgets = new ArrayList<>();
     for (ComponentConnector connector : abstractLayout.getChildComponents()) {
       widgets.add(connector.getWidget());

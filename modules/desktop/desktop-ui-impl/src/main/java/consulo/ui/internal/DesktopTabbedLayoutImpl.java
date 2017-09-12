@@ -33,7 +33,7 @@ public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout
   @NotNull
   @Override
   public TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component) {
-    return this;
+    throw new UnsupportedOperationException();
   }
 
   @RequiredUIAccess

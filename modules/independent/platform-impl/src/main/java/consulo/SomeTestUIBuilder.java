@@ -29,7 +29,25 @@ import java.util.concurrent.TimeUnit;
  */
 public class SomeTestUIBuilder {
   @RequiredUIAccess
-  public static void build(Window window) {
+  public static void buildTabbed(Window window) {
+    DockLayout dock = Layouts.dock();
+
+    TabbedLayout tabbed = Layouts.tabbed();
+
+    tabbed.addTab("Test Me", Components.label("Okey"));
+    DockLayout tabDock = Layouts.dock();
+    build(tabDock);
+    tabbed.addTab("Unactive", tabDock);
+
+    dock.top(Components.label("Hello world"));
+
+    dock.center(tabbed);
+
+    window.setContent(dock);
+  }
+
+  @RequiredUIAccess
+  public static void build(DockLayout window) {
     VerticalLayout layout = Layouts.vertical();
 
     final CheckBox top = Components.checkBox("top");
@@ -93,6 +111,6 @@ public class SomeTestUIBuilder {
 
     layout.add(Components.listBox("Test", "Test2", "Test3"));
 
-    window.setContent(layout);
+    window.center(layout);
   }
 }

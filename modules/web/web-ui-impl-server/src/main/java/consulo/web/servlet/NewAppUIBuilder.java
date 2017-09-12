@@ -39,6 +39,6 @@ public class NewAppUIBuilder extends UIBuilder {
   @RequiredUIAccess
   @Override
   protected void build(@NotNull Window window) {
-    SomeTestUIBuilder.build(window);
+    SomeTestUIBuilder.buildTabbed(window);
   }
 }

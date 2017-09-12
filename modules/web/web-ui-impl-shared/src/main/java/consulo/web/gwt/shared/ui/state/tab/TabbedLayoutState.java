@@ -13,30 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.web.gwt.shared.ui.state.tab;
 
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.StyleConstants;
-import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.shared.ui.AbstractComponentContainerState;
+import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 12-Sep-17
  */
-public abstract class GwtLayoutConnector extends AbstractComponentContainerConnector {
-  @Override
-  protected void updateWidgetStyleNames() {
-    super.updateWidgetStyleNames();
+public class TabbedLayoutState extends AbstractComponentContainerState {
+  private static final long serialVersionUID = -116499580006123898L;
 
-    setWidgetStyleName(StyleConstants.UI_WIDGET, false);
+  public static class TabState extends ComboBoxState.Item {
+    private static final long serialVersionUID = -8442971060081651491L;
   }
 
-  @Override
-  protected void updateComponentSize() {
-    // nothing
-  }
-
-  @Override
-  public void updateCaption(ComponentConnector componentConnector) {
-  }
+  public List<TabState> myTabStates = new ArrayList<>();
+  public int mySelected;
 }

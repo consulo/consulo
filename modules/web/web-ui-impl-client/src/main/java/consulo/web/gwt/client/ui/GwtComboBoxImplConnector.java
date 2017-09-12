@@ -58,8 +58,9 @@ public class GwtComboBoxImplConnector extends AbstractComponentConnector {
     getWidget().setItems(widgets);
   }
 
-  public Widget buildItem(ComboBoxState.Item item) {
+  public static Widget buildItem(ComboBoxState.Item item) {
     GwtHorizontalLayoutImpl layout = new GwtHorizontalLayoutImpl();
+    layout.setHorizontalAlignment(GwtHorizontalLayoutImpl.ALIGN_LEFT);
 
     MultiImageState imageState = item.myImageState;
     if (imageState != null) {

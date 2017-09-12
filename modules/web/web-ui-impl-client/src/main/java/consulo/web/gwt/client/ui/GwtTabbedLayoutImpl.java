@@ -16,33 +16,30 @@
 package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.TabPanel;
-import consulo.web.gwt.client.UIConverter;
-import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.shared.UIComponent;
-import org.jetbrains.annotations.NotNull;
+import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
 
-import java.util.List;
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
+@Connect(canonicalName = "consulo.ui.internal.WGwtTabbedLayoutImpl")
 public class GwtTabbedLayoutImpl extends TabPanel {
-  public void updateState(@NotNull Map<String, Object> map) {
-    selectTab((Integer)map.get("selected"));
+  public GwtTabbedLayoutImpl() {
+    setStyleName("ui-tabbed-layout");
+    getDeckPanel().setStyleName("ui-tabbed-layout-bottom");
   }
 
-  public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
-    for (int i = 0; i < children.size(); i ++) {
-      final UIComponent.Child tabChild = children.get(i);
-      // inc i
-      final UIComponent.Child contentChild = children.get(++i);
+  public void setTabs(int index, Map<TabbedLayoutState.TabState, Widget> map) {
+    clear();
 
-      final InternalGwtComponent tab = UIConverter.create(proxy, tabChild.getComponent());
-      final InternalGwtComponent content = UIConverter.create(proxy, contentChild.getComponent());
-
-      add(content, tab);
+    for (Map.Entry<TabbedLayoutState.TabState, Widget> entry : map.entrySet()) {
+      add(entry.getValue(), GwtComboBoxImplConnector.buildItem(entry.getKey()));
     }
+
+    selectTab(index);
   }
 }

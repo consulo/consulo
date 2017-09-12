@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
 import java.util.List;
@@ -38,24 +39,25 @@ public class GwtDockLayoutImplConnector extends GwtLayoutConnector {
       ComponentConnector connector = childComponents.get(i);
       DockLayoutState.Constraint constraint = getState().myConstraints.get(i);
 
-      Widget widget = connector.getWidget();
-      widget.setWidth("100%");
-
+      Widget widget = GwtUIUtil.fillAndReturn(connector.getWidget());
+      GwtDockLayoutImpl dockLayout = getWidget();
       switch (constraint) {
         case TOP:
-          getWidget().add(widget, GwtDockLayoutImpl.NORTH);
+          dockLayout.add(widget, GwtDockLayoutImpl.NORTH);
           break;
         case BOTTOM:
-          getWidget().add(widget, GwtDockLayoutImpl.SOUTH);
+          dockLayout.add(widget, GwtDockLayoutImpl.SOUTH);
           break;
         case LEFT:
-          getWidget().add(widget, GwtDockLayoutImpl.WEST);
+          dockLayout.add(widget, GwtDockLayoutImpl.WEST);
           break;
         case RIGHT:
-          getWidget().add(widget, GwtDockLayoutImpl.EAST);
+          dockLayout.add(widget, GwtDockLayoutImpl.EAST);
           break;
         case CENTER:
-          getWidget().add(widget, GwtDockLayoutImpl.CENTER);
+          dockLayout.add(widget, GwtDockLayoutImpl.CENTER);
+          dockLayout.setCellHeight(widget, "100%");
+          dockLayout.setCellWidth(widget, "100%");
           break;
       }
     }

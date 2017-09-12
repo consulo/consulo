@@ -16,69 +16,51 @@
 package consulo.ui.internal;
 
 import com.intellij.util.containers.hash.LinkedHashMap;
+import com.vaadin.ui.AbstractComponentContainer;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
-import consulo.web.gwt.shared.UIComponent;
-import gnu.trove.TLongObjectHashMap;
+import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtTabbedLayoutImpl extends WGwtBaseComponent implements TabbedLayout {
-  private Map<Tab, WGwtBaseComponent> myTabs = new LinkedHashMap<Tab, WGwtBaseComponent>();
-  private int mySelected = 0;
+public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements TabbedLayout {
+  private Map<WGwtTabImpl, com.vaadin.ui.Component> myTabs = new LinkedHashMap<>();
 
   @Override
-  public void registerComponent(TLongObjectHashMap<WGwtBaseComponent> map) {
-    super.registerComponent(map);
-    for (WGwtBaseComponent component : myTabs.values()) {
-      component.registerComponent(map);
+  protected TabbedLayoutState getState() {
+    return (TabbedLayoutState)super.getState();
+  }
+
+  @Override
+  public void beforeClientResponse(boolean initial) {
+    super.beforeClientResponse(initial);
+
+    for (WGwtTabImpl tab : myTabs.keySet()) {
+      TabbedLayoutState.TabState tabState = new TabbedLayoutState.TabState();
+      tabState.myImageState = tab.getItem().myImageState;
+      tabState.myItemSegments = tab.getItem().myItemSegments;
+
+      getState().myTabStates.add(tabState);
     }
-  }
-
-  @Override
-  public void visitChanges(List<UIComponent> components) {
-    super.visitChanges(components);
-
-    for (WGwtBaseComponent component : myTabs.values()) {
-      component.visitChanges(components);
-    }
-  }
-
-  @Override
-  protected void getState(Map<String, Object> map) {
-    super.getState(map);
-    map.put("selected", mySelected);
-  }
-
-  @Override
-  protected void initChildren(List<UIComponent.Child> children) {
-    /*for (Map.Entry<Tab, WGwtBaseComponent> entry : myTabs.entrySet()) {
-      // send tab
-      UIComponent.Child child = new UIComponent.Child();
-      child.setComponent(((WGwtTabImpl)entry.getKey()).getLayout().convert());
-      children.add(child);
-
-      // send tab content
-      child = new UIComponent.Child();
-      child.setComponent(entry.getValue().convert());
-      children.add(child);
-    } */
   }
 
   @RequiredUIAccess
   @NotNull
   @Override
   public TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component) {
-    myTabs.put(tab, (WGwtBaseComponent)component);
-    markAsChanged();
+    addComponent((com.vaadin.ui.Component)component);
+    myTabs.put((WGwtTabImpl)tab, (com.vaadin.ui.Component)component);
+    markAsDirtyRecursive();
     return this;
   }
 
@@ -86,8 +68,34 @@ public class WGwtTabbedLayoutImpl extends WGwtBaseComponent implements TabbedLay
   @NotNull
   @Override
   public TabbedLayout addTab(@NotNull String tabName, @NotNull Component component) {
-    Tab presentation = new WGwtTabImpl();
+    WGwtTabImpl presentation = new WGwtTabImpl();
     presentation.append(tabName);
     return addTab(presentation, component);
+  }
+
+  @Override
+  public void replaceComponent(com.vaadin.ui.Component oldComponent, com.vaadin.ui.Component newComponent) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public int getComponentCount() {
+    return myTabs.size();
+  }
+
+  @Override
+  public Iterator<com.vaadin.ui.Component> iterator() {
+    return myTabs.values().iterator();
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)getParent();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
   }
 }
