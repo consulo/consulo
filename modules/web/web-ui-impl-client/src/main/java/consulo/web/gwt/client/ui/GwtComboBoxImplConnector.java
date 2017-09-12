@@ -55,7 +55,7 @@ public class GwtComboBoxImplConnector extends AbstractComponentConnector {
       widgets.add(buildItem(item));
     }
 
-    getWidget().setItems(widgets);
+    getWidget().setItems(getState().mySelectedIndex, widgets);
   }
 
   public static GwtHorizontalLayoutImpl buildItem(ComboBoxState.Item item) {

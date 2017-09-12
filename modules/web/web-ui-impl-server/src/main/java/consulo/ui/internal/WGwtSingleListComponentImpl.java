@@ -38,7 +38,6 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
   private List<ValueListener<E>> myValueListeners = new ArrayList<>();
   private ListModel<E> myModel;
-  private int myIndex = -1;
 
   public WGwtSingleListComponentImpl(ListModel<E> model) {
     myModel = model;
@@ -110,10 +109,10 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
   @Nullable
   @Override
   public E getValue() {
-    if (myIndex == -1) {
+    if (getState().mySelectedIndex == -1) {
       return null;
     }
-    return myModel.get(myIndex);
+    return myModel.get(getState().mySelectedIndex);
   }
 
   //@Override
@@ -136,14 +135,14 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
 
   public void setValueImpl(@Nullable E value, boolean fireEvents) {
     if (value == null) {
-      myIndex = -1;
+      getState().mySelectedIndex = -1;
     }
     else {
       final int i = myModel.indexOf(value);
       if (i == -1) {
         throw new IndexOutOfBoundsException();
       }
-      myIndex = i;
+      getState().mySelectedIndex = i;
     }
 
     if (fireEvents) {

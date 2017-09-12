@@ -42,5 +42,6 @@ public class ComboBoxState extends AbstractComponentState {
     public List<ItemSegment> myItemSegments = new ArrayList<>();
   }
 
+  public int mySelectedIndex = -1;
   public List<Item> myItems = new ArrayList<>();
 }

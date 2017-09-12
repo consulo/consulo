@@ -34,7 +34,7 @@ import java.util.Map;
 public class GwtComboBoxImpl extends WidgetComboBox {
   static {
     ThemeHelper.getInstance().setThemeName("classic");
- }
+  }
 
   /**
    * Item list with by index
@@ -63,7 +63,7 @@ public class GwtComboBoxImpl extends WidgetComboBox {
     });
   }
 
-  public void setItems(List<Widget> widgets) {
+  public void setItems(int selectedIndex, List<Widget> widgets) {
     myItemsWithNullItem.clear();
     myItemsWithNullItem.addAll(widgets);
 
@@ -74,6 +74,7 @@ public class GwtComboBoxImpl extends WidgetComboBox {
       map.put(String.valueOf(i), i);
     }
     model.set(map);
+    model.setSelectedIndex(selectedIndex);
   }
 
   @Override

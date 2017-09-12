@@ -21,14 +21,18 @@ import org.gwt.advanced.client.datamodel.ListDataModel;
 import org.gwt.advanced.client.datamodel.ListModelEvent;
 import org.gwt.advanced.client.datamodel.ListModelListener;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * By VISTALL. This is copy-paste version of {@link org.gwt.advanced.client.datamodel.ComboBoxDataModel}  with changes:
  * -  setSelectedIndex() not ignore listeners
  * - don't need call listeners on setSelectedId() if value equals current
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * This is an implementation of the data model interface for the ComboBox widget.
  *
  * @author <a href="mailto:sskladchikov@gmail.com">Sergey Skladchikov</a>
@@ -76,6 +80,8 @@ public class ComboBoxDataModel2 implements ListDataModel {
   }
 
   public void set(Map<String, Object> items) {
+    selectedId = null;
+
     getItemIds().clear();
 
     add(items);
@@ -164,7 +170,7 @@ public class ComboBoxDataModel2 implements ListDataModel {
    */
   @Override
   public int getSelectedIndex() {
-    if(getSelectedId() == null) {
+    if (getSelectedId() == null) {
       return -1;
     }
     return getItemIds().indexOf(getSelectedId());
@@ -183,7 +189,7 @@ public class ComboBoxDataModel2 implements ListDataModel {
    */
   @Override
   public void setSelectedId(String id) {
-    if(selectedId == null && id == null || selectedId != null && selectedId.equals(id)) {
+    if (selectedId == null && id == null || selectedId != null && selectedId.equals(id)) {
       return;
     }
 

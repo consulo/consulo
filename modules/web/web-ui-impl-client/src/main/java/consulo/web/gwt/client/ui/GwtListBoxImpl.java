@@ -39,7 +39,11 @@ public class GwtListBoxImpl extends FlowPanel {
     setStyleName("ui-list-box");
   }
 
-  public void setItems(List<Widget> list) {
+  public void addListModelListener(ListModelListener listModelListener) {
+    myModelListeners.add(listModelListener);
+  }
+
+  public void setItems(int selectedIndex, List<Widget> list) {
     clear();
 
     int i = 0;
@@ -57,9 +61,15 @@ public class GwtListBoxImpl extends FlowPanel {
 
       add(comboBoxSelectItem);
     }
+
+    setSelectedIndex(selectedIndex, false);
   }
 
   public void setSelectedIndex(int selectedIndex) {
+    setSelectedIndex(selectedIndex, true);
+  }
+
+  public void setSelectedIndex(int selectedIndex, boolean fireEvents) {
     if (mySelectedIndex != -1) {
       for (ComboBoxSelectItem selectItem : myList) {
         selectItem.removeStyleName("selected");
@@ -74,9 +84,11 @@ public class GwtListBoxImpl extends FlowPanel {
       target.addStyleName("selected");
     }
 
-    ListModelEvent event = new ListModelEvent(null, String.valueOf(selectedIndex), selectedIndex, ListModelEvent.SELECT_ITEM);
-    for (ListModelListener modelListener : myModelListeners) {
-      modelListener.onModelEvent(event);
+    if (fireEvents) {
+      ListModelEvent event = new ListModelEvent(null, String.valueOf(selectedIndex), selectedIndex, ListModelEvent.SELECT_ITEM);
+      for (ListModelListener modelListener : myModelListeners) {
+        modelListener.onModelEvent(event);
+      }
     }
   }
 }

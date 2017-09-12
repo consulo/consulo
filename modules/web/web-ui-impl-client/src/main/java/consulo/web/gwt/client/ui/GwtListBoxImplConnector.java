@@ -55,7 +55,7 @@ public class GwtListBoxImplConnector extends AbstractComponentConnector {
       widgets.add(buildItem(item));
     }
 
-    getWidget().setItems(widgets);
+    getWidget().setItems(getState().mySelectedIndex, widgets);
   }
 
   public Widget buildItem(ComboBoxState.Item item) {
