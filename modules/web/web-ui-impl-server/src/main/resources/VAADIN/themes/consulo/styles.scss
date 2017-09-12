@@ -4,7 +4,6 @@ $v-app-background-color: #ffffff;
 
 @import "../valo/valo.scss";
 
-
 @mixin consulo {
   @include valo;
 
@@ -79,6 +78,12 @@ $v-app-background-color: #ffffff;
   @include consulo;
 }
 
+table, tr, td {
+  border-collapse: collapse;
+  border: 0px;
+  padding: 0px;
+  margin: 0px;
+}
 
 .ui-layered-image {
   position: relative;
@@ -97,6 +102,109 @@ $v-app-background-color: #ffffff;
   display: block;
   height: 100%;
   overflow: auto;
+}
+
+.gwt-MenuBar {
+  cursor: default;
+}
+.gwt-MenuBar .gwt-MenuItem {
+  cursor: default;
+  font-family: Arial Unicode MS, Arial, sans-serif;
+}
+.gwt-MenuBar .gwt-MenuItem-selected {
+  background: #E3E8F3;
+}
+.gwt-MenuBar-horizontal {
+  border-bottom: 1px solid #e0e0e0;
+}
+.gwt-MenuBar-horizontal .gwt-MenuItem {
+  padding: 5px 10px;
+  vertical-align: bottom;
+  color: #000;
+  font-weight: bold;
+}
+.gwt-MenuBar-horizontal .gwt-MenuItemSeparator {
+  width: 1px;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  border-left: 1px solid #ccc;
+  background: white;
+}
+.gwt-MenuBar-horizontal .gwt-MenuItemSeparator .menuSeparatorInner {
+  width: 1px;
+  height: 1px;
+  background: white;
+}
+.gwt-MenuBar-vertical {
+  margin-top: 0px;
+  margin-left: 0px;
+  background: white;
+}
+.gwt-MenuBar-vertical table {
+  border-collapse: collapse;
+}
+.gwt-MenuBar-vertical .gwt-MenuItem {
+  padding: 2px 40px 2px 1px;
+}
+.gwt-MenuBar-vertical .gwt-MenuItemSeparator {
+  padding: 2px 0px;
+}
+.gwt-MenuBar-vertical .gwt-MenuItemSeparator .menuSeparatorInner {
+  height: 1px;
+  padding: 0px;
+  border: 0px;
+  border-top: 1px solid #ccc;
+  overflow: hidden;
+}
+
+.gwt-MenuBar-vertical .subMenuIcon {
+  padding-right: 4px;
+}
+
+.gwt-MenuBar-vertical .subMenuIcon-selected {
+  background: #E3E8F3;
+}
+
+.gwt-MenuBarPopup {
+  border: 1px solid #a0a0a0;
+  background: white;
+}
+
+.gwt-MenuBarPopup .menuPopupTopCenter {
+}
+
+.gwt-MenuBarPopup .menuPopupBottomCenter {
+}
+
+.gwt-MenuBarPopup .menuPopupMiddleLeft {
+}
+
+.gwt-MenuBarPopup .menuPopupMiddleRight {
+}
+
+.gwt-MenuBarPopup .menuPopupTopLeftInner {
+}
+
+.gwt-MenuBarPopup .menuPopupTopRightInner {
+}
+
+.gwt-MenuBarPopup .menuPopupBottomLeftInner {
+}
+
+.gwt-MenuBarPopup .menuPopupBottomRightInner {
+}
+
+.gwt-MenuBarPopup .menuPopupTopLeft {
+}
+
+.gwt-MenuBarPopup .menuPopupTopRight {
+}
+
+.gwt-MenuBarPopup .menuPopupBottomLeft {
+}
+
+.gwt-MenuBarPopup .menuPopupBottomRight {
 }
 
 /** main combo box style */
@@ -256,7 +364,7 @@ $v-app-background-color: #ffffff;
 }
 
 .gwt-TabBarItem-no-close-button {
-  padding-right: 4px;
+  margin-right: 4px;
 }
 
 .gwt-TabBar .gwt-TabBarItem-selected {

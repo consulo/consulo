@@ -36,7 +36,8 @@ public class SomeTestUIBuilder {
 
     Tab okey = tabbed.addTab("Test Me", Components.label("Okey"));
     okey.setIcon(AllIcons.Nodes.Class);
-    okey.setCloseHandler((tab, component) -> {});
+    okey.setCloseHandler((tab, component) -> {
+    });
 
     DockLayout tabDock = Layouts.dock();
     build(tabDock);
@@ -45,6 +46,10 @@ public class SomeTestUIBuilder {
     dock.top(Components.label("Hello world"));
 
     dock.center(tabbed);
+
+    MenuBar menuBar = MenuItems.menuBar();
+
+    window.setMenuBar(menuBar);
 
     window.setContent(dock);
   }

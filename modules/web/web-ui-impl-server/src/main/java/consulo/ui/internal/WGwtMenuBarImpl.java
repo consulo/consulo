@@ -15,37 +15,60 @@
  */
 package consulo.ui.internal;
 
+import com.vaadin.ui.AbstractComponentContainer;
+import com.vaadin.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
-import consulo.web.gwt.shared.UIComponent;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtMenuBarImpl extends WGwtBaseComponent implements MenuBar {
-  private List<MenuItem> myMenuItems = new ArrayList<MenuItem>();
+public class WGwtMenuBarImpl extends AbstractComponentContainer implements MenuBar {
+  private List<Component> myMenuItems = new ArrayList<>();
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public MenuBar add(@NotNull MenuItem menuItem) {
-    myMenuItems.add(menuItem);
+    myMenuItems.add((Component)menuItem);
+
+    addComponent((Component)menuItem);
     return this;
   }
 
   @Override
-  protected void initChildren(List<UIComponent.Child> children) {
-    for (MenuItem menuItem : myMenuItems) {
-      final UIComponent.Child child = new UIComponent.Child();
+  public void replaceComponent(Component oldComponent, Component newComponent) {
+    throw new UnsupportedOperationException();
+  }
 
-      final UIComponent uiComponent = ((WGwtBaseComponent)menuItem).convert();
-      child.setComponent(uiComponent);
+  @Override
+  public int getComponentCount() {
+    return myMenuItems.size();
+  }
 
-      children.add(child);
-    }
+  @Override
+  public Iterator<Component> iterator() {
+    return myMenuItems.iterator();
+  }
+
+  @Nullable
+  @Override
+  public consulo.ui.Component getParentComponent() {
+    return (consulo.ui.Component)getParent();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
+
   }
 }

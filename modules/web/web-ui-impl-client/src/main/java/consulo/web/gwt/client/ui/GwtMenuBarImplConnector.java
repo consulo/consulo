@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,22 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.MenuBar;
+import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.shared.ui.Connect;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 12-Sep-17
  */
-public class GwtMenuBarImpl extends MenuBar {
-  public GwtMenuBarImpl() {
-    addItem("Test", () -> {
+@Connect(canonicalName = "consulo.ui.internal.WGwtMenuBarImpl")
+public class GwtMenuBarImplConnector extends GwtLayoutConnector {
+  @Override
+  public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
 
-    });
+  }
+
+  @Override
+  public GwtMenuBarImpl getWidget() {
+    return (GwtMenuBarImpl)super.getWidget();
   }
 }
