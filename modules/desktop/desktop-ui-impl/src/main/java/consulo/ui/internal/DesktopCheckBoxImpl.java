@@ -17,6 +17,7 @@ package consulo.ui.internal;
 
 import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.CheckBox;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,8 +37,9 @@ public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox, SwingWr
     return isSelected();
   }
 
+  @RequiredUIAccess
   @Override
-  public void setValue(@Nullable Boolean value) {
+  public void setValue(@Nullable Boolean value, boolean fireEvents) {
     if (value == null) {
       throw new IllegalArgumentException();
     }

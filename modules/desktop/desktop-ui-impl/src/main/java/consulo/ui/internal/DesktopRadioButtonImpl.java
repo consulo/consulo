@@ -48,7 +48,7 @@ public class DesktopRadioButtonImpl extends JRadioButton implements RadioButton,
 
   @RequiredUIAccess
   @Override
-  public void setValue(@NotNull Boolean value) {
+  public void setValue(@NotNull Boolean value, boolean fireEvents) {
     setSelected(value);
   }
 }

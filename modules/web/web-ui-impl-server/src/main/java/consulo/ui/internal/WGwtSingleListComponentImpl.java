@@ -130,11 +130,11 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
 
   @Override
   @RequiredUIAccess
-  public void setValue(@Nullable E value) {
-    setValueImpl(value);
+  public void setValue(@Nullable E value, boolean fireEvents) {
+    setValueImpl(value, fireEvents);
   }
 
-  public void setValueImpl(@Nullable E value) {
+  public void setValueImpl(@Nullable E value, boolean fireEvents) {
     if (value == null) {
       myIndex = -1;
     }
@@ -146,9 +146,11 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
       myIndex = i;
     }
 
-    final ValueEvent<E> event = new ValueEvent<>(this, value);
-    for (ValueListener<E> valueListener : myValueListeners) {
-      valueListener.valueChanged(event);
+    if (fireEvents) {
+      final ValueEvent<E> event = new ValueEvent<>(this, value);
+      for (ValueListener<E> valueListener : myValueListeners) {
+        valueListener.valueChanged(event);
+      }
     }
 
     markAsDirty();

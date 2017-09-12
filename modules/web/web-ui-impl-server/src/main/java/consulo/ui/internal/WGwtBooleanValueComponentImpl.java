@@ -36,7 +36,7 @@ import java.util.List;
 public class WGwtBooleanValueComponentImpl extends AbstractComponent implements ValueComponent<Boolean> {
   private List<ValueComponent.ValueListener<Boolean>> myValueListeners = new SmartList<>();
 
-  private final CheckBoxRpc myRpc = value -> setValueImpl(value);
+  private final CheckBoxRpc myRpc = value -> setValueImpl(value, true);
 
   public WGwtBooleanValueComponentImpl(boolean selected) {
     getState().myChecked = selected;
@@ -57,7 +57,7 @@ public class WGwtBooleanValueComponentImpl extends AbstractComponent implements 
 
   @Override
   @RequiredUIAccess
-  public void setValue(@Nullable final Boolean value) {
+  public void setValue(@Nullable final Boolean value, boolean fireEvents) {
     UIAccess.assertIsUIThread();
 
     if (value == null) {
@@ -68,16 +68,19 @@ public class WGwtBooleanValueComponentImpl extends AbstractComponent implements 
       return;
     }
 
-    setValueImpl(value);
+    setValueImpl(value, fireEvents);
 
     markAsDirty();
   }
 
-  private void setValueImpl(@Nullable Boolean value) {
+  @RequiredUIAccess
+  private void setValueImpl(@Nullable Boolean value, boolean fireEvents) {
     getState().myChecked = value;
 
-    for (ValueListener<Boolean> valueListener : myValueListeners) {
-      valueListener.valueChanged(new ValueEvent<>(this, value));
+    if (fireEvents) {
+      for (ValueListener<Boolean> valueListener : myValueListeners) {
+        valueListener.valueChanged(new ValueEvent<>(this, value));
+      }
     }
   }
 

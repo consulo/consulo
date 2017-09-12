@@ -17,10 +17,13 @@ package consulo.ui.internal;
 
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.ui.ColoredListCellRenderer;
-import consulo.ui.*;
+import consulo.ui.ComboBox;
+import consulo.ui.ListItemRender;
+import consulo.ui.ListItemRenders;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.ValueComponent;
 import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -63,7 +66,7 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
 
   @RequiredUIAccess
   @Override
-  public void setValue(E value) {
+  public void setValue(E value, boolean fireEvents) {
     setSelectedItem(value);
   }
 

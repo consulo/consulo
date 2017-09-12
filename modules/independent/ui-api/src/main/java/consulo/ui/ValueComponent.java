@@ -54,5 +54,10 @@ public interface ValueComponent<V> extends Component {
   V getValue();
 
   @RequiredUIAccess
-  void setValue(V value);
+  default void setValue(V value) {
+    setValue(value, true);
+  }
+
+  @RequiredUIAccess
+  void setValue(V value, boolean fireEvents);
 }
