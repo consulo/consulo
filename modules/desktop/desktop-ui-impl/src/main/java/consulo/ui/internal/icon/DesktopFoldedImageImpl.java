@@ -27,19 +27,22 @@ import java.util.Arrays;
  * @author VISTALL
  * @since 11-Sep-17
  */
-public class DesktopFoldedIconImpl extends LayeredIcon implements SwingIconWrapper, FoldedImage {
+public class DesktopFoldedImageImpl extends LayeredIcon implements SwingIconWrapper, FoldedImage {
   @NotNull
-  public static Icon[] remap(consulo.ui.image.FoldedImage[] icons) {
-    return Arrays.stream(icons).map(DesktopFoldedIconImpl::to).toArray(Icon[]::new);
+  public static Icon[] remap(consulo.ui.image.Image[] icons) {
+    return Arrays.stream(icons).map(DesktopFoldedImageImpl::to).toArray(Icon[]::new);
   }
 
-  public static Icon to(consulo.ui.image.FoldedImage icon) {
+  public static Icon to(consulo.ui.image.Image icon) {
+    if(icon instanceof Icon) {
+      return (Icon)icon;
+    }
     return ((SwingIconWrapper)icon).toSwingIcon();
   }
 
-  private final consulo.ui.image.FoldedImage[] myImages;
+  private final consulo.ui.image.Image[] myImages;
 
-  public DesktopFoldedIconImpl(@NotNull consulo.ui.image.FoldedImage... images) {
+  public DesktopFoldedImageImpl(@NotNull consulo.ui.image.Image... images) {
     super(remap(images));
     myImages = images;
   }
@@ -62,7 +65,7 @@ public class DesktopFoldedIconImpl extends LayeredIcon implements SwingIconWrapp
 
   @NotNull
   @Override
-  public consulo.ui.image.FoldedImage[] getImages() {
+  public consulo.ui.image.Image[] getImages() {
     return myImages;
   }
 }

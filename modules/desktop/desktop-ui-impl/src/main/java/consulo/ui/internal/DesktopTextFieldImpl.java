@@ -86,7 +86,7 @@ public class DesktopTextFieldImpl extends JBTextField implements TextField, Swin
 
   @RequiredUIAccess
   @Override
-  public void setValue(String value) {
+  public void setValue(String value, boolean fireEvents) {
     setText(value);
   }
 }

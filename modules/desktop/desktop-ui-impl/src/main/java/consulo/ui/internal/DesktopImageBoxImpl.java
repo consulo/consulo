@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,37 +15,26 @@
  */
 package consulo.ui.internal;
 
-import com.intellij.openapi.util.IconLoader;
+import com.intellij.ui.roots.ScalableIconComponent;
+import consulo.ui.ImageBox;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.net.URL;
-
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 12-Sep-17
  */
-public class DesktopImageImpl implements Image, SwingIconWrapper {
-  private Icon myIcon;
+public class DesktopImageBoxImpl extends ScalableIconComponent implements ImageBox, SwingWrapper{
+  private Image myIcon;
 
-  public DesktopImageImpl(URL url) {
-    myIcon = IconLoader.findIcon(url);
-  }
-
-  @Override
-  public int getHeight() {
-    return myIcon.getIconHeight();
-  }
-
-  @Override
-  public int getWidth() {
-    return myIcon.getIconWidth();
+  public DesktopImageBoxImpl(Image icon) {
+    super(((SwingIconWrapper)icon).toSwingIcon());
+    myIcon = icon;
   }
 
   @NotNull
   @Override
-  public Icon toSwingIcon() {
+  public Image getImage() {
     return myIcon;
   }
 }
