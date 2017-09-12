@@ -72,6 +72,17 @@ $v-app-background-color: #ffffff;
   .ui-list-box .selected {
     background-color: #D7E9FF;
   }
+
+  .ui-text-field {
+    padding: 5px 4px;
+    border: 1px solid #ccc;
+    border-top: 1px solid #999;
+    font-size: small;
+    font-family: Arial Unicode MS, Arial, sans-serif;
+  }
+  .ui-text-field-readonly {
+    color: #888;
+  }
 }
 
 .consulo {

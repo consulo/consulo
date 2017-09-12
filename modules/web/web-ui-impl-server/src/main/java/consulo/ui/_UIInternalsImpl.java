@@ -88,12 +88,12 @@ class _UIInternalsImpl extends _UIInternals {
 
   @Override
   <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
-    return new WGwtComboBoxImpl<E>(model);
+    return new WGwtComboBoxImpl<>(model);
   }
 
   @Override
   TextField _Components_textField(String text) {
-    throw new UnsupportedOperationException();
+    return new WGwtTextFieldImpl(text);
   }
 
   @Override
