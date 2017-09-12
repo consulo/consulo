@@ -36,7 +36,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 19-Jun-16
  */
-public class GwtTreeImpl extends CellTree implements InternalGwtComponentWithChildren {
+public class GwtTreeImpl extends CellTree {
   private static class OurModel implements TreeViewModel {
     private Map<String, UIComponent.Child> myChildren = new HashMap<>();
     private WebSocketProxy myProxy;
@@ -79,12 +79,10 @@ public class GwtTreeImpl extends CellTree implements InternalGwtComponentWithChi
     super(new OurModel(), null, GWT.<CellTree.Resources>create(DefaultCellTreeResources.class));
   }
 
-  @Override
   public void clear() {
     ((OurModel)getTreeViewModel()).myChildren.clear();
   }
 
-  @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
     OurModel model = (OurModel)getTreeViewModel();
     model.myProxy = proxy;

@@ -28,13 +28,11 @@ import java.util.Map;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtTabbedLayoutImpl extends TabPanel implements InternalGwtComponentWithChildren {
-  @Override
+public class GwtTabbedLayoutImpl extends TabPanel {
   public void updateState(@NotNull Map<String, Object> map) {
     selectTab((Integer)map.get("selected"));
   }
 
-  @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
     for (int i = 0; i < children.size(); i ++) {
       final UIComponent.Child tabChild = children.get(i);

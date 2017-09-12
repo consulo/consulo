@@ -28,13 +28,12 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class GwtWindowImpl extends Grid implements InternalGwtComponentWithChildren {
+public class GwtWindowImpl extends Grid {
   public GwtWindowImpl() {
     super(2, 1);
     GwtUIUtil.fill(this);
   }
 
-  @Override
   public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
     handleComponents(proxy, this, children);
   }
