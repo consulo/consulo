@@ -21,6 +21,7 @@ import consulo.ui.MenuBar;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.Window;
+import consulo.ui.internal.WGwtRootPanelImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,9 +33,12 @@ import org.jetbrains.annotations.Nullable;
  */
 class VaadinUIWindowImpl implements Window {
   private final UI myUI;
+  private WGwtRootPanelImpl myRootPanel = new WGwtRootPanelImpl();
 
   public VaadinUIWindowImpl(UI ui) {
     myUI = ui;
+    myUI.setSizeFull();
+    myUI.setContent(myRootPanel);
   }
 
   @Override
@@ -74,13 +78,12 @@ class VaadinUIWindowImpl implements Window {
   @RequiredUIAccess
   @Override
   public void setContent(@NotNull Component content) {
-    myUI.setSizeFull();
-    myUI.setContent((com.vaadin.ui.Component)content);
+    myRootPanel.setCenterComponent((com.vaadin.ui.Component)content);
   }
 
   @RequiredUIAccess
   @Override
   public void setMenuBar(@Nullable MenuBar menuBar) {
-
+    myRootPanel.setMenuBar(menuBar);
   }
 }

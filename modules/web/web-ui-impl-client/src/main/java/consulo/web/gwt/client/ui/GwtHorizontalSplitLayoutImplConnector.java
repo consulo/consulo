@@ -15,12 +15,12 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.util.ArrayUtil2;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.layout.SplitLayoutState;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +37,7 @@ public class GwtHorizontalSplitLayoutImplConnector extends GwtLayoutConnector {
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
     List<Widget> widgets = GwtUIUtil.remapWidgets(this);
 
-    setWidget(getWidget(), safeGet(widgets, 0), safeGet(widgets, 1));
+    setWidget(getWidget(), ArrayUtil2.safeGet(widgets, 0), ArrayUtil2.safeGet(widgets, 1));
 
     resize();
   }
@@ -80,13 +80,6 @@ public class GwtHorizontalSplitLayoutImplConnector extends GwtLayoutConnector {
     if (height == null || height.isEmpty()) {
       widget.setHeight(o1.getOffsetHeight() + "px");
     }
-  }
-
-  @Nullable
-  public static <T> T safeGet(@Nullable List<? extends T> array, int index) {
-    if (array == null) return null;
-    if (index < 0 || array.size() <= index) return null;
-    return array.get(index);
   }
 
   public void setWidget(HorizontalSplitPanel panel, @Nullable Widget o1, @Nullable Widget o2) {
