@@ -74,7 +74,9 @@ public abstract class _UIInternals {
 
   abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
 
-  abstract TextField _Components_TextField(String text);
+  abstract TextField _Components_textField(String text);
+
+  abstract <E> ListBox<E> _Components_listBox(ListModel<E> model);
 
   abstract RadioButton _Components_radioButton(String text, boolean selected);
 

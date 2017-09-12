@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui;
 
-import consulo.ui.ListBox;
 import consulo.ui.model.ListModel;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 16-Jun-16
+ * @since 12-Sep-17
  */
-public class WGwtListBoxImpl<E> extends WGwtSingleListComponentImpl<E> implements ListBox<E> {
+public interface ListBox<E> extends ValueComponent<E> {
+  @NotNull
+  ListModel<E> getListModel();
 
-  public WGwtListBoxImpl(ListModel<E> model) {
-    super(model);
-  }
+  void setRender(@NotNull ListItemRender<E> render);
 
-  @Override
-  protected boolean needRenderNullValue() {
-    return false;
-  }
+  void setValueByIndex(int index);
 }

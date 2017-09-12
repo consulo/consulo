@@ -33,7 +33,7 @@ public class Components {
 
   @NotNull
   public static TextField textField(@Nullable String text) {
-    return _UIInternals.get()._Components_TextField(text);
+    return _UIInternals.get()._Components_textField(text);
   }
 
   @NotNull
@@ -75,6 +75,17 @@ public class Components {
   @NotNull
   public static <E> ComboBox<E> comboBox(@NotNull ListModel<E> model) {
     return _UIInternals.get()._Components_comboBox(model);
+  }
+
+  @SafeVarargs
+  @NotNull
+  public static <E> ListBox<E> listBox(@NotNull E... elements) {
+    return _UIInternals.get()._Components_listBox(new ImmutableListModel<E>(elements));
+  }
+
+  @NotNull
+  public static <E> ListBox<E> listBox(@NotNull ListModel<E> model) {
+    return _UIInternals.get()._Components_listBox(model);
   }
 
   @NotNull

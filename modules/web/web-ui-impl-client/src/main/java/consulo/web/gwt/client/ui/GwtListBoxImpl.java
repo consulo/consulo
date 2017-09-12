@@ -16,29 +16,19 @@
 package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.IsWidget;
-import consulo.web.gwt.client.UIConverter;
-import consulo.web.gwt.client.WebSocketProxy;
+import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.ui.advancedGwt.ComboBoxSelectItem;
-import consulo.web.gwt.shared.UIComponent;
 import org.gwt.advanced.client.datamodel.ListModelEvent;
 import org.gwt.advanced.client.datamodel.ListModelListener;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class GwtListBoxImpl extends FlowPanel implements InternalGwtComponentWithChildren, InternalGwtComponentWithListeners {
-  /**
-   * Item list with by index
-   */
-  private WebSocketProxy myProxy;
-
+public class GwtListBoxImpl extends FlowPanel {
   private int mySelectedIndex = -1;
 
   private List<ComboBoxSelectItem> myList = new ArrayList<>();
@@ -46,15 +36,15 @@ public class GwtListBoxImpl extends FlowPanel implements InternalGwtComponentWit
   private List<ListModelListener> myModelListeners = new ArrayList<>();
 
   public GwtListBoxImpl() {
+    setStyleName("ui-list-box");
   }
 
-  @Override
-  public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
-    myProxy = proxy;
+  public void setItems(List<Widget> list) {
+    clear();
+
     int i = 0;
-    for (UIComponent.Child child : children) {
+    for (Widget widget : list) {
       final int index = i++;
-      final IsWidget widget = UIConverter.create(myProxy, child.getComponent());
 
       final ComboBoxSelectItem comboBoxSelectItem = new ComboBoxSelectItem();
       myList.add(comboBoxSelectItem);
@@ -69,27 +59,19 @@ public class GwtListBoxImpl extends FlowPanel implements InternalGwtComponentWit
     }
   }
 
-  @Override
-  public void updateState(@NotNull Map<String, Object> map) {
-    final int size = (Integer)map.get("size");
-
-    setSelectedIndex((Integer)map.get("index"));
-  }
-
   public void setSelectedIndex(int selectedIndex) {
+    if (mySelectedIndex != -1) {
+      for (ComboBoxSelectItem selectItem : myList) {
+        selectItem.removeStyleName("selected");
+      }
+    }
+
     mySelectedIndex = selectedIndex;
 
     ComboBoxSelectItem target = selectedIndex == -1 ? null : myList.get(selectedIndex);
 
-    for (ComboBoxSelectItem selectItem : myList) {
-      if (selectItem == target) {
-        continue;
-      }
-      selectItem.getElement().getStyle().setBackgroundColor(null);
-    }
-
     if (target != null) {
-      target.getElement().getStyle().setBackgroundColor("gray");
+      target.addStyleName("selected");
     }
 
     ListModelEvent event = new ListModelEvent(null, String.valueOf(selectedIndex), selectedIndex, ListModelEvent.SELECT_ITEM);

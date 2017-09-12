@@ -90,6 +90,8 @@ public class SomeTestUIBuilder {
     layout.add(Components.radioButton("Uncheck me!", true));
     layout.add(Components.radioButton("Check me!"));
 
+    layout.add(Components.listBox("Test", "Test2", "Test3"));
+
     window.setContent(layout);
   }
 }

@@ -92,8 +92,13 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  TextField _Components_TextField(String text) {
+  TextField _Components_textField(String text) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  <E> ListBox<E> _Components_listBox(ListModel<E> model) {
+    return new WGwtListBoxImpl<>(model);
   }
 
   @Override

@@ -21,6 +21,7 @@ import consulo.ui.image.Image;
 import consulo.ui.internal.*;
 import consulo.ui.internal.icon.DesktopFoldedImageImpl;
 import consulo.ui.internal.icon.DesktopImageImpl;
+import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -123,8 +124,13 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  TextField _Components_TextField(String text) {
+  TextField _Components_textField(String text) {
     return new DesktopTextFieldImpl(text);
+  }
+
+  @Override
+  <E> ListBox<E> _Components_listBox(ListModel<E> model) {
+    return null;
   }
 
   @Override
