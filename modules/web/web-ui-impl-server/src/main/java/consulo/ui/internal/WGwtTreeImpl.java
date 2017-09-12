@@ -15,58 +15,40 @@
  */
 package consulo.ui.internal;
 
+import com.vaadin.ui.AbstractComponent;
+import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.UIAccess;
-import consulo.web.gwt.shared.UIComponent;
+import consulo.ui.Size;
+import consulo.ui.Tree;
+import consulo.ui.TreeModel;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class WGwtTreeImpl<NODE> extends WGwtBaseComponent {
+public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE> {
   private WGwtTreeModelImpl<NODE> myModel;
 
   private List<WGwtTreeNodeImpl<NODE>> myChildren = new ArrayList<>();
 
-  public WGwtTreeImpl(WGwtTreeModelImpl<NODE> model) {
-    myModel = model;
+  public WGwtTreeImpl(TreeModel<NODE> model) {
+    myModel = (WGwtTreeModelImpl<NODE>)model;
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)getParent();
   }
 
   @RequiredUIAccess
   @Override
-  public void invokeListeners(long type, Map<String, Object> variables) {
-    UIAccess uiAccess = UIAccess.get();
+  public void setSize(@NotNull Size size) {
 
-    /*if (type == InternalEventTypes.SHOW) {
-      AppExecutorUtil.getAppExecutorService().execute(() -> {
-        NODE node = myModel.fetchRootNode();
-
-        WGwtTreeNodeImpl<NODE> treeNode = new WGwtTreeNodeImpl<>(null, node);
-
-        uiAccess.give(() -> {
-          myModel.renderNode(node, treeNode.getPresentation());
-
-          myChildren.add(treeNode);
-
-          markAsChanged(CHILDREN_CHANGED);
-        });
-      });
-    }*/
-  }
-
-  @Override
-  protected void initChildren(List<UIComponent.Child> children) {
-    for (WGwtTreeNodeImpl<NODE> child : myChildren) {
-      /*UIComponent.Child e = new UIComponent.Child();
-      e.setComponent(child.getPresentation().getLayout().convert());
-
-      e.setVariables(Collections.singletonMap("parentId", child.getParentId()));
-
-      children.add(e);  */
-    }
   }
 }

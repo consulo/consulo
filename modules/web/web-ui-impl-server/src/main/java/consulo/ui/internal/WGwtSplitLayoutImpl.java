@@ -52,7 +52,6 @@ public class WGwtSplitLayoutImpl extends AbstractLayout implements SplitLayout {
   public SplitLayout setFirstComponent(@NotNull Component component) {
     myFirstComponent = component;
     addComponent((com.vaadin.ui.Component)component);
-    markAsDirtyRecursive();
     return this;
   }
 
@@ -61,7 +60,6 @@ public class WGwtSplitLayoutImpl extends AbstractLayout implements SplitLayout {
   public SplitLayout setSecondComponent(@NotNull Component component) {
     mySecondComponent = component;
     addComponent((com.vaadin.ui.Component)component);
-    markAsDirtyRecursive();
     return this;
   }
 

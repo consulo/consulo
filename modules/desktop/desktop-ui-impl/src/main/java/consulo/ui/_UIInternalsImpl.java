@@ -105,7 +105,7 @@ class _UIInternalsImpl extends _UIInternals {
 
   @Override
   TableLayout _Layouts_table(int rows, int columns) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -146,6 +146,11 @@ class _UIInternalsImpl extends _UIInternals {
   @Override
   ImageBox _Components_imageBox(Image image) {
     return new DesktopImageBoxImpl(image);
+  }
+
+  @Override
+  <E> Tree<E> _Components_tree(TreeModel<E> model) {
+    throw new UnsupportedOperationException();
   }
 
   @RequiredUIAccess

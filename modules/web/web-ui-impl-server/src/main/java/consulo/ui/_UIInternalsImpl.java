@@ -117,6 +117,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  <E> Tree<E> _Components_tree(TreeModel<E> model) {
+    return new WGwtTreeImpl<>(model);
+  }
+
+  @Override
   public Image _Images_image(URL url) {
     return new WGwtImageImpl(url);
   }

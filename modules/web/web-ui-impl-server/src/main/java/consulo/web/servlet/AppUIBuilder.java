@@ -33,12 +33,11 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.*;
 import consulo.ui.internal.WGwtTreeImpl;
 import consulo.ui.internal.WGwtTreeModelImpl;
-import consulo.web.servlet.ui.UIBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class AppUIBuilder extends UIBuilder {
-  private static final ViewSettings ourViewSettings = new ViewSettings() {
+public class AppUIBuilder {
+  public static final ViewSettings ourViewSettings = new ViewSettings() {
     @Override
     public boolean isShowMembers() {
       return false;
@@ -83,8 +82,7 @@ public class AppUIBuilder extends UIBuilder {
 
 
   @RequiredUIAccess
-  @Override
-  protected void build(@NotNull final Window window) {
+  public static void build(@NotNull final Window window) {
     ApplicationEx application = ApplicationManagerEx.getApplicationEx();
     if (application == null || !application.isLoaded()) {
       window.setContent(Components.label("Not loaded"));
@@ -105,7 +103,7 @@ public class AppUIBuilder extends UIBuilder {
   }
 
   @RequiredUIAccess
-  private void buildContent(@NotNull Window window, @NotNull Project project) {
+  private static void buildContent(@NotNull Window window, @NotNull Project project) {
     final Menu file = MenuItems.menu("File");
     file.add(MenuItems.menu("New").add(MenuItems.item("Class")));
     file.separate();
@@ -113,7 +111,6 @@ public class AppUIBuilder extends UIBuilder {
 
     window.setMenuBar(MenuItems.menuBar().add(file).add(MenuItems.item("Help")));
 
-    final SplitLayout splitLayout = Layouts.horizontalSplit();
     final TabbedLayout tabbed = Layouts.tabbed();
 
     final VerticalLayout vertical = Layouts.vertical();
@@ -151,6 +148,8 @@ public class AppUIBuilder extends UIBuilder {
       }
     };
 
+    final SplitLayout splitLayout = Layouts.horizontalSplit();
+
     WGwtTreeImpl<AbstractTreeNode> tree = new WGwtTreeImpl<>(model);
 
     splitLayout.setFirstComponent(tree);
@@ -161,7 +160,7 @@ public class AppUIBuilder extends UIBuilder {
   }
 
   @Nullable
-  private Project getOrLoadProject(String path) {
+  public static Project getOrLoadProject(String path) {
     final VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(path);
     if (fileByPath == null) {
       return null;

@@ -47,6 +47,14 @@ public class SomeTestUIBuilder {
 
     dock.center(tabbed);
 
+    DockLayout layout = Layouts.dock();
+
+    layout.left(Components.label("test2")) ;
+
+    layout.center(Components.label("test"));
+
+    tabbed.addTab("Tree", layout);
+
     MenuBar menuBar = MenuItems.menuBar();
     menuBar.add(MenuItems.menu("File").add(MenuItems.item("New")).separate().add(MenuItems.item("Exit")));
     menuBar.add(MenuItems.menu("Edit").add(MenuItems.item("Copy")));

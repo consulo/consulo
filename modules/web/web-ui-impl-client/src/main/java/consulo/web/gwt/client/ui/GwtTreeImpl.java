@@ -17,20 +17,12 @@ package consulo.web.gwt.client.ui;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellTree;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.TreeViewModel;
-import consulo.web.gwt.client.UIConverter;
-import consulo.web.gwt.client.WebSocketProxy;
-import consulo.web.gwt.shared.UIComponent;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
@@ -38,12 +30,9 @@ import java.util.Map;
  */
 public class GwtTreeImpl extends CellTree {
   private static class OurModel implements TreeViewModel {
-    private Map<String, UIComponent.Child> myChildren = new HashMap<>();
-    private WebSocketProxy myProxy;
-
     @Override
     public <T> NodeInfo<?> getNodeInfo(T value) {
-      if (value == null) {
+      /*if (value == null) {
         UIComponent.Child child = myChildren.get(null);
         return new DefaultNodeInfo<>(new ListDataProvider<>(Collections.emptyList()), new AbstractCell<Object>() {
           @Override
@@ -59,7 +48,7 @@ public class GwtTreeImpl extends CellTree {
             parent.appendChild(((Widget)internalGwtComponent).getElement());
           }
         });
-      }
+      } */
 
       return new DefaultNodeInfo<>(new ListDataProvider<>(Collections.emptyList()), new AbstractCell<Object>() {
         @Override
@@ -80,17 +69,5 @@ public class GwtTreeImpl extends CellTree {
   }
 
   public void clear() {
-    ((OurModel)getTreeViewModel()).myChildren.clear();
-  }
-
-  public void addChildren(WebSocketProxy proxy, List<UIComponent.Child> children) {
-    OurModel model = (OurModel)getTreeViewModel();
-    model.myProxy = proxy;
-
-    for (UIComponent.Child child : children) {
-      Object parentId = child.getVariables().get("parentId");
-
-      model.myChildren.put((String)parentId, child);
-    }
   }
 }

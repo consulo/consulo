@@ -16,6 +16,7 @@
 package consulo.ui.internal;
 
 import consulo.ui.ItemPresentation;
+import consulo.ui.TreeModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -25,7 +26,7 @@ import java.util.List;
  * @author VISTALL
  * @since 09-Sep-17
  */
-public abstract class WGwtTreeModelImpl<N> {
+public abstract class WGwtTreeModelImpl<N> implements TreeModel<N> {
   @NotNull
   public abstract N fetchRootNode();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,25 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.IsWidget;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
+import com.vaadin.client.StyleConstants;
+import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.shared.ui.Connect;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 12-Sep-17
  */
-@Deprecated
-public interface InternalGwtComponent extends IsWidget {
-  default void updateState(@NotNull Map<String, Object> map) {
+@Connect(canonicalName = "consulo.ui.internal.WGwtTreeImpl")
+public class GwtTreeImplConnector extends AbstractComponentConnector {
+  @Override
+  protected void updateWidgetStyleNames() {
+    super.updateWidgetStyleNames();
+
+    setWidgetStyleName(StyleConstants.UI_WIDGET, false);
+  }
+
+  @Override
+  public GwtTreeImpl getWidget() {
+    return (GwtTreeImpl)super.getWidget();
   }
 }

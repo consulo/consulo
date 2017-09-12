@@ -92,4 +92,9 @@ public class Components {
   public static ImageBox imageBox(@NotNull Image image) {
     return _UIInternals.get()._Components_imageBox(image);
   }
+
+  @NotNull
+  public static <E> Tree<E> tree(@NotNull TreeModel<E> model) {
+    return _UIInternals.get()._Components_tree(model);
+  }
 }
