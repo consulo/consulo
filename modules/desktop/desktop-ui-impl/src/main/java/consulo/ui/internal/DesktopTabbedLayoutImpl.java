@@ -29,18 +29,24 @@ import javax.swing.*;
  * @since 14-Jun-16
  */
 public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout, SwingWrapper {
-  @RequiredUIAccess
   @NotNull
   @Override
-  public TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component) {
+  public Tab createTab() {
     throw new UnsupportedOperationException();
   }
 
   @RequiredUIAccess
   @NotNull
   @Override
-  public TabbedLayout addTab(@NotNull String tabName, @NotNull Component component) {
+  public Tab addTab(@NotNull Tab tab, @NotNull Component component) {
+    throw new UnsupportedOperationException();
+  }
+
+  @RequiredUIAccess
+  @NotNull
+  @Override
+  public Tab addTab(@NotNull String tabName, @NotNull Component component) {
     addTab(tabName, ConfigurableUIMigrationUtil.toAWT(component));
-    return this;
+    return new DesktopTabImpl();
   }
 }

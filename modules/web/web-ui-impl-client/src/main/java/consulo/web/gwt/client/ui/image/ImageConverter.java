@@ -40,8 +40,6 @@ public class ImageConverter {
     else if (state.myFoldedImageState != null) {
       FlowPanel flowPanel = new FlowPanel();
       flowPanel.setStyleName("ui-layered-image");
-      flowPanel.setWidth(state.myWidth + "px");
-      flowPanel.setHeight(state.myHeight + "px");
 
       for (MultiImageState child : state.myFoldedImageState.myChildren) {
         flowPanel.add(create(child));
@@ -54,8 +52,8 @@ public class ImageConverter {
       return new Label("Unsupported " + state.getClass().getName());
     }
 
-    widget.setWidth(state.myWidth + "pm");
-    widget.setWidth(state.myHeight + "pm");
+    widget.setWidth(state.myWidth + "px");
+    widget.setHeight(state.myHeight + "px");
     return widget;
   }
 }

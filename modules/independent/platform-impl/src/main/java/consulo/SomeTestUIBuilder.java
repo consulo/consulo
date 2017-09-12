@@ -34,7 +34,9 @@ public class SomeTestUIBuilder {
 
     TabbedLayout tabbed = Layouts.tabbed();
 
-    tabbed.addTab("Test Me", Components.label("Okey"));
+    Tab okey = tabbed.addTab("Test Me", Components.label("Okey"));
+    okey.setIcon(AllIcons.Nodes.Class);
+
     DockLayout tabDock = Layouts.dock();
     build(tabDock);
     tabbed.addTab("Unactive", tabDock);

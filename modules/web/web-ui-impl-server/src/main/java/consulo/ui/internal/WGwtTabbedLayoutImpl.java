@@ -54,20 +54,26 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
     }
   }
 
-  @RequiredUIAccess
   @NotNull
   @Override
-  public TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component) {
-    addComponent((com.vaadin.ui.Component)component);
-    myTabs.put((WGwtTabImpl)tab, (com.vaadin.ui.Component)component);
-    markAsDirtyRecursive();
-    return this;
+  public Tab createTab() {
+    return new WGwtTabImpl();
   }
 
   @RequiredUIAccess
   @NotNull
   @Override
-  public TabbedLayout addTab(@NotNull String tabName, @NotNull Component component) {
+  public Tab addTab(@NotNull Tab tab, @NotNull Component component) {
+    addComponent((com.vaadin.ui.Component)component);
+    myTabs.put((WGwtTabImpl)tab, (com.vaadin.ui.Component)component);
+    markAsDirtyRecursive();
+    return tab;
+  }
+
+  @RequiredUIAccess
+  @NotNull
+  @Override
+  public Tab addTab(@NotNull String tabName, @NotNull Component component) {
     WGwtTabImpl presentation = new WGwtTabImpl();
     presentation.append(tabName);
     return addTab(presentation, component);

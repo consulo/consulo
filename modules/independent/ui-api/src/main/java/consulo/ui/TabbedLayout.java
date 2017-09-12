@@ -23,22 +23,25 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface TabbedLayout extends Layout {
   @NotNull
+  Tab createTab();
+
+  @NotNull
   @RequiredUIAccess
-  default TabbedLayout addTab(@NotNull Tab tab, @NotNull PseudoComponent component) {
+  default Tab addTab(@NotNull Tab tab, @NotNull PseudoComponent component) {
     return addTab(tab, component.getComponent());
   }
 
   @NotNull
   @RequiredUIAccess
-  default TabbedLayout addTab(@NotNull String tabName, @NotNull PseudoComponent component) {
+  default Tab addTab(@NotNull String tabName, @NotNull PseudoComponent component) {
     return addTab(tabName, component.getComponent());
   }
 
   @NotNull
   @RequiredUIAccess
-  TabbedLayout addTab(@NotNull Tab tab, @NotNull Component component);
+  Tab addTab(@NotNull Tab tab, @NotNull Component component);
 
   @NotNull
   @RequiredUIAccess
-  TabbedLayout addTab(@NotNull String tabName, @NotNull Component component);
+  Tab addTab(@NotNull String tabName, @NotNull Component component);
 }

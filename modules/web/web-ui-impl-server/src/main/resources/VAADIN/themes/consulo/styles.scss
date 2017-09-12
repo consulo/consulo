@@ -225,7 +225,6 @@ $v-app-background-color: #ffffff;
 }
 
 .gwt-TabBar {
-  border-bottom: #e0e0e0 solid 1px;
 }
 
 .gwt-TabBar .gwt-TabBarFirst {
@@ -233,6 +232,7 @@ $v-app-background-color: #ffffff;
 }
 
 .gwt-TabBar .gwt-TabBarRest {
+  border-bottom: #e0e0e0 solid 1px;
 }
 
 .gwt-TabBar .gwt-TabBarItem {
