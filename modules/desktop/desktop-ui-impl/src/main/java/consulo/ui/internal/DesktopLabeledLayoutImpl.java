@@ -16,6 +16,7 @@
 package consulo.ui.internal;
 
 import com.intellij.ui.IdeBorderFactory;
+import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
 import consulo.ui.LabeledLayout;
 import consulo.ui.RequiredUIAccess;
@@ -39,7 +40,7 @@ public class DesktopLabeledLayoutImpl extends JPanel implements SwingWrapper, La
   @NotNull
   @Override
   public LabeledLayout set(@NotNull Component component) {
-    add((java.awt.Component)component, BorderLayout.CENTER);
+    add(ConfigurableUIMigrationUtil.toAWT(component), BorderLayout.CENTER);
     return this;
   }
 }

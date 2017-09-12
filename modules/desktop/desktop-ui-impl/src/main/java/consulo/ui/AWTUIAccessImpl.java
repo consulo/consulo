@@ -24,7 +24,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class AWTUIAccessImpl implements UIAccess {
+class AWTUIAccessImpl implements UIAccess {
   public static UIAccess ourInstance = new AWTUIAccessImpl();
 
   private AWTUIAccessImpl() {

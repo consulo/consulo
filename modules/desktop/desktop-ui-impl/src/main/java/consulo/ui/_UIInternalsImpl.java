@@ -120,7 +120,7 @@ class _UIInternalsImpl extends _UIInternals {
 
   @Override
   <E> ComboBox<E> _Components_comboBox(consulo.ui.model.ListModel<E> model) {
-    return new DesktopComboBoxImpl<E>(model);
+    return new DesktopComboBoxImpl<>(model);
   }
 
   @Override
@@ -130,7 +130,7 @@ class _UIInternalsImpl extends _UIInternals {
 
   @Override
   <E> ListBox<E> _Components_listBox(ListModel<E> model) {
-    return null;
+    return new DesktopListBoxImpl<>(model);
   }
 
   @Override

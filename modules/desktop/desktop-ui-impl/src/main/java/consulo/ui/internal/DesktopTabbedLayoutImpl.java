@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tab;
@@ -39,7 +40,7 @@ public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout
   @NotNull
   @Override
   public TabbedLayout addTab(@NotNull String tabName, @NotNull Component component) {
-    addTab(tabName, (java.awt.Component)component);
+    addTab(tabName, ConfigurableUIMigrationUtil.toAWT(component));
     return this;
   }
 }

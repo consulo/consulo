@@ -16,10 +16,13 @@
 package consulo.ui.internal;
 
 import com.intellij.openapi.ui.Splitter;
+import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.SplitLayout;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -34,14 +37,14 @@ public class DesktopSplitLayoutImpl extends Splitter implements SplitLayout, Swi
   @RequiredUIAccess
   @Override
   public SplitLayout setFirstComponent(@NotNull Component component) {
-    setFirstComponent((javax.swing.JComponent)component);
+    setFirstComponent((JComponent)ConfigurableUIMigrationUtil.toAWT(component));
     return this;
   }
 
   @RequiredUIAccess
   @Override
   public SplitLayout setSecondComponent(@NotNull Component component) {
-    setSecondComponent((javax.swing.JComponent)component);
+    setSecondComponent((JComponent)ConfigurableUIMigrationUtil.toAWT(component));
     return this;
   }
 }

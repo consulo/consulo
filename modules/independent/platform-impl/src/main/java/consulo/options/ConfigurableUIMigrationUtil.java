@@ -18,15 +18,25 @@ package consulo.options;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.migration.ToSwingWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 05-Nov-16
  */
 public class ConfigurableUIMigrationUtil {
+  @NotNull
+  public static Component toAWT(@NotNull consulo.ui.Component component) {
+    if (component instanceof ToSwingWrapper) {
+      return ((ToSwingWrapper)component).toAWT();
+    }
+    throw new IllegalArgumentException(component + " is not ToSwingWrapper");
+  }
+
   @RequiredDispatchThread
   public static JComponent createComponent(@NotNull UnnamedConfigurable configurable) {
     consulo.ui.Component uiComponent = configurable.createUIComponent();

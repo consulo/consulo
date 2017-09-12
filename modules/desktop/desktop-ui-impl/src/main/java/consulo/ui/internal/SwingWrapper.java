@@ -18,6 +18,7 @@ package consulo.ui.internal;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
+import consulo.ui.migration.ToSwingWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +28,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 19-Nov-16.
  */
-public interface SwingWrapper extends Component {
+public interface SwingWrapper extends Component, ToSwingWrapper {
   @Nullable
   @Override
   default Component getParentComponent() {
@@ -40,6 +41,12 @@ public interface SwingWrapper extends Component {
   default void setSize(@NotNull Size size) {
     Container container = (Container)this;
     container.setPreferredSize(new Dimension(size.getWidth(), size.getHeight()));
+  }
+
+  @NotNull
+  @Override
+  default java.awt.Component toAWT() {
+    return (java.awt.Component)this;
   }
 
   @Override

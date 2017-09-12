@@ -24,7 +24,7 @@ import java.awt.event.ItemListener;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class DesktopValueListenerAsItemListenerImpl<E> implements ItemListener {
+class DesktopValueListenerAsItemListenerImpl<E> implements ItemListener {
   private ValueComponent.ValueListener<E> myValueListener;
   private boolean mySelectEvent;
 
