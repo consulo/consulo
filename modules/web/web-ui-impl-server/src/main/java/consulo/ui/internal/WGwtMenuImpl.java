@@ -15,48 +15,76 @@
  */
 package consulo.ui.internal;
 
+import com.vaadin.ui.AbstractComponentContainer;
+import com.vaadin.ui.Component;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
-import consulo.web.gwt.shared.UIComponent;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtMenuImpl extends WGwtMenuItemImpl implements Menu {
-  private List<MenuItem> myMenuItems = new ArrayList<MenuItem>();
+public class WGwtMenuImpl extends AbstractComponentContainer implements Menu {
+  private List<Component> myMenuItems = new ArrayList<>();
 
   public WGwtMenuImpl(String text) {
-    super(text);
+    getState().caption = text;
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public Menu add(@NotNull MenuItem menuItem) {
-    myMenuItems.add(menuItem);
+    myMenuItems.add((Component)menuItem);
     return this;
+  }
+
+  @RequiredUIAccess
+  @NotNull
+  @Override
+  public Menu separate() {
+    //myMenuItems.add(new WGwtMenuSeparatorImpl());
+    return this;
+  }
+
+  @Override
+  public void replaceComponent(Component oldComponent, Component newComponent) {
+
+  }
+
+  @Override
+  public int getComponentCount() {
+    return 0;
+  }
+
+  @Override
+  public Iterator<Component> iterator() {
+    return null;
   }
 
   @NotNull
   @Override
-  public Menu separate() {
-    myMenuItems.add(new WGwtMenuSeparatorImpl());
-    return this;
+  public String getText() {
+    return getState().caption;
   }
 
+  @Nullable
   @Override
-  protected void initChildren(List<UIComponent.Child> children) {
-    for (MenuItem menuItem : myMenuItems) {
-      final UIComponent.Child child = new UIComponent.Child();
+  public consulo.ui.Component getParentComponent() {
+    return (consulo.ui.Component)getParent();
+  }
 
-      final UIComponent uiComponent = ((WGwtBaseComponent)menuItem).convert();
-      child.setComponent(uiComponent);
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
 
-      children.add(child);
-    }
   }
 }

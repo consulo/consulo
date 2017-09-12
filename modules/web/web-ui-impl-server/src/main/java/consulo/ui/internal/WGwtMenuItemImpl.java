@@ -15,31 +15,37 @@
  */
 package consulo.ui.internal;
 
+import com.vaadin.ui.AbstractComponent;
+import consulo.ui.Component;
 import consulo.ui.MenuItem;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtMenuItemImpl extends WGwtBaseComponent implements MenuItem {
-  private String myText;
-
+public class WGwtMenuItemImpl extends AbstractComponent implements MenuItem {
   public WGwtMenuItemImpl(String text) {
-    myText = text;
+    getState().caption = text;
   }
 
   @NotNull
   @Override
   public String getText() {
-    return myText;
+    return getState().caption;
   }
 
+  @Nullable
   @Override
-  protected void getState(Map<String, Object> map) {
-    super.getState(map);
-    map.put("text", myText);
+  public Component getParentComponent() {
+    return (Component)getParent();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
   }
 }

@@ -15,28 +15,23 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.MenuItem;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
+ *
+ * wrapper for menu item
  */
-public class GwtMenuItemImpl extends MenuItem  {
+public class GwtMenuItemImpl extends SimplePanel {
+  private final MenuItem myItem;
 
   public GwtMenuItemImpl() {
-    super("", new Scheduler.ScheduledCommand() {
-      @Override
-      public void execute() {
-        // dummy
-      }
-    });
+    myItem = new MenuItem("", () -> {});
   }
 
-  public void updateState(@NotNull Map<String, Object> map) {
-    setText((String)map.get("text"));
+  public MenuItem getItem() {
+    return myItem;
   }
 }

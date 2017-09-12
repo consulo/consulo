@@ -15,8 +15,14 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.util.GwtUIUtil;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -26,11 +32,19 @@ import com.vaadin.shared.ui.Connect;
 public class GwtMenuBarImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
-
+    addItems(GwtUIUtil.remapWidgets(this), getWidget()::addItem);
   }
 
   @Override
   public GwtMenuBarImpl getWidget() {
     return (GwtMenuBarImpl)super.getWidget();
+  }
+
+  public static void addItems(List<Widget> child, Consumer<MenuItem> itemConsumer) {
+    for (Widget widget : child) {
+      if (widget instanceof GwtMenuItemImpl) {
+        itemConsumer.accept(((GwtMenuItemImpl)widget).getItem());
+      }
+    }
   }
 }

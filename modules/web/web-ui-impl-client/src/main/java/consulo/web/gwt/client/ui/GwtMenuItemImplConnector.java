@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,25 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.MenuBar;
+import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.shared.ui.Connect;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 12-Sep-17
  */
-public class GwtMenuBarImpl extends MenuBar {
-  public GwtMenuBarImpl() {
+@Connect(canonicalName = "consulo.ui.internal.WGwtMenuItemImpl")
+public class GwtMenuItemImplConnector extends AbstractComponentConnector {
+  @Override
+  public void onStateChanged(StateChangeEvent stateChangeEvent) {
+    super.onStateChanged(stateChangeEvent);
+
+    getWidget().getItem().setText(getState().caption);
+  }
+
+  @Override
+  public GwtMenuItemImpl getWidget() {
+    return (GwtMenuItemImpl)super.getWidget();
   }
 }

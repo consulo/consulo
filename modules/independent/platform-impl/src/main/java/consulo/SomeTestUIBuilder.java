@@ -48,6 +48,8 @@ public class SomeTestUIBuilder {
     dock.center(tabbed);
 
     MenuBar menuBar = MenuItems.menuBar();
+    menuBar.add(MenuItems.item("File"));
+    menuBar.add(MenuItems.item("Edit"));
 
     window.setMenuBar(menuBar);
 
