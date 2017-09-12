@@ -21,5 +21,5 @@ import consulo.ui.Tab;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtTabImpl extends WGwtListItemPresentationImpl implements Tab {
+public class WGwtTabImpl extends WGwtItemPresentationImpl implements Tab {
 }

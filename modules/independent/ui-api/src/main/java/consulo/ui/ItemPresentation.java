@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public interface ListItemPresentation {
+public interface ItemPresentation {
   void setIcon(@NotNull Image image);
 
   void append(@NotNull String text);

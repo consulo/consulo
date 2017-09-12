@@ -86,7 +86,7 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
   }
 
   private void buildItem(List<ComboBoxState.Item> children, int i, @Nullable E e) {
-    WGwtListItemPresentationImpl presentation = new WGwtListItemPresentationImpl();
+    WGwtItemPresentationImpl presentation = new WGwtItemPresentationImpl();
     myRender.render(presentation, i, e);
 
     children.add(presentation.getItem());

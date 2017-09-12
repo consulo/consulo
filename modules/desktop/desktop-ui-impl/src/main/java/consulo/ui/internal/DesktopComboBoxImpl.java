@@ -42,7 +42,7 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
     setRenderer(new ColoredListCellRenderer<E>() {
       @Override
       protected void customizeCellRenderer(@NotNull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
-        DesktopListItemPresentationImpl<E> render = new DesktopListItemPresentationImpl<E>(this);
+        DesktopItemPresentationImpl<E> render = new DesktopItemPresentationImpl<E>(this);
         myRender.render(render, index, value);
       }
     });

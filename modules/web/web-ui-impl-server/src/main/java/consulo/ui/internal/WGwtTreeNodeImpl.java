@@ -23,7 +23,7 @@ import java.util.UUID;
  * @since 09-Sep-17
  */
 public class WGwtTreeNodeImpl<N> {
-  private final WGwtListItemPresentationImpl myPresentation = new WGwtListItemPresentationImpl();
+  private final WGwtItemPresentationImpl myPresentation = new WGwtItemPresentationImpl();
   private String myParentId;
   private N myNode;
   private String myId = UUID.randomUUID().toString();
@@ -47,7 +47,7 @@ public class WGwtTreeNodeImpl<N> {
     return myId;
   }
 
-  public WGwtListItemPresentationImpl getPresentation() {
+  public WGwtItemPresentationImpl getPresentation() {
     return myPresentation;
   }
 

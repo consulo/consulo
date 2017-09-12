@@ -19,5 +19,5 @@ package consulo.ui;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public interface Tab extends ListItemPresentation {
+public interface Tab extends ItemPresentation {
 }

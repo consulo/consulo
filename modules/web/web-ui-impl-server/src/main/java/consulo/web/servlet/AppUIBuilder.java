@@ -142,7 +142,7 @@ public class AppUIBuilder extends UIBuilder {
       }
 
       @Override
-      public void renderNode(@NotNull AbstractTreeNode node, @NotNull ListItemPresentation presentation) {
+      public void renderNode(@NotNull AbstractTreeNode node, @NotNull ItemPresentation presentation) {
         PresentationData o = node.getPresentation();
         UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
           node.update();

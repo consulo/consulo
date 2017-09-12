@@ -15,7 +15,7 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.ListItemPresentation;
+import consulo.ui.ItemPresentation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -34,7 +34,7 @@ public abstract class WGwtTreeModelImpl<N> {
     return Collections.emptyList();
   }
 
-  public void renderNode(@NotNull N node, @NotNull ListItemPresentation presentation) {
+  public void renderNode(@NotNull N node, @NotNull ItemPresentation presentation) {
     presentation.append(node.toString());
   }
 }

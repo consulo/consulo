@@ -15,41 +15,44 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.ListItemPresentation;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.ItemPresentation;
 import consulo.ui.TextStyle;
-import consulo.ui.image.Image;
-import consulo.ui.internal.image.WGwtImageUrlCache;
-import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
+ * <p/>
+ * some dummy impl
  */
-class WGwtListItemPresentationImpl implements ListItemPresentation {
-  private ComboBoxState.Item myItem = new ComboBoxState.Item();
+public class DesktopItemPresentationImpl<E> implements ItemPresentation {
+  private ColoredListCellRenderer<E> myRenderer;
+
+  public DesktopItemPresentationImpl(ColoredListCellRenderer<E> renderer) {
+    myRenderer = renderer;
+  }
 
   @Override
-  public void setIcon(@NotNull Image image) {
-    myItem.myImageState = WGwtImageUrlCache.fixSwingImageRef(image).getState();
+  public void setIcon(@NotNull consulo.ui.image.Image icon) {
+    myRenderer.setIcon((Icon)icon);
   }
 
   @Override
   public void append(@NotNull String text) {
-    ComboBoxState.ItemSegment segment = new ComboBoxState.ItemSegment();
-    segment.myText = text;
-    myItem.myItemSegments.add(segment);
+    myRenderer.append(text);
   }
 
   @Override
   public void append(@NotNull String text, @NotNull TextStyle... styles) {
-    ComboBoxState.ItemSegment segment = new ComboBoxState.ItemSegment();
-    segment.myText = text;
-    //TODO [VISTALL] style!
-    myItem.myItemSegments.add(segment);
-  }
-
-  public ComboBoxState.Item getItem() {
-    return myItem;
+    if (styles[0] == TextStyle.BOLD) {
+      myRenderer.append(text, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+    }
+    else {
+      append(text);
+    }
   }
 }

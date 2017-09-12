@@ -23,5 +23,5 @@ import org.jetbrains.annotations.Nullable;
  * @since 12-Jun-16
  */
 public interface ListItemRender<E> {
-  void render(@NotNull ListItemPresentation render, int index, @Nullable E item);
+  void render(@NotNull ItemPresentation render, int index, @Nullable E item);
 }
