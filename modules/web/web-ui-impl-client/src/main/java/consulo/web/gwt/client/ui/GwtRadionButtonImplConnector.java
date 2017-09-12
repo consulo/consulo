@@ -15,21 +15,40 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
-import consulo.web.gwt.client.ui.image.ImageConverter;
-import consulo.web.gwt.shared.ui.state.ImageBoxState;
-import consulo.web.gwt.shared.ui.state.image.MultiImageState;
+import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxRpc;
+import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxState;
 
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtImageBoxImpl")
-public class GwtImageBoxImplConnector extends AbstractComponentConnector {
+@Connect(canonicalName = "consulo.ui.internal.WGwtRadioButtonImpl")
+public class GwtRadionButtonImplConnector extends AbstractComponentConnector implements ValueChangeHandler<Boolean> {
+  @Override
+  protected void init() {
+    super.init();
+
+    getWidget().addValueChangeHandler(this);
+  }
+
+  @Override
+  protected void updateComponentSize() {
+    // nothing
+  }
+
+  @Override
+  public void onValueChange(ValueChangeEvent<Boolean> event) {
+    getState().myChecked = event.getValue();
+    getRpcProxy(CheckBoxRpc.class).setValue(event.getValue());
+    getConnection().sendPendingVariableChanges();
+  }
+
   @Override
   protected void updateWidgetStyleNames() {
     super.updateWidgetStyleNames();
@@ -41,26 +60,17 @@ public class GwtImageBoxImplConnector extends AbstractComponentConnector {
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
-    SimplePanel widget = getWidget();
-    MultiImageState state = getState().myImageState;
-    widget.setHeight(state.myHeight + "px");
-    widget.setWidth(state.myWidth + "px");
-
-    widget.setWidget(ImageConverter.create(state));
+    getWidget().setValue(getState().myChecked);
+    getWidget().setText(getState().caption);
   }
 
   @Override
-  protected void updateComponentSize() {
-    // nothing
+  public GwtRadioButtonImpl getWidget() {
+    return (GwtRadioButtonImpl)super.getWidget();
   }
 
   @Override
-  public ImageBoxState getState() {
-    return (ImageBoxState)super.getState();
-  }
-
-  @Override
-  public SimplePanel getWidget() {
-    return (SimplePanel)super.getWidget();
+  public CheckBoxState getState() {
+    return (CheckBoxState)super.getState();
   }
 }

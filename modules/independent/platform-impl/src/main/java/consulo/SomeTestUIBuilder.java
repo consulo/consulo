@@ -83,7 +83,7 @@ public class SomeTestUIBuilder {
       }
     });
 
-    layout.add(Layouts.dock().left(Components.label("SDK:")).center(comboBox));
+    layout.add(LabeledComponents.left("SDK:", comboBox));
 
     layout.add(Layouts.horizontal().add(Components.imageBox(Images.fold(AllIcons.Nodes.AbstractClass, AllIcons.Nodes.JunitTestMark))));
 
@@ -92,5 +92,4 @@ public class SomeTestUIBuilder {
 
     window.setContent(layout);
   }
-
 }
