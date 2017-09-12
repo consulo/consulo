@@ -680,7 +680,7 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
       getFocuses().remove(sender);
 
       SimplePanel value = getSelectedValue();
-      if (sender == value && !isCustomTextAllowed()) value.removeStyleName("selected-row");
+      if (sender == value && !false) value.removeStyleName("selected-row");
 
       if (!isFocus()) fireEvent(event);
     }
@@ -694,10 +694,8 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
 
       SimplePanel value = getSelectedValue();
       if (sender == value) {
-        if (!isCustomTextAllowed()) {
-          value.addStyleName("selected-row");
-          if (isChoiceButtonVisible()) getChoiceButton().setFocus(true);
-        }
+        value.addStyleName("selected-row");
+        if (isChoiceButtonVisible()) getChoiceButton().setFocus(true);
       }
       else if (sender == null || sender == getListPanel()) { //on drop down list show
         Widget widget = getSelectedWidget();
@@ -721,18 +719,15 @@ public class WidgetComboBox extends WidgetButtonPanel implements HasAllFocusHand
     @Override
     public void onClick(ClickEvent event) {
       int count = getModel().getCount();
-      Object sender = event.getSource();
-      if (sender instanceof ToggleButton || !isCustomTextAllowed()) {
-        if (count > 0 && !getListPanel().isShowing()) {
-          getListPanel().show();
-          getListPanel().prepareList();
-          if (getItemCount() <= 0) getListPanel().hide();
-          getChoiceButton().setDown(true);
-        }
-        else {
-          getListPanel().hide();
-          getChoiceButton().setDown(false);
-        }
+      if (count > 0 && !getListPanel().isShowing()) {
+        getListPanel().show();
+        getListPanel().prepareList();
+        if (getItemCount() <= 0) getListPanel().hide();
+        getChoiceButton().setDown(true);
+      }
+      else {
+        getListPanel().hide();
+        getChoiceButton().setDown(false);
       }
       fireEvent(event);
     }

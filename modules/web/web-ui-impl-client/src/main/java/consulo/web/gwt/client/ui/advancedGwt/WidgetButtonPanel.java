@@ -48,10 +48,6 @@ public abstract class WidgetButtonPanel extends FlexTable implements AdvancedWid
    */
   private Image choiceButtonImage;
   /**
-   * this flag means whether it's possible to enter a custom text
-   */
-  private final boolean customTextAllowed = false;
-  /**
    * a falg meaning whether the widget locked
    */
   private boolean locked;
@@ -84,16 +80,6 @@ public abstract class WidgetButtonPanel extends FlexTable implements AdvancedWid
     super.onAttach();
 
     prepareSelectedValue();
-  }
-
-  /**
-   * Getter for property 'customTextAllowed'.
-   *
-   * @return Value for property 'customTextAllowed'.
-   */
-  @Deprecated
-  public boolean isCustomTextAllowed() {
-    return customTextAllowed;
   }
 
   /**
