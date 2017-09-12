@@ -48,7 +48,7 @@ public class SomeTestUIBuilder {
     dock.center(tabbed);
 
     MenuBar menuBar = MenuItems.menuBar();
-    menuBar.add(MenuItems.menu("File").add(MenuItems.item("New")).add(MenuItems.item("Exit")));
+    menuBar.add(MenuItems.menu("File").add(MenuItems.item("New")).separate().add(MenuItems.item("Exit")));
     menuBar.add(MenuItems.menu("Edit").add(MenuItems.item("Copy")));
     menuBar.add(MenuItems.item("About"));
 

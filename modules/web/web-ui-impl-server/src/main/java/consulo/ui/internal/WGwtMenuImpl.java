@@ -52,7 +52,9 @@ public class WGwtMenuImpl extends AbstractComponentContainer implements Menu {
   @NotNull
   @Override
   public Menu separate() {
-    //myMenuItems.add(new WGwtMenuSeparatorImpl());
+    WGwtMenuSeparatorImpl separator = new WGwtMenuSeparatorImpl();
+    myMenuItems.add(separator);
+    addComponent(separator);
     return this;
   }
 

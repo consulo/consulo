@@ -15,14 +15,19 @@
  */
 package consulo.ui.internal;
 
+import com.vaadin.ui.AbstractComponent;
+import consulo.ui.Component;
 import consulo.ui.MenuItem;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtMenuSeparatorImpl extends WGwtBaseComponent implements MenuItem{
+public class WGwtMenuSeparatorImpl extends AbstractComponent implements MenuItem {
   public WGwtMenuSeparatorImpl() {
   }
 
@@ -30,5 +35,17 @@ public class WGwtMenuSeparatorImpl extends WGwtBaseComponent implements MenuItem
   @Override
   public String getText() {
     throw new UnsupportedOperationException();
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)getParent();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
+
   }
 }
