@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Label;
  */
 public class GwtLabelImpl extends Label {
   public GwtLabelImpl() {
-    setHorizontalAlignment(ALIGN_CENTER);
+    setHorizontalAlignment(ALIGN_LEFT);
 
     setStyleName("ui-label");
   }
