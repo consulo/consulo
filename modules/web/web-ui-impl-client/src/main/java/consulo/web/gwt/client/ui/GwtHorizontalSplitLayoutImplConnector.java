@@ -70,11 +70,11 @@ public class GwtHorizontalSplitLayoutImplConnector extends GwtLayoutConnector im
   }
 
   @Override
-  public GwtHorizontalSplitLayout getWidget() {
-    return (GwtHorizontalSplitLayout)super.getWidget();
+  public GwtHorizontalSplitLayoutImpl getWidget() {
+    return (GwtHorizontalSplitLayoutImpl)super.getWidget();
   }
 
-  public void setWidget(GwtHorizontalSplitLayout panel, @Nullable Widget o1, @Nullable Widget o2) {
+  public void setWidget(GwtHorizontalSplitLayoutImpl panel, @Nullable Widget o1, @Nullable Widget o2) {
     if (o1 != null) {
       GwtUIUtil.fill(o1);
 

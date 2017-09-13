@@ -47,7 +47,7 @@ public class SomeTestUIBuilder {
 
     dock.center(tabbed);
 
-    SplitLayout layout = Layouts.horizontalSplit();
+    SplitLayout layout = Layouts.verticalSplit();
 
     layout.setFirstComponent(Components.label("test2")) ;
 

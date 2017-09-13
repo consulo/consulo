@@ -25,18 +25,18 @@ import com.google.gwt.user.client.ui.Widget;
  * <p>
  * idea from https://stackoverflow.com/a/16403608/3129079
  */
-public class GwtHorizontalSplitLayout extends SplitLayoutPanel {
+public class GwtHorizontalSplitLayoutImpl extends SplitLayoutPanel {
   private ScrollPanel myLeftScrollPanel = new ScrollPanel();
   private ScrollPanel myRightScrollPanel = new ScrollPanel();
 
   private int myProportion = 50;
   private int myLastWidth;
 
-  public GwtHorizontalSplitLayout() {
+  public GwtHorizontalSplitLayoutImpl() {
     this(1);
   }
 
-  public GwtHorizontalSplitLayout(int splitterSize) {
+  public GwtHorizontalSplitLayoutImpl(int splitterSize) {
     super(splitterSize);
     setStyleName("ui-horizontal-split-panel");
     addWest(myLeftScrollPanel, 300);
