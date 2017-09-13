@@ -44,13 +44,6 @@ $v-app-background-color: #ffffff;
   .ui-horizontal-split-panel {
   }
 
-  .ui-horizontal-split-panel .hsplitter {
-    cursor: move;
-    border: 0px;
-    background: #e7e7e7;
-    line-height: 0px;
-  }
-
   .ui-list-box {
     border: 0;
     padding: 0;
@@ -377,4 +370,14 @@ table, tr, td {
 
 .gwt-TabBar .gwt-TabBarItem-disabled {
   cursor: default;
+}
+
+.gwt-SplitLayoutPanel-HDragger {
+  background: #e7e7e7;
+  cursor: col-resize;
+}
+
+.gwt-SplitLayoutPanel-VDragger {
+  background: #e7e7e7;
+  cursor: row-resize;
 }

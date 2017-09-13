@@ -15,7 +15,10 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.HorizontalSplitPanel;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -32,21 +35,33 @@ import java.util.List;
  * @since 11-Sep-17
  */
 @Connect(canonicalName = "consulo.ui.internal.WGwtHorizontalSplitLayoutImpl")
-public class GwtHorizontalSplitLayoutImplConnector extends GwtLayoutConnector {
+public class GwtHorizontalSplitLayoutImplConnector extends GwtLayoutConnector implements ResizeHandler {
+
+  private HandlerRegistration myCloseRegister;
+
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
     List<Widget> widgets = GwtUIUtil.remapWidgets(this);
 
     setWidget(getWidget(), ArrayUtil2.safeGet(widgets, 0), ArrayUtil2.safeGet(widgets, 1));
-
-    resize();
   }
 
   @Override
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
-
     getWidget().setSplitPosition(getState().myProportion + "%");
+  }
+
+  @Override
+  protected void init() {
+    super.init();
+    myCloseRegister = Window.addResizeHandler(this);
+  }
+
+  @Override
+  public void onUnregister() {
+    super.onUnregister();
+    myCloseRegister.removeHandler();
   }
 
   @Override
@@ -55,33 +70,11 @@ public class GwtHorizontalSplitLayoutImplConnector extends GwtLayoutConnector {
   }
 
   @Override
-  public HorizontalSplitPanel getWidget() {
-    return (HorizontalSplitPanel)super.getWidget();
+  public GwtHorizontalSplitLayout getWidget() {
+    return (GwtHorizontalSplitLayout)super.getWidget();
   }
 
-  @Override
-  protected HorizontalSplitPanel createWidget() {
-    HorizontalSplitPanel widget = new HorizontalSplitPanel();
-    widget.setStyleName("ui-horizontal-split-panel");
-
-    return widget;
-  }
-
-  private void resize() {
-    HorizontalSplitPanel widget = getWidget();
-    final String height = widget.getElement().getStyle().getHeight();
-
-    Widget o1 = widget.getLeftWidget();
-    if (o1 == null) {
-      return;
-    }
-
-    if (height == null || height.isEmpty()) {
-      widget.setHeight(o1.getOffsetHeight() + "px");
-    }
-  }
-
-  public void setWidget(HorizontalSplitPanel panel, @Nullable Widget o1, @Nullable Widget o2) {
+  public void setWidget(GwtHorizontalSplitLayout panel, @Nullable Widget o1, @Nullable Widget o2) {
     if (o1 != null) {
       GwtUIUtil.fill(o1);
 
@@ -95,5 +88,10 @@ public class GwtHorizontalSplitLayoutImplConnector extends GwtLayoutConnector {
       GwtUIUtil.fill(o2);
     }
     panel.setRightWidget(o2);
+  }
+
+  @Override
+  public void onResize(ResizeEvent event) {
+    getWidget().updateOnResize();
   }
 }
