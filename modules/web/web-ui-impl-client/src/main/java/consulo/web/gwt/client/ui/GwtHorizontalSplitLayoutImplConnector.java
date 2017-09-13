@@ -15,83 +15,16 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
-import consulo.web.gwt.client.util.ArrayUtil2;
-import consulo.web.gwt.client.util.GwtUIUtil;
-import consulo.web.gwt.shared.ui.state.layout.SplitLayoutState;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
 @Connect(canonicalName = "consulo.ui.internal.WGwtHorizontalSplitLayoutImpl")
-public class GwtHorizontalSplitLayoutImplConnector extends GwtLayoutConnector implements ResizeHandler {
-
-  private HandlerRegistration myCloseRegister;
-
-  @Override
-  public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
-    List<Widget> widgets = GwtUIUtil.remapWidgets(this);
-
-    setWidget(getWidget(), ArrayUtil2.safeGet(widgets, 0), ArrayUtil2.safeGet(widgets, 1));
-  }
-
-  @Override
-  public void onStateChanged(StateChangeEvent stateChangeEvent) {
-    super.onStateChanged(stateChangeEvent);
-    getWidget().setSplitPosition(getState().myProportion + "%");
-  }
-
-  @Override
-  protected void init() {
-    super.init();
-    myCloseRegister = Window.addResizeHandler(this);
-  }
-
-  @Override
-  public void onUnregister() {
-    super.onUnregister();
-    myCloseRegister.removeHandler();
-  }
-
-  @Override
-  public SplitLayoutState getState() {
-    return (SplitLayoutState)super.getState();
-  }
-
+public class GwtHorizontalSplitLayoutImplConnector extends GwtSplitLayoutImplConnector {
   @Override
   public GwtHorizontalSplitLayoutImpl getWidget() {
     return (GwtHorizontalSplitLayoutImpl)super.getWidget();
-  }
-
-  public void setWidget(GwtHorizontalSplitLayoutImpl panel, @Nullable Widget o1, @Nullable Widget o2) {
-    if (o1 != null) {
-      GwtUIUtil.fill(o1);
-
-      panel.setLeftWidget(o1);
-    }
-    else {
-      panel.setLeftWidget(null);
-    }
-
-    if (o2 != null) {
-      GwtUIUtil.fill(o2);
-    }
-    panel.setRightWidget(o2);
-  }
-
-  @Override
-  public void onResize(ResizeEvent event) {
-    getWidget().updateOnResize();
   }
 }

@@ -15,29 +15,34 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author VISTALL
  * @since 13-Sep-17
  */
-public class GwtHorizontalSplitLayoutImpl extends GwtSplitLayoutImpl {
-  public GwtHorizontalSplitLayoutImpl() {
+public class GwtVerticalSplitLayoutImpl extends GwtSplitLayoutImpl {
+  public GwtVerticalSplitLayoutImpl() {
     this(1);
   }
 
-  public GwtHorizontalSplitLayoutImpl(int splitterSize) {
+  public GwtVerticalSplitLayoutImpl(int splitterSize) {
     super(splitterSize);
-    setStyleName("ui-horizontal-split-panel");
+    setStyleName("ui-vertical-split-panel");
   }
 
   @Override
   protected int getElementSize(Widget widget) {
-    return widget.getOffsetWidth();
+    int offsetHeight = widget.getOffsetHeight();
+    if(offsetHeight == 0) {
+      offsetHeight = Window.getClientHeight();
+    }
+    return offsetHeight;
   }
 
   @Override
   protected Direction getDirection() {
-    return Direction.WEST;
+    return Direction.NORTH;
   }
 }

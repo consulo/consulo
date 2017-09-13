@@ -15,29 +15,16 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.Connect;
 
 /**
  * @author VISTALL
  * @since 13-Sep-17
  */
-public class GwtHorizontalSplitLayoutImpl extends GwtSplitLayoutImpl {
-  public GwtHorizontalSplitLayoutImpl() {
-    this(1);
-  }
-
-  public GwtHorizontalSplitLayoutImpl(int splitterSize) {
-    super(splitterSize);
-    setStyleName("ui-horizontal-split-panel");
-  }
-
+@Connect(canonicalName = "consulo.ui.internal.WGwtVerticalSplitLayoutImpl")
+public class GwtVerticalSplitLayoutImplConnector extends GwtSplitLayoutImplConnector {
   @Override
-  protected int getElementSize(Widget widget) {
-    return widget.getOffsetWidth();
-  }
-
-  @Override
-  protected Direction getDirection() {
-    return Direction.WEST;
+  public GwtVerticalSplitLayoutImpl getWidget() {
+    return (GwtVerticalSplitLayoutImpl)super.getWidget();
   }
 }

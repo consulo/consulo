@@ -30,8 +30,6 @@ import java.util.concurrent.TimeUnit;
 public class SomeTestUIBuilder {
   @RequiredUIAccess
   public static void buildTabbed(Window window) {
-    DockLayout dock = Layouts.dock();
-
     TabbedLayout tabbed = Layouts.tabbed();
 
     Tab okey = tabbed.addTab("Test Me", Components.label("Okey"));
@@ -43,19 +41,13 @@ public class SomeTestUIBuilder {
     build(tabDock);
     tabbed.addTab("Unactive", tabDock);
 
-    dock.top(Components.label("Hello world"));
-
-    dock.center(tabbed);
-
-    SplitLayout layout = Layouts.verticalSplit();
+    SplitLayout layout = Layouts.horizontalSplit();
 
     layout.setFirstComponent(Components.label("test2")) ;
 
-    layout.setSecondComponent(Components.label("test"));
+    layout.setSecondComponent(tabbed);
 
     layout.setProportion(30);
-
-    tabbed.addTab("Tree", layout);
 
     MenuBar menuBar = MenuItems.menuBar();
     menuBar.add(MenuItems.menu("File").add(MenuItems.item("New")).separate().add(MenuItems.item("Exit")));
@@ -64,7 +56,7 @@ public class SomeTestUIBuilder {
 
     window.setMenuBar(menuBar);
 
-    window.setContent(dock);
+    window.setContent(layout);
   }
 
   @RequiredUIAccess
