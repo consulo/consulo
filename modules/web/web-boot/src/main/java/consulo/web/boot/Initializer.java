@@ -80,6 +80,10 @@ public class Initializer implements ServletContextListener {
           libs.add(child.toURI().toURL());
         }
       }
+      File superGwtDirectory = new File(libFile, "gwt");
+      if(superGwtDirectory.exists()) {
+        libs.add(superGwtDirectory.getCanonicalFile().toURI().toURL());
+      }
     }
 
     UrlClassLoader.Builder build = UrlClassLoader.build();

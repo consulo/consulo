@@ -36,6 +36,15 @@ If you want run Consulo from repository
    ```
    mvn package -am -pl consulo:consulo-sandbox-web
    ```
+
+   then need start code server (since we used gwt as frontend)
+
+   ```sh
+   cd modules/web/web-ui-impl-client
+
+   mvn -am vaadin:run-codeserver
+   ```
+
    and start web server
 
    ```sh

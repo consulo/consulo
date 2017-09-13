@@ -42,12 +42,8 @@
         <configuration>
           <source>${java.level}</source>
           <target>${java.level}</target>
-          <showDeprecation>true</showDeprecation>
-          <showWarnings>true</showWarnings>
-          <fork>true</fork>
-          <meminitial>2048</meminitial>
-          <maxmem>4096</maxmem>
           <skip>true</skip>
+          <skipMain>true</skipMain>
         </configuration>
         <!--workaround for java 9-->
         <dependencies>
@@ -66,9 +62,10 @@
         <configuration>
           <extraJvmArgs>-Xmx1G</extraJvmArgs>
           <webappDirectory>${basedir}/target/classes/VAADIN/widgetsets</webappDirectory>
+          <launcherDir>${project.basedir}/../../../sandbox/web/target/consulo-sandbox-web-${project.version}-main/workdir/platform/buildSNAPSHOT/lib/gwt/VAADIN/widgetsets</launcherDir>
           <draftCompile>false</draftCompile>
           <compileReport>false</compileReport>
-          <style>DETAILED</style>
+          <style>OBF</style>
           <strict>true</strict>
         </configuration>
 

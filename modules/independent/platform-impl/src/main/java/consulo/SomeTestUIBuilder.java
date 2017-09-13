@@ -47,11 +47,13 @@ public class SomeTestUIBuilder {
 
     dock.center(tabbed);
 
-    DockLayout layout = Layouts.dock();
+    SplitLayout layout = Layouts.horizontalSplit();
 
-    layout.left(Components.label("test2")) ;
+    layout.setFirstComponent(Components.label("test2")) ;
 
-    layout.center(Components.label("test"));
+    layout.setSecondComponent(Components.label("test"));
+
+    layout.setProportion(30);
 
     tabbed.addTab("Tree", layout);
 

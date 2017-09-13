@@ -15,9 +15,11 @@
  */
 package consulo.web.gwt.server;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.google.gwt.user.server.rpc.SerializationPolicy;
-import com.intellij.codeInsight.daemon.impl.*;
+import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
+import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
+import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
+import com.intellij.codeInsight.daemon.impl.IdentifierHighlighterPassFactory;
 import com.intellij.codeInsight.navigation.CtrlMouseHandler;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
@@ -52,17 +54,28 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.ReferenceRange;
 import com.intellij.util.BitUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
-import consulo.web.gwt.client.GwtTransportService;
-import consulo.web.gwt.shared.transport.*;
+import consulo.web.gwt.shared.transport.GwtColor;
+import consulo.web.gwt.shared.transport.GwtEditorColorScheme;
+import consulo.web.gwt.shared.transport.GwtHighlightInfo;
+import consulo.web.gwt.shared.transport.GwtNavigatable;
+import consulo.web.gwt.shared.transport.GwtNavigateInfo;
+import consulo.web.gwt.shared.transport.GwtProjectInfo;
+import consulo.web.gwt.shared.transport.GwtTextAttributes;
+import consulo.web.gwt.shared.transport.GwtTextRange;
+import consulo.web.gwt.shared.transport.GwtVirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -76,7 +89,7 @@ import java.util.List;
 @Deprecated
 @DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 @WebServlet(urlPatterns = "/webResources/consulo/transport")
-public class GwtTransportServiceImpl extends RemoteServiceServlet implements GwtTransportService {
+public class GwtTransportServiceImpl {
 
   private Project getProject() {
     String path = "R:/_github.com/consulo/mssdw";
@@ -103,20 +116,15 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     return null;
   }
 
-  @Override
-  protected SerializationPolicy doGetSerializationPolicy(HttpServletRequest request, String moduleBaseURL, String strongName) {
 
-    return super.doGetSerializationPolicy(request, moduleBaseURL, strongName);
-  }
-
-  @Override
+  
   public boolean getApplicationStatus() {
     Application application = ApplicationManager.getApplication();
     return application instanceof ApplicationEx && ((ApplicationEx)application).isLoaded();
   }
 
   @NotNull
-  @Override
+  
   public List<GwtVirtualFile> listChildren(String fileUrl) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl == null) {
@@ -130,13 +138,13 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     return list;
   }
 
-  @Override
+  
   public GwtProjectInfo getProjectInfo(String path) {
     final Project project = getProject();
     GwtVirtualFile virtualFile = GwtVirtualFileUtil.createVirtualFile(project, project.getBaseDir());
     final List<String> moduleFileUrls = new ArrayList<String>();
     ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
+      
       public void run() {
         Module[] modules = ModuleManager.getInstance(project).getModules();
         for (Module module : modules) {
@@ -150,7 +158,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     return new GwtProjectInfo(project.getName(), virtualFile, moduleFileUrls);
   }
 
-  @Override
+  
   public GwtVirtualFile findFileByUrl(String fileUrl) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl == null) {
@@ -160,7 +168,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   }
 
   @Nullable
-  @Override
+  
   public GwtNavigateInfo getNavigationInfo(String fileUrl, final int offset) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl == null) {
@@ -171,7 +179,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     final String[] text = new String[1];
     final List<GwtNavigatable> navigatables = new ArrayList<GwtNavigatable>();
     ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
+      
       @RequiredReadAction
       public void run() {
         Project project = getProject();
@@ -211,7 +219,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   }
 
   @NotNull
-  @Override
+  
   public GwtEditorColorScheme serviceEditorColorScheme(String scheme, String[] colorKeys, String[] attributes) {
     GwtEditorColorScheme gwtScheme = new GwtEditorColorScheme(scheme);
 
@@ -221,7 +229,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     if (globalScheme != null) {
       final EditorColorsScheme finalGlobalScheme = globalScheme;
       ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-        @Override
+        
         public void run() {
           colorsManager.setGlobalScheme(finalGlobalScheme);
         }
@@ -250,7 +258,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   }
 
   @NotNull
-  @Override
+  
   public List<String> serviceEditorColorSchemeList() {
     List<String> list = new ArrayList<String>();
     EditorColorsScheme[] allSchemes = EditorColorsManager.getInstance().getAllSchemes();
@@ -261,7 +269,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
     return list;
   }
 
-  @Override
+  
   public String getContent(final String fileUrl) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl != null) {
@@ -282,7 +290,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
       }
 
       return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-        @Override
+        
         public String compute() {
           return getFileText(getProject(), fileByUrl).toString();
         }
@@ -292,7 +300,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   }
 
   @NotNull
-  @Override
+  
   public List<GwtHighlightInfo> getLexerHighlight(String fileUrl) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl != null) {
@@ -300,7 +308,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
         return Collections.emptyList();
       }
       return ApplicationManager.getApplication().runReadAction(new Computable<List<GwtHighlightInfo>>() {
-        @Override
+        
         public List<GwtHighlightInfo> compute() {
           List<GwtHighlightInfo> list = new ArrayList<GwtHighlightInfo>();
           Project project = getProject();
@@ -380,7 +388,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
   }
 
   @NotNull
-  @Override
+  
   public List<GwtHighlightInfo> runHighlightPasses(String fileUrl, final int offset) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
     if (fileByUrl != null) {
@@ -389,7 +397,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
       }
       IdentifierHighlighterPassFactory.ourTestingIdentifierHighlighting = true;
       return ApplicationManager.getApplication().runReadAction(new Computable<List<GwtHighlightInfo>>() {
-        @Override
+        
         public List<GwtHighlightInfo> compute() {
           final List<GwtHighlightInfo> list = new ArrayList<GwtHighlightInfo>();
           final Project project = getProject();
@@ -400,7 +408,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
           try {
 
             SwingUtilities.invokeAndWait(new Runnable() {
-              @Override
+              
               public void run() {
                 Editor editor = findEditor(project, fileByUrl, offset);
                 DaemonCodeAnalyzerImpl analyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzerEx.getInstanceEx(project);
@@ -442,7 +450,7 @@ public class GwtTransportServiceImpl extends RemoteServiceServlet implements Gwt
       if (fileEditor instanceof TextEditor) {
         final Editor editor = ((TextEditor)fileEditor).getEditor();
         SwingUtilities.invokeLater(new Runnable() {
-          @Override
+          
           public void run() {
             editor.getCaretModel().moveToOffset(offset);
           }
