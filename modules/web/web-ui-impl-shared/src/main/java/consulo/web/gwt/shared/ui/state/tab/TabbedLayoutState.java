@@ -33,6 +33,7 @@ public class TabbedLayoutState extends AbstractComponentContainerState {
     private static final long serialVersionUID = -8442971060081651491L;
 
     public MultiImageState myCloseButton;
+    public MultiImageState myCloseHoverButton;
   }
 
   public List<TabState> myTabStates = new ArrayList<>();

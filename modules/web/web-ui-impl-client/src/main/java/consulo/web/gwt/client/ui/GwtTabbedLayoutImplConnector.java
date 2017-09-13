@@ -20,18 +20,27 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.util.GwtUIUtil;
+import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutRpc;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.IntConsumer;
 
 /**
  * @author VISTALL
  * @since 12-Sep-17
  */
 @Connect(canonicalName = "consulo.ui.internal.WGwtTabbedLayoutImpl")
-public class GwtTabbedLayoutImplConnector extends GwtLayoutConnector {
+public class GwtTabbedLayoutImplConnector extends GwtLayoutConnector implements IntConsumer {
+  @Override
+  protected void init() {
+    super.init();
+
+    getWidget().setCloseHandler(this);
+  }
+
   @Override
   protected void updateWidgetStyleNames() {
     super.updateWidgetStyleNames();
@@ -57,5 +66,10 @@ public class GwtTabbedLayoutImplConnector extends GwtLayoutConnector {
       map.put(getState().myTabStates.get(i), widgets.get(i));
     }
     getWidget().setTabs(getState().mySelected, map);
+  }
+
+  @Override
+  public void accept(int value) {
+    getRpcProxy(TabbedLayoutRpc.class).close(value);
   }
 }

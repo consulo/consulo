@@ -15,7 +15,11 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ui.Connect;
@@ -23,6 +27,7 @@ import consulo.web.gwt.client.ui.image.ImageConverter;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
 
 import java.util.Map;
+import java.util.function.IntConsumer;
 
 /**
  * @author VISTALL
@@ -30,6 +35,8 @@ import java.util.Map;
  */
 @Connect(canonicalName = "consulo.ui.internal.WGwtTabbedLayoutImpl")
 public class GwtTabbedLayoutImpl extends TabPanel {
+  private IntConsumer myCloseHandler;
+
   public GwtTabbedLayoutImpl() {
     setStyleName("ui-tabbed-layout");
     getDeckPanel().setStyleName("ui-tabbed-layout-bottom");
@@ -41,10 +48,32 @@ public class GwtTabbedLayoutImpl extends TabPanel {
     for (Map.Entry<TabbedLayoutState.TabState, Widget> entry : map.entrySet()) {
       TabbedLayoutState.TabState state = entry.getKey();
       GwtHorizontalLayoutImpl tabWidget = GwtComboBoxImplConnector.buildItem(state);
-      if(state.myCloseButton != null) {
+      if (state.myCloseButton != null) {
+        SimplePanel closeButton = new SimplePanel();
+
+        tabWidget.add(closeButton);
+        tabWidget.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
+
         Widget closeIcon = ImageConverter.create(state.myCloseButton);
-        tabWidget.add(closeIcon);
-        tabWidget.setCellHorizontalAlignment(closeIcon, HasHorizontalAlignment.ALIGN_RIGHT);
+        closeButton.setWidget(closeIcon);
+        Widget closeHoveredIcon = ImageConverter.create(state.myCloseHoverButton);
+
+        closeButton.addDomHandler(event -> {
+          closeButton.setWidget(closeHoveredIcon);
+        }, MouseOverEvent.getType());
+
+        closeButton.addDomHandler(event -> {
+          closeButton.setWidget(closeIcon);
+        }, MouseOutEvent.getType());
+
+        closeButton.addDomHandler(event -> {
+          if (myCloseHandler != null) {
+            int idx = getWidgetIndex(entry.getValue());
+            if (idx != -1) {
+              myCloseHandler.accept(idx);
+            }
+          }
+        }, ClickEvent.getType());
       }
       else {
         tabWidget.addStyleName("gwt-TabBarItem-no-close-button");
@@ -53,5 +82,9 @@ public class GwtTabbedLayoutImpl extends TabPanel {
     }
 
     selectTab(index);
+  }
+
+  public void setCloseHandler(IntConsumer closeHandler) {
+    myCloseHandler = closeHandler;
   }
 }

@@ -63,7 +63,6 @@ public class GwtHorizontalSplitLayoutImplConnector extends GwtLayoutConnector {
   protected HorizontalSplitPanel createWidget() {
     HorizontalSplitPanel widget = new HorizontalSplitPanel();
     widget.setStyleName("ui-horizontal-split-panel");
-    widget.setHeight(null);
 
     return widget;
   }

@@ -24,6 +24,7 @@ import consulo.ui.Size;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
 import consulo.ui.internal.image.WGwtImageUrlCache;
+import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutRpc;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +39,17 @@ import java.util.function.BiConsumer;
  */
 public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements TabbedLayout {
   private Map<WGwtTabImpl, com.vaadin.ui.Component> myTabs = new LinkedHashMap<>();
+
+  private TabbedLayoutRpc myRpc = new TabbedLayoutRpc() {
+    @Override
+    public void close(int index) {
+      System.out.println("Close tab " + index);
+    }
+  };
+
+  public WGwtTabbedLayoutImpl() {
+    registerRpc(myRpc);
+  }
 
   @Override
   protected TabbedLayoutState getState() {
@@ -55,6 +67,7 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
       BiConsumer<Tab, Component> closeHandler = tab.getCloseHandler();
       if (closeHandler != null) {
         tabState.myCloseButton = WGwtImageUrlCache.fixSwingImageRef(AllIcons.Actions.CloseNew).getState();
+        tabState.myCloseHoverButton = WGwtImageUrlCache.fixSwingImageRef(AllIcons.Actions.CloseNewHovered).getState();
       }
 
       getState().myTabStates.add(tabState);
