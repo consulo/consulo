@@ -97,4 +97,9 @@ public class Components {
   public static <E> Tree<E> tree(@NotNull TreeModel<E> model) {
     return _UIInternals.get()._Components_tree(model);
   }
+
+  @NotNull
+  public static Button button(@NotNull String text) {
+    return _UIInternals.get()._Components_button(text);
+  }
 }

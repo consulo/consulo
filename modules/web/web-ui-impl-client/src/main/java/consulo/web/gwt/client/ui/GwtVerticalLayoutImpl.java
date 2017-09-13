@@ -50,6 +50,11 @@ public class GwtVerticalLayoutImpl extends Grid {
       setWidget(rowCount - 1, 0, child);
 
       updateLastRow(rowCount - 1);
+
+      //child.setWidth("100%");
+
+      //Style style = getCellFormatter().getElement(rowCount - 1, 0).getStyle();
+      //style.setWidth(100, Style.Unit.PCT);
     }
   }
 

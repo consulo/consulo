@@ -99,6 +99,32 @@ table, tr, td {
   overflow: auto;
 }
 
+.ui-button {
+  margin: 0;
+  padding: 5px 7px;
+  text-decoration: none;
+  cursor: pointer;
+  cursor: hand;
+  font-size:small;
+  border:1px solid #bbb;
+  border-bottom: 1px solid #a0a0a0;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+.ui-button:active {
+  border: 1px inset #ccc;
+}
+.ui-button:hover {
+  border-color: #939393;
+}
+.ui-button[disabled] {
+  cursor: default;
+  color: #888;
+}
+.ui-button[disabled]:hover {
+  border: 1px outset #ccc;
+}
+
 .gwt-MenuBar {
   cursor: default;
 }

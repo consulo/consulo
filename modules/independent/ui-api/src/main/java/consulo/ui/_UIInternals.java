@@ -80,6 +80,8 @@ public abstract class _UIInternals {
 
   abstract RadioButton _Components_radioButton(String text, boolean selected);
 
+  abstract Button _Components_button(String text);
+
   abstract ImageBox _Components_imageBox(Image image);
 
   abstract <E> Tree<E> _Components_tree(TreeModel<E> model);

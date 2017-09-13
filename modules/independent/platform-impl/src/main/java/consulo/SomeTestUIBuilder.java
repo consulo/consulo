@@ -43,7 +43,7 @@ public class SomeTestUIBuilder {
 
     SplitLayout layout = Layouts.horizontalSplit();
 
-    layout.setFirstComponent(Components.label("test2")) ;
+    layout.setFirstComponent(Components.label("test2"));
 
     layout.setSecondComponent(tabbed);
 
@@ -62,6 +62,8 @@ public class SomeTestUIBuilder {
   @RequiredUIAccess
   public static void build(DockLayout window) {
     VerticalLayout layout = Layouts.vertical();
+
+    layout.add(Components.button("Click me"));
 
     final CheckBox top = Components.checkBox("top");
     top.setEnabled(false);

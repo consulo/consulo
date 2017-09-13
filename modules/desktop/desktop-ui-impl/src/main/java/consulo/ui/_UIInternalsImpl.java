@@ -139,6 +139,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  Button _Components_button(String text) {
+    return new DesktopButtonImpl(text, null);
+  }
+
+  @Override
   HorizontalLayout _Layouts_horizontal() {
     return new DesktopHorizontalLayoutImpl();
   }
