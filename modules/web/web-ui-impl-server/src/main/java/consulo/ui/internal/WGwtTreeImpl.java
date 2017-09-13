@@ -16,28 +16,140 @@
 package consulo.ui.internal;
 
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.UI;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
+import consulo.web.gwt.shared.ui.state.tree.TreeRpc;
+import consulo.web.gwt.shared.ui.state.tree.TreeState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * @author VISTALL
  * @since 16-Jun-16
  */
 public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE> {
-  private WGwtTreeModelImpl<NODE> myModel;
+  private TreeModel<NODE> myModel;
 
-  private List<WGwtTreeNodeImpl<NODE>> myChildren = new ArrayList<>();
+  private Map<String, WGwtTreeNodeImpl<NODE>> myChildren = new LinkedHashMap<>();
+
+  private Executor myUpdater = Executors.newSingleThreadExecutor();
+
+  private TreeRpc myTreeRpc = new TreeRpc() {
+    @Override
+    public void fetchChildren(String id) {
+      WGwtTreeNodeImpl<NODE> node = myChildren.get(id);
+      if (node == null) {
+        return;
+      }
+
+      queue(node, TreeState.TreeChangeType.SET);
+    }
+  };
+
+  private final List<TreeState.TreeChange> myChanges = new ArrayList<>();
 
   public WGwtTreeImpl(TreeModel<NODE> model) {
-    myModel = (WGwtTreeModelImpl<NODE>)model;
+    myModel = model;
+    registerRpc(myTreeRpc);
+  }
+
+  @Override
+  @RequiredUIAccess
+  public void attach() {
+    super.attach();
+
+    myChildren.clear();
+
+    queue(null, TreeState.TreeChangeType.SET);
+  }
+
+  private void queue(@Nullable WGwtTreeNodeImpl<NODE> parent, TreeState.TreeChangeType type) {
+    UI ui = UI.getCurrent();
+    myUpdater.execute(() -> {
+      WGwtUIThreadLocal.setUI(ui);
+
+      try {
+        List<WGwtTreeNodeImpl<NODE>> list = new ArrayList<>();
+
+        myModel.fetchChildren(node -> {
+          WGwtTreeNodeImpl<NODE> child = new WGwtTreeNodeImpl<>(getNode(parent), node);
+          list.add(child);
+          return child;
+        }, getNode(parent));
+
+        if (parent != null) {
+          parent.setChildren(list);
+        }
+
+        synchronized (myChanges) {
+          TreeState.TreeChange change = new TreeState.TreeChange();
+          change.myId = parent == null ? null : parent.getId();
+          change.myType = type;
+
+          for (WGwtTreeNodeImpl<NODE> node : list) {
+            myChildren.put(node.getId(), node);
+
+            change.myNodes.add(convert(node));
+          }
+
+          myChanges.add(change);
+        }
+
+        ui.access(this::markAsDirty);
+      }
+      finally {
+        WGwtUIThreadLocal.setUI(null);
+      }
+    });
+  }
+
+  private NODE getNode(WGwtTreeNodeImpl<NODE> parent) {
+    return parent == null ? null : parent.getNode();
+  }
+
+  @Override
+  public void beforeClientResponse(boolean initial) {
+    super.beforeClientResponse(initial);
+
+    synchronized (myChanges) {
+      TreeState state = getState();
+      state.myChanges.clear();
+
+      state.myChanges.addAll(myChanges);
+
+      myChanges.clear();
+    }
+  }
+
+  @NotNull
+  private TreeState.TreeNodeState convert(WGwtTreeNodeImpl<NODE> child) {
+    TreeState.TreeNodeState e = new TreeState.TreeNodeState();
+    e.myId = child.getId();
+    e.myLeaf = child.isLeaf();
+    e.myParentId = child.getParent() == null ? null : child.getId();
+
+    WGwtItemPresentationImpl presentation = new WGwtItemPresentationImpl();
+
+    child.getRender().accept(child.getNode(), presentation);
+    e.myItemSegments = presentation.getItem().myItemSegments;
+    e.myImageState = presentation.getItem().myImageState;
+    return e;
+  }
+
+  @Override
+  protected TreeState getState() {
+    return (TreeState)super.getState();
   }
 
   @Nullable

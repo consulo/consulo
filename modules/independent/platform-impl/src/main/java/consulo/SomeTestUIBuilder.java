@@ -18,7 +18,6 @@ package consulo;
 import com.intellij.icons.AllIcons;
 import consulo.ui.*;
 import consulo.ui.image.Images;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class SomeTestUIBuilder {
   @RequiredUIAccess
-  public static void buildTabbed(Window window) {
+  public static SplitLayout buildTabbed(Window window) {
     TabbedLayout tabbed = Layouts.tabbed();
 
     Tab okey = tabbed.addTab("Test Me", Components.label("Okey"));
@@ -57,6 +56,7 @@ public class SomeTestUIBuilder {
     window.setMenuBar(menuBar);
 
     window.setContent(layout);
+    return layout;
   }
 
   @RequiredUIAccess
@@ -76,16 +76,12 @@ public class SomeTestUIBuilder {
     layout.add(bottom);
 
     final CheckBox center = Components.checkBox("UI proxy?=center", false);
-    center.addValueListener(new ValueComponent.ValueListener<Boolean>() {
-      @RequiredUIAccess
-      @Override
-      public void valueChanged(@NotNull ValueComponent.ValueEvent<Boolean> event) {
-        top.setValue(event.getValue());
-        left.setValue(event.getValue());
-        right.setValue(event.getValue());
-        bottom.setValue(event.getValue());
-        bottom.setVisible(!event.getValue());
-      }
+    center.addValueListener(event -> {
+      top.setValue(event.getValue());
+      left.setValue(event.getValue());
+      right.setValue(event.getValue());
+      bottom.setValue(event.getValue());
+      bottom.setVisible(!event.getValue());
     });
 
     final UIAccess uiAccess = UIAccess.get();

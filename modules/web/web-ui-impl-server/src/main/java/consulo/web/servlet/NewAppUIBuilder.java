@@ -15,7 +15,6 @@
  */
 package consulo.web.servlet;
 
-import consulo.SomeTestUIBuilder;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.web.servlet.ui.UIBuilder;
@@ -39,6 +38,6 @@ public class NewAppUIBuilder extends UIBuilder {
   @RequiredUIAccess
   @Override
   protected void build(@NotNull Window window) {
-    SomeTestUIBuilder.buildTabbed(window);
+    AppUIBuilder.build(window);
   }
 }

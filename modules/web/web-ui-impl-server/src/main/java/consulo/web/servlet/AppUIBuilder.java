@@ -20,6 +20,7 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.TransactionGuardImpl;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
@@ -27,14 +28,20 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.KeyWithDefaultValue;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.DeferredIcon;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.*;
+import consulo.ui.image.Image;
 import consulo.ui.internal.WGwtTreeImpl;
-import consulo.ui.internal.WGwtTreeModelImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+import java.util.Collection;
+import java.util.function.Function;
 
 public class AppUIBuilder {
   public static final ViewSettings ourViewSettings = new ViewSettings() {
@@ -129,22 +136,44 @@ public class AppUIBuilder {
     final LabeledLayout labeled = Layouts.labeled("Some Panel Label");
     tabbed.addTab("Hello2", labeled.set(Components.label("test 1")));
 
-    ProjectViewProjectNode rootNode = new ProjectViewProjectNode(project, ourViewSettings);
 
-    WGwtTreeModelImpl<AbstractTreeNode> model = new WGwtTreeModelImpl<AbstractTreeNode>() {
-      @NotNull
-      @Override
-      public AbstractTreeNode fetchRootNode() {
-        return rootNode;
-      }
+    TreeModel<AbstractTreeNode> model = new TreeModel<AbstractTreeNode>() {
 
       @Override
-      public void renderNode(@NotNull AbstractTreeNode node, @NotNull ItemPresentation presentation) {
-        PresentationData o = node.getPresentation();
-        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
-          node.update();
-        });
-        presentation.append(Strings.nullToEmpty(o.getPresentableText()));
+      public void fetchChildren(@NotNull Function<AbstractTreeNode, TreeNode<AbstractTreeNode>> nodeFactory, @Nullable AbstractTreeNode parentNode) {
+        AbstractTreeNode it;
+        if (parentNode == null) {
+          it = new ProjectViewProjectNode(project, ourViewSettings);
+
+        }
+        else {
+          it = parentNode;
+        }
+
+        Collection<AbstractTreeNode> children = ReadAction.compute((ThrowableComputable<Collection, RuntimeException>)it::getChildren);
+
+        for (AbstractTreeNode child : children) {
+          TreeNode<AbstractTreeNode> node = nodeFactory.apply(child);
+          node.setLeaf(ReadAction.compute((ThrowableComputable<Collection, RuntimeException>)child::getChildren).isEmpty());
+          node.setRender((t, itemPresentation) -> {
+            UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+              try {
+                t.update();
+              }
+              catch (Exception e) {
+                e.printStackTrace();
+              }
+            });
+            PresentationData presentation = child.getPresentation();
+            Icon icon = presentation.getIcon(true);
+            if (icon instanceof DeferredIcon) {
+              final Icon finalIcon = icon;
+              icon = ReadAction.compute(((DeferredIcon)finalIcon)::evaluate);
+            }
+            itemPresentation.setIcon((Image)icon);
+            itemPresentation.append(Strings.nullToEmpty(presentation.getPresentableText()));
+          });
+        }
       }
     };
 

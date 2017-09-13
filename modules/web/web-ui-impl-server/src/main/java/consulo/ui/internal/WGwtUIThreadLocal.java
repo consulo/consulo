@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.shared;
+package consulo.ui.internal;
 
-
-import java.io.Serializable;
-import java.util.Map;
+import com.vaadin.ui.UI;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 13-Sep-17
  */
-@Deprecated
-public class UIVariablesOwner implements Serializable {
-  private Map<String, Object> myVariables;
+public class WGwtUIThreadLocal {
+  private static final ThreadLocal<UI> ourUI = new ThreadLocal<>();
 
-  public Map<String, Object> getVariables() {
-    return myVariables;
+  public static void setUI(UI ui) {
+    ourUI.set(ui);
   }
 
-  public void setVariables(Map<String, Object> map) {
-    myVariables = map;
+  @NotNull
+  public static UI getUI() {
+    UI ui = ourUI.get();
+    if (ui != null) {
+      return ui;
+    }
+    UI current = UI.getCurrent();
+    if (current != null) {
+      return current;
+    }
+    throw new UnsupportedOperationException();
   }
 }

@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -60,6 +61,9 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
   public void beforeClientResponse(boolean initial) {
     super.beforeClientResponse(initial);
 
+    List<TabbedLayoutState.TabState> tabStates = getState().myTabStates;
+    tabStates.clear();
+
     for (WGwtTabImpl tab : myTabs.keySet()) {
       TabbedLayoutState.TabState tabState = new TabbedLayoutState.TabState();
       tabState.myImageState = tab.getItem().myImageState;
@@ -70,7 +74,7 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
         tabState.myCloseHoverButton = WGwtImageUrlCache.fixSwingImageRef(AllIcons.Actions.CloseNewHovered).getState();
       }
 
-      getState().myTabStates.add(tabState);
+      tabStates.add(tabState);
     }
   }
 

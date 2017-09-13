@@ -15,28 +15,36 @@
  */
 package consulo.ui.internal;
 
+import consulo.ui.ItemPresentation;
+import consulo.ui.TreeNode;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
  * @since 09-Sep-17
  */
-public class WGwtTreeNodeImpl<N> {
-  private final WGwtItemPresentationImpl myPresentation = new WGwtItemPresentationImpl();
-  private String myParentId;
+public class WGwtTreeNodeImpl<N> implements TreeNode<N> {
+  private N myParent;
   private N myNode;
   private String myId = UUID.randomUUID().toString();
 
   private List<WGwtTreeNodeImpl<N>> myChildren;
+  private BiConsumer<N, ItemPresentation> myRender = (n, itemPresentation) -> itemPresentation.append(String.valueOf(n));
+  private boolean myLeaf;
 
-  public WGwtTreeNodeImpl(String parentId, N node) {
-    myParentId = parentId;
+  public WGwtTreeNodeImpl(@Nullable N parent, N node) {
+    myParent = parent;
     myNode = node;
   }
 
-  public String getParentId() {
-    return myParentId;
+  @Nullable
+  public N getParent() {
+    return myParent;
   }
 
   public N getNode() {
@@ -47,15 +55,30 @@ public class WGwtTreeNodeImpl<N> {
     return myId;
   }
 
-  public WGwtItemPresentationImpl getPresentation() {
-    return myPresentation;
-  }
-
   public List<WGwtTreeNodeImpl<N>> getChildren() {
     return myChildren;
   }
 
   public void setChildren(List<WGwtTreeNodeImpl<N>> children) {
     myChildren = children;
+  }
+
+  @Override
+  public void setRender(@NotNull BiConsumer<N, ItemPresentation> render) {
+    myRender = render;
+  }
+
+  @Override
+  public void setLeaf(boolean leaf) {
+    myLeaf = leaf;
+  }
+
+  @Override
+  public boolean isLeaf() {
+    return myLeaf;
+  }
+
+  public BiConsumer<N, ItemPresentation> getRender() {
+    return myRender;
   }
 }

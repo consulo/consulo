@@ -50,6 +50,11 @@ public class WGwtSplitLayoutImpl extends AbstractLayout implements SplitLayout {
   @RequiredUIAccess
   @Override
   public SplitLayout setFirstComponent(@NotNull Component component) {
+    Component old = myFirstComponent;
+    if (old != null) {
+      removeComponent((com.vaadin.ui.Component)old);
+    }
+
     myFirstComponent = component;
     addComponent((com.vaadin.ui.Component)component);
     return this;
@@ -58,34 +63,19 @@ public class WGwtSplitLayoutImpl extends AbstractLayout implements SplitLayout {
   @RequiredUIAccess
   @Override
   public SplitLayout setSecondComponent(@NotNull Component component) {
+    Component old = mySecondComponent;
+    if (old != null) {
+      removeComponent((com.vaadin.ui.Component)old);
+    }
+
     mySecondComponent = component;
     addComponent((com.vaadin.ui.Component)component);
     return this;
   }
 
   @Override
-  public void removeComponent(com.vaadin.ui.Component c) {
-    if (myFirstComponent == c) {
-      myFirstComponent = null;
-    }
-    if (mySecondComponent == c) {
-      mySecondComponent = null;
-    }
-    super.removeComponent(c);
-  }
-
-  @Override
   public void replaceComponent(com.vaadin.ui.Component oldComponent, com.vaadin.ui.Component newComponent) {
-    boolean left = mySecondComponent == oldComponent;
-    removeComponent(oldComponent);
-    addComponent(newComponent);
-
-    if(left) {
-      myFirstComponent = (Component)newComponent;
-    }
-    else {
-      mySecondComponent = (Component)newComponent;
-    }
+    throw new UnsupportedOperationException();
   }
 
   @Override

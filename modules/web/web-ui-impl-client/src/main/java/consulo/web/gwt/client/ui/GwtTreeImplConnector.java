@@ -16,8 +16,11 @@
 package consulo.web.gwt.client.ui;
 
 import com.vaadin.client.StyleConstants;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.shared.ui.state.tree.TreeRpc;
+import consulo.web.gwt.shared.ui.state.tree.TreeState;
 
 /**
  * @author VISTALL
@@ -30,6 +33,25 @@ public class GwtTreeImplConnector extends AbstractComponentConnector {
     super.updateWidgetStyleNames();
 
     setWidgetStyleName(StyleConstants.UI_WIDGET, false);
+  }
+
+  @Override
+  protected void init() {
+    super.init();
+
+    getWidget().setChildrenOpen(id -> getRpcProxy(TreeRpc.class).fetchChildren(id));
+  }
+
+  @Override
+  public void onStateChanged(StateChangeEvent stateChangeEvent) {
+    super.onStateChanged(stateChangeEvent);
+
+    getWidget().handleChanges(getState().myChanges);
+  }
+
+  @Override
+  public TreeState getState() {
+    return (TreeState)super.getState();
   }
 
   @Override

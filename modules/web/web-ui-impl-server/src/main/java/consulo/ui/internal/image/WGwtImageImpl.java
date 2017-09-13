@@ -16,8 +16,8 @@
 package consulo.ui.internal.image;
 
 import com.intellij.openapi.util.IconLoader;
-import com.vaadin.ui.UI;
 import consulo.ui.image.Image;
+import consulo.ui.internal.WGwtUIThreadLocal;
 import consulo.web.gwt.shared.ui.state.image.ImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 import consulo.web.servlet.ui.UIServlet;
@@ -52,7 +52,7 @@ public class WGwtImageImpl implements Image, WGwtImageWithState {
   @Override
   public void toState(MultiImageState m) {
     ImageState state = new ImageState();
-    UIServlet.UIImpl current = (UIServlet.UIImpl)UI.getCurrent();
+    UIServlet.UIImpl current = (UIServlet.UIImpl)WGwtUIThreadLocal.getUI();
     state.myURL = WGwtImageUrlCache.createURL(myURLHash, current.getURLPrefix());
 
     m.myImageState = state;

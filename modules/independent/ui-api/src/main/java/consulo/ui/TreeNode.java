@@ -13,29 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui;
 
-import consulo.ui.ItemPresentation;
-import consulo.ui.TreeModel;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
- * @since 09-Sep-17
+ * @since 13-Sep-17
  */
-public abstract class WGwtTreeModelImpl<N> implements TreeModel<N> {
-  @NotNull
-  public abstract N fetchRootNode();
+public interface TreeNode<T> {
+  void setRender(@NotNull BiConsumer<T, ItemPresentation> render);
 
-  @NotNull
-  public List<N> fetchChildNodes(N node) {
-    return Collections.emptyList();
-  }
+  void setLeaf(boolean leaf);
 
-  public void renderNode(@NotNull N node, @NotNull ItemPresentation presentation) {
-    presentation.append(node.toString());
-  }
+  boolean isLeaf();
 }
