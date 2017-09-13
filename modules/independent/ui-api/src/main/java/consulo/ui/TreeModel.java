@@ -25,5 +25,5 @@ import java.util.function.Function;
  * @since 12-Sep-17
  */
 public interface TreeModel<N> {
-  void fetchChildren(@NotNull Function<N, TreeNode<N>> nodeFactory, @Nullable N parentNode);
+  void fetchChildren(@NotNull Function<N, TreeNode<N>> nodeFactory, @Nullable N parentValue);
 }

@@ -47,7 +47,7 @@ public class WGwtTreeNodeImpl<N> implements TreeNode<N> {
     return myParent;
   }
 
-  public N getNode() {
+  public N getValue() {
     return myNode;
   }
 

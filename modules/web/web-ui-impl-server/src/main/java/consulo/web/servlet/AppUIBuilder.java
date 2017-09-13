@@ -35,7 +35,6 @@ import com.intellij.ui.DeferredIcon;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.*;
 import consulo.ui.image.Image;
-import consulo.ui.internal.WGwtTreeImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -140,17 +139,10 @@ public class AppUIBuilder {
     TreeModel<AbstractTreeNode> model = new TreeModel<AbstractTreeNode>() {
 
       @Override
-      public void fetchChildren(@NotNull Function<AbstractTreeNode, TreeNode<AbstractTreeNode>> nodeFactory, @Nullable AbstractTreeNode parentNode) {
-        AbstractTreeNode it;
-        if (parentNode == null) {
-          it = new ProjectViewProjectNode(project, ourViewSettings);
+      public void fetchChildren(@NotNull Function<AbstractTreeNode, TreeNode<AbstractTreeNode>> nodeFactory, @Nullable AbstractTreeNode parentValue) {
+        assert parentValue != null;
 
-        }
-        else {
-          it = parentNode;
-        }
-
-        Collection<AbstractTreeNode> children = ReadAction.compute((ThrowableComputable<Collection, RuntimeException>)it::getChildren);
+        Collection<AbstractTreeNode> children = ReadAction.compute((ThrowableComputable<Collection, RuntimeException>)parentValue::getChildren);
 
         for (AbstractTreeNode child : children) {
           TreeNode<AbstractTreeNode> node = nodeFactory.apply(child);
@@ -179,7 +171,7 @@ public class AppUIBuilder {
 
     final SplitLayout splitLayout = Layouts.horizontalSplit();
 
-    WGwtTreeImpl<AbstractTreeNode> tree = new WGwtTreeImpl<>(model);
+    Tree<AbstractTreeNode> tree = Components.tree(new ProjectViewProjectNode(project, ourViewSettings), model);
 
     splitLayout.setFirstComponent(tree);
     splitLayout.setSecondComponent(tabbed);

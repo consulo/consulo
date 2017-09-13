@@ -95,7 +95,12 @@ public class Components {
 
   @NotNull
   public static <E> Tree<E> tree(@NotNull TreeModel<E> model) {
-    return _UIInternals.get()._Components_tree(model);
+    return tree(null, model);
+  }
+
+  @NotNull
+  public static <E> Tree<E> tree(@Nullable E rootValue, @NotNull TreeModel<E> model) {
+    return _UIInternals.get()._Components_tree(rootValue, model);
   }
 
   @NotNull

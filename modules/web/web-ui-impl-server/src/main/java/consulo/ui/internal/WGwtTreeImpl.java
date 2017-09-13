@@ -39,13 +39,7 @@ import java.util.concurrent.Executors;
  * @since 16-Jun-16
  */
 public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE> {
-  private TreeModel<NODE> myModel;
-
-  private Map<String, WGwtTreeNodeImpl<NODE>> myChildren = new LinkedHashMap<>();
-
-  private Executor myUpdater = Executors.newSingleThreadExecutor();
-
-  private TreeRpc myTreeRpc = new TreeRpc() {
+  private final TreeRpc myTreeRpc = new TreeRpc() {
     @Override
     public void fetchChildren(String id) {
       WGwtTreeNodeImpl<NODE> node = myChildren.get(id);
@@ -53,13 +47,18 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE> 
         return;
       }
 
-      queue(node, TreeState.TreeChangeType.SET);
+      queue(node.getValue(), node, TreeState.TreeChangeType.SET);
     }
   };
 
+  private final NODE myRootValue;
+  private final TreeModel<NODE> myModel;
+  private final Executor myUpdater = Executors.newSingleThreadExecutor();
+  private final Map<String, WGwtTreeNodeImpl<NODE>> myChildren = new LinkedHashMap<>();
   private final List<TreeState.TreeChange> myChanges = new ArrayList<>();
 
-  public WGwtTreeImpl(TreeModel<NODE> model) {
+  public WGwtTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model) {
+    myRootValue = rootValue;
     myModel = model;
     registerRpc(myTreeRpc);
   }
@@ -71,10 +70,10 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE> 
 
     myChildren.clear();
 
-    queue(null, TreeState.TreeChangeType.SET);
+    queue(myRootValue, null, TreeState.TreeChangeType.SET);
   }
 
-  private void queue(@Nullable WGwtTreeNodeImpl<NODE> parent, TreeState.TreeChangeType type) {
+  private void queue(NODE value, @Nullable WGwtTreeNodeImpl<NODE> parent, TreeState.TreeChangeType type) {
     UI ui = UI.getCurrent();
     myUpdater.execute(() -> {
       WGwtUIThreadLocal.setUI(ui);
@@ -83,10 +82,10 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE> 
         List<WGwtTreeNodeImpl<NODE>> list = new ArrayList<>();
 
         myModel.fetchChildren(node -> {
-          WGwtTreeNodeImpl<NODE> child = new WGwtTreeNodeImpl<>(getNode(parent), node);
+          WGwtTreeNodeImpl<NODE> child = new WGwtTreeNodeImpl<>(value, node);
           list.add(child);
           return child;
-        }, getNode(parent));
+        }, value);
 
         if (parent != null) {
           parent.setChildren(list);
@@ -114,10 +113,6 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE> 
     });
   }
 
-  private NODE getNode(WGwtTreeNodeImpl<NODE> parent) {
-    return parent == null ? null : parent.getNode();
-  }
-
   @Override
   public void beforeClientResponse(boolean initial) {
     super.beforeClientResponse(initial);
@@ -141,7 +136,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE> 
 
     WGwtItemPresentationImpl presentation = new WGwtItemPresentationImpl();
 
-    child.getRender().accept(child.getNode(), presentation);
+    child.getRender().accept(child.getValue(), presentation);
     e.myItemSegments = presentation.getItem().myItemSegments;
     e.myImageState = presentation.getItem().myImageState;
     return e;

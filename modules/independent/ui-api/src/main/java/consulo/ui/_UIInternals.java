@@ -84,7 +84,7 @@ public abstract class _UIInternals {
 
   abstract ImageBox _Components_imageBox(Image image);
 
-  abstract <E> Tree<E> _Components_tree(TreeModel<E> model);
+  abstract <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model);
 
   public abstract Image _Images_image(URL url);
 

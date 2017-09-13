@@ -154,7 +154,7 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  <E> Tree<E> _Components_tree(TreeModel<E> model) {
+  <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model) {
     throw new UnsupportedOperationException();
   }
 
