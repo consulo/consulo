@@ -74,7 +74,7 @@ public abstract class _UIInternals {
 
   abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
 
-  abstract TextField _Components_textField(String text);
+  abstract TextBox _Components_textBox(String text);
 
   abstract <E> ListBox<E> _Components_listBox(ListModel<E> model);
 

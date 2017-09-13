@@ -24,8 +24,8 @@ import com.vaadin.shared.ui.Connect;
  * @author VISTALL
  * @since 12-Sep-17
  */
-@Connect(canonicalName = "consulo.ui.internal.WGwtTextFieldImpl")
-public class GwtTextFieldImplConnector extends AbstractComponentConnector {
+@Connect(canonicalName = "consulo.ui.internal.WGwtTextBoxImpl")
+public class GwtTextBoxImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateWidgetStyleNames() {
     super.updateWidgetStyleNames();
@@ -41,7 +41,7 @@ public class GwtTextFieldImplConnector extends AbstractComponentConnector {
   }
 
   @Override
-  public GwtTextFieldImpl getWidget() {
-    return (GwtTextFieldImpl)super.getWidget();
+  public GwtTextBoxImpl getWidget() {
+    return (GwtTextBoxImpl)super.getWidget();
   }
 }

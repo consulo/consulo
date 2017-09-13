@@ -19,7 +19,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.EventDispatcher;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.TextField;
+import consulo.ui.TextBox;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.DocumentEvent;
@@ -29,11 +29,11 @@ import javax.swing.event.DocumentListener;
  * @author VISTALL
  * @since 19-Nov-16.
  */
-public class DesktopTextFieldImpl extends JBTextField implements TextField, SwingWrapper {
+public class DesktopTextBoxImpl extends JBTextField implements TextBox, SwingWrapper {
   private static class Listener implements DocumentListener {
-    private DesktopTextFieldImpl myTextField;
+    private DesktopTextBoxImpl myTextField;
 
-    public Listener(DesktopTextFieldImpl textField) {
+    public Listener(DesktopTextBoxImpl textField) {
       myTextField = textField;
     }
 
@@ -58,7 +58,7 @@ public class DesktopTextFieldImpl extends JBTextField implements TextField, Swin
 
   private EventDispatcher<ValueListener> myEventDispatcher = EventDispatcher.create(ValueListener.class);
 
-  public DesktopTextFieldImpl(String text) {
+  public DesktopTextBoxImpl(String text) {
     getDocument().addDocumentListener(new Listener(this));
     setValue(text);
   }

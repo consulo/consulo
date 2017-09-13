@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
-
-import com.google.gwt.user.client.ui.TextBox;
+package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 12-Sep-17
+ * @since 19-Nov-16.
  */
-public class GwtTextFieldImpl extends TextBox {
-  public GwtTextFieldImpl() {
-    setStyleName("ui-text-field");
-  }
+public interface TextBox extends ValueComponent<String> {
 }

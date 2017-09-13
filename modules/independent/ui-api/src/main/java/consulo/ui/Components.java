@@ -27,13 +27,13 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Components {
   @NotNull
-  public static TextField textField() {
-    return textField(null);
+  public static TextBox textBox() {
+    return textBox(null);
   }
 
   @NotNull
-  public static TextField textField(@Nullable String text) {
-    return _UIInternals.get()._Components_textField(text);
+  public static TextBox textBox(@Nullable String text) {
+    return _UIInternals.get()._Components_textBox(text);
   }
 
   @NotNull

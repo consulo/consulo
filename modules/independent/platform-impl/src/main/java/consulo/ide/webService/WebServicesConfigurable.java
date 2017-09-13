@@ -56,10 +56,10 @@ public class WebServicesConfigurable extends SimpleConfigurableByProperties impl
         continue;
       }
 
-      TextField textField = Components.textField();
+      TextBox textBox = Components.textBox();
 
-      layout.add(Layouts.labeled(description).set(LabeledComponents.leftFilled("OAuth Key", textField)));
-      propertyBuilder.add(textField, () -> webServicesConfiguration.getOAuthKey(api), text -> webServicesConfiguration.setOAuthKey(api, text));
+      layout.add(Layouts.labeled(description).set(LabeledComponents.leftFilled("OAuth Key", textBox)));
+      propertyBuilder.add(textBox, () -> webServicesConfiguration.getOAuthKey(api), text -> webServicesConfiguration.setOAuthKey(api, text));
     }
     return layout;
   }

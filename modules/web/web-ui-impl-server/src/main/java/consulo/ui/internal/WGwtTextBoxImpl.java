@@ -19,7 +19,7 @@ import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
-import consulo.ui.TextField;
+import consulo.ui.TextBox;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,8 +27,8 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 12-Sep-17
  */
-public class WGwtTextFieldImpl extends AbstractComponent implements TextField {
-  public WGwtTextFieldImpl(String text) {
+public class WGwtTextBoxImpl extends AbstractComponent implements TextBox {
+  public WGwtTextBoxImpl(String text) {
     getState().caption = text;
   }
 

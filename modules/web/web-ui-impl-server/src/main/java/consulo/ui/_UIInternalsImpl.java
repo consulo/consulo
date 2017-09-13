@@ -92,8 +92,8 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
-  TextField _Components_textField(String text) {
-    return new WGwtTextFieldImpl(text);
+  TextBox _Components_textBox(String text) {
+    return new WGwtTextBoxImpl(text);
   }
 
   @Override

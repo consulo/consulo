@@ -115,7 +115,7 @@ public class SomeTestUIBuilder {
     });
 
     layout.add(LabeledComponents.left("SDK:", comboBox));
-    layout.add(LabeledComponents.leftFilled("Some Field:", Components.textField("Hello")));
+    layout.add(LabeledComponents.leftFilled("Some Field:", Components.textBox("Hello")));
 
     layout.add(Layouts.horizontal().add(Components.imageBox(Images.fold(AllIcons.Nodes.AbstractClass, AllIcons.Nodes.JunitTestMark))));
 
