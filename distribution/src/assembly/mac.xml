@@ -33,14 +33,14 @@
     <fileSet>
       <directory>${project.basedir}/platform/shared/</directory>
       <includes>
-        <include>**</include>
+        <include>*/**</include>
       </includes>
       <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/platform/mac</directory>
       <includes>
-        <include>**</include>
+        <include>*/**</include>
       </includes>
       <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
     </fileSet>

@@ -18,14 +18,14 @@
     <fileSet>
       <directory>${project.basedir}/platform/shared/</directory>
       <includes>
-        <include>*/*</include>
+        <include>*/**</include>
       </includes>
       <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/platform/win</directory>
       <includes>
-        <include>*/*</include>
+        <include>*/**</include>
       </includes>
       <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
     </fileSet>

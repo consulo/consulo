@@ -15,11 +15,14 @@
  */
 package consulo.web.servlet;
 
+import com.vaadin.server.Sizeable;
+import com.vaadin.ui.UI;
 import consulo.SomeTestUIBuilder;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.SplitLayout;
 import consulo.ui.Window;
 import consulo.ui.ex.internal.WGwtEditorImpl;
+import consulo.ui.internal.WGwtLabelImpl;
 import consulo.web.servlet.ui.UIBuilder;
 import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +44,14 @@ public class NewAppUIBuilder extends UIBuilder {
   @RequiredUIAccess
   @Override
   protected void build(@NotNull Window window) {
+
+    com.vaadin.ui.Window components = new com.vaadin.ui.Window("Test");
+    components.setModal(true);
+    components.setWidth(100, Sizeable.Unit.PIXELS);
+    components.setHeight(100, Sizeable.Unit.PIXELS);
+    components.setContent(new WGwtLabelImpl("TEst"));
+    UI.getCurrent().addWindow(components);
+
    // AppUIBuilder.build(window);
     SplitLayout splitLayout = SomeTestUIBuilder.buildTabbed(window);
 
