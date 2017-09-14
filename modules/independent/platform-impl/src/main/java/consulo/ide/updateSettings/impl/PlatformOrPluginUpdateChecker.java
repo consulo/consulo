@@ -290,7 +290,7 @@ public class PlatformOrPluginUpdateChecker {
       return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLATFORM_UPDATE, targets);
     }
 
-    if (alreadyVisited) {
+    if (alreadyVisited && targets.isEmpty()) {
       return PlatformOrPluginUpdateResult.UPDATE_RESTART;
     }
     return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
