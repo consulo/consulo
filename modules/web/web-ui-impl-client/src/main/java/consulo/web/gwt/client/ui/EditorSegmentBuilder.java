@@ -18,6 +18,7 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.InlineHTML;
 import consulo.annotations.DeprecationInfo;
+import consulo.web.gwt.client.ui.ex.GwtEditorImpl;
 import consulo.web.gwt.client.util.BitUtil;
 import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.shared.transport.GwtColor;
@@ -71,7 +72,7 @@ public class EditorSegmentBuilder {
         return null;
       }
       for (StyleInfo style : myStyles) {
-        if(style.flag == Editor.ourLexerFlag) {
+        if(style.flag == GwtEditorImpl.ourLexerFlag) {
           continue;
         }
 
@@ -198,6 +199,10 @@ public class EditorSegmentBuilder {
       for (int k = startOffset; k < endOffset; k++) {
         myFragments[k] = charSpan;
       }
+    }
+
+    if(!text.isEmpty() && myLineCount == 0) {
+      myLineCount = 1;
     }
   }
 

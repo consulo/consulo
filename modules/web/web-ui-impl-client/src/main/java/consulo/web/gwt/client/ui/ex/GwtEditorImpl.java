@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.web.gwt.client.ui.ex;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
@@ -22,14 +22,29 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.*;
-import consulo.annotations.DeprecationInfo;
+import com.google.gwt.user.client.ui.DecoratedPopupPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
+import consulo.web.gwt.client.ui.EditorSegmentBuilder;
+import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
 import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.client.util.GwtUtil;
 import consulo.web.gwt.client.util.ReportableCallable;
-import consulo.web.gwt.shared.transport.*;
+import consulo.web.gwt.shared.transport.GwtColor;
+import consulo.web.gwt.shared.transport.GwtEditorColorScheme;
+import consulo.web.gwt.shared.transport.GwtHighlightInfo;
+import consulo.web.gwt.shared.transport.GwtNavigatable;
+import consulo.web.gwt.shared.transport.GwtNavigateInfo;
+import consulo.web.gwt.shared.transport.GwtTextAttributes;
+import consulo.web.gwt.shared.transport.GwtTextRange;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -39,14 +54,12 @@ import java.util.List;
  * @author VISTALL
  * @since 17-May-16
  */
-@Deprecated
-@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
-public class Editor extends SimplePanel implements WidgetWithUpdateUI {
+public class GwtEditorImpl extends SimplePanel {
   private static class CodeLinePanel extends FlowPanel implements WidgetWithUpdateUI {
-    private Editor myEditor;
+    private GwtEditorImpl myEditor;
     private int myLine;
 
-    public CodeLinePanel(Editor editor, int line) {
+    public CodeLinePanel(GwtEditorImpl editor, int line) {
       myEditor = editor;
       myLine = line;
 
@@ -67,6 +80,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     @Override
     public void updateUI() {
+      if(Boolean.TRUE) {
+        return;
+      }
       Element parentElement = getElement().getParentElement();
 
       GwtEditorColorScheme scheme = myEditor.getScheme();
@@ -86,9 +102,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   }
 
   public static class LineNumberSpan extends InlineHTML implements WidgetWithUpdateUI {
-    private Editor myEditor;
+    private GwtEditorImpl myEditor;
 
-    public LineNumberSpan(String html, Editor editor) {
+    public LineNumberSpan(String html, GwtEditorImpl editor) {
       super(html);
       myEditor = editor;
 
@@ -97,6 +113,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     @Override
     public void updateUI() {
+      if(Boolean.TRUE) {
+        return;
+      }
       GwtEditorColorScheme scheme = myEditor.getScheme();
 
       getElement().getStyle().setColor(GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.LINE_NUMBERS_COLOR)));
@@ -104,9 +123,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   }
 
   public static class MainGrid extends Grid implements WidgetWithUpdateUI {
-    private Editor myEditor;
+    private GwtEditorImpl myEditor;
 
-    public MainGrid(Editor editor, int rows, int columns) {
+    public MainGrid(GwtEditorImpl editor, int rows, int columns) {
       super(rows, columns);
       myEditor = editor;
 
@@ -120,9 +139,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   }
 
   public static class GutterPanel extends Grid implements WidgetWithUpdateUI {
-    private Editor myEditor;
+    private GwtEditorImpl myEditor;
 
-    public GutterPanel(int lineCount, Editor editor) {
+    public GutterPanel(int lineCount, GwtEditorImpl editor) {
       super(lineCount + 1, 1);
       myEditor = editor;
 
@@ -140,6 +159,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     @Override
     public void updateUI() {
+      if(Boolean.TRUE) {
+        return;
+      }
       GwtEditorColorScheme scheme = myEditor.getScheme();
 
       getElement().getStyle().setProperty("borderRightColor", GwtStyleUtil.toString(scheme.getColor(GwtEditorColorScheme.TEARLINE_COLOR)));
@@ -151,10 +173,10 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   }
 
   public static class GutterLineGrid extends Grid implements WidgetWithUpdateUI {
-    private Editor myEditor;
+    private GwtEditorImpl myEditor;
     private int myLine;
 
-    public GutterLineGrid(int rows, int columns, Editor editor, int line) {
+    public GutterLineGrid(int rows, int columns, GwtEditorImpl editor, int line) {
       super(rows, columns);
       myEditor = editor;
       myLine = line;
@@ -162,6 +184,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
     @Override
     public void updateUI() {
+      if(Boolean.TRUE) {
+        return;
+      }
       final Style style = getElement().getStyle();
       GwtEditorColorScheme scheme = myEditor.getScheme();
       if (myEditor.myCurrentLinePanel != null && myEditor.myCurrentLinePanel.myLine == myLine) {
@@ -187,9 +212,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
   private int myLastCaretOffset = -1;
 
-  private final EditorTabPanel myEditorTabPanel;
-
-  private final String myFileUrl;
+  private String myFileUrl;
 
   private GwtTextRange myLastCursorPsiElementTextRange;
 
@@ -223,7 +246,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
       Scheduler.get().scheduleDeferred(new Command() {
         @Override
         public void execute() {
-          GwtUIUtil.updateUI(Editor.this);
+          GwtUIUtil.updateUI(GwtEditorImpl.this);
 
           doHighlightImpl();
         }
@@ -231,17 +254,11 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     }
   };
 
-  public Editor(final EditorTabPanel editorTabPanel, String fileUrl, final String text) {
-    myEditorTabPanel = editorTabPanel;
-    myFileUrl = fileUrl;
-
+  public GwtEditorImpl() {
     sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS | Event.ONKEYUP);
 
-    final EditorColorSchemeService schemeService = GwtUtil.get(EditorColorSchemeService.KEY);
-    schemeService.addListener(myListener);
-
-    myScheme = schemeService.getScheme();
-
+    String text = "some text\nvfdsavfdasvfsdavafv";
+    myScheme = new GwtEditorColorScheme() ;
     setDefaultTextColors(this);
 
     addStyleName("scroll");
@@ -263,7 +280,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
           myDelayedCaredOffset = -1;
         }
 
-        doHighlightImpl();
+        //doHighlightImpl();
       }
     });
   }
@@ -272,7 +289,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     GwtUtil.rpc().getLexerHighlight(myFileUrl, new ReportableCallable<List<GwtHighlightInfo>>() {
       @Override
       public void onSuccess(List<GwtHighlightInfo> result) {
-        addHighlightInfos(result, Editor.ourLexerFlag);
+        addHighlightInfos(result, GwtEditorImpl.ourLexerFlag);
 
         myHighlightState = HighlightState.LEXER;
 
@@ -287,7 +304,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     GwtUtil.rpc().runHighlightPasses(myFileUrl, offset, new ReportableCallable<List<GwtHighlightInfo>>() {
       @Override
       public void onSuccess(List<GwtHighlightInfo> result) {
-        addHighlightInfos(result, Editor.ourEditorFlag);
+        addHighlightInfos(result, GwtEditorImpl.ourEditorFlag);
 
         if (callback != null) {
           callback.run();
@@ -296,7 +313,6 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
     });
   }
 
-  @Override
   public void updateUI() {
     // update main panel
     setDefaultTextColors(this);
@@ -312,6 +328,9 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
   }
 
   private void setDefaultTextColors(Element element) {
+    if(Boolean.TRUE) {
+      return;
+    }
     GwtTextAttributes textAttr = myScheme.getAttributes(GwtEditorColorScheme.TEXT);
     if (textAttr != null) {
       GwtColor background = textAttr.getBackground();
@@ -493,7 +512,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
             onMouseOut();
 
-            myEditorTabPanel.openFileInEditor(navigatable.getFile(), navigatable.getOffset());
+            //myEditorTabPanel.openFileInEditor(navigatable.getFile(), navigatable.getOffset());
           }
         }
         else {
@@ -588,7 +607,7 @@ public class Editor extends SimplePanel implements WidgetWithUpdateUI {
 
                       GwtNavigatable navigatable = result.getNavigates().get(0);
 
-                      myEditorTabPanel.openFileInEditor(navigatable.getFile(), navigatable.getOffset());
+                      //myEditorTabPanel.openFileInEditor(navigatable.getFile(), navigatable.getOffset());
                     }
                   });
                 }

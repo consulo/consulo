@@ -27,7 +27,6 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
-import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
@@ -36,7 +35,11 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.ui.*;
+import com.intellij.ui.ClickListener;
+import com.intellij.ui.HintHint;
+import com.intellij.ui.HintListener;
+import com.intellij.ui.LightweightHint;
+import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.IconUtil;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
@@ -46,7 +49,11 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
@@ -203,7 +210,7 @@ public abstract class AbstractValueHint {
         if (inputEvent instanceof MouseEvent) {
           Component comp = inputEvent.getComponent();
           if (comp instanceof EditorComponentImpl) {
-            EditorImpl editor = ((EditorComponentImpl)comp).getEditor();
+            Editor editor = ((EditorComponentImpl)comp).getEditor();
             return !isInsideCurrentRange(editor, ((MouseEvent)inputEvent).getPoint());
           }
         }

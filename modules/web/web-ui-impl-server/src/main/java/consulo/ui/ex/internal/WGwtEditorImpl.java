@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.ui.ex.internal;
 
-import com.google.gwt.user.client.ui.TabPanel;
-import consulo.annotations.DeprecationInfo;
-import consulo.web.gwt.shared.transport.GwtVirtualFile;
+import com.vaadin.ui.AbstractComponent;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 19-May-16
+ * @since 13-Sep-17
  */
-@Deprecated
-@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
-public class EditorTabPanel extends TabPanel {
+public class WGwtEditorImpl extends AbstractComponent implements Component {
 
-  public void openFileInEditor(final GwtVirtualFile virtualFile, final int offset) {
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)getParent();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
 
   }
 }

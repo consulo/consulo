@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,20 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.application.options.OptionsConstants;
+import com.intellij.application.options.EditorFontsConstants;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorBundle;
 import com.intellij.openapi.editor.impl.EditorImpl;
+import com.intellij.openapi.project.DumbAware;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  */
-public abstract class ChangeEditorFontSizeAction extends AnAction {
+public abstract class ChangeEditorFontSizeAction extends AnAction implements DumbAware {
   private final int myStep;
 
   protected ChangeEditorFontSizeAction(@Nullable String text, int increaseStep) {
@@ -40,7 +41,7 @@ public abstract class ChangeEditorFontSizeAction extends AnAction {
     final EditorImpl editor = getEditor(e);
     if (editor != null) {
       final int size = editor.getFontSize() + myStep;
-      if (size >= 8 && size <= OptionsConstants.MAX_EDITOR_FONT_SIZE) {
+      if (size >= 8 && size <= EditorFontsConstants.getMaxEditorFontSize()) {
         editor.setFontSize(size);
       }
     }

@@ -61,13 +61,8 @@ public class SoftWrapHelper {
       return false;
     }
 
-    if (true) {
-      VisualPosition afterWrapPosition = editor.offsetToVisualPosition(offset, false, false);
-      VisualPosition caretPosition = caret.getVisualPosition();
-      return caretPosition.line == afterWrapPosition.line && caretPosition.column <= afterWrapPosition.column;
-    }
-    else {
-      return editor.offsetToVisualLine(offset) == caret.getVisualPosition().line;
-    }
+    VisualPosition afterWrapPosition = editor.offsetToVisualPosition(offset, false, false);
+    VisualPosition caretPosition = caret.getVisualPosition();
+    return caretPosition.line == afterWrapPosition.line && caretPosition.column <= afterWrapPosition.column;
   }
 }

@@ -15,8 +15,11 @@
  */
 package consulo.web.servlet;
 
+import consulo.SomeTestUIBuilder;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.SplitLayout;
 import consulo.ui.Window;
+import consulo.ui.ex.internal.WGwtEditorImpl;
 import consulo.web.servlet.ui.UIBuilder;
 import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +41,9 @@ public class NewAppUIBuilder extends UIBuilder {
   @RequiredUIAccess
   @Override
   protected void build(@NotNull Window window) {
-    AppUIBuilder.build(window);
+   // AppUIBuilder.build(window);
+    SplitLayout splitLayout = SomeTestUIBuilder.buildTabbed(window);
+
+    splitLayout.setSecondComponent(new WGwtEditorImpl());
   }
 }

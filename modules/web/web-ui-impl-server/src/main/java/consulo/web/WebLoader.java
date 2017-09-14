@@ -15,14 +15,7 @@
  */
 package consulo.web;
 
-import com.intellij.ide.plugins.PluginManager;
-import com.intellij.idea.ApplicationStarter;
-import com.intellij.idea.Main;
-import com.intellij.idea.StartupUtil;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
-import consulo.application.ApplicationProperties;
-import consulo.start.CommandLineArgs;
 import consulo.web.servlet.NewAppUIBuilder;
 import consulo.web.servlet.ui.UIIconServlet;
 import org.jetbrains.annotations.NonNls;
@@ -30,8 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.Servlet;
-import javax.swing.*;
-import java.io.File;
 
 /**
  * @author VISTALL
@@ -95,7 +86,7 @@ public class WebLoader {
   }
 
   public void start(String[] args) {
-    File home = new File(args[0]);
+   /* File home = new File(args[0]);
 
     System.setProperty("java.awt.headless", "true");
     System.setProperty(PathManager.PROPERTY_HOME_PATH, home.getPath());
@@ -116,7 +107,7 @@ public class WebLoader {
     SwingUtilities.invokeLater(() -> {
       PluginManager.installExceptionHandler();
       app.run(false);
-    });
+    });   */
   }
 
   @NotNull

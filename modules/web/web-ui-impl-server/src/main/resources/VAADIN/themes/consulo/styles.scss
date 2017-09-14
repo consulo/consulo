@@ -409,3 +409,30 @@ table, tr, td {
   background: #e7e7e7;
   cursor: row-resize;
 }
+
+
+.editorLine {
+  font-family:Monaco,Menlo,Consolas,"Courier New",monospace;
+  font-size:12px
+}
+
+.editorLinePanel {
+  white-space: nowrap;
+}
+
+.disableOverflow {
+  overflow: visible;
+}
+
+.noFocusBorder:read-write:focus {
+  outline: none;
+}
+
+.noselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

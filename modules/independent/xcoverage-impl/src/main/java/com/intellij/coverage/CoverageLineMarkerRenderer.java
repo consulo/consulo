@@ -25,7 +25,14 @@ import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.coverage.actions.HideCoverageInfoAction;
 import com.intellij.coverage.actions.ShowCoveringTestsAction;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CustomShortcutSet;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -35,7 +42,6 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
-import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.markup.ActiveGutterRenderer;
 import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -176,12 +182,12 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
     panel.add(createActionsToolbar(editor, lineNumber), BorderLayout.NORTH);
 
     final LineData lineData = getLineData(lineNumber);
-    final EditorImpl uEditor;
+    final Editor uEditor;
     if (lineData != null && lineData.getStatus() != LineCoverage.NONE && !mySubCoverageActive) {
       final EditorFactory factory = EditorFactory.getInstance();
       final Document doc = factory.createDocument(getReport(editor, lineNumber));
       doc.setReadOnly(true);
-      uEditor = (EditorImpl)factory.createEditor(doc, editor.getProject());
+      uEditor = factory.createEditor(doc, editor.getProject());
       panel.add(EditorFragmentComponent.createEditorFragmentComponent(uEditor, 0, doc.getLineCount(), false, false), BorderLayout.CENTER);
     } else {
       uEditor = null;
