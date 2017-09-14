@@ -21,7 +21,14 @@ import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.LogEventException;
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.diagnostic.ThreadDumper;
-import com.intellij.ide.*;
+import com.intellij.ide.ActivityTracker;
+import com.intellij.ide.AppLifecycleListener;
+import com.intellij.ide.ApplicationActivationStateManager;
+import com.intellij.ide.ApplicationLoadListener;
+import com.intellij.ide.CommandLineProcessor;
+import com.intellij.ide.GeneralSettings;
+import com.intellij.ide.IdeEventQueue;
+import com.intellij.ide.WindowsCommandLineProcessor;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.idea.ApplicationStarter;
@@ -43,7 +50,11 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.progress.*;
+import com.intellij.openapi.progress.EmptyProgressIndicator;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.util.PotemkinProgress;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
@@ -54,7 +65,11 @@ import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.ShutDownTracker;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
@@ -62,7 +77,11 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.AppIcon;
 import com.intellij.ui.Splash;
-import com.intellij.util.*;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.EventDispatcher;
+import com.intellij.util.PausesStat;
+import com.intellij.util.ReflectionUtil;
+import com.intellij.util.Restarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
@@ -175,12 +194,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
   }
 
-  public ApplicationImpl(boolean isInternal,
-                         boolean isUnitTestMode,
-                         boolean isHeadless,
-                         boolean isCommandLine,
-                         @NotNull String appName,
-                         @Nullable Splash splash) {
+  public ApplicationImpl(boolean isInternal, boolean isUnitTestMode, boolean isHeadless, boolean isCommandLine, @NotNull String appName, @Nullable Splash splash) {
     super(null);
 
     ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
@@ -215,7 +229,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
       StartupUtil.addExternalInstanceListener(commandLineArgs -> {
         LOG.info("ApplicationImpl.externalInstanceListener invocation");
         final Project project = CommandLineProcessor.processExternalCommandLine(commandLineArgs, null);
-        final IdeFrame  frame = WindowManager.getInstance().getIdeFrame(project);
+        final IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
 
         if (frame != null) AppIcon.getInstance().requestFocus(frame);
       });
@@ -813,11 +827,10 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     };
 
     if (hasUnsafeBgTasks || option.isToBeShown()) {
-      String message = ApplicationBundle
-              .message(hasUnsafeBgTasks ? "exit.confirm.prompt.tasks" : "exit.confirm.prompt", ApplicationNamesInfo.getInstance().getFullProductName());
+      String message = ApplicationBundle.message(hasUnsafeBgTasks ? "exit.confirm.prompt.tasks" : "exit.confirm.prompt", ApplicationNamesInfo.getInstance().getFullProductName());
 
-      if (MessageDialogBuilder.yesNo(ApplicationBundle.message("exit.confirm.title"), message).yesText(ApplicationBundle.message("command.exit"))
-                  .noText(CommonBundle.message("button.cancel")).doNotAsk(option).show() != Messages.YES) {
+      if (MessageDialogBuilder.yesNo(ApplicationBundle.message("exit.confirm.title"), message).yesText(ApplicationBundle.message("command.exit")).noText(CommonBundle.message("button.cancel"))
+                  .doNotAsk(option).show() != Messages.YES) {
         return false;
       }
     }
@@ -992,9 +1005,8 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   @Override
   public void assertReadAccessAllowed() {
     if (!isReadAccessAllowed()) {
-      LOG.error("Read access is allowed from event dispatch thread or inside read-action only" +
-                " (see com.intellij.openapi.application.Application.runReadAction())", "Current thread: " + describe(Thread.currentThread()),
-                "; dispatch thread: " + EventQueue.isDispatchThread() + "; isDispatchThread(): " + isDispatchThread(),
+      LOG.error("Read access is allowed from event dispatch thread or inside read-action only" + " (see com.intellij.openapi.application.Application.runReadAction())",
+                "Current thread: " + describe(Thread.currentThread()), "; dispatch thread: " + EventQueue.isDispatchThread() + "; isDispatchThread(): " + isDispatchThread(),
                 "SystemEventQueueThread: " + describe(getEventQueueThread()));
     }
   }
@@ -1131,8 +1143,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
         if (!myLock.tryWriteLock()) {
           Future<?> reportSlowWrite = ourDumpThreadsOnLongWriteActionWaiting <= 0
                                       ? null
-                                      : JobScheduler.getScheduler().scheduleWithFixedDelay(() -> PerformanceWatcher.getInstance().dumpThreads("waiting", true),
-                                                                                           ourDumpThreadsOnLongWriteActionWaiting,
+                                      : JobScheduler.getScheduler().scheduleWithFixedDelay(() -> PerformanceWatcher.getInstance().dumpThreads("waiting", true), ourDumpThreadsOnLongWriteActionWaiting,
                                                                                            ourDumpThreadsOnLongWriteActionWaiting, TimeUnit.MILLISECONDS);
           myLock.writeLock();
           if (reportSlowWrite != null) {
@@ -1247,8 +1258,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   @RequiredWriteAction
   @Override
   public void assertWriteAccessAllowed() {
-    LOG.assertTrue(isWriteAccessAllowed(),
-                   "Write access is allowed inside write-action only (see com.intellij.openapi.application.Application.runWriteAction())");
+    LOG.assertTrue(isWriteAccessAllowed(), "Write access is allowed inside write-action only (see com.intellij.openapi.application.Application.runWriteAction())");
   }
 
   @Override
@@ -1345,6 +1355,8 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   // public for testing purposes
   public void _saveSettings() {
     if (mySaveSettingsIsInProgress.compareAndSet(false, true)) {
+      HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
+
       try {
         StoreUtil.save(getStateStore(), null);
       }
@@ -1360,6 +1372,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     _saveSettings();
   }
 
+  @RequiredDispatchThread
   @Override
   public void saveAll() {
     if (myDoNotSave) return;
@@ -1368,6 +1381,12 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
     Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
     for (Project openProject : openProjects) {
+      if (openProject.isDisposed()) {
+        // debug for https://github.com/consulo/consulo/issues/296
+        LOG.error("Project is disposed: " + openProject.getName() + ", isInitialized: " + openProject.isInitialized());
+        continue;
+      }
+
       ProjectEx project = (ProjectEx)openProject;
       project.save();
     }

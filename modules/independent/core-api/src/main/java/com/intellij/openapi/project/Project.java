@@ -109,9 +109,6 @@ public interface Project extends ComponentManager, AreaInstance {
   @NonNls
   String getLocationHash();
 
-  /**
-   * Should be invoked under WriteAction.
-   */
   void save();
 
   boolean isOpen();

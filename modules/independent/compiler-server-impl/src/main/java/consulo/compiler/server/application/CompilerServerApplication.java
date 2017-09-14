@@ -297,6 +297,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   public void removeApplicationListener(@NotNull ApplicationListener listener) {
   }
 
+  @RequiredDispatchThread
   @Override
   public void saveAll() {
   }

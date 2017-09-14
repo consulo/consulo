@@ -276,6 +276,7 @@ public class MockApplication extends MockComponentManager implements Application
   public void exit() {
   }
 
+  @RequiredDispatchThread
   @Override
   public void saveAll() {
   }

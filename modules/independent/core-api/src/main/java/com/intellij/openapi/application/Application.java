@@ -157,6 +157,7 @@ public interface Application extends ComponentManager {
   /**
    * Saves all open documents and projects.
    */
+  @RequiredDispatchThread
   void saveAll();
 
   /**
