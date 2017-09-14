@@ -16,8 +16,17 @@
 package consulo.ide.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.*;
-import com.intellij.notification.*;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.ide.plugins.PluginManagerMain;
+import com.intellij.ide.plugins.PluginNode;
+import com.intellij.ide.plugins.RepositoryHelper;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationAction;
+import com.intellij.notification.NotificationDisplayType;
+import com.intellij.notification.NotificationGroup;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -46,7 +55,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -70,8 +83,7 @@ public class PlatformOrPluginUpdateChecker {
   private static final PluginId ourMacNoJre = PluginId.getId("consulo-mac-no-jre");
   private static final PluginId ourMac64 = PluginId.getId("consulo-mac64");
 
-  private static final PluginId[] ourPlatformIds =
-          {ourWinNoJre, ourWin, ourWin64, ourLinuxNoJre, ourLinux, ourLinux64, ourMacNoJre, ourMac64, ourWinNoJreZip, ourWinZip, ourWin64Zip};
+  private static final PluginId[] ourPlatformIds = {ourWinNoJre, ourWin, ourWin64, ourLinuxNoJre, ourLinux, ourLinux64, ourMacNoJre, ourMac64, ourWinNoJreZip, ourWinZip, ourWin64Zip};
 
   @NotNull
   public static PluginId getPlatformPluginId() {
@@ -128,9 +140,11 @@ public class PlatformOrPluginUpdateChecker {
     switch (type) {
       case NO_UPDATE:
         if (showResults) {
-          ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.there.are.no.updates"),
-                                      NotificationType.INFORMATION, null).notify(project);
+          ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.there.are.no.updates"), NotificationType.INFORMATION, null).notify(project);
         }
+        break;
+      case UPDATE_RESTART:
+        PluginManagerMain.notifyPluginsWereInstalled(Collections.emptyList(), null);
         break;
       case PLUGIN_UPDATE:
       case PLATFORM_UPDATE:
@@ -138,9 +152,7 @@ public class PlatformOrPluginUpdateChecker {
           new PluginListDialog(project, targetsForUpdate, null, null).show();
         }
         else {
-          Notification notification =
-                  ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.available"), NotificationType.INFORMATION,
-                                              null);
+          Notification notification = ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.available"), NotificationType.INFORMATION, null);
           notification.addAction(new NotificationAction(IdeBundle.message("update.view.updates")) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
@@ -189,10 +201,18 @@ public class PlatformOrPluginUpdateChecker {
       LOGGER.info(e);
     }
 
+    boolean alreadyVisited = false;
+    final InstalledPluginsState state = InstalledPluginsState.getInstance();
+
     IdeaPluginDescriptor newPlatformPlugin = null;
     // try to search platform number
     for (IdeaPluginDescriptor pluginDescriptor : remotePlugins) {
       PluginId pluginId = pluginDescriptor.getPluginId();
+      // platform already downloaded for update
+      if (state.wasUpdated(pluginId)) {
+        alreadyVisited = true;
+        break;
+      }
       if (platformPluginId.equals(pluginId)) {
         if (StringUtil.compareVersionNumbers(pluginDescriptor.getVersion(), currentBuildNumber) > 0) {
           // change current build
@@ -232,7 +252,6 @@ public class PlatformOrPluginUpdateChecker {
       }
     }
 
-    final InstalledPluginsState state = InstalledPluginsState.getInstance();
     state.getOutdatedPlugins().clear();
     if (!ourPlugins.isEmpty()) {
       try {
@@ -242,6 +261,11 @@ public class PlatformOrPluginUpdateChecker {
           IdeaPluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));
 
           if (filtered == null) {
+            continue;
+          }
+
+          if (state.wasUpdated(filtered.getPluginId())) {
+            alreadyVisited = true;
             continue;
           }
 
@@ -266,14 +290,13 @@ public class PlatformOrPluginUpdateChecker {
       return new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLATFORM_UPDATE, targets);
     }
 
-    return targets.isEmpty()
-           ? PlatformOrPluginUpdateResult.NO_UPDATE
-           : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
+    if (alreadyVisited) {
+      return PlatformOrPluginUpdateResult.UPDATE_RESTART;
+    }
+    return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
   }
 
-  private static void processDependencies(@NotNull IdeaPluginDescriptor target,
-                                          List<Couple<IdeaPluginDescriptor>> targets,
-                                          List<IdeaPluginDescriptor> remotePlugins) {
+  private static void processDependencies(@NotNull IdeaPluginDescriptor target, List<Couple<IdeaPluginDescriptor>> targets, List<IdeaPluginDescriptor> remotePlugins) {
     PluginId[] dependentPluginIds = target.getDependentPluginIds();
     for (PluginId pluginId : dependentPluginIds) {
       IdeaPluginDescriptor depPlugin = PluginManager.getPlugin(pluginId);

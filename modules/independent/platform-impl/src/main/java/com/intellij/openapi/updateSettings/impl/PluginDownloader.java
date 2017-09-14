@@ -31,6 +31,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.StreamUtil;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.io.ZipUtil;
 import consulo.ide.updateSettings.UpdateSettings;
@@ -42,7 +43,11 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -60,16 +65,13 @@ public class PluginDownloader {
 
   @NotNull
   public static PluginDownloader createDownloader(@NotNull IdeaPluginDescriptor descriptor, @Nullable String platformVersion, boolean viaUpdate) {
-    String url = RepositoryHelper
-            .buildUrlForDownload(UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString(), platformVersion, false, viaUpdate);
+    String url = RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString(), platformVersion, false, viaUpdate);
 
     return new PluginDownloader(descriptor, url);
   }
 
   private final PluginId myPluginId;
   private String myPluginUrl;
-
-  private String myPluginName;
 
   private File myFile;
   private File myOldFile;
@@ -83,7 +85,6 @@ public class PluginDownloader {
     myPluginId = pluginDescriptor.getPluginId();
     myDescriptor = pluginDescriptor;
     myPluginUrl = pluginUrl;
-    myPluginName = pluginDescriptor.getName();
     myIsPlatform = PlatformOrPluginUpdateChecker.getPlatformPluginId() == pluginDescriptor.getPluginId();
   }
 
@@ -234,20 +235,20 @@ public class PluginDownloader {
   }
 
   @NotNull
-  public String getFileName() {
+  private String getFileName() {
+    String fileName = myPluginId + "_" + myDescriptor.getVersion();
     if (myIsPlatform) {
-      return "platform.tar.gz";
+      fileName += ".tar.gz";
     }
     else {
-      return myPluginId + ".zip";
+      fileName += ".zip";
     }
+    return fileName;
   }
 
+  @NotNull
   public String getPluginName() {
-    if (myPluginName == null) {
-      myPluginName = FileUtil.getNameWithoutExtension(getFileName());
-    }
-    return myPluginName;
+    return ObjectUtil.notNull(myDescriptor.getName(), myPluginId.toString());
   }
 
   public void setDescription(String description) {
