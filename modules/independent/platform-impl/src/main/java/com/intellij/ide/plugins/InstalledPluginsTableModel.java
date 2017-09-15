@@ -22,7 +22,6 @@ import com.intellij.ui.BooleanTableCellEditor;
 import com.intellij.ui.BooleanTableCellRenderer;
 import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.ColumnInfo;
-import consulo.Platform;
 import consulo.ide.plugins.InstalledPluginsState;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +55,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
 
     for (Iterator<IdeaPluginDescriptor> iterator = view.iterator(); iterator.hasNext(); ) {
       @NonNls final PluginId pluginId = iterator.next().getPluginId();
-      if (PluginManagerCore.CORE_PLUGIN.equals(pluginId) || Platform.get().getPluginId().equals(pluginId)) {
+      if (PluginManagerCore.isSystemPlugin(pluginId)) {
         iterator.remove();
       }
     }

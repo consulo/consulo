@@ -25,8 +25,18 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.*;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.extensions.AreaInstance;
+import com.intellij.openapi.extensions.AreaListener;
+import com.intellij.openapi.extensions.ExtensionPoint;
+import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.extensions.ExtensionsArea;
+import com.intellij.openapi.extensions.LogProvider;
+import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.util.BuildNumber;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Couple;
+import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
@@ -38,10 +48,11 @@ import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.Graph;
 import com.intellij.util.graph.GraphGenerator;
+import com.intellij.util.graph.InboundSemiGraph;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.xmlb.XmlSerializationException;
-import consulo.Platform;
 import consulo.application.ApplicationProperties;
+import consulo.util.SandboxUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntProcedure;
@@ -50,7 +61,13 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -82,8 +99,7 @@ public class PluginManagerCore {
   static final String DISABLE = "disable";
   static final String ENABLE = "enable";
   static final String EDIT = "edit";
-  @NonNls
-  private static final String PROPERTY_PLUGIN_PATH = "plugin.path";
+
   static List<String> ourDisabledPlugins = null;
   static IdeaPluginDescriptor[] ourPlugins;
   static List<String> ourPluginErrors = null;
@@ -234,7 +250,7 @@ public class PluginManagerCore {
 
     // it can be an UrlClassLoader loaded by another class loader, so instanceof doesn't work
     try {
-      return ((Boolean)loader.getClass().getMethod("hasLoadedClass", String.class).invoke(loader, className)).booleanValue();
+      return (Boolean)loader.getClass().getMethod("hasLoadedClass", String.class).invoke(loader, className);
     }
     catch (Exception e) {
       return false;
@@ -382,12 +398,12 @@ public class PluginManagerCore {
     return 0;
   }
 
+  @SuppressWarnings("unchecked")
   static Collection<URL> getClassLoaderUrls() {
     final ClassLoader classLoader = PluginManagerCore.class.getClassLoader();
     final Class<? extends ClassLoader> aClass = classLoader.getClass();
     try {
-      @SuppressWarnings("unchecked") List<URL> urls = (List<URL>)aClass.getMethod("getUrls").invoke(classLoader);
-      return urls;
+      return (List<URL>)aClass.getMethod("getUrls").invoke(classLoader);
     }
     catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) {
     }
@@ -433,7 +449,7 @@ public class PluginManagerCore {
     // this magic ensures that the dependent plugins always follow their dependencies in lexicographic order
     // needed to make sure that extensions are always in the same order
     Collections.sort(ids, (o1, o2) -> o2.getIdString().compareTo(o1.getIdString()));
-    return GraphGenerator.create(CachingSemiGraph.create(new GraphGenerator.SemiGraph<PluginId>() {
+    return GraphGenerator.generate(CachingSemiGraph.cache(new InboundSemiGraph<PluginId>() {
       @Override
       public Collection<PluginId> getNodes() {
         return ids;
@@ -442,11 +458,16 @@ public class PluginManagerCore {
       @Override
       public Iterator<PluginId> getIn(PluginId pluginId) {
         final IdeaPluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
-        ArrayList<PluginId> plugins = new ArrayList<>();
+        List<PluginId> plugins = new ArrayList<>();
         for (PluginId dependentPluginId : descriptor.getDependentPluginIds()) {
           // check for missing optional dependency
-          if (idToDescriptorMap.containsKey(dependentPluginId)) {
-            plugins.add(dependentPluginId);
+          IdeaPluginDescriptor dep = idToDescriptorMap.get(dependentPluginId);
+          if (dep != null) {
+            //if 'dep' refers to a module we need to add the real plugin containing this module only if it's still enabled, otherwise the graph will be inconsistent
+            PluginId realPluginId = dep.getPluginId();
+            if (idToDescriptorMap.containsKey(realPluginId)) {
+              plugins.add(realPluginId);
+            }
           }
         }
         return plugins.iterator();
@@ -721,19 +742,6 @@ public class PluginManagerCore {
     return URLDecoder.decode(quotePluses);
   }
 
-  static void loadDescriptorsFromProperty(final List<IdeaPluginDescriptorImpl> result) {
-    final String pathProperty = System.getProperty(PROPERTY_PLUGIN_PATH);
-    if (pathProperty == null) return;
-
-    for (StringTokenizer t = new StringTokenizer(pathProperty, File.pathSeparator); t.hasMoreTokens(); ) {
-      String s = t.nextToken();
-      final IdeaPluginDescriptorImpl ideaPluginDescriptor = loadDescriptor(new File(s), PLUGIN_XML);
-      if (ideaPluginDescriptor != null) {
-        result.add(ideaPluginDescriptor);
-      }
-    }
-  }
-
   public static IdeaPluginDescriptorImpl[] loadDescriptors(@Nullable StartupProgress progress) {
     final List<IdeaPluginDescriptorImpl> result = new ArrayList<>();
 
@@ -746,9 +754,6 @@ public class PluginManagerCore {
       loadDescriptors(pluginsPath, result, progress, pluginsCount);
     }
     loadDescriptors(PathManager.getPreInstalledPluginsPath(), result, progress, pluginsCount);
-
-    // insert dummy platform code
-    insertPlatformPlugin(result);
 
     // insert consulo unit dummy plugin
     if (Boolean.getBoolean(ApplicationProperties.CONSULO_IN_UNIT_TEST)) {
@@ -767,18 +772,6 @@ public class PluginManagerCore {
 
     Arrays.sort(pluginDescriptors, getPluginDescriptorComparator(idToDescriptorMap));
     return pluginDescriptors;
-  }
-
-  private static void insertPlatformPlugin(List<IdeaPluginDescriptorImpl> result) {
-    Platform platform = Platform.get();
-
-    PluginId pluginId = platform.getPluginId();
-
-    IdeaPluginDescriptorImpl pluginDescriptor = new IdeaPluginDescriptorImpl(new File(PathManager.getPreInstalledPluginsPath(), pluginId.getIdString()));
-    pluginDescriptor.setName(StringUtil.capitalize(platform.name().toLowerCase(Locale.US)));
-    pluginDescriptor.setId(pluginId);
-
-    result.add(pluginDescriptor);
   }
 
   static void mergeOptionalConfigs(Map<PluginId, IdeaPluginDescriptorImpl> descriptors) {
@@ -937,7 +930,7 @@ public class PluginManagerCore {
     final DFSTBuilder<PluginId> builder = new DFSTBuilder<>(graph);
     if (!builder.isAcyclic()) {
       final String cyclePresentation;
-      if (ApplicationManager.getApplication().isInternal()) {
+      if (SandboxUtil.isInsideSandbox()) {
         final List<String> cycles = new ArrayList<>();
         builder.getSCCs().forEach(new TIntProcedure() {
           int myTNumber = 0;
@@ -1039,6 +1032,10 @@ public class PluginManagerCore {
     getLogger().info(ourPlugins.length + " plugins initialized in " + (System.currentTimeMillis() - start) + " ms");
     logPlugins();
     ClassUtilCore.clearJarURLCache();
+  }
+
+  public static boolean isSystemPlugin(@NotNull PluginId pluginId) {
+    return CORE_PLUGIN.equals(pluginId);
   }
 
   private static class LoggerHolder {

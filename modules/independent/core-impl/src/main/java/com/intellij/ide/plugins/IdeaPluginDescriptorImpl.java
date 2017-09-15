@@ -36,7 +36,6 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.StringInterner;
 import com.intellij.util.xmlb.JDOMXIncluder;
 import com.intellij.util.xmlb.XmlSerializer;
-import consulo.Platform;
 import gnu.trove.THashMap;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -49,7 +48,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * @author mike
@@ -391,10 +397,6 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   @SuppressWarnings({"HardCodedStringLiteral"})
   @NotNull
   public List<File> getClassPath() {
-    if (getPluginId().equals(Platform.get().getPluginId())) {
-      return Collections.emptyList();
-    }
-
     // special hack for unit test loader
     if (PluginManagerCore.UNIT_TEST_PLUGIN.equals(getPluginId())) {
       final List<File> result = new ArrayList<>();
