@@ -21,17 +21,22 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileChooser.ex.FileChooserDialogImpl;
 import com.intellij.openapi.fileChooser.ex.PathField;
 import com.intellij.openapi.project.DumbAware;
+import consulo.annotations.RequiredDispatchThread;
 
 public class TogglePathShowingAction extends AnAction implements DumbAware {
   public TogglePathShowingAction() {
     setEnabledInModalContext(true);
   }
 
+  @RequiredDispatchThread
+  @Override
   public void update(final AnActionEvent e) {
     e.getPresentation().setText(IdeBundle.message("file.chooser.hide.path.tooltip.text"));
     e.getPresentation().setEnabled(FileChooserDialogImpl.PATH_FIELD.getData(e.getDataContext()) != null);
   }
 
+  @RequiredDispatchThread
+  @Override
   public void actionPerformed(final AnActionEvent e) {
     PathField f = FileChooserDialogImpl.PATH_FIELD.getData(e.getDataContext());
     if (f != null) {

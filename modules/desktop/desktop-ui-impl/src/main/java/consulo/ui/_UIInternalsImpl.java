@@ -73,6 +73,12 @@ class _UIInternalsImpl extends _UIInternals {
     throw new UnsupportedOperationException();
   }
 
+  @NotNull
+  @Override
+  public Window _Windows_modalWindow(String title) {
+    throw new UnsupportedOperationException();
+  }
+
   @Override
   public CheckBox _Components_checkBox(@NotNull String text, boolean selected) {
     return new DesktopCheckBoxImpl(text, selected);

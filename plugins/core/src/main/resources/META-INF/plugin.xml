@@ -15,7 +15,7 @@
   -->
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
   <id>com.intellij</id>
-  <name>Platform</name>
+  <name>Platform: independent</name>
 
   <xi:include href="/META-INF/Actions.xml" xpointer="xpointer(/idea-plugin/*)">
     <xi:fallback/>

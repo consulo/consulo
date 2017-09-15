@@ -17,6 +17,12 @@
   <id>consulo.platform.desktop</id>
   <name>Platform: desktop</name>
 
+  <actions>
+    <group id="FileChooser">
+      <action id="FileChooser.TogglePathShowing" class="com.intellij.openapi.fileChooser.actions.TogglePathShowingAction"/>
+    </group>
+  </actions>
+
   <extensions defaultExtensionNs="com.intellij">
     <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
                         serviceImplementation="com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl"/>
