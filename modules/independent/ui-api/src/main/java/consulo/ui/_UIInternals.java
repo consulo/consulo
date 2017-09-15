@@ -19,6 +19,7 @@ import consulo.annotations.Internal;
 import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
 import consulo.ui.model.ListModel;
+import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
@@ -97,6 +98,9 @@ public abstract class _UIInternals {
   abstract ValueGroup<Boolean> _ValueGroups_boolGroup();
 
   abstract MenuBar _MenuItems_menuBar();
+
+  @NotNull
+  public abstract StyleManager _StyleManager_get();
 
   @RequiredUIAccess
   @NotNull

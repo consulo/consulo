@@ -22,6 +22,7 @@ import consulo.ui.internal.*;
 import consulo.ui.internal.icon.DesktopFoldedImageImpl;
 import consulo.ui.internal.icon.DesktopImageImpl;
 import consulo.ui.model.ListModel;
+import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -64,6 +65,12 @@ class _UIInternalsImpl extends _UIInternals {
   @Override
   MenuBar _MenuItems_menuBar() {
     return new DesktopMenuBarImpl();
+  }
+
+  @NotNull
+  @Override
+  public StyleManager _StyleManager_get() {
+    throw new UnsupportedOperationException();
   }
 
   @Override

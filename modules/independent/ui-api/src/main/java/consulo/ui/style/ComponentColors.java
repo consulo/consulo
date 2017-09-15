@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,8 @@ package consulo.ui.style;
 
 /**
  * @author VISTALL
- * @since 22-Jun-16
+ * @since 15-Sep-17
  */
-public enum StandardColorKey implements ColorKey {
-  RED,
-  BLUE,
-  GREEN
+public enum ComponentColors implements ColorKey {
+  BORDER
 }

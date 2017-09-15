@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.style;
-
-import consulo.annotations.Immutable;
-import consulo.ui._UIInternals;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
+package consulo.ui.border;
 
 /**
  * @author VISTALL
- * @since 22-Jun-16
+ * @since 15-Sep-17
  */
-public interface StyleManager {
-  @NotNull
-  static StyleManager get() {
-    return _UIInternals.get()._StyleManager_get();
-  }
-
-  @NotNull
-  @Immutable
-  List<Style> getStyles();
-
-  @NotNull
-  Style getCurrentStyle();
-
-  void setCurrentStyle(@NotNull Style style);
+public interface Border {
 }

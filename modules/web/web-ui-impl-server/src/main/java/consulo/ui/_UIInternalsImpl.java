@@ -23,6 +23,7 @@ import consulo.ui.internal.*;
 import consulo.ui.internal.image.WGwtFoldedImageImpl;
 import consulo.ui.internal.image.WGwtImageImpl;
 import consulo.ui.model.ListModel;
+import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
@@ -166,6 +167,12 @@ class _UIInternalsImpl extends _UIInternals {
   @Override
   MenuBar _MenuItems_menuBar() {
     return new WGwtMenuBarImpl();
+  }
+
+  @NotNull
+  @Override
+  public StyleManager _StyleManager_get() {
+    return null;
   }
 
   @RequiredUIAccess
