@@ -15,11 +15,26 @@
  */
 package consulo.platform;
 
+import com.intellij.openapi.extensions.PluginId;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 15-Sep-17
  */
 public abstract class PlatformBase implements Platform {
+  private final PluginId myPluginId;
+
+  protected PlatformBase(@NotNull String pluginId) {
+    myPluginId = PluginId.getId(pluginId);
+  }
+
+  @NotNull
+  @Override
+  public PluginId getPluginId() {
+    return myPluginId;
+  }
+
   @Override
   public boolean isDesktop() {
     return false;

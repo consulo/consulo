@@ -20,6 +20,10 @@ package consulo.platform;
  * @since 15-Sep-17
  */
 public class WebPlatformImpl extends PlatformBase {
+  public WebPlatformImpl() {
+    super("consulo.platform.web");
+  }
+
   @Override
   public boolean isWebService() {
     return true;

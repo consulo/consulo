@@ -15,6 +15,7 @@
  */
 package consulo.platform;
 
+import com.intellij.openapi.extensions.PluginId;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,6 +27,9 @@ public interface Platform {
   static Platform current() {
     return _PlatformInternal.current();
   }
+
+  @NotNull
+  PluginId getPluginId();
 
   boolean isDesktop();
 

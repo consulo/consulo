@@ -55,6 +55,7 @@
       <excludes>
         <exclude>consulo:consulo-bundle</exclude>
         <exclude>consulo:consulo-core-plugin</exclude>
+        <exclude>consulo:consulo-platform-desktop-plugin</exclude>
       </excludes>
     </dependencySet>
     <dependencySet>
@@ -64,6 +65,15 @@
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <includes>
         <include>consulo:consulo-core-plugin</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}plugins${file.separator}platform-desktop${file.separator}lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+      <includes>
+        <include>consulo:consulo-platform-desktop-plugin</include>
       </includes>
     </dependencySet>
   </dependencySets>

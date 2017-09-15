@@ -52,6 +52,7 @@ import com.intellij.util.graph.InboundSemiGraph;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.xmlb.XmlSerializationException;
 import consulo.application.ApplicationProperties;
+import consulo.platform.Platform;
 import consulo.util.SandboxUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
@@ -197,9 +198,7 @@ public class PluginManagerCore {
     return ourId2Index.get(id);
   }
 
-  public static void checkDependants(final IdeaPluginDescriptor pluginDescriptor,
-                                     final Function<PluginId, IdeaPluginDescriptor> pluginId2Descriptor,
-                                     final Condition<PluginId> check) {
+  public static void checkDependants(final IdeaPluginDescriptor pluginDescriptor, final Function<PluginId, IdeaPluginDescriptor> pluginId2Descriptor, final Condition<PluginId> check) {
     checkDependants(pluginDescriptor, pluginId2Descriptor, check, new HashSet<>());
   }
 
@@ -977,8 +976,7 @@ public class PluginManagerCore {
       final ClassLoader[] parentLoaders = getParentLoaders(idToDescriptorMap, dependentPluginIds);
 
       final ClassLoader pluginClassLoader =
-              createPluginClassLoader(classPath.toArray(new File[classPath.size()]), parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader},
-                                      pluginDescriptor);
+              createPluginClassLoader(classPath.toArray(new File[classPath.size()]), parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader}, pluginDescriptor);
       pluginDescriptor.setLoader(pluginClassLoader);
 
       if (progress != null) {
@@ -1035,7 +1033,7 @@ public class PluginManagerCore {
   }
 
   public static boolean isSystemPlugin(@NotNull PluginId pluginId) {
-    return CORE_PLUGIN.equals(pluginId);
+    return CORE_PLUGIN.equals(pluginId) || Platform.current().getPluginId().equals(pluginId);
   }
 
   private static class LoggerHolder {

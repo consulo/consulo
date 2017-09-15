@@ -71,6 +71,11 @@
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
+      <artifactId>consulo-platform-web-plugin</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo</groupId>
       <artifactId>consulo-web-ui-impl-server</artifactId>
       <version>${project.version}</version>
     </dependency>

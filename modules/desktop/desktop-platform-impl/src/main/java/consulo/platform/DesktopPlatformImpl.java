@@ -20,6 +20,10 @@ package consulo.platform;
  * @since 15-Sep-17
  */
 class DesktopPlatformImpl extends PlatformBase {
+  public DesktopPlatformImpl() {
+    super("consulo.platform.desktop");
+  }
+
   @Override
   public boolean isDesktop() {
     return true;

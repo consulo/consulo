@@ -63,8 +63,7 @@
       <excludes>
         <exclude>consulo:consulo-core-plugin</exclude>
         <exclude>consulo:consulo-sand-language-plugin</exclude>
-        <exclude>consulo:consulo-desktop-ui-impl</exclude>
-        <exclude>consulo:consulo-desktop-ui-laf-impl</exclude>
+        <exclude>consulo:consulo-platform-web-plugin</exclude>
       </excludes>
     </dependencySet>
     <dependencySet>
@@ -78,6 +77,15 @@
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <includes>
         <include>consulo:consulo-sand-language-plugin</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>workdir/platform/buildSNAPSHOT/plugins/platform-web/lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+      <includes>
+        <include>consulo:consulo-platform-web-plugin</include>
       </includes>
     </dependencySet>
   </dependencySets>
