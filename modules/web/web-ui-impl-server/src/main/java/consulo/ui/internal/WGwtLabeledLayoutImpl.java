@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 15-Jun-16
  */
-public class WGwtLabeledLayoutImpl extends AbstractSingleComponentContainer implements LabeledLayout {
+public class WGwtLabeledLayoutImpl extends AbstractSingleComponentContainer implements LabeledLayout, VaadinWrapper {
   public WGwtLabeledLayoutImpl(String text) {
     getState().caption = text;
   }

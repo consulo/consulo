@@ -32,7 +32,7 @@ import java.util.List;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class WGwtSplitLayoutImpl extends AbstractLayout implements SplitLayout {
+public class WGwtSplitLayoutImpl extends AbstractLayout implements SplitLayout, VaadinWrapper {
   private Component myFirstComponent;
   private Component mySecondComponent;
 

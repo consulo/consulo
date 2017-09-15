@@ -21,7 +21,7 @@ import consulo.ui.HtmlLabel;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class WGwtHtmlLabelImpl extends WGwtLabelImpl implements HtmlLabel {
+public class WGwtHtmlLabelImpl extends WGwtLabelImpl implements HtmlLabel, VaadinWrapper {
   public WGwtHtmlLabelImpl(String text) {
     super(text);
   }

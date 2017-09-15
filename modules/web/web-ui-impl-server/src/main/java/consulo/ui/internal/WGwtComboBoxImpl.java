@@ -22,7 +22,7 @@ import consulo.ui.model.ListModel;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class WGwtComboBoxImpl<E> extends WGwtSingleListComponentImpl<E> implements ComboBox<E> {
+public class WGwtComboBoxImpl<E> extends WGwtSingleListComponentImpl<E> implements ComboBox<E>, VaadinWrapper {
   public WGwtComboBoxImpl(ListModel<E> model) {
     super(model);
   }

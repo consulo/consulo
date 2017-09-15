@@ -18,11 +18,13 @@ package consulo.ui.internal;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
+import consulo.ui.impl.UIDataObject;
 import consulo.ui.migration.ToSwingWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.EventListener;
 
 /**
  * @author VISTALL
@@ -47,6 +49,28 @@ public interface SwingWrapper extends Component, ToSwingWrapper {
   @Override
   default java.awt.Component toAWT() {
     return (java.awt.Component)this;
+  }
+
+  @NotNull
+  @Override
+  default <T extends EventListener> Runnable addListener(@NotNull Class<T> eventClass, @NotNull T listener) {
+    javax.swing.JComponent component = (javax.swing.JComponent)toAWT();
+    UIDataObject dataObject = (UIDataObject)component.getClientProperty(UIDataObject.class);
+    if (dataObject == null) {
+      component.putClientProperty(UIDataObject.class, dataObject = new UIDataObject());
+    }
+    return dataObject.addListener(eventClass, listener);
+  }
+
+  @NotNull
+  @Override
+  default <T extends EventListener> T getListenerDispatcher(@NotNull Class<T> eventClass) {
+    javax.swing.JComponent component = (javax.swing.JComponent)toAWT();
+    UIDataObject dataObject = (UIDataObject)component.getClientProperty(UIDataObject.class);
+    if (dataObject == null) {
+      component.putClientProperty(UIDataObject.class, dataObject = new UIDataObject());
+    }
+    return dataObject.getDispatcher(eventClass);
   }
 
   @Override

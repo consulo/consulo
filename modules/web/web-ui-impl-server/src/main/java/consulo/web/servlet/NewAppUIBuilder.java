@@ -15,16 +15,25 @@
  */
 package consulo.web.servlet;
 
+import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.UI;
-import consulo.SomeTestUIBuilder;
+import consulo.application.impl.FrameTitleUtil;
+import consulo.ui.Components;
+import consulo.ui.DockLayout;
+import consulo.ui.HorizontalLayout;
+import consulo.ui.Layouts;
+import consulo.ui.ListBox;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.SplitLayout;
+import consulo.ui.Size;
+import consulo.ui.VerticalLayout;
 import consulo.ui.Window;
-import consulo.ui.ex.internal.WGwtEditorImpl;
 import consulo.ui.internal.WGwtLabelImpl;
+import consulo.ui.internal.WGwtVerticalLayoutImpl;
 import consulo.web.servlet.ui.UIBuilder;
 import consulo.web.servlet.ui.UIServlet;
+import consulo.web.ui.FileTreeComponent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
@@ -44,17 +53,60 @@ public class NewAppUIBuilder extends UIBuilder {
   @RequiredUIAccess
   @Override
   protected void build(@NotNull Window window) {
+    ApplicationEx application = ApplicationManagerEx.getApplicationEx();
+    if (application == null || !application.isLoaded()) {
+      window.setContent(Components.label("Loading"));
+      return;
+    }
 
-    com.vaadin.ui.Window components = new com.vaadin.ui.Window("Test");
-    components.setModal(true);
-    components.setWidth(100, Sizeable.Unit.PIXELS);
-    components.setHeight(100, Sizeable.Unit.PIXELS);
-    components.setContent(new WGwtLabelImpl("TEst"));
-    UI.getCurrent().addWindow(components);
+    com.vaadin.ui.Window welcomeFrame = new com.vaadin.ui.Window(FrameTitleUtil.buildTitle());
+    welcomeFrame.setResizable(false);
+    welcomeFrame.setClosable(false);
+    welcomeFrame.setModal(true);
+    welcomeFrame.setWidth(777, Sizeable.Unit.PIXELS);
+    welcomeFrame.setHeight(460, Sizeable.Unit.PIXELS);
+    welcomeFrame.setContent(new WGwtLabelImpl("TEst"));
 
-   // AppUIBuilder.build(window);
-    SplitLayout splitLayout = SomeTestUIBuilder.buildTabbed(window);
+    //AnAction[] recentProjectsActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
 
-    splitLayout.setSecondComponent(new WGwtEditorImpl());
+    ListBox<String> listSelect = Components.listBox("Test");
+    listSelect.setSize(new Size(200, -1));
+
+    DockLayout layout = Layouts.dock();
+    layout.left(listSelect);
+
+    VerticalLayout projectActionLayout = new WGwtVerticalLayoutImpl();
+
+    projectActionLayout.add(Components.button("Open Project", () -> {
+      com.vaadin.ui.Window fileTree = new com.vaadin.ui.Window("Select file");
+      fileTree.setModal(true);
+      fileTree.setWidth(400, Sizeable.Unit.PIXELS);
+      fileTree.setHeight(400, Sizeable.Unit.PIXELS);
+      fileTree.setContent(new WGwtLabelImpl("TEst"));
+
+      DockLayout dockLayout = Layouts.dock();
+      dockLayout.center(FileTreeComponent.create());
+      HorizontalLayout botton = Layouts.horizontal();
+      consulo.ui.Button ok = Components.button("OK");
+      ok.setEnabled(false);
+      botton.add(ok);
+      consulo.ui.Button cancel = Components.button("Cancel");
+      cancel.addListener(consulo.ui.Button.ClickHandler.class, () -> {
+        fileTree.close();
+      });
+
+      botton.add(cancel);
+      dockLayout.bottom(botton);
+
+      fileTree.setContent((com.vaadin.ui.Component)dockLayout);
+
+
+      UI.getCurrent().addWindow(fileTree);
+    }));
+    layout.center(projectActionLayout);
+
+    welcomeFrame.setContent((com.vaadin.ui.Component)layout);
+
+    UI.getCurrent().addWindow(welcomeFrame);
   }
 }

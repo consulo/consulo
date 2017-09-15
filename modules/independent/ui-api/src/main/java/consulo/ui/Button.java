@@ -17,11 +17,18 @@ package consulo.ui;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.EventListener;
+
 /**
  * @author VISTALL
  * @since 13-Sep-17
  */
 public interface Button extends Component {
+  interface ClickHandler extends EventListener {
+    @RequiredUIAccess
+    void onClick();
+  }
+
   @NotNull
   String getText();
 

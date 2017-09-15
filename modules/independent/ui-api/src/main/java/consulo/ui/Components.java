@@ -105,6 +105,14 @@ public class Components {
 
   @NotNull
   public static Button button(@NotNull String text) {
-    return _UIInternals.get()._Components_button(text);
+    return button(text, null);
+  }
+
+  @NotNull
+  public static Button button(@NotNull String text, @Nullable @RequiredUIAccess Button.ClickHandler clickHandler) {
+    Button button = _UIInternals.get()._Components_button(text);
+    if (clickHandler != null) {
+      button.addListener(Button.ClickHandler.class, clickHandler);
+    } return button;
   }
 }

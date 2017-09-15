@@ -36,7 +36,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 12-Sep-17
  */
-public class DesktopListBoxImpl<E> implements ListBox<E>, ToSwingWrapper {
+public class DesktopListBoxImpl<E> implements ListBox<E>, ToSwingWrapper, SwingWrapper {
   private JBList<E> myList;
   private DesktopComboBoxModelWrapper<E> myModel;
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();

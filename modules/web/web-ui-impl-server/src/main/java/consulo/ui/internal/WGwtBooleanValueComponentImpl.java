@@ -33,7 +33,7 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtBooleanValueComponentImpl extends AbstractComponent implements ValueComponent<Boolean> {
+public class WGwtBooleanValueComponentImpl extends AbstractComponent implements ValueComponent<Boolean>, VaadinWrapper {
   private List<ValueComponent.ValueListener<Boolean>> myValueListeners = new SmartList<>();
 
   private final CheckBoxRpc myRpc = value -> setValueImpl(value, true);

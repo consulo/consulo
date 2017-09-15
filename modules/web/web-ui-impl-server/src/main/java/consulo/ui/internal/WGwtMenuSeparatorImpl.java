@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtMenuSeparatorImpl extends AbstractComponent implements MenuItem {
+public class WGwtMenuSeparatorImpl extends AbstractComponent implements MenuItem, VaadinWrapper {
   public WGwtMenuSeparatorImpl() {
   }
 

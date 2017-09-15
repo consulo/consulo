@@ -23,6 +23,7 @@ import java.io.Serializable;
  */
 public class Size implements Serializable {
   public static final Size UNDEFINED = new Size(-1, -1);
+  private static final long serialVersionUID = 3195037735722861866L;
 
   private int myWidth;
   private int myHeight;
@@ -41,5 +42,34 @@ public class Size implements Serializable {
 
   public int getHeight() {
     return myHeight;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Size size = (Size)o;
+
+    if (myWidth != size.myWidth) return false;
+    if (myHeight != size.myHeight) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = myWidth;
+    result = 31 * result + myHeight;
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("Size{");
+    sb.append("myWidth=").append(myWidth);
+    sb.append(", myHeight=").append(myHeight);
+    sb.append('}');
+    return sb.toString();
   }
 }

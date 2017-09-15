@@ -2,8 +2,7 @@ package consulo.ui.internal.image;
 
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
-import consulo.ui.image.Images;
-import consulo.ui.migration.SwingImageRef;
+import consulo.ui.migration.ToImageWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
@@ -17,8 +16,8 @@ public class WGwtImageUrlCache {
   public static final ConcurrentMap<Integer, URL> ourURLCache = ContainerUtil.newConcurrentMap();
 
   public static WGwtImageWithState fixSwingImageRef(Image other) {
-    if (other instanceof SwingImageRef) {
-      return (WGwtImageWithState)Images.fromURL(((SwingImageRef)other).getIconURL());
+    if (other instanceof ToImageWrapper) {
+      return (WGwtImageWithState)((ToImageWrapper)other).toImage();
     }
     return (WGwtImageWithState)other;
   }

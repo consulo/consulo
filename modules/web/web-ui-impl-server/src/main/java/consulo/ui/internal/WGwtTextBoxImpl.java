@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 12-Sep-17
  */
-public class WGwtTextBoxImpl extends AbstractComponent implements TextBox {
+public class WGwtTextBoxImpl extends AbstractComponent implements TextBox, VaadinWrapper {
   public WGwtTextBoxImpl(String text) {
     getState().caption = text;
   }

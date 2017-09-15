@@ -15,6 +15,7 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.ui.advancedGwt.ComboBoxSelectItem;

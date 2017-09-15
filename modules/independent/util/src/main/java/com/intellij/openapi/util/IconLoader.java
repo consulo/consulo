@@ -30,6 +30,7 @@ import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.JBUI.ScaleType;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.*;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageFilter;
 import java.lang.ref.Reference;
@@ -383,12 +385,6 @@ public final class IconLoader {
       myFilters = new ImageFilter[] {IMAGE_FILTER};
     }
 
-    @NotNull
-    @Override
-    public URL getIconURL() {
-      return myUrl;
-    }
-
     private void setGlobalFilter(ImageFilter globalFilter) {
       myFilters[0] = globalFilter;
     }
@@ -507,6 +503,11 @@ public final class IconLoader {
       CachedImageIcon icon = new CachedImageIcon(this);
       icon.myFilters = new ImageFilter[] {getGlobalFilter(), UIUtil.getGrayFilter()};
       return icon;
+    }
+
+    @Override
+    public consulo.ui.image.Image toImage() {
+      return Images.fromURL(myUrl);
     }
 
     private class MyScaledIconsCache {

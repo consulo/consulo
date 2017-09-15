@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtRadioButtonImpl extends WGwtBooleanValueComponentImpl implements RadioButton {
+public class WGwtRadioButtonImpl extends WGwtBooleanValueComponentImpl implements RadioButton, VaadinWrapper {
   public WGwtRadioButtonImpl(boolean selected, String text) {
     super(selected);
     getState().caption = text;

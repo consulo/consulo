@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class WGwtLabelImpl extends AbstractComponent implements Label {
+public class WGwtLabelImpl extends AbstractComponent implements Label, VaadinWrapper {
   public WGwtLabelImpl(String text) {
     getState().caption = text;
   }

@@ -21,6 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.image.Image;
+import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,8 +29,16 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 13-Sep-17
  */
-public class WGwtButtonImpl extends AbstractComponent implements Button {
+public class WGwtButtonImpl extends AbstractComponent implements Button, VaadinWrapper {
+  private final ButtonRpc myRpc = new ButtonRpc() {
+    @Override
+    public void onClick() {
+      getListenerDispatcher(ClickHandler.class).onClick();
+    }
+  };
+
   public WGwtButtonImpl(String text, Image image) {
+    registerRpc(myRpc);
     getState().caption = text;
   }
 

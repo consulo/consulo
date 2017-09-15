@@ -18,6 +18,8 @@ package consulo.ui;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EventListener;
+
 /**
  * @author VISTALL
  * @since 09-Jun-16
@@ -38,6 +40,15 @@ public interface Component {
 
   @RequiredUIAccess
   void setSize(@NotNull Size size);
+
+  /**
+   * @return runner for unregister listener
+   */
+  @NotNull
+  <T extends EventListener> Runnable addListener(@NotNull Class<T> eventClass, @RequiredUIAccess @NotNull T listener);
+
+  @NotNull
+  <T extends EventListener> T getListenerDispatcher(@NotNull Class<T> eventClass);
 
   default void dispose() {
   }

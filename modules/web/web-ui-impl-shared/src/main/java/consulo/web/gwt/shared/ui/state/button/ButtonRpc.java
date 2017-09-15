@@ -13,31 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.internal;
+package consulo.web.gwt.shared.ui.state.button;
 
-import com.vaadin.ui.AbstractComponent;
-import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
-import consulo.ui.internal.VaadinWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.vaadin.shared.communication.ServerRpc;
 
 /**
  * @author VISTALL
- * @since 13-Sep-17
+ * @since 14-Sep-17
  */
-public class WGwtEditorImpl extends AbstractComponent implements Component, VaadinWrapper {
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@NotNull Size size) {
-
-  }
+public interface ButtonRpc extends ServerRpc {
+  void onClick();
 }

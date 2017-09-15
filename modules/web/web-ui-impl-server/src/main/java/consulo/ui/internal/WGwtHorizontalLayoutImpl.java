@@ -31,7 +31,7 @@ import java.util.List;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class WGwtHorizontalLayoutImpl extends AbstractLayout implements HorizontalLayout {
+public class WGwtHorizontalLayoutImpl extends AbstractLayout implements HorizontalLayout, VaadinWrapper {
   private final List<com.vaadin.ui.Component> myChildren = new LinkedList<>();
 
   @NotNull

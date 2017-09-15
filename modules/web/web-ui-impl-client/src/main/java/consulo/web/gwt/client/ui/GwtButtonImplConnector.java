@@ -15,17 +15,20 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
 
 /**
  * @author VISTALL
  * @since 13-Sep-17
  */
 @Connect(canonicalName = "consulo.ui.internal.WGwtButtonImpl")
-public class GwtButtonImplConnector extends AbstractComponentConnector {
+public class GwtButtonImplConnector extends AbstractComponentConnector implements ClickHandler {
   @Override
   protected void updateWidgetStyleNames() {
     super.updateWidgetStyleNames();
@@ -46,7 +49,18 @@ public class GwtButtonImplConnector extends AbstractComponentConnector {
   }
 
   @Override
+  protected void init() {
+    super.init();
+    getWidget().addClickHandler(this);
+  }
+
+  @Override
   public GwtButtonImpl getWidget() {
     return (GwtButtonImpl)super.getWidget();
+  }
+
+  @Override
+  public void onClick(ClickEvent event) {
+    getRpcProxy(ButtonRpc.class).onClick();
   }
 }

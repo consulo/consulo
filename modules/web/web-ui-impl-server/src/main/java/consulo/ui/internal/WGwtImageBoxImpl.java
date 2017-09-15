@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class WGwtImageBoxImpl extends AbstractComponent implements ImageBox {
+public class WGwtImageBoxImpl extends AbstractComponent implements ImageBox, VaadinWrapper {
   private WGwtImageWithState myImage;
 
   public WGwtImageBoxImpl(Image image) {

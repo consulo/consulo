@@ -25,6 +25,8 @@ import consulo.ui.internal.WGwtRootPanelImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EventListener;
+
 /**
  * @author VISTALL
  * @since 11-Sep-17
@@ -73,6 +75,18 @@ class VaadinUIWindowImpl implements Window {
   @Override
   public void setSize(@NotNull Size size) {
 
+  }
+
+  @NotNull
+  @Override
+  public <T extends EventListener> T getListenerDispatcher(@NotNull Class<T> eventClass) {
+    throw new UnsupportedOperationException();
+  }
+
+  @NotNull
+  @Override
+  public <T extends EventListener> Runnable addListener(@NotNull Class<T> eventClass, @NotNull T listener) {
+    throw new UnsupportedOperationException();
   }
 
   @RequiredUIAccess

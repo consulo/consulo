@@ -34,7 +34,7 @@ import java.util.List;
  * @author VISTALL
  * @since 16-Jun-16
  */
-public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent implements ValueComponent<E> {
+public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent implements ValueComponent<E>, VaadinWrapper {
   private ListItemRender<E> myRender = ListItemRenders.defaultRender();
   private List<ValueListener<E>> myValueListeners = new ArrayList<>();
   private ListModel<E> myModel;
@@ -124,7 +124,9 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
   @RequiredUIAccess
   @Override
   public void setSize(@NotNull Size size) {
-
+    getState().myHeight = size.getHeight();
+    getState().myWidth = size.getWidth();
+    markAsDirty();
   }
 
   @Override

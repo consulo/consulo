@@ -22,7 +22,7 @@ import consulo.ui.model.ListModel;
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class WGwtListBoxImpl<E> extends WGwtSingleListComponentImpl<E> implements ListBox<E> {
+public class WGwtListBoxImpl<E> extends WGwtSingleListComponentImpl<E> implements ListBox<E>, VaadinWrapper {
 
   public WGwtListBoxImpl(ListModel<E> model) {
     super(model);

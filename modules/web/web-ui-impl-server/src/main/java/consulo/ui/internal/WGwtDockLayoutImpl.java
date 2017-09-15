@@ -32,7 +32,7 @@ import java.util.List;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class WGwtDockLayoutImpl extends AbstractLayout implements DockLayout {
+public class WGwtDockLayoutImpl extends AbstractLayout implements DockLayout, VaadinWrapper {
   private final List<com.vaadin.ui.Component> myChildren = new LinkedList<>();
 
   @Override

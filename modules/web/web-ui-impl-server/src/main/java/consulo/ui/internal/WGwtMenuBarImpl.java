@@ -32,7 +32,7 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtMenuBarImpl extends AbstractComponentContainer implements MenuBar {
+public class WGwtMenuBarImpl extends AbstractComponentContainer implements MenuBar, VaadinWrapper {
   private List<Component> myMenuItems = new ArrayList<>();
 
   @RequiredUIAccess

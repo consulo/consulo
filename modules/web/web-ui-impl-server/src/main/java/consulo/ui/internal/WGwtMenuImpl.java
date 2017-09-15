@@ -32,7 +32,7 @@ import java.util.List;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtMenuImpl extends AbstractComponentContainer implements Menu {
+public class WGwtMenuImpl extends AbstractComponentContainer implements Menu, VaadinWrapper {
   private List<Component> myMenuItems = new ArrayList<>();
 
   public WGwtMenuImpl(String text) {

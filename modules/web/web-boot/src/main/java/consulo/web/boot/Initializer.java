@@ -28,6 +28,7 @@ import javax.servlet.ServletRegistration;
 import javax.servlet.annotation.WebListener;
 import javax.servlet.annotation.WebServlet;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
@@ -40,17 +41,17 @@ import java.util.List;
  */
 @WebListener
 public class Initializer implements ServletContextListener {
-  public static final String INITIALIZED = "Initializer.INITIALIZED";
+  private static final String ourWebLoaderObject = "ourWebLoaderObject";
 
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent) {
     ServletContext servletContext = servletContextEvent.getServletContext();
 
-    File platformDirectory = null;
+    File platformDirectory;
 
     String workDirectoryProperty = System.getProperty("consulo.web.work.directory");
-    if(workDirectoryProperty != null) {
-       platformDirectory = new File(workDirectoryProperty, "platform").listFiles()[0];
+    if (workDirectoryProperty != null) {
+      platformDirectory = new File(workDirectoryProperty, "platform").listFiles()[0];
     }
     else {
       String platformPath = servletContext.getRealPath("/platform");
@@ -62,13 +63,11 @@ public class Initializer implements ServletContextListener {
       initApplication(platformDirectory, servletContext);
     }
     catch (Exception e) {
-      e.printStackTrace();
+      Logger.getInstance(Initializer.class).error(e);
     }
-
-    servletContext.setAttribute(INITIALIZED, Boolean.TRUE);
   }
 
-  private static void initApplication(File file, ServletContext servletContext) throws Exception {
+  private void initApplication(File file, ServletContext servletContext) throws Exception {
     List<URL> libs = new ArrayList<>();
 
     File libFile = new File(file, "lib");
@@ -81,7 +80,7 @@ public class Initializer implements ServletContextListener {
         }
       }
       File superGwtDirectory = new File(libFile, "gwt");
-      if(superGwtDirectory.exists()) {
+      if (superGwtDirectory.exists()) {
         libs.add(superGwtDirectory.getCanonicalFile().toURI().toURL());
       }
     }
@@ -92,17 +91,11 @@ public class Initializer implements ServletContextListener {
 
     UrlClassLoader urlClassLoader = build.get();
 
-
     Class<?> webMain = urlClassLoader.loadClass("consulo.web.WebLoader");
 
     Object webLoader = ReflectionUtil.newInstance(webMain);
 
-    Method startMethod = webMain.getDeclaredMethod("start", String[].class);
-    startMethod.setAccessible(true);
-
-    String[] args = {file.getPath()};
-    startMethod.invoke(webLoader, (Object)args);
-
+    servletContext.setAttribute(ourWebLoaderObject, webLoader);
 
     Method getServletClassesMethod = webMain.getDeclaredMethod("getServletClasses");
 
@@ -120,10 +113,40 @@ public class Initializer implements ServletContextListener {
 
       System.out.println(aClass.getName() + " registered to: " + Arrays.asList(urls));
     }
+
+    new Thread(() -> startApplication(webMain, webLoader, file), "App Start").start();
+  }
+
+  private void startApplication(Class<?> webMain, Object webLoader, File file) {
+    try {
+      Method startMethod = webMain.getDeclaredMethod("start", String[].class);
+      startMethod.setAccessible(true);
+
+      String[] args = {file.getPath()};
+      startMethod.invoke(webLoader, (Object)args);
+    }
+    catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+      Logger.getInstance(Initializer.class).error(e);
+    }
   }
 
   @Override
   public void contextDestroyed(ServletContextEvent servletContextEvent) {
+    Object attribute = servletContextEvent.getServletContext().getAttribute(ourWebLoaderObject);
+    if (attribute == null) {
+      return;
+    }
 
+    servletContextEvent.getServletContext().setAttribute(ourWebLoaderObject, null);
+
+    Method destroyMethod = ReflectionUtil.getDeclaredMethod(attribute.getClass(), "destroy");
+    if (destroyMethod != null) {
+      try {
+        destroyMethod.invoke(null);
+      }
+      catch (IllegalAccessException | InvocationTargetException e) {
+        Logger.getInstance(Initializer.class).error(e);
+      }
+    }
   }
 }

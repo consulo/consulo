@@ -38,7 +38,7 @@ import java.util.function.BiConsumer;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements TabbedLayout {
+public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements TabbedLayout, VaadinWrapper {
   private Map<WGwtTabImpl, com.vaadin.ui.Component> myTabs = new LinkedHashMap<>();
 
   private TabbedLayoutRpc myRpc = new TabbedLayoutRpc() {

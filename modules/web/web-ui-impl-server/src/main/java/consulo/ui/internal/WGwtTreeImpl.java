@@ -38,7 +38,7 @@ import java.util.concurrent.Executors;
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE> {
+public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>, VaadinWrapper {
   private final TreeRpc myTreeRpc = new TreeRpc() {
     @Override
     public void fetchChildren(String id) {

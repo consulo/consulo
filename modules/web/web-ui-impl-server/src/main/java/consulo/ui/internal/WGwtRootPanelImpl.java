@@ -30,7 +30,7 @@ import java.util.List;
  * @author VISTALL
  * @since 12-Sep-17
  */
-public class WGwtRootPanelImpl extends AbstractComponentContainer implements consulo.ui.Component {
+public class WGwtRootPanelImpl extends AbstractComponentContainer implements consulo.ui.Component, VaadinWrapper {
   private Component myMenuBar;
   private Component myCenterComponent;
 
