@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,13 @@ package com.intellij.openapi.fileChooser.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
-import com.intellij.openapi.fileChooser.*;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileChooserDialog;
+import com.intellij.openapi.fileChooser.FileChooserFactory;
+import com.intellij.openapi.fileChooser.FileSaverDescriptor;
+import com.intellij.openapi.fileChooser.FileSaverDialog;
+import com.intellij.openapi.fileChooser.FileTextField;
+import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.fileChooser.ex.FileChooserDialogImpl;
 import com.intellij.openapi.fileChooser.ex.FileSaverDialogImpl;
 import com.intellij.openapi.fileChooser.ex.FileTextFieldImpl;
@@ -26,23 +32,26 @@ import com.intellij.openapi.fileChooser.ex.LocalFsFinder;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.ui.mac.MacFileChooserDialogImpl;
+import com.intellij.ui.mac.MacFileSaverDialog;
+import com.intellij.ui.mac.MacPathChooserDialog;
+import com.intellij.ui.win.WinPathChooserDialog;
 import com.intellij.util.SystemProperties;
+import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class FileChooserFactoryImpl extends FileChooserFactory {
   @NotNull
   @Override
-  public FileChooserDialog createFileChooser(@NotNull FileChooserDescriptor descriptor,
-                                             @Nullable Project project,
-                                             @Nullable Component parent) {
+  public FileChooserDialog createFileChooser(@NotNull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+    if (useNativeMacChooser(descriptor)) {
+      return new MacPathChooserDialog(descriptor, parent, project);
+    }
     if (parent != null) {
       return new FileChooserDialogImpl(descriptor, parent, project);
     }
@@ -53,11 +62,12 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
 
   @NotNull
   @Override
-  public PathChooserDialog createPathChooser(@NotNull FileChooserDescriptor descriptor,
-                                             @Nullable Project project,
-                                             @Nullable Component parent) {
+  public PathChooserDialog createPathChooser(@NotNull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
     if (useNativeMacChooser(descriptor)) {
-      return new MacFileChooserDialogImpl(descriptor, project);
+      return new MacPathChooserDialog(descriptor, parent, project);
+    }
+    else if (useNativeWinChooser()) {
+      return new WinPathChooserDialog(descriptor, parent, project);
     }
     else if (parent != null) {
       return new FileChooserDialogImpl(descriptor, parent, project);
@@ -65,6 +75,10 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
     else {
       return new FileChooserDialogImpl(descriptor, project);
     }
+  }
+
+  private static boolean useNativeWinChooser() {
+    return SystemInfo.isWindows && Registry.is("ide.win.file.chooser.native");
   }
 
   private static boolean useNativeMacChooser(final FileChooserDescriptor descriptor) {
@@ -82,10 +96,7 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
   }
 
   @Override
-  public void installFileCompletion(@NotNull JTextField field,
-                                    @NotNull FileChooserDescriptor descriptor,
-                                    boolean showHidden,
-                                    @Nullable Disposable parent) {
+  public void installFileCompletion(@NotNull JTextField field, @NotNull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
     if (!ApplicationManager.getApplication().isUnitTestMode() && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
       new FileTextFieldImpl.Vfs(field, getMacroMap(), parent, new LocalFsFinder.FileChooserFilter(descriptor, showHidden));
     }
@@ -94,7 +105,7 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
   public static Map<String, String> getMacroMap() {
     final PathMacros macros = PathMacros.getInstance();
     final Set<String> allNames = macros.getAllMacroNames();
-    final HashMap<String, String> map = new HashMap<String, String>();
+    final Map<String, String> map = new THashMap<>(allNames.size());
     for (String eachMacroName : allNames) {
       map.put("$" + eachMacroName + "$", macros.getValue(eachMacroName));
     }
@@ -105,12 +116,12 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
   @NotNull
   @Override
   public FileSaverDialog createSaveFileDialog(@NotNull FileSaverDescriptor descriptor, @Nullable Project project) {
-    return new FileSaverDialogImpl(descriptor, project);
+    return (SystemInfo.isMac && Registry.is("ide.mac.native.save.dialog")) ? new MacFileSaverDialog(descriptor, project) : new FileSaverDialogImpl(descriptor, project);
   }
 
   @NotNull
   @Override
   public FileSaverDialog createSaveFileDialog(@NotNull FileSaverDescriptor descriptor, @NotNull Component parent) {
-    return new FileSaverDialogImpl(descriptor, parent);
+    return (SystemInfo.isMac && Registry.is("ide.mac.native.save.dialog")) ? new MacFileSaverDialog(descriptor, parent) : new FileSaverDialogImpl(descriptor, parent);
   }
 }
