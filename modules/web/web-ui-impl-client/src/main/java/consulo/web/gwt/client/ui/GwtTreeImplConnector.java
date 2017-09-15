@@ -15,12 +15,15 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.tree.TreeRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
@@ -36,17 +39,22 @@ public class GwtTreeImplConnector extends AbstractComponentConnector {
   }
 
   @Override
+  protected void updateComponentSize() {
+    // nothing !
+  }
+
+  @Override
   protected void init() {
     super.init();
 
-    getWidget().setChildrenOpen(id -> getRpcProxy(TreeRpc.class).fetchChildren(id));
+    getTree().setChildrenOpen(id -> getRpcProxy(TreeRpc.class).fetchChildren(id));
   }
 
   @Override
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
-    getWidget().handleChanges(getState().myChanges);
+    getTree().handleChanges(getState().myChanges);
   }
 
   @Override
@@ -55,7 +63,21 @@ public class GwtTreeImplConnector extends AbstractComponentConnector {
   }
 
   @Override
-  public GwtTreeImpl getWidget() {
-    return (GwtTreeImpl)super.getWidget();
+  public ScrollPanel getWidget() {
+    return (ScrollPanel)super.getWidget();
+  }
+
+  @NotNull
+  private GwtTreeImpl getTree() {
+    ScrollPanel widget = getWidget();
+    return (GwtTreeImpl)widget.getWidget();
+  }
+
+  @Override
+  protected ScrollPanel createWidget() {
+    ScrollPanel panel = new ScrollPanel(new GwtTreeImpl());
+    panel.addStyleName("ui-scroll-panel-marker");
+    GwtUIUtil.fill(panel);
+    return panel;
   }
 }

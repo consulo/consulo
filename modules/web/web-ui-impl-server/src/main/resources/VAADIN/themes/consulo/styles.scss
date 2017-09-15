@@ -7,6 +7,10 @@ $v-app-background-color: #ffffff;
 @mixin consulo {
   @include valo;
 
+  .v-scrollable {
+    overflow: hidden;
+  }
+
   .ui-labeled-layout {
     border: 0px;
     border-top: 1px solid gray;
