@@ -16,4 +16,9 @@
 <idea-plugin>
   <id>consulo.platform.desktop</id>
   <name>Platform: desktop</name>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
+                        serviceImplementation="com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl"/>
+  </extensions>
 </idea-plugin>

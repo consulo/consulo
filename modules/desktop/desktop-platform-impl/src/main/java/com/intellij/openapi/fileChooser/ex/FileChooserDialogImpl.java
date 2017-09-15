@@ -53,6 +53,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.fileTypes.impl.VfsIconUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -227,11 +228,13 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     }.installOn(label);
 
     new AnAction() {
+      @RequiredDispatchThread
       @Override
       public void actionPerformed(AnActionEvent e) {
         showRecentFilesPopup();
       }
 
+      @RequiredDispatchThread
       @Override
       public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(!IdeEventQueue.getInstance().isPopupActive());
@@ -374,6 +377,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     return null;
   }
 
+  @RequiredDispatchThread
   public JComponent getPreferredFocusedComponent() {
     if (isToShowTextField()) {
       return myPathTextField != null ? myPathTextField.getField() : null;
