@@ -35,6 +35,8 @@ import com.intellij.util.containers.TransferToEDTQueue;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.*;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,6 +97,16 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
       myScaledDelegateIcon = ((ScalableIcon)myDelegateIcon).scale(scale);
       super.setScale(scale);
     }
+  }
+
+  @Override
+  public int getHeight() {
+    return getIconHeight();
+  }
+
+  @Override
+  public int getWidth() {
+    return getIconWidth();
   }
 
   private static class Holder {
