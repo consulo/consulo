@@ -33,27 +33,27 @@
 
   <dependencies>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-lang-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-vcs-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-platform-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-compiler-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-usage-view</artifactId>
       <version>${project.version}</version>
     </dependency>

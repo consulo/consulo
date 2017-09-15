@@ -37,47 +37,47 @@
 
   <dependencies>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-desktop-boot</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-desktop-bootstrap</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-platform-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-lang-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-core-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-project-model-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-analysis-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-editor-ui-ex</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-diff-api</artifactId>
       <version>${project.version}</version>
     </dependency>

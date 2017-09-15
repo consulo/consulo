@@ -37,17 +37,17 @@
 
   <dependencies>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-ui-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-core-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-platform-api</artifactId>
       <version>${project.version}</version>
     </dependency>

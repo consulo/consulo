@@ -37,7 +37,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-lang-api</artifactId>
       <version>${project.version}</version>
     </dependency>

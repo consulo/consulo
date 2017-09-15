@@ -37,17 +37,17 @@
 
   <dependencies>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-remote-servers-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-lang-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-xdebugger-impl</artifactId>
       <version>${project.version}</version>
     </dependency>

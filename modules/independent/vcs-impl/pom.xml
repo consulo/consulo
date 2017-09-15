@@ -37,12 +37,12 @@
 
   <dependencies>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-lang-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-diff-impl</artifactId>
       <version>${project.version}</version>
     </dependency>

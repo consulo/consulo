@@ -37,7 +37,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-desktop-ui-impl</artifactId>
       <version>${project.version}</version>
     </dependency>

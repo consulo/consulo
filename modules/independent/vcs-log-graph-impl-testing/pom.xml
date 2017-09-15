@@ -42,7 +42,7 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>consulo</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-vcs-log-graph-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
