@@ -16,8 +16,11 @@
 package consulo.web.gwt.client.ui;
 
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.border.GwtBorderSetter;
 import consulo.web.gwt.client.util.GwtUIUtil;
+import consulo.web.gwt.shared.ui.state.layout.BaseLayoutState;
 
 /**
  * @author VISTALL
@@ -28,6 +31,18 @@ public class GwtHorizontalLayoutImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
     getWidget().setChildren(GwtUIUtil.remapWidgets(this));
+  }
+
+  @Override
+  public void onStateChanged(StateChangeEvent stateChangeEvent) {
+    super.onStateChanged(stateChangeEvent);
+
+    GwtBorderSetter.set(getWidget(), getState().myBorderListState);
+  }
+
+  @Override
+  public BaseLayoutState getState() {
+    return (BaseLayoutState)super.getState();
   }
 
   @Override

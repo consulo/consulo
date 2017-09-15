@@ -89,6 +89,8 @@ public class NewAppUIBuilder extends UIBuilder {
       DockLayout dockLayout = Layouts.dock();
       dockLayout.center(FileTreeComponent.create());
       HorizontalLayout botton = Layouts.horizontal();
+      botton.addBorder(BorderPosition.TOP);
+
       consulo.ui.Button ok = Components.button("OK");
       ok.setEnabled(false);
       botton.add(ok);

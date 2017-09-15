@@ -20,6 +20,8 @@ import consulo.ui.Component;
 import consulo.ui.HorizontalLayout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
+import consulo.ui.internal.border.WGwtBorderBuilder;
+import consulo.web.gwt.shared.ui.state.layout.BaseLayoutState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +35,18 @@ import java.util.List;
  */
 public class WGwtHorizontalLayoutImpl extends AbstractComponentContainer implements HorizontalLayout, VaadinWrapper {
   private final List<com.vaadin.ui.Component> myChildren = new LinkedList<>();
+
+  @Override
+  public void beforeClientResponse(boolean initial) {
+    super.beforeClientResponse(initial);
+
+    WGwtBorderBuilder.fill(this, getState().myBorderListState);
+  }
+
+  @Override
+  protected BaseLayoutState getState() {
+    return (BaseLayoutState)super.getState();
+  }
 
   @NotNull
   @Override
