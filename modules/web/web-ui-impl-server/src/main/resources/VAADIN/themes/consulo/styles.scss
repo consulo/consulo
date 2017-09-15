@@ -75,6 +75,24 @@ $v-app-background-color: #ffffff;
   @include consulo;
 }
 
+::-webkit-scrollbar-track
+{
+  border: 1px solid lightgray;
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar
+{
+  width: 13px;
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb
+{
+  background-color: lightgray;
+}
+
+
 table, tr, td {
   border-collapse: collapse;
   border: 0px;

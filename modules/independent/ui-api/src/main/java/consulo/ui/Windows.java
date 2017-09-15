@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,32 +16,14 @@
 package consulo.ui;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 15-Sep-17
  */
-public interface Window extends Component {
-  @RequiredUIAccess
-  void setTitle(@NotNull String title);
-
-  @RequiredUIAccess
-  void setContent(@NotNull Component content);
-
-  @RequiredUIAccess
-  void setMenuBar(@Nullable MenuBar menuBar);
-
-  void setResizable(boolean value);
-
-  void setClosable(boolean value);
-
-  /**
-   * not block current thread
-   */
-  @RequiredUIAccess
-  void show();
-
-  @RequiredUIAccess
-  void close();
+public class Windows {
+  @NotNull
+  public static Window modalWindow(@NotNull String title) {
+    return _UIInternals.get()._Windows_modalWindow(title);
+  }
 }

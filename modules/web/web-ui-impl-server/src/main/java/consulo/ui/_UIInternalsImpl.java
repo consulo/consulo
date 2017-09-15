@@ -175,6 +175,14 @@ class _UIInternalsImpl extends _UIInternals {
     return WGwtStyleManagerImpl.ourInstance;
   }
 
+  @NotNull
+  @Override
+  public Window _Windows_modalWindow(String title) {
+    VaadinWindowImpl window = new VaadinWindowImpl(true);
+    window.setTitle(title);
+    return window;
+  }
+
   @RequiredUIAccess
   @NotNull
   @Override

@@ -102,6 +102,9 @@ public abstract class _UIInternals {
   @NotNull
   public abstract StyleManager _StyleManager_get();
 
+  @NotNull
+  public abstract Window _Windows_modalWindow(String title);
+
   @RequiredUIAccess
   @NotNull
   abstract UIAccess _UIAccess_get();

@@ -15,6 +15,7 @@
  */
 package consulo.web.servlet.ui;
 
+import com.vaadin.server.Page;
 import com.vaadin.ui.UI;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
@@ -104,6 +105,12 @@ class VaadinUIWindowImpl implements Window {
 
   @RequiredUIAccess
   @Override
+  public void setTitle(@NotNull String title) {
+    Page.getCurrent().setTitle(title);
+  }
+
+  @RequiredUIAccess
+  @Override
   public void setContent(@NotNull Component content) {
     myRootPanel.setCenterComponent((com.vaadin.ui.Component)content);
   }
@@ -112,5 +119,27 @@ class VaadinUIWindowImpl implements Window {
   @Override
   public void setMenuBar(@Nullable MenuBar menuBar) {
     myRootPanel.setMenuBar(menuBar);
+  }
+
+  @Override
+  public void setResizable(boolean value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void setClosable(boolean value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void show() {
+    throw new UnsupportedOperationException();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void close() {
+    throw new UnsupportedOperationException();
   }
 }

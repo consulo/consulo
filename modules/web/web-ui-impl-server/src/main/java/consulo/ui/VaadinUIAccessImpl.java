@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 16-Jun-16
  */
-class VaadinUIAccessImpl implements UIAccess {
+public class VaadinUIAccessImpl implements UIAccess {
   private final UI myUI;
 
   public VaadinUIAccessImpl(UI ui) {
@@ -41,5 +41,9 @@ class VaadinUIAccessImpl implements UIAccess {
     if (myUI.isAttached()) {
       myUI.accessSynchronously(runnable);
     }
+  }
+
+  public UI getUI() {
+    return myUI;
   }
 }

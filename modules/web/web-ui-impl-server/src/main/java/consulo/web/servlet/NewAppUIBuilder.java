@@ -17,18 +17,8 @@ package consulo.web.servlet;
 
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import com.vaadin.server.Sizeable;
-import com.vaadin.ui.UI;
 import consulo.application.impl.FrameTitleUtil;
-import consulo.ui.Components;
-import consulo.ui.DockLayout;
-import consulo.ui.HorizontalLayout;
-import consulo.ui.Layouts;
-import consulo.ui.ListBox;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
-import consulo.ui.VerticalLayout;
-import consulo.ui.Window;
+import consulo.ui.*;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.internal.WGwtLabelImpl;
 import consulo.ui.internal.WGwtVerticalLayoutImpl;
@@ -60,12 +50,10 @@ public class NewAppUIBuilder extends UIBuilder {
       return;
     }
 
-    com.vaadin.ui.Window welcomeFrame = new com.vaadin.ui.Window(FrameTitleUtil.buildTitle());
+    Window welcomeFrame = Windows.modalWindow(FrameTitleUtil.buildTitle());
     welcomeFrame.setResizable(false);
     welcomeFrame.setClosable(false);
-    welcomeFrame.setModal(true);
-    welcomeFrame.setWidth(777, Sizeable.Unit.PIXELS);
-    welcomeFrame.setHeight(460, Sizeable.Unit.PIXELS);
+    welcomeFrame.setSize(new Size(777, 460));
     welcomeFrame.setContent(new WGwtLabelImpl("TEst"));
 
     //AnAction[] recentProjectsActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
@@ -80,10 +68,8 @@ public class NewAppUIBuilder extends UIBuilder {
     VerticalLayout projectActionLayout = new WGwtVerticalLayoutImpl();
 
     projectActionLayout.add(Components.button("Open Project", () -> {
-      com.vaadin.ui.Window fileTree = new com.vaadin.ui.Window("Select file");
-      fileTree.setModal(true);
-      fileTree.setWidth(400, Sizeable.Unit.PIXELS);
-      fileTree.setHeight(400, Sizeable.Unit.PIXELS);
+      Window fileTree = Windows.modalWindow("Select file");
+      fileTree.setSize(new Size(400, 400));
       fileTree.setContent(new WGwtLabelImpl("TEst"));
 
       DockLayout dockLayout = Layouts.dock();
@@ -91,26 +77,25 @@ public class NewAppUIBuilder extends UIBuilder {
       HorizontalLayout botton = Layouts.horizontal();
       botton.addBorder(BorderPosition.TOP);
 
-      consulo.ui.Button ok = Components.button("OK");
+      Button ok = Components.button("OK");
       ok.setEnabled(false);
       botton.add(ok);
       consulo.ui.Button cancel = Components.button("Cancel");
-      cancel.addListener(consulo.ui.Button.ClickHandler.class, () -> {
+      cancel.addListener(Button.ClickHandler.class, () -> {
         fileTree.close();
       });
 
       botton.add(cancel);
       dockLayout.bottom(botton);
 
-      fileTree.setContent((com.vaadin.ui.Component)dockLayout);
+      fileTree.setContent(dockLayout);
 
-
-      UI.getCurrent().addWindow(fileTree);
+      fileTree.show();
     }));
     layout.center(projectActionLayout);
 
-    welcomeFrame.setContent((com.vaadin.ui.Component)layout);
+    welcomeFrame.setContent(layout);
 
-    UI.getCurrent().addWindow(welcomeFrame);
+    welcomeFrame.show();
   }
 }
