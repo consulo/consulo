@@ -11,6 +11,10 @@ $v-app-background-color: #ffffff;
     overflow: hidden;
   }
 
+  .v-window-contents {
+    padding-top: 30px !important;
+  }
+
   .ui-labeled-layout {
     border: 0px;
     border-top: 1px solid gray;
@@ -91,7 +95,6 @@ $v-app-background-color: #ffffff;
 {
   background-color: lightgray;
 }
-
 
 table, tr, td {
   border-collapse: collapse;

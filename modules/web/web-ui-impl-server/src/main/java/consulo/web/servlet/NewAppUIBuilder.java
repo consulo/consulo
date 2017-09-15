@@ -74,19 +74,22 @@ public class NewAppUIBuilder extends UIBuilder {
 
       DockLayout dockLayout = Layouts.dock();
       dockLayout.center(FileTreeComponent.create());
-      HorizontalLayout botton = Layouts.horizontal();
-      botton.addBorder(BorderPosition.TOP);
+
+      DockLayout bottomLayout = Layouts.dock();
+      bottomLayout.addBorder(BorderPosition.TOP);
+      HorizontalLayout rightButtons = Layouts.horizontal();
+      bottomLayout.right(rightButtons);
 
       Button ok = Components.button("OK");
       ok.setEnabled(false);
-      botton.add(ok);
+      rightButtons.add(ok);
       consulo.ui.Button cancel = Components.button("Cancel");
       cancel.addListener(Button.ClickHandler.class, () -> {
         fileTree.close();
       });
 
-      botton.add(cancel);
-      dockLayout.bottom(botton);
+      rightButtons.add(cancel);
+      dockLayout.bottom(bottomLayout);
 
       fileTree.setContent(dockLayout);
 
