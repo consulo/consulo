@@ -15,6 +15,10 @@
  */
 package consulo.ui;
 
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
+import consulo.ui.style.ColorKey;
+import consulo.ui.style.ComponentColors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +29,34 @@ import java.util.EventListener;
  * @since 09-Jun-16
  */
 public interface Component {
+  @RequiredUIAccess
+  default void addBorder(@NotNull BorderPosition borderPosition) {
+    addBorder(borderPosition, BorderStyle.LINE, ComponentColors.BORDER, 1);
+  }
+
+  @RequiredUIAccess
+  default void addBorder(@NotNull BorderPosition borderPosition, @NotNull BorderStyle borderStyle) {
+    addBorder(borderPosition, borderStyle, ComponentColors.BORDER, 1);
+  }
+
+  @RequiredUIAccess
+  default void addBorder(@NotNull BorderPosition borderPosition, @NotNull BorderStyle borderStyle, ColorKey colorKey) {
+    addBorder(borderPosition, borderStyle, colorKey, 1);
+  }
+
+  @RequiredUIAccess
+  default void addDefaultBorders() {
+    for (BorderPosition position : BorderPosition.values()) {
+      addBorder(position);
+    }
+  }
+
+  @RequiredUIAccess
+  void addBorder(@NotNull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width);
+
+  @RequiredUIAccess
+  void removeBorder(@NotNull BorderPosition borderPosition);
+
   boolean isVisible();
 
   @RequiredUIAccess

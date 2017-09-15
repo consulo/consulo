@@ -21,7 +21,7 @@ import java.io.Serializable;
  * @author VISTALL
  * @since 21-Jun-16
  */
-public class RGBColor implements Serializable {
+public final class RGBColor implements Serializable {
   private int myRed;
   private int myGreed;
   private int myBlue;
@@ -45,5 +45,37 @@ public class RGBColor implements Serializable {
 
   public int getBlue() {
     return myBlue;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    RGBColor rgbColor = (RGBColor)o;
+
+    if (myRed != rgbColor.myRed) return false;
+    if (myGreed != rgbColor.myGreed) return false;
+    if (myBlue != rgbColor.myBlue) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = myRed;
+    result = 31 * result + myGreed;
+    result = 31 * result + myBlue;
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("RGBColor{");
+    sb.append("myRed=").append(myRed);
+    sb.append(", myGreed=").append(myGreed);
+    sb.append(", myBlue=").append(myBlue);
+    sb.append('}');
+    return sb.toString();
   }
 }

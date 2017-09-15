@@ -21,7 +21,7 @@ import java.io.Serializable;
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class Size implements Serializable {
+public final class Size implements Serializable {
   public static final Size UNDEFINED = new Size(-1, -1);
   private static final long serialVersionUID = 3195037735722861866L;
 

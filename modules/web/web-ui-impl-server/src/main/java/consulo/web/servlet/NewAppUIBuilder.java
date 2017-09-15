@@ -29,6 +29,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.VerticalLayout;
 import consulo.ui.Window;
+import consulo.ui.border.BorderPosition;
 import consulo.ui.internal.WGwtLabelImpl;
 import consulo.ui.internal.WGwtVerticalLayoutImpl;
 import consulo.web.servlet.ui.UIBuilder;
@@ -70,6 +71,7 @@ public class NewAppUIBuilder extends UIBuilder {
     //AnAction[] recentProjectsActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
 
     ListBox<String> listSelect = Components.listBox("Test");
+    listSelect.addBorder(BorderPosition.RIGHT);
     listSelect.setSize(new Size(200, -1));
 
     DockLayout layout = Layouts.dock();

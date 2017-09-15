@@ -15,7 +15,7 @@
  */
 package consulo.ui.internal;
 
-import com.vaadin.ui.AbstractLayout;
+import com.vaadin.ui.AbstractComponentContainer;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
@@ -32,7 +32,7 @@ import java.util.List;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class WGwtSplitLayoutImpl extends AbstractLayout implements SplitLayout, VaadinWrapper {
+public class WGwtSplitLayoutImpl extends AbstractComponentContainer implements SplitLayout, VaadinWrapper {
   private Component myFirstComponent;
   private Component mySecondComponent;
 

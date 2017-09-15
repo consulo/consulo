@@ -15,23 +15,13 @@
  */
 package consulo.web.gwt.shared.ui.state.layout;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.vaadin.shared.ui.AbstractComponentContainerState;
+import consulo.web.gwt.shared.ui.state.border.BorderListState;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 15-Sep-17
  */
-public class DockLayoutState extends BaseLayoutState {
-  private static final long serialVersionUID = -3882314231208864241L;
-
-  public enum Constraint {
-    TOP,
-    BOTTOM,
-    LEFT,
-    RIGHT,
-    CENTER
-  }
-
-  public List<Constraint> myConstraints = new ArrayList<>();
+public class BaseLayoutState extends AbstractComponentContainerState {
+  public BorderListState myBorderListState = new BorderListState();
 }

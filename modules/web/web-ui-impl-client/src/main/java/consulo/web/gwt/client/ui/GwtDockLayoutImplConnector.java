@@ -18,7 +18,9 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.border.GwtBorderSetter;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
@@ -61,6 +63,13 @@ public class GwtDockLayoutImplConnector extends GwtLayoutConnector {
           break;
       }
     }
+  }
+
+  @Override
+  public void onStateChanged(StateChangeEvent stateChangeEvent) {
+    super.onStateChanged(stateChangeEvent);
+
+    GwtBorderSetter.set(getWidget(), getState().myBorderListState);
   }
 
   @Override

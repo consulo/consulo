@@ -15,13 +15,11 @@
  */
 package consulo.web.gwt.shared.ui.state.layout;
 
-import com.vaadin.shared.ui.AbstractLayoutState;
-
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
-public class SplitLayoutState extends AbstractLayoutState {
+public class SplitLayoutState extends BaseLayoutState {
   private static final long serialVersionUID = -6403922484792137131L;
 
   public int myProportion = 50;

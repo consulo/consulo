@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.shared.ui.state.layout;
-
-import java.util.ArrayList;
-import java.util.List;
+package consulo.ui.border;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 15-Sep-17
  */
-public class DockLayoutState extends BaseLayoutState {
-  private static final long serialVersionUID = -3882314231208864241L;
-
-  public enum Constraint {
-    TOP,
-    BOTTOM,
-    LEFT,
-    RIGHT,
-    CENTER
-  }
-
-  public List<Constraint> myConstraints = new ArrayList<>();
+public enum BorderPosition {
+  TOP,
+  BOTTOM,
+  LEFT,
+  RIGHT
 }

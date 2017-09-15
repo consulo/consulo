@@ -22,6 +22,7 @@ import consulo.ui.ListItemRenders;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.ValueComponent;
+import consulo.ui.internal.border.WGwtBorderBuilder;
 import consulo.ui.model.ListModel;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
 import org.jetbrains.annotations.NotNull;
@@ -69,6 +70,8 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
     ComboBoxState state = getState();
     state.myItems.clear();
     buildState(state.myItems);
+
+    WGwtBorderBuilder.fill(this, state.myBorderState);
   }
 
   protected void buildState(List<ComboBoxState.Item> children) {

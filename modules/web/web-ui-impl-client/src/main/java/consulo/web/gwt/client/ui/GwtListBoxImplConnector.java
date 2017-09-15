@@ -21,6 +21,7 @@ import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.border.GwtBorderSetter;
 import consulo.web.gwt.client.ui.image.ImageConverter;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
@@ -44,6 +45,8 @@ public class GwtListBoxImplConnector extends AbstractComponentConnector {
     super.updateWidgetStyleNames();
 
     setWidgetStyleName(StyleConstants.UI_WIDGET, false);
+
+    GwtBorderSetter.set(getWidget(), getState().myBorderState);
   }
 
   @Override

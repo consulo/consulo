@@ -16,7 +16,11 @@
 package consulo.ui.impl;
 
 import com.intellij.util.EventDispatcher;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
+import consulo.ui.style.ColorKey;
 
+import java.util.Collection;
 import java.util.EventListener;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +30,22 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 14-Sep-17
  */
 public class UIDataObject {
+  public static class BorderInfo {
+    public BorderPosition myBorderPosition;
+    public BorderStyle myBorderStyle;
+    public ColorKey myColorKey;
+    public int myWidth;
+
+    public BorderInfo(BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+      myBorderPosition = borderPosition;
+      myBorderStyle = borderStyle;
+      myColorKey = colorKey;
+      myWidth = width;
+    }
+  }
+
   private Map<Class, EventDispatcher> myListeners = new ConcurrentHashMap<>();
+  private Map<BorderPosition, BorderInfo> myBorders = new ConcurrentHashMap<>();
 
   @SuppressWarnings("unchecked")
   public <T extends EventListener> Runnable addListener(Class<T> clazz, T value) {
@@ -38,5 +57,18 @@ public class UIDataObject {
   @SuppressWarnings("unchecked")
   public <T extends EventListener> T getDispatcher(Class<T> clazz) {
     return (T)myListeners.computeIfAbsent(clazz, aClass -> EventDispatcher.create(aClass)).getMulticaster();
+  }
+
+  public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+    BorderInfo borderInfo = new BorderInfo(borderPosition, borderStyle, colorKey, width);
+    myBorders.put(borderPosition, borderInfo);
+  }
+
+  public void removeBorder(BorderPosition borderPosition) {
+    myBorders.remove(borderPosition);
+  }
+
+  public Collection<BorderInfo> getBorders() {
+    return myBorders.values();
   }
 }

@@ -17,15 +17,22 @@ package consulo.web.gwt.client.util;
 
 import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.shared.transport.GwtColor;
+import consulo.web.gwt.shared.ui.state.RGBColorShared;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 20-May-16
  */
-@Deprecated
-@DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class GwtStyleUtil {
+  @Deprecated
+  @DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
   public static String toString(GwtColor color) {
     return "rgb(" + color.getRed() + ", " + color.getGreen() + ", " + color.getBlue() + ")";
+  }
+
+  @NotNull
+  public static String toString(RGBColorShared color) {
+    return "rgb(" + color.myRed + ", " + color.myGreen + ", " + color.myBlue + ")";
   }
 }

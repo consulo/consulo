@@ -16,6 +16,7 @@
 package consulo.web.gwt.shared.ui.state.combobox;
 
 import com.vaadin.shared.AbstractComponentState;
+import consulo.web.gwt.shared.ui.state.border.BorderListState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 import java.io.Serializable;
@@ -46,4 +47,6 @@ public class ComboBoxState extends AbstractComponentState {
   public List<Item> myItems = new ArrayList<>();
   public int myWidth = -1;
   public int myHeight = -1;
+
+  public BorderListState myBorderState = new BorderListState();
 }

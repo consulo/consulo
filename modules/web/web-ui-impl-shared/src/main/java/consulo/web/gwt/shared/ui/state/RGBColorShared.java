@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.shared.ui.state.layout;
-
-import java.util.ArrayList;
-import java.util.List;
+package consulo.web.gwt.shared.ui.state;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 15-Sep-17
  */
-public class DockLayoutState extends BaseLayoutState {
-  private static final long serialVersionUID = -3882314231208864241L;
+public class RGBColorShared {
+  public int myRed;
+  public int myGreen;
+  public int myBlue;
 
-  public enum Constraint {
-    TOP,
-    BOTTOM,
-    LEFT,
-    RIGHT,
-    CENTER
+  public RGBColorShared() {
   }
 
-  public List<Constraint> myConstraints = new ArrayList<>();
+  public RGBColorShared(int red, int green, int blue) {
+    myRed = red;
+    myGreen = green;
+    myBlue = blue;
+  }
 }

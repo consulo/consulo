@@ -172,7 +172,7 @@ class _UIInternalsImpl extends _UIInternals {
   @NotNull
   @Override
   public StyleManager _StyleManager_get() {
-    return null;
+    return WGwtStyleManagerImpl.ourInstance;
   }
 
   @RequiredUIAccess

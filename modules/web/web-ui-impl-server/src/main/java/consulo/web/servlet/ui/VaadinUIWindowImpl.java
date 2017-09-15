@@ -21,7 +21,10 @@ import consulo.ui.MenuBar;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.Window;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.internal.WGwtRootPanelImpl;
+import consulo.ui.style.ColorKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,8 +33,6 @@ import java.util.EventListener;
 /**
  * @author VISTALL
  * @since 11-Sep-17
- * <p>
- * TODO [VISTALL] support menu bar
  */
 class VaadinUIWindowImpl implements Window {
   private final UI myUI;
@@ -41,6 +42,18 @@ class VaadinUIWindowImpl implements Window {
     myUI = ui;
     myUI.setSizeFull();
     myUI.setContent(myRootPanel);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void addBorder(@NotNull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+    throw new UnsupportedOperationException();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void removeBorder(@NotNull BorderPosition borderPosition) {
+    throw new UnsupportedOperationException();
   }
 
   @Override

@@ -15,7 +15,7 @@
  */
 package consulo.ui.internal;
 
-import com.vaadin.ui.AbstractLayout;
+import com.vaadin.ui.AbstractComponentContainer;
 import consulo.ui.Component;
 import consulo.ui.HorizontalLayout;
 import consulo.ui.RequiredUIAccess;
@@ -31,7 +31,7 @@ import java.util.List;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class WGwtHorizontalLayoutImpl extends AbstractLayout implements HorizontalLayout, VaadinWrapper {
+public class WGwtHorizontalLayoutImpl extends AbstractComponentContainer implements HorizontalLayout, VaadinWrapper {
   private final List<com.vaadin.ui.Component> myChildren = new LinkedList<>();
 
   @NotNull

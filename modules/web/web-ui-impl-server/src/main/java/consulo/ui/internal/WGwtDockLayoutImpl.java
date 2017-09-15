@@ -15,11 +15,12 @@
  */
 package consulo.ui.internal;
 
-import com.vaadin.ui.AbstractLayout;
+import com.vaadin.ui.AbstractComponentContainer;
 import consulo.ui.Component;
 import consulo.ui.DockLayout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
+import consulo.ui.internal.border.WGwtBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +33,7 @@ import java.util.List;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class WGwtDockLayoutImpl extends AbstractLayout implements DockLayout, VaadinWrapper {
+public class WGwtDockLayoutImpl extends AbstractComponentContainer implements DockLayout, VaadinWrapper {
   private final List<com.vaadin.ui.Component> myChildren = new LinkedList<>();
 
   @Override
@@ -53,6 +54,12 @@ public class WGwtDockLayoutImpl extends AbstractLayout implements DockLayout, Va
 
     myChildren.remove(c);
     super.removeComponent(c);
+  }
+
+  @Override
+  public void beforeClientResponse(boolean initial) {
+    super.beforeClientResponse(initial);
+    WGwtBorderBuilder.fill(this, getState().myBorderListState);
   }
 
   @RequiredUIAccess

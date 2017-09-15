@@ -18,8 +18,11 @@ package consulo.ui.internal;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.migration.ToSwingWrapper;
+import consulo.ui.style.ColorKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,28 +54,39 @@ public interface SwingWrapper extends Component, ToSwingWrapper {
     return (java.awt.Component)this;
   }
 
-  @NotNull
-  @Override
-  default <T extends EventListener> Runnable addListener(@NotNull Class<T> eventClass, @NotNull T listener) {
+  default UIDataObject dataObject() {
     javax.swing.JComponent component = (javax.swing.JComponent)toAWT();
     UIDataObject dataObject = (UIDataObject)component.getClientProperty(UIDataObject.class);
     if (dataObject == null) {
       component.putClientProperty(UIDataObject.class, dataObject = new UIDataObject());
     }
-    return dataObject.addListener(eventClass, listener);
+    return dataObject;
+  }
+
+  @NotNull
+  @Override
+  default <T extends EventListener> Runnable addListener(@NotNull Class<T> eventClass, @NotNull T listener) {
+    return dataObject().addListener(eventClass, listener);
   }
 
   @NotNull
   @Override
   default <T extends EventListener> T getListenerDispatcher(@NotNull Class<T> eventClass) {
-    javax.swing.JComponent component = (javax.swing.JComponent)toAWT();
-    UIDataObject dataObject = (UIDataObject)component.getClientProperty(UIDataObject.class);
-    if (dataObject == null) {
-      component.putClientProperty(UIDataObject.class, dataObject = new UIDataObject());
-    }
-    return dataObject.getDispatcher(eventClass);
+    return dataObject().getDispatcher(eventClass);
   }
 
+  @RequiredUIAccess
+  @Override
+  default void addBorder(@NotNull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+    dataObject().addBorder(borderPosition, borderStyle, colorKey, width);
+  }
+
+  @RequiredUIAccess
+  @Override
+  default void removeBorder(@NotNull BorderPosition borderPosition) {
+    dataObject().removeBorder(borderPosition);
+  }
+  
   @Override
   default void dispose() {
   }

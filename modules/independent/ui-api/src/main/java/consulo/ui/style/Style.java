@@ -17,6 +17,7 @@ package consulo.ui.style;
 
 import consulo.ui.RGBColor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -24,8 +25,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Style {
   @NotNull
-  Style getName();
+  String getName();
 
-  @NotNull
+  @Nullable
   RGBColor getColor(@NotNull ColorKey colorKey);
 }
