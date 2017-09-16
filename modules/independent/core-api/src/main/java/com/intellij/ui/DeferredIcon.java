@@ -19,6 +19,7 @@
  */
 package com.intellij.ui;
 
+import com.intellij.icons.AllIcons;
 import consulo.ui.image.Image;
 import consulo.ui.migration.ToImageWrapper;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +36,9 @@ public interface DeferredIcon extends Icon, ToImageWrapper {
     if(evaluate instanceof ToImageWrapper) {
       return ((ToImageWrapper)evaluate).toImage();
     }
-    return (Image)evaluate;
+    if(evaluate instanceof Image) {
+      return (Image)evaluate;
+    }
+    return AllIcons.Nodes.EmptyNode;
   }
 }

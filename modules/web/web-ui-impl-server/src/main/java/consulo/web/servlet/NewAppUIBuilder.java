@@ -17,14 +17,12 @@ package consulo.web.servlet;
 
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import consulo.application.impl.FrameTitleUtil;
-import consulo.ui.*;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.internal.WGwtLabelImpl;
-import consulo.ui.internal.WGwtVerticalLayoutImpl;
+import consulo.ui.Components;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Window;
 import consulo.web.servlet.ui.UIBuilder;
 import consulo.web.servlet.ui.UIServlet;
-import consulo.web.ui.FileTreeComponent;
+import consulo.web.ui.welcomeFrame.WelcomeFrameBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
@@ -50,55 +48,6 @@ public class NewAppUIBuilder extends UIBuilder {
       return;
     }
 
-    Window welcomeFrame = Windows.modalWindow(FrameTitleUtil.buildTitle());
-    welcomeFrame.setResizable(false);
-    welcomeFrame.setClosable(false);
-    welcomeFrame.setSize(new Size(777, 460));
-    welcomeFrame.setContent(new WGwtLabelImpl("TEst"));
-
-    //AnAction[] recentProjectsActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
-
-    ListBox<String> listSelect = Components.listBox("Test");
-    listSelect.addBorder(BorderPosition.RIGHT);
-    listSelect.setSize(new Size(200, -1));
-
-    DockLayout layout = Layouts.dock();
-    layout.left(listSelect);
-
-    VerticalLayout projectActionLayout = new WGwtVerticalLayoutImpl();
-
-    projectActionLayout.add(Components.button("Open Project", () -> {
-      Window fileTree = Windows.modalWindow("Select file");
-      fileTree.setSize(new Size(400, 400));
-      fileTree.setContent(new WGwtLabelImpl("TEst"));
-
-      DockLayout dockLayout = Layouts.dock();
-      dockLayout.center(FileTreeComponent.create());
-
-      DockLayout bottomLayout = Layouts.dock();
-      bottomLayout.addBorder(BorderPosition.TOP);
-      HorizontalLayout rightButtons = Layouts.horizontal();
-      bottomLayout.right(rightButtons);
-
-      Button ok = Components.button("OK");
-      ok.setEnabled(false);
-      rightButtons.add(ok);
-      consulo.ui.Button cancel = Components.button("Cancel");
-      cancel.addListener(Button.ClickHandler.class, () -> {
-        fileTree.close();
-      });
-
-      rightButtons.add(cancel);
-      dockLayout.bottom(bottomLayout);
-
-      fileTree.setContent(dockLayout);
-
-      fileTree.show();
-    }));
-    layout.center(projectActionLayout);
-
-    welcomeFrame.setContent(layout);
-
-    welcomeFrame.show();
+    WelcomeFrameBuilder.show();
   }
 }

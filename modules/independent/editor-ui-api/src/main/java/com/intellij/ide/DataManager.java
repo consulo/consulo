@@ -49,6 +49,11 @@ public abstract class DataManager {
   public abstract DataContext getDataContext(Component component);
 
   /**
+   * @return {@link DataContext} constructed by the specified <code>component</code>
+   */
+  public abstract DataContext getDataContext2(consulo.ui.Component component);
+
+  /**
    * @return {@link DataContext} constructed be the specified <code>component</code>
    * and the point specified by <code>x</code> and <code>y</code> coordinate inside the
    * component.

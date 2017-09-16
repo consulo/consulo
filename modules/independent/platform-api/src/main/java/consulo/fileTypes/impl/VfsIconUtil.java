@@ -33,6 +33,7 @@ import com.intellij.util.NullableFunction;
 import consulo.annotations.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.platform.Platform;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +55,8 @@ public class VfsIconUtil {
       if (!file.isValid() || project != null && (project.isDisposed() || !wasEverInitialized(project))) return null;
 
       boolean processedDescriptors = false;
-      final Icon nativeIcon = NativeFileIconUtil.INSTANCE.getIcon(file);
+      // disable on webservice native icon
+      final Icon nativeIcon = Platform.current().isWebService() ? null : NativeFileIconUtil.INSTANCE.getIcon(file);
       IconDescriptor iconDescriptor = new IconDescriptor(nativeIcon == null ? VirtualFilePresentation.getIcon(file) : nativeIcon);
 
       if (project != null) {

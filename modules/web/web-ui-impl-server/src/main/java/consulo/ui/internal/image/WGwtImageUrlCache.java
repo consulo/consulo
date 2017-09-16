@@ -17,7 +17,11 @@ public class WGwtImageUrlCache {
 
   public static WGwtImageWithState fixSwingImageRef(Image other) {
     if (other instanceof ToImageWrapper) {
-      return (WGwtImageWithState)((ToImageWrapper)other).toImage();
+      Image image = ((ToImageWrapper)other).toImage();
+      if(!(image instanceof WGwtImageWithState))  {
+        return fixSwingImageRef(image);
+      }
+      return (WGwtImageWithState)image;
     }
     return (WGwtImageWithState)other;
   }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.ui;
+package consulo.fileChooser;
 
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.util.Iconable;
@@ -28,7 +28,6 @@ import consulo.ui.Components;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.image.Image;
-import consulo.ui.internal.image.WGwtImageUrlCache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,12 +63,24 @@ public class FileTreeComponent {
             Image img = null;
             try {
               Icon icon = VfsIconUtil.getIcon(virtualFile, Iconable.ICON_FLAG_READ_STATUS, null);
-              img = WGwtImageUrlCache.fixSwingImageRef((consulo.ui.image.Image)icon);
+              img = (Image)icon;
             }
             catch (Exception e) {
-              img = (Image)VirtualFilePresentation.getIcon(virtualFile);
+              try {
+                img = (Image)VirtualFilePresentation.getIcon(virtualFile);
+              }
+              catch (Exception e1) {
+                //
+              }
             }
-            itemPresentation.setIcon(img);
+
+            // swing resource
+            if(img instanceof ImageIcon) {
+              img = null;
+            }
+            if(img != null) {
+              itemPresentation.setIcon(img);
+            }
             itemPresentation.append(virtualFile.getName());
           });
         }

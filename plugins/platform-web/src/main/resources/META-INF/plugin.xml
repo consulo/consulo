@@ -16,4 +16,10 @@
 <idea-plugin>
   <id>consulo.platform.web</id>
   <name>Platform: web</name>
+
+
+  <extensions defaultExtensionNs="com.intellij">
+    <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
+                        serviceImplementation="consulo.fileChooser.WebFileChooserFactory"/>
+  </extensions>
 </idea-plugin>

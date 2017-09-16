@@ -17,7 +17,13 @@ package consulo.ide.welcomeScreen;
 
 import com.intellij.ide.DataManager;
 import com.intellij.internal.statistic.UsageTrigger;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomeFrame;
 import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomePanel;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomePopupAction;
@@ -130,7 +136,7 @@ public class FlatWelcomeScreen extends JPanel {
     return panel;
   }
 
-  private void collectAllActions(List<AnAction> group, ActionGroup actionGroup) {
+  public static void collectAllActions(List<AnAction> group, ActionGroup actionGroup) {
     for (AnAction action : actionGroup.getChildren(null)) {
       if (action instanceof ActionGroup && !((ActionGroup)action).isPopup()) {
         collectAllActions(group, (ActionGroup)action);

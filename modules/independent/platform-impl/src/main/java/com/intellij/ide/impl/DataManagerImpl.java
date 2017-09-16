@@ -18,8 +18,20 @@ package com.intellij.ide.impl;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ProhibitAWTEvents;
-import com.intellij.ide.impl.dataRules.*;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.ide.impl.dataRules.CopyProviderRule;
+import com.intellij.ide.impl.dataRules.CutProviderRule;
+import com.intellij.ide.impl.dataRules.FileEditorRule;
+import com.intellij.ide.impl.dataRules.FileTextRule;
+import com.intellij.ide.impl.dataRules.GetDataRule;
+import com.intellij.ide.impl.dataRules.InactiveEditorRule;
+import com.intellij.ide.impl.dataRules.NavigatableArrayRule;
+import com.intellij.ide.impl.dataRules.PasteProviderRule;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
@@ -77,6 +89,19 @@ public class DataManagerImpl extends DataManager {
   }
 
   @Nullable
+  private Object getData(@NotNull String dataId, final consulo.ui.Component focusedComponent) {
+    try (AccessToken ignored = ProhibitAWTEvents.start("getData")) {
+      for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParentComponent()) {
+        final DataProvider dataProvider = getDataProviderEx(c);
+        if (dataProvider == null) continue;
+        Object data = getDataFromProvider(dataProvider, dataId, null);
+        if (data != null) return data;
+      }
+    }
+    return null;
+  }
+
+  @Nullable
   private Object getDataFromProvider(@NotNull final DataProvider provider, @NotNull String dataId, @Nullable Set<String> alreadyComputedIds) {
     if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) {
       return null;
@@ -89,12 +114,7 @@ public class DataManagerImpl extends DataManager {
       if (dataRule != null) {
         final Set<String> ids = alreadyComputedIds == null ? new THashSet<>() : alreadyComputedIds;
         ids.add(dataId);
-        data = dataRule.getData(new DataProvider() {
-          @Override
-          public Object getData(String dataId) {
-            return getDataFromProvider(provider, dataId, ids);
-          }
-        });
+        data = dataRule.getData(id -> getDataFromProvider(provider, id, ids));
 
         if (data != null) return validated(data, dataId, provider);
       }
@@ -131,18 +151,7 @@ public class DataManagerImpl extends DataManager {
 
     final GetDataRule plainRule = getRuleFromMap(AnActionEvent.uninjectedId(dataId));
     if (plainRule != null) {
-      return new GetDataRule() {
-        @Override
-        public Object getData(final DataProvider dataProvider) {
-          return plainRule.getData(new DataProvider() {
-            @Override
-            @Nullable
-            public Object getData(@NonNls String dataId) {
-              return dataProvider.getData(AnActionEvent.injectedId(dataId));
-            }
-          });
-        }
-      };
+      return dataProvider -> plainRule.getData(id -> dataProvider.getData(AnActionEvent.injectedId(id)));
     }
 
     return null;
@@ -181,6 +190,11 @@ public class DataManagerImpl extends DataManager {
   @Override
   public DataContext getDataContext(Component component) {
     return new MyDataContext(component);
+  }
+
+  @Override
+  public DataContext getDataContext2(consulo.ui.Component component) {
+    return new MyDataContext2(component);
   }
 
   @Override
@@ -392,6 +406,66 @@ public class DataManagerImpl extends DataManager {
         Editor editor = (Editor)((DataManagerImpl)DataManager.getInstance()).getData(dataId, component);
         return validateEditor(editor);
       }
+      return ((DataManagerImpl)DataManager.getInstance()).getData(dataId, component);
+    }
+
+    @NonNls
+    public String toString() {
+      return "component=" + SoftReference.dereference(myRef);
+    }
+
+    @Override
+    public <T> T getUserData(@NotNull Key<T> key) {
+      //noinspection unchecked
+      return (T)getOrCreateMap().get(key);
+    }
+
+    @Override
+    public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+      getOrCreateMap().put(key, value);
+    }
+
+    @NotNull
+    private Map<Key, Object> getOrCreateMap() {
+      Map<Key, Object> userData = myUserData;
+      if (userData == null) {
+        myUserData = userData = new WeakValueHashMap<>();
+      }
+      return userData;
+    }
+  }
+
+  public static class MyDataContext2 implements DataContext, UserDataHolder {
+
+    private final Reference<consulo.ui.Component> myRef;
+    private Map<Key, Object> myUserData;
+    private final Map<String, Object> myCachedData = new WeakValueHashMap<>();
+
+    public MyDataContext2(final consulo.ui.Component component) {
+      myRef = component == null ? null : new WeakReference<>(component);
+    }
+
+    @Override
+    public Object getData(String dataId) {
+      if (dataId == null) return null;
+
+      if (ourSafeKeys.contains(dataId)) {
+        Object answer = myCachedData.get(dataId);
+        if (answer == null) {
+          answer = doGetData(dataId);
+          myCachedData.put(dataId, answer == null ? NullResult.INSTANCE : answer);
+        }
+        return answer != NullResult.INSTANCE ? answer : null;
+      }
+      else {
+        return doGetData(dataId);
+      }
+    }
+
+    @Nullable
+    private Object doGetData(@NotNull String dataId) {
+      consulo.ui.Component component = SoftReference.dereference(myRef);
+
       return ((DataManagerImpl)DataManager.getInstance()).getData(dataId, component);
     }
 
