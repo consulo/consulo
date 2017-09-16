@@ -16,23 +16,17 @@
 package consulo.fileChooser;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
-import consulo.ui.Button;
-import consulo.ui.Components;
-import consulo.ui.DockLayout;
-import consulo.ui.HorizontalLayout;
-import consulo.ui.Layouts;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
-import consulo.ui.Window;
-import consulo.ui.Windows;
+import consulo.ui.*;
 import consulo.ui.border.BorderPosition;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -57,7 +51,9 @@ public class WebPathChooserDialog implements PathChooserDialog {
     fileTree.setContent(Components.label("TEst"));
 
     DockLayout dockLayout = Layouts.dock();
-    dockLayout.center(FileTreeComponent.create(myProject, myDescriptor));
+    Tree<FileElement> component = FileTreeComponent.create(myProject, myDescriptor);
+
+    dockLayout.center(component);
 
     DockLayout bottomLayout = Layouts.dock();
     bottomLayout.addBorder(BorderPosition.TOP);
@@ -65,11 +61,19 @@ public class WebPathChooserDialog implements PathChooserDialog {
     bottomLayout.right(rightButtons);
 
     Button ok = Components.button("OK");
+    ok.addClickListener(() -> {
+      fileTree.close();
+
+      callback.consume(Arrays.asList(component.getSelectedNode().getValue().getFile()));
+    });
     ok.setEnabled(false);
     rightButtons.add(ok);
     consulo.ui.Button cancel = Components.button("Cancel");
-    cancel.addListener(Button.ClickHandler.class, () -> {
-      fileTree.close();
+    cancel.addClickListener(fileTree::close);
+
+    component.addSelectListener(node -> {
+      VirtualFile file = node.getValue().getFile();
+      ok.setEnabled(myDescriptor.isFileSelectable(file));
     });
 
     rightButtons.add(cancel);

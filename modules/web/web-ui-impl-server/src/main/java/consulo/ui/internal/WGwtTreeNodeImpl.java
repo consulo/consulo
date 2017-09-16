@@ -47,6 +47,8 @@ public class WGwtTreeNodeImpl<N> implements TreeNode<N> {
     return myParent;
   }
 
+  @NotNull
+  @Override
   public N getValue() {
     return myNode;
   }

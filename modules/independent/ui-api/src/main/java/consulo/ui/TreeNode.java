@@ -29,4 +29,7 @@ public interface TreeNode<T> {
   void setLeaf(boolean leaf);
 
   boolean isLeaf();
+
+  @NotNull
+  T getValue();
 }

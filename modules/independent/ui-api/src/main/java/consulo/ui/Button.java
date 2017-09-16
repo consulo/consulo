@@ -34,4 +34,8 @@ public interface Button extends Component {
 
   @RequiredUIAccess
   void setText(@NotNull String text);
+
+  default void addClickListener(@RequiredUIAccess ClickHandler listener) {
+    addListener(ClickHandler.class, listener);
+  }
 }

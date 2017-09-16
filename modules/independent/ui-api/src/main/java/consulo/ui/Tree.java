@@ -16,11 +16,27 @@
 package consulo.ui;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.EventListener;
 
 /**
  * @author VISTALL
  * @since 12-Sep-17
  */
 public interface Tree<E> extends Component {
+  interface SelectListener<K> extends EventListener {
+    @RequiredUIAccess
+    void onSelected(TreeNode<K> node);
+  }
+
+  @Nullable
+  TreeNode<E> getSelectedNode();
+
   void expand(@NotNull TreeNode<E> node);
+
+  @NotNull
+  default Runnable addSelectListener(@NotNull @RequiredUIAccess SelectListener<E> listener) {
+    return addListener(SelectListener.class, listener);
+  }
 }

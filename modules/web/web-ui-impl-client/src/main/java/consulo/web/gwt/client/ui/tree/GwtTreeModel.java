@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  * @since 16-Sep-17
  */
 public class GwtTreeModel implements TreeViewModel {
-  private final SelectionModel<TreeState.TreeNodeState> myModel = new SingleSelectionModel<>();
+  private final SelectionModel<TreeState.TreeNodeState> mySelectionModel = new SingleSelectionModel<>();
 
   private Consumer<TreeState.TreeNodeState> myChildrenOpenHandler = state -> {
   };
@@ -40,7 +40,7 @@ public class GwtTreeModel implements TreeViewModel {
 
   private final Map<String, GwtTreeNode> myNodes = new HashMap<>();
 
-  private final GwtTreeNode myRootNode = new GwtTreeNode(myModel);
+  private final GwtTreeNode myRootNode = new GwtTreeNode(mySelectionModel);
 
   private GwtTreeImpl myCellTree;
 
@@ -63,7 +63,7 @@ public class GwtTreeModel implements TreeViewModel {
 
     myChildrenOpenHandler.accept(state);
 
-    GwtTreeNode node = new GwtTreeNode(myModel);
+    GwtTreeNode node = new GwtTreeNode(mySelectionModel);
     node.init(myCellTree);
 
     myNodes.put(state.myId, node);
@@ -89,6 +89,10 @@ public class GwtTreeModel implements TreeViewModel {
 
   public void setDoubleClickHandler(Consumer<TreeState.TreeNodeState> doubleClickHandler) {
     myDoubleClickHandler = doubleClickHandler;
+  }
+
+  public SelectionModel<TreeState.TreeNodeState> getSelectionModel() {
+    return mySelectionModel;
   }
 
   public Consumer<TreeState.TreeNodeState> getDoubleClickHandler() {

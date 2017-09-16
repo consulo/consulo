@@ -52,7 +52,7 @@ public class WrapperTreeModel implements TreeModel<FileElement> {
 
         descriptor.update();
 
-        itemPresentation.append(descriptor.getElement().getName());
+        itemPresentation.append(descriptor.getName());
         try {
           itemPresentation.setIcon((consulo.ui.image.Image)descriptor.getIcon());
         }

@@ -59,8 +59,18 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
         return;
       }
 
-      if(myModel.onDoubleClick(WGwtTreeImpl.this, node)) {
+      if (myModel.onDoubleClick(WGwtTreeImpl.this, node)) {
         getRpcProxy(TreeClientRpc.class).expand(id);
+      }
+    }
+
+    @Override
+    public void onSelected(String id) {
+      mySelectedValue = id;
+
+      WGwtTreeNodeImpl<NODE> gwtTreeNode = myChildren.get(id);
+      if(gwtTreeNode != null) {
+        getListenerDispatcher(SelectListener.class).onSelected(gwtTreeNode);
       }
     }
   };
@@ -70,6 +80,8 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
   private final Executor myUpdater = Executors.newSingleThreadExecutor();
   private final Map<String, WGwtTreeNodeImpl<NODE>> myChildren = new LinkedHashMap<>();
   private final List<TreeState.TreeChange> myChanges = new ArrayList<>();
+
+  private String mySelectedValue;
 
   public WGwtTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model) {
     myRootValue = rootValue;
@@ -85,6 +97,15 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
     myChildren.clear();
 
     queue(myRootValue, null, TreeState.TreeChangeType.SET);
+  }
+
+  @Nullable
+  @Override
+  public TreeNode<NODE> getSelectedNode() {
+    if (mySelectedValue == null) {
+      return null;
+    }
+    return myChildren.get(mySelectedValue);
   }
 
   @Override

@@ -15,6 +15,7 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.user.cellview.client.TreeNode;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -50,6 +51,11 @@ public class GwtTreeImplConnector extends AbstractComponentConnector {
 
     getTree().setChildrenOpenHandler(state -> getRpcProxy(TreeServerRpc.class).onOpen(state.myId));
     getTree().setDoubleClickHandler((state) -> getRpcProxy(TreeServerRpc.class).onDoubleClick(state.myId));
+    getTree().getTreeViewModel().getSelectionModel().addSelectionChangeHandler(event -> {
+      TreeNode value = getTree().getKeyboardSelectedTreeNode();
+      TreeState.TreeNodeState childValue = (TreeState.TreeNodeState)value.getValue();
+      getRpcProxy(TreeServerRpc.class).onSelected(childValue.myId);
+    });
 
     registerRpc(TreeClientRpc.class, new TreeClientRpc() {
       @Override

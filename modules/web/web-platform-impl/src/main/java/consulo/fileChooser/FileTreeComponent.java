@@ -16,17 +16,18 @@
 package consulo.fileChooser;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.impl.FileTreeStructure;
 import com.intellij.openapi.project.Project;
-import consulo.ui.Component;
 import consulo.ui.Components;
+import consulo.ui.Tree;
 
 /**
  * @author VISTALL
  * @since 14-Sep-17
  */
 public class FileTreeComponent {
-  public static Component create(Project project, FileChooserDescriptor descriptor) {
+  public static Tree<FileElement> create(Project project, FileChooserDescriptor descriptor) {
     WrapperTreeModel wrapperTreeModel = new WrapperTreeModel(new FileTreeStructure(project, descriptor));
     return Components.tree(wrapperTreeModel.getRootElement(), wrapperTreeModel);
   }
