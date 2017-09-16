@@ -15,9 +15,12 @@
  */
 package consulo.ui;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 12-Sep-17
  */
 public interface Tree<E> extends Component {
+  void expand(@NotNull TreeNode<E> node);
 }

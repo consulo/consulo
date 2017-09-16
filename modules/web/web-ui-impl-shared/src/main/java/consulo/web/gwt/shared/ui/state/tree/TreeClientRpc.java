@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.web.gwt.shared.ui.state.tree;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Function;
+import com.vaadin.shared.communication.ClientRpc;
 
 /**
  * @author VISTALL
- * @since 12-Sep-17
+ * @since 16-Sep-17
  */
-public interface TreeModel<N> {
-  void fetchChildren(@NotNull Function<N, TreeNode<N>> nodeFactory, @Nullable N parentValue);
-
-  /**
-   * @return expand on double click
-   */
-  default boolean onDoubleClick(@NotNull Tree<N> tree, @NotNull TreeNode<N> node) {
-    return true;
-  }
+public interface TreeClientRpc extends ClientRpc {
+  void expand(String nodeId);
 }

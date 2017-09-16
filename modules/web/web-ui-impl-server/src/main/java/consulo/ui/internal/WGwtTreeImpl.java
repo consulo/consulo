@@ -22,7 +22,9 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
-import consulo.web.gwt.shared.ui.state.tree.TreeRpc;
+import consulo.ui.TreeNode;
+import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;
+import consulo.web.gwt.shared.ui.state.tree.TreeServerRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,15 +41,27 @@ import java.util.concurrent.Executors;
  * @since 16-Jun-16
  */
 public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>, VaadinWrapper {
-  private final TreeRpc myTreeRpc = new TreeRpc() {
+  private final TreeServerRpc myTreeServerRpc = new TreeServerRpc() {
     @Override
-    public void fetchChildren(String id) {
+    public void onOpen(String id) {
       WGwtTreeNodeImpl<NODE> node = myChildren.get(id);
       if (node == null) {
         return;
       }
 
       queue(node.getValue(), node, TreeState.TreeChangeType.SET);
+    }
+
+    @Override
+    public void onDoubleClick(String id) {
+      WGwtTreeNodeImpl<NODE> node = myChildren.get(id);
+      if (node == null) {
+        return;
+      }
+
+      if(myModel.onDoubleClick(WGwtTreeImpl.this, node)) {
+        getRpcProxy(TreeClientRpc.class).expand(id);
+      }
     }
   };
 
@@ -60,7 +74,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
   public WGwtTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model) {
     myRootValue = rootValue;
     myModel = model;
-    registerRpc(myTreeRpc);
+    registerRpc(myTreeServerRpc);
   }
 
   @Override
@@ -71,6 +85,13 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
     myChildren.clear();
 
     queue(myRootValue, null, TreeState.TreeChangeType.SET);
+  }
+
+  @Override
+  public void expand(@NotNull TreeNode<NODE> node) {
+    WGwtTreeNodeImpl<NODE> gwtTreeNode = (WGwtTreeNodeImpl<NODE>)node;
+
+    queue(gwtTreeNode.getValue(), gwtTreeNode, TreeState.TreeChangeType.SET);
   }
 
   private void queue(NODE value, @Nullable WGwtTreeNodeImpl<NODE> parent, TreeState.TreeChangeType type) {

@@ -15,21 +15,17 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.CellTree;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.TreeViewModel;
+import com.google.gwt.user.cellview.client.TreeNode;
+import consulo.web.gwt.client.ui.tree.GwtTreeModel;
+import consulo.web.gwt.client.ui.tree.GwtTreeNode;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -37,87 +33,64 @@ import java.util.function.Consumer;
  * @since 19-Jun-16
  */
 public class GwtTreeImpl extends CellTree {
-  private static class ChildNode extends TreeViewModel.DefaultNodeInfo<TreeState.TreeNodeState> {
-
-    public ChildNode() {
-      super(new ListDataProvider<>(Collections.emptyList()), new AbstractCell<TreeState.TreeNodeState>() {
-        @Override
-        public void render(Context context, TreeState.TreeNodeState value, SafeHtmlBuilder sb) {
-          GwtHorizontalLayoutImpl layout = GwtComboBoxImplConnector.buildItem(value);
-
-          SafeHtml safeValue = SafeHtmlUtils.fromSafeConstant(layout.toString());
-
-          sb.append(safeValue);
-        }
-      });
-    }
-
-    public void setItems(List<TreeState.TreeNodeState> list) {
-      ListDataProvider<TreeState.TreeNodeState> provider = (ListDataProvider<TreeState.TreeNodeState>)getProvidesKey();
-
-      provider.setList(list);
-      provider.refresh();
-    }
-  }
-
-  private static class OurModel implements TreeViewModel {
-    private final ChildNode myRootNode = new ChildNode();
-
-    private Map<String, ChildNode> myNodes = new HashMap<>();
-
-    private Consumer<String> myChildrenOpen = id -> {
-    };
-
-    private OurModel() {
-      myNodes.put(null, myRootNode);
-    }
-
-    @Override
-    public <T> NodeInfo<?> getNodeInfo(T value) {
-      if (value == null) {
-        return myRootNode;
-      }
-
-      TreeState.TreeNodeState state = (TreeState.TreeNodeState)value;
-
-      myChildrenOpen.accept(state.myId);
-
-      ChildNode node = new ChildNode();
-      myNodes.put(state.myId, node);
-      return node;
-    }
-
-    @Override
-    public boolean isLeaf(Object value) {
-      if(value == null) {
-        return false;
-      }
-      TreeState.TreeNodeState state = (TreeState.TreeNodeState)value;
-      return state.myLeaf;
-    }
-  }
-
   public GwtTreeImpl() {
-    super(new OurModel(), null, GWT.<CellTree.Resources>create(DefaultCellTreeResources.class), new CellTreeMessages() {
+    super(new GwtTreeModel(), null, GWT.<CellTree.Resources>create(DefaultCellTreeResources.class), new CellTreeMessages() {
       @Override
       public String showMore() {
-        return null;
+        // should not never called - due page size is max
+        return "SHOW_MORE";
       }
 
       @Override
       public String emptyTree() {
         return "loading...";
       }
-    });
+    }, Integer.MAX_VALUE);
+
+    getTreeViewModel().init(this);
   }
 
-  public void setChildrenOpen(Consumer<String> childrenOpen) {
-    getTreeViewModel().myChildrenOpen = childrenOpen;
+  public void setChildrenOpenHandler(@NotNull Consumer<TreeState.TreeNodeState> handler) {
+    getTreeViewModel().setChildrenOpenHandler(handler);
+  }
+
+  public void setDoubleClickHandler(@NotNull Consumer<TreeState.TreeNodeState> handler) {
+    getTreeViewModel().setDoubleClickHandler(handler);
   }
 
   @Override
-  public OurModel getTreeViewModel() {
-    return (OurModel)super.getTreeViewModel();
+  public GwtTreeModel getTreeViewModel() {
+    return (GwtTreeModel)super.getTreeViewModel();
+  }
+
+  public void expand(String nodeId) {
+    TreeNode node = findNode(getRootTreeNode(), nodeId);
+    if (node == null) {
+      return;
+    }
+
+    int index = node.getIndex();
+    node.getParent().setChildOpen(index, !node.getParent().isChildOpen(index));
+  }
+
+  @Nullable
+  private TreeNode findNode(TreeNode node, String nodeId) {
+    int childCount = node.getChildCount();
+    for (int i = 0; i < childCount; i++) {
+      TreeNode child = node.getChild(i);
+
+      TreeState.TreeNodeState nodeState = (TreeState.TreeNodeState)child.getValue();
+      if (Objects.equals(nodeState.myId, nodeId)) {
+        return child;
+      }
+
+      TreeNode in = findNode(child, nodeId);
+      if (in != null) {
+        return in;
+      }
+    }
+
+    return null;
   }
 
   public void handleChanges(List<TreeState.TreeChange> changes) {
@@ -130,9 +103,8 @@ public class GwtTreeImpl extends CellTree {
           //todo [vistall] remove
           break;
         case SET:
-          ChildNode info = getTreeViewModel().myNodes.get(change.myId);
+          GwtTreeNode info = getTreeViewModel().getNodes().get(change.myId);
           if (info == null) {
-            Window.alert("NULL");
             continue;
           }
 

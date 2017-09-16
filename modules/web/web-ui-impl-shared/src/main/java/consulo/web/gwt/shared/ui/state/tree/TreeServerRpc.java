@@ -21,6 +21,8 @@ import com.vaadin.shared.communication.ServerRpc;
  * @author VISTALL
  * @since 13-Sep-17
  */
-public interface TreeRpc extends ServerRpc {
-  void fetchChildren(String id);
+public interface TreeServerRpc extends ServerRpc {
+  void onOpen(String id);
+
+  void onDoubleClick(String id);
 }

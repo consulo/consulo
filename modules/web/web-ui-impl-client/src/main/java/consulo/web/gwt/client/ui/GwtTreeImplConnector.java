@@ -21,7 +21,8 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.util.GwtUIUtil;
-import consulo.web.gwt.shared.ui.state.tree.TreeRpc;
+import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;
+import consulo.web.gwt.shared.ui.state.tree.TreeServerRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +48,15 @@ public class GwtTreeImplConnector extends AbstractComponentConnector {
   protected void init() {
     super.init();
 
-    getTree().setChildrenOpen(id -> getRpcProxy(TreeRpc.class).fetchChildren(id));
+    getTree().setChildrenOpenHandler(state -> getRpcProxy(TreeServerRpc.class).onOpen(state.myId));
+    getTree().setDoubleClickHandler((state) -> getRpcProxy(TreeServerRpc.class).onDoubleClick(state.myId));
+
+    registerRpc(TreeClientRpc.class, new TreeClientRpc() {
+      @Override
+      public void expand(String nodeId) {
+        getTree().expand(nodeId);
+      }
+    });
   }
 
   @Override
