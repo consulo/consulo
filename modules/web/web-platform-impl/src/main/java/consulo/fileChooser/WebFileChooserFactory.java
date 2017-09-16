@@ -44,7 +44,7 @@ public class WebFileChooserFactory extends FileChooserFactory {
   @NotNull
   @Override
   public PathChooserDialog createPathChooser(@NotNull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    return new WebPathChooserDialog();
+    return new WebPathChooserDialog(project, descriptor);
   }
 
   @NotNull

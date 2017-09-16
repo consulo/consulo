@@ -21,8 +21,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -32,17 +32,16 @@ public class FileNodeDescriptor extends NodeDescriptor {
   private final Icon myOriginalIcon;
   private final String myComment;
 
-  public FileNodeDescriptor(Project project,
-                            @NotNull FileElement element,
-                            NodeDescriptor parentDescriptor,
-                            Icon closedIcon,
-                            String name,
-                            String comment) {
+  public FileNodeDescriptor(Project project, @NotNull FileElement element, NodeDescriptor parentDescriptor, Icon closedIcon, String name, String comment) {
     super(project, parentDescriptor);
     myOriginalIcon = closedIcon;
     myComment = comment;
     myFileElement = element;
     myName = name;
+  }
+
+  public String getName() {
+    return myName;
   }
 
   @RequiredDispatchThread

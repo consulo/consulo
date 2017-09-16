@@ -15,7 +15,9 @@
  */
 package consulo.fileChooser;
 
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import consulo.ui.Button;
@@ -38,6 +40,15 @@ import java.util.List;
  * @since 15-Sep-17
  */
 public class WebPathChooserDialog implements PathChooserDialog {
+  private FileChooserDescriptor myDescriptor;
+  @Nullable
+  private Project myProject;
+
+  public WebPathChooserDialog(@Nullable Project project, @NotNull FileChooserDescriptor descriptor) {
+    myDescriptor = descriptor;
+    myProject = project;
+  }
+
   @Override
   @RequiredUIAccess
   public void choose(@Nullable VirtualFile toSelect, @NotNull Consumer<List<VirtualFile>> callback) {
@@ -46,7 +57,7 @@ public class WebPathChooserDialog implements PathChooserDialog {
     fileTree.setContent(Components.label("TEst"));
 
     DockLayout dockLayout = Layouts.dock();
-    dockLayout.center(FileTreeComponent.create());
+    dockLayout.center(FileTreeComponent.create(myProject, myDescriptor));
 
     DockLayout bottomLayout = Layouts.dock();
     bottomLayout.addBorder(BorderPosition.TOP);
