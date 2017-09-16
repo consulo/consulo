@@ -35,8 +35,6 @@ import consulo.ui.VerticalLayout;
 import consulo.ui.Window;
 import consulo.ui.Windows;
 import consulo.ui.border.BorderPosition;
-import consulo.ui.internal.WGwtLabelImpl;
-import consulo.ui.internal.WGwtVerticalLayoutImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +51,7 @@ public class WelcomeFrameBuilder {
     welcomeFrame.setResizable(false);
     welcomeFrame.setClosable(false);
     welcomeFrame.setSize(new Size(777, 460));
-    welcomeFrame.setContent(new WGwtLabelImpl("TEst"));
+    welcomeFrame.setContent(Components.label("TEst"));
 
 
     ListBox<String> listSelect = Components.listBox("Test");
@@ -63,7 +61,7 @@ public class WelcomeFrameBuilder {
     DockLayout layout = Layouts.dock();
     layout.left(listSelect);
 
-    VerticalLayout projectActionLayout = new WGwtVerticalLayoutImpl();
+    VerticalLayout projectActionLayout = Layouts.vertical();
 
     ActionManager actionManager = ActionManager.getInstance();
     ActionGroup quickStart = (ActionGroup)actionManager.getAction(IdeActions.GROUP_WELCOME_SCREEN_QUICKSTART);

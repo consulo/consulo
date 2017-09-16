@@ -22,6 +22,7 @@ import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import consulo.annotations.Internal;
 import consulo.start.CommandLineArgs;
+import consulo.web.application.impl.WebApplicationImpl;
 
 /**
  * @author VISTALL
@@ -34,6 +35,11 @@ import consulo.start.CommandLineArgs;
 @Internal
 public class WebPostStarter extends ApplicationPostStarter {
   public WebPostStarter(ApplicationStarter application) {
+  }
+
+  @Override
+  public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
+    new WebApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, IDEA_APPLICATION, null);
   }
 
   @Override

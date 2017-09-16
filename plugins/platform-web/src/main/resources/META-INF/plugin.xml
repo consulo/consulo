@@ -20,6 +20,6 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
-                        serviceImplementation="consulo.fileChooser.WebFileChooserFactory"/>
+                        serviceImplementation="consulo.web.fileChooser.WebFileChooserFactory"/>
   </extensions>
 </idea-plugin>
