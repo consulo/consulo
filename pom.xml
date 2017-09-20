@@ -38,7 +38,7 @@
     <module>modules/web/web-platform-impl</module>
     <module>plugins/platform-web</module>
 
-    <module>jre-stub</module>
+    <module>jre9-stub</module>
 
     <module>modules/independent/annotations</module>
     <module>modules/independent/analysis-api</module>
