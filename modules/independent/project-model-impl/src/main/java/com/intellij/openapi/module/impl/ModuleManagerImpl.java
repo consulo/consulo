@@ -25,11 +25,8 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.ModifiableModuleModel;
+import com.intellij.openapi.module.*;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleWithNameAlreadyExistsException;
-import com.intellij.openapi.module.ProjectLoadingErrorsNotifier;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
@@ -40,11 +37,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.ModificationTracker;
-import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
@@ -55,11 +48,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.StringInterner;
-import com.intellij.util.graph.CachingSemiGraph;
-import com.intellij.util.graph.DFSTBuilder;
-import com.intellij.util.graph.Graph;
-import com.intellij.util.graph.GraphGenerator;
-import com.intellij.util.graph.InboundSemiGraph;
+import com.intellij.util.graph.*;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
@@ -76,8 +65,6 @@ import java.util.*;
 
 /**
  * @author max
- *
- * Do not change import layout - it will conflict with {@link java.lang.Module} on java 9
  */
 public abstract class ModuleManagerImpl extends ModuleManager implements ProjectComponent, PersistentStateComponent<Element>, ModificationTracker {
   public static final Logger LOGGER = Logger.getInstance(ModuleManagerImpl.class);
@@ -322,9 +309,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
         errors.add(ModuleLoadingErrorDescription.create(e.getMessage(), moduleLoadItem, this));
       }
       catch (Exception e) {
-        errors.add(ModuleLoadingErrorDescription
-                           .create(ProjectBundle.message("module.cannot.load.error", moduleLoadItem.getName(), ExceptionUtil.getThrowableText(e)),
-                                   moduleLoadItem, this));
+        errors.add(ModuleLoadingErrorDescription.create(ProjectBundle.message("module.cannot.load.error", moduleLoadItem.getName(), ExceptionUtil.getThrowableText(e)), moduleLoadItem, this));
       }
     }
     fireErrors(errors);
@@ -564,9 +549,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   protected abstract ModuleEx createModule(@NotNull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator);
 
   @NotNull
-  protected ModuleEx createAndLoadModule(@NotNull final ModuleLoadItem moduleLoadItem,
-                                         @NotNull ModuleModelImpl moduleModel,
-                                         @Nullable final ProgressIndicator progressIndicator) {
+  protected ModuleEx createAndLoadModule(@NotNull final ModuleLoadItem moduleLoadItem, @NotNull ModuleModelImpl moduleModel, @Nullable final ProgressIndicator progressIndicator) {
     final ModuleEx module = createModule(moduleLoadItem.getName(), moduleLoadItem.getDirUrl(), progressIndicator);
     moduleModel.initModule(module);
 
@@ -714,7 +697,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
         progressIndicator.setText2(moduleName);
       }
 
-      if(firstLoad) {
+      if (firstLoad) {
         for (Module module : myModules) {
           if (module.getName().equals(moduleName)) {
             throw new ModuleWithNameAlreadyExistsException(ProjectBundle.message("module.already.exists.error", moduleName), moduleName);
@@ -731,8 +714,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
         VirtualFile moduleDir = ref.get();
 
         if (moduleDir == null || !moduleDir.exists() || !moduleDir.isDirectory()) {
-          throw new ModuleDirIsNotExistsException(
-                  ProjectBundle.message("module.dir.does.not.exist.error", FileUtil.toSystemDependentName(VirtualFileManager.extractPath(dirUrl))));
+          throw new ModuleDirIsNotExistsException(ProjectBundle.message("module.dir.does.not.exist.error", FileUtil.toSystemDependentName(VirtualFileManager.extractPath(dirUrl))));
         }
 
         oldModule = getModuleByDirUrl(moduleDir.getUrl());

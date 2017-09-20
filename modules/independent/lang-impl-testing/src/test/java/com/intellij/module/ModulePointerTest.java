@@ -27,8 +27,6 @@ import consulo.util.pointers.NamedPointer;
 
 /**
  * @author nik
- *
- *  Do not change import layout - it will conflict with {@link java.lang.Module} on java 9
  */
 public class ModulePointerTest extends PlatformTestCase {
   public void testCreateByName() throws Exception {
