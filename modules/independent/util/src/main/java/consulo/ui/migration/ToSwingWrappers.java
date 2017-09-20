@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.migration;
 
-import consulo.ui.Component;
-import consulo.ui.HorizontalLayout;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.migration.ToSwingWrappers;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 20-Sep-17
  */
-public class DesktopHorizontalLayoutImpl extends JPanel implements HorizontalLayout, SwingWrapper {
-  public DesktopHorizontalLayoutImpl() {
-    super(new com.intellij.ui.components.panels.HorizontalLayout(0));
-  }
-
-  @RequiredUIAccess
+public class ToSwingWrappers {
   @NotNull
-  @Override
-  public HorizontalLayout add(@NotNull Component component) {
-    add(ToSwingWrappers.toAWT(component));
-    return this;
+  public static Component toAWT(@NotNull consulo.ui.Component component) {
+    if (component instanceof ToSwingWrapper) {
+      return ((ToSwingWrapper)component).toAWT();
+    }
+    throw new IllegalArgumentException(component + " is not ToSwingWrapper");
   }
 }

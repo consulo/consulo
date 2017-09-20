@@ -16,10 +16,10 @@
 package consulo.ui.internal;
 
 import com.intellij.openapi.ui.VerticalFlowLayout;
-import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.VerticalLayout;
+import consulo.ui.migration.ToSwingWrappers;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -37,7 +37,7 @@ public class DesktopVerticalLayoutImpl extends JPanel implements VerticalLayout,
   @NotNull
   @Override
   public VerticalLayout add(@NotNull Component component) {
-    add(ConfigurableUIMigrationUtil.toAWT(component));
+    add(ToSwingWrappers.toAWT(component));
     return this;
   }
 }
