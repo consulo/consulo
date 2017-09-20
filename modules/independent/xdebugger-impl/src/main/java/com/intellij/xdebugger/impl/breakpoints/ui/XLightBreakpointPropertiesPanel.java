@@ -16,6 +16,7 @@
 package com.intellij.xdebugger.impl.breakpoints.ui;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
@@ -90,7 +91,7 @@ public class XLightBreakpointPropertiesPanel implements XSuspendPolicyPanel.Dele
   private JPanel myCustomTopPropertiesPanelWrapper;
   private JPanel myConditionEnabledPanel;
   private JBLabel myBreakpointNameLabel;
-  private final List<XBreakpointCustomPropertiesPanel> myCustomPanels;
+  private final List<XBreakpointCustomPropertiesPanel<?>> myCustomPanels;
 
   private final List<XBreakpointPropertiesSubPanel> mySubPanels = new ArrayList<>();
 
@@ -285,7 +286,7 @@ public class XLightBreakpointPropertiesPanel implements XSuspendPolicyPanel.Dele
   public void dispose() {
     myActionsPanel.dispose();
     for (XBreakpointCustomPropertiesPanel panel : myCustomPanels) {
-      panel.dispose();
+      Disposer.dispose(panel);
     }
   }
 }

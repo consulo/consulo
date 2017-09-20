@@ -22,7 +22,6 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.web.servlet.ui.UIBuilder;
 import consulo.web.servlet.ui.UIServlet;
-import consulo.web.ui.welcomeFrame.WelcomeFrameBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
@@ -48,6 +47,6 @@ public class NewAppUIBuilder extends UIBuilder {
       return;
     }
 
-    WelcomeFrameBuilder.show();
+    //WelcomeFrameBuilder.show();
   }
 }

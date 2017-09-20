@@ -15,6 +15,7 @@
  */
 package com.intellij.xdebugger.breakpoints.ui;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,7 @@ import javax.swing.*;
 /**
  * @author nik
  */
-public abstract class XBreakpointCustomPropertiesPanel<B extends XBreakpoint<?>> {
+public abstract class XBreakpointCustomPropertiesPanel<B extends XBreakpoint<?>> implements Disposable {
 
   @NotNull
   public abstract JComponent getComponent();
@@ -32,6 +33,7 @@ public abstract class XBreakpointCustomPropertiesPanel<B extends XBreakpoint<?>>
 
   public abstract void loadFrom(@NotNull B breakpoint);
 
+  @Override
   public void dispose() {
   }
 
