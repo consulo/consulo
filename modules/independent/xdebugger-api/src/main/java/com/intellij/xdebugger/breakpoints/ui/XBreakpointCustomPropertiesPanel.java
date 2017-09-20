@@ -17,6 +17,10 @@ package com.intellij.xdebugger.breakpoints.ui;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import consulo.annotations.DeprecationInfo;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.migration.ToSwingWrappers;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -27,10 +31,22 @@ import javax.swing.*;
 public abstract class XBreakpointCustomPropertiesPanel<B extends XBreakpoint<?>> implements Disposable {
 
   @NotNull
-  public abstract JComponent getComponent();
+  @Deprecated
+  @DeprecationInfo("Please implement interface via new UI API")
+  public JComponent getComponent() {
+    return (JComponent)ToSwingWrappers.toAWT(getUIComponent());
+  }
 
+  @NotNull
+  @RequiredUIAccess
+  public Component getUIComponent() {
+    throw new AbstractMethodError();
+  }
+
+  @RequiredUIAccess
   public abstract void saveTo(@NotNull B breakpoint);
 
+  @RequiredUIAccess
   public abstract void loadFrom(@NotNull B breakpoint);
 
   @Override
