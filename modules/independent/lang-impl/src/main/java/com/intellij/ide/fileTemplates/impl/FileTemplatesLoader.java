@@ -164,10 +164,10 @@ public class FileTemplatesLoader {
     final Set<String> descriptionPaths = new HashSet<>();
     for (String path : children) {
       if (path.equals("default.html")) {
-        myDefaultTemplateDescription = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm() + "/" + path)));
+        myDefaultTemplateDescription = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
       }
       else if (path.equals("includes/default.html")) {
-        myDefaultIncludeDescription = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm() + "/" + path)));
+        myDefaultIncludeDescription = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
       }
       else if (path.endsWith(DESCRIPTION_EXTENSION_SUFFIX)) {
         descriptionPaths.add(path);
@@ -181,11 +181,9 @@ public class FileTemplatesLoader {
             final String filename = path.substring(prefix.length(), path.length() - FTManager.TEMPLATE_EXTENSION_SUFFIX.length());
             final String extension = myTypeManager.getExtension(filename);
             final String templateName = filename.substring(0, filename.length() - extension.length() - 1);
-            final URL templateUrl = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm() + "/" + path)));
+            final URL templateUrl = UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + path));
             final String descriptionPath = getDescriptionPath(prefix, templateName, extension, descriptionPaths);
-            final URL descriptionUrl = descriptionPath != null
-                                       ? UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm() + "/" + descriptionPath)))
-                                       : null;
+            final URL descriptionUrl = descriptionPath == null ? null : UrlClassLoader.internProtocol(new URL(UriUtil.trimTrailingSlashes(root.toExternalForm()) + "/" + descriptionPath));
             assert templateUrl != null;
             entry.getValue().addDefaultTemplate(new DefaultTemplate(templateName, extension, templateUrl, descriptionUrl));
           }
@@ -207,8 +205,7 @@ public class FileTemplatesLoader {
   private static String getDescriptionPath(String pathPrefix, String templateName, String templateExtension, Set<String> descriptionPaths) {
     final Locale locale = Locale.getDefault();
 
-    String descName =
-            MessageFormat.format("{0}.{1}_{2}_{3}" + DESCRIPTION_EXTENSION_SUFFIX, templateName, templateExtension, locale.getLanguage(), locale.getCountry());
+    String descName = MessageFormat.format("{0}.{1}_{2}_{3}" + DESCRIPTION_EXTENSION_SUFFIX, templateName, templateExtension, locale.getLanguage(), locale.getCountry());
     String descPath = pathPrefix.length() > 0 ? pathPrefix + descName : descName;
     if (descriptionPaths.contains(descPath)) {
       return descPath;

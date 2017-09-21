@@ -42,12 +42,8 @@ public class UrlUtil {
   private static final String FILE_PROTOCOL_PREFIX = FILE_PROTOCOL + ":";
 
   public static String loadText(URL url) throws IOException {
-    final InputStream stream = new BufferedInputStream(URLUtil.openStream(url));
-    try {
+    try (InputStream stream = new BufferedInputStream(URLUtil.openStream(url))) {
       return new String(FileUtil.loadBytes(stream), FileTemplate.ourEncoding);
-    }
-    finally {
-      stream.close();
     }
   }
 
