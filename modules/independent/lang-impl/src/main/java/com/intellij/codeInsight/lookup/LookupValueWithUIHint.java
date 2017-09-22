@@ -26,10 +26,16 @@ import java.awt.*;
  */
 public interface LookupValueWithUIHint extends PresentableLookupValue {
   @Nullable
-  String getTypeHint();
+  default String getTypeHint() {
+    return null;
+  }
 
   @Nullable
-  Color getColorHint();
+  default Color getColorHint() {
+    return null;
+  }
 
-  boolean isBold();
+  default boolean isBold() {
+    return false;
+  }
 }
