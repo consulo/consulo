@@ -17,6 +17,7 @@ package consulo.platform;
 
 import com.intellij.openapi.extensions.PluginId;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -27,6 +28,18 @@ public abstract class PlatformBase implements Platform {
 
   protected PlatformBase(@NotNull String pluginId) {
     myPluginId = PluginId.getId(pluginId);
+  }
+
+  @Nullable
+  @Override
+  public String getRuntimeProperty(@NotNull String key) {
+    return System.getProperty(key);
+  }
+
+  @Nullable
+  @Override
+  public String getEnvironmentVariable(@NotNull String key) {
+    return System.getenv(key);
   }
 
   @NotNull

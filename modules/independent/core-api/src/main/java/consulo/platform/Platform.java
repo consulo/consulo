@@ -16,7 +16,9 @@
 package consulo.platform;
 
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -34,4 +36,20 @@ public interface Platform {
   boolean isDesktop();
 
   boolean isWebService();
+
+  @Nullable
+  String getRuntimeProperty(@NotNull String key);
+
+  @Nullable
+  default String getRuntimeProperty(@NotNull String key, @NotNull String defaultValue) {
+    return ObjectUtil.notNull(getRuntimeProperty(key), defaultValue);
+  }
+
+  @Nullable
+  String getEnvironmentVariable(@NotNull String key);
+
+  @Nullable
+  default String getEnvironmentVariable(@NotNull String key, @NotNull String defaultValue) {
+    return ObjectUtil.notNull(getEnvironmentVariable(key), defaultValue);
+  }
 }
