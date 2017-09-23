@@ -325,6 +325,11 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return true;
   }
 
+  @Override
+  public boolean isWriteThread() {
+    return true;
+  }
+
   @NotNull
   @Override
   public ModalityInvokator getInvokator() {

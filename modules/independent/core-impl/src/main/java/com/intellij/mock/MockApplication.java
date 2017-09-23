@@ -53,6 +53,11 @@ public class MockApplication extends MockComponentManager implements Application
   }
 
   @Override
+  public boolean isWriteThread() {
+    return true;
+  }
+
+  @Override
   public boolean isActive() {
     return true;
   }

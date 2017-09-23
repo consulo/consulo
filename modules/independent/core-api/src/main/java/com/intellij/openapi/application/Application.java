@@ -191,9 +191,18 @@ public interface Application extends ComponentManager {
   /**
    * Checks if the current thread is the Swing dispatch thread.
    *
+   * Dispatch thread not always is "write thread". For checking if current thread is "write thread" use {@link #isWriteThread()}
+   *
    * @return true if the current thread is the Swing dispatch thread, false otherwise.
    */
   boolean isDispatchThread();
+
+  /**
+   * Checks if the current thread is "write thread".
+   *
+   * @return true if the current thread is the "write thread", false otherwise.
+   */
+  boolean isWriteThread();
 
   /**
    * @return a facade, which lets to call all those invokeLater() with a ActionCallback handle returned.

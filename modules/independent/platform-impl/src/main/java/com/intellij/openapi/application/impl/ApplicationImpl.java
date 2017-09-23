@@ -449,6 +449,11 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
+  public boolean isWriteThread() {
+    return myLock.isWriteThread();
+  }
+
+  @Override
   @NotNull
   public ModalityInvokator getInvokator() {
     return myInvokator;

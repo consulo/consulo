@@ -17,7 +17,7 @@ package com.intellij.openapi.application;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ThrowableComputable;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
   @NotNull
   @Override
   public RunResult<T> execute() {
-    final RunResult<T> result = new RunResult<T>(this);
+    final RunResult<T> result = new RunResult<>(this);
 
     final Application application = ApplicationManager.getApplication();
     boolean dispatchThread = application.isDispatchThread();
@@ -47,16 +47,13 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
       LOG.error("Must not start write action from within read action in the other thread - deadlock is coming");
     }
 
-    TransactionGuard.getInstance().submitTransactionAndWait(new Runnable() {
-      @Override
-      public void run() {
-        AccessToken token = start(WriteAction.this.getClass());
-        try {
-          result.run();
-        }
-        finally {
-          token.finish();
-        }
+    TransactionGuard.getInstance().submitTransactionAndWait(() -> {
+      AccessToken token = start(WriteAction.this.getClass());
+      try {
+        result.run();
+      }
+      finally {
+        token.finish();
       }
     });
 
@@ -67,7 +64,7 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
   @NotNull
   public static AccessToken start() {
     // get useful information about the write action
-    Class aClass = ObjectUtils.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
+    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
     return start(aClass);
   }
 
