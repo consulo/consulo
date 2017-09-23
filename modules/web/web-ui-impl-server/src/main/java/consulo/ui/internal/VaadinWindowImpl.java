@@ -15,13 +15,8 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.Component;
-import consulo.ui.MenuBar;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
-import consulo.ui.UIAccess;
-import consulo.ui.VaadinUIAccessImpl;
-import consulo.ui.Window;
+import com.intellij.openapi.util.Disposer;
+import consulo.ui.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,8 +25,32 @@ import org.jetbrains.annotations.Nullable;
  * @since 15-Sep-17
  */
 public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, VaadinWrapper {
+  private boolean myDisposed;
+
   public VaadinWindowImpl(boolean modal) {
     setModal(modal);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void show() {
+    if (myDisposed) {
+      throw new IllegalArgumentException("Window already disposed");
+    }
+
+    VaadinUIAccessImpl uiAccess = (VaadinUIAccessImpl)UIAccess.get();
+
+    uiAccess.getUI().addWindow(this);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void close() {
+    super.close();
+
+    myDisposed = true;
+
+    Disposer.dispose(this);
   }
 
   @RequiredUIAccess
@@ -50,15 +69,6 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
   @Override
   public void setMenuBar(@Nullable MenuBar menuBar) {
     throw new UnsupportedOperationException();
-  }
-
-
-  @RequiredUIAccess
-  @Override
-  public void show() {
-    VaadinUIAccessImpl uiAccess = (VaadinUIAccessImpl)UIAccess.get();
-
-    uiAccess.getUI().addWindow(this);
   }
 
   @Nullable

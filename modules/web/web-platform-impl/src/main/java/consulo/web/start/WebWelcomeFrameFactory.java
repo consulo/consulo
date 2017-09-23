@@ -13,46 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.ui.welcomeFrame;
+package consulo.web.start;
 
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
-import consulo.ui.Components;
-import consulo.ui.DockLayout;
-import consulo.ui.Layouts;
-import consulo.ui.ListBox;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
-import consulo.ui.VerticalLayout;
-import consulo.ui.Window;
-import consulo.ui.Windows;
+import consulo.start.WelcomeFrameFactory;
+import consulo.ui.*;
 import consulo.ui.border.BorderPosition;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 23-Sep-17
  */
-public class WelcomeFrameBuilder {
+public class WebWelcomeFrameFactory implements WelcomeFrameFactory {
   @RequiredUIAccess
-  public static void show() {
-
+  @NotNull
+  @Override
+  public Window createFrame() {
     Window welcomeFrame = Windows.modalWindow(FrameTitleUtil.buildTitle());
     welcomeFrame.setResizable(false);
     welcomeFrame.setClosable(false);
-    welcomeFrame.setSize(new Size(777, 460));
-    welcomeFrame.setContent(Components.label("TEst"));
-
+    welcomeFrame.setSize(WelcomeFrameFactory.getDefaultWindowSize());
+    welcomeFrame.setContent(Components.label("Test"));
 
     ListBox<String> listSelect = Components.listBox("Test");
     listSelect.addBorder(BorderPosition.RIGHT);
@@ -88,7 +76,6 @@ public class WelcomeFrameBuilder {
     layout.center(projectActionLayout);
 
     welcomeFrame.setContent(layout);
-
-    welcomeFrame.show();
+    return welcomeFrame;
   }
 }

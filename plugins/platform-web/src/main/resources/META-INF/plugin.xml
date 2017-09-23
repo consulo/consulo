@@ -21,5 +21,8 @@
   <extensions defaultExtensionNs="com.intellij">
     <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
                         serviceImplementation="consulo.web.fileChooser.WebFileChooserFactory"/>
+
+    <applicationService serviceInterface="consulo.start.WelcomeFrameFactory"
+                        serviceImplementation="consulo.web.start.WebWelcomeFrameFactory" />
   </extensions>
 </idea-plugin>

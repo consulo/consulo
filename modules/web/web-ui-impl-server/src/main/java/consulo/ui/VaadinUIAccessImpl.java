@@ -30,15 +30,20 @@ public class VaadinUIAccessImpl implements UIAccess {
   }
 
   @Override
+  public boolean isValid() {
+    return myUI.isAttached() && myUI.getSession() != null;
+  }
+
+  @Override
   public void give(@RequiredUIAccess @NotNull Runnable runnable) {
-    if (myUI.isAttached()) {
+    if (isValid()) {
       myUI.access(runnable);
     }
   }
 
   @Override
   public void giveAndWait(@NotNull Runnable runnable) {
-    if (myUI.isAttached()) {
+    if (isValid()) {
       myUI.accessSynchronously(runnable);
     }
   }

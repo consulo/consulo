@@ -36,6 +36,7 @@ import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
+import consulo.start.WelcomeFrameFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +51,7 @@ import java.io.File;
 public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, AccessibleContextAccessor, UISettingsListener {
   @NotNull
   public static Dimension getDefaultWindowSize() {
-    return JBUI.size(777, 460);
+    return JBUI.size(WelcomeFrameFactory.getDefaultWindowSize());
   }
 
   BalloonLayout myBalloonLayout;

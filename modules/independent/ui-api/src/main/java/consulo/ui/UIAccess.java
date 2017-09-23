@@ -49,6 +49,8 @@ public interface UIAccess {
     }
   }
 
+  boolean isValid();
+
   void give(@RequiredUIAccess @NotNull Runnable runnable);
 
   void giveAndWait(@RequiredUIAccess @NotNull Runnable runnable);

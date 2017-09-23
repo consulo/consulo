@@ -16,21 +16,28 @@
 package consulo.web.servlet;
 
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import consulo.ui.Components;
+import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.start.WelcomeFrameFactory;
+import consulo.ui.Layouts;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
+import consulo.ui.ex.internal.WGwtLoadingPanelImpl;
+import consulo.web.application.WebApplication;
+import consulo.web.application.WebSession;
+import consulo.web.application.impl.VaadinWebSessionImpl;
 import consulo.web.servlet.ui.UIBuilder;
 import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
  * @since 10-Sep-17
  */
-public class NewAppUIBuilder extends UIBuilder {
+public class NewAppUIBuilder implements UIBuilder {
   @WebServlet(urlPatterns = "/app/*")
   public static class Servlet extends UIServlet {
     public Servlet() {
@@ -40,13 +47,50 @@ public class NewAppUIBuilder extends UIBuilder {
 
   @RequiredUIAccess
   @Override
-  protected void build(@NotNull Window window) {
-    ApplicationEx application = ApplicationManagerEx.getApplicationEx();
-    if (application == null || !application.isLoaded()) {
-      window.setContent(Components.label("Loading"));
-      return;
+  public void build(@NotNull Window window) {
+    window.setContent(new WGwtLoadingPanelImpl());
+
+    UIAccess access = UIAccess.get();
+
+    scheduleWelcomeFrame(access, window);
+  }
+
+  private void scheduleWelcomeFrame(UIAccess access, Window window) {
+    AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
+      WebApplication application = WebApplication.getInstance();
+      if (application == null || !((ApplicationEx)application).isLoaded()) {
+        if (access.isValid()) {
+          scheduleWelcomeFrame(access, window);
+        }
+        return;
+      }
+
+      if (access.isValid()) {
+        access.give(() -> showWelcomeFrame(application, window));
+      }
+    }, 1, TimeUnit.SECONDS);
+  }
+
+  @RequiredUIAccess
+  private void showWelcomeFrame(WebApplication application, Window window) {
+    window.setContent(Layouts.dock());
+
+    WebSession currentSession = application.getCurrentSession();
+    if (currentSession != null) {
+      WebSession newSession = currentSession;
+
+      currentSession.close();
+
+      currentSession = newSession.copy();
+    }
+    else {
+      currentSession = new VaadinWebSessionImpl();
     }
 
-    //WelcomeFrameBuilder.show();
+    application.setCurrentSession(currentSession);
+
+    Window frame = WelcomeFrameFactory.getInstance().createFrame();
+
+    frame.show();
   }
 }

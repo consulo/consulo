@@ -105,6 +105,11 @@ public class UIServlet extends VaadinServlet {
         }
 
         @Override
+        public boolean isPreservedOnRefresh(UICreateEvent event) {
+          return true;
+        }
+
+        @Override
         public String getTheme(UICreateEvent event) {
           return "consulo";
         }

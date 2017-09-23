@@ -35,6 +35,11 @@ public interface VaadinWrapper extends Component {
     return (com.vaadin.ui.Component)this;
   }
 
+  @Override
+  default public Component getParentComponent() {
+    return (Component)toVaadin().getParent();
+  }
+
   default UIDataObject dataObject() {
     AbstractComponent component = (AbstractComponent)toVaadin();
     UIDataObject data = (UIDataObject)component.getData();

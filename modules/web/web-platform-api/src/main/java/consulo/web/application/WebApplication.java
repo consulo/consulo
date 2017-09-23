@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.servlet.ui;
+package consulo.web.application;
 
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.Window;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 23-Sep-17
  */
-public interface UIBuilder {
-  @RequiredUIAccess
-  void build(@NotNull Window window);
+public interface WebApplication extends Application {
+  @Nullable
+  static WebApplication getInstance() {
+    return (WebApplication)ApplicationManager.getApplication();
+  }
+
+  @Nullable
+  WebSession getCurrentSession();
+
+  void setCurrentSession(@Nullable WebSession session);
 }

@@ -31,6 +31,11 @@ class AWTUIAccessImpl implements UIAccess {
   }
 
   @Override
+  public boolean isValid() {
+    return true;
+  }
+
+  @Override
   public void give(@RequiredUIAccess @NotNull Runnable runnable) {
     SwingUtilities.invokeLater(runnable);
   }

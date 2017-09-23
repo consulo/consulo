@@ -24,6 +24,7 @@ import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.keyFMap.KeyFMap;
 import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.ui.Size;
 import consulo.util.ui.components.VerticalLayoutPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -393,6 +394,10 @@ public class JBUI {
 
   public static JBDimension size(int widthAndHeight) {
     return new JBDimension(widthAndHeight, widthAndHeight);
+  }
+
+  public static JBDimension size(Size size) {
+    return new JBDimension(size.getWidth(), size.getHeight());
   }
 
   public static JBDimension size(Dimension size) {

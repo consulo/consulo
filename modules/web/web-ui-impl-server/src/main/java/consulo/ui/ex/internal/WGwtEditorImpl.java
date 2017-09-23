@@ -21,20 +21,12 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.internal.VaadinWrapper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 13-Sep-17
  */
 public class WGwtEditorImpl extends AbstractComponent implements Component, VaadinWrapper {
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
-  }
-
   @RequiredUIAccess
   @Override
   public void setSize(@NotNull Size size) {

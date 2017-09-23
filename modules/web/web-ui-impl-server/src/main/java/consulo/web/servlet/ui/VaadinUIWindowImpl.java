@@ -15,13 +15,10 @@
  */
 package consulo.web.servlet.ui;
 
+import com.intellij.openapi.util.Disposer;
 import com.vaadin.server.Page;
 import com.vaadin.ui.UI;
-import consulo.ui.Component;
-import consulo.ui.MenuBar;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
-import consulo.ui.Window;
+import consulo.ui.*;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.internal.WGwtRootPanelImpl;
@@ -39,10 +36,18 @@ class VaadinUIWindowImpl implements Window {
   private final UI myUI;
   private WGwtRootPanelImpl myRootPanel = new WGwtRootPanelImpl();
 
+  private boolean myDisposed;
+
   public VaadinUIWindowImpl(UI ui) {
     myUI = ui;
     myUI.setSizeFull();
     myUI.setContent(myRootPanel);
+
+    ui.addDetachListener(event -> {
+      myDisposed = true;
+
+      Disposer.dispose(this);
+    });
   }
 
   @RequiredUIAccess
@@ -112,6 +117,10 @@ class VaadinUIWindowImpl implements Window {
   @RequiredUIAccess
   @Override
   public void setContent(@NotNull Component content) {
+    if (myDisposed) {
+      throw new IllegalArgumentException("Already disposed");
+    }
+
     myRootPanel.setCenterComponent((com.vaadin.ui.Component)content);
   }
 
@@ -140,6 +149,6 @@ class VaadinUIWindowImpl implements Window {
   @RequiredUIAccess
   @Override
   public void close() {
-    throw new UnsupportedOperationException();
+    myUI.close();
   }
 }

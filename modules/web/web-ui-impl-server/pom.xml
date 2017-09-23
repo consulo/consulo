@@ -65,7 +65,13 @@
       <artifactId>consulo-lang-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
-    
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-web-platform-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util</artifactId>
