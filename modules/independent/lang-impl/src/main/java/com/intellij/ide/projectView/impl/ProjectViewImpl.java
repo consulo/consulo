@@ -23,7 +23,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.impl.ProjectViewSelectInTarget;
 import com.intellij.ide.projectView.HelpID;
-import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.impl.nodes.*;
 import com.intellij.ide.scopeView.ScopeViewPane;
@@ -90,6 +89,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.projectView.ProjectViewEx;
 import consulo.psi.PsiPackageSupportProviders;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
@@ -108,7 +108,7 @@ import java.util.*;
 import java.util.List;
 
 @State(name = "ProjectView", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-public class ProjectViewImpl extends ProjectView implements PersistentStateComponent<Element>, Disposable, QuickActionProvider, BusyObject {
+public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<Element>, Disposable, QuickActionProvider, BusyObject {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.projectView.impl.ProjectViewImpl");
   private static final Key<String> ID_KEY = Key.create("pane-id");
   private static final Key<String> SUB_ID_KEY = Key.create("pane-sub-id");
@@ -537,13 +537,8 @@ public class ProjectViewImpl extends ProjectView implements PersistentStateCompo
     myAutoScrollToSourceHandler.onMouseClicked(newPane.myTree);
   }
 
-  // public for tests
-  public synchronized void setupImpl(@NotNull ToolWindow toolWindow) {
-    setupImpl(toolWindow, true);
-  }
-
-  // public for tests
-  public synchronized void setupImpl(@NotNull ToolWindow toolWindow, final boolean loadPaneExtensions) {
+  @Override
+  public void setupToolwindow(@NotNull ToolWindow toolWindow, final boolean loadPaneExtensions) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myActionGroup = new DefaultActionGroup();
 

@@ -28,79 +28,80 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
-public abstract class ProjectView {
-  public static ProjectView getInstance(Project project) {
+public interface ProjectView {
+  @NotNull
+  static ProjectView getInstance(Project project) {
     return ServiceManager.getService(project, ProjectView.class);
   }
 
-  public abstract void select(Object element, VirtualFile file, boolean requestFocus);
+  void select(Object element, VirtualFile file, boolean requestFocus);
 
-  public abstract ActionCallback selectCB(Object element, VirtualFile file, boolean requestFocus);
+  ActionCallback selectCB(Object element, VirtualFile file, boolean requestFocus);
 
-  public abstract ActionCallback changeViewCB(@NotNull String viewId, String subId);
+  ActionCallback changeViewCB(@NotNull String viewId, String subId);
 
   @Nullable
-  public abstract PsiElement getParentOfCurrentSelection();
+  PsiElement getParentOfCurrentSelection();
 
   // show pane identified by id using default(or currently selected) subId
-  public abstract void changeView(String viewId);
+  void changeView(String viewId);
 
-  public abstract void changeView(String viewId, String subId);
+  void changeView(String viewId, String subId);
 
-  public abstract void changeView();
+  void changeView();
 
-  public abstract void refresh();
+  void refresh();
 
-  public abstract boolean isAutoscrollToSource(String paneId);
+  boolean isAutoscrollToSource(String paneId);
 
-  public abstract boolean isFlattenPackages(String paneId);
+  boolean isFlattenPackages(String paneId);
 
-  public abstract boolean isShowMembers(String paneId);
+  boolean isShowMembers(String paneId);
 
-  public abstract boolean isHideEmptyMiddlePackages(String paneId);
+  boolean isHideEmptyMiddlePackages(String paneId);
 
-  public abstract void setHideEmptyPackages(boolean hideEmptyPackages, String paneId);
+  void setHideEmptyPackages(boolean hideEmptyPackages, String paneId);
 
-  public abstract boolean isShowLibraryContents(String paneId);
+  boolean isShowLibraryContents(String paneId);
 
-  public abstract void setShowLibraryContents(boolean showLibraryContents, String paneId);
+  void setShowLibraryContents(boolean showLibraryContents, String paneId);
 
-  public abstract boolean isShowModules(String paneId);
+  boolean isShowModules(String paneId);
 
-  public abstract void setShowModules(boolean showModules, String paneId);
+  void setShowModules(boolean showModules, String paneId);
 
-  public abstract void addProjectPane(final AbstractProjectViewPane pane);
+  void addProjectPane(final AbstractProjectViewPane pane);
 
-  public abstract void removeProjectPane(AbstractProjectViewPane instance);
+  void removeProjectPane(AbstractProjectViewPane instance);
 
-  public abstract AbstractProjectViewPane getProjectViewPaneById(String id);
+  AbstractProjectViewPane getProjectViewPaneById(String id);
 
-  public abstract boolean isAutoscrollFromSource(String paneId);
+  boolean isAutoscrollFromSource(String paneId);
 
-  public abstract boolean isAbbreviatePackageNames(String paneId);
+  boolean isAbbreviatePackageNames(String paneId);
 
-  public abstract void setAbbreviatePackageNames(boolean abbreviatePackageNames, String paneId);
+  void setAbbreviatePackageNames(boolean abbreviatePackageNames, String paneId);
 
   /**
    * e.g. {@link com.intellij.ide.projectView.impl.ProjectViewPane#ID}
    *
    * @see com.intellij.ide.projectView.impl.AbstractProjectViewPane#getId()
    */
-  public abstract String getCurrentViewId();
+  String getCurrentViewId();
 
-  public abstract boolean isManualOrder(String paneId);
+  boolean isManualOrder(String paneId);
 
-  public abstract void setManualOrder(@NotNull String paneId, final boolean enabled);
+  void setManualOrder(@NotNull String paneId, final boolean enabled);
 
-  public abstract void selectPsiElement(PsiElement element, boolean requestFocus);
+  void selectPsiElement(PsiElement element, boolean requestFocus);
 
-  public abstract boolean isSortByType(String paneId);
+  boolean isSortByType(String paneId);
 
-  public abstract void setSortByType(String paneId, final boolean sortByType);
+  void setSortByType(String paneId, final boolean sortByType);
 
-  public abstract AbstractProjectViewPane getCurrentProjectViewPane();
+  AbstractProjectViewPane getCurrentProjectViewPane();
 
-  public abstract Collection<String> getPaneIds();
+  Collection<String> getPaneIds();
 
-  public abstract Collection<SelectInTarget> getSelectInTargets();
+  Collection<SelectInTarget> getSelectInTargets();
 }

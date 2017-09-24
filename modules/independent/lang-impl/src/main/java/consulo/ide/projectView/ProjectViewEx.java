@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.intellij.ide.projectView.impl;
+package consulo.ide.projectView;
 
 import com.intellij.ide.projectView.ProjectView;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
-import consulo.ide.projectView.ProjectViewEx;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 25-Sep-17
  */
-public class ProjectViewToolWindowFactory implements ToolWindowFactory, DumbAware {
-  @Override
-  public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-    ((ProjectViewEx) ProjectView.getInstance(project)).setupToolwindow(toolWindow, true);
-  }
+public interface ProjectViewEx extends ProjectView {
+  void setupToolwindow(@NotNull ToolWindow toolWindow, final boolean loadPaneExtensions);
 }
