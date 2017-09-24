@@ -31,7 +31,6 @@ import java.util.List;
  * @since 31-Jan-17
  */
 public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
-
   @SuppressWarnings("unchecked")
   private NotNullLazyValue<ProjectOpenProcessor[]> myCacheValue = NotNullLazyValue.createValue(() -> {
     List<ProjectOpenProcessor> processors = new ArrayList<>();
