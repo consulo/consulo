@@ -37,11 +37,11 @@ import java.util.concurrent.TimeUnit;
  * @author VISTALL
  * @since 10-Sep-17
  */
-public class NewAppUIBuilder implements UIBuilder {
+public class RootUIBuilder implements UIBuilder {
   @WebServlet(urlPatterns = "/app/*")
   public static class Servlet extends UIServlet {
     public Servlet() {
-      super(NewAppUIBuilder.class, "/app");
+      super(RootUIBuilder.class, "/app");
     }
   }
 
