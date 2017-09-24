@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.RequiredDispatchThread;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +43,7 @@ public abstract class ProjectManagerEx extends ProjectManager {
   @Nullable
   public abstract Project loadProject(@NotNull String filePath) throws IOException, JDOMException, InvalidDataException;
 
+  @RequiredDispatchThread
   public abstract boolean openProject(Project project);
 
   public abstract boolean isProjectOpened(Project project);
@@ -54,13 +56,16 @@ public abstract class ProjectManagerEx extends ProjectManager {
   public abstract void unblockReloadingProjectOnExternalChanges();
 
   @TestOnly
+  @RequiredDispatchThread
   public abstract void openTestProject(@NotNull Project project);
 
   @TestOnly
   // returns remaining open test projects
+  @RequiredDispatchThread
   public abstract Collection<Project> closeTestProject(@NotNull Project project);
 
   // returns true on success
+  @RequiredDispatchThread
   public abstract boolean closeAndDispose(@NotNull Project project);
 
   @Nullable

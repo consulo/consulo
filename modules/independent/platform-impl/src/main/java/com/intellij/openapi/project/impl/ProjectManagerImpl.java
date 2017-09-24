@@ -61,6 +61,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredWriteAction;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -81,9 +82,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
   private static final Key<List<ProjectManagerListener>> LISTENERS_IN_PROJECT_KEY = Key.create("LISTENERS_IN_PROJECT_KEY");
 
-  @SuppressWarnings({"FieldAccessedSynchronizedAndUnsynchronized"})
   private ProjectImpl myDefaultProject; // Only used asynchronously in save and dispose, which itself are synchronized.
-  @SuppressWarnings({"FieldAccessedSynchronizedAndUnsynchronized"})
   private Element myDefaultProjectRootElement; // Only used asynchronously in save and dispose, which itself are synchronized.
 
   private Project[] myOpenProjects = {}; // guarded by lock
@@ -98,12 +97,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   private final ProgressManager myProgressManager;
   private volatile boolean myDefaultProjectWasDisposed = false;
 
-  private final Runnable restartApplicationOrReloadProjectTask = new Runnable() {
-    @Override
-    public void run() {
-      if (isReloadUnblocked() && tryToReloadApplication()) {
-        askToReloadProjectIfConfigFilesChangedExternally();
-      }
+  private final Runnable restartApplicationOrReloadProjectTask = () -> {
+    if (isReloadUnblocked() && tryToReloadApplication()) {
+      askToReloadProjectIfConfigFilesChangedExternally();
     }
   };
 
@@ -114,31 +110,18 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return array;
   }
 
-  /**
-   * @noinspection UnusedParameters
-   */
   public ProjectManagerImpl(@NotNull VirtualFileManager virtualFileManager, ProgressManager progressManager) {
     myProgressManager = progressManager;
     Application app = ApplicationManager.getApplication();
     MessageBus messageBus = app.getMessageBus();
 
-    messageBus.connect(app).subscribe(StateStorage.STORAGE_TOPIC, new StateStorage.Listener() {
-      @Override
-      public void storageFileChanged(@NotNull VirtualFileEvent event, @NotNull StateStorage storage) {
-        projectStorageFileChanged(event, storage, null);
-      }
-    });
+    messageBus.connect(app).subscribe(StateStorage.STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, null));
 
     final ProjectManagerListener busPublisher = messageBus.syncPublisher(TOPIC);
     addProjectManagerListener(new ProjectManagerListener() {
       @Override
       public void projectOpened(final Project project) {
-        project.getMessageBus().connect(project).subscribe(StateStorage.PROJECT_STORAGE_TOPIC, new StateStorage.Listener() {
-          @Override
-          public void storageFileChanged(@NotNull VirtualFileEvent event, @NotNull StateStorage storage) {
-            projectStorageFileChanged(event, storage, project);
-          }
-        });
+        project.getMessageBus().connect(project).subscribe(StateStorage.PROJECT_STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, project));
 
         busPublisher.projectOpened(project);
         for (ProjectManagerListener listener : getListeners(project)) {
@@ -198,6 +181,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Override
+  @RequiredWriteAction
   public void dispose() {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     Disposer.dispose(myChangedFilesAlarm);
@@ -209,10 +193,10 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     }
   }
 
-  private static final boolean LOG_PROJECT_LEAKAGE_IN_TESTS = false;
+  private static final boolean LOG_PROJECT_LEAKAGE_IN_TESTS = Boolean.getBoolean("LOG_PROJECT_LEAKAGE_IN_TESTS");
   private static final int MAX_LEAKY_PROJECTS = 42;
   @SuppressWarnings("FieldCanBeLocal")
-  private final Map<Project, String> myProjects = new WeakHashMap<Project, String>();
+  private final Map<Project, String> myProjects = new WeakHashMap<>();
 
   @Override
   @Nullable
@@ -229,7 +213,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       }
 
       if (myProjects.size() >= MAX_LEAKY_PROJECTS) {
-        List<Project> copy = new ArrayList<Project>(myProjects.keySet());
+        List<Project> copy = new ArrayList<>(myProjects.keySet());
         myProjects.clear();
         throw new TooManyProjectLeakedException(copy);
       }
@@ -290,17 +274,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     }
     finally {
       if (!succeed && !project.isDefault()) {
-        TransactionGuard.submitTransaction(project, new Runnable() {
-          @Override
-          public void run() {
-            WriteAction.run(new ThrowableRunnable<RuntimeException>() {
-              @Override
-              public void run() throws RuntimeException {
-                Disposer.dispose(project);
-              }
-            });
-          }
-        });
+        TransactionGuard.submitTransaction(project, () -> WriteAction.run(() -> Disposer.dispose(project)));
       }
     }
   }
@@ -309,22 +283,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return isDefault
            ? new DefaultProject(this, "", isOptimiseTestLoadSpeed)
            : new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName);
-  }
-
-  private static void scheduleDispose(final ProjectImpl project) {
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            if (!project.isDisposed()) {
-              Disposer.dispose(project);
-            }
-          }
-        });
-      }
-    });
   }
 
   @Override
@@ -363,17 +321,14 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   public synchronized Project getDefaultProject() {
     LOG.assertTrue(!myDefaultProjectWasDisposed, "Default project has been already disposed!");
     if (myDefaultProject == null) {
-      ProgressManager.getInstance().executeNonCancelableSection(new Runnable() {
-        @Override
-        public void run() {
-          try {
-            myDefaultProject = createProject(null, "", true, ApplicationManager.getApplication().isUnitTestMode());
-            initProject(myDefaultProject, null);
-            myDefaultProjectRootElement = null;
-          }
-          catch (Throwable t) {
-            PluginManager.processException(t);
-          }
+      ProgressManager.getInstance().executeNonCancelableSection(() -> {
+        try {
+          myDefaultProject = createProject(null, "", true, ApplicationManager.getApplication().isUnitTestMode());
+          initProject(myDefaultProject, null);
+          myDefaultProjectRootElement = null;
+        }
+        catch (Throwable t) {
+          PluginManager.processException(t);
         }
       });
     }
@@ -400,6 +355,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean openProject(final Project project) {
     if (isLight(project)) {
@@ -503,6 +459,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return !(indicator instanceof NonCancelableSection);
   }
 
+  @RequiredDispatchThread
   @Override
   public Project loadAndOpenProject(@NotNull final String filePath) throws IOException {
     final Project project = convertAndLoadProject(filePath);
@@ -511,15 +468,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       return null;
     }
 
-    // todo unify this logic with PlatformProjectOpenProcessor
     if (!openProject(project)) {
       WelcomeFrame.showIfNoProjectOpened();
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          Disposer.dispose(project);
-        }
-      });
+      ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(project));
     }
 
     return project;
@@ -555,12 +506,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     }
 
     if (!conversionResult.conversionNotNeeded()) {
-      StartupManager.getInstance(project).registerPostStartupActivity(new Runnable() {
-        @Override
-        public void run() {
-          conversionResult.postStartupActivity(project);
-        }
-      });
+      StartupManager.getInstance(project).registerPostStartupActivity(() -> conversionResult.postStartupActivity(project));
     }
     return project;
   }
@@ -601,10 +547,10 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       if (myChangedProjectFiles.isEmpty()) {
         return;
       }
-      projects = new THashSet<Project>(myChangedProjectFiles.keySet());
+      projects = new THashSet<>(myChangedProjectFiles.keySet());
     }
 
-    List<Project> projectsToReload = new SmartList<Project>();
+    List<Project> projectsToReload = new SmartList<>();
     for (Project project : projects) {
       if (shouldReloadProject(project)) {
         projectsToReload.add(project);
@@ -653,10 +599,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       }
     }
 
-    if (causes.isEmpty()) {
-      return false;
-    }
-    return ComponentStoreImpl.reloadStore(causes, ((ProjectEx)project).getStateStore()) == ReloadComponentStoreStatus.RESTART_AGREED;
+    return !causes.isEmpty() && ComponentStoreImpl.reloadStore(causes, ((ProjectEx)project).getStateStore()) == ReloadComponentStoreStatus.RESTART_AGREED;
   }
 
   @Override
@@ -680,6 +623,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Override
+  @RequiredDispatchThread
   public void openTestProject(@NotNull final Project project) {
     assert ApplicationManager.getApplication().isUnitTestMode();
     openProject(project);
@@ -687,6 +631,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   @Override
+  @RequiredDispatchThread
   public Collection<Project> closeTestProject(@NotNull Project project) {
     assert ApplicationManager.getApplication().isUnitTestMode();
     closeProject(project, false, false, false);
@@ -737,30 +682,28 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   private static void doReloadProject(@NotNull Project project) {
     final Ref<Project> projectRef = Ref.create(project);
     ProjectReloadState.getInstance(project).onBeforeAutomaticProjectReload();
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        LOG.debug("Reloading project.");
-        Project project = projectRef.get();
-        // Let it go
-        projectRef.set(null);
+    ApplicationManager.getApplication().invokeLater(() -> {
+      LOG.debug("Reloading project.");
+      Project project1 = projectRef.get();
+      // Let it go
+      projectRef.set(null);
 
-        if (project.isDisposed()) {
-          return;
-        }
-
-        // must compute here, before project dispose
-        String presentableUrl = project.getPresentableUrl();
-        if (!ProjectUtil.closeAndDispose(project)) {
-          return;
-        }
-
-        ProjectUtil.open(presentableUrl, null, true);
+      if (project1.isDisposed()) {
+        return;
       }
+
+      // must compute here, before project dispose
+      String presentableUrl = project1.getPresentableUrl();
+      if (!ProjectUtil.closeAndDispose(project1)) {
+        return;
+      }
+
+      ProjectUtil.open(presentableUrl, null, true);
     }, ModalityState.NON_MODAL);
   }
 
   @Override
+  @RequiredDispatchThread
   public boolean closeProject(@NotNull final Project project) {
     return closeProject(project, true, false, true);
   }
@@ -790,16 +733,13 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
       fireProjectClosing(project); // somebody can start progress here, do not wrap in write action
 
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          removeFromOpened(project);
+      ApplicationManager.getApplication().runWriteAction(() -> {
+        removeFromOpened(project);
 
-          fireProjectClosed(project);
+        fireProjectClosed(project);
 
-          if (dispose) {
-            Disposer.dispose(project);
-          }
+        if (dispose) {
+          Disposer.dispose(project);
         }
       });
     }
@@ -814,6 +754,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     return ApplicationManager.getApplication().isUnitTestMode() && project.toString().contains("light_temp_");
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean closeAndDispose(@NotNull final Project project) {
     return closeProject(project, true, true, true);
@@ -842,12 +783,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   @Override
   public void addProjectManagerListener(@NotNull final ProjectManagerListener listener, @NotNull Disposable parentDisposable) {
     addProjectManagerListener(listener);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        removeProjectManagerListener(listener);
-      }
-    });
+    Disposer.register(parentDisposable, () -> removeProjectManagerListener(listener));
   }
 
   @Override
