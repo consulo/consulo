@@ -32,24 +32,20 @@ import java.util.List;
  */
 public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
 
-  private NotNullLazyValue<ProjectOpenProcessor[]> myValue = new NotNullLazyValue<ProjectOpenProcessor[]>() {
-    @NotNull
-    @Override
-    @SuppressWarnings("unchecked")
-    protected ProjectOpenProcessor[] compute() {
-      List<ProjectOpenProcessor> processors = new ArrayList<>();
-      processors.add(PlatformProjectOpenProcessor.getInstance());
+  @SuppressWarnings("unchecked")
+  private NotNullLazyValue<ProjectOpenProcessor[]> myCacheValue = NotNullLazyValue.createValue(() -> {
+    List<ProjectOpenProcessor> processors = new ArrayList<>();
+    processors.add(PlatformProjectOpenProcessor.getInstance());
 
-      for (ModuleImportProvider<?> provider : ModuleImportProviders.getExtensions(false)) {
-        processors.add(new ModuleImportBasedProjectOpenProcessor(provider));
-      }
-      return processors.toArray(new ProjectOpenProcessor[processors.size()]);
+    for (ModuleImportProvider<?> provider : ModuleImportProviders.getExtensions(false)) {
+      processors.add(new ModuleImportBasedProjectOpenProcessor(provider));
     }
-  };
+    return processors.toArray(new ProjectOpenProcessor[processors.size()]);
+  });
 
   @NotNull
   @Override
   public ProjectOpenProcessor[] getProcessors() {
-    return myValue.getValue();
+    return myCacheValue.getValue();
   }
 }
