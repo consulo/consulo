@@ -575,13 +575,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   private Project loadProjectWithProgress(@NotNull final String filePath) throws IOException {
     final ProjectImpl project = createProject(null, toCanonicalName(filePath), false, false);
     try {
-      myProgressManager.runProcessWithProgressSynchronously(new ThrowableComputable<Project, IOException>() {
-        @Override
-        @Nullable
-        public Project compute() throws IOException {
-          initProject(project, null);
-          return project;
-        }
+      myProgressManager.runProcessWithProgressSynchronously((ThrowableComputable<Project, IOException>)() -> {
+        initProject(project, null);
+        return project;
       }, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), project);
     }
     catch (StateStorageException e) {
