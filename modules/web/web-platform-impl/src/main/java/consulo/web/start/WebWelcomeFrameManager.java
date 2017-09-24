@@ -17,6 +17,7 @@ package consulo.web.start;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.Application;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.start.WelcomeFrameManager;
@@ -24,6 +25,7 @@ import consulo.ui.*;
 import consulo.ui.border.BorderPosition;
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,10 @@ import java.util.List;
  * @since 23-Sep-17
  */
 public class WebWelcomeFrameManager implements WelcomeFrameManager {
+  @Inject
+  public WebWelcomeFrameManager(@NotNull Application application) {
+  }
+
   @RequiredUIAccess
   @NotNull
   @Override
