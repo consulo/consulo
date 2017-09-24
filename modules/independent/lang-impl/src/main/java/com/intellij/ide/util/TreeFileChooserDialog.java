@@ -367,7 +367,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
   }
 
   private final class MyGotoFileModel implements ChooseByNameModel {
-    private final int myMaxSize = WindowManagerEx.getInstanceEx().getFrame(myProject).getSize().width;
+    private final int myMaxSize = WindowManagerEx.getInstance().getFrame(myProject).getSize().width;
     @Override
     @NotNull
     public Object[] getElementsByName(final String name, final boolean checkBoxState, final String pattern) {

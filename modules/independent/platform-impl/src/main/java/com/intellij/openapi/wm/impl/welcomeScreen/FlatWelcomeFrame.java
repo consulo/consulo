@@ -23,11 +23,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
+import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.*;
 import com.intellij.util.ui.JBUI;
@@ -48,7 +49,7 @@ import java.io.File;
 /**
  * @author Konstantin Bulenkov
  */
-public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, AccessibleContextAccessor, UISettingsListener {
+public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, AccessibleContextAccessor, UISettingsListener {
   @NotNull
   public static Dimension getDefaultWindowSize() {
     return JBUI.size(WelcomeFrameManager.getDefaultWindowSize());
@@ -185,5 +186,16 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrame, Disposable, Ac
   @Override
   public void uiSettingsChanged(UISettings source) {
     UIUtil.resetRootPaneAppearance(getRootPane());
+  }
+
+  @Override
+  public boolean isInFullScreen() {
+    return false;
+  }
+
+  @NotNull
+  @Override
+  public ActionCallback toggleFullScreen(boolean state) {
+    return ActionCallback.REJECTED;
   }
 }

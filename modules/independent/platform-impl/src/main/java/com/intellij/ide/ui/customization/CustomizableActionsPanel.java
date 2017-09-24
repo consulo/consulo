@@ -39,8 +39,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.packageDependencies.ui.TreeExpansionMonitor;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.InsertPathAction;
@@ -387,7 +387,7 @@ public class CustomizableActionsPanel {
   private static void setCustomizationSchemaForCurrentProjects() {
     final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
     for (Project project : openProjects) {
-      final IdeFrameImpl frame = WindowManagerEx.getInstanceEx().getFrame(project);
+      final IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(project);
       if (frame != null) {
         frame.updateView();
       }
@@ -398,7 +398,7 @@ public class CustomizableActionsPanel {
       //  favoritesView.getFavoritesTreeViewPanel(favoritesList).updateTreePopupHandler();
       //}
     }
-    final IdeFrameImpl frame = WindowManagerEx.getInstanceEx().getFrame(null);
+    final IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(null);
     if (frame != null) {
       frame.updateView();
     }

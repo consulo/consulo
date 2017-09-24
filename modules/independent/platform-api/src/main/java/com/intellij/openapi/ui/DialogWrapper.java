@@ -23,6 +23,7 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -32,6 +33,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.*;
+import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
@@ -681,8 +683,7 @@ public abstract class DialogWrapper {
       button = new JBOptionButton(action, options);
       final JBOptionButton eachOptionsButton = (JBOptionButton)button;
       eachOptionsButton.setOkToProcessDefaultMnemonics(false);
-      eachOptionsButton
-              .setOptionTooltipText("Press " + KeymapUtil.getKeystrokeText(SHOW_OPTION_KEYSTROKE) + " to expand or use a mnemonic of a contained action");
+      eachOptionsButton.setOptionTooltipText("Press " + KeymapUtil.getKeystrokeText(SHOW_OPTION_KEYSTROKE) + " to expand or use a mnemonic of a contained action");
       myOptionsButtons.add(eachOptionsButton);
 
       final Set<JBOptionButton.OptionInfo> infos = eachOptionsButton.getOptionInfos();
@@ -784,8 +785,7 @@ public abstract class DialogWrapper {
 
   @Deprecated
   protected DialogWrapperPeer createPeer(final Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
-    return DialogWrapperPeerFactory.getInstance()
-            .createPeer(this, owner, canBeParent, applicationModalIfPossible ? IdeModalityType.IDE : IdeModalityType.PROJECT);
+    return DialogWrapperPeerFactory.getInstance().createPeer(this, owner, canBeParent, applicationModalIfPossible ? IdeModalityType.IDE : IdeModalityType.PROJECT);
   }
 
   protected DialogWrapperPeer createPeer(@Nullable final Project project, final boolean canBeParent, final IdeModalityType ideModalityType) {
@@ -1376,11 +1376,8 @@ public abstract class DialogWrapper {
     if (getValidationThreadToUse() == Alarm.ThreadToUse.SWING_THREAD) {
       // null if headless
       JRootPane rootPane = getRootPane();
-      myValidationAlarm.addRequest(validateRequest, myValidationDelay, ApplicationManager.getApplication() == null
-                                                                       ? null
-                                                                       : rootPane == null
-                                                                         ? ModalityState.current()
-                                                                         : ModalityState.stateForComponent(rootPane));
+      myValidationAlarm.addRequest(validateRequest, myValidationDelay,
+                                   ApplicationManager.getApplication() == null ? null : rootPane == null ? ModalityState.current() : ModalityState.stateForComponent(rootPane));
     }
     else {
       myValidationAlarm.addRequest(validateRequest, myValidationDelay);
@@ -1510,8 +1507,8 @@ public abstract class DialogWrapper {
         HelpManager.getInstance().invokeHelp(helpId);
       }
       else {
-        Messages.showMessageDialog(getContentPane(), UIBundle.message("there.is.no.help.for.this.dialog.error.message"),
-                                   UIBundle.message("no.help.available.dialog.title"), Messages.getInformationIcon());
+        Messages.showMessageDialog(getContentPane(), UIBundle.message("there.is.no.help.for.this.dialog.error.message"), UIBundle.message("no.help.available.dialog.title"),
+                                   Messages.getInformationIcon());
       }
     }
   }
@@ -1663,32 +1660,16 @@ public abstract class DialogWrapper {
   }
 
   private void registerKeyboardShortcuts() {
-    ActionListener cancelKeyboardAction = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
-        MenuElement[] selectedPath = menuSelectionManager.getSelectedPath();
-        if (selectedPath.length > 0) { // hide popup menu if any
-          menuSelectionManager.clearSelectedPath();
-        }
-        else {
-          if (ApplicationManager.getApplication() == null) {
-            doCancelAction(e);
-            return;
-          }
-          final StackingPopupDispatcher popupDispatcher = StackingPopupDispatcher.getInstance();
-          if (popupDispatcher != null && !popupDispatcher.isPopupFocused()) {
-            doCancelAction(e);
-          }
-        }
-      }
-    };
-
     final JRootPane rootPane = getRootPane();
 
     if (rootPane == null) return;
 
-    rootPane.registerKeyboardAction(cancelKeyboardAction, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+    ActionListener cancelKeyboardAction = createCancelAction();
+    if (cancelKeyboardAction != null) {
+      rootPane
+              .registerKeyboardAction(cancelKeyboardAction, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+      ActionUtil.registerForEveryKeyboardShortcut(getRootPane(), cancelKeyboardAction, CommonShortcuts.getCloseActiveWindow());
+    }
     registerForEveryKeyboardShortcut(cancelKeyboardAction, CommonShortcuts.getCloseActiveWindow());
 
     if (ApplicationInfo.contextHelpAvailable()) {
@@ -1738,6 +1719,21 @@ public abstract class DialogWrapper {
         }
       }
     }
+  }
+
+  /**
+   * @return null if we should ignore <Esc> for window closing
+   */
+  @Nullable
+  protected ActionListener createCancelAction() {
+    return new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (!PopupUtil.handleEscKeyEvent()) {
+          doCancelAction(e);
+        }
+      }
+    };
   }
 
   private void focusPreviousButton() {
@@ -1962,11 +1958,9 @@ public abstract class DialogWrapper {
             label.setHorizontalAlignment(SwingConstants.LEADING);
             setErrorTipText(vi.component, label, vi.message);
 
-            BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createBalloonBuilder(label).setDisposable(getDisposable())
-                    .setBorderInsets(UIManager.getInsets("Balloon.error.textInsets")).setPointerSize(new JBDimension(17, 6))
-                    .setCornerToPointerDistance(JBUI.scale(30)).setHideOnKeyOutside(false).setHideOnClickOutside(false).setHideOnAction(false)
-                    .setBorderColor(BALLOON_BORDER).setFillColor(BALLOON_BACKGROUND).setHideOnFrameResize(false).setRequestFocus(false).setAnimationCycle(100)
-                    .setShadow(true);
+            BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createBalloonBuilder(label).setDisposable(getDisposable()).setBorderInsets(UIManager.getInsets("Balloon.error.textInsets"))
+                    .setPointerSize(new JBDimension(17, 6)).setCornerToPointerDistance(JBUI.scale(30)).setHideOnKeyOutside(false).setHideOnClickOutside(false).setHideOnAction(false)
+                    .setBorderColor(BALLOON_BORDER).setFillColor(BALLOON_BACKGROUND).setHideOnFrameResize(false).setRequestFocus(false).setAnimationCycle(100).setShadow(true);
 
             vi.component.putClientProperty("JComponent.error.balloon.builder", balloonBuilder);
 

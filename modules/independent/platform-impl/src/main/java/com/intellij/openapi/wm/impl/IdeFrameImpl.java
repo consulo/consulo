@@ -317,6 +317,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
     }
   }
 
+  @Override
   public void updateView() {
     ((IdeRootPane)getRootPane()).updateToolbar();
     ((IdeRootPane)getRootPane()).updateMainMenuActions();

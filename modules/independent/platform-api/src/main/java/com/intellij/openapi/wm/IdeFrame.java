@@ -36,6 +36,7 @@ public interface IdeFrame {
   Project getProject();
 
   void setFrameTitle(String title);
+
   void setFileTitle(String fileTitle, File ioFile);
 
   IdeRootPaneNorthExtension getNorthExtension(String key);
@@ -46,8 +47,6 @@ public interface IdeFrame {
   BalloonLayout getBalloonLayout();
 
   interface Child extends IdeFrame {
-
     IdeFrame getParentFrame();
-
   }
 }

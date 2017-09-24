@@ -34,6 +34,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManagerListener;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.ScreenUtil;
@@ -69,15 +70,23 @@ import java.util.Set;
 public final class WindowManagerImpl extends WindowManagerEx implements NamedComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.WindowManagerImpl");
 
-  @NonNls public static final String FULL_SCREEN = "ide.frame.full.screen";
+  @NonNls
+  public static final String FULL_SCREEN = "ide.frame.full.screen";
 
-  @NonNls private static final String FOCUSED_WINDOW_PROPERTY_NAME = "focusedWindow";
-  @NonNls private static final String X_ATTR = "x";
-  @NonNls private static final String FRAME_ELEMENT = "frame";
-  @NonNls private static final String Y_ATTR = "y";
-  @NonNls private static final String WIDTH_ATTR = "width";
-  @NonNls private static final String HEIGHT_ATTR = "height";
-  @NonNls private static final String EXTENDED_STATE_ATTR = "extended-state";
+  @NonNls
+  private static final String FOCUSED_WINDOW_PROPERTY_NAME = "focusedWindow";
+  @NonNls
+  private static final String X_ATTR = "x";
+  @NonNls
+  private static final String FRAME_ELEMENT = "frame";
+  @NonNls
+  private static final String Y_ATTR = "y";
+  @NonNls
+  private static final String WIDTH_ATTR = "width";
+  @NonNls
+  private static final String HEIGHT_ATTR = "height";
+  @NonNls
+  private static final String EXTENDED_STATE_ATTR = "extended-state";
 
   static {
     try {
@@ -116,9 +125,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   /**
    * invoked by reflection
    */
-  public WindowManagerImpl(DataManager dataManager,
-                           ActionManagerEx actionManager,
-                           MessageBus bus) {
+  public WindowManagerImpl(DataManager dataManager, ActionManagerEx actionManager, MessageBus bus) {
     myDataManager = dataManager;
     myActionManager = actionManager;
     if (myDataManager instanceof DataManagerImpl) {
@@ -164,9 +171,9 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
           if (openProjects.length > 0) {
             WindowManagerEx wm = WindowManagerEx.getInstanceEx();
             for (Project project : openProjects) {
-              IdeFrameImpl frame  = wm.getFrame(project);
+              IdeFrameImpl frame = (IdeFrameImpl)wm.getFrame(project);
               if (frame != null) {
-                frame.storeFullScreenStateIfNeeded();
+                ((IdeFrameImpl)frame).storeFullScreenStateIfNeeded();
               }
             }
           }
@@ -282,9 +289,11 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
       if (SystemInfo.isMacOSLeopard) {
         if (window instanceof JWindow) {
           ((JWindow)window).getRootPane().putClientProperty("Window.alpha", 1.0f - ratio);
-        } else if (window instanceof JDialog) {
+        }
+        else if (window instanceof JDialog) {
           ((JDialog)window).getRootPane().putClientProperty("Window.alpha", 1.0f - ratio);
-        } else if (window instanceof JFrame) {
+        }
+        else if (window instanceof JFrame) {
           ((JFrame)window).getRootPane().putClientProperty("Window.alpha", 1.0f - ratio);
         }
       }
@@ -443,12 +452,12 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     if (project != null) {
       frame = project.isDefault() ? WelcomeFrame.getInstance() : getFrame(project);
       if (frame == null) {
-        frame =  myProject2Frame.get(null);
+        frame = myProject2Frame.get(null);
       }
     }
     else {
       Container eachParent = getMostRecentFocusedWindow();
-      while(eachParent != null) {
+      while (eachParent != null) {
         if (eachParent instanceof IdeFrame) {
 
           frame = (IdeFrame)eachParent;
@@ -472,7 +481,8 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
       if (each instanceof IdeFrame) {
         if (candidate == null) {
           candidate = (IdeFrame)each;
-        } else {
+        }
+        else {
           candidate = null;
           break;
         }
@@ -489,18 +499,18 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   }
 
   @Override
-  public IdeFrame getIdeFrame(@Nullable final Project project) {
+  public IdeFrameEx getIdeFrame(@Nullable final Project project) {
     if (project != null) {
       return getFrame(project);
     }
     final Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
     final Component parent = UIUtil.findUltimateParent(window);
-    if (parent instanceof IdeFrame) return (IdeFrame)parent;
+    if (parent instanceof IdeFrameEx) return (IdeFrameEx)parent;
 
     final Frame[] frames = Frame.getFrames();
     for (Frame each : frames) {
-      if (each instanceof IdeFrame) {
-        return (IdeFrame)each;
+      if (each instanceof IdeFrameEx) {
+        return (IdeFrameEx)each;
       }
     }
 
@@ -508,9 +518,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   }
 
   public void showFrame() {
-    final IdeFrameImpl frame = new IdeFrameImpl(ApplicationInfoEx.getInstanceEx(),
-                                                myActionManager, myDataManager,
-                                                ApplicationManager.getApplication());
+    final IdeFrameImpl frame = new IdeFrameImpl(ApplicationInfoEx.getInstanceEx(), myActionManager, myDataManager, ApplicationManager.getApplication());
     myProject2Frame.put(null, frame);
 
     if (myFrameBounds == null || !ScreenUtil.isVisible(myFrameBounds)) { //avoid situations when IdeFrame is out of all screens
@@ -530,8 +538,9 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     return myProject2Frame.get(null);
   }
 
+  @NotNull
   @Override
-  public final IdeFrameImpl allocateFrame(final Project project) {
+  public final IdeFrameEx allocateFrame(final Project project) {
     LOG.assertTrue(!myProject2Frame.containsKey(project));
 
     final IdeFrameImpl frame;
@@ -542,8 +551,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
       frame.setProject(project);
     }
     else {
-      frame = new IdeFrameImpl(ApplicationInfoEx.getInstanceEx(), myActionManager,
-                               myDataManager, ApplicationManager.getApplication());
+      frame = new IdeFrameImpl(ApplicationInfoEx.getInstanceEx(), myActionManager, myDataManager, ApplicationManager.getApplication());
 
       final Rectangle bounds = ProjectFrameBounds.getInstance(project).getBounds();
 
@@ -591,27 +599,28 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   }
 
   @Override
-  public final void releaseFrame(final IdeFrameImpl frame) {
+  public final void releaseFrame(final IdeFrameEx frame) {
+    IdeFrameImpl implFrame = (IdeFrameImpl)frame;
 
-    myEventDispatcher.getMulticaster().beforeFrameReleased(frame);
+    myEventDispatcher.getMulticaster().beforeFrameReleased(implFrame);
 
-    final Project project = frame.getProject();
+    final Project project = implFrame.getProject();
     LOG.assertTrue(project != null);
 
-    frame.removeWindowListener(myActivationListener);
+    implFrame.removeWindowListener(myActivationListener);
     proceedDialogDisposalQueue(project);
 
-    frame.setProject(null);
-    frame.setTitle(null);
-    frame.setFileTitle(null, null);
+    implFrame.setProject(null);
+    implFrame.setTitle(null);
+    implFrame.setFileTitle(null, null);
 
     myProject2Frame.remove(project);
     if (myProject2Frame.isEmpty()) {
-      myProject2Frame.put(null, frame);
+      myProject2Frame.put(null, implFrame);
     }
     else {
-      Disposer.dispose(frame.getStatusBar());
-      frame.dispose();
+      Disposer.dispose(implFrame.getStatusBar());
+      implFrame.dispose();
     }
   }
 
@@ -758,11 +767,8 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
         extendedState = ((FramePeer)peer).getState();
       }
     }
-    boolean isMaximized = extendedState == Frame.MAXIMIZED_BOTH ||
-                          isFullScreenSupportedInCurrentOS() && frame.isInFullScreen();
-    boolean usePreviousBounds = isMaximized &&
-                                myFrameBounds != null &&
-                                frame.getBounds().contains(new Point((int)myFrameBounds.getCenterX(), (int)myFrameBounds.getCenterY()));
+    boolean isMaximized = extendedState == Frame.MAXIMIZED_BOTH || isFullScreenSupportedInCurrentOS() && frame.isInFullScreen();
+    boolean usePreviousBounds = isMaximized && myFrameBounds != null && frame.getBounds().contains(new Point((int)myFrameBounds.getCenterX(), (int)myFrameBounds.getCenterY()));
     if (!usePreviousBounds) {
       myFrameBounds = frame.getBounds();
     }
@@ -829,7 +835,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     }
 
     /**
-     * @param gc the graphics config
+     * @param gc     the graphics config
      * @param bounds the bounds in the user space
      * @return the bounds in the device space
      */

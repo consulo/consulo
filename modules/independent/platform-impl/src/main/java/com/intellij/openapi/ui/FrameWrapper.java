@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,36 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.ide.DataManager;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.project.ProjectManagerListener;
+import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.WindowStateService;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.openapi.wm.impl.IdeMenuBar;
+import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.BalloonLayout;
 import com.intellij.ui.FocusTrackback;
 import com.intellij.ui.FrameState;
-import com.intellij.util.ImageLoader;
-import com.intellij.util.containers.HashMap;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -50,23 +55,27 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class FrameWrapper implements Disposable, DataProvider {
+
   private String myDimensionKey = null;
   private JComponent myComponent = null;
-  private JComponent myPreferedFocus = null;
+  private JComponent myPreferredFocus = null;
   private String myTitle = "";
-  private Image myImage = ImageLoader.loadFromResource(ApplicationInfoImpl.getShadowInstance().getIconUrl());
+  private List<Image> myImages = null;
   private boolean myCloseOnEsc = false;
   private Window myFrame;
-  private final Map<String, Object> myDatas = new HashMap<String, Object>();
+  private final Map<String, Object> myDataMap = ContainerUtil.newHashMap();
   private Project myProject;
   private final ProjectManagerListener myProjectListener = new MyProjectManagerListener();
   private FocusTrackback myFocusTrackback;
   private FocusWatcher myFocusWatcher;
 
   private ActionCallback myFocusedCallback;
+  private boolean myDisposing;
   private boolean myDisposed;
 
   protected StatusBar myStatusBar;
@@ -82,9 +91,11 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   public FrameWrapper(Project project, @Nullable @NonNls String dimensionServiceKey, boolean isDialog) {
-    myProject = project;
     myDimensionKey = dimensionServiceKey;
     myIsDialog = isDialog;
+    if (project != null) {
+      setProject(project);
+    }
   }
 
   public void setDimensionKey(String dimensionKey) {
@@ -92,7 +103,7 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   public void setData(String dataId, Object data) {
-    myDatas.put(dataId, data);
+    myDataMap.put(dataId, data);
   }
 
   public void setProject(@NotNull final Project project) {
@@ -138,7 +149,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       @Override
       public void windowOpened(WindowEvent e) {
         IdeFocusManager fm = IdeFocusManager.getInstance(myProject);
-        JComponent toFocus = myPreferedFocus;
+        JComponent toFocus = getPreferredFocusedComponent();
         if (toFocus == null) {
           toFocus = fm.getFocusTargetFor(myComponent);
         }
@@ -151,6 +162,9 @@ public class FrameWrapper implements Disposable, DataProvider {
       }
     };
     frame.addWindowListener(focusListener);
+    if (Registry.is("ide.perProjectModality")) {
+      frame.setAlwaysOnTop(true);
+    }
     Disposer.register(this, new Disposable() {
       @Override
       public void dispose() {
@@ -164,7 +178,13 @@ public class FrameWrapper implements Disposable, DataProvider {
     } else {
       ((JDialog)frame).setTitle(myTitle);
     }
-    frame.setIconImage(myImage);
+    if (myImages != null) {
+      // unwrap the image before setting as frame's icon
+      frame.setIconImages(ContainerUtil.map(myImages, ImageUtil::toBufferedImage));
+    }
+    else {
+      AppUIUtil.updateWindowIcon(myFrame);
+    }
 
     if (restoreBounds) {
       loadFrameState();
@@ -189,26 +209,52 @@ public class FrameWrapper implements Disposable, DataProvider {
   public void dispose() {
     if (isDisposed()) return;
 
-    Window frame = getFrame();
+    Window frame = myFrame;
+    StatusBar statusBar = myStatusBar;
 
-    final JRootPane rootPane = ((RootPaneContainer)frame).getRootPane();
-    if (rootPane != null) {
-      DialogWrapper.unregisterKeyboardActions(rootPane);
+    if (myShown && myDimensionKey != null) {
+      WindowStateService.getInstance().saveStateFor(myProject, myDimensionKey, frame);
     }
 
-    frame.setVisible(false);
-    frame.dispose();
-
-    if (frame instanceof JFrame) {
-      FocusTrackback.release((JFrame)frame);
+    myFrame = null;
+    myPreferredFocus = null;
+    myProject = null;
+    myDataMap.clear();
+    if (myFocusTrackback != null) {
+      myFocusTrackback.restoreFocus();
     }
-
-    if (myStatusBar != null) {
-      Disposer.dispose(myStatusBar);
-      myStatusBar = null;
+    if (myComponent != null && myFocusWatcher != null) {
+      myFocusWatcher.deinstall(myComponent);
     }
-
+    myFocusWatcher = null;
+    myFocusedCallback = null;
+    myFocusTrackback = null;
+    myComponent = null;
+    myImages = null;
     myDisposed = true;
+
+    if (statusBar != null) {
+      Disposer.dispose(statusBar);
+    }
+
+    if (frame != null) {
+      frame.setVisible(false);
+
+      JRootPane rootPane = ((RootPaneContainer)frame).getRootPane();
+      frame.removeAll();
+      DialogWrapper.cleanupRootPane(rootPane);
+
+      if (frame instanceof JFrame) {
+        FocusTrackback.release((JFrame)frame);
+      }
+      if (frame instanceof IdeFrame) {
+        MouseGestureManager.getInstance().remove((IdeFrame)frame);
+      }
+
+      frame.dispose();
+
+      DialogWrapper.cleanupWindowListeners(frame);
+    }
   }
 
   public boolean isDisposed() {
@@ -216,23 +262,22 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   private void addCloseOnEsc(final RootPaneContainer frame) {
-    frame.getRootPane().registerKeyboardAction(
-      new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
-          MenuElement[] selectedPath = menuSelectionManager.getSelectedPath();
-          if (selectedPath.length > 0) { // hide popup menu if any
-            menuSelectionManager.clearSelectedPath();
-          }
-          else {
-            close();
-          }
+    JRootPane rootPane = frame.getRootPane();
+    ActionListener closeAction = new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (!PopupUtil.handleEscKeyEvent()) {
+          // if you remove this line problems will start happen on Mac OS X
+          // 2 projects opened, call Cmd+D on the second opened project and then Esc.
+          // Weird situation: 2nd IdeFrame will be active, but focus will be somewhere inside the 1st IdeFrame
+          // App is unusable until Cmd+Tab, Cmd+tab
+          FrameWrapper.this.myFrame.setVisible(false);
+          close();
         }
-      },
-      KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-      JComponent.WHEN_IN_FOCUSED_WINDOW
-    );
+      }
+    };
+    rootPane.registerKeyboardAction(closeAction, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+    ActionUtil.registerForEveryKeyboardShortcut(rootPane, closeAction, CommonShortcuts.getCloseActiveWindow());
   }
 
   public Window getFrame() {
@@ -246,16 +291,11 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   protected JFrame createJFrame(IdeFrame parent) {
-    return new MyJFrame(parent) {
-      @Override
-      public IdeRootPaneNorthExtension getNorthExtension(String key) {
-        return FrameWrapper.this.getNorthExtension(key);
-      }
-    };
+    return new MyJFrame(this, parent);
   }
 
   protected JDialog createJDialog(IdeFrame parent) {
-    return new MyJDialog(parent);
+    return new MyJDialog(this, parent);
   }
 
   protected IdeRootPaneNorthExtension getNorthExtension(String key) {
@@ -264,7 +304,16 @@ public class FrameWrapper implements Disposable, DataProvider {
 
   @Override
   public Object getData(@NonNls String dataId) {
+    if (CommonDataKeys.PROJECT.is(dataId)) {
+      return myProject;
+    }
     return null;
+  }
+
+  @Nullable
+  private Object getDataInner(String dataId) {
+    Object data = getData(dataId);
+    return data != null ? data : myDataMap.get(dataId);
   }
 
   public void setComponent(JComponent component) {
@@ -272,7 +321,11 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   public void setPreferredFocusedComponent(JComponent preferedFocus) {
-    myPreferedFocus = preferedFocus;
+    myPreferredFocus = preferedFocus;
+  }
+
+  public JComponent getPreferredFocusedComponent() {
+    return myPreferredFocus;
   }
 
   public void closeOnEsc() {
@@ -280,7 +333,11 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   public void setImage(Image image) {
-    myImage = image;
+    setImages(image != null ? Collections.singletonList(image) : Collections.emptyList());
+  }
+
+  public void setImages(List<Image> images) {
+    myImages = images;
   }
 
   protected void loadFrameState() {
@@ -298,7 +355,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     myTitle = title;
   }
 
-  public void addDisposable(Disposable disposable) {
+  public void addDisposable(@NotNull Disposable disposable) {
     Disposer.register(this, disposable);
   }
 
@@ -309,19 +366,20 @@ public class FrameWrapper implements Disposable, DataProvider {
     myStatusBar = statusBar;
   }
 
-  private class MyJFrame extends JFrame implements DataProvider, IdeFrame.Child {
+  private static class MyJFrame extends JFrame implements DataProvider, IdeFrame.Child, IdeFrameEx {
 
-    private boolean myDisposing;
+    private FrameWrapper myOwner;
     private final IdeFrame myParent;
 
     private String myFrameTitle;
     private String myFileTitle;
     private File myFile;
 
-    private MyJFrame(IdeFrame parent) throws HeadlessException {
-      FrameState.setFrameStateListener(this);
+    private MyJFrame(FrameWrapper owner, IdeFrame parent) throws HeadlessException {
+      myOwner = owner;
       myParent = parent;
-      setGlassPane(new IdeGlassPaneImpl(getRootPane()));
+      FrameState.setFrameStateListener(this);
+      setGlassPane(new IdeGlassPaneImpl(getRootPane(), true));
 
       boolean setMenuOnFrame = SystemInfo.isMac;
 
@@ -346,6 +404,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       setFocusTraversalPolicy(new LayoutFocusTraversalPolicyExt());
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
+
     @Override
     public JComponent getComponent() {
       return getRootPane();
@@ -353,7 +412,8 @@ public class FrameWrapper implements Disposable, DataProvider {
 
     @Override
     public StatusBar getStatusBar() {
-      return myStatusBar != null ? myStatusBar : myParent.getStatusBar();
+      StatusBar ownerBar = myOwner != null ? myOwner.myStatusBar : null;
+      return ownerBar != null ? ownerBar : myParent != null ? myParent.getStatusBar() : null;
     }
 
     @Override
@@ -381,7 +441,7 @@ public class FrameWrapper implements Disposable, DataProvider {
 
     @Override
     public IdeRootPaneNorthExtension getNorthExtension(String key) {
-      return null;
+      return myOwner.getNorthExtension(key);
     }
 
     @Override
@@ -400,30 +460,14 @@ public class FrameWrapper implements Disposable, DataProvider {
 
     @Override
     public void dispose() {
-      if (myDisposing) return;
-      myDisposing = true;
-
-      MouseGestureManager.getInstance().remove(this);
-
-      if (myShown && myDimensionKey != null) {
-        WindowStateService.getInstance().saveStateFor(myProject, myDimensionKey, this);
-      }
-
-      Disposer.dispose(FrameWrapper.this);
-      myDatas.clear();
-      myProject = null;
-      myPreferedFocus = null;
-
-      if (myFocusTrackback != null) {
-        myFocusTrackback.restoreFocus();
-      }
-      if (myComponent != null && myFocusWatcher != null) {
-        myFocusWatcher.deinstall(myComponent);
-      }
-      myFocusWatcher = null;
-      myFocusedCallback = null;
-
+      FrameWrapper owner = myOwner;
+      myOwner = null;
+      if (owner == null || owner.myDisposing) return;
+      owner.myDisposing = true;
+      Disposer.dispose(owner);
       super.dispose();
+      rootPane = null;
+      setMenuBar(null);
     }
 
     @Override
@@ -431,31 +475,31 @@ public class FrameWrapper implements Disposable, DataProvider {
       if (IdeFrame.KEY.getName().equals(dataId)) {
         return this;
       }
-
-      Object data = FrameWrapper.this.getData(dataId);
-      return data != null ? data : myDatas.get(dataId);
+      return myOwner == null ? null : myOwner.getDataInner(dataId);
     }
 
     @Override
     public void paint(Graphics g) {
-      UIUtil.applyRenderingHints(g);
+      UISettings.setupAntialiasing(g);
       super.paint(g);
     }
   }
 
-  private class MyJDialog extends JDialog implements DataProvider, IdeFrame.Child {
+  private static class MyJDialog extends JDialog implements DataProvider, IdeFrame.Child, IdeFrameEx {
 
-    private boolean myDisposing;
+    private FrameWrapper myOwner;
     private final IdeFrame myParent;
 
-    private MyJDialog(IdeFrame parent) throws HeadlessException {
+    private MyJDialog(FrameWrapper owner, IdeFrame parent) throws HeadlessException {
       super((JFrame)parent);
+      myOwner = owner;
       myParent = parent;
       setGlassPane(new IdeGlassPaneImpl(getRootPane()));
       getRootPane().putClientProperty("Window.style", "small");
       setBackground(UIUtil.getPanelBackground());
       MouseGestureManager.getInstance().add(this);
       setFocusTraversalPolicy(new LayoutFocusTraversalPolicyExt());
+      setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     @Override
@@ -506,30 +550,13 @@ public class FrameWrapper implements Disposable, DataProvider {
 
     @Override
     public void dispose() {
-      if (myDisposing) return;
-      myDisposing = true;
-
-      MouseGestureManager.getInstance().remove(this);
-
-      if (myShown && myDimensionKey != null) {
-        WindowStateService.getInstance().saveStateFor(myProject, myDimensionKey, this);
-      }
-
-      Disposer.dispose(FrameWrapper.this);
-      myDatas.clear();
-      myProject = null;
-      myPreferedFocus = null;
-
-      if (myFocusTrackback != null) {
-        myFocusTrackback.restoreFocus();
-      }
-      if (myComponent != null && myFocusWatcher != null) {
-        myFocusWatcher.deinstall(myComponent);
-      }
-      myFocusWatcher = null;
-      myFocusedCallback = null;
-
+      FrameWrapper owner = myOwner;
+      myOwner = null;
+      if (owner == null || owner.myDisposing) return;
+      owner.myDisposing = true;
+      Disposer.dispose(owner);
       super.dispose();
+      rootPane = null;
     }
 
     @Override
@@ -537,14 +564,12 @@ public class FrameWrapper implements Disposable, DataProvider {
       if (IdeFrame.KEY.getName().equals(dataId)) {
         return this;
       }
-
-      Object data = FrameWrapper.this.getData(dataId);
-      return data != null ? data : myDatas.get(dataId);
+      return myOwner == null ? null : myOwner.getDataInner(dataId);
     }
 
     @Override
     public void paint(Graphics g) {
-      UIUtil.applyRenderingHints(g);
+      UISettings.setupAntialiasing(g);
       super.paint(g);
     }
   }
@@ -558,7 +583,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     getFrame().setSize(size);
   }
 
-  private class MyProjectManagerListener extends ProjectManagerAdapter {
+  private class MyProjectManagerListener implements ProjectManagerListener {
     @Override
     public void projectClosing(Project project) {
       if (project == myProject) {

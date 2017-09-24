@@ -31,8 +31,8 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.util.ImageLoader;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -349,7 +349,7 @@ public class CustomActionsSchema implements JDOMExternalizable {
         }
       }
     }
-    final IdeFrameImpl frame = WindowManagerEx.getInstanceEx().getFrame(null);
+    final IdeFrameEx frame = WindowManagerEx.getInstanceEx().getIdeFrame(null);
     if (frame != null) {
       frame.updateView();
     }

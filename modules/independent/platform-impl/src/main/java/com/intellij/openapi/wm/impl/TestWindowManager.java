@@ -28,6 +28,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.WindowManagerListener;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -71,7 +72,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
   }
 
   @Override
-  public IdeFrame getIdeFrame(final Project project) {
+  public IdeFrameEx getIdeFrame(final Project project) {
     return null;
   }
 
@@ -239,13 +240,14 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
     return null;
   }
 
+  @NotNull
   @Override
-  public final IdeFrameImpl allocateFrame(final Project project) {
+  public final IdeFrameEx allocateFrame(final Project project) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public final void releaseFrame(final IdeFrameImpl frame) {
+  public final void releaseFrame(final IdeFrameEx frame) {
     throw new UnsupportedOperationException();
   }
 

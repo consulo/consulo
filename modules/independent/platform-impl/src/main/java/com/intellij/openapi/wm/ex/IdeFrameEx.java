@@ -20,8 +20,15 @@ import com.intellij.openapi.wm.IdeFrame;
 import org.jetbrains.annotations.NotNull;
 
 public interface IdeFrameEx extends IdeFrame {
-  boolean isInFullScreen();
+  default boolean isInFullScreen() {
+    return false;
+  }
 
   @NotNull
-  ActionCallback toggleFullScreen(boolean state);
+  default ActionCallback toggleFullScreen(boolean state) {
+    return ActionCallback.REJECTED;
+  }
+
+  default void updateView() {
+  }
 }

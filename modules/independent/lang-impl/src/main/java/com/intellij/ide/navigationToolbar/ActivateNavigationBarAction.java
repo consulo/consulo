@@ -22,8 +22,9 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.openapi.wm.impl.IdeRootPane;
+
+import javax.swing.*;
 
 /**
  * @author Anna Kozlova
@@ -34,7 +35,7 @@ public class ActivateNavigationBarAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
     final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     if (project != null && UISettings.getInstance().SHOW_NAVIGATION_BAR){
-      final IdeFrameImpl frame = WindowManagerEx.getInstanceEx().getFrame(project);
+      final JFrame frame = WindowManagerEx.getInstance().getFrame(project);
       final IdeRootPane ideRootPane = ((IdeRootPane)frame.getRootPane());
       final NavBarPanel navBarPanel = (NavBarPanel)ideRootPane.findByName(NavBarRootPaneExtension.NAV_BAR).getComponent();
       navBarPanel.rebuildAndSelectTail(true);

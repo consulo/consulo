@@ -25,6 +25,7 @@ import com.intellij.ui.JBCardLayout;
 import com.intellij.util.containers.MultiMap;
 import consulo.ide.customize.CustomizeDownloadAndStartStepPanel;
 import consulo.ide.customize.CustomizeSelectTemplateStepPanel;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,6 +74,12 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
   protected void dispose() {
     System.clearProperty(StartupActionScriptManager.STARTUP_WIZARD_MODE);
     super.dispose();
+  }
+
+  @Nullable
+  @Override
+  protected ActionListener createCancelAction() {
+    return null;//Prevent closing by <Esc>
   }
 
   protected void initSteps() {

@@ -93,7 +93,7 @@ public class ShowRunningListAction extends AnAction {
                 .setDialogMode(true).setHideOnKeyOutside(false);
         IdeFrame frame = IdeFrame.KEY.getData(e.getDataContext());
         if (frame == null) {
-          frame = WindowManagerEx.getInstanceEx().getFrame(project);
+          frame = WindowManagerEx.getInstance().getIdeFrame(project);
         }
         if (balloon != null) {
           balloon.hide();

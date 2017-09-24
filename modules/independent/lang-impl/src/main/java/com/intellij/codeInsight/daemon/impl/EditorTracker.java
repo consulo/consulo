@@ -30,7 +30,6 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
@@ -58,7 +57,7 @@ public class EditorTracker extends AbstractProjectComponent {
 
   private final EventDispatcher<EditorTrackerListener> myDispatcher = EventDispatcher.create(EditorTrackerListener.class);
 
-  private IdeFrameImpl myIdeFrame;
+  private JFrame myIdeFrame;
   private Window myActiveWindow;
 
   public EditorTracker(Project project,
@@ -71,7 +70,7 @@ public class EditorTracker extends AbstractProjectComponent {
 
   @Override
   public void projectOpened() {
-    myIdeFrame = ((WindowManagerEx)myWindowManager).getFrame(myProject);
+    myIdeFrame = myWindowManager.getFrame(myProject);
     myProject.getMessageBus().connect(myProject).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
       @Override
       public void selectionChanged(@NotNull FileEditorManagerEvent event) {

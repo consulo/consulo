@@ -435,7 +435,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
       UIManager.removePropertyChangeListener(uiManagerPropertyListener);
       LafManager.getInstance().removeLafManagerListener(lafManagerListener);
     });
-    myFrame = myWindowManager.allocateFrame(myProject);
+    myFrame = (IdeFrameImpl)myWindowManager.allocateFrame(myProject);
     LOG.assertTrue(myFrame != null);
 
     myToolWindowsPane = new ToolWindowsPane(myFrame, this);
