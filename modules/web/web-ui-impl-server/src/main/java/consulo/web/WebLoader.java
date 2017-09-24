@@ -25,7 +25,6 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Disposer;
 import consulo.application.ApplicationProperties;
-import consulo.start.CommandLineArgs;
 import consulo.web.servlet.RootUIBuilder;
 import consulo.web.servlet.ui.UIIconServlet;
 import org.jetbrains.annotations.NonNls;
@@ -108,17 +107,14 @@ public class WebLoader {
     System.setProperty(ApplicationProperties.CONSULO_AS_WEB_APP, Boolean.TRUE.toString());
 
     Main.setFlags(new String[0]);
-    Logger.setFactory(Factory.class);
 
-    Logger system = Logger.getInstance("system");
+    StartupUtil.prepareAndStart(args, (newConfigFolder, commandLineArgs) -> {
+      ApplicationStarter app = new ApplicationStarter(commandLineArgs);
 
-    StartupUtil.loadSystemLibraries(system);
-
-    ApplicationStarter app = new ApplicationStarter(new CommandLineArgs());
-
-    SwingUtilities.invokeLater(() -> {
-      PluginManager.installExceptionHandler();
-      app.run(false);
+      SwingUtilities.invokeLater(() -> {
+        PluginManager.installExceptionHandler();
+        app.run(newConfigFolder);
+      });
     });
   }
 

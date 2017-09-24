@@ -59,8 +59,7 @@ public class LoggerFactory implements Logger.Factory {
     try {
       System.setProperty("log4j.defaultInitOverride", "true");
 
-      File logXmlFile = FileUtil.findFirstThatExist(PathManager.getHomePath() + "/bin/log.xml",
-                                                    PathManager.getHomePath() + "/community/bin/log.xml");
+      File logXmlFile = FileUtil.findFirstThatExist(PathManager.getHomePath() + "/bin/log.xml");
       if (logXmlFile == null) {
         throw new RuntimeException("log.xml file does not exist! Path: [ $home/bin/log.xml]");
       }
