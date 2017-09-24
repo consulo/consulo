@@ -21,6 +21,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
+import consulo.project.ProjectOpenProcessors;
 
 import java.io.File;
 
@@ -34,7 +35,7 @@ public class ProjectImporterCheckoutListener implements CheckoutListener {
         if (file.isDirectory()) continue;
         final VirtualFile virtualFile = localFileSystem.findFileByIoFile(file);
         if (virtualFile != null) {
-          final ProjectOpenProcessor openProcessor = ProjectOpenProcessor.findProcessor(virtualFile);
+          final ProjectOpenProcessor openProcessor = ProjectOpenProcessors.getInstance().findProcessor(virtualFile);
           if (openProcessor != null) {
             int rc = Messages.showYesNoDialog(project, VcsBundle
               .message("checkout.open.project.prompt", ProjectDirCheckoutListener.getProductNameWithArticle(), files[0].getPath()),

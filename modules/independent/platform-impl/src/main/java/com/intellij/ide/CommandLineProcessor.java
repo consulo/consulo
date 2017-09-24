@@ -29,6 +29,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
+import consulo.project.ProjectOpenProcessors;
 import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +65,7 @@ public class CommandLineProcessor {
       Messages.showErrorDialog("Cannot find file '" + name + "'", "Cannot find file");
       return null;
     }
-    ProjectOpenProcessor provider = ProjectOpenProcessor.findProcessor(virtualFile);
+    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(virtualFile);
     if (provider instanceof PlatformProjectOpenProcessor && !virtualFile.isDirectory()) {
       // HACK: PlatformProjectOpenProcessor agrees to open anything
       provider = null;

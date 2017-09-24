@@ -36,6 +36,7 @@ import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.DefaultPaths;
+import consulo.project.ProjectOpenProcessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -126,7 +127,7 @@ public class ProjectUtil {
 
     if (virtualFile == null) return null;
 
-    ProjectOpenProcessor provider = ProjectOpenProcessor.findProcessor(virtualFile);
+    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(virtualFile);
     if (provider != null) {
       final Project project = provider.doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
 
