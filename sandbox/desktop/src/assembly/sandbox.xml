@@ -70,17 +70,17 @@
       <scope>runtime</scope>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <excludes>
-        <exclude>consulo:consulo-core-plugin</exclude>
         <exclude>consulo:consulo-sand-language-plugin</exclude>
+        <exclude>consulo:consulo-platform-independent-plugin</exclude>
         <exclude>consulo:consulo-platform-desktop-plugin</exclude>
       </excludes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/core/lib</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/platform-independent/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <includes>
-        <include>consulo:consulo-core-plugin</include>
+        <include>consulo:consulo-platform-independent-plugin</include>
       </includes>
     </dependencySet>
     <dependencySet>

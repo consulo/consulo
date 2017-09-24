@@ -39,17 +39,17 @@
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <excludes>
         <exclude>consulo:consulo-bundle</exclude>
-        <exclude>consulo:consulo-core-plugin</exclude>
+        <exclude>consulo:consulo-platform-independent-plugin</exclude>
         <exclude>consulo:consulo-platform-desktop-plugin</exclude>
       </excludes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}plugins${file.separator}core${file.separator}lib</outputDirectory>
+      <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}plugins${file.separator}platform-independent{file.separator}lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <includes>
-        <include>consulo:consulo-core-plugin</include>
+        <include>consulo:consulo-platform-independent-plugin</include>
       </includes>
     </dependencySet>
     <dependencySet>

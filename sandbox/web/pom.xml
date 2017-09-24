@@ -61,7 +61,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-core-plugin</artifactId>
+      <artifactId>consulo-platform-independent-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

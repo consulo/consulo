@@ -61,15 +61,15 @@
       <outputDirectory>/workdir/platform/buildSNAPSHOT/lib</outputDirectory>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <excludes>
-        <exclude>consulo:consulo-core-plugin</exclude>
-        <exclude>consulo:consulo-sand-language-plugin</exclude>
+        <exclude>consulo:consulo-platform-independent-plugin</exclude>
         <exclude>consulo:consulo-platform-web-plugin</exclude>
+        <exclude>consulo:consulo-sand-language-plugin</exclude>
       </excludes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>workdir/platform/buildSNAPSHOT/plugins/core/lib</outputDirectory>
+      <outputDirectory>workdir/platform/buildSNAPSHOT/plugins/platform-independent/lib</outputDirectory>
       <includes>
-        <include>consulo:consulo-core-plugin</include>
+        <include>consulo:consulo-platform-independent-plugin</include>
       </includes>
     </dependencySet>
     <dependencySet>
