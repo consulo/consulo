@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.wm.impl;
+package consulo.web.wm.impl;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.RoamingType;
@@ -35,6 +35,7 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.DesktopLayout;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.wm.impl.ToolWindowManagerBase;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
