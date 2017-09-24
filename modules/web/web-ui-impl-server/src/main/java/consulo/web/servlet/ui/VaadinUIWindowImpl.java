@@ -15,7 +15,6 @@
  */
 package consulo.web.servlet.ui;
 
-import com.intellij.openapi.util.Disposer;
 import com.vaadin.server.Page;
 import com.vaadin.ui.UI;
 import consulo.ui.*;
@@ -42,12 +41,11 @@ class VaadinUIWindowImpl implements Window {
     myUI = ui;
     myUI.setSizeFull();
     myUI.setContent(myRootPanel);
+  }
 
-    ui.addDetachListener(event -> {
-      myDisposed = true;
-
-      Disposer.dispose(this);
-    });
+  @Override
+  public void dispose() {
+    myDisposed = true;
   }
 
   @RequiredUIAccess

@@ -17,7 +17,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.DataManager;
-import com.intellij.ide.projectView.impl.ProjectViewImpl;
+import com.intellij.ide.projectView.ProjectView;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
@@ -37,7 +37,7 @@ public class NewElementToolbarAction extends NewElementAction {
     if (e.getData(LangDataKeys.IDE_VIEW) == null) {
       final Project project = e.getData(CommonDataKeys.PROJECT);
       final PsiFileSystemItem psiFile = e.getData(LangDataKeys.PSI_FILE).getParent();
-      ProjectViewImpl.getInstance(project).selectCB(psiFile, psiFile.getVirtualFile(), true).doWhenDone(new Runnable() {
+      ProjectView.getInstance(project).selectCB(psiFile, psiFile.getVirtualFile(), true).doWhenDone(new Runnable() {
         @Override
         public void run() {
           showPopup(DataManager.getInstance().getDataContext());

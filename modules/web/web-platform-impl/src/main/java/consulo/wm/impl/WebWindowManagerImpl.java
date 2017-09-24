@@ -142,7 +142,10 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
 
   @Override
   public void releaseFrame(IdeFrameEx frame) {
+    WebIdeFrameImpl ideFrame = myProject2Frame.remove(frame.getProject());
+    assert ideFrame == frame;
 
+    ideFrame.close();
   }
 
   @Override

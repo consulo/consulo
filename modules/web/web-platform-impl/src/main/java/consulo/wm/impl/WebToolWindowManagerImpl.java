@@ -47,13 +47,13 @@ import java.util.List;
  */
 @State(name = "ToolWindowManager", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
 public class WebToolWindowManagerImpl extends ToolWindowManagerEx implements PersistentStateComponent<Element>, Disposable {
-  private WindowManagerEx myWindowManagerEx;
+  private WindowManagerEx myWindowManager;
   private final Project myProject;
 
   private IdeFrameEx myFrame;
 
-  public WebToolWindowManagerImpl(WindowManagerEx windowManagerEx, Project project) {
-    myWindowManagerEx = windowManagerEx;
+  public WebToolWindowManagerImpl(WindowManagerEx windowManager, Project project) {
+    myWindowManager = windowManager;
     myProject = project;
     if (project.isDefault()) {
       return;
@@ -78,11 +78,13 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerEx implements Per
   }
 
   private void projectOpened() {
-    myFrame = myWindowManagerEx.allocateFrame(myProject);
+    myFrame = myWindowManager.allocateFrame(myProject);
   }
 
   private void projectClosed() {
+    myWindowManager.releaseFrame(myFrame);
 
+    myFrame = null;
   }
 
   @Override

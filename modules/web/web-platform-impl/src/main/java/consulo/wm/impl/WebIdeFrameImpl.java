@@ -35,8 +35,10 @@ import java.io.File;
  * @since 24-Sep-17
  */
 public class WebIdeFrameImpl implements IdeFrameEx {
-  private Project myProject;
-  private WebStatusBarImpl myStatusBar = new WebStatusBarImpl(this);
+  private final WebStatusBarImpl myStatusBar = new WebStatusBarImpl(this);
+  private final Project myProject;
+
+  private consulo.ui.Window myWindow;
 
   public WebIdeFrameImpl(Project project) {
     myProject = project;
@@ -44,13 +46,19 @@ public class WebIdeFrameImpl implements IdeFrameEx {
 
   public void show() {
     WebApplication.invokeOnCurrentSession(() -> {
-      consulo.ui.Window window = Windows.modalWindow(myProject.getName());
-      ((com.vaadin.ui.Window)window).setWindowMode(WindowMode.MAXIMIZED);
+      myWindow = Windows.modalWindow(myProject.getName());
+      ((com.vaadin.ui.Window)myWindow).setWindowMode(WindowMode.MAXIMIZED);
 
-      window.setResizable(false);
-      window.setContent(Components.label("Hello world"));
+      myWindow.setResizable(false);
+      myWindow.setContent(Components.label("Hello world"));
 
-      window.show();
+      myWindow.show();
+    });
+  }
+
+  public void close() {
+    WebApplication.invokeOnCurrentSession(() -> {
+      myWindow.close();
     });
   }
 

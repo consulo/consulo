@@ -15,6 +15,7 @@
  */
 package consulo.web.servlet.ui;
 
+import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ReflectionUtil;
 import com.vaadin.server.*;
 import com.vaadin.shared.communication.PushMode;
@@ -35,6 +36,8 @@ public class UIServlet extends VaadinServlet {
     private String myURLPrefix;
     private final UIBuilder myBuilder;
 
+    private VaadinUIWindowImpl myUIWindow = new VaadinUIWindowImpl(this);
+
     public UIImpl(String urlPrefix, UIBuilder builder) {
       myURLPrefix = urlPrefix;
       myBuilder = builder;
@@ -47,7 +50,11 @@ public class UIServlet extends VaadinServlet {
     @Override
     @RequiredUIAccess
     protected void init(VaadinRequest vaadinRequest) {
-      myBuilder.build(new VaadinUIWindowImpl(this));
+      myBuilder.build(myUIWindow);
+    }
+
+    public void onDetach() {
+      Disposer.dispose(myUIWindow);
     }
   }
 
@@ -81,7 +88,16 @@ public class UIServlet extends VaadinServlet {
 
   @Override
   protected VaadinServletService createServletService(DeploymentConfiguration deploymentConfiguration) throws ServiceException {
-    VaadinServletService service = new VaadinServletService(this, deploymentConfiguration);
+    VaadinServletService service = new VaadinServletService(this, deploymentConfiguration) {
+      @Override
+      public void closeSession(VaadinSession session) {
+        super.closeSession(session);
+
+        UIImpl next = (UIImpl)session.getUIs().iterator().next();
+
+        next.onDetach();
+      }
+    };
     service.init();
     service.setClassLoader(UIImpl.class.getClassLoader());
     return service;

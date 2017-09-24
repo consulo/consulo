@@ -15,7 +15,11 @@
  */
 package consulo.web.servlet;
 
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.Layouts;
@@ -48,6 +52,23 @@ public class RootUIBuilder implements UIBuilder {
   @RequiredUIAccess
   @Override
   public void build(@NotNull Window window) {
+    Disposer.register(window, () -> {
+      WebApplication application = WebApplication.getInstance();
+      if (application == null || !((ApplicationEx)application).isLoaded()) {
+        return;
+      }
+
+      WriteAction.run(() -> {
+        ProjectManager projectManager = ProjectManager.getInstance();
+
+        Project[] openProjects = projectManager.getOpenProjects();
+
+        for (Project openProject : openProjects) {
+          projectManager.closeProject(openProject);
+        }
+      });
+    });
+
     window.setContent(new WGwtLoadingPanelImpl());
 
     UIAccess access = UIAccess.get();
