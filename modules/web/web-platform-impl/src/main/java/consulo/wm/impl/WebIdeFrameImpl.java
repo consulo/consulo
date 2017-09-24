@@ -50,6 +50,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
       ((com.vaadin.ui.Window)myWindow).setWindowMode(WindowMode.MAXIMIZED);
 
       myWindow.setResizable(false);
+      myWindow.setClosable(false);
       myWindow.setContent(Components.label("Hello world"));
 
       myWindow.show();
