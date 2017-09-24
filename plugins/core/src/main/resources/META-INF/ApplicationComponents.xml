@@ -194,12 +194,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.wm.WindowManager</interface-class>
-      <implementation-class>com.intellij.openapi.wm.impl.WindowManagerImpl</implementation-class>
-      <headless-implementation-class>com.intellij.openapi.wm.impl.TestWindowManager</headless-implementation-class>
-    </component>
-
-    <component>
       <interface-class>com.intellij.ide.RecentProjectsManager</interface-class>
       <implementation-class>com.intellij.ide.RecentDirectoryProjectsManager</implementation-class>
     </component>

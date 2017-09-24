@@ -17,6 +17,14 @@
   <id>consulo.platform.web</id>
   <name>Platform: web</name>
 
+  <application-components>
+    <component>
+      <interface-class>com.intellij.openapi.wm.WindowManager</interface-class>
+      <implementation-class>com.intellij.openapi.wm.impl.WindowManagerImpl</implementation-class>
+      <headless-implementation-class>com.intellij.openapi.wm.impl.TestWindowManager</headless-implementation-class>
+    </component>
+  </application-components>
+
   <project-components>
     <component>
       <interface-class>com.intellij.openapi.wm.ToolWindowManager</interface-class>
