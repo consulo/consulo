@@ -17,6 +17,12 @@
   <id>consulo.platform.web</id>
   <name>Platform: web</name>
 
+  <project-components>
+    <component>
+      <interface-class>com.intellij.openapi.wm.ToolWindowManager</interface-class>
+      <implementation-class>consulo.wm.impl.WebToolWindowManagerImpl</implementation-class>
+    </component>
+  </project-components>
 
   <extensions defaultExtensionNs="com.intellij">
     <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
