@@ -49,7 +49,7 @@ public abstract class WindowManagerEx extends WindowManager {
   }
 
   @NotNull
-  public abstract IdeFrameEx allocateFrame(Project project);
+  public abstract IdeFrameEx allocateFrame(@NotNull Project project);
 
   public abstract void releaseFrame(IdeFrameEx frame);
 

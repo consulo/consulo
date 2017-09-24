@@ -27,8 +27,10 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowEP;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.DesktopLayout;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jdom.Element;
@@ -45,9 +47,13 @@ import java.util.List;
  */
 @State(name = "ToolWindowManager", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
 public class WebToolWindowManagerImpl extends ToolWindowManagerEx implements PersistentStateComponent<Element>, Disposable {
+  private WindowManagerEx myWindowManagerEx;
   private final Project myProject;
 
-  public WebToolWindowManagerImpl(Project project) {
+  private IdeFrameEx myFrame;
+
+  public WebToolWindowManagerImpl(WindowManagerEx windowManagerEx, Project project) {
+    myWindowManagerEx = windowManagerEx;
     myProject = project;
     if (project.isDefault()) {
       return;
@@ -72,7 +78,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerEx implements Per
   }
 
   private void projectOpened() {
-
+    myFrame = myWindowManagerEx.allocateFrame(myProject);
   }
 
   private void projectClosed() {
