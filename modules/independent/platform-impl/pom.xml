@@ -89,6 +89,7 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>eawtstub</artifactId>
+      <optional>true</optional>
     </dependency>
     <!--extenal libraries-->
     <dependency>
@@ -110,6 +111,7 @@
     <dependency>
       <groupId>javax.help</groupId>
       <artifactId>javahelp</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.apache.sanselan</groupId>
@@ -122,6 +124,16 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>

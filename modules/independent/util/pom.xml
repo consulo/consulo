@@ -49,6 +49,7 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>eawtstub</artifactId>
+      <optional>true</optional>
     </dependency>
     <!--external-->
     <dependency>
@@ -66,14 +67,17 @@
     <dependency>
       <groupId>org.iq80.snappy</groupId>
       <artifactId>snappy</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>oro</groupId>
       <artifactId>oro</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>picocontainer</groupId>
