@@ -27,10 +27,12 @@ import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
@@ -38,7 +40,6 @@ import com.intellij.openapi.fileEditor.impl.EditorsSplitters;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.*;
-import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Splitter;
@@ -56,13 +57,10 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.*;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.ui.EdtInvocationManager;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.ModuleExtensionChangeListener;
-import consulo.module.extension.condition.ModuleExtensionCondition;
+import consulo.wm.impl.ToolWindowManagerBase;
 import gnu.trove.THashSet;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
@@ -90,27 +88,9 @@ import static com.intellij.openapi.wm.impl.FloatingDecorator.DIVIDER_WIDTH;
  * @author Vladimir Kondratyev
  */
 @State(name = "ToolWindowManager", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
-public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements PersistentStateComponent<Element>, Disposable {
-  public static class InitToolWindowsActivity implements StartupActivity, DumbAware {
-    @Override
-    public void runActivity(@NotNull Project project) {
-      ToolWindowManagerEx ex = ToolWindowManagerEx.getInstanceEx(project);
-      if (ex instanceof ToolWindowManagerImpl) {
-        ToolWindowManagerImpl manager = (ToolWindowManagerImpl)ex;
-        List<FinalizableCommand> list = new ArrayList<>();
-        manager.registerToolWindowsFromBeans(list);
-        manager.initAll(list);
-        EdtInvocationManager.getInstance().invokeLater(() -> {
-          manager.execute(list);
-          manager.flushCommands();
-        });
-      }
-    }
-  }
-
+public final class ToolWindowManagerImpl extends ToolWindowManagerBase{
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.ToolWindowManagerImpl");
 
-  private final Project myProject;
   private final WindowManagerEx myWindowManager;
   private final EventDispatcher<ToolWindowManagerListener> myDispatcher = EventDispatcher.create(ToolWindowManagerListener.class);
   private final DesktopLayout myLayout = new DesktopLayout();
@@ -164,6 +144,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
   private final Alarm myUpdateHeadersAlarm = new Alarm();
   private final CommandProcessor myCommandProcessor = new CommandProcessor();
 
+  @Override
   public boolean isToolWindowRegistered(String id) {
     return myLayout.isToolWindowRegistered(id);
   }
@@ -180,7 +161,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
    * invoked by reflection
    */
   public ToolWindowManagerImpl(final Project project, final WindowManagerEx windowManagerEx, final FileEditorManager fem, final ActionManager actionManager) {
-    myProject = project;
+    super(project);
     myWindowManager = windowManagerEx;
 
     if (project.isDefault()) {
@@ -455,7 +436,8 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     }, myProject);
   }
 
-  private void initAll(List<FinalizableCommand> commandsList) {
+  @Override
+  protected void initAll(List<FinalizableCommand> commandsList) {
     appendUpdateToolWindowsPaneCmd(commandsList);
 
     JComponent editorComponent = createEditorComponent(myProject);
@@ -469,58 +451,6 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
 
   private JComponent createEditorComponent(Project project) {
     return FrameEditorComponentProvider.EP.getExtensions()[0].createEditorComponent(project);
-  }
-
-  private void registerToolWindowsFromBeans(List<FinalizableCommand> list) {
-    final ToolWindowEP[] beans = Extensions.getExtensions(ToolWindowEP.EP_NAME);
-    for (final ToolWindowEP bean : beans) {
-      if (checkCondition(myProject, bean)) {
-        list.add(new FinalizableCommand(EmptyRunnable.INSTANCE) {
-          @Override
-          public void run() {
-            initToolWindow(bean);
-          }
-        });
-      }
-    }
-
-    myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
-      @Override
-      public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
-        boolean extensionVal = newExtension.isEnabled();
-        for (final ToolWindowEP bean : beans) {
-          boolean value = checkCondition(newExtension, bean);
-
-          if (extensionVal && value) {
-            if (isToolWindowRegistered(bean.id)) {
-              continue;
-            }
-            initToolWindow(bean);
-          }
-          else if (!extensionVal && !value) {
-            unregisterToolWindow(bean.id);
-          }
-        }
-      }
-    });
-  }
-
-  private static boolean checkCondition(Project project, ToolWindowEP toolWindowEP) {
-    Condition<Project> condition = toolWindowEP.getCondition();
-    if (condition != null && !condition.value(project)) {
-      return false;
-    }
-    ModuleExtensionCondition moduleExtensionCondition = toolWindowEP.getModuleExtensionCondition();
-    return moduleExtensionCondition.value(project);
-  }
-
-  private static boolean checkCondition(ModuleExtension<?> extension, ToolWindowEP toolWindowEP) {
-    Condition<Project> condition = toolWindowEP.getCondition();
-    if (condition != null && !condition.value(extension.getProject())) {
-      return false;
-    }
-    ModuleExtensionCondition moduleExtensionCondition = toolWindowEP.getModuleExtensionCondition();
-    return moduleExtensionCondition.value(extension);
   }
 
   @Override
@@ -623,6 +553,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
    * This is helper method. It delegated its functionality to the WindowManager.
    * Before delegating it fires state changed.
    */
+  @Override
   public void execute(@NotNull List<FinalizableCommand> commandList) {
     for (FinalizableCommand each : commandList) {
       if (each.willChangeState()) {
@@ -637,7 +568,8 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerEx implements 
     myCommandProcessor.execute(commandList, myProject.getDisposed());
   }
 
-  private void flushCommands() {
+  @Override
+  protected void flushCommands() {
     myCommandProcessor.flush();
   }
 

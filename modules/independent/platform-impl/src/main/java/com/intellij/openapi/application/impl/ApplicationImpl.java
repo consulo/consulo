@@ -92,6 +92,7 @@ import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ex.ApplicationEx2;
 import consulo.start.CommandLineArgs;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

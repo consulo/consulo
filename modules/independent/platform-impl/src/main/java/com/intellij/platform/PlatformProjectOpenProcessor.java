@@ -42,6 +42,7 @@ import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.util.Consumer;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.project.ProjectOpenProcessors;
+import consulo.ui.UIAccess;
 import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -212,15 +213,16 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
   //region Async staff
   @Override
-  public void doOpenProjectAsync(@NotNull AsyncResult<Project> asyncResult, @NotNull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame) {
-    doOpenProjectAsync(asyncResult, virtualFile, projectToClose, forceOpenInNewFrame, -1, null);
+  public void doOpenProjectAsync(@NotNull AsyncResult<Project> asyncResult, @NotNull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame, @NotNull UIAccess uiAccess) {
+    doOpenProjectAsync(asyncResult, virtualFile, projectToClose, forceOpenInNewFrame, -1, uiAccess, null);
   }
 
   public static void doOpenProjectAsync(@NotNull AsyncResult<Project> result,
-                                        @NotNull final VirtualFile virtualFile,
+                                        @NotNull VirtualFile virtualFile,
                                         Project projectToClose,
-                                        final boolean forceOpenInNewFrame,
-                                        final int line,
+                                        boolean forceOpenInNewFrame,
+                                        int line,
+                                        @NotNull UIAccess uiAccess,
                                         @Nullable Consumer<Project> callback) {
     VirtualFile baseDir = virtualFile;
     if (!baseDir.isDirectory()) {
@@ -266,7 +268,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
       ProjectBaseDirectory.getInstance(project).setBaseDir(finalBaseDir);
       openProjectToolWindow(project);
       openFileFromCommandLine(project, virtualFile, line);
-      if (!projectManager.openProject(project)) {
+      if (!projectManager.openProject(project, uiAccess)) {
         WelcomeFrame.showIfNoProjectOpened();
         final Project finalProject = project;
         ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(finalProject));

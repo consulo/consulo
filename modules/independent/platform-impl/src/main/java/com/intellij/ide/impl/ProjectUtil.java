@@ -40,6 +40,7 @@ import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.application.DefaultPaths;
 import consulo.project.ProjectOpenProcessors;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -212,7 +213,7 @@ public class ProjectUtil {
 
   //region Async staff
   @NotNull
-  public static AsyncResult<Project> openAsync(@NotNull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
+  public static AsyncResult<Project> openAsync(@NotNull String path, @Nullable Project projectToClose, boolean forceOpenInNewFrame, @NotNull UIAccess uiAccess) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
     if (virtualFile == null) return AsyncResult.rejected("file path not find");
@@ -224,17 +225,17 @@ public class ProjectUtil {
 
       AppExecutorUtil.getAppExecutorService().execute(() -> {
         result.doWhenDone((project) -> {
-          ApplicationManager.getApplication().invokeLater(() -> {
+          uiAccess.give(() -> {
             if (!project.isDisposed()) {
               final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
               if (toolWindow != null) {
                 toolWindow.activate(null);
               }
             }
-          }, ModalityState.NON_MODAL);
+          });
         });
 
-        ApplicationManager.getApplication().runInWriteThreadAndWait(() -> provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame));
+        ApplicationManager.getApplication().runInWriteThreadAndWait(() -> provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame, uiAccess));
       });
 
       return result;

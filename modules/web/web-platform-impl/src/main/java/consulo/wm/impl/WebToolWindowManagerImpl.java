@@ -16,7 +16,10 @@
 package consulo.wm.impl;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
@@ -28,7 +31,6 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowEP;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
-import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.DesktopLayout;
@@ -46,15 +48,14 @@ import java.util.List;
  * @since 24-Sep-17
  */
 @State(name = "ToolWindowManager", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
-public class WebToolWindowManagerImpl extends ToolWindowManagerEx implements PersistentStateComponent<Element>, Disposable {
+public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   private WindowManagerEx myWindowManager;
-  private final Project myProject;
 
   private IdeFrameEx myFrame;
 
   public WebToolWindowManagerImpl(WindowManagerEx windowManager, Project project) {
+    super(project);
     myWindowManager = windowManager;
-    myProject = project;
     if (project.isDefault()) {
       return;
     }
@@ -295,5 +296,10 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerEx implements Per
   @Override
   public void setMaximized(@NotNull ToolWindow wnd, boolean maximized) {
 
+  }
+
+  @Override
+  public boolean isToolWindowRegistered(String id) {
+    return false;
   }
 }

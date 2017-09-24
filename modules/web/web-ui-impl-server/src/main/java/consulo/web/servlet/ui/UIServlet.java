@@ -53,8 +53,13 @@ public class UIServlet extends VaadinServlet {
       myBuilder.build(myUIWindow);
     }
 
-    public void onDetach() {
-      Disposer.dispose(myUIWindow);
+    @Override
+    public void setSession(VaadinSession session) {
+      super.setSession(session);
+
+      if(session == null) {
+        Disposer.dispose(myUIWindow);
+      }
     }
   }
 
@@ -88,16 +93,7 @@ public class UIServlet extends VaadinServlet {
 
   @Override
   protected VaadinServletService createServletService(DeploymentConfiguration deploymentConfiguration) throws ServiceException {
-    VaadinServletService service = new VaadinServletService(this, deploymentConfiguration) {
-      @Override
-      public void closeSession(VaadinSession session) {
-        super.closeSession(session);
-
-        UIImpl next = (UIImpl)session.getUIs().iterator().next();
-
-        next.onDetach();
-      }
-    };
+    VaadinServletService service = new VaadinServletService(this, deploymentConfiguration);
     service.init();
     service.setClassLoader(UIImpl.class.getClassLoader());
     return service;

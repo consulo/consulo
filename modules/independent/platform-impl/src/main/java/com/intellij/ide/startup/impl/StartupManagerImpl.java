@@ -44,6 +44,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
@@ -139,13 +140,13 @@ public class StartupManagerImpl extends StartupManagerEx {
     });
   }
 
-  public void runPostStartupActivitiesFromExtensions() {
+  public void runPostStartupActivitiesFromExtensions(@NotNull UIAccess uiAccess) {
     StartupActivity[] extensions = Extensions.getExtensions(StartupActivity.POST_STARTUP_ACTIVITY);
     for (final StartupActivity extension : extensions) {
       final Runnable runnable = () -> {
         if (!myProject.isDisposed()) {
           long start = System.currentTimeMillis();
-          extension.runActivity(myProject);
+          extension.runActivity(uiAccess, myProject);
           long duration = System.currentTimeMillis() - start;
           if (duration > 200) {
             LOG.info(extension.getClass().getSimpleName() + " run in " + duration);

@@ -35,6 +35,7 @@ import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NotNull;
 
 public class OpenProjectAction extends AnAction implements DumbAware {
@@ -54,7 +55,7 @@ public class OpenProjectAction extends AnAction implements DumbAware {
     final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     FileChooser.chooseFiles(descriptor, project, userHomeDir, files -> {
       if (files.size() == 1) {
-        Platform.hacky(() -> ProjectUtil.open(files.get(0).getPath(), project, false), () -> ProjectUtil.openAsync(files.get(0).getPath(), project, false));
+        Platform.hacky(() -> ProjectUtil.open(files.get(0).getPath(), project, false), () -> ProjectUtil.openAsync(files.get(0).getPath(), project, false, UIAccess.get()));
       }
     });
   }

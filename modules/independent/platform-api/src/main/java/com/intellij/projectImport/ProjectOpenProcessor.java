@@ -26,6 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.project.ProjectOpenProcessors;
+import consulo.ui.UIAccess;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -80,7 +81,11 @@ public abstract class ProjectOpenProcessor {
   @DeprecationInfo("Use #doOpenProjectAsync()")
   public abstract Project doOpenProject(@NotNull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame);
 
-  public void doOpenProjectAsync(@NotNull AsyncResult<Project> asyncResult, @NotNull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame) {
+  public void doOpenProjectAsync(@NotNull AsyncResult<Project> asyncResult,
+                                 @NotNull VirtualFile virtualFile,
+                                 @Nullable Project projectToClose,
+                                 boolean forceOpenInNewFrame,
+                                 @NotNull UIAccess uiAccess) {
     Project project = doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
     if (project != null) {
       asyncResult.setDone(project);

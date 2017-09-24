@@ -17,15 +17,26 @@ package com.intellij.openapi.startup;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.DeprecationInfo;
+import consulo.ui.UIAccess;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Dmitry Avdeev
- *
- * This may implement {@link com.intellij.openapi.project.DumbAware}.
+ *         <p>
+ *         This may implement {@link com.intellij.openapi.project.DumbAware}.
  */
 public interface StartupActivity {
 
   ExtensionPointName<StartupActivity> POST_STARTUP_ACTIVITY = ExtensionPointName.create("com.intellij.postStartupActivity");
 
-  void runActivity(Project project);
+  default void runActivity(@NotNull UIAccess uiAccess, @NotNull Project project) {
+    runActivity(project);
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use #runActivity(@NotNull UIAccess uiAccess, @NotNull Project project)")
+  default void runActivity(Project project) {
+    throw new AbstractMethodError();
+  }
 }

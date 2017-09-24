@@ -65,6 +65,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
+import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -356,9 +357,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
     }
   }
 
-  @RequiredDispatchThread
   @Override
-  public boolean openProject(final Project project) {
+  public boolean openProject(@NotNull final Project project, @NotNull UIAccess uiAccess) {
     if (isLight(project)) {
       ((ProjectImpl)project).setTemporarilyDisposed(false);
       boolean isInitialized = StartupManagerEx.getInstanceEx(project).startupActivityPassed();
@@ -391,7 +391,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       // Post-startup activities should not ever see unindexed and at the same time non-dumb state
       TransactionGuard.getInstance().submitTransactionAndWait(startupManager::startCacheUpdate);
 
-      startupManager.runPostStartupActivitiesFromExtensions();
+      startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
 
       GuiUtils.invokeLaterIfNeeded(() -> {
         if (!project.isDisposed()) {

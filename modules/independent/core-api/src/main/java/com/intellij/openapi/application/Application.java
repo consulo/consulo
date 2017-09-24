@@ -69,7 +69,7 @@ public interface Application extends ComponentManager {
    *
    * @param computation the computation to perform.
    * @return the result returned by the computation.
-   * @exception E re-frown from ThrowableComputable
+   * @throws E re-frown from ThrowableComputable
    */
   <T, E extends Throwable> T runReadAction(@NotNull ThrowableComputable<T, E> computation) throws E;
 
@@ -100,7 +100,7 @@ public interface Application extends ComponentManager {
    *
    * @param computation the computation to run
    * @return the result returned by the computation.
-   * @exception E re-frown from ThrowableComputable
+   * @throws E re-frown from ThrowableComputable
    */
   @RequiredDispatchThread
   <T, E extends Throwable> T runWriteAction(@NotNull ThrowableComputable<T, E> computation) throws E;
@@ -143,7 +143,7 @@ public interface Application extends ComponentManager {
    * Adds an {@link ApplicationListener}.
    *
    * @param listener the listener to add
-   * @param parent the parent disposable which dispose will trigger this listener removal
+   * @param parent   the parent disposable which dispose will trigger this listener removal
    */
   void addApplicationListener(@NotNull ApplicationListener listener, @NotNull Disposable parent);
 
@@ -190,7 +190,7 @@ public interface Application extends ComponentManager {
 
   /**
    * Checks if the current thread is the Swing dispatch thread.
-   *
+   * <p>
    * Dispatch thread not always is "write thread". For checking if current thread is "write thread" use {@link #isWriteThread()}
    *
    * @return true if the current thread is the Swing dispatch thread, false otherwise.
@@ -240,7 +240,7 @@ public interface Application extends ComponentManager {
    * state.
    *
    * @param runnable the runnable to execute.
-   * @param state the state in which the runnable will be executed.
+   * @param state    the state in which the runnable will be executed.
    */
   void invokeLater(@NotNull Runnable runnable, @NotNull ModalityState state);
 
@@ -258,7 +258,7 @@ public interface Application extends ComponentManager {
    * This will happen after all pending AWT events have been processed.
    *
    * @param runnable the runnable to execute.
-   * @param state the state in which the runnable will be executed.
+   * @param state    the state in which the runnable will be executed.
    * @param expired  condition to check before execution.
    */
   void invokeLater(@NotNull Runnable runnable, @NotNull ModalityState state, @NotNull Condition expired);
@@ -268,11 +268,11 @@ public interface Application extends ComponentManager {
    * AWT event dispatching thread, when IDEA is in the specified modality
    * state. This call blocks until all pending AWT events have been processed and (then)
    * {@code runnable.run()} returns.</p>
-   *
+   * <p>
    * <p>If current thread is an event dispatch thread then {@code runnable.run()}
    * is executed immediately.</p>
    *
-   * @param runnable the runnable to execute.
+   * @param runnable      the runnable to execute.
    * @param modalityState the state in which the runnable will be executed.
    */
   void invokeAndWait(@NotNull Runnable runnable, @NotNull ModalityState modalityState);
@@ -314,6 +314,7 @@ public interface Application extends ComponentManager {
 
   /**
    * Returns modality state which is active anytime
+   *
    * @return modality state
    */
   @NotNull
@@ -371,6 +372,7 @@ public interface Application extends ComponentManager {
 
   /**
    * Requests pooled thread to execute the action
+   *
    * @param action to be executed
    * @return future result
    */
@@ -379,6 +381,7 @@ public interface Application extends ComponentManager {
 
   /**
    * Requests pooled thread to execute the action
+   *
    * @param action to be executed
    * @return future result
    */
@@ -407,6 +410,7 @@ public interface Application extends ComponentManager {
 
   /**
    * Checks if the application is active
+   *
    * @return true if one of application windows is focused, false -- otherwise
    * @since 9.0
    */

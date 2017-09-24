@@ -22,6 +22,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.UIAccess;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +46,11 @@ public abstract class ProjectManagerEx extends ProjectManager {
   public abstract Project loadProject(@NotNull String filePath) throws IOException, JDOMException, InvalidDataException;
 
   @RequiredDispatchThread
-  public abstract boolean openProject(Project project);
+  public boolean openProject(Project project) {
+    return openProject(project, UIAccess.get());
+  }
+
+  public abstract boolean openProject(@NotNull Project project, @NotNull UIAccess uiAccess);
 
   public abstract boolean isProjectOpened(Project project);
 
@@ -54,6 +59,7 @@ public abstract class ProjectManagerEx extends ProjectManager {
   public abstract void saveChangedProjectFile(@NotNull VirtualFile file, @NotNull Project project);
 
   public abstract void blockReloadingProjectOnExternalChanges();
+
   public abstract void unblockReloadingProjectOnExternalChanges();
 
   @TestOnly
