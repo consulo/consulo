@@ -44,7 +44,6 @@ public class WebModalProgressIndicator extends EmptyProgressIndicator {
     });
   }
 
-
   @Override
   public void setText2(String text) {
     super.setText2(text);

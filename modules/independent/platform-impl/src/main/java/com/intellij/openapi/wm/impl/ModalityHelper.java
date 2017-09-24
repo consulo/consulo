@@ -16,6 +16,7 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 
 import javax.swing.*;
@@ -80,7 +81,7 @@ public class ModalityHelper {
   }
 
   public static JDialog getBlockerForFocusedFrame() {
-    return getBlockerForFrame(IdeFocusManagerImpl.getGlobalInstance().getLastFocusedFrame());
+    return getBlockerForFrame(IdeFocusManager.getGlobalInstance().getLastFocusedFrame());
   }
 
 }
