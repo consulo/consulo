@@ -21,6 +21,7 @@ package com.intellij.projectImport;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
@@ -75,9 +76,20 @@ public abstract class ProjectOpenProcessor {
 
   @Nullable
   @RequiredDispatchThread
+  @Deprecated
+  @DeprecationInfo("Use #doOpenProjectAsync()")
   public abstract Project doOpenProject(@NotNull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame);
 
-  public void refreshProjectFiles(File basedir) {
+  public void doOpenProjectAsync(@NotNull AsyncResult<Project> asyncResult, @NotNull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame) {
+    Project project = doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
+    if (project != null) {
+      asyncResult.setDone(project);
+    }
+    else {
+      asyncResult.reject("project not loaded");
+    }
+  }
 
+  public void refreshProjectFiles(File basedir) {
   }
 }

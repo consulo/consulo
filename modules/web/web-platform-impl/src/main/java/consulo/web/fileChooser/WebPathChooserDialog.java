@@ -64,7 +64,9 @@ public class WebPathChooserDialog implements PathChooserDialog {
     ok.addClickListener(() -> {
       fileTree.close();
 
-      callback.consume(Arrays.asList(component.getSelectedNode().getValue().getFile()));
+      VirtualFile file = component.getSelectedNode().getValue().getFile();
+      
+      UIAccess.get().give(() -> callback.consume(Arrays.asList(file)));
     });
     ok.setEnabled(false);
     rightButtons.add(ok);

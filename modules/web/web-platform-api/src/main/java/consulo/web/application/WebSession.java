@@ -16,13 +16,18 @@
 package consulo.web.application;
 
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 23-Sep-17
  */
 public interface WebSession {
+  @Nullable
+  UIAccess getAccess();
+
   void close();
 
   @NotNull

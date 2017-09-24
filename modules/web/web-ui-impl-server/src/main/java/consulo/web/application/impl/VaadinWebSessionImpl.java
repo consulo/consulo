@@ -18,22 +18,29 @@ package consulo.web.application.impl;
 import consulo.ui.*;
 import consulo.web.application.WebSession;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 23-Sep-17
  */
 public class VaadinWebSessionImpl implements WebSession {
-  private final VaadinUIAccessImpl myVaadinUI;
+  private final UIAccess myAccess;
 
   @RequiredUIAccess
   public VaadinWebSessionImpl() {
-    myVaadinUI = (VaadinUIAccessImpl)UIAccess.get();
+    myAccess = UIAccess.get();
+  }
+
+  @Nullable
+  @Override
+  public UIAccess getAccess() {
+    return myAccess.isValid() ? myAccess : null;
   }
 
   @Override
   public void close() {
-    myVaadinUI.give(() -> {
+    myAccess.give(() -> {
       Window window = Windows.modalWindow("Consulo");
       window.setContent(Components.label("Session Closed"));
       window.setResizable(false);
@@ -41,7 +48,7 @@ public class VaadinWebSessionImpl implements WebSession {
 
       window.show();
 
-      myVaadinUI.getUI().close();
+      ((VaadinUIAccessImpl)myAccess).getUI().close();
     });
   }
 

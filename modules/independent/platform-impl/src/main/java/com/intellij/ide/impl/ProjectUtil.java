@@ -28,13 +28,16 @@ import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.application.DefaultPaths;
 import consulo.project.ProjectOpenProcessors;
 import org.jetbrains.annotations.NotNull;
@@ -103,12 +106,15 @@ public class ProjectUtil {
   /**
    * @param project cannot be null
    */
+  @RequiredDispatchThread
   public static boolean closeAndDispose(@NotNull final Project project) {
     return ProjectManagerEx.getInstanceEx().closeAndDispose(project);
   }
 
   @Deprecated
   @DeprecationInfo("ProjectUtil#open()")
+  @RequiredDispatchThread
+  @SuppressWarnings({"unused", "deprecation"})
   public static Project openOrImport(@NotNull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
     return open(path, projectToClose, forceOpenInNewFrame);
   }
@@ -122,6 +128,8 @@ public class ProjectUtil {
    * null otherwise
    */
   @Nullable
+  @Deprecated
+  @DeprecationInfo("Sync variant of #openAsync()")
   public static Project open(@NotNull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
@@ -132,14 +140,11 @@ public class ProjectUtil {
       final Project project = provider.doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
 
       if (project != null) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            if (!project.isDisposed()) {
-              final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
-              if (toolWindow != null) {
-                toolWindow.activate(null);
-              }
+        ApplicationManager.getApplication().invokeLater(() -> {
+          if (!project.isDisposed()) {
+            final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
+            if (toolWindow != null) {
+              toolWindow.activate(null);
             }
           }
         }, ModalityState.NON_MODAL);
@@ -150,9 +155,7 @@ public class ProjectUtil {
     return null;
   }
 
-
   /**
-   * @param isNewProject
    * @return {@link com.intellij.ide.GeneralSettings#OPEN_PROJECT_SAME_WINDOW}
    * {@link com.intellij.ide.GeneralSettings#OPEN_PROJECT_NEW_WINDOW}
    * {@link com.intellij.openapi.ui.Messages#CANCEL} - if user canceled the dialog
@@ -162,15 +165,13 @@ public class ProjectUtil {
     int confirmOpenNewProject = settings.getConfirmOpenNewProject();
     if (confirmOpenNewProject == GeneralSettings.OPEN_PROJECT_ASK) {
       if (isNewProject) {
-        int exitCode = Messages.showYesNoDialog(IdeBundle.message("prompt.open.project.in.new.frame"), IdeBundle.message("title.new.project"),
-                                                IdeBundle.message("button.existingframe"), IdeBundle.message("button.newframe"), Messages.getQuestionIcon(),
-                                                new ProjectNewWindowDoNotAskOption());
+        int exitCode = Messages.showYesNoDialog(IdeBundle.message("prompt.open.project.in.new.frame"), IdeBundle.message("title.new.project"), IdeBundle.message("button.existingframe"),
+                                                IdeBundle.message("button.newframe"), Messages.getQuestionIcon(), new ProjectNewWindowDoNotAskOption());
         return exitCode == 0 ? GeneralSettings.OPEN_PROJECT_SAME_WINDOW : GeneralSettings.OPEN_PROJECT_NEW_WINDOW;
       }
       else {
-        int exitCode = Messages.showYesNoCancelDialog(IdeBundle.message("prompt.open.project.in.new.frame"), IdeBundle.message("title.open.project"),
-                                                      IdeBundle.message("button.existingframe"), IdeBundle.message("button.newframe"),
-                                                      CommonBundle.getCancelButtonText(), Messages.getQuestionIcon(), new ProjectNewWindowDoNotAskOption());
+        int exitCode = Messages.showYesNoCancelDialog(IdeBundle.message("prompt.open.project.in.new.frame"), IdeBundle.message("title.open.project"), IdeBundle.message("button.existingframe"),
+                                                      IdeBundle.message("button.newframe"), CommonBundle.getCancelButtonText(), Messages.getQuestionIcon(), new ProjectNewWindowDoNotAskOption());
         return exitCode == 0 ? GeneralSettings.OPEN_PROJECT_SAME_WINDOW : exitCode == 1 ? GeneralSettings.OPEN_PROJECT_NEW_WINDOW : Messages.CANCEL;
       }
     }
@@ -208,4 +209,37 @@ public class ProjectUtil {
     }
     return DefaultPaths.getInstance().getDocumentsDir();
   }
+
+  //region Async staff
+  @NotNull
+  public static AsyncResult<Project> openAsync(@NotNull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
+    final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+
+    if (virtualFile == null) return AsyncResult.rejected("file path not find");
+
+    AsyncResult<Project> result = new AsyncResult<>();
+
+    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(virtualFile);
+    if (provider != null) {
+
+      AppExecutorUtil.getAppExecutorService().execute(() -> {
+        result.doWhenDone((project) -> {
+          ApplicationManager.getApplication().invokeLater(() -> {
+            if (!project.isDisposed()) {
+              final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
+              if (toolWindow != null) {
+                toolWindow.activate(null);
+              }
+            }
+          }, ModalityState.NON_MODAL);
+        });
+
+        ApplicationManager.getApplication().runInWriteThreadAndWait(() -> provider.doOpenProjectAsync(result, virtualFile, projectToClose, forceOpenInNewFrame));
+      });
+
+      return result;
+    }
+    return AsyncResult.rejected("provider for file path is not find");
+  }
+  //endregion
 }

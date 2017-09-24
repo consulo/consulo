@@ -454,6 +454,11 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
+  public void runInWriteThreadAndWait(@NotNull Runnable runnable) {
+    invokeAndWait(runnable, ModalityState.any());
+  }
+
+  @Override
   @NotNull
   public ModalityInvokator getInvokator() {
     return myInvokator;

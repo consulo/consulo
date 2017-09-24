@@ -58,6 +58,11 @@ public class MockApplication extends MockComponentManager implements Application
   }
 
   @Override
+  public void runInWriteThreadAndWait(@NotNull Runnable runnable) {
+    runnable.run();
+  }
+
+  @Override
   public boolean isActive() {
     return true;
   }

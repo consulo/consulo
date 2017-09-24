@@ -205,6 +205,11 @@ public interface Application extends ComponentManager {
   boolean isWriteThread();
 
   /**
+   * Execute action in write thread. Write thread can be not UI thread
+   */
+  void runInWriteThreadAndWait(@NotNull Runnable runnable);
+
+  /**
    * @return a facade, which lets to call all those invokeLater() with a ActionCallback handle returned.
    */
   @NotNull

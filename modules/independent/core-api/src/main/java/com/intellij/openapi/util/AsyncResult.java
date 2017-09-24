@@ -64,36 +64,26 @@ public class AsyncResult<T> extends ActionCallback {
   @NotNull
   public <SubResult, SubAsyncResult extends AsyncResult<SubResult>> SubAsyncResult subResult(@NotNull SubAsyncResult subResult,
                                                                                              @NotNull Function<T, SubResult> doneHandler) {
-    doWhenDone(new SubResultDoneCallback<T, SubResult, SubAsyncResult>(subResult, doneHandler)).notifyWhenRejected(subResult);
+    doWhenDone(new SubResultDoneCallback<>(subResult, doneHandler)).notifyWhenRejected(subResult);
     return subResult;
   }
 
   @NotNull
   public ActionCallback subCallback(@NotNull Consumer<T> doneHandler) {
     ActionCallback subCallback = new ActionCallback();
-    doWhenDone(new SubCallbackDoneCallback<T>(subCallback, doneHandler)).notifyWhenRejected(subCallback);
+    doWhenDone(new SubCallbackDoneCallback<>(subCallback, doneHandler)).notifyWhenRejected(subCallback);
     return subCallback;
   }
 
   @NotNull
   public AsyncResult<T> doWhenDone(@NotNull final Consumer<T> consumer) {
-    doWhenDone(new Runnable() {
-      @Override
-      public void run() {
-        consumer.consume(myResult);
-      }
-    });
+    doWhenDone(() -> consumer.consume(myResult));
     return this;
   }
 
   @NotNull
   public AsyncResult<T> doWhenRejected(@NotNull final PairConsumer<T, String> consumer) {
-    doWhenRejected(new Runnable() {
-      @Override
-      public void run() {
-        consumer.consume(myResult, myError);
-      }
-    });
+    doWhenRejected(() -> consumer.consume(myResult, myError));
     return this;
   }
 
@@ -121,12 +111,7 @@ public class AsyncResult<T> extends ActionCallback {
   @NotNull
   public final ActionCallback doWhenProcessed(@NotNull final Consumer<T> consumer) {
     doWhenDone(consumer);
-    doWhenRejected(new PairConsumer<T, String>() {
-      @Override
-      public void consume(T result, String error) {
-        consumer.consume(result);
-      }
-    });
+    doWhenRejected((result, error) -> consumer.consume(result));
     return this;
   }
 
@@ -154,7 +139,7 @@ public class AsyncResult<T> extends ActionCallback {
 
   @NotNull
   public static <R> AsyncResult<R> rejected(@NotNull String errorMessage) {
-    AsyncResult<R> result = new AsyncResult<R>();
+    AsyncResult<R> result = new AsyncResult<>();
     result.reject(errorMessage);
     return result;
   }

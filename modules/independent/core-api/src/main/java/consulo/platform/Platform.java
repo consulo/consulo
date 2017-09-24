@@ -17,6 +17,7 @@ package consulo.platform;
 
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.ObjectUtil;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +26,28 @@ import org.jetbrains.annotations.Nullable;
  * @since 16-May-17
  */
 public interface Platform {
+  //region Migration staff
+  @Deprecated
+  static boolean ourUnifiedVariantAnyway = Boolean.getBoolean("consulo.code.unify.enabled");
+
+  @Deprecated
+  @DeprecationInfo("This is marker for future unify. In most case unified variant works good, but need more tests")
+  @SuppressWarnings("deprecation")
+  static void hacky(@NotNull Runnable desktopVariant, @NotNull Runnable unifiedVariant) {
+    if (ourUnifiedVariantAnyway) {
+      unifiedVariant.run();
+      return;
+    }
+
+    if (Platform.current().isDesktop()) {
+      desktopVariant.run();
+    }
+    else {
+      unifiedVariant.run();
+    }
+  }
+  //endregion
+
   @NotNull
   static Platform current() {
     return _PlatformInternal.current();

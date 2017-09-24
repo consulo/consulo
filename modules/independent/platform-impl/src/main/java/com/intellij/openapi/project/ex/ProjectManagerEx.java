@@ -18,6 +18,7 @@ package com.intellij.openapi.project.ex;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
@@ -76,4 +77,6 @@ public abstract class ProjectManagerEx extends ProjectManager {
 
   @Nullable
   public abstract Project convertAndLoadProject(String filePath) throws IOException;
+
+  public abstract void convertAndLoadProjectAsync(@NotNull AsyncResult<Project> result, String filePath);
 }

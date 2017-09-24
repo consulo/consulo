@@ -55,7 +55,10 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.GuiUtils;
-import com.intellij.util.*;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.SingleAlarm;
+import com.intellij.util.SmartList;
+import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
@@ -280,9 +283,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   }
 
   private ProjectImpl createProject(@Nullable String projectName, @NotNull String dirPath, boolean isDefault, boolean isOptimiseTestLoadSpeed) {
-    return isDefault
-           ? new DefaultProject(this, "", isOptimiseTestLoadSpeed)
-           : new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName);
+    return isDefault ? new DefaultProject(this, "", isOptimiseTestLoadSpeed) : new ProjectImpl(this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName);
   }
 
   @Override
@@ -422,8 +423,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
       return true;
     }
 
-    boolean ok =
-            myProgressManager.runProcessWithProgressSynchronously(process, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), project);
+    boolean ok = myProgressManager.runProcessWithProgressSynchronously(process, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), project);
     if (!ok) {
       closeProject(project, false, false, true);
       notifyProjectOpenFailed();
@@ -643,8 +643,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   public void saveChangedProjectFile(@NotNull VirtualFile file, @NotNull Project project) {
     StateStorageManager storageManager = ((ProjectEx)project).getStateStore().getStateStorageManager();
     String fileSpec = storageManager.collapseMacros(file.getPath());
-    Couple<Collection<FileBasedStorage>> storages =
-            storageManager.getCachedFileStateStorages(Collections.singletonList(fileSpec), Collections.<String>emptyList());
+    Couple<Collection<FileBasedStorage>> storages = storageManager.getCachedFileStateStorages(Collections.singletonList(fileSpec), Collections.<String>emptyList());
     FileBasedStorage storage = ContainerUtil.getFirstItem(storages.first);
     // if empty, so, storage is not yet loaded, so, we don't have to reload
     if (storage != null) {
@@ -796,8 +795,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   public void addProjectManagerListener(@NotNull Project project, @NotNull ProjectManagerListener listener) {
     List<ProjectManagerListener> listeners = project.getUserData(LISTENERS_IN_PROJECT_KEY);
     if (listeners == null) {
-      listeners =
-              ((UserDataHolderEx)project).putUserDataIfAbsent(LISTENERS_IN_PROJECT_KEY, ContainerUtil.<ProjectManagerListener>createLockFreeCopyOnWriteList());
+      listeners = ((UserDataHolderEx)project).putUserDataIfAbsent(LISTENERS_IN_PROJECT_KEY, ContainerUtil.<ProjectManagerListener>createLockFreeCopyOnWriteList());
     }
     listeners.add(listener);
   }
@@ -865,10 +863,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
 
     final String fileNames = StringUtil.join(notifications[0].getFileNames(), "\n");
 
-    final String msg = String.format("%s was unable to save some project files,\nare you sure you want to close this project anyway?",
-                                     ApplicationNamesInfo.getInstance().getProductName());
-    return Messages.showDialog(project, msg, "Unsaved Project", "Read-only files:\n\n" + fileNames, new String[]{"Yes", "No"}, 0, 1,
-                               Messages.getWarningIcon()) == 0;
+    final String msg = String.format("%s was unable to save some project files,\nare you sure you want to close this project anyway?", ApplicationNamesInfo.getInstance().getProductName());
+    return Messages.showDialog(project, msg, "Unsaved Project", "Read-only files:\n\n" + fileNames, new String[]{"Yes", "No"}, 0, 1, Messages.getWarningIcon()) == 0;
   }
 
 
@@ -901,4 +897,50 @@ public class ProjectManagerImpl extends ProjectManagerEx implements PersistentSt
   public void setDefaultProjectRootElement(@NotNull Element defaultProjectRootElement) {
     myDefaultProjectRootElement = defaultProjectRootElement;
   }
+
+  //region Async staff
+  @Override
+  public void convertAndLoadProjectAsync(@NotNull AsyncResult<Project> result, String filePath) {
+    final String fp = toCanonicalName(filePath);
+    final ConversionResult conversionResult = ConversionService.getInstance().convert(fp);
+    if (conversionResult.openingIsCanceled()) {
+      result.reject("conversion canceled");
+      return;
+    }
+
+    result.doWhenDone((project) -> {
+      if (!conversionResult.conversionNotNeeded()) {
+        StartupManager.getInstance(project).registerPostStartupActivity(() -> conversionResult.postStartupActivity(project));
+      }
+    });
+
+    loadProjectWithProgressAsync(result, filePath);
+  }
+
+  /**
+   * Opens the project at the specified path.
+   */
+  private void loadProjectWithProgressAsync(AsyncResult<Project> result, @NotNull final String filePath) {
+    final ProjectImpl project = createProject(null, toCanonicalName(filePath), false, false);
+    try {
+      myProgressManager.runProcessWithProgressSynchronously(() -> {
+        try {
+          initProject(project, null);
+
+          result.setDone(project);
+        }
+        catch (ProcessCanceledException e) {
+          throw e;
+        }
+        catch (Throwable e) {
+          result.rejectWithThrowable(e);
+        }
+      }, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), project);
+    }
+    catch (ProcessCanceledException ignore) {
+      result.reject("canceled");
+    }
+  }
+
+  //endregion
 }

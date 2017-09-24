@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,7 +86,7 @@ public class FileChooser {
   public static void chooseFiles(@NotNull final FileChooserDescriptor descriptor,
                                  @Nullable final Project project,
                                  @Nullable final VirtualFile toSelect,
-                                 @NotNull final Consumer<List<VirtualFile>> callback) {
+                                 @RequiredUIAccess @NotNull final Consumer<List<VirtualFile>> callback) {
     chooseFiles(descriptor, project, null, toSelect, callback);
   }
 

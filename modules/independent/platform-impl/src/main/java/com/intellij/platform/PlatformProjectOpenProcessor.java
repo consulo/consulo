@@ -19,6 +19,7 @@ import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
@@ -28,6 +29,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -46,6 +48,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author max
@@ -71,11 +74,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
   }
 
   @Nullable
-  public static Project doOpenProject(@NotNull final VirtualFile virtualFile,
-                                      Project projectToClose,
-                                      final boolean forceOpenInNewFrame,
-                                      final int line,
-                                      @Nullable Consumer<Project> callback) {
+  public static Project doOpenProject(@NotNull final VirtualFile virtualFile, Project projectToClose, final boolean forceOpenInNewFrame, final int line, @Nullable Consumer<Project> callback) {
     VirtualFile baseDir = virtualFile;
     if (!baseDir.isDirectory()) {
       baseDir = virtualFile.getParent();
@@ -145,12 +144,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     if (!projectManager.openProject(project)) {
       WelcomeFrame.showIfNoProjectOpened();
       final Project finalProject = project;
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          Disposer.dispose(finalProject);
-        }
-      });
+      ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(finalProject));
       return project;
     }
 
@@ -162,60 +156,45 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
   }
 
   public static void openProjectToolWindow(final Project project) {
-    StartupManager.getInstance(project).registerPostStartupActivity(new DumbAwareRunnable() {
-      @Override
-      public void run() {
-        // ensure the dialog is shown after all startup activities are done
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-              @Override
-              public void run() {
-                if (project.isDisposed()) return;
-                final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
-                if (toolWindow != null && toolWindow.getType() != ToolWindowType.SLIDING) {
-                  toolWindow.activate(null);
-                }
-              }
-            }, ModalityState.NON_MODAL);
-          }
-        });
-      }
+    //noinspection RedundantCast
+    StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
+      // ensure the dialog is shown after all startup activities are done
+      SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          ApplicationManager.getApplication().invokeLater(() -> {
+            if (project.isDisposed()) return;
+            final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
+            if (toolWindow != null && toolWindow.getType() != ToolWindowType.SLIDING) {
+              toolWindow.activate(null);
+            }
+          }, ModalityState.NON_MODAL);
+        }
+      });
     });
   }
 
   private static void openFileFromCommandLine(final Project project, final VirtualFile virtualFile, final int line) {
-    StartupManager.getInstance(project).registerPostStartupActivity(new DumbAwareRunnable() {
-      @Override
-      public void run() {
-        if (project.isDisposed()) {
-          return;
-        }
-        ToolWindowManager.getInstance(project).invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            ToolWindowManager.getInstance(project).invokeLater(new Runnable() {
-              @Override
-              public void run() {
-                if (!virtualFile.isDirectory()) {
-                  if (line > 0) {
-                    new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
-                  }
-                  else {
-                    new OpenFileDescriptor(project, virtualFile).navigate(true);
-                  }
-                }
-              }
-            });
-          }
-        });
+    //noinspection RedundantCast
+    StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
+      if (project.isDisposed()) {
+        return;
       }
+      ToolWindowManager.getInstance(project).invokeLater(() -> ToolWindowManager.getInstance(project).invokeLater(() -> {
+        if (!virtualFile.isDirectory()) {
+          if (line > 0) {
+            new OpenFileDescriptor(project, virtualFile, line - 1, 0).navigate(true);
+          }
+          else {
+            new OpenFileDescriptor(project, virtualFile).navigate(true);
+          }
+        }
+      }));
     });
   }
 
   @Override
-  @Nullable
+  @NotNull
   public Icon getIcon() {
     return SandboxUtil.getAppIcon();
   }
@@ -230,4 +209,109 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
   public String getName() {
     return "text editor";
   }
+
+  //region Async staff
+  @Override
+  public void doOpenProjectAsync(@NotNull AsyncResult<Project> asyncResult, @NotNull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame) {
+    doOpenProjectAsync(asyncResult, virtualFile, projectToClose, forceOpenInNewFrame, -1, null);
+  }
+
+  public static void doOpenProjectAsync(@NotNull AsyncResult<Project> result,
+                                        @NotNull final VirtualFile virtualFile,
+                                        Project projectToClose,
+                                        final boolean forceOpenInNewFrame,
+                                        final int line,
+                                        @Nullable Consumer<Project> callback) {
+    VirtualFile baseDir = virtualFile;
+    if (!baseDir.isDirectory()) {
+      baseDir = virtualFile.getParent();
+      while (baseDir != null) {
+        if (new File(FileUtil.toSystemDependentName(baseDir.getPath()), Project.DIRECTORY_STORE_FOLDER).exists()) {
+          break;
+        }
+        baseDir = baseDir.getParent();
+      }
+      if (baseDir == null) {
+        baseDir = virtualFile.getParent();
+      }
+    }
+
+    final File projectDir = new File(FileUtil.toSystemDependentName(baseDir.getPath()), Project.DIRECTORY_STORE_FOLDER);
+
+    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+    if (!forceOpenInNewFrame && openProjects.length > 0) {
+      if (projectToClose == null) {
+        projectToClose = openProjects[openProjects.length - 1];
+      }
+
+      int exitCode = ProjectUtil.confirmOpenNewProject(false);
+      if (exitCode == GeneralSettings.OPEN_PROJECT_SAME_WINDOW) {
+        if (!ProjectUtil.closeAndDispose(projectToClose)) {
+          result.reject("not closed project");
+          return;
+        }
+      }
+      else if (exitCode != GeneralSettings.OPEN_PROJECT_NEW_WINDOW) { // not in a new window
+        result.reject("not open in new window");
+        return;
+      }
+    }
+
+    ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
+    AtomicBoolean runConfigurators = new AtomicBoolean(true);
+
+    final VirtualFile finalBaseDir = baseDir;
+
+    Consumer<Project> afterProjectAction = project -> {
+      ProjectBaseDirectory.getInstance(project).setBaseDir(finalBaseDir);
+      openProjectToolWindow(project);
+      openFileFromCommandLine(project, virtualFile, line);
+      if (!projectManager.openProject(project)) {
+        WelcomeFrame.showIfNoProjectOpened();
+        final Project finalProject = project;
+        ApplicationManager.getApplication().runWriteAction(() -> Disposer.dispose(finalProject));
+      }
+
+      if (callback != null && runConfigurators.get()) {
+        callback.consume(project);
+      }
+    };
+
+    result.doWhenDone(afterProjectAction);
+
+    if (projectDir.exists()) {
+      for (ProjectOpenProcessor processor : ProjectOpenProcessors.getInstance().getProcessors()) {
+        processor.refreshProjectFiles(projectDir);
+      }
+
+      AsyncResult<Project> anotherResult = new AsyncResult<>();
+      anotherResult.doWhenDone((project) -> {
+        final Module[] modules = ReadAction.compute(() -> ModuleManager.getInstance(project).getModules());
+        if (modules.length > 0) {
+          runConfigurators.set(false);
+        }
+
+        result.setDone(project);
+      });
+
+      anotherResult.doWhenRejected((Runnable)result::setRejected);
+
+      anotherResult.doWhenRejectedButNotThrowable(WelcomeFrame::showIfNoProjectOpened);
+
+      anotherResult.doWhenRejectedWithThrowable(LOGGER::error);
+
+      projectManager.convertAndLoadProjectAsync(anotherResult, baseDir.getPath());
+    }
+    else {
+      projectDir.mkdirs();
+      Project project = projectManager.newProject(projectDir.getParentFile().getName(), projectDir.getParent(), true, false);
+      if (project == null) {
+        result.reject("can't create project");
+        return;
+      }
+
+      result.setDone(project);
+    }
+  }
+  //endregion
 }

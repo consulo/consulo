@@ -33,6 +33,7 @@ public class ActionCallback implements Disposable {
   private final ExecutionCallback myRejected;
 
   protected String myError;
+  protected Throwable myThrowable;
 
   private final String myName;
 
@@ -98,6 +99,13 @@ public class ActionCallback implements Disposable {
     return this;
   }
 
+  @NotNull
+  public ActionCallback rejectWithThrowable(Throwable error) {
+    myThrowable = error;
+    setRejected();
+    return this;
+  }
+
   @Nullable
   public String getError() {
     return myError;
@@ -116,13 +124,28 @@ public class ActionCallback implements Disposable {
   }
 
   @NotNull
-  public final ActionCallback doWhenRejected(@NotNull final Consumer<String> consumer) {
-    myRejected.doWhenExecuted(new Runnable() {
-      @Override
-      public void run() {
-        consumer.consume(myError);
+  public final ActionCallback doWhenRejectedButNotThrowable(@NotNull final Runnable runnable) {
+    myRejected.doWhenExecuted(() -> {
+      if (myThrowable == null) {
+        runnable.run();
       }
     });
+    return this;
+  }
+
+  @NotNull
+  public final ActionCallback doWhenRejectedWithThrowable(@NotNull final Consumer<Throwable> consumer) {
+    myRejected.doWhenExecuted(() -> {
+      if (myThrowable != null) {
+        consumer.consume(myThrowable);
+      }
+    });
+    return this;
+  }
+
+  @NotNull
+  public final ActionCallback doWhenRejected(@NotNull final Consumer<String> consumer) {
+    myRejected.doWhenExecuted(() -> consumer.consume(myError));
     return this;
   }
 
@@ -140,12 +163,7 @@ public class ActionCallback implements Disposable {
 
   @NotNull
   public final ActionCallback notifyWhenRejected(@NotNull final ActionCallback child) {
-    return doWhenRejected(new Runnable() {
-      @Override
-      public void run() {
-        child.reject(myError);
-      }
-    });
+    return doWhenRejected(() -> child.reject(myError));
   }
 
   @NotNull
@@ -182,7 +200,7 @@ public class ActionCallback implements Disposable {
   }
 
   public static class Chunk {
-    private final Set<ActionCallback> myCallbacks = new LinkedHashSet<ActionCallback>();
+    private final Set<ActionCallback> myCallbacks = new LinkedHashSet<>();
 
     public void add(@NotNull ActionCallback callback) {
       myCallbacks.add(callback);
@@ -219,12 +237,7 @@ public class ActionCallback implements Disposable {
 
   @NotNull
   public Runnable createSetDoneRunnable() {
-    return new Runnable() {
-      @Override
-      public void run() {
-        setDone();
-      }
-    };
+    return this::setDone;
   }
 
   @SuppressWarnings("UnusedDeclaration")
@@ -232,14 +245,8 @@ public class ActionCallback implements Disposable {
   @Deprecated
   /**
    * @deprecated use {@link #notifyWhenRejected(ActionCallback)}
-   */
-  public Runnable createSetRejectedRunnable() {
-    return new Runnable() {
-      @Override
-      public void run() {
-        setRejected();
-      }
-    };
+   */ public Runnable createSetRejectedRunnable() {
+    return this::setRejected;
   }
 
   public boolean waitFor(long msTimeout) {
@@ -249,12 +256,7 @@ public class ActionCallback implements Disposable {
 
     final Semaphore semaphore = new Semaphore();
     semaphore.down();
-    doWhenProcessed(new Runnable() {
-      @Override
-      public void run() {
-        semaphore.up();
-      }
-    });
+    doWhenProcessed(semaphore::up);
 
     try {
       if (msTimeout == -1) {

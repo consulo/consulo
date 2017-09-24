@@ -1,7 +1,7 @@
 package consulo.web.application.impl;
 
 import com.intellij.openapi.application.impl.ApplicationImpl;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.Splash;
@@ -32,7 +32,24 @@ public class WebApplicationImpl extends ApplicationImpl implements WebApplicatio
                                                      @Nullable Project project,
                                                      JComponent parentComponent,
                                                      String cancelText) {
-    ProgressManager.getInstance().runProcess(process, new EmptyProgressIndicator());
+
+    WebModalProgressIndicator progress = new WebModalProgressIndicator();
+
+    executeOnPooledThread(() -> {
+      try {
+        ProgressManager.getInstance().runProcess(process, progress);
+      }
+      catch (ProcessCanceledException e) {
+        progress.cancel();
+        // ok to ignore.
+      }
+      catch (RuntimeException e) {
+        progress.cancel();
+        throw e;
+      }
+    });
+
+
     return true;
   }
 
