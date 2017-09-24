@@ -89,7 +89,7 @@ public class NewAppUIBuilder implements UIBuilder {
 
     application.setCurrentSession(currentSession);
 
-    Window frame = WelcomeFrameManager.getInstance().createFrame();
+    Window frame = WelcomeFrameManager.getInstance().openFrame();
 
     frame.show();
   }

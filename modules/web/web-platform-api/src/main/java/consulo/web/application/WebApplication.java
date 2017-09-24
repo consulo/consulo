@@ -17,6 +17,8 @@ package consulo.web.application;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -27,6 +29,19 @@ public interface WebApplication extends Application {
   @Nullable
   static WebApplication getInstance() {
     return (WebApplication)ApplicationManager.getApplication();
+  }
+
+  static void invokeOnCurrentSession(@RequiredUIAccess Runnable runnable) {
+    WebApplication webApplication = WebApplication.getInstance();
+    assert webApplication != null;
+    WebSession currentSession = webApplication.getCurrentSession();
+    UIAccess access = currentSession == null ? null : currentSession.getAccess();
+
+    if (access == null) {
+      return;
+    }
+
+    access.give(runnable);
   }
 
   @Nullable

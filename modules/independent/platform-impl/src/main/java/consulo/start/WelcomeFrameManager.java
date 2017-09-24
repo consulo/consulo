@@ -40,5 +40,5 @@ public interface WelcomeFrameManager {
 
   @NotNull
   @RequiredUIAccess
-  Window createFrame();
+  Window openFrame();
 }

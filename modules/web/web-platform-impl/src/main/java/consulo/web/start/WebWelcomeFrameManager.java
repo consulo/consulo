@@ -18,11 +18,15 @@ package consulo.web.start;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.border.BorderPosition;
+import consulo.web.application.WebApplication;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -34,14 +38,28 @@ import java.util.List;
  * @since 23-Sep-17
  */
 public class WebWelcomeFrameManager implements WelcomeFrameManager {
+  private Window myWindow;
+
   @Inject
   public WebWelcomeFrameManager(@NotNull Application application) {
+    application.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      @Override
+      public void projectOpened(Project project) {
+        Window window = myWindow;
+
+        myWindow = null;
+
+        if (window != null) {
+          WebApplication.invokeOnCurrentSession(window::close);
+        }
+      }
+    });
   }
 
   @RequiredUIAccess
   @NotNull
   @Override
-  public Window createFrame() {
+  public Window openFrame() {
     Window welcomeFrame = Windows.modalWindow(FrameTitleUtil.buildTitle());
     welcomeFrame.setResizable(false);
     welcomeFrame.setClosable(false);
@@ -82,6 +100,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
     layout.center(projectActionLayout);
 
     welcomeFrame.setContent(layout);
+    myWindow = welcomeFrame;
     return welcomeFrame;
   }
 }

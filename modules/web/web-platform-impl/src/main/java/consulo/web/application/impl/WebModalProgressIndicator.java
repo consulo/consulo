@@ -16,9 +16,11 @@
 package consulo.web.application.impl;
 
 import com.intellij.openapi.progress.EmptyProgressIndicator;
-import consulo.ui.*;
+import consulo.ui.Components;
+import consulo.ui.Label;
+import consulo.ui.Window;
+import consulo.ui.Windows;
 import consulo.web.application.WebApplication;
-import consulo.web.application.WebSession;
 
 /**
  * @author VISTALL
@@ -33,7 +35,7 @@ public class WebModalProgressIndicator extends EmptyProgressIndicator {
   public void start() {
     super.start();
 
-    invoke(() -> {
+    WebApplication.invokeOnCurrentSession(() -> {
       myWindow = Windows.modalWindow("Consulo");
       myWindow.setClosable(false);
       myWindow.setResizable(false);
@@ -42,25 +44,13 @@ public class WebModalProgressIndicator extends EmptyProgressIndicator {
     });
   }
 
-  private void invoke(@RequiredUIAccess Runnable runnable) {
-    WebApplication webApplication = WebApplication.getInstance();
-    assert webApplication != null;
-    WebSession currentSession = webApplication.getCurrentSession();
-    UIAccess access = currentSession == null ? null : currentSession.getAccess();
-
-    if (access == null) {
-      return;
-    }
-
-    access.give(runnable);
-  }
 
   @Override
   public void setText2(String text) {
     super.setText2(text);
 
     if (myLabel != null) {
-      invoke(() -> {
+      WebApplication.invokeOnCurrentSession(() -> {
         myLabel.setText(text);
       });
     }
@@ -71,9 +61,7 @@ public class WebModalProgressIndicator extends EmptyProgressIndicator {
     super.stop();
 
     if (myWindow != null) {
-      invoke(() -> {
-        myWindow.close();
-      });
+      WebApplication.invokeOnCurrentSession(() -> myWindow.close());
     }
   }
 }
