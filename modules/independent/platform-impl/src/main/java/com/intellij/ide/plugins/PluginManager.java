@@ -233,7 +233,7 @@ public class PluginManager extends PluginManagerCore {
       }
     }
 
-    if (pluginId != null && !CORE_PLUGIN.equals(pluginId)) {
+    if (pluginId != null && !isSystemPlugin(pluginId)) {
       getLogger().warn(t);
 
       if(!SandboxUtil.isInsideSandbox()) {
