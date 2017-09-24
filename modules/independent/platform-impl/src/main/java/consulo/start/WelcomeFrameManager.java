@@ -27,15 +27,15 @@ import org.jetbrains.annotations.NotNull;
  *
  * TODO [VISTALL] migrate desktop frame to this class
  */
-public interface WelcomeFrameFactory {
+public interface WelcomeFrameManager {
   @NotNull
   public static Size getDefaultWindowSize() {
     return new Size(777, 460);
   }
 
   @NotNull
-  static WelcomeFrameFactory getInstance() {
-    return ServiceManager.getService(WelcomeFrameFactory.class);
+  static WelcomeFrameManager getInstance() {
+    return ServiceManager.getService(WelcomeFrameManager.class);
   }
 
   @NotNull

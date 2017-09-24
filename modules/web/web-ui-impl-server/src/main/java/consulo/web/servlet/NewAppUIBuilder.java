@@ -17,7 +17,7 @@ package consulo.web.servlet;
 
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import consulo.start.WelcomeFrameFactory;
+import consulo.start.WelcomeFrameManager;
 import consulo.ui.Layouts;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
@@ -89,7 +89,7 @@ public class NewAppUIBuilder implements UIBuilder {
 
     application.setCurrentSession(currentSession);
 
-    Window frame = WelcomeFrameFactory.getInstance().createFrame();
+    Window frame = WelcomeFrameManager.getInstance().createFrame();
 
     frame.show();
   }

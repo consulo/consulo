@@ -19,7 +19,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
-import consulo.start.WelcomeFrameFactory;
+import consulo.start.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.border.BorderPosition;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ import java.util.List;
  * @author VISTALL
  * @since 23-Sep-17
  */
-public class WebWelcomeFrameFactory implements WelcomeFrameFactory {
+public class WebWelcomeFrameManager implements WelcomeFrameManager {
   @RequiredUIAccess
   @NotNull
   @Override
@@ -39,7 +39,7 @@ public class WebWelcomeFrameFactory implements WelcomeFrameFactory {
     Window welcomeFrame = Windows.modalWindow(FrameTitleUtil.buildTitle());
     welcomeFrame.setResizable(false);
     welcomeFrame.setClosable(false);
-    welcomeFrame.setSize(WelcomeFrameFactory.getDefaultWindowSize());
+    welcomeFrame.setSize(WelcomeFrameManager.getDefaultWindowSize());
     welcomeFrame.setContent(Components.label("Test"));
 
     ListBox<String> listSelect = Components.listBox("Test");

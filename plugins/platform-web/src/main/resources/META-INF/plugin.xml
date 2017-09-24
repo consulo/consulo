@@ -22,7 +22,7 @@
     <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
                         serviceImplementation="consulo.web.fileChooser.WebFileChooserFactory"/>
 
-    <applicationService serviceInterface="consulo.start.WelcomeFrameFactory"
-                        serviceImplementation="consulo.web.start.WebWelcomeFrameFactory" />
+    <applicationService serviceInterface="consulo.start.WelcomeFrameManager"
+                        serviceImplementation="consulo.web.start.WebWelcomeFrameManager" />
   </extensions>
 </idea-plugin>
