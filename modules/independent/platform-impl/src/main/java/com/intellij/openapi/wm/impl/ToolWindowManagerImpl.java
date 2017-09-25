@@ -448,7 +448,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   private JComponent createEditorComponent(Project project) {
-    return FrameEditorComponentProvider.EP.getExtensions()[0].createEditorComponent(project);
+    return FileEditorManagerEx.getInstanceEx(project).getComponent();
   }
 
   @Override
