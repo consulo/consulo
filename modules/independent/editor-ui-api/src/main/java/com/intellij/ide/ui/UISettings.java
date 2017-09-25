@@ -151,7 +151,8 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean SHOW_TABS_TOOLTIPS = true;
   public boolean SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES = true;
   public boolean NAVIGATE_TO_PREVIEW = false;
-  public boolean SMOOTH_SCROLLING = SystemInfo.isMac && (SystemInfo.isJetbrainsJvm || SystemInfo.isJavaVersionAtLeast("9"));
+  public boolean SMOOTH_SCROLLING = SystemInfo.isMac && (SystemInfo.isJetbrainsJvm || SystemInfo.IS_AT_LEAST_JAVA9);
+  public boolean PIN_FIND_IN_PATH_POPUP = false;
 
   private final ComponentTreeEventDispatcher<UISettingsListener> myDispatcher = ComponentTreeEventDispatcher.create(UISettingsListener.class);
 
@@ -440,6 +441,14 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public boolean getDisableMnemonicsInControls() {
     return DISABLE_MNEMONICS_IN_CONTROLS;
+  }
+
+  public boolean getPinFindInPath() {
+    return PIN_FIND_IN_PATH_POPUP;
+  }
+
+  public void setPinFindInPath(boolean value) {
+    PIN_FIND_IN_PATH_POPUP = value;
   }
 
   /**

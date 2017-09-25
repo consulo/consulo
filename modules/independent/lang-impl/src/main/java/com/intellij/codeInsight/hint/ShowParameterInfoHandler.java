@@ -32,10 +32,10 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.LightweightHint;
+import consulo.annotations.RequiredDispatchThread;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import java.awt.*;
 import java.util.Set;
@@ -80,6 +80,11 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
 
   @RequiredDispatchThread
   public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, Object highlightedElement, boolean requestFocus) {
+    invoke(project, editor, file, lbraceOffset, highlightedElement, requestFocus, false);
+  }
+
+  @RequiredDispatchThread
+  public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, Object highlightedElement, boolean requestFocus, boolean singleParameterHint) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
@@ -87,14 +92,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
     final PsiElement psiElement = findAnyElementAt(file, offset);
     if (psiElement == null) return;
 
-    final ShowParameterInfoContext context = new ShowParameterInfoContext(
-            editor,
-            project,
-            file,
-            offset,
-            lbraceOffset,
-            requestFocus
-    );
+    final ShowParameterInfoContext context = new ShowParameterInfoContext(editor, project, file, offset, lbraceOffset, requestFocus);
 
     context.setHighlightedElement(highlightedElement);
     context.setRequestFocus(requestFocus);
@@ -109,7 +107,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
       LookupElement item = lookup.getCurrentItem();
 
       if (item != null) {
-        for(ParameterInfoHandler handler:handlers) {
+        for (ParameterInfoHandler handler : handlers) {
           if (handler.couldShowInLookup()) {
             final Object[] items = handler.getParametersForLookup(item, context);
             if (items != null && items.length > 0) {
@@ -136,11 +134,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
     }
   }
 
-  private static void showLookupEditorHint(Object[] descriptors,
-                                           final Editor editor,
-                                           final Project project,
-                                           ParameterInfoHandler handler,
-                                           boolean requestFocus) {
+  private static void showLookupEditorHint(Object[] descriptors, final Editor editor, final Project project, ParameterInfoHandler handler, boolean requestFocus) {
     ParameterInfoComponent component = new ParameterInfoComponent(descriptors, editor, handler, requestFocus);
     component.update();
 
@@ -152,9 +146,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
       @Override
       public void run() {
         if (!editor.getComponent().isShowing()) return;
-        hintManager.showEditorHint(hint, editor, pos.getFirst(),
-                                   HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE | HintManager.UPDATE_BY_SCROLLING, 0, false,
-                                   pos.getSecond());
+        hintManager.showEditorHint(hint, editor, pos.getFirst(), HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE | HintManager.UPDATE_BY_SCROLLING, 0, false, pos.getSecond());
       }
     });
   }
@@ -171,11 +163,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
 
   interface BestLocationPointProvider {
     @NotNull
-    Pair<Point, Short> getBestPointPosition(LightweightHint hint,
-                                            final PsiElement list,
-                                            int offset,
-                                            final boolean awtTooltip,
-                                            short preferredPosition);
+    Pair<Point, Short> getBestPointPosition(LightweightHint hint, final PsiElement list, int offset, final boolean awtTooltip, short preferredPosition);
   }
 
 }

@@ -378,14 +378,10 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
   private void hidePopupsIfNeeded() {
     if (!SystemInfo.isMac) return;
 
-    StackingPopupDispatcher.getInstance().hidePersistentPopups();
+    final StackingPopupDispatcher stackingPopupDispatcher = StackingPopupDispatcher.getInstance();
+    stackingPopupDispatcher.hidePersistentPopups();
 
-    Disposer.register(myDialog, new Disposable() {
-      @Override
-      public void dispose() {
-        StackingPopupDispatcher.getInstance().restorePersistentPopups();
-      }
-    });
+    Disposer.register(myDialog, stackingPopupDispatcher::restorePersistentPopups);
   }
 
   private static class MyDialog extends JPanel implements Disposable, DialogWrapperDialog, DataProvider, FocusTrackback.Provider {

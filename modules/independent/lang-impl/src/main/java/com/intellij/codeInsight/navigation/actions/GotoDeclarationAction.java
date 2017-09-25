@@ -98,7 +98,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
           if (element != null) {
             ShowUsagesAction showUsages = (ShowUsagesAction)ActionManager.getInstance().getAction(ShowUsagesAction.ID);
             RelativePoint popupPosition = JBPopupFactory.getInstance().guessBestPopupLocation(editor);
-            showUsages.startFindUsages(element, popupPosition, editor, ShowUsagesAction.USAGES_PAGE_SIZE);
+            showUsages.startFindUsages(element, popupPosition, editor, ShowUsagesAction.getUsagesPageSize());
             return;
           }
         }

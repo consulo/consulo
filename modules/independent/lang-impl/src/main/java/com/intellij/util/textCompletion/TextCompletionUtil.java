@@ -15,6 +15,7 @@
  */
 package com.intellij.util.textCompletion;
 
+import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.IdeActions;
@@ -54,8 +55,7 @@ public class TextCompletionUtil {
   }
 
   public static void installCompletionHint(@NotNull EditorEx editor) {
-    String completionShortcutText =
-            KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_CODE_COMPLETION));
+    String completionShortcutText = KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_CODE_COMPLETION));
     if (!StringUtil.isEmpty(completionShortcutText)) {
 
       final Ref<Boolean> toShowHintRef = new Ref<>(true);
@@ -69,9 +69,13 @@ public class TextCompletionUtil {
       editor.addFocusListener(new FocusChangeListener() {
         @Override
         public void focusGained(final Editor editor) {
+          if (Boolean.TRUE.equals(editor.getUserData(AutoPopupController.AUTO_POPUP_ON_FOCUS_GAINED))) {
+            AutoPopupController.getInstance(editor.getProject()).scheduleAutoPopup(editor);
+            return;
+          }
+
           if (toShowHintRef.get() && editor.getDocument().getText().isEmpty()) {
-            ApplicationManager.getApplication().invokeLater(
-                    () -> HintManager.getInstance().showInformationHint(editor, "Code completion available ( " + completionShortcutText + " )"));
+            ApplicationManager.getApplication().invokeLater(() -> HintManager.getInstance().showInformationHint(editor, "Code completion available ( " + completionShortcutText + " )"));
           }
         }
 
@@ -84,7 +88,8 @@ public class TextCompletionUtil {
   }
 
   public static class DocumentWithCompletionCreator extends LanguageTextField.SimpleDocumentCreator {
-    @NotNull private final TextCompletionProvider myProvider;
+    @NotNull
+    private final TextCompletionProvider myProvider;
     private final boolean myAutoPopup;
 
     public DocumentWithCompletionCreator(@NotNull TextCompletionProvider provider, boolean autoPopup) {
