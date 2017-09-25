@@ -24,6 +24,7 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.CommandProcessor;
 import com.intellij.openapi.wm.impl.DesktopLayout;
+import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -130,6 +131,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
     return false;
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public IdeFrameEx allocateFrame(@NotNull Project project) {

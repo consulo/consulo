@@ -18,6 +18,7 @@ package com.intellij.openapi.wm;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.BalloonLayout;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -42,6 +43,11 @@ public interface IdeFrame {
   IdeRootPaneNorthExtension getNorthExtension(String key);
 
   JComponent getComponent();
+
+  @NotNull
+  default consulo.ui.Window getWindow() {
+    throw new AbstractMethodError();
+  }
 
   @Nullable
   BalloonLayout getBalloonLayout();

@@ -32,6 +32,7 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -240,6 +241,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
     return null;
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public final IdeFrameEx allocateFrame(final Project project) {

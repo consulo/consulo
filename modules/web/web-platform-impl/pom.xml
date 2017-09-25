@@ -56,6 +56,11 @@
       <artifactId>consulo-web-platform-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-web-ui-impl-server</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>com.vaadin</groupId>

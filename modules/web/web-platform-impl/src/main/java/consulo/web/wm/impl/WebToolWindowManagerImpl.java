@@ -35,6 +35,8 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.DesktopLayout;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.ui.ex.WGwtToolWindowPanel;
+import consulo.web.application.WebApplication;
 import consulo.wm.impl.ToolWindowManagerBase;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +55,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   private WindowManagerEx myWindowManager;
 
   private IdeFrameEx myFrame;
+
+  private WGwtToolWindowPanel myToolWindowPanel;
 
   public WebToolWindowManagerImpl(WindowManagerEx windowManager, Project project) {
     super(project);
@@ -80,7 +84,14 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   private void projectOpened() {
-    myFrame = myWindowManager.allocateFrame(myProject);
+    WebApplication.invokeOnCurrentSession(() -> {
+      myFrame = myWindowManager.allocateFrame(myProject);
+
+      myToolWindowPanel = new WGwtToolWindowPanel();
+
+      // TODO [VISTALL]  IdeRootPane
+      myFrame.getWindow().setContent(myToolWindowPanel);
+    });
   }
 
   private void projectClosed() {

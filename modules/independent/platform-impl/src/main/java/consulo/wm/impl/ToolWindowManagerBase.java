@@ -25,7 +25,10 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.wm.ToolWindowEP;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
+import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
+import com.intellij.openapi.wm.impl.CommandProcessor;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
+import com.intellij.util.EventDispatcher;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
 import consulo.ui.UIAccess;
@@ -59,6 +62,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   }
 
   protected final Project myProject;
+  protected final EventDispatcher<ToolWindowManagerListener> myDispatcher = EventDispatcher.create(ToolWindowManagerListener.class);
+  protected final CommandProcessor myCommandProcessor = new CommandProcessor();
 
   protected ToolWindowManagerBase(Project project) {
     myProject = project;
@@ -67,10 +72,26 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected void initAll(List<FinalizableCommand> commandsList) {
   }
 
+  /**
+   * This is helper method. It delegated its functionality to the WindowManager.
+   * Before delegating it fires state changed.
+   */
   public void execute(@NotNull List<FinalizableCommand> commandList) {
+    for (FinalizableCommand each : commandList) {
+      if (each.willChangeState()) {
+        fireStateChanged();
+        break;
+      }
+    }
+
+    for (FinalizableCommand each : commandList) {
+      each.beforeExecute(this);
+    }
+    myCommandProcessor.execute(commandList, myProject.getDisposed());
   }
 
   protected void flushCommands() {
+    myCommandProcessor.flush();
   }
 
   protected void registerToolWindowsFromBeans(List<FinalizableCommand> list) {
@@ -122,5 +143,13 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
     ModuleExtensionCondition moduleExtensionCondition = toolWindowEP.getModuleExtensionCondition();
     return moduleExtensionCondition.value(extension);
+  }
+
+  protected void fireToolWindowRegistered(final String id) {
+    myDispatcher.getMulticaster().toolWindowRegistered(id);
+  }
+
+  protected void fireStateChanged() {
+    myDispatcher.getMulticaster().stateChanged();
   }
 }

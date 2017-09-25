@@ -44,6 +44,7 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.platform.WindowUtils;
+import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -538,6 +539,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     return myProject2Frame.get(null);
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public final IdeFrameEx allocateFrame(final Project project) {

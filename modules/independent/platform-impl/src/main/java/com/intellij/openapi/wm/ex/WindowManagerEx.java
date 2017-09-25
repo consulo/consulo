@@ -21,6 +21,7 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.CommandProcessor;
 import com.intellij.openapi.wm.impl.DesktopLayout;
 import com.intellij.ui.AppIcon;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,6 +50,7 @@ public abstract class WindowManagerEx extends WindowManager {
   }
 
   @NotNull
+  @RequiredUIAccess
   public abstract IdeFrameEx allocateFrame(@NotNull Project project);
 
   public abstract void releaseFrame(IdeFrameEx frame);

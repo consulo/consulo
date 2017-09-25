@@ -21,9 +21,9 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.ui.BalloonLayout;
 import com.vaadin.shared.ui.window.WindowMode;
-import consulo.ui.Components;
-import consulo.ui.Windows;
+import consulo.ui.*;
 import consulo.web.application.WebApplication;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -44,17 +44,22 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     myProject = project;
   }
 
+  @RequiredUIAccess
   public void show() {
-    WebApplication.invokeOnCurrentSession(() -> {
-      myWindow = Windows.modalWindow(myProject.getName());
-      ((com.vaadin.ui.Window)myWindow).setWindowMode(WindowMode.MAXIMIZED);
+    myWindow = Windows.modalWindow(myProject.getName());
+    ((com.vaadin.ui.Window)myWindow).setWindowMode(WindowMode.MAXIMIZED);
 
-      myWindow.setResizable(false);
-      myWindow.setClosable(false);
-      myWindow.setContent(Components.label("Hello world"));
+    myWindow.setResizable(false);
+    myWindow.setClosable(false);
+    myWindow.setContent(Components.label("Hello world"));
 
-      myWindow.show();
-    });
+    myWindow.show();
+  }
+
+  @NotNull
+  @Override
+  public consulo.ui.Window getWindow() {
+    return myWindow;
   }
 
   public void close() {

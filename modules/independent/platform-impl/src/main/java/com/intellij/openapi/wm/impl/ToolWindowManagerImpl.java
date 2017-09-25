@@ -88,11 +88,10 @@ import static com.intellij.openapi.wm.impl.FloatingDecorator.DIVIDER_WIDTH;
  * @author Vladimir Kondratyev
  */
 @State(name = "ToolWindowManager", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
-public final class ToolWindowManagerImpl extends ToolWindowManagerBase{
+public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.ToolWindowManagerImpl");
 
   private final WindowManagerEx myWindowManager;
-  private final EventDispatcher<ToolWindowManagerListener> myDispatcher = EventDispatcher.create(ToolWindowManagerListener.class);
   private final DesktopLayout myLayout = new DesktopLayout();
   private final Map<String, InternalDecorator> myId2InternalDecorator = new HashMap<>();
   private final Map<String, FloatingDecorator> myId2FloatingDecorator = new HashMap<>();
@@ -142,7 +141,6 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase{
   };
 
   private final Alarm myUpdateHeadersAlarm = new Alarm();
-  private final CommandProcessor myCommandProcessor = new CommandProcessor();
 
   @Override
   public boolean isToolWindowRegistered(String id) {
@@ -547,30 +545,6 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase{
   @Override
   public void removeToolWindowManagerListener(@NotNull ToolWindowManagerListener l) {
     myDispatcher.removeListener(l);
-  }
-
-  /**
-   * This is helper method. It delegated its functionality to the WindowManager.
-   * Before delegating it fires state changed.
-   */
-  @Override
-  public void execute(@NotNull List<FinalizableCommand> commandList) {
-    for (FinalizableCommand each : commandList) {
-      if (each.willChangeState()) {
-        fireStateChanged();
-        break;
-      }
-    }
-
-    for (FinalizableCommand each : commandList) {
-      each.beforeExecute(this);
-    }
-    myCommandProcessor.execute(commandList, myProject.getDisposed());
-  }
-
-  @Override
-  protected void flushCommands() {
-    myCommandProcessor.flush();
   }
 
   @Override
@@ -1649,14 +1623,6 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase{
   ToolWindowType getToolWindowType(final String id) {
     checkId(id);
     return getInfo(id).getType();
-  }
-
-  private void fireToolWindowRegistered(final String id) {
-    myDispatcher.getMulticaster().toolWindowRegistered(id);
-  }
-
-  private void fireStateChanged() {
-    myDispatcher.getMulticaster().stateChanged();
   }
 
   boolean isToolWindowActive(final String id) {
