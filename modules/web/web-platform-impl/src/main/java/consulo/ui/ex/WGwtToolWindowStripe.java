@@ -15,11 +15,37 @@
  */
 package consulo.ui.ex;
 
-import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractComponentContainer;
+import com.vaadin.ui.Component;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class WGwtToolWindowStripe extends AbstractComponent {
+public class WGwtToolWindowStripe extends AbstractComponentContainer {
+  private List<Component> myButtons = new ArrayList<>();
+
+  public void add(WGwtToolWindowStripeButton button) {
+    myButtons.add(button);
+    addComponent(button);
+  }
+
+  @Override
+  public void replaceComponent(Component component, Component component1) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public int getComponentCount() {
+    return myButtons.size();
+  }
+
+  @Override
+  public Iterator<Component> iterator() {
+    return myButtons.iterator();
+  }
 }

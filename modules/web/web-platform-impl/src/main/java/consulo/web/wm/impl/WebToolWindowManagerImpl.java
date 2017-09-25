@@ -20,6 +20,7 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
@@ -52,6 +53,8 @@ import java.util.List;
  */
 @State(name = "ToolWindowManager", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
 public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
+  private static final Logger LOG = Logger.getInstance(WebToolWindowManagerImpl.class);
+
   private WindowManagerEx myWindowManager;
 
   private IdeFrameEx myFrame;
@@ -102,9 +105,111 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @Override
   public void initToolWindow(@NotNull ToolWindowEP bean) {
+   /* WindowInfoImpl before = myLayout.getInfo(bean.id, false);
+    boolean visible = before != null && before.isVisible();
+    JLabel label = createInitializingLabel();
+    ToolWindowAnchor toolWindowAnchor = ToolWindowAnchor.fromText(bean.anchor);
+    final ToolWindowFactory factory = bean.getToolWindowFactory();
+    ToolWindow window = registerToolWindow(bean.id, label, toolWindowAnchor, false, bean.canCloseContents, DumbService.isDumbAware(factory), factory.shouldBeAvailable(myProject));
+    final ToolWindowImpl toolWindow = (ToolWindowImpl)registerDisposable(bean.id, myProject, window);
+    toolWindow.setContentFactory(factory);
+    if (bean.icon != null && toolWindow.getIcon() == null) {
+      Icon icon = IconLoader.findIcon(bean.icon, factory.getClass());
+      if (icon == null) {
+        try {
+          icon = IconLoader.getIcon(bean.icon);
+        }
+        catch (Exception ignored) {
+        }
+      }
+      toolWindow.setIcon(icon);
+    }
 
+    WindowInfoImpl info = getInfo(bean.id);
+    if (!info.isSplit() && bean.secondary && !info.wasRead()) {
+      toolWindow.setSplitMode(true, null);
+    }
+
+    // ToolWindow activation is not needed anymore and should be removed in 2017
+    toolWindow.setActivation(new ActionCallback()).setDone();
+    final DumbAwareRunnable runnable = () -> {
+      if (toolWindow.isDisposed()) return;
+
+      toolWindow.ensureContentInitialized();
+    };
+    if (visible) {
+      runnable.run();
+    }
+    else {
+      UiNotifyConnector.doWhenFirstShown(label, () -> ApplicationManager.getApplication().invokeLater(runnable));
+    } */
   }
 
+  /*@NotNull
+  private ToolWindow registerToolWindow(@NotNull final String id,
+                                        @Nullable final JComponent component,
+                                        @NotNull final ToolWindowAnchor anchor,
+                                        boolean sideTool,
+                                        boolean canCloseContent,
+                                        final boolean canWorkInDumbMode,
+                                        boolean shouldBeAvailable) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("enter: installToolWindow(" + id + "," + component + "," + anchor + "\")");
+    }
+    ApplicationManager.getApplication().assertIsDispatchThread();
+    boolean known = myLayout.isToolWindowUnregistered(id);
+    if (myLayout.isToolWindowRegistered(id)) {
+      throw new IllegalArgumentException("window with id=\"" + id + "\" is already registered");
+    }
+
+    final WindowInfoImpl info = myLayout.register(id, anchor, sideTool);
+    final boolean wasActive = info.isActive();
+    final boolean wasVisible = info.isVisible();
+    info.setActive(false);
+    info.setVisible(false);
+    if (!known) {
+      info.setShowStripeButton(shouldBeAvailable);
+    }
+
+    // Create decorator
+
+    WebToolWindowImpl toolWindow = new WebToolWindowImpl(this, id, canCloseContent, component);
+    InternalDecorator decorator = new InternalDecorator(myProject, info.copy(), toolWindow, canWorkInDumbMode);
+    ActivateToolWindowAction.ensureToolWindowActionRegistered(toolWindow);
+    myId2InternalDecorator.put(id, decorator);
+    decorator.addInternalDecoratorListener(myInternalDecoratorListener);
+    toolWindow.addPropertyChangeListener(myToolWindowPropertyChangeListener);
+    myId2FocusWatcher.put(id, new ToolWindowFocusWatcher(toolWindow));
+
+    // Create and show tool button
+
+    final StripeButton button = new StripeButton(decorator, myToolWindowsPane);
+    myId2StripeButton.put(id, button);
+    List<FinalizableCommand> commandsList = new ArrayList<>();
+    appendAddButtonCmd(button, info, commandsList);
+
+    // If preloaded info is visible or active then we have to show/activate the installed
+    // tool window. This step has sense only for windows which are not in the auto hide
+    // mode. But if tool window was active but its mode doesn't allow to activate it again
+    // (for example, tool window is in auto hide mode) then we just activate editor component.
+
+    if (!info.isAutoHide() && (info.isDocked() || info.isFloating())) {
+      if (wasActive) {
+        activateToolWindowImpl(info.getId(), commandsList, true, true);
+      }
+      else if (wasVisible) {
+        showToolWindowImpl(info.getId(), false, commandsList);
+      }
+    }
+    else if (wasActive) { // tool window was active but it cannot be activate again
+      activateEditorComponentImpl(commandsList, true);
+    }
+
+    execute(commandsList);
+    fireToolWindowRegistered(id);
+    return toolWindow;
+  }
+            */
   @Override
   public void addToolWindowManagerListener(@NotNull ToolWindowManagerListener l) {
 
