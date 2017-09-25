@@ -396,10 +396,6 @@ public class JBUI {
     return new JBDimension(widthAndHeight, widthAndHeight);
   }
 
-  public static JBDimension size(Size size) {
-    return new JBDimension(size.getWidth(), size.getHeight());
-  }
-
   public static JBDimension size(Dimension size) {
     if (size instanceof JBDimension) {
       final JBDimension jbSize = (JBDimension)size;

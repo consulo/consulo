@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,34 +19,28 @@ import java.io.Serializable;
 
 /**
  * @author VISTALL
- * @since 16-Jun-16
+ * @since 25-Sep-17
  */
-public final class Size implements Serializable {
-  public static final Size UNDEFINED = new Size(-1, -1);
+public class Coordinate2D implements Serializable {
+  private static final long serialVersionUID = -8454212049522017852L;
 
-  private static final long serialVersionUID = 3195037735722861866L;
+  private int myX;
+  private int myY;
 
-  private int myWidth;
-  private int myHeight;
-
-  private Size() {
+  private Coordinate2D() {
   }
 
-  public Size(int widthAndHeight) {
-    this(widthAndHeight, widthAndHeight);
+  public Coordinate2D(int x, int y) {
+    myX = x;
+    myY = y;
   }
 
-  public Size(int width, int height) {
-    myWidth = width;
-    myHeight = height;
+  public int getX() {
+    return myX;
   }
 
-  public int getWidth() {
-    return myWidth;
-  }
-
-  public int getHeight() {
-    return myHeight;
+  public int getY() {
+    return myY;
   }
 
   @Override
@@ -54,26 +48,26 @@ public final class Size implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    Size size = (Size)o;
+    Coordinate2D that = (Coordinate2D)o;
 
-    if (myWidth != size.myWidth) return false;
-    if (myHeight != size.myHeight) return false;
+    if (myX != that.myX) return false;
+    if (myY != that.myY) return false;
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    int result = myWidth;
-    result = 31 * result + myHeight;
+    int result = myX;
+    result = 31 * result + myY;
     return result;
   }
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("Size{");
-    sb.append("myWidth=").append(myWidth);
-    sb.append(", myHeight=").append(myHeight);
+    final StringBuilder sb = new StringBuilder("Coordinate2D{");
+    sb.append("myX=").append(myX);
+    sb.append(", myY=").append(myY);
     sb.append('}');
     return sb.toString();
   }
