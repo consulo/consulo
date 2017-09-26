@@ -84,5 +84,57 @@
       <artifactId>consulo-web-platform-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!--copied from consulo-bundle module-->
+
+    <!--optional dependency-->
+    <dependency>
+      <groupId>org.apache.ws.xmlrpc</groupId>
+      <artifactId>xmlrpc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>oro</groupId>
+      <artifactId>oro</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.iq80.snappy</groupId>
+      <artifactId>snappy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.help</groupId>
+      <artifactId>javahelp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.thrift</groupId>
+      <artifactId>libthrift</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.markusbernhardt</groupId>
+      <artifactId>proxy-vole</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.imgscalr</groupId>
+      <artifactId>imgscalr-lib</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>dk.brics.automaton</groupId>
+      <artifactId>automaton</artifactId>
+    </dependency>
   </dependencies>
 </project>
