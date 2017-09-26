@@ -108,5 +108,13 @@
       <groupId>com.github.markusbernhardt</groupId>
       <artifactId>proxy-vole</artifactId>
     </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>dk.brics.automaton</groupId>
+      <artifactId>automaton</artifactId>
+    </dependency>
   </dependencies>
 </project>

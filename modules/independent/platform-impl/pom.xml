@@ -103,6 +103,7 @@
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib-nodep</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.swinglabs</groupId>

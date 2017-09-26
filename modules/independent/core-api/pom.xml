@@ -55,10 +55,12 @@
     <dependency>
       <groupId>dk.brics.automaton</groupId>
       <artifactId>automaton</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib-nodep</artifactId>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>
