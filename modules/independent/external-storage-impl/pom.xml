@@ -41,5 +41,11 @@
       <artifactId>consulo-platform-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.iq80.snappy</groupId>
+      <artifactId>snappy</artifactId>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 </project>

@@ -50,6 +50,12 @@
     <dependency>
       <groupId>org.apache.ws.xmlrpc</groupId>
       <artifactId>xmlrpc</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>
