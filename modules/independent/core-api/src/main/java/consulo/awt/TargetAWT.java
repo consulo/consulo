@@ -29,19 +29,24 @@ import java.awt.*;
  * <p>
  * This should moved to desktop module, after split desktop and platform code
  */
-public class ToAWT {
+public class TargetAWT {
   @NotNull
-  public static Dimension from(@NotNull Size size) {
+  public static Dimension to(@NotNull Size size) {
     return JBUI.size(size.getWidth(), size.getHeight());
   }
 
   @NotNull
-  public static Color from(@NotNull RGBColor color) {
+  public static Color to(@NotNull RGBColor color) {
     return new Color(color.getRed(), color.getGreed(), color.getBlue());
   }
 
   @NotNull
-  public static Rectangle from(@NotNull Rectangle2D rectangle2D) {
+  public static Rectangle to(@NotNull Rectangle2D rectangle2D) {
     return new Rectangle(rectangle2D.getCoordinate().getX(), rectangle2D.getCoordinate().getY(), rectangle2D.getSize().getWidth(), rectangle2D.getSize().getHeight());
+  }
+
+  @NotNull
+  public static Rectangle2D from(@NotNull Rectangle rectangle) {
+    return new Rectangle2D(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
   }
 }

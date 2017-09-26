@@ -49,17 +49,25 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
-import com.intellij.openapi.wm.ex.*;
+import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import com.intellij.openapi.wm.ex.ToolWindowEx;
+import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.commands.*;
 import com.intellij.ui.BalloonImpl;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.util.*;
+import com.intellij.util.Alarm;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.IJSwingUtilities;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.awt.TargetAWT;
+import consulo.ui.Rectangle2D;
 import consulo.wm.impl.ToolWindowManagerBase;
 import gnu.trove.THashSet;
 import org.intellij.lang.annotations.JdkConstants;
@@ -80,8 +88,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.List;
-
-import static com.intellij.openapi.wm.impl.FloatingDecorator.DIVIDER_WIDTH;
 
 /**
  * @author Anton Katilin
@@ -1932,7 +1938,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
     if (info.wasRead()) return;
 
     if (floatingBounds != null) {
-      info.setFloatingBounds(floatingBounds);
+      info.setFloatingBounds(TargetAWT.from(floatingBounds));
     }
 
     if (anchor != null) {
@@ -2002,9 +2008,9 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
       super(myCommandProcessor);
       myFloatingDecorator = new FloatingDecorator(myFrame, info.copy(), decorator);
       myId2FloatingDecorator.put(info.getId(), myFloatingDecorator);
-      final Rectangle bounds = info.getFloatingBounds();
-      if (bounds != null && bounds.width > 0 && bounds.height > 0 && myWindowManager.isInsideScreenBounds(bounds.x, bounds.y, bounds.width)) {
-        myFloatingDecorator.setBounds(bounds);
+      final Rectangle2D bounds = info.getFloatingBounds();
+      if (bounds != null && bounds.getWidth() > 0 && bounds.getHeight() > 0 && myWindowManager.isInsideScreenBounds(bounds.getX(), bounds.getY(), bounds.getWidth())) {
+        myFloatingDecorator.setBounds(TargetAWT.to(bounds));
       }
       else { // place new frame at the center of main frame if there are no floating bounds
         Dimension size = decorator.getSize();
@@ -2038,7 +2044,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
       super(myCommandProcessor);
       myFloatingDecorator = getFloatingDecorator(info.getId());
       myId2FloatingDecorator.remove(info.getId());
-      info.setFloatingBounds(myFloatingDecorator.getBounds());
+      info.setFloatingBounds(TargetAWT.from(myFloatingDecorator.getBounds()));
     }
 
     @Override
@@ -2067,16 +2073,16 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
     /**
      * Creates floating decorator for specified floating decorator.
      */
-    private AddWindowedDecoratorCmd(final InternalDecorator decorator, final WindowInfoImpl info) {
+    private AddWindowedDecoratorCmd(@NotNull InternalDecorator decorator, @NotNull WindowInfoImpl info) {
       super(myCommandProcessor);
       myWindowedDecorator = new WindowedDecorator(myProject, info.copy(), decorator);
       Window window = myWindowedDecorator.getFrame();
-      final Rectangle bounds = info.getFloatingBounds();
-      if (bounds != null) {
-        bounds.setBounds(bounds.x + DIVIDER_WIDTH, bounds.y + DIVIDER_WIDTH, bounds.width - 2 * DIVIDER_WIDTH, bounds.height - 2 * DIVIDER_WIDTH);
-      }
-      if (bounds != null && bounds.width > 0 && bounds.height > 0 && myWindowManager.isInsideScreenBounds(bounds.x, bounds.y, bounds.width)) {
-        window.setBounds(bounds);
+      final Rectangle2D bounds = info.getFloatingBounds();
+      if (bounds != null &&
+          bounds.getWidth() > 0 &&
+          bounds.getHeight() > 0 &&
+          myWindowManager.isInsideScreenBounds(bounds.getX(), bounds.getY(), bounds.getWidth())) {
+        window.setBounds(TargetAWT.to(bounds));
       }
       else { // place new frame at the center of main frame if there are no floating bounds
         Dimension size = decorator.getSize();
@@ -2087,12 +2093,9 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
         window.setLocationRelativeTo(myFrame);
       }
       myId2WindowedDecorator.put(info.getId(), myWindowedDecorator);
-      myWindowedDecorator.addDisposable(new Disposable() {
-        @Override
-        public void dispose() {
-          if (myId2WindowedDecorator.get(info.getId()) != null) {
-            hideToolWindow(info.getId(), false);
-          }
+      myWindowedDecorator.addDisposable(() -> {
+        if (myId2WindowedDecorator.get(info.getId()) != null) {
+          hideToolWindow(info.getId(), false);
         }
       });
     }
@@ -2131,7 +2134,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
 
       Window frame = myWindowedDecorator.getFrame();
       if (!frame.isShowing()) return;
-      Rectangle bounds = getRootBounds((JFrame)frame);
+      Rectangle2D bounds = getRootBounds((JFrame)frame);
       info.setFloatingBounds(bounds);
     }
 
@@ -2287,7 +2290,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
       if (info.isFloating()) {
         final Window owner = SwingUtilities.getWindowAncestor(source);
         if (owner != null) {
-          info.setFloatingBounds(owner.getBounds());
+          info.setFloatingBounds(TargetAWT.from(owner.getBounds()));
         }
       }
       else if (info.isWindowed()) {
@@ -2523,12 +2526,11 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
     return IdeFocusManager.getInstance(myProject).getTimestamp(trackOnlyForcedCommands);
   }
 
-
   @NotNull
-  private static Rectangle getRootBounds(JFrame frame) {
+  private static Rectangle2D getRootBounds(JFrame frame) {
     JRootPane rootPane = frame.getRootPane();
     Rectangle bounds = rootPane.getBounds();
     bounds.setLocation(frame.getX() + rootPane.getX(), frame.getY() + rootPane.getY());
-    return bounds;
+    return TargetAWT.from(bounds);
   }
 }

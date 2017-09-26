@@ -23,7 +23,7 @@ import java.io.Serializable;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class Rectangle2D implements Serializable {
+public class Rectangle2D implements Serializable, Cloneable {
   private static final long serialVersionUID = 4140523038283686399L;
 
   private Coordinate2D myCoordinate;
@@ -45,6 +45,22 @@ public class Rectangle2D implements Serializable {
     mySize = size;
   }
 
+  public int getHeight() {
+    return mySize.getHeight();
+  }
+
+  public int getWidth() {
+    return mySize.getWidth();
+  }
+
+  public int getX() {
+    return myCoordinate.getX();
+  }
+
+  public int getY() {
+    return myCoordinate.getY();
+  }
+
   @NotNull
   public Coordinate2D getCoordinate() {
     return myCoordinate;
@@ -53,6 +69,11 @@ public class Rectangle2D implements Serializable {
   @NotNull
   public Size getSize() {
     return mySize;
+  }
+
+  @Override
+  public Rectangle2D clone() {
+    return new Rectangle2D(myCoordinate, mySize);
   }
 
   @Override

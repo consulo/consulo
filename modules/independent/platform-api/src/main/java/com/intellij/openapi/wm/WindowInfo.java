@@ -16,15 +16,16 @@
 
 package com.intellij.openapi.wm;
 
+import consulo.ui.Rectangle2D;
 import org.jetbrains.annotations.NotNull;
-
-import java.awt.*;
+import org.jetbrains.annotations.Nullable;
 
 public interface WindowInfo {
   @NotNull
   ToolWindowAnchor getAnchor();
 
-  Rectangle getFloatingBounds();
+  @Nullable
+  Rectangle2D getFloatingBounds();
 
   boolean isSplit();
 
