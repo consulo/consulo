@@ -99,7 +99,6 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   @NonNls
   private static final String SHOW_STRIPE_BUTTON = "show_stripe_button";
 
-
   private boolean myWasRead;
 
   /**
