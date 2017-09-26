@@ -30,8 +30,11 @@ import java.util.*;
 /**
  * @author Vladimir Kondratyev
  */
-public final class DesktopLayout {
-  @NonNls static final String TAG = "layout";
+public final class ToolWindowLayout {
+  @NonNls
+  static final String TAG = "layout";
+  @NonNls
+  private static final String ID_ATTR = "id";
   /**
    * Map between <code>id</code>s and registered <code>WindowInfo</code>s.
    */
@@ -62,15 +65,13 @@ public final class DesktopLayout {
    * if the cached data is invalid.
    */
   private WindowInfoImpl[] myAllInfos;
-  @NonNls private static final String ID_ATTR = "id";
-
 
   /**
    * Copies itself from the passed
    *
    * @param layout to be copied.
    */
-  public final void copyFrom(@NotNull DesktopLayout layout) {
+  public final void copyFrom(@NotNull ToolWindowLayout layout) {
     for (WindowInfoImpl info1 : layout.getAllInfos()) {
       WindowInfoImpl info = myRegisteredId2Info.get(info1.getId());
       if (info != null) {
@@ -133,8 +134,8 @@ public final class DesktopLayout {
 
   /**
    * @return <code>WindowInfo</code> for the window with specified <code>id</code>.
-   *         If <code>onlyRegistered</code> is <code>true</code> then returns not <code>null</code>
-   *         value if and only if window with <code>id</code> is registered one.
+   * If <code>onlyRegistered</code> is <code>true</code> then returns not <code>null</code>
+   * value if and only if window with <code>id</code> is registered one.
    */
   final WindowInfoImpl getInfo(String id, final boolean onlyRegistered) {
     final WindowInfoImpl info = myRegisteredId2Info.get(id);
@@ -190,7 +191,7 @@ public final class DesktopLayout {
 
   /**
    * @return all (registered and not unregistered) <code>WindowInfos</code> for the specified <code>anchor</code>.
-   *         Returned infos are sorted by order.
+   * Returned infos are sorted by order.
    */
   @NotNull
   private WindowInfoImpl[] getAllInfos(@NotNull ToolWindowAnchor anchor) {
@@ -226,7 +227,7 @@ public final class DesktopLayout {
 
   /**
    * @return comparator which compares <code>StripeButtons</code> in the stripe with
-   *         specified <code>anchor</code>.
+   * specified <code>anchor</code>.
    */
   @NotNull
   final Comparator<StripeButton> comparator(@NotNull ToolWindowAnchor anchor) {
@@ -236,7 +237,7 @@ public final class DesktopLayout {
   /**
    * @param anchor anchor of the stripe.
    * @return maximum ordinal number in the specified stripe. Returns <code>-1</code>
-   *         if there is no any tool window with the specified anchor.
+   * if there is no any tool window with the specified anchor.
    */
   private int getMaxOrder(@NotNull ToolWindowAnchor anchor) {
     int res = -1;

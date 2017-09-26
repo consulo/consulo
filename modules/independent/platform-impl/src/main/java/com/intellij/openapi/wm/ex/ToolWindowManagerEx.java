@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowEP;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.impl.DesktopLayout;
+import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,16 +54,16 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
   /**
    * @return layout of tool windows.
    */
-  public abstract DesktopLayout getLayout();
+  public abstract ToolWindowLayout getLayout();
 
-  public abstract void setLayoutToRestoreLater(DesktopLayout layout);
+  public abstract void setLayoutToRestoreLater(ToolWindowLayout layout);
 
-  public abstract DesktopLayout getLayoutToRestoreLater();
+  public abstract ToolWindowLayout getLayoutToRestoreLater();
 
   /**
    * Copied <code>layout</code> into internal layout and rearranges tool windows.
    */
-  public abstract void setLayout(@NotNull DesktopLayout layout);
+  public abstract void setLayout(@NotNull ToolWindowLayout layout);
 
   public abstract void clearSideStack();
 

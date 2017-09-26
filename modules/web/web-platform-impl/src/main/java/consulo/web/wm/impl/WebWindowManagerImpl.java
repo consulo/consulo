@@ -23,7 +23,7 @@ import com.intellij.openapi.wm.WindowManagerListener;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.CommandProcessor;
-import com.intellij.openapi.wm.impl.DesktopLayout;
+import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -177,12 +177,12 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
   }
 
   @Override
-  public DesktopLayout getLayout() {
+  public ToolWindowLayout getLayout() {
     return null;
   }
 
   @Override
-  public void setLayout(DesktopLayout layout) {
+  public void setLayout(ToolWindowLayout layout) {
 
   }
 

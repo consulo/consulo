@@ -107,7 +107,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   /**
    * That is the default layout.
    */
-  private final DesktopLayout myLayout;
+  private final ToolWindowLayout myLayout;
 
   private final HashMap<Project, IdeFrameImpl> myProject2Frame;
 
@@ -147,7 +147,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     myWindowWatcher = new WindowWatcher();
     final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener(FOCUSED_WINDOW_PROPERTY_NAME, myWindowWatcher);
-    myLayout = new DesktopLayout();
+    myLayout = new ToolWindowLayout();
     myProject2Frame = new HashMap<>();
     myDialogsToDispose = new HashMap<>();
     myFrameExtendedState = Frame.NORMAL;
@@ -677,7 +677,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
       }
     }
 
-    final Element desktopElement = state.getChild(DesktopLayout.TAG);
+    final Element desktopElement = state.getChild(ToolWindowLayout.TAG);
     if (desktopElement != null) {
       myLayout.readExternal(desktopElement);
     }
@@ -724,7 +724,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     state.addContent(frameState);
 
     // Save default layout
-    Element layoutElement = myLayout.writeExternal(DesktopLayout.TAG);
+    Element layoutElement = myLayout.writeExternal(ToolWindowLayout.TAG);
     if (layoutElement != null) {
       state.addContent(layoutElement);
     }
@@ -778,12 +778,12 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   }
 
   @Override
-  public final DesktopLayout getLayout() {
+  public final ToolWindowLayout getLayout() {
     return myLayout;
   }
 
   @Override
-  public final void setLayout(final DesktopLayout layout) {
+  public final void setLayout(final ToolWindowLayout layout) {
     myLayout.copyFrom(layout);
   }
 

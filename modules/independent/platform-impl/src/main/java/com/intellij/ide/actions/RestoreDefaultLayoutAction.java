@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.DesktopLayout;
+import com.intellij.openapi.wm.impl.ToolWindowLayout;
 
 /**
  * @author Vladimir Kondratyev
@@ -31,7 +31,7 @@ public final class RestoreDefaultLayoutAction extends AnAction implements DumbAw
     if(project==null){
       return;
     }
-    DesktopLayout layout=WindowManagerEx.getInstanceEx().getLayout();
+    ToolWindowLayout layout=WindowManagerEx.getInstanceEx().getLayout();
     ToolWindowManagerEx.getInstanceEx(project).setLayout(layout);
   }
 

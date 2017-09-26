@@ -31,7 +31,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
-import com.intellij.openapi.wm.impl.DesktopLayout;
+import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
@@ -188,7 +188,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
     if (project == null) return false;
     ToolWindowManagerEx manager = ToolWindowManagerEx.getInstanceEx(project);
 
-    DesktopLayout layout = new DesktopLayout();
+    ToolWindowLayout layout = new ToolWindowLayout();
     layout.copyFrom(manager.getLayout());
     boolean hasVisible = hideAllToolWindows(manager);
 
@@ -202,7 +202,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
   static void restoreToolWindows(Project project, boolean needsRestore, boolean inPresentation) {
     if (project == null || !needsRestore) return;
     ToolWindowManagerEx manager = ToolWindowManagerEx.getInstanceEx(project);
-    DesktopLayout restoreLayout = manager.getLayoutToRestoreLater();
+    ToolWindowLayout restoreLayout = manager.getLayoutToRestoreLater();
     if (!inPresentation && restoreLayout != null) {
       manager.setLayout(restoreLayout);
     }

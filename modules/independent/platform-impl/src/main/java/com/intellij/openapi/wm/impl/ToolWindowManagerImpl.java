@@ -98,7 +98,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.ToolWindowManagerImpl");
 
   private final WindowManagerEx myWindowManager;
-  private final DesktopLayout myLayout = new DesktopLayout();
+  private final ToolWindowLayout myLayout = new ToolWindowLayout();
   private final Map<String, InternalDecorator> myId2InternalDecorator = new HashMap<>();
   private final Map<String, FloatingDecorator> myId2FloatingDecorator = new HashMap<>();
   private final Map<String, WindowedDecorator> myId2WindowedDecorator = new HashMap<>();
@@ -116,7 +116,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
 
   private ToolWindowsPane myToolWindowsPane;
   private IdeFrameImpl myFrame;
-  private DesktopLayout myLayoutToRestoreLater = null;
+  private ToolWindowLayout myLayoutToRestoreLater = null;
   @NonNls
   private static final String EDITOR_ELEMENT = "editor";
   @NonNls
@@ -1247,23 +1247,23 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public DesktopLayout getLayout() {
+  public ToolWindowLayout getLayout() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     return myLayout;
   }
 
   @Override
-  public void setLayoutToRestoreLater(DesktopLayout layout) {
+  public void setLayoutToRestoreLater(ToolWindowLayout layout) {
     myLayoutToRestoreLater = layout;
   }
 
   @Override
-  public DesktopLayout getLayoutToRestoreLater() {
+  public ToolWindowLayout getLayoutToRestoreLater() {
     return myLayoutToRestoreLater;
   }
 
   @Override
-  public void setLayout(@NotNull final DesktopLayout layout) {
+  public void setLayout(@NotNull final ToolWindowLayout layout) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     final ArrayList<FinalizableCommand> commandList = new ArrayList<>();
     // hide tool window that are invisible in new layout
@@ -1869,11 +1869,11 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
       if (EDITOR_ELEMENT.equals(e.getName())) {
         myEditorWasActive = Boolean.valueOf(e.getAttributeValue(ACTIVE_ATTR_VALUE)).booleanValue();
       }
-      else if (DesktopLayout.TAG.equals(e.getName())) {
+      else if (ToolWindowLayout.TAG.equals(e.getName())) {
         myLayout.readExternal(e);
       }
       else if (LAYOUT_TO_RESTORE.equals(e.getName())) {
-        myLayoutToRestoreLater = new DesktopLayout();
+        myLayoutToRestoreLater = new ToolWindowLayout();
         myLayoutToRestoreLater.readExternal(e);
       }
     }
@@ -1916,7 +1916,7 @@ public final class ToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     // Save layout of tool windows
-    Element layoutElement = myLayout.writeExternal(DesktopLayout.TAG);
+    Element layoutElement = myLayout.writeExternal(ToolWindowLayout.TAG);
     if (layoutElement != null) {
       element.addContent(layoutElement);
     }

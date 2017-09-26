@@ -279,12 +279,12 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
   }
 
   @Override
-  public final DesktopLayout getLayout() {
+  public final ToolWindowLayout getLayout() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public final void setLayout(final DesktopLayout layout) {
+  public final void setLayout(final ToolWindowLayout layout) {
     throw new UnsupportedOperationException();
   }
 

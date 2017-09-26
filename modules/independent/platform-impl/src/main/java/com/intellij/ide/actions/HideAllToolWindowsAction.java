@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
-import com.intellij.openapi.wm.impl.DesktopLayout;
+import com.intellij.openapi.wm.impl.ToolWindowLayout;
 
 public class HideAllToolWindowsAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
@@ -36,7 +36,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
   public static void performAction(final Project project) {
     ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
 
-    DesktopLayout layout = new DesktopLayout();
+    ToolWindowLayout layout = new ToolWindowLayout();
     layout.copyFrom(toolWindowManager.getLayout());
 
     // to clear windows stack
@@ -59,7 +59,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
       toolWindowManager.activateEditorComponent();
     }
     else {
-      final DesktopLayout restoredLayout = toolWindowManager.getLayoutToRestoreLater();
+      final ToolWindowLayout restoredLayout = toolWindowManager.getLayoutToRestoreLater();
       if (restoredLayout != null) {
         toolWindowManager.setLayoutToRestoreLater(null);
         toolWindowManager.setLayout(restoredLayout);
@@ -85,7 +85,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
       }
     }
 
-    final DesktopLayout layout = toolWindowManager.getLayoutToRestoreLater();
+    final ToolWindowLayout layout = toolWindowManager.getLayoutToRestoreLater();
     if (layout != null) {
       presentation.setEnabled(true);
       presentation.setText(IdeBundle.message("action.restore.windows"));

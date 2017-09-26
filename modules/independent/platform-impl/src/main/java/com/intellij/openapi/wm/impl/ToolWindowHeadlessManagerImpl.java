@@ -240,21 +240,21 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
   }
 
   @Override
-  public DesktopLayout getLayout() {
-    return new DesktopLayout();
+  public ToolWindowLayout getLayout() {
+    return new ToolWindowLayout();
   }
 
   @Override
-  public void setLayoutToRestoreLater(DesktopLayout layout) {
+  public void setLayoutToRestoreLater(ToolWindowLayout layout) {
   }
 
   @Override
-  public DesktopLayout getLayoutToRestoreLater() {
-    return new DesktopLayout();
+  public ToolWindowLayout getLayoutToRestoreLater() {
+    return new ToolWindowLayout();
   }
 
   @Override
-  public void setLayout(@NotNull DesktopLayout layout) {
+  public void setLayout(@NotNull ToolWindowLayout layout) {
   }
 
   @Override

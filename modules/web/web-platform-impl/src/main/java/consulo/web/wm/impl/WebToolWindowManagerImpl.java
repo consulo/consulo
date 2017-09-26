@@ -34,7 +34,7 @@ import com.intellij.openapi.wm.ToolWindowEP;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.DesktopLayout;
+import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.ui.ex.WGwtToolWindowPanel;
 import consulo.web.application.WebApplication;
@@ -238,22 +238,22 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public DesktopLayout getLayout() {
+  public ToolWindowLayout getLayout() {
     return null;
   }
 
   @Override
-  public void setLayoutToRestoreLater(DesktopLayout layout) {
+  public void setLayoutToRestoreLater(ToolWindowLayout layout) {
 
   }
 
   @Override
-  public DesktopLayout getLayoutToRestoreLater() {
+  public ToolWindowLayout getLayoutToRestoreLater() {
     return null;
   }
 
   @Override
-  public void setLayout(@NotNull DesktopLayout layout) {
+  public void setLayout(@NotNull ToolWindowLayout layout) {
 
   }
 

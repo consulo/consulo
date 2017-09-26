@@ -19,7 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.CommandProcessor;
-import com.intellij.openapi.wm.impl.DesktopLayout;
+import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.ui.AppIcon;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
@@ -79,12 +79,12 @@ public abstract class WindowManagerEx extends WindowManager {
   /**
    * @return default layout for tool windows.
    */
-  public abstract DesktopLayout getLayout();
+  public abstract ToolWindowLayout getLayout();
 
   /**
    * Copies <code>layout</code> into internal default layout.
    */
-  public abstract void setLayout(DesktopLayout layout);
+  public abstract void setLayout(ToolWindowLayout layout);
 
   /**
    * This method is invoked by <code>IdeEventQueue</code> to notify window manager that
