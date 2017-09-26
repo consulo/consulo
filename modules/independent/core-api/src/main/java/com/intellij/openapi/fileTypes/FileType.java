@@ -26,15 +26,9 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 public interface FileType extends Named {
-  public static final FileType[] EMPTY_ARRAY = new FileType[0];
+  FileType[] EMPTY_ARRAY = new FileType[0];
+  ArrayFactory<FileType> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new FileType[count];
 
-  public static ArrayFactory<FileType> ARRAY_FACTORY = new ArrayFactory<FileType>() {
-    @NotNull
-    @Override
-    public FileType[] create(int count) {
-      return count == 0 ? EMPTY_ARRAY : new FileType[count];
-    }
-  };
   /**
    * Returns the id of the file type. The name must be unique among all file types registered in the system.
    *
