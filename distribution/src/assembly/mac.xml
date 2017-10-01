@@ -59,7 +59,7 @@
       </excludes>
     </dependencySet>
     <dependencySet>
-      <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}plugins${file.separator}platform-independent{file.separator}lib</outputDirectory>
+      <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}plugins${file.separator}platform-independent${file.separator}lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
