@@ -41,7 +41,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.Alarm;
@@ -59,7 +58,7 @@ public class AutoPopupController implements Disposable {
   /**
    * Settings this user data key to the editor with a completion provider
    * makes the autopopup scheduling ignore the state of the corresponding setting.
-   * <p/>
+   * <p>
    * This doesn't affect other conditions when autopopup is not possible (e.g. power save mode).
    */
   public static final Key<Boolean> ALWAYS_AUTO_POPUP = Key.create("Always Show Completion Auto-Popup");
@@ -79,7 +78,7 @@ public class AutoPopupController implements Disposable {
   private final Project myProject;
   private final Alarm myAlarm;
 
-  public static AutoPopupController getInstance(Project project){
+  public static AutoPopupController getInstance(Project project) {
     return ServiceManager.getService(project, AutoPopupController.class);
   }
 
@@ -110,11 +109,11 @@ public class AutoPopupController implements Disposable {
     IdeEventQueue.getInstance().addActivityListener(() -> cancelAllRequest(), this);
   }
 
-  public void autoPopupMemberLookup(final Editor editor, @Nullable final Condition<PsiFile> condition){
+  public void autoPopupMemberLookup(final Editor editor, @Nullable final Condition<PsiFile> condition) {
     autoPopupMemberLookup(editor, CompletionType.BASIC, condition);
   }
 
-  public void autoPopupMemberLookup(final Editor editor, CompletionType completionType, @Nullable final Condition<PsiFile> condition){
+  public void autoPopupMemberLookup(final Editor editor, CompletionType completionType, @Nullable final Condition<PsiFile> condition) {
     scheduleAutoPopup(editor, completionType, condition);
   }
 
@@ -167,7 +166,8 @@ public class AutoPopupController implements Disposable {
     };
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       runnable.run();
-    } else {
+    }
+    else {
       ApplicationManager.getApplication().invokeLater(runnable);
     }
   }
@@ -177,7 +177,7 @@ public class AutoPopupController implements Disposable {
   }
 
   @RequiredDispatchThread
-  public void autoPopupParameterInfo(@NotNull final Editor editor, @Nullable final PsiElement highlightedMethod){
+  public void autoPopupParameterInfo(@NotNull final Editor editor, @Nullable final Object highlightedMethod) {
     if (DumbService.isDumb(myProject)) return;
     if (PowerSaveMode.isEnabled()) return;
 
@@ -194,8 +194,7 @@ public class AutoPopupController implements Disposable {
       }
 
       Runnable request = () -> {
-        if (!myProject.isDisposed() && !DumbService.isDumb(myProject) && !editor.isDisposed() &&
-            (ApplicationManager.getApplication().isUnitTestMode() || editor.getComponent().isShowing())) {
+        if (!myProject.isDisposed() && !DumbService.isDumb(myProject) && !editor.isDisposed() && (ApplicationManager.getApplication().isUnitTestMode() || editor.getComponent().isShowing())) {
           int lbraceOffset = editor.getCaretModel().getOffset() - 1;
           try {
             PsiFile file1 = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
