@@ -33,6 +33,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
+import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
 import com.intellij.util.concurrency.AppExecutorUtil;
@@ -214,15 +215,19 @@ public class ProjectUtil {
   //region Async staff
   @NotNull
   public static AsyncResult<Project> openAsync(@NotNull String path, @Nullable Project projectToClose, boolean forceOpenInNewFrame, @NotNull UIAccess uiAccess) {
+    return openAsync(path, projectToClose, false, forceOpenInNewFrame, uiAccess);
+  }
+
+  @NotNull
+  public static AsyncResult<Project> openAsync(@NotNull String path, @Nullable Project projectToClose, boolean useDefaultOpenProcessor, boolean forceOpenInNewFrame, @NotNull UIAccess uiAccess) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
     if (virtualFile == null) return AsyncResult.rejected("file path not find");
 
     AsyncResult<Project> result = new AsyncResult<>();
 
-    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(virtualFile);
+    ProjectOpenProcessor provider = useDefaultOpenProcessor ? PlatformProjectOpenProcessor.getInstance() : ProjectOpenProcessors.getInstance().findProcessor(virtualFile);
     if (provider != null) {
-
       AppExecutorUtil.getAppExecutorService().execute(() -> {
         result.doWhenDone((project) -> {
           uiAccess.give(() -> {

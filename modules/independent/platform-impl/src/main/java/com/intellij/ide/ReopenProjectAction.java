@@ -15,6 +15,7 @@
  */
 package com.intellij.ide;
 
+import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
@@ -22,6 +23,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.BitUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.platform.Platform;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.InputEvent;
@@ -55,21 +58,22 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     IdeEventQueue.getInstance().getPopupManager().closeAllPopups();
 
     final int modifiers = e.getModifiers();
-    final boolean forceOpenInNewFrame =
-            BitUtil.isSet(modifiers, InputEvent.CTRL_MASK) || BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK) || e.getPlace() == ActionPlaces.WELCOME_SCREEN;
+    final boolean forceOpenInNewFrame = BitUtil.isSet(modifiers, InputEvent.CTRL_MASK) || BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK) || e.getPlace() == ActionPlaces.WELCOME_SCREEN;
 
     Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
     if (!new File(myProjectPath).exists()) {
       if (Messages.showDialog(project, "The path " +
                                        FileUtil.toSystemDependentName(myProjectPath) +
                                        " does not exist.\n" +
-                                       "If it is on a removable or network drive, please make sure that the drive is connected.", "Reopen Project",
-                              new String[]{"OK", "&Remove From List"}, 0, Messages.getErrorIcon()) == 1) {
+                                       "If it is on a removable or network drive, please make sure that the drive is connected.", "Reopen Project", new String[]{"OK", "&Remove From List"}, 0,
+                              Messages.getErrorIcon()) == 1) {
         RecentProjectsManager.getInstance().removePath(myProjectPath);
       }
       return;
     }
-    RecentProjectsManagerBase.getInstanceEx().doOpenProject(myProjectPath, project, forceOpenInNewFrame);
+
+    Platform.hacky(() -> RecentProjectsManagerBase.getInstanceEx().doOpenProject(myProjectPath, project, forceOpenInNewFrame),
+                   () -> ProjectUtil.openAsync(myProjectPath, null, true, forceOpenInNewFrame, UIAccess.get()));
   }
 
   @NotNull

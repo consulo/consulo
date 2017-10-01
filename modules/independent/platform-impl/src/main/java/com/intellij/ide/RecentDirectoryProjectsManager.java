@@ -15,7 +15,10 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -23,6 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.platform.ProjectBaseDirectory;
 import com.intellij.util.messages.MessageBus;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,6 +51,8 @@ public class RecentDirectoryProjectsManager extends RecentProjectsManagerBase {
   }
 
   @Override
+  @Deprecated
+  @DeprecationInfo("Deprecated method - used until migrated to unified async open action")
   protected void doOpenProject(@NotNull String projectPath, Project projectToClose, boolean forceOpenInNewFrame) {
     final VirtualFile projectDir = LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(projectPath));
     if (projectDir != null) {

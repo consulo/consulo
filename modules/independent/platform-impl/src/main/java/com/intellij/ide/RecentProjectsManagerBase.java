@@ -16,6 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.ProjectTopics;
+import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -41,10 +42,13 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
+import consulo.platform.Platform;
+import consulo.ui.UIAccess;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
@@ -388,6 +392,8 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   @Nullable
   protected abstract String getProjectPath(@NotNull Project project);
 
+  @Deprecated
+  @DeprecationInfo("Deprecated method - used until migrated to unified async open action")
   protected abstract void doOpenProject(@NotNull String projectPath, @Nullable Project projectToClose, boolean forceOpenInNewFrame);
 
   public static boolean isValidProjectPath(String projectPath) {
@@ -517,7 +523,10 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
       }
       for (String openPath : openPaths) {
         if (isValidProjectPath(openPath)) {
-          doOpenProject(openPath, null, forceNewFrame);
+
+          final boolean finalForceNewFrame = forceNewFrame;
+          Platform.hacky(() -> doOpenProject(openPath, null, finalForceNewFrame), () -> ProjectUtil.openAsync(openPath, null, finalForceNewFrame, UIAccess.get()));
+          break;
         }
       }
     }
