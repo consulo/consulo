@@ -183,6 +183,11 @@ class _UIInternalsImpl extends _UIInternals {
     return window;
   }
 
+  @Override
+  public AlertBuilder _Alerts_builder() {
+    return null;
+  }
+
   @RequiredUIAccess
   @NotNull
   @Override

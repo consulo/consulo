@@ -105,6 +105,8 @@ public abstract class _UIInternals {
   @NotNull
   public abstract Window _Windows_modalWindow(String title);
 
+  public abstract AlertBuilder _Alerts_builder();
+
   @RequiredUIAccess
   @NotNull
   abstract UIAccess _UIAccess_get();

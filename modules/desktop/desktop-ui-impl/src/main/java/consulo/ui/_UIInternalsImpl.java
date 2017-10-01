@@ -80,6 +80,11 @@ class _UIInternalsImpl extends _UIInternals {
   }
 
   @Override
+  public AlertBuilder _Alerts_builder() {
+    return null;
+  }
+
+  @Override
   public CheckBox _Components_checkBox(@NotNull String text, boolean selected) {
     return new DesktopCheckBoxImpl(text, selected);
   }
