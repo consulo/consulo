@@ -15,6 +15,7 @@
     <module>arch/managment</module>
     <module>arch/global</module>
     <module>arch/ide</module>
+    <module>arch/ide-provided</module>
 
     <module>distribution</module>
 
