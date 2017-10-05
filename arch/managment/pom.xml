@@ -29,7 +29,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <jna.version>4.1.0</jna.version>
+    <jna.version>4.4.0</jna.version>
     <jdom.version>2.1</jdom.version>
     <trove4j.version>2.0</trove4j.version>
     <log4j.version>1.2.4</log4j.version>
