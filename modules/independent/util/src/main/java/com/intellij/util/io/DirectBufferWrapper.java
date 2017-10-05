@@ -16,15 +16,10 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.concurrency.AtomicFieldUpdater;
-import sun.misc.Cleaner;
-import sun.misc.Unsafe;
-import sun.nio.ch.DirectBuffer;
+import consulo.util.io.PreJava9IOUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 
 public abstract class DirectBufferWrapper extends ByteBufferWrapper {
@@ -62,29 +57,7 @@ public abstract class DirectBufferWrapper extends ByteBufferWrapper {
   // return true if successful
   static boolean disposeDirectBuffer(final ByteBuffer buffer) {
     if (!buffer.isDirect()) return true;
-    if (SystemInfo.IS_AT_LEAST_JAVA9) {
-      // in JDK9 the "official" dispose method is sun.misc.Unsafe#invokeCleaner
-      // since we have to target both jdk 8 and 9 we have to use reflection
-      Unsafe unsafe = AtomicFieldUpdater.getUnsafe();
-      try {
-        Method invokeCleaner = unsafe.getClass().getMethod("invokeCleaner", ByteBuffer.class);
-        invokeCleaner.setAccessible(true);
-        invokeCleaner.invoke(unsafe, buffer);
-        return true;
-      }
-      catch (Exception e) {
-        // something serious, needs to be logged
-        LOG.error(e);
-        throw new RuntimeException(e);
-      }
-    }
-    try {
-      Cleaner cleaner = ((DirectBuffer)buffer).cleaner();
-      if (cleaner != null) cleaner.clean(); // Already cleaned otherwise
-      return true;
-    }
-    catch (Throwable e) {
-      return false;
-    }
+
+    return PreJava9IOUtil.invokeCleaner(buffer);
   }
 }
