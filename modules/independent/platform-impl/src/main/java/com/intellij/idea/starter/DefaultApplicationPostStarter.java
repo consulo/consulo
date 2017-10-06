@@ -15,10 +15,7 @@
  */
 package com.intellij.idea.starter;
 
-import com.intellij.ide.CommandLineProcessor;
-import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.RecentProjectsManager;
-import com.intellij.ide.RecentProjectsManagerBase;
+import com.intellij.ide.*;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.idea.ApplicationStarter;
@@ -46,6 +43,7 @@ import java.awt.*;
 
 /**
  * Used via reflection
+ *
  * @see com.intellij.idea.ApplicationStarter#getStarterClass(boolean, boolean)
  */
 @SuppressWarnings("unused")
@@ -114,15 +112,20 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
       FirstStartCustomizeUtil.show(true);
     }
 
-    if (!recentProjectsManager.willReopenProjectOnStart() || args.isNoRecentProjects()) {
-      WelcomeFrame.showNow();
+    boolean willOpenProject = recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects();
+    
+    AppLifecycleListener lifecyclePublisher = app.getMessageBus().syncPublisher(AppLifecycleListener.TOPIC);
+    lifecyclePublisher.appFrameCreated(args, willOpenProject);
+
+    if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
+      windowManager.showFrame();
     }
     else {
-      windowManager.showFrame();
+      WelcomeFrame.showNow();
     }
 
     app.invokeLater(() -> {
-      if(!args.isNoRecentProjects()) {
+      if (!args.isNoRecentProjects()) {
         Project projectFromCommandLine = null;
         if (myApplicationStarter.isPerformProjectLoad()) {
           projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);

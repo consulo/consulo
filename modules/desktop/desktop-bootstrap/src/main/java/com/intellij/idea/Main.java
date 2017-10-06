@@ -35,6 +35,7 @@ public class Main {
   public static final int INSTANCE_CHECK_FAILED = 2;
   public static final int PLUGIN_ERROR = 3;
   public static final int UNSUPPORTED_JAVA_VERSION = 4;
+  public static final int OUT_OF_MEMORY = 9;
 
   private static final String AWT_HEADLESS = "java.awt.headless";
 

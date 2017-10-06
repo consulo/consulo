@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,116 +15,181 @@
  */
 package com.intellij.diagnostic;
 
+import com.intellij.diagnostic.VMOptions.MemoryKind;
+import com.intellij.ide.IdeBundle;
+import com.intellij.idea.Main;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
+import com.intellij.util.MemoryDumpHelper;
+import com.intellij.util.SystemProperties;
+import com.intellij.util.TimeoutUtil;
+import com.intellij.util.ui.JBUI;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.Locale;
 
 public class OutOfMemoryDialog extends DialogWrapper {
-  public enum MemoryKind {
-    HEAP, CODE_CACHE
-  }
-
   private final MemoryKind myMemoryKind;
 
   private JPanel myContentPane;
-  private JLabel myMessageLabel;
+  private JBLabel myIconLabel;
+  private JBLabel myMessageLabel;
+  private JBLabel myHeapSizeLabel;
   private JTextField myHeapSizeField;
+  private JBLabel myHeapUnitsLabel;
   private JBLabel myHeapCurrentValueLabel;
-  private JLabel myHeapSizeLabel;
-  private JLabel myHeapUnitsLabel;
-  private JBLabel mySettingsFileHintLabel;
-  private JLabel myCodeCacheSizeLabel;
+  private JBLabel myMetaspaceSizeLabel;
+  private JTextField myMetaspaceSizeField;
+  private JBLabel myMetaspaceUnitsLabel;
+  private JBLabel myMetaspaceCurrentValueLabel;
+  private JBLabel myCodeCacheSizeLabel;
   private JTextField myCodeCacheSizeField;
-  private JLabel myCodeCacheUnitsLabel;
+  private JBLabel myCodeCacheUnitsLabel;
   private JBLabel myCodeCacheCurrentValueLabel;
-  private final Action myIgnoreAction;
+  private JBLabel mySettingsFileHintLabel;
+  private JBLabel myDumpMessageLabel;
+  private final Action myContinueAction;
   private final Action myShutdownAction;
+  private final Action myHeapDumpAction;
 
-  public OutOfMemoryDialog(MemoryKind memoryKind) {
+  public OutOfMemoryDialog(@NotNull MemoryKind memoryKind) {
     super(false);
     myMemoryKind = memoryKind;
     setTitle(DiagnosticBundle.message("diagnostic.out.of.memory.title"));
 
-    myMessageLabel.setIcon(Messages.getErrorIcon());
-    myMessageLabel.setText(DiagnosticBundle.message("diagnostic.out.of.memory.error",
-                                                    memoryKind == MemoryKind.HEAP ? VMOptions.XMX_OPTION_NAME : VMOptions.CODE_CACHE_OPTION_NAME,
-                                                    ApplicationNamesInfo.getInstance().getProductName()));
+    myIconLabel.setIcon(Messages.getErrorIcon());
+    myMessageLabel.setText(DiagnosticBundle.message("diagnostic.out.of.memory.error", memoryKind.optionName));
+    myMessageLabel.setBorder(JBUI.Borders.emptyBottom(10));
 
     File file = VMOptions.getWriteFile();
-    final String path = file != null ? file.getPath() : null;
-    if (path != null) {
-      mySettingsFileHintLabel.setText(DiagnosticBundle.message("diagnostic.out.of.memory.willBeSavedTo", path));
+    if (file != null) {
+      mySettingsFileHintLabel.setText(DiagnosticBundle.message("diagnostic.out.of.memory.willBeSavedTo", file.getPath()));
+      mySettingsFileHintLabel.setBorder(JBUI.Borders.emptyTop(10));
     }
     else {
       mySettingsFileHintLabel.setVisible(false);
+      myHeapSizeField.setEnabled(false);
+      myMetaspaceSizeField.setEnabled(false);
+      myCodeCacheSizeField.setEnabled(false);
     }
 
-    myIgnoreAction = new AbstractAction(DiagnosticBundle.message("diagnostic.out.of.memory.ignore")) {
+    myContinueAction = new DialogWrapperAction(DiagnosticBundle.message("diagnostic.out.of.memory.continue")) {
       @Override
-      public void actionPerformed(ActionEvent e) {
+      protected void doAction(ActionEvent e) {
         save();
         close(0);
       }
     };
 
-    myShutdownAction = new AbstractAction(DiagnosticBundle.message("diagnostic.out.of.memory.shutdown")) {
+    myShutdownAction = new DialogWrapperAction(IdeBundle.message("ide.shutdown.action")) {
       @Override
-      public void actionPerformed(ActionEvent e) {
+      protected void doAction(ActionEvent e) {
         save();
-        System.exit(0);
+        System.exit(Main.OUT_OF_MEMORY);
       }
     };
     myShutdownAction.putValue(DialogWrapper.DEFAULT_ACTION, true);
 
-    configControls(VMOptions.XMX_OPTION_NAME, VMOptions.readXmx(), memoryKind == MemoryKind.HEAP, myHeapSizeLabel, myHeapSizeField, myHeapUnitsLabel,
-                   myHeapCurrentValueLabel);
+    boolean heapDump = memoryKind == MemoryKind.HEAP && MemoryDumpHelper.memoryDumpAvailable();
+    myHeapDumpAction = !heapDump ? null : new DialogWrapperAction(DiagnosticBundle.message("diagnostic.out.of.memory.dump")) {
+      @Override
+      protected void doAction(ActionEvent e) {
+        snapshot();
+      }
+    };
 
-    configControls(VMOptions.CODE_CACHE_OPTION_NAME, VMOptions.readCodeCache(), memoryKind == MemoryKind.CODE_CACHE, myCodeCacheSizeLabel, myCodeCacheSizeField,
-                   myCodeCacheUnitsLabel, myCodeCacheCurrentValueLabel);
+    configControls(MemoryKind.HEAP, myHeapSizeLabel, myHeapSizeField, myHeapUnitsLabel, myHeapCurrentValueLabel);
+    configControls(MemoryKind.METASPACE, myMetaspaceSizeLabel, myMetaspaceSizeField, myMetaspaceUnitsLabel, myMetaspaceCurrentValueLabel);
+    configControls(MemoryKind.CODE_CACHE, myCodeCacheSizeLabel, myCodeCacheSizeField, myCodeCacheUnitsLabel, myCodeCacheCurrentValueLabel);
 
     init();
   }
 
-  private static void configControls(String optionName,
-                                     int value,
-                                     boolean highlight,
-                                     JLabel sizeLabel,
-                                     JTextField sizeField,
-                                     JLabel unitsLabel,
-                                     JLabel currentValueLabel) {
-    sizeLabel.setText(optionName);
+  private void configControls(MemoryKind option, JLabel sizeLabel, JTextField sizeField, JLabel unitsLabel, JLabel currentLabel) {
+    sizeLabel.setText('-' + option.optionName);
 
-    String formatted = value == -1 ? DiagnosticBundle.message("diagnostic.out.of.memory.currentValue.unknown") : String.valueOf(value);
-    sizeField.setText(formatted);
-    currentValueLabel.setText(DiagnosticBundle.message("diagnostic.out.of.memory.currentValue", formatted));
+    int effective = VMOptions.readOption(option, true);
+    int stored = VMOptions.readOption(option, false);
+    if (stored == -1) stored = effective;
+    sizeField.setText(format(stored));
+    currentLabel.setText(DiagnosticBundle.message("diagnostic.out.of.memory.currentValue", format(effective)));
 
-    if (highlight) {
+    if (option == myMemoryKind) {
       sizeLabel.setForeground(JBColor.RED);
       sizeField.setForeground(JBColor.RED);
       unitsLabel.setForeground(JBColor.RED);
-      currentValueLabel.setForeground(JBColor.RED);
+      currentLabel.setForeground(JBColor.RED);
     }
+  }
+
+  private static String format(int value) {
+    return value == -1 ? DiagnosticBundle.message("diagnostic.out.of.memory.currentValue.unknown") : String.valueOf(value);
   }
 
   private void save() {
     try {
-      VMOptions.writeXmx(Integer.parseInt(myHeapSizeField.getText()));
+      int heapSize = Integer.parseInt(myHeapSizeField.getText());
+      VMOptions.writeOption(MemoryKind.HEAP, heapSize);
     }
-    catch (NumberFormatException ignored) {
-    }
+    catch (NumberFormatException ignored) { }
 
     try {
-      VMOptions.writeCodeCache(Integer.parseInt(myCodeCacheSizeField.getText()));
+      int codeCacheSize = Integer.parseInt(myMetaspaceSizeField.getText());
+      VMOptions.writeOption(MemoryKind.METASPACE, codeCacheSize);
     }
-    catch (NumberFormatException ignored) {
+    catch (NumberFormatException ignored) { }
+
+    try {
+      int codeCacheSize = Integer.parseInt(myCodeCacheSizeField.getText());
+      VMOptions.writeOption(MemoryKind.CODE_CACHE, codeCacheSize);
     }
+    catch (NumberFormatException ignored) { }
+  }
+
+  @SuppressWarnings("SSBasedInspection")
+  private void snapshot() {
+    enableControls(false);
+    myDumpMessageLabel.setVisible(true);
+    myDumpMessageLabel.setText("Dumping memory...");
+
+    Runnable task = () -> {
+      TimeoutUtil.sleep(250);  // to give UI chance to update
+      String message = "";
+      try {
+        String name = ApplicationNamesInfo.getInstance().getFullProductName().replace(' ', '-').toLowerCase(Locale.US);
+        String path = SystemProperties.getUserHome() + File.separator + "heapDump-" + name + '-' + System.currentTimeMillis() + ".hprof.zip";
+        MemoryDumpHelper.captureMemoryDumpZipped(path);
+        message = "Dumped to " + path;
+      }
+      catch (Throwable t) {
+        message = "Error: " + t.getMessage();
+      }
+      finally {
+        final String _message = message;
+        SwingUtilities.invokeLater(() -> {
+          myDumpMessageLabel.setText(_message);
+          enableControls(true);
+        });
+      }
+    };
+    new Thread(task, "OOME Heap Dump").start();
+  }
+
+  @SuppressWarnings("Duplicates")
+  private void enableControls(boolean enabled) {
+    myHeapSizeField.setEnabled(enabled);
+    myMetaspaceSizeField.setEnabled(enabled);
+    myCodeCacheSizeField.setEnabled(enabled);
+    myShutdownAction.setEnabled(enabled);
+    myContinueAction.setEnabled(enabled);
+    myHeapDumpAction.setEnabled(enabled);
   }
 
   @Override
@@ -132,14 +197,18 @@ public class OutOfMemoryDialog extends DialogWrapper {
     return myContentPane;
   }
 
-  @Override
   @NotNull
+  @Override
   protected Action[] createActions() {
-    return new Action[]{myShutdownAction, myIgnoreAction};
+    return myHeapDumpAction != null ? new Action[]{myShutdownAction, myContinueAction, myHeapDumpAction}
+                                    : new Action[]{myShutdownAction, myContinueAction};
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent getPreferredFocusedComponent() {
-    return myMemoryKind == MemoryKind.HEAP ? myHeapSizeField : myCodeCacheSizeField;
+    return myMemoryKind == MemoryKind.METASPACE ? myMetaspaceSizeField :
+           myMemoryKind == MemoryKind.CODE_CACHE ? myCodeCacheSizeField :
+           myHeapSizeField;
   }
 }

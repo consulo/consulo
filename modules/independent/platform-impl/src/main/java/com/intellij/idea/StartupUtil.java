@@ -15,6 +15,7 @@
  */
 package com.intellij.idea;
 
+import com.intellij.jna.JnaLoader;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
@@ -31,7 +32,6 @@ import com.intellij.util.Consumer;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.lang.UrlClassLoader;
-import com.sun.jna.Native;
 import consulo.start.CommandLineArgs;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
@@ -177,33 +177,23 @@ public class StartupUtil {
     }
   }
 
-  private static final String JAVA_IO_TEMP_DIR = "java.io.tmpdir";
-
   public static void loadSystemLibraries(final Logger log) {
-    // load JNA and Snappy in own temp directory - to avoid collisions and work around no-exec /tmp
+    // load JNA in own temp directory - to avoid collisions and work around no-exec /tmp
     File ideTempDir = new File(PathManager.getTempPath());
     if (!(ideTempDir.mkdirs() || ideTempDir.exists())) {
       throw new RuntimeException("Unable to create temp directory '" + ideTempDir + "'");
     }
-
-    String javaTempDir = System.getProperty(JAVA_IO_TEMP_DIR);
-    try {
-      System.setProperty(JAVA_IO_TEMP_DIR, ideTempDir.getPath());
-      if (System.getProperty("jna.nosys") == null && System.getProperty("jna.nounpack") == null) {
-        // force using bundled JNA dispatcher (if not explicitly stated)
-        System.setProperty("jna.nosys", "true");
-        System.setProperty("jna.nounpack", "false");
-      }
-      try {
-        final long t = System.currentTimeMillis();
-        log.info("JNA library loaded (" + (Native.POINTER_SIZE * 8) + "-bit) in " + (System.currentTimeMillis() - t) + " ms");
-      }
-      catch (Throwable t) {
-        logError(log, "Unable to load JNA library", t);
-      }
+    if (System.getProperty("jna.tmpdir") == null) {
+      System.setProperty("jna.tmpdir", ideTempDir.getPath());
     }
-    finally {
-      System.setProperty(JAVA_IO_TEMP_DIR, javaTempDir);
+    if (System.getProperty("jna.nosys") == null) {
+      System.setProperty("jna.nosys", "true");  // prefer bundled JNA dispatcher lib
+    }
+    try {
+      JnaLoader.load(log);
+    }
+    catch (Throwable t) {
+      log.error("Unable to load JNA library (OS: " + SystemInfo.OS_NAME + " " + SystemInfo.OS_VERSION + ")", t);
     }
 
     if (SystemInfo.isWin2kOrNewer) {
@@ -218,6 +208,11 @@ public class StartupUtil {
       catch (Throwable t) {
         log.info("\"FocusKiller\" library not found or there were problems loading it.", t);
       }
+    }
+
+    if (SystemInfo.isWindows) {
+      // WinP should not unpack .dll files into parent directory
+      System.setProperty("winp.unpack.dll.to.parent.dir", "false");
     }
   }
 
