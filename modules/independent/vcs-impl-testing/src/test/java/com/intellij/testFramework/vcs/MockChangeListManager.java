@@ -24,6 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.ThreeState;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -380,23 +381,37 @@ public class MockChangeListManager extends ChangeListManagerEx {
     throw new UnsupportedOperationException();
   }
 
+  @NotNull
   @Override
   public Collection<LocalChangeList> getInvolvedListsFilterChanges(Collection<Change> changes, List<Change> validChanges) {
     throw new UnsupportedOperationException();
   }
 
+  @NotNull
   @Override
   public LocalChangeList addChangeList(@NotNull String name, @Nullable String comment, @Nullable Object data) {
     return addChangeList(name, comment);
   }
 
+  @RequiredDispatchThread
   @Override
   public void blockModalNotifications() {
     throw new UnsupportedOperationException();
   }
 
+  @RequiredDispatchThread
   @Override
   public void unblockModalNotifications() {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void freeze(@NotNull String reason) {
+
+  }
+
+  @Override
+  public void unfreeze() {
+
   }
 }
