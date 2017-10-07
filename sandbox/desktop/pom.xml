@@ -134,6 +134,10 @@
       <artifactId>libthrift</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-imaging</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.github.markusbernhardt</groupId>
       <artifactId>proxy-vole</artifactId>
     </dependency>

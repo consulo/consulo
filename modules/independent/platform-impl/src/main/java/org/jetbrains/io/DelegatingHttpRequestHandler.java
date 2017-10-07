@@ -13,8 +13,8 @@ import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
-import org.apache.sanselan.ImageFormat;
-import org.apache.sanselan.Sanselan;
+import org.apache.commons.imaging.ImageFormats;
+import org.apache.commons.imaging.Imaging;
 import org.jetbrains.ide.HttpRequestHandler;
 
 import javax.swing.*;
@@ -59,16 +59,14 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
 
     if (urlDecoder.path().equals("/favicon.ico")) {
       Icon icon = SandboxUtil.getAppIcon();
-      if (icon != null) {
-        BufferedImage image = UIUtil.createImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-        icon.paintIcon(null, image.getGraphics(), 0, 0);
-        byte[] icoBytes = Sanselan.writeImageToBytes(image, ImageFormat.IMAGE_FORMAT_ICO, null);
+      BufferedImage image = UIUtil.createImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+      icon.paintIcon(null, image.getGraphics(), 0, 0);
+      byte[] icoBytes = Imaging.writeImageToBytes(image, ImageFormats.ICO, null);
 
-        HttpResponse response = Responses.response(FileResponses.getContentType(urlDecoder.path()), Unpooled.wrappedBuffer(icoBytes));
-        response = Responses.addNoCache(response);
-        Responses.send(response, context.channel(), request);
-        return true;
-      }
+      HttpResponse response = Responses.response(FileResponses.getContentType(urlDecoder.path()), Unpooled.wrappedBuffer(icoBytes));
+      response = Responses.addNoCache(response);
+      Responses.send(response, context.channel(), request);
+      return true;
     }
 
     return false;
