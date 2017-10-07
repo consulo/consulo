@@ -104,7 +104,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager implements Ap
       }
       catch (Throwable e) {
         LOG.info(e);
-        NOTIFICATION_GROUP.getValue().createNotification("Cannot start internal HTTP server. Git integration, JavaScript debugger and LiveEdit may operate with errors. " +
+        NOTIFICATION_GROUP.getValue().createNotification("Cannot start internal HTTP server. Git integration, Some plugins may operate with errors. " +
                                                          "Please check your firewall settings and restart " + ApplicationNamesInfo.getInstance().getFullProductName(),
                                                          NotificationType.ERROR).notify(null);
         return;
