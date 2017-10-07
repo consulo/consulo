@@ -77,6 +77,14 @@ import static org.junit.Assert.assertNotNull;
 public class PlatformTestUtil {
   public static final boolean COVERAGE_ENABLED_BUILD = "true".equals(System.getProperty("idea.coverage.enabled.build"));
 
+  @NotNull
+  public static String lowercaseFirstLetter(@NotNull String name, boolean lowercaseFirstLetter) {
+    if (lowercaseFirstLetter && !UsefulTestCase.isAllUppercaseName(name)) {
+      name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
+    }
+    return name;
+  }
+
   @Nullable
   protected static String toString(@Nullable Object node, @Nullable Queryable.PrintInfo printInfo) {
     if (node instanceof AbstractTreeNode) {
