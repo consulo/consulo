@@ -15,12 +15,16 @@
  */
 package com.intellij.openapi.project;
 
-public abstract class ProjectReloadState {
-  public static ProjectReloadState getInstance(Project project){
-    return project.getComponent(ProjectReloadState.class);
+import com.intellij.openapi.components.ServiceManager;
+import org.jetbrains.annotations.NotNull;
+
+public interface ProjectReloadState {
+  @NotNull
+  static ProjectReloadState getInstance(Project project) {
+    return ServiceManager.getService(project, ProjectReloadState.class);
   }
 
-  public abstract boolean isAfterAutomaticReload();
+  boolean isAfterAutomaticReload();
 
-  public abstract void onBeforeAutomaticProjectReload();
+  void onBeforeAutomaticProjectReload();
 }

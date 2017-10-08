@@ -1401,6 +1401,9 @@
     <projectService serviceInterface="com.intellij.openapi.editor.LazyRangeMarkerFactory"
                     serviceImplementation="com.intellij.openapi.editor.impl.LazyRangeMarkerFactoryImpl"/>
 
+    <projectService serviceInterface="com.intellij.openapi.project.ProjectReloadState"
+                    serviceImplementation="com.intellij.openapi.project.impl.ProjectReloadStateImpl"/>
+
     <projectService serviceImplementation="com.intellij.execution.TestStateStorage"/>
 
     <projectService serviceInterface="com.intellij.execution.testframework.sm.TestHistoryConfiguration"
