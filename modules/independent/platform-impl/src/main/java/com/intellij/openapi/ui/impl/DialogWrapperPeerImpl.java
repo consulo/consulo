@@ -728,9 +728,9 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
       setBackground(UIUtil.getPanelBackground());
 
       final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
-      if (app != null && !app.isLoaded() && Splash.BOUNDS != null) {
+      if (app != null && !app.isLoaded() && DesktopSplash.BOUNDS != null) {
         final Point loc = getLocation();
-        loc.y = Splash.BOUNDS.y + Splash.BOUNDS.height;
+        loc.y = DesktopSplash.BOUNDS.y + DesktopSplash.BOUNDS.height;
         setLocation(loc);
       }
       super.show();

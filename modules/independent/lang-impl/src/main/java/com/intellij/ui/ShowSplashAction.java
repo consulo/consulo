@@ -32,7 +32,7 @@ public class ShowSplashAction extends AnAction {
   @RequiredDispatchThread
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    final Splash splash = new Splash(true);
+    final DesktopSplash splash = new DesktopSplash(true);
 
     Future<?> task = ApplicationManager.getApplication().executeOnPooledThread((Runnable)() -> {
       for (int i = 0; i <= 100; i++) {
@@ -57,10 +57,10 @@ public class ShowSplashAction extends AnAction {
   }
 
   private static class SplashListener implements KeyListener, MouseListener, FocusListener {
-    private final Splash mySplash;
+    private final DesktopSplash mySplash;
     private Future<?> myTask;
 
-    private SplashListener(Splash splash, Future<?> task) {
+    private SplashListener(DesktopSplash splash, Future<?> task) {
       mySplash = splash;
       myTask = task;
     }

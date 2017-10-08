@@ -28,7 +28,7 @@ import java.awt.*;
 /**
  * @author Konstantin Bulenkov
  */
-public class Splash extends JDialog implements StartupProgress {
+public class DesktopSplash extends JDialog implements StartupProgress {
   @Nullable
   public static Rectangle BOUNDS;
 
@@ -38,7 +38,7 @@ public class Splash extends JDialog implements StartupProgress {
    * @param unstableScaling - cache scale value or always recalculate it.
    *                        On start - scaling may changed, and will provide some artifacts after LafManager loading
    */
-  public Splash(boolean unstableScaling) {
+  public DesktopSplash(boolean unstableScaling) {
     super((Frame)null, false);
 
     setUndecorated(true);

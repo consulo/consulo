@@ -21,14 +21,7 @@ import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.LogEventException;
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.diagnostic.ThreadDumper;
-import com.intellij.ide.ActivityTracker;
-import com.intellij.ide.AppLifecycleListener;
-import com.intellij.ide.ApplicationActivationStateManager;
-import com.intellij.ide.ApplicationLoadListener;
-import com.intellij.ide.CommandLineProcessor;
-import com.intellij.ide.GeneralSettings;
-import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.WindowsCommandLineProcessor;
+import com.intellij.ide.*;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.idea.ApplicationStarter;
@@ -50,11 +43,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.util.PotemkinProgress;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
@@ -65,23 +54,14 @@ import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.ShutDownTracker;
-import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.AppIcon;
-import com.intellij.ui.Splash;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.EventDispatcher;
-import com.intellij.util.PausesStat;
-import com.intellij.util.ReflectionUtil;
-import com.intellij.util.Restarter;
+import com.intellij.util.*;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
@@ -92,7 +72,6 @@ import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ex.ApplicationEx2;
 import consulo.start.CommandLineArgs;
-import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -134,7 +113,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   private int myInEditorPaintCounter; // EDT only
   private final long myStartTime;
   @Nullable
-  private final Splash mySplash;
+  private final StartupProgress mySplash;
   private boolean myDoNotSave;
   private volatile boolean myDisposeInProgress;
 
@@ -195,7 +174,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
   }
 
-  public ApplicationImpl(boolean isInternal, boolean isUnitTestMode, boolean isHeadless, boolean isCommandLine, @NotNull String appName, @Nullable Splash splash) {
+  public ApplicationImpl(boolean isInternal, boolean isUnitTestMode, boolean isHeadless, boolean isCommandLine, @NotNull String appName, @Nullable StartupProgress splash) {
     super(null);
 
     ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed

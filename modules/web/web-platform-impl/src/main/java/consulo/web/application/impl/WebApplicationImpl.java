@@ -1,10 +1,10 @@
 package consulo.web.application.impl;
 
+import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.Splash;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
@@ -20,7 +20,7 @@ import javax.swing.*;
 public class WebApplicationImpl extends ApplicationImpl implements WebApplication {
   private WebSession myCurrentSession;
 
-  public WebApplicationImpl(boolean isInternal, boolean isUnitTestMode, boolean isHeadless, boolean isCommandLine, @NotNull String appName, @Nullable Splash splash) {
+  public WebApplicationImpl(boolean isInternal, boolean isUnitTestMode, boolean isHeadless, boolean isCommandLine, @NotNull String appName, @Nullable StartupProgress splash) {
     super(isInternal, isUnitTestMode, isHeadless, isCommandLine, appName, splash);
   }
 

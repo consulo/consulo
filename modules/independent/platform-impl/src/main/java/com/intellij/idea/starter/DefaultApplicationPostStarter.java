@@ -30,7 +30,7 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.openapi.wm.impl.WindowManagerImpl;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
-import com.intellij.ui.Splash;
+import com.intellij.ui.DesktopSplash;
 import consulo.annotations.Internal;
 import consulo.ide.customize.FirstStartCustomizeUtil;
 import consulo.start.CommandLineArgs;
@@ -52,7 +52,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
   private static final Logger LOG = Logger.getInstance(DefaultApplicationPostStarter.class);
 
   private ApplicationStarter myApplicationStarter;
-  private Splash mySplash;
+  private DesktopSplash mySplash;
 
   public DefaultApplicationPostStarter(ApplicationStarter applicationStarter) {
     myApplicationStarter = applicationStarter;
@@ -63,7 +63,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
     if (!args.isNoSplash()) {
       final SplashScreen splashScreen = getSplashScreen();
       if (splashScreen == null) {
-        mySplash = new Splash(false);
+        mySplash = new DesktopSplash(false);
         mySplash.show();
       }
     }
