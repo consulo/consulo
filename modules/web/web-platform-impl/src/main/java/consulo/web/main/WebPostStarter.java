@@ -20,6 +20,7 @@ import com.intellij.idea.starter.ApplicationPostStarter;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
+import com.intellij.openapi.util.Ref;
 import consulo.annotations.Internal;
 import consulo.start.CommandLineArgs;
 import consulo.web.application.impl.WebApplicationImpl;
@@ -39,7 +40,7 @@ public class WebPostStarter extends ApplicationPostStarter {
 
   @Override
   public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
-    new WebApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, null);
+    new WebApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, Ref.create());
   }
 
   @Override

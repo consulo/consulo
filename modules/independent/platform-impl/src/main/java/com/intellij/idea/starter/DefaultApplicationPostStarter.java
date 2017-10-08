@@ -26,6 +26,7 @@ import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.openapi.wm.impl.WindowManagerImpl;
@@ -52,7 +53,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
   private static final Logger LOG = Logger.getInstance(DefaultApplicationPostStarter.class);
 
   private ApplicationStarter myApplicationStarter;
-  private DesktopSplash mySplash;
+  private Ref<DesktopSplash> mySplashRef;
 
   public DefaultApplicationPostStarter(ApplicationStarter applicationStarter) {
     myApplicationStarter = applicationStarter;
@@ -63,12 +64,13 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
     if (!args.isNoSplash()) {
       final SplashScreen splashScreen = getSplashScreen();
       if (splashScreen == null) {
-        mySplash = new DesktopSplash(false);
-        mySplash.show();
+        DesktopSplash splash = new DesktopSplash(false);
+        mySplashRef = Ref.create(splash);
+        splash.show();
       }
     }
 
-    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, mySplash);
+    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, mySplashRef);
   }
 
   @Nullable
@@ -102,10 +104,13 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
     PluginManagerCore.dumpPluginClassStatistics();
 
     app.invokeAndWait(() -> {
-      if (mySplash != null) {
-        mySplash.dispose();
-        mySplash = null; // Allow GC collect the splash window
+      DesktopSplash desktopSplash = mySplashRef.get();
+      if (desktopSplash != null) {
+        desktopSplash.dispose();
+        mySplashRef.set(null);  // Allow GC collect the splash window
       }
+
+      mySplashRef = null;
     }, ModalityState.NON_MODAL);
 
     if (newConfigFolder && !SandboxUtil.isInsideSandbox()) {
@@ -113,7 +118,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
     }
 
     boolean willOpenProject = recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects();
-    
+
     AppLifecycleListener lifecyclePublisher = app.getMessageBus().syncPublisher(AppLifecycleListener.TOPIC);
     lifecyclePublisher.appFrameCreated(args, willOpenProject);
 

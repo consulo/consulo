@@ -112,8 +112,8 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   private int myInEditorPaintCounter; // EDT only
   private final long myStartTime;
-  @Nullable
-  private final StartupProgress mySplash;
+  @NotNull
+  private final Ref<? extends StartupProgress> mySplashRef;
   private boolean myDoNotSave;
   private volatile boolean myDisposeInProgress;
 
@@ -174,7 +174,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
   }
 
-  public ApplicationImpl(boolean isInternal, boolean isUnitTestMode, boolean isHeadless, boolean isCommandLine, @Nullable StartupProgress splash) {
+  public ApplicationImpl(boolean isInternal, boolean isUnitTestMode, boolean isHeadless, boolean isCommandLine, @NotNull Ref<? extends StartupProgress> splashRef) {
     super(null);
 
     ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
@@ -187,7 +187,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     Disposer.setDebugMode((isInternal || isUnitTestMode || "on".equals(debugDisposer)) && !"off".equals(debugDisposer));
 
     myStartTime = System.currentTimeMillis();
-    mySplash = splash;
+    mySplashRef = splashRef;
 
     myIsInternal = isInternal;
     myTestModeFlag = isUnitTestMode;
@@ -317,7 +317,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   private void loadApplicationComponents() {
     PluginManagerCore.BUILD_NUMBER = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
-    PluginManagerCore.initPlugins(mySplash);
+    PluginManagerCore.initPlugins(mySplashRef.get());
     IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     for (IdeaPluginDescriptor plugin : plugins) {
       if (!PluginManagerCore.shouldSkipPlugin(plugin)) {
@@ -329,8 +329,9 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   @Override
   protected synchronized Object createComponent(@NotNull Class componentInterface) {
     Object component = super.createComponent(componentInterface);
-    if (mySplash != null) {
-      mySplash.showProgress("", 0.65f + getPercentageOfComponentsLoaded() * 0.35f);
+    StartupProgress progress = mySplashRef.get();
+    if (progress != null) {
+      progress.showProgress("", 0.65f + getPercentageOfComponentsLoaded() * 0.35f);
     }
     return component;
   }

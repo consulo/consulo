@@ -84,6 +84,12 @@ public class DesktopSplash extends JDialog implements StartupProgress {
     BOUNDS = getBounds();
   }
 
+  @Override
+  public void dispose() {
+    stopAnimation();
+    super.dispose();
+  }
+
   public void stopAnimation() {
     myLabel.stop();
   }
