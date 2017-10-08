@@ -20,8 +20,8 @@ import javax.swing.*;
 public class WebApplicationImpl extends ApplicationImpl implements WebApplication {
   private WebSession myCurrentSession;
 
-  public WebApplicationImpl(boolean isInternal, boolean isUnitTestMode, boolean isHeadless, boolean isCommandLine, @NotNull String appName, @Nullable StartupProgress splash) {
-    super(isInternal, isUnitTestMode, isHeadless, isCommandLine, appName, splash);
+  public WebApplicationImpl(boolean isInternal, boolean isUnitTestMode, boolean isHeadless, boolean isCommandLine, @Nullable StartupProgress splash) {
+    super(isInternal, isUnitTestMode, isHeadless, isCommandLine, splash);
   }
 
   @RequiredDispatchThread

@@ -39,7 +39,7 @@ public class WebPostStarter extends ApplicationPostStarter {
 
   @Override
   public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
-    new WebApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, IDEA_APPLICATION, null);
+    new WebApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, null);
   }
 
   @Override

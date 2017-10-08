@@ -68,7 +68,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
       }
     }
 
-    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, IDEA_APPLICATION, mySplash);
+    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, mySplash);
   }
 
   @Nullable

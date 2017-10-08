@@ -22,11 +22,8 @@ import org.jetbrains.annotations.NotNull;
 
 @Internal
 public abstract class ApplicationPostStarter {
-  public static final String IDEA_APPLICATION = "idea";
-
-
   public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
-    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, IDEA_APPLICATION, null);
+    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, null);
   }
 
   public void premain(@NotNull CommandLineArgs args) {
