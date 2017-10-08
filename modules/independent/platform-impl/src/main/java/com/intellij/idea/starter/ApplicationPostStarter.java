@@ -15,7 +15,8 @@
  */
 package com.intellij.idea.starter;
 
-import com.intellij.openapi.application.impl.ApplicationImpl;
+import com.intellij.ide.StartupProgress;
+import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.util.Ref;
 import consulo.annotations.Internal;
 import consulo.start.CommandLineArgs;
@@ -23,9 +24,14 @@ import org.jetbrains.annotations.NotNull;
 
 @Internal
 public abstract class ApplicationPostStarter {
-  public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
-    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, Ref.create());
+  protected final Ref<StartupProgress> mySplashRef = Ref.create();
+  protected ApplicationStarter myApplicationStarter;
+
+  public ApplicationPostStarter(ApplicationStarter applicationStarter) {
+    myApplicationStarter = applicationStarter;
   }
+
+  public abstract void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args);
 
   public void premain(@NotNull CommandLineArgs args) {
   }

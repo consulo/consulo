@@ -35,7 +35,8 @@ import consulo.web.application.impl.WebApplicationImpl;
 @SuppressWarnings("unused")
 @Internal
 public class WebPostStarter extends ApplicationPostStarter {
-  public WebPostStarter(ApplicationStarter application) {
+  public WebPostStarter(ApplicationStarter applicationStarter) {
+    super(applicationStarter);
   }
 
   @Override

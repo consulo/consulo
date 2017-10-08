@@ -117,7 +117,7 @@ public class ApplicationStarter {
       return "consulo.start.UnitTestPostStarter";
     }
 
-    return asWebApp ? "consulo.web.main.WebPostStarter" : "com.intellij.idea.starter.DefaultApplicationPostStarter";
+    return asWebApp ? "consulo.web.main.WebPostStarter" : "com.intellij.idea.starter.DesktopApplicationPostStarter";
   }
 
   public void run(boolean newConfigFolder) {
@@ -125,13 +125,9 @@ public class ApplicationStarter {
       ApplicationEx app = ApplicationManagerEx.getApplicationEx();
       app.load(PathManager.getOptionsPath());
 
-      ((TransactionGuardImpl) TransactionGuard.getInstance()).performUserActivity(new Runnable() {
-        @Override
-        public void run() {
-          myPostStarter.main(newConfigFolder, myArgs);
-        }
-      });
-      myPostStarter = null; //GC it
+      ((TransactionGuardImpl) TransactionGuard.getInstance()).performUserActivity(() -> myPostStarter.main(newConfigFolder, myArgs));
+
+      myPostStarter = null;
 
       ourLoaded = true;
     }

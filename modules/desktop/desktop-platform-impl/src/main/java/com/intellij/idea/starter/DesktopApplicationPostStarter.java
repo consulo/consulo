@@ -26,7 +26,6 @@ import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.openapi.wm.impl.WindowManagerImpl;
@@ -49,14 +48,11 @@ import java.awt.*;
  */
 @SuppressWarnings("unused")
 @Internal
-public class DefaultApplicationPostStarter extends ApplicationPostStarter {
-  private static final Logger LOG = Logger.getInstance(DefaultApplicationPostStarter.class);
+public class DesktopApplicationPostStarter extends ApplicationPostStarter {
+  private static final Logger LOG = Logger.getInstance(DesktopApplicationPostStarter.class);
 
-  private ApplicationStarter myApplicationStarter;
-  private Ref<DesktopSplash> mySplashRef;
-
-  public DefaultApplicationPostStarter(ApplicationStarter applicationStarter) {
-    myApplicationStarter = applicationStarter;
+  public DesktopApplicationPostStarter(ApplicationStarter applicationStarter) {
+    super(applicationStarter);
   }
 
   @Override
@@ -65,7 +61,7 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
       final SplashScreen splashScreen = getSplashScreen();
       if (splashScreen == null) {
         DesktopSplash splash = new DesktopSplash(false);
-        mySplashRef = Ref.create(splash);
+        mySplashRef.set(splash);
         splash.show();
       }
     }
@@ -104,13 +100,11 @@ public class DefaultApplicationPostStarter extends ApplicationPostStarter {
     PluginManagerCore.dumpPluginClassStatistics();
 
     app.invokeAndWait(() -> {
-      DesktopSplash desktopSplash = mySplashRef.get();
+      DesktopSplash desktopSplash = (DesktopSplash)mySplashRef.get();
       if (desktopSplash != null) {
         desktopSplash.dispose();
         mySplashRef.set(null);  // Allow GC collect the splash window
       }
-
-      mySplashRef = null;
     }, ModalityState.NON_MODAL);
 
     if (newConfigFolder && !SandboxUtil.isInsideSandbox()) {

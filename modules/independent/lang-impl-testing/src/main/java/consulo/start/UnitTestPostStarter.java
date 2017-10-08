@@ -22,6 +22,7 @@ import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.starter.ApplicationPostStarter;
 import com.intellij.idea.starter.SMTestSender;
+import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -44,7 +45,13 @@ import java.util.List;
 public class UnitTestPostStarter extends ApplicationPostStarter {
   private static final Logger LOGGER = Logger.getInstance(UnitTestPostStarter.class);
 
-  public UnitTestPostStarter(ApplicationStarter application) {
+  public UnitTestPostStarter(ApplicationStarter applicationStarter) {
+    super(applicationStarter);
+  }
+
+  @Override
+  public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
+    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, mySplashRef);
   }
 
   @Override
