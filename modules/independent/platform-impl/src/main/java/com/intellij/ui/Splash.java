@@ -25,19 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-
 /**
- * To customize your IDE splash go to YourIdeNameApplicationInfo.xml and find
- * section corresponding to IDE logo. It should look like:
- * <p>
- * &lt;logo url=&quot;/idea_logo.png&quot; textcolor=&quot;919191&quot; progressColor=&quot;264db5&quot; progressY=&quot;235&quot;/&gt;
- * </p>
- * <p>where <code>url</code> is path to your splash image
- * <p><code>textColor</code> is HEX representation of text color for user name
- * <p><code>progressColor</code> is progress bar color
- * <p><code>progressY</code> is Y coordinate of the progress bar
- * <p><code>progressTailIcon</code> is a path to flame effect icon
- *
  * @author Konstantin Bulenkov
  */
 public class Splash extends JDialog implements StartupProgress {
