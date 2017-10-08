@@ -72,7 +72,7 @@ public class EventLogToolWindowFactory implements ToolWindowFactory, DumbAware {
     toolbar.setTargetComponent(editor.getContentComponent());
     panel.setToolbar(toolbar.getComponent());
 
-    Content content = ContentFactory.SERVICE.getInstance().createContent(panel, title, false);
+    Content content = ContentFactory.getInstance().createContent(panel, title, false);
     contentManager.addContent(content);
     contentManager.setSelectedContent(content);
   }

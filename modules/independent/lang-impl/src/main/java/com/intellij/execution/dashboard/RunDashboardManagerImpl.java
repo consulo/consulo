@@ -69,7 +69,7 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
   public RunDashboardManagerImpl(@NotNull final Project project) {
     myProject = project;
 
-    ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+    ContentFactory contentFactory = ContentFactory.getInstance();
     ContentUI contentUI = new PanelContentUI();
     myContentManager = contentFactory.createContentManager(contentUI, false, project);
 

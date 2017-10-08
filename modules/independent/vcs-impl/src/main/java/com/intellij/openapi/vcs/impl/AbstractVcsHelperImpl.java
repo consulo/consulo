@@ -115,7 +115,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         messageView.runWhenInitialized(new Runnable() {
           public void run() {
             final Content content =
-                    ContentFactory.SERVICE.getInstance().createContent(errorTreeView, tabDisplayName, true);
+                    ContentFactory.getInstance().createContent(errorTreeView, tabDisplayName, true);
             messageView.getContentManager().addContent(content);
             Disposer.register(content, errorTreeView);
             messageView.getContentManager().setSelectedContent(content);
@@ -652,7 +652,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     CommittedChangesPanel panel = new CommittedChangesPanel(myProject, provider, settings, location, extraActions);
     panel.setMaxCount(maxCount);
     panel.refreshChanges(false);
-    final ContentFactory factory = ContentFactory.SERVICE.getInstance();
+    final ContentFactory factory = ContentFactory.getInstance();
     if (title == null && location != null) {
       title = VcsBundle.message("browse.changes.content.title", location.toPresentableString());
     }

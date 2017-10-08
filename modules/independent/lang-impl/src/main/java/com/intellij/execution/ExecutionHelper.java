@@ -219,7 +219,7 @@ public class ExecutionHelper {
       @Override
       public void run() {
         final MessageView messageView = ServiceManager.getService(myProject, MessageView.class);
-        final Content content = ContentFactory.SERVICE.getInstance().createContent(errorTreeView, tabDisplayName, true);
+        final Content content = ContentFactory.getInstance().createContent(errorTreeView, tabDisplayName, true);
         messageView.getContentManager().addContent(content);
         Disposer.register(content, errorTreeView);
         messageView.getContentManager().setSelectedContent(content);

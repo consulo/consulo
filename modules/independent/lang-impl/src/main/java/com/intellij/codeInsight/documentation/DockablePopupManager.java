@@ -106,7 +106,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
     myToolWindow.setDefaultState(ToolWindowAnchor.RIGHT, ToolWindowType.FLOATING, rectangle);
 
     final ContentManager contentManager = myToolWindow.getContentManager();
-    final ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+    final ContentFactory contentFactory = ContentFactory.getInstance();
     final Content content = contentFactory.createContent(component, getTitle(element), false);
     contentManager.addContent(content);
 

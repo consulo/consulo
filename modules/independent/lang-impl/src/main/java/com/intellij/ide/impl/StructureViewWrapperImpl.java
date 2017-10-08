@@ -345,7 +345,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     }
 
     for (int i = 0; i < myPanels.length; i++) {
-      final Content content = ContentFactory.SERVICE.getInstance().createContent(myPanels[i], names[i], false);
+      final Content content = ContentFactory.getInstance().createContent(myPanels[i], names[i], false);
       contentManager.addContent(content);
       if (i == 0 && myStructureView != null) {
         Disposer.register(content, myStructureView);

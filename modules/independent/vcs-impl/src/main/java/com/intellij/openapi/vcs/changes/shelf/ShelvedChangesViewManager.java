@@ -190,7 +190,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       if (myContent == null) {
         JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree);
         scrollPane.setBorder(null);
-        myContent = ContentFactory.SERVICE.getInstance().createContent(scrollPane, VcsBundle.message("shelf.tab"), false);
+        myContent = ContentFactory.getInstance().createContent(scrollPane, VcsBundle.message("shelf.tab"), false);
         myContent.setCloseable(false);
         myContentManager.addContent(myContent);
       }

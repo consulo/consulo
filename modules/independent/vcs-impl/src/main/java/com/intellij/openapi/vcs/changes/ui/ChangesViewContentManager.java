@@ -138,7 +138,7 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
     for(ChangesViewContentEP ep: contentEPs) {
       final NotNullFunction<Project,Boolean> predicate = ep.newPredicateInstance(myProject);
       if (predicate == null || predicate.fun(myProject).equals(Boolean.TRUE)) {
-        final Content content = ContentFactory.SERVICE.getInstance().createContent(new ContentStub(ep), ep.getTabName(), false);
+        final Content content = ContentFactory.getInstance().createContent(new ContentStub(ep), ep.getTabName(), false);
         content.setCloseable(false);
         content.putUserData(myEPKey, ep);
         contentList.add(content);
@@ -148,7 +148,7 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
   }
 
   private void addExtensionTab(final ChangesViewContentEP ep) {
-    final Content content = ContentFactory.SERVICE.getInstance().createContent(new ContentStub(ep), ep.getTabName(), false);
+    final Content content = ContentFactory.getInstance().createContent(new ContentStub(ep), ep.getTabName(), false);
     content.setCloseable(false);
     content.putUserData(myEPKey, ep);
     addIntoCorrectPlace(content);

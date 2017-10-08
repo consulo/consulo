@@ -155,7 +155,7 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
   }
 
   private static ContentFactory getContentFactory() {
-    return ContentFactory.SERVICE.getInstance();
+    return ContentFactory.getInstance();
   }
 
   public RunnerLayout getLayout() {

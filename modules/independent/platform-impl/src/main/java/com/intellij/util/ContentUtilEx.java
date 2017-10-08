@@ -53,7 +53,7 @@ public class ContentUtilEx extends ContentsUtil {
                                       boolean select,
                                       @Nullable Disposable childDisposable) {
     if (PropertiesComponent.getInstance().getBoolean(TabbedContent.SPLIT_PROPERTY_PREFIX + groupPrefix)) {
-      final Content content = ContentFactory.SERVICE.getInstance().createContent(contentComponent, getFullName(groupPrefix, tabName), true);
+      final Content content = ContentFactory.getInstance().createContent(contentComponent, getFullName(groupPrefix, tabName), true);
       content.putUserData(Content.TABBED_CONTENT_KEY, Boolean.TRUE);
       content.putUserData(Content.TAB_GROUP_NAME_KEY, groupPrefix);
 

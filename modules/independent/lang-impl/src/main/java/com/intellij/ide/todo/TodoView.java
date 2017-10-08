@@ -147,7 +147,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
 
   public void initToolWindow(@NotNull ToolWindow toolWindow) {
     // Create panels
-    ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+    ContentFactory contentFactory = ContentFactory.getInstance();
     Content allTodosContent = contentFactory.createContent(null, IdeBundle.message("title.project"), false);
     myAllTodos = new TodoPanel(myProject, state.all, false, allTodosContent) {
       @Override
@@ -311,7 +311,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
   }
 
   public void addCustomTodoView(final TodoTreeBuilderFactory factory, final String title, final TodoPanelSettings settings) {
-    Content content = ContentFactory.SERVICE.getInstance().createContent(null, title, true);
+    Content content = ContentFactory.getInstance().createContent(null, title, true);
     final ChangeListTodosPanel panel = new ChangeListTodosPanel(myProject, settings, content) {
       @Override
       protected TodoTreeBuilder createTreeBuilder(JTree tree, DefaultTreeModel treeModel, Project project) {

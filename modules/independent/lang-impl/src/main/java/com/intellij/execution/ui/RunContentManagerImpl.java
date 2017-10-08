@@ -488,7 +488,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
 
   private static Content createNewContent(final RunContentDescriptor descriptor, Executor executor) {
     final String processDisplayName = descriptor.getDisplayName();
-    final Content content = ContentFactory.SERVICE.getInstance().createContent(descriptor.getComponent(), processDisplayName, true);
+    final Content content = ContentFactory.getInstance().createContent(descriptor.getComponent(), processDisplayName, true);
     content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
     Icon icon = descriptor.getIcon();
     content.setIcon(icon == null ? executor.getToolWindowIcon() : icon);

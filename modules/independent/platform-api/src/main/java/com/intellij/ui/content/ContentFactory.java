@@ -22,6 +22,23 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 public interface ContentFactory {
+  @Deprecated
+  class SERVICE {
+    private SERVICE() {
+    }
+
+    @NotNull
+    @Deprecated
+    static ContentFactory getInstance() {
+      return ServiceManager.getService(ContentFactory.class);
+    }
+  }
+
+  @NotNull
+  static ContentFactory getInstance() {
+    return ServiceManager.getService(ContentFactory.class);
+  }
+
   @NotNull
   Content createContent(JComponent component, String displayName, boolean isLockable);
 
@@ -30,13 +47,4 @@ public interface ContentFactory {
 
   @NotNull
   ContentManager createContentManager(boolean canCloseContents, @NotNull Project project);
-
-  class SERVICE {
-    private SERVICE() {
-    }
-
-    public static ContentFactory getInstance() {
-      return ServiceManager.getService(ContentFactory.class);
-    }
-  }
 }

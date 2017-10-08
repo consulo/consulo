@@ -30,7 +30,7 @@ import javax.swing.*;
 public class SandToolWindowFactory implements ToolWindowFactory {
   @Override
   public void createToolWindowContent(Project project, ToolWindow toolWindow) {
-    ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+    ContentFactory contentFactory = ContentFactory.getInstance();
 
     Content content = contentFactory.createContent(new JLabel("test"), "Test", false);
     toolWindow.getContentManager().addContent(content);

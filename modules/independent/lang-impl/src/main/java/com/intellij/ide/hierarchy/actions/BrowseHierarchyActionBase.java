@@ -87,7 +87,7 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
       content.setComponent(hierarchyBrowser.getComponent());
     }
     else {
-      content = ContentFactory.SERVICE.getInstance().createContent(hierarchyBrowser.getComponent(), null, true);
+      content = ContentFactory.getInstance().createContent(hierarchyBrowser.getComponent(), null, true);
       contentManager.addContent(content);
     }
     contentManager.setSelectedContent(content);

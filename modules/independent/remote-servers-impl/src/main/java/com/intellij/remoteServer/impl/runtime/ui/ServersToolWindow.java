@@ -49,7 +49,7 @@ public class ServersToolWindow {
 
     myToolWindow.setIcon(RemoteServersIcons.ServersToolWindow);
 
-    final ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+    final ContentFactory contentFactory = ContentFactory.getInstance();
     final ServersToolWindowContent serversContent = new ServersToolWindowContent(project);
     Content content = contentFactory.createContent(serversContent.getMainPanel(), null, false);
     Disposer.register(content, serversContent);

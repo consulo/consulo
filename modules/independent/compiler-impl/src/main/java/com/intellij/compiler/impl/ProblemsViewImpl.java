@@ -164,7 +164,7 @@ public class ProblemsViewImpl extends ProblemsView {
           addMessage(problemsViewPanel, tempMessage);
         }
 
-        content = ContentFactory.SERVICE.getInstance().createContent(myPanel = problemsViewPanel, "Compilation", false);
+        content = ContentFactory.getInstance().createContent(myPanel = problemsViewPanel, "Compilation", false);
         content.putUserData(ourViewKey, Boolean.TRUE);
 
         contentManager.addContent(content);

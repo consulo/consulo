@@ -114,7 +114,7 @@ public abstract class DependenciesHandlerBase {
         if (shouldShowDependenciesPanel(builders)) {
           final String displayName = getPanelDisplayName(builders.get(0).getScope());
           DependenciesPanel panel = new DependenciesPanel(myProject, builders, myExcluded);
-          Content content = ContentFactory.SERVICE.getInstance().createContent(panel, displayName, false);
+          Content content = ContentFactory.getInstance().createContent(panel, displayName, false);
           content.setDisposer(panel);
           panel.setContent(content);
           DependenciesToolWindow.getInstance(myProject).addContent(content);

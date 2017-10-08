@@ -127,7 +127,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     });
 
     myView = view;
-    myContent = ContentFactory.SERVICE.getInstance().createContent(view, title, false);
+    myContent = ContentFactory.getInstance().createContent(view, title, false);
 
     myContent.setDisposer(myView);
 
