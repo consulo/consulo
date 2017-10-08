@@ -16,7 +16,6 @@
 package consulo.compiler.server.application;
 
 import com.intellij.core.CoreFileTypeRegistry;
-import com.intellij.ide.StartupProgress;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.Disposable;
@@ -99,11 +98,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   private void loadApplicationComponents() {
-    PluginManagerCore.initPlugins(new StartupProgress() {
-      @Override
-      public void showProgress(String message, float progress) {
-
-      }
+    PluginManagerCore.initPlugins((message, progress) -> {
     });
 
     final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
