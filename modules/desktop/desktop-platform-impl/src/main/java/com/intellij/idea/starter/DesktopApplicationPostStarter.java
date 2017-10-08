@@ -100,7 +100,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
     PluginManagerCore.dumpPluginClassStatistics();
 
     app.invokeAndWait(() -> {
-      DesktopSplash desktopSplash = (DesktopSplash)mySplashRef.get();
+      StartupProgress desktopSplash = mySplashRef.get();
       if (desktopSplash != null) {
         desktopSplash.dispose();
         mySplashRef.set(null);  // Allow GC collect the splash window

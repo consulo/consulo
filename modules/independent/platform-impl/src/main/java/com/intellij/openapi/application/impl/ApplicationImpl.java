@@ -113,7 +113,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   private int myInEditorPaintCounter; // EDT only
   private final long myStartTime;
   @NotNull
-  private final Ref<? extends StartupProgress> mySplashRef;
+  protected final Ref<? extends StartupProgress> mySplashRef;
   private boolean myDoNotSave;
   private volatile boolean myDisposeInProgress;
 

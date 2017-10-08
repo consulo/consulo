@@ -25,6 +25,11 @@ public class WebApplicationImpl extends ApplicationImpl implements WebApplicatio
     super(isInternal, isUnitTestMode, isHeadless, isCommandLine, splash);
   }
 
+  @Nullable
+  public WebStartupProgressImpl getSplash() {
+    return (WebStartupProgressImpl)mySplashRef.get();
+  }
+
   @RequiredDispatchThread
   @Override
   public boolean runProcessWithProgressSynchronously(@NotNull Runnable process,

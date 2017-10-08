@@ -22,16 +22,14 @@ import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Disposer;
 import consulo.application.ApplicationProperties;
 import consulo.web.servlet.RootUIBuilder;
 import consulo.web.servlet.ui.UIIconServlet;
-import org.jetbrains.annotations.NonNls;
+import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import javax.servlet.Servlet;
+import javax.servlet.annotation.WebServlet;
 import javax.swing.*;
 import java.io.File;
 
@@ -40,59 +38,10 @@ import java.io.File;
  * @since 16-May-17
  */
 public class WebLoader {
-  static class Factory implements Logger.Factory {
-    @Override
-    public Logger getLoggerInstance(String category) {
-      return new Logger() {
-        @Override
-        public boolean isDebugEnabled() {
-          return false;
-        }
-
-        @Override
-        public void debug(@NonNls String message) {
-
-        }
-
-        @Override
-        public void debug(@Nullable Throwable t) {
-
-        }
-
-        @Override
-        public void debug(@NonNls String message, @Nullable Throwable t) {
-
-        }
-
-        @Override
-        public void error(@NonNls String message, @Nullable Throwable t, @NonNls String... details) {
-          System.out.println(message);
-          if (t != null) {
-            t.printStackTrace();
-          }
-        }
-
-        @Override
-        public void info(@NonNls String message) {
-          System.out.println(message);
-        }
-
-        @Override
-        public void info(@NonNls String message, @Nullable Throwable t) {
-          System.out.println(message);
-          if (t != null) {
-            t.printStackTrace();
-          }
-        }
-
-        @Override
-        public void warn(@NonNls String message, @Nullable Throwable t) {
-          System.out.println(message);
-          if (t != null) {
-            t.printStackTrace();
-          }
-        }
-      };
+  @WebServlet(urlPatterns = "/app/*")
+  public static class RootUIServlet extends UIServlet {
+    public RootUIServlet() {
+      super(RootUIBuilder.class, "/app");
     }
   }
 
@@ -127,7 +76,7 @@ public class WebLoader {
 
   @NotNull
   @SuppressWarnings("unchecked")
-  public Class<? extends Servlet>[] getServletClasses() {
-    return new Class[]{RootUIBuilder.Servlet.class, UIIconServlet.class};
+  public Class<? extends RootUIServlet>[] getServletClasses() {
+    return new Class[]{RootUIServlet.class, UIIconServlet.class};
   }
 }

@@ -31,10 +31,8 @@ import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
 import consulo.web.application.impl.VaadinWebSessionImpl;
 import consulo.web.servlet.ui.UIBuilder;
-import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
 
-import javax.servlet.annotation.WebServlet;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,13 +40,6 @@ import java.util.concurrent.TimeUnit;
  * @since 10-Sep-17
  */
 public class RootUIBuilder implements UIBuilder {
-  @WebServlet(urlPatterns = "/app/*")
-  public static class Servlet extends UIServlet {
-    public Servlet() {
-      super(RootUIBuilder.class, "/app");
-    }
-  }
-
   @RequiredUIAccess
   @Override
   public void build(@NotNull Window window) {

@@ -15,11 +15,13 @@
  */
 package com.intellij.ide;
 
+import com.intellij.openapi.Disposable;
+
 /**
  * @author Dmitry Avdeev
  *         Date: 7/21/11
  */
-public interface StartupProgress {
+public interface StartupProgress extends Disposable {
 
   /**
    * Displays new progress state.

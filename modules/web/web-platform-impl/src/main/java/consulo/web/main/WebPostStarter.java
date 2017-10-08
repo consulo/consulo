@@ -15,22 +15,22 @@
  */
 package consulo.web.main;
 
+import com.intellij.ide.StartupProgress;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.starter.ApplicationPostStarter;
-import com.intellij.openapi.projectRoots.SdkTable;
-import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.util.Ref;
 import consulo.annotations.Internal;
 import consulo.start.CommandLineArgs;
 import consulo.web.application.impl.WebApplicationImpl;
+import consulo.web.application.impl.WebStartupProgressImpl;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * @author VISTALL
- * @since 15-May-16
- *
  * Used via reflection
+ *
+ * @author VISTALL
  * @see com.intellij.idea.ApplicationStarter#getStarterClass(boolean, boolean)
+ * @since 15-May-16
  */
 @SuppressWarnings("unused")
 @Internal
@@ -41,40 +41,17 @@ public class WebPostStarter extends ApplicationPostStarter {
 
   @Override
   public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
+    mySplashRef.set(new WebStartupProgressImpl());
+
     new WebApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, Ref.create());
   }
 
   @Override
-  public void main(boolean newConfigFolder, CommandLineArgs args) {
-    /*ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            setupSdk("JDK", "1.6", "C:\\Program Files\\Java\\jdk1.6.0_45");
-          }
-        });
-      }
-    }, ModalityState.any());  */
-
-    System.out.println("We started");
-  }
-
-  private static void setupSdk(String sdkTypeName, String name, String home) {
-    SdkType sdkType = null;
-    for (SdkType temp : SdkType.EP_NAME.getExtensions()) {
-      if (temp.getName().equals(sdkTypeName)) {
-        sdkType = temp;
-        break;
-      }
+  public void main(boolean newConfigFolder, @NotNull CommandLineArgs args) {
+    StartupProgress startupProgress = mySplashRef.get();
+    if (startupProgress != null) {
+      startupProgress.dispose();
+      mySplashRef.set(null);
     }
-
-    assert sdkType != null;
-    SdkImpl sdk = new SdkImpl(name, sdkType, home, sdkType.getVersionString(home));
-
-    sdkType.setupSdkPaths(sdk);
-
-    SdkTable.getInstance().addSdk(sdk);
   }
 }
