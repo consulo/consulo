@@ -2,7 +2,7 @@
 
 Consulo - multi-language ide. Project was started in 2013 year by forking [IDEA Community Edition](https://github.com/JetBrains/intellij-community).
 
-Main goal - create **open** IDE where you don't need select IDE for different languages. Provide standart for language implementation inside IDE.
+Main goal - create **open** IDE where you don't need select IDE for different languages. Provide a standard for language implementation inside IDE.
 
 ## Contributing
 
