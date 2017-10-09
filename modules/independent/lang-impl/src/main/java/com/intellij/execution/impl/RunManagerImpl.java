@@ -49,10 +49,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.util.*;
 
-@State(
-        name = "RunManager",
-        storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE)
-)
+@State(name = "RunManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class RunManagerImpl extends RunManagerEx implements PersistentStateComponent<Element>, NamedComponent, Disposable {
   private static final Logger LOG = Logger.getInstance(RunManagerImpl.class);
 
@@ -61,15 +58,16 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   private final Map<String, ConfigurationType> myTypesByName = new LinkedHashMap<>();
 
   private final Map<String, RunnerAndConfigurationSettings> myTemplateConfigurationsMap = new TreeMap<>();
-  private final Map<String, RunnerAndConfigurationSettings> myConfigurations =
-          new LinkedHashMap<>(); // template configurations are not included here
+  private final Map<String, RunnerAndConfigurationSettings> myConfigurations = new LinkedHashMap<>(); // template configurations are not included here
   private final Map<String, Boolean> mySharedConfigurations = new THashMap<>();
   private final Map<RunConfiguration, List<BeforeRunTask>> myConfigurationToBeforeTasksMap = new WeakHashMap<>();
 
   // When readExternal not all configuration may be loaded, so we need to remember the selected configuration
   // so that when it is eventually loaded, we can mark is as a selected.
-  @Nullable private String myLoadedSelectedConfigurationUniqueName = null;
-  @Nullable private String mySelectedConfigurationId = null;
+  @Nullable
+  private String myLoadedSelectedConfigurationUniqueName = null;
+  @Nullable
+  private String mySelectedConfigurationId = null;
 
   private final Map<String, Icon> myIdToIcon = new HashMap<>();
   private final Map<String, Long> myIconCheckTimes = new HashMap<>();
@@ -84,8 +82,10 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   protected static final String NAME_ATTR = "name";
   @NonNls
   protected static final String SELECTED_ATTR = "selected";
-  @NonNls private static final String METHOD = "method";
-  @NonNls private static final String OPTION = "option";
+  @NonNls
+  private static final String METHOD = "method";
+  @NonNls
+  private static final String OPTION = "option";
 
   private List<Element> myUnknownElements = null;
   private final JDOMExternalizableStringList myOrder = new JDOMExternalizableStringList();
@@ -143,8 +143,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
   @Override
   @NotNull
-  public RunnerAndConfigurationSettings createConfiguration(@NotNull final RunConfiguration runConfiguration,
-                                                            @NotNull final ConfigurationFactory factory) {
+  public RunnerAndConfigurationSettings createConfiguration(@NotNull final RunConfiguration runConfiguration, @NotNull final ConfigurationFactory factory) {
     RunnerAndConfigurationSettings template = getConfigurationTemplate(factory);
     RunnerAndConfigurationSettingsImpl settings = new RunnerAndConfigurationSettingsImpl(this, runConfiguration, false);
     settings.importRunnerAndConfigurationSettings((RunnerAndConfigurationSettingsImpl)template);
@@ -324,9 +323,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   }
 
   @Override
-  public void addConfiguration(RunnerAndConfigurationSettings settings,
-                               boolean shared,
-                               List<BeforeRunTask> tasks, boolean addEnabledTemplateTasksIfAbsent) {
+  public void addConfiguration(RunnerAndConfigurationSettings settings, boolean shared, List<BeforeRunTask> tasks, boolean addEnabledTemplateTasksIfAbsent) {
     String existingId = findExistingConfigurationId(settings);
     String newId = settings.getUniqueID();
     RunnerAndConfigurationSettings existingSettings = null;
@@ -375,7 +372,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   }
 
   private void trimUsagesListToLimit() {
-    while(myRecentlyUsedTemporaries.size() > getConfig().getRecentsLimit()) {
+    while (myRecentlyUsedTemporaries.size() > getConfig().getRecentsLimit()) {
       myRecentlyUsedTemporaries.remove(myRecentlyUsedTemporaries.size() - 1);
     }
   }
@@ -405,8 +402,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   }
 
   private void doSaveOrder(@Nullable Comparator<RunnerAndConfigurationSettings> comparator) {
-    List<RunnerAndConfigurationSettings> sorted = new ArrayList<>(
-            ContainerUtil.filter(myConfigurations.values(), o -> !(o.getType() instanceof UnknownConfigurationType)));
+    List<RunnerAndConfigurationSettings> sorted = new ArrayList<>(ContainerUtil.filter(myConfigurations.values(), o -> !(o.getType() instanceof UnknownConfigurationType)));
     if (comparator != null) sorted.sort(comparator);
 
     myOrder.clear();
@@ -442,8 +438,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     for (Map.Entry<RunConfiguration, List<BeforeRunTask>> entry : myConfigurationToBeforeTasksMap.entrySet()) {
       for (Iterator<BeforeRunTask> iterator = entry.getValue().iterator(); iterator.hasNext(); ) {
         BeforeRunTask task = iterator.next();
-        if (task instanceof RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask &&
-            settings.equals(((RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask)task).getSettings())) {
+        if (task instanceof RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask && settings.equals(((RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask)task).getSettings())) {
           iterator.remove();
           RunnerAndConfigurationSettings changedSettings = getSettings(entry.getKey());
           if (changedSettings != null) {
@@ -481,8 +476,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
       return myConfigurations.values();
     }
 
-    List<Pair<String, RunnerAndConfigurationSettings>> order
-            = new ArrayList<>(myConfigurations.size());
+    List<Pair<String, RunnerAndConfigurationSettings>> order = new ArrayList<>(myConfigurations.size());
     final List<String> folderNames = new SmartList<>();
     for (RunnerAndConfigurationSettings each : myConfigurations.values()) {
       order.add(Pair.create(each.getUniqueID(), each));
@@ -548,14 +542,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     try {
       configuration.checkSettings(executor);
     }
-    catch (IndexNotReadyException ignored) {
-      return Registry.is("dumb.aware.run.configurations");
-    }
-    catch (RuntimeConfigurationError ignored) {
+    catch (IndexNotReadyException | RuntimeConfigurationException ignored) {
       return false;
-    }
-    catch (RuntimeConfigurationException ignored) {
-      return true;
     }
     return true;
   }
@@ -568,8 +556,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     writeContext(parentNode);
 
     for (RunnerAndConfigurationSettings configuration : myTemplateConfigurationsMap.values()) {
-      if (configuration.getConfiguration() instanceof UnknownRunConfiguration &&
-          ((UnknownRunConfiguration)configuration.getConfiguration()).isDoNotStore()) {
+      if (configuration.getConfiguration() instanceof UnknownRunConfiguration && ((UnknownRunConfiguration)configuration.getConfiguration()).isDoNotStore()) {
         continue;
       }
 
@@ -654,9 +641,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
     List<BeforeRunTask> tasks = new ArrayList<>(getBeforeRunTasks(settings.getConfiguration()));
     Map<Key<BeforeRunTask>, BeforeRunTask> templateTasks = new THashMap<>();
-    List<BeforeRunTask> beforeRunTasks = settings.isTemplate()
-                                         ? getHardcodedBeforeRunTasks(settings.getConfiguration())
-                                         : getBeforeRunTasks(getConfigurationTemplate(settings.getFactory()).getConfiguration());
+    List<BeforeRunTask> beforeRunTasks =
+            settings.isTemplate() ? getHardcodedBeforeRunTasks(settings.getConfiguration()) : getBeforeRunTasks(getConfigurationTemplate(settings.getFactory()).getConfiguration());
     for (BeforeRunTask templateTask : beforeRunTasks) {
       templateTasks.put(templateTask.getProviderId(), templateTask);
       if (templateTask.isEnabled()) {
@@ -767,8 +753,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
       for (RunnerAndConfigurationSettings settings : myConfigurations.values()) {
         RunConfiguration configuration = settings.getConfiguration();
         //noinspection deprecation
-        if (configuration != null && list.get(i).equals(configuration.getType().getDisplayName() + "." + configuration.getName() +
-                                                        (configuration instanceof UnknownRunConfiguration ? configuration.getUniqueID() : ""))) {
+        if (configuration != null &&
+            list.get(i).equals(configuration.getType().getDisplayName() + "." + configuration.getName() + (configuration instanceof UnknownRunConfiguration ? configuration.getUniqueID() : ""))) {
           list.set(i, settings.getUniqueID());
           break;
         }
@@ -782,9 +768,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     for (Object aChildren : parentNode.getChildren()) {
       Element element = (Element)aChildren;
       RunnerAndConfigurationSettings config = loadConfiguration(element, false);
-      if (myLoadedSelectedConfigurationUniqueName == null
-          && config != null
-          && Boolean.valueOf(element.getAttributeValue(SELECTED_ATTR)).booleanValue()) {
+      if (myLoadedSelectedConfigurationUniqueName == null && config != null && Boolean.valueOf(element.getAttributeValue(SELECTED_ATTR)).booleanValue()) {
         myLoadedSelectedConfigurationUniqueName = config.getUniqueID();
       }
     }
@@ -960,8 +944,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
     tempConfiguration.setTemporary(true);
 
-    addConfiguration(tempConfiguration, isConfigurationShared(tempConfiguration),
-                     getBeforeRunTasks(tempConfiguration.getConfiguration()), false);
+    addConfiguration(tempConfiguration, isConfigurationShared(tempConfiguration), getBeforeRunTasks(tempConfiguration.getConfiguration()), false);
     if (Registry.is("select.run.configuration.from.context")) {
       setSelectedConfiguration(tempConfiguration);
     }
@@ -994,8 +977,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   @Override
   @NotNull
   public List<RunnerAndConfigurationSettings> getTempConfigurationsList() {
-    List<RunnerAndConfigurationSettings> configurations =
-            ContainerUtil.filter(myConfigurations.values(), RunnerAndConfigurationSettings::isTemporary);
+    List<RunnerAndConfigurationSettings> configurations = ContainerUtil.filter(myConfigurations.values(), RunnerAndConfigurationSettings::isTemporary);
     return Collections.unmodifiableList(configurations);
   }
 
@@ -1081,47 +1063,37 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     if (selectedId.equals(uniqueID)) {
       Long lastCheckTime = myIconCheckTimes.get(uniqueID);
       Long calcTime = myIconCalcTime.get(uniqueID);
-      if (calcTime == null || calcTime<150) calcTime = 150L;
-      if (lastCheckTime == null || System.currentTimeMillis() - lastCheckTime > calcTime*10) {
+      if (calcTime == null || calcTime < 150) calcTime = 150L;
+      if (lastCheckTime == null || System.currentTimeMillis() - lastCheckTime > calcTime * 10) {
         myIdToIcon.remove(uniqueID);//cache has expired
       }
     }
     Icon icon = myIdToIcon.get(uniqueID);
     if (icon == null) {
-      icon = IconDeferrer.getInstance().deferAutoUpdatable(settings.getConfiguration().getIcon(), myProject.hashCode() ^ settings.hashCode(),
-                                                           param -> {
-                                                             if (myProject.isDisposed()) return null;
+      icon = IconDeferrer.getInstance().deferAutoUpdatable(settings.getConfiguration().getIcon(), myProject.hashCode() ^ settings.hashCode(), param -> {
+        if (myProject.isDisposed()) return null;
 
-                                                             myIconCalcTime.remove(uniqueID);
-                                                             long startTime = System.currentTimeMillis();
+        myIconCalcTime.remove(uniqueID);
+        long startTime = System.currentTimeMillis();
 
-                                                             Icon icon1;
-                                                             if (DumbService.isDumb(myProject) && !Registry.is("dumb.aware.run.configurations")) {
-                                                               icon1 =
-                                                                       IconLoader.getDisabledIcon(ProgramRunnerUtil.getRawIcon(settings));
-                                                               if (settings.isTemporary()) {
-                                                                 icon1 = ProgramRunnerUtil.getTemporaryIcon(icon1);
-                                                               }
-                                                             }
-                                                             else {
-                                                               try {
-                                                                 DumbService.getInstance(myProject).setAlternativeResolveEnabled(true);
-                                                                 settings.checkSettings();
-                                                                 icon1 = ProgramRunnerUtil.getConfigurationIcon(settings, false);
-                                                               }
-                                                               catch (IndexNotReadyException e) {
-                                                                 icon1 = ProgramRunnerUtil.getConfigurationIcon(settings, !Registry.is("dumb.aware.run.configurations"));
-                                                               }
-                                                               catch (RuntimeConfigurationException ignored) {
-                                                                 icon1 = ProgramRunnerUtil.getConfigurationIcon(settings, true);
-                                                               }
-                                                               finally {
-                                                                 DumbService.getInstance(myProject).setAlternativeResolveEnabled(false);
-                                                               }
-                                                             }
-                                                             myIconCalcTime.put(uniqueID, System.currentTimeMillis() - startTime);
-                                                             return icon1;
-                                                           });
+        Icon ico;
+        try {
+          DumbService.getInstance(myProject).setAlternativeResolveEnabled(true);
+          settings.checkSettings();
+          ico = ProgramRunnerUtil.getConfigurationIcon(settings, false);
+        }
+        catch (IndexNotReadyException e) {
+          ico = ProgramRunnerUtil.getConfigurationIcon(settings, false);
+        }
+        catch (RuntimeConfigurationException ignored) {
+          ico = ProgramRunnerUtil.getConfigurationIcon(settings, true);
+        }
+        finally {
+          DumbService.getInstance(myProject).setAlternativeResolveEnabled(false);
+        }
+        myIconCalcTime.put(uniqueID, System.currentTimeMillis() - startTime);
+        return ico;
+      });
 
       myIdToIcon.put(uniqueID, icon);
       myIconCheckTimes.put(uniqueID, System.currentTimeMillis());
@@ -1196,8 +1168,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   @NotNull
   private List<BeforeRunTask> getHardcodedBeforeRunTasks(@NotNull RunConfiguration settings) {
     List<BeforeRunTask> _tasks = new SmartList<>();
-    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : Extensions
-            .getExtensions(BeforeRunTaskProvider.EXTENSION_POINT_NAME, myProject)) {
+    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : Extensions.getExtensions(BeforeRunTaskProvider.EXTENSION_POINT_NAME, myProject)) {
       BeforeRunTask task = provider.createTask(settings);
       if (task != null && task.isEnabled()) {
         Key<? extends BeforeRunTask> providerID = provider.getId();
@@ -1346,14 +1317,13 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   private void initProviderMaps() {
     myBeforeStepsMap = new LinkedHashMap<>();
     myProviderKeysMap = new LinkedHashMap<>();
-    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : Extensions
-            .getExtensions(BeforeRunTaskProvider.EXTENSION_POINT_NAME, myProject)) {
+    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : Extensions.getExtensions(BeforeRunTaskProvider.EXTENSION_POINT_NAME, myProject)) {
       final Key<? extends BeforeRunTask> id = provider.getId();
       myBeforeStepsMap.put(id, provider);
       myProviderKeysMap.put(id.toString(), id);
     }
   }
-  
+
   @NotNull
   private RunManagerListener getEventPublisher() {
     return myProject.getMessageBus().syncPublisher(RunManagerListener.TOPIC);
