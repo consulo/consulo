@@ -29,7 +29,7 @@ public interface ContentFactory {
 
     @NotNull
     @Deprecated
-    static ContentFactory getInstance() {
+    public static ContentFactory getInstance() {
       return ServiceManager.getService(ContentFactory.class);
     }
   }
