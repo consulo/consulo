@@ -26,7 +26,6 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
@@ -58,27 +57,19 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
   private String myCurrentLayerName;
   private ModuleRootLayerImpl myCachedCurrentLayer;
-  private final SortedMap<String, ModuleRootLayerImpl> myLayers = new TreeMap<String, ModuleRootLayerImpl>();
+  private final SortedMap<String, ModuleRootLayerImpl> myLayers = new TreeMap<>();
 
+  @RequiredReadAction
   RootModelImpl(@NotNull ModuleRootManagerImpl moduleRootManager) {
     myModuleRootManager = moduleRootManager;
     myWritable = false;
     myConfigurationAccessor = new RootConfigurationAccessor();
 
-    try {
-      initDefaultLayer(null);
-    }
-    catch (InvalidDataException e) {
-      //
-    }
+    initDefaultLayer(null);
   }
 
   @RequiredReadAction
-  RootModelImpl(@NotNull Element element,
-                @Nullable ProgressIndicator progressIndicator,
-                @NotNull ModuleRootManagerImpl moduleRootManager,
-                boolean writable)
-          throws InvalidDataException {
+  RootModelImpl(@NotNull Element element, @Nullable ProgressIndicator progressIndicator, @NotNull ModuleRootManagerImpl moduleRootManager, boolean writable) {
     myModuleRootManager = moduleRootManager;
 
     myConfigurationAccessor = new RootConfigurationAccessor();
@@ -89,9 +80,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   //creates modifiable model
-  RootModelImpl(@NotNull RootModelImpl rootModel,
-                @NotNull ModuleRootManagerImpl moduleRootManager,
-                @NotNull RootConfigurationAccessor rootConfigurationAccessor) {
+  @RequiredReadAction
+  RootModelImpl(@NotNull RootModelImpl rootModel, @NotNull ModuleRootManagerImpl moduleRootManager, @NotNull RootConfigurationAccessor rootConfigurationAccessor) {
     myModuleRootManager = moduleRootManager;
     myWritable = true;
     myConfigurationAccessor = rootConfigurationAccessor;
@@ -104,7 +94,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     setCurrentLayerSafe(rootModel.myCurrentLayerName);
   }
 
-  private void initDefaultLayer(Element element) throws InvalidDataException {
+  @RequiredReadAction
+  private void initDefaultLayer(Element element) {
     setCurrentLayerSafe(DEFAULT_LAYER_NAME);
 
     ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(null, this);
@@ -115,7 +106,8 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     }
   }
 
-  private void loadState(Element element, @Nullable ProgressIndicator progressIndicator) throws InvalidDataException {
+  @RequiredReadAction
+  private void loadState(Element element, @Nullable ProgressIndicator progressIndicator) {
     String currentLayer = element.getAttributeValue("current-layer");
     if (currentLayer != null) {
       setCurrentLayerSafe(currentLayer);
@@ -126,7 +118,11 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(null, this);
         moduleRootLayer.loadState(moduleLayerElement, progressIndicator);
 
-        myLayers.put(name, moduleRootLayer);
+        ModuleRootLayerImpl layer = myLayers.put(name, moduleRootLayer);
+        if (layer != null) {
+          // dispose old layout
+          Disposer.dispose(layer);
+        }
       }
     }
 
@@ -233,12 +229,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   public void clear() {
     disposeLayers();
 
-    try {
-      initDefaultLayer(null);
-    }
-    catch (InvalidDataException e) {
-      //
-    }
+    initDefaultLayer(null);
   }
 
   private void disposeLayers() {
@@ -256,6 +247,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   @SuppressWarnings("unchecked")
+  @RequiredReadAction
   public void doCommitAndDispose(boolean notifyEvents) {
     assert isWritable();
 
@@ -284,7 +276,10 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       // if layer exists
       if (toCommit == null) {
         toCommit = new ModuleRootLayerImpl(null, sourceModel);
-        sourceModel.myLayers.put(entry.getKey(), toCommit);
+        ModuleRootLayerImpl layer = sourceModel.myLayers.put(entry.getKey(), toCommit);
+        if(layer != null) {
+          Disposer.dispose(layer);
+        }
       }
 
       if (entry.getValue().copy(toCommit, notifyEvents && !extensionListenerAlreadyCalled && myCurrentLayerName.equals(entry.getKey())) && notifyEvents) {
@@ -297,7 +292,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       }
     }
 
-    List<String> toRemove = new SmartList<String>();
+    List<String> toRemove = new SmartList<>();
     // second remove non existed layers
     for (String layerName : sourceModel.myLayers.keySet()) {
       ModuleRootLayerImpl moduleRootLayer = myLayers.get(layerName);
@@ -486,12 +481,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       Disposer.dispose(removedLayer);
 
       if (initDefault && myLayers.isEmpty()) {
-        try {
-          initDefaultLayer(null);
-        }
-        catch (InvalidDataException e) {
-          //
-        }
+        initDefaultLayer(null);
       }
 
       if (Comparing.equal(myCurrentLayerName, name)) {
@@ -511,12 +501,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     myLayers.clear();
 
     if (initDefault) {
-      try {
-        initDefaultLayer(null);
-      }
-      catch (InvalidDataException ignored) {
-        //
-      }
+      initDefaultLayer(null);
     }
     else {
       setCurrentLayerSafe(null);

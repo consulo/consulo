@@ -55,7 +55,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   @NotNull
   private final VirtualFilePointer myRoot;
 
-  private final Set<ContentFolder> myContentFolders = new TreeSet<ContentFolder>(ContentFolderComparator.INSTANCE);
+  private final Set<ContentFolder> myContentFolders = new TreeSet<>(ContentFolderComparator.INSTANCE);
 
   public ContentEntryImpl(@NotNull VirtualFile file, @NotNull ModuleRootLayerImpl m) {
     this(file.getUrl(), m);
@@ -66,7 +66,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     myRoot = VirtualFilePointerManager.getInstance().create(url, this, null);
   }
 
-  public ContentEntryImpl(@NotNull Element e, @NotNull ModuleRootLayerImpl m) throws InvalidDataException {
+  public ContentEntryImpl(@NotNull Element e, @NotNull ModuleRootLayerImpl m) {
     this(getUrlFrom(e), m);
 
     for (Element child : e.getChildren(ContentFolderImpl.ELEMENT_NAME)) {
@@ -74,7 +74,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     }
   }
 
-  private static String getUrlFrom(@NotNull Element e) throws InvalidDataException {
+  private static String getUrlFrom(@NotNull Element e) {
     LOGGER.assertTrue(ELEMENT_NAME.equals(e.getName()));
 
     String url = e.getAttributeValue(URL_ATTRIBUTE);
@@ -96,7 +96,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   @NotNull
   @Override
   public ContentFolder[] getFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    List<ContentFolder> list = new ArrayList<ContentFolder>();
+    List<ContentFolder> list = new ArrayList<>();
     for (ContentFolder contentFolder : getFolders0(predicate)) {
       list.add(contentFolder);
     }
@@ -107,7 +107,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   @NotNull
   @Override
   public VirtualFile[] getFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    List<VirtualFile> list = new ArrayList<VirtualFile>();
+    List<VirtualFile> list = new ArrayList<>();
     for (ContentFolder contentFolder : getFolders0(predicate)) {
       ContainerUtil.addIfNotNull(contentFolder.getFile(), list);
     }
@@ -117,7 +117,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   @NotNull
   @Override
   public String[] getFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
-    List<String> list = new ArrayList<String>();
+    List<String> list = new ArrayList<>();
     for (ContentFolder contentFolder : getFolders0(predicate)) {
       list.add(contentFolder.getUrl());
     }
@@ -125,7 +125,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   }
 
   private List<ContentFolder> getFolders0(Predicate<ContentFolderTypeProvider> predicate) {
-    List<ContentFolder> list = new ArrayList<ContentFolder>(myContentFolders.size());
+    List<ContentFolder> list = new ArrayList<>(myContentFolders.size());
     for (ContentFolder contentFolder : myContentFolders) {
       if (predicate.apply(contentFolder.getType())) {
         list.add(contentFolder);

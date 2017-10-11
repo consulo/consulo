@@ -18,6 +18,7 @@ package com.intellij.openapi.module.impl;
 
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.PathMacroManager;
@@ -556,7 +557,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     collapseOrExpandMacros(module, moduleLoadItem.getElement(), false);
 
     final ModuleRootManagerImpl moduleRootManager = (ModuleRootManagerImpl)ModuleRootManager.getInstance(module);
-    ApplicationManager.getApplication().runReadAction(() -> moduleRootManager.loadState(moduleLoadItem.getElement(), progressIndicator));
+    ReadAction.run(() -> moduleRootManager.loadState(moduleLoadItem.getElement(), progressIndicator));
 
     return module;
   }

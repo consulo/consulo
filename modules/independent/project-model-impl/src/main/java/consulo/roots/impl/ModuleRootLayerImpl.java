@@ -28,7 +28,6 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
@@ -202,7 +201,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     }
   }
 
-  public void loadState(@NotNull Element element, @Nullable ProgressIndicator progressIndicator) throws InvalidDataException {
+  public void loadState(@NotNull Element element, @Nullable ProgressIndicator progressIndicator) {
     removeAllContentEntries();
     removeAllOrderEntries();
 
@@ -379,7 +378,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @RequiredReadAction
   public void init() {
     removeAllOrderEntries();
-    myExtensions = ModuleExtension.EMPTY_ARRAY;
+    removeAllExtensions();
 
     addSourceOrderEntries();
     createMutableExtensions(null);
@@ -596,9 +595,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public VirtualFile[] getSourceRoots(boolean includingTests) {
     List<VirtualFile> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, includingTests
-                                 ? contentEntry.getFolderFiles(ContentFolderScopes.productionAndTest())
-                                 : contentEntry.getFolderFiles(ContentFolderScopes.production()));
+      Collections.addAll(result, includingTests ? contentEntry.getFolderFiles(ContentFolderScopes.productionAndTest()) : contentEntry.getFolderFiles(ContentFolderScopes.production()));
     }
     return VfsUtilCore.toVirtualFileArray(result);
   }
@@ -614,9 +611,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   public String[] getSourceRootUrls(boolean includingTests) {
     List<String> result = new SmartList<>();
     for (ContentEntry contentEntry : getContent()) {
-      Collections.addAll(result, includingTests
-                                 ? contentEntry.getFolderUrls(ContentFolderScopes.productionAndTest())
-                                 : contentEntry.getFolderUrls(ContentFolderScopes.production()));
+      Collections.addAll(result, includingTests ? contentEntry.getFolderUrls(ContentFolderScopes.productionAndTest()) : contentEntry.getFolderUrls(ContentFolderScopes.production()));
     }
     return ArrayUtil.toStringArray(result);
   }
@@ -639,8 +634,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @NotNull
   @Override
   public String[] getDependencyModuleNames() {
-    List<String> result =
-            orderEntries().withoutSdk().withoutLibraries().withoutModuleSourceEntries().process(new CollectDependentModules(), new ArrayList<String>());
+    List<String> result = orderEntries().withoutSdk().withoutLibraries().withoutModuleSourceEntries().process(new CollectDependentModules(), new ArrayList<String>());
     return ArrayUtil.toStringArray(result);
   }
 
@@ -691,7 +685,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
-    if(myExtensions.length == 0) {
+    if (myExtensions.length == 0) {
       return null;
     }
 
@@ -709,7 +703,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
-    if(myExtensions.length == 0) {
+    if (myExtensions.length == 0) {
       return null;
     }
 
@@ -861,8 +855,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @Override
   public ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(@NotNull ModuleExtension extension) {
     for (OrderEntry orderEntry : getOrderEntries()) {
-      if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry &&
-          extension.getId().equals(((ModuleExtensionWithSdkOrderEntry)orderEntry).getModuleExtensionId())) {
+      if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry && extension.getId().equals(((ModuleExtensionWithSdkOrderEntry)orderEntry).getModuleExtensionId())) {
         return (ModuleExtensionWithSdkOrderEntry)orderEntry;
       }
     }
@@ -928,16 +921,20 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     myOrderEntries.clear();
   }
 
-  @Override
-  public void dispose() {
-    removeAllContentEntries();
-    removeAllOrderEntries();
+  private void removeAllExtensions() {
     for (ModuleExtension<?> extension : myExtensions) {
       if (extension instanceof Disposable) {
         Disposer.dispose((Disposable)extension);
       }
     }
     myExtensions = ModuleExtension.EMPTY_ARRAY;
+  }
+
+  @Override
+  public void dispose() {
+    removeAllContentEntries();
+    removeAllOrderEntries();
+    removeAllExtensions();
   }
 
   @NotNull
