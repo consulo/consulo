@@ -20,28 +20,30 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.platform.Platform;
+import consulo.ui.UIAccess;
+import org.jetbrains.annotations.NotNull;
 
 public class TipOfTheDayManager implements StartupActivity, DumbAware {
   private boolean myVeryFirstProjectOpening = true;
 
   @Override
-  public void runActivity(final Project project) {
-    if (!myVeryFirstProjectOpening || !GeneralSettings.getInstance().showTipsOnStartup()) {
+  public void runActivity(@NotNull UIAccess uiAccess, @NotNull Project project) {
+    if (!myVeryFirstProjectOpening || !GeneralSettings.getInstance().isShowTipsOnStartup()) {
       return;
     }
 
     myVeryFirstProjectOpening = false;
 
-    ToolWindowManager.getInstance(project).invokeLater(new Runnable() {
-      public void run() {
+    Platform.onlyAtDesktop(() -> {
+      ToolWindowManager.getInstance(project).invokeLater(() -> {
         if (project.isDisposed()) return;
-        ToolWindowManager.getInstance(project).invokeLater(new Runnable() {
-          public void run() {
-            if (project.isDisposed()) return;
-            new TipDialog().show();
-          }
+        ToolWindowManager.getInstance(project).invokeLater(() -> {
+          if (project.isDisposed()) return;
+
+          new TipDialog().show();
         });
-      }
+      });
     });
   }
 }

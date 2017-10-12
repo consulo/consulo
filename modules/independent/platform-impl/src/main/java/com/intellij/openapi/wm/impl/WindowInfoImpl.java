@@ -176,7 +176,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
    * @return <code>ID</code> of the tool window.
    */
   @NotNull
-  String getId() {
+  public String getId() {
     return myId;
   }
 
@@ -186,7 +186,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
    * tool window had when it was internal one. The method never returns <code>null</code>.
    */
   @NotNull
-  ToolWindowType getInternalType() {
+  public ToolWindowType getInternalType() {
     return myInternalType;
   }
 
@@ -252,7 +252,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     return ToolWindowType.SLIDING == myType;
   }
 
-  boolean isVisible() {
+  public boolean isVisible() {
     return myVisible;
   }
 
@@ -261,7 +261,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     return myShowStripeButton;
   }
 
-  void setShowStripeButton(boolean showStripeButton) {
+  public void setShowStripeButton(boolean showStripeButton) {
     myShowStripeButton = showStripeButton;
   }
 
@@ -373,7 +373,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     myAnchor = anchor;
   }
 
-  void setActive(final boolean active) {
+  public void setActive(final boolean active) {
     myActive = active;
   }
 
@@ -397,7 +397,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     myType = ToolWindowId.PREVIEW == myId && type == ToolWindowType.DOCKED ? ToolWindowType.SLIDING : type;
   }
 
-  void setVisible(final boolean visible) {
+  public void setVisible(final boolean visible) {
     myVisible = visible;
   }
 
@@ -471,7 +471,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
            ']';
   }
 
-  boolean wasRead() {
+  public boolean wasRead() {
     return myWasRead;
   }
 }

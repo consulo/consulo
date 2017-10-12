@@ -16,22 +16,23 @@
 package com.intellij.openapi.wm.impl.commands;
 
 
-
 /**
  * @author Vladimir Kondratyev
  */
-public final class InvokeLaterCmd extends FinalizableCommand{
+public final class InvokeLaterCmd extends FinalizableCommand {
   private final Runnable myRunnable;
 
-  public InvokeLaterCmd(final Runnable runnable,final Runnable finishCallBack){
+  public InvokeLaterCmd(final Runnable runnable, final Runnable finishCallBack) {
     super(finishCallBack);
-    myRunnable=runnable;
+    myRunnable = runnable;
   }
 
-  public void run(){
-    try{
+  @Override
+  public void run() {
+    try {
       myRunnable.run();
-    }finally{
+    }
+    finally {
       finish();
     }
   }

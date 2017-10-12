@@ -22,6 +22,7 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.impl.IdeFocusManagerHeadless;
 import com.intellij.util.ArrayUtil;
+import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -635,6 +636,7 @@ public class Mock {
       return ArrayUtil.EMPTY_STRING_ARRAY;
     }
 
+    @RequiredUIAccess
     @Override
     public String getActiveToolWindowId() {
       return null;

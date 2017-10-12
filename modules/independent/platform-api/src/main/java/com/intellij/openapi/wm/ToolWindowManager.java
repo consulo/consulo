@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -132,6 +133,7 @@ public abstract class ToolWindowManager {
    * tool window.
    */
   @Nullable
+  @RequiredUIAccess
   public abstract String getActiveToolWindowId();
 
   /**

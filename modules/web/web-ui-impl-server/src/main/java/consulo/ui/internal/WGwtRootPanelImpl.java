@@ -35,11 +35,18 @@ public class WGwtRootPanelImpl extends AbstractComponentContainer implements con
   private Component myCenterComponent;
 
   public void setMenuBar(consulo.ui.Component menuBar) {
+    if(myMenuBar != null) {
+      removeComponent(myMenuBar);
+    }
     myMenuBar = (Component)menuBar;
     addComponent(myMenuBar);
   }
 
   public void setCenterComponent(Component centerComponent) {
+    if (myCenterComponent != null) {
+      removeComponent(myCenterComponent);
+    }
+
     myCenterComponent = centerComponent;
     addComponent(myCenterComponent);
   }

@@ -4,6 +4,7 @@ import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.platform.Platform;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,17 +19,7 @@ public class ServersToolWindowOpener extends AbstractProjectComponent {
 
   @Override
   public void projectOpened() {
-    StartupManager.getInstance(myProject).registerPostStartupActivity(new Runnable() {
-      @Override
-      public void run() {
-        ToolWindowManager.getInstance(myProject).invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            new ServersToolWindow(myProject);
-          }
-        });
-      }
-    });
+    Platform.onlyAtDesktop(() -> StartupManager.getInstance(myProject).registerPostStartupActivity(() -> ToolWindowManager.getInstance(myProject).invokeLater(() -> new ServersToolWindow(myProject))));
   }
 
   @Override

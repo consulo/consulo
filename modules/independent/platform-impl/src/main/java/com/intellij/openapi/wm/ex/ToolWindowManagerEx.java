@@ -22,6 +22,7 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowEP;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +30,7 @@ import javax.swing.*;
 import java.util.List;
 
 public abstract class ToolWindowManagerEx extends ToolWindowManager {
+  @RequiredUIAccess
   public abstract void initToolWindow(@NotNull ToolWindowEP bean);
 
   public static ToolWindowManagerEx getInstanceEx(final Project project){
@@ -54,6 +56,8 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
   /**
    * @return layout of tool windows.
    */
+  @RequiredUIAccess
+  @NotNull
   public abstract ToolWindowLayout getLayout();
 
   public abstract void setLayoutToRestoreLater(ToolWindowLayout layout);

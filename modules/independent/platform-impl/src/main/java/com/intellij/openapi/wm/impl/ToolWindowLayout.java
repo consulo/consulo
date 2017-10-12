@@ -18,6 +18,7 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
 import org.jdom.Element;
@@ -32,7 +33,7 @@ import java.util.*;
  */
 public final class ToolWindowLayout {
   @NonNls
-  static final String TAG = "layout";
+  public static final String TAG = "layout";
   @NonNls
   private static final String ID_ATTR = "id";
   /**
@@ -104,7 +105,7 @@ public final class ToolWindowLayout {
    * @param id     <code>id</code> of tool window to be registered.
    * @param anchor the default tool window anchor.
    */
-  final WindowInfoImpl register(@NotNull String id, @NotNull ToolWindowAnchor anchor, final boolean splitMode) {
+  public final WindowInfoImpl register(@NotNull String id, @NotNull ToolWindowAnchor anchor, final boolean splitMode) {
     WindowInfoImpl info = myUnregisteredId2Info.get(id);
     if (info != null) { // tool window has been already registered some time
       myUnregisteredId2Info.remove(id);
@@ -137,7 +138,7 @@ public final class ToolWindowLayout {
    * If <code>onlyRegistered</code> is <code>true</code> then returns not <code>null</code>
    * value if and only if window with <code>id</code> is registered one.
    */
-  final WindowInfoImpl getInfo(String id, final boolean onlyRegistered) {
+  public final WindowInfoImpl getInfo(String id, final boolean onlyRegistered) {
     final WindowInfoImpl info = myRegisteredId2Info.get(id);
     if (onlyRegistered || info != null) {
       return info;
@@ -146,7 +147,7 @@ public final class ToolWindowLayout {
   }
 
   @Nullable
-  final String getActiveId() {
+  public final String getActiveId() {
     final WindowInfoImpl[] infos = getInfos();
     for (WindowInfoImpl info : infos) {
       if (info.isActive()) {
@@ -160,7 +161,7 @@ public final class ToolWindowLayout {
    * @return <code>WindowInfo</code>s for all registered tool windows.
    */
   @NotNull
-  final WindowInfoImpl[] getInfos() {
+  public final WindowInfoImpl[] getInfos() {
     if (myRegisteredInfos == null) {
       myRegisteredInfos = myRegisteredId2Info.values().toArray(new WindowInfoImpl[myRegisteredId2Info.size()]);
     }
@@ -217,11 +218,11 @@ public final class ToolWindowLayout {
     }
   }
 
-  final boolean isToolWindowRegistered(final String id) {
+  public final boolean isToolWindowRegistered(final String id) {
     return myRegisteredId2Info.containsKey(id);
   }
 
-  final boolean isToolWindowUnregistered(final String id) {
+  public final boolean isToolWindowUnregistered(final String id) {
     return myUnregisteredId2Info.containsKey(id);
   }
 
@@ -319,7 +320,7 @@ public final class ToolWindowLayout {
   }
 
   @NotNull
-  List<String> getVisibleIdsOn(@NotNull ToolWindowAnchor anchor, @NotNull ToolWindowManagerImpl manager) {
+  public List<String> getVisibleIdsOn(@NotNull ToolWindowAnchor anchor, @NotNull ToolWindowManager manager) {
     List<String> ids = new ArrayList<>();
     for (WindowInfoImpl each : getAllInfos(anchor)) {
       final ToolWindow window = manager.getToolWindow(each.getId());

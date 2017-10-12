@@ -26,9 +26,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, VaadinWrapper {
   private boolean myDisposed;
+  private WGwtRootPanelImpl myRootPanel = new WGwtRootPanelImpl();
 
   public VaadinWindowImpl(boolean modal) {
     setModal(modal);
+    setContent((com.vaadin.ui.Component)myRootPanel);
+    MenuBar bar = MenuItems.menuBar();
+    bar.add(MenuItems.item("Help"));
+    setMenuBar(bar);
   }
 
   @RequiredUIAccess
@@ -62,13 +67,13 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
   @RequiredUIAccess
   @Override
   public void setContent(@NotNull Component content) {
-    setContent((com.vaadin.ui.Component)content);
+    myRootPanel.setCenterComponent((com.vaadin.ui.Component)content);
   }
 
   @RequiredUIAccess
   @Override
   public void setMenuBar(@Nullable MenuBar menuBar) {
-    throw new UnsupportedOperationException();
+    myRootPanel.setMenuBar(menuBar);
   }
 
   @Nullable

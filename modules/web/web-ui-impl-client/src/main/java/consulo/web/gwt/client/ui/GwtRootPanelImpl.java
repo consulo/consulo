@@ -52,7 +52,7 @@ public class GwtRootPanelImpl extends Grid {
     resizeRows(rows);
 
     if (menuComponent != null) {
-      getRowFormatter().getElement(0).getStyle().setHeight(26, Style.Unit.PX);
+      getRowFormatter().getElement(0).getStyle().setHeight(22, Style.Unit.PX);
 
       setWidget(0, 0, menuComponent);
     }

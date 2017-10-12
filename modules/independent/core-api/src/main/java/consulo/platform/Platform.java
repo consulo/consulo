@@ -46,6 +46,15 @@ public interface Platform {
       unifiedVariant.run();
     }
   }
+
+  @Deprecated
+  @DeprecationInfo("This is marker for future unify. In most case unified variant works good, but need more tests")
+  @SuppressWarnings("deprecation")
+  static void onlyAtDesktop(@NotNull Runnable runnable) {
+    if(current().isDesktop()) {
+      runnable.run();
+    }
+  }
   //endregion
 
   @NotNull

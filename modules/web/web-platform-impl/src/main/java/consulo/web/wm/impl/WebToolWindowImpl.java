@@ -20,10 +20,12 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
+import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.impl.InternalDecorator;
 import com.intellij.ui.content.ContentManager;
+import consulo.ui.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +39,12 @@ import java.beans.PropertyChangeListener;
  * @since 25-Sep-17
  */
 public class WebToolWindowImpl implements ToolWindowEx {
+  private ActionCallback myActivation;
+  private ToolWindowFactory myContentFactory;
+
+  public WebToolWindowImpl(WebToolWindowManagerImpl webToolWindowManager, String id, boolean canCloseContent, Component component) {
+  }
+
   @Override
   public ActionCallback getReady(@NotNull Object requestor) {
     return null;
@@ -272,5 +280,22 @@ public class WebToolWindowImpl implements ToolWindowEx {
   @Override
   public ActionCallback getActivation() {
     return null;
+  }
+
+  public ActionCallback setActivation(ActionCallback activation) {
+    myActivation = activation;
+    return myActivation;
+  }
+
+  public void ensureContentInitialized() {
+
+  }
+
+  public void setContentFactory(ToolWindowFactory contentFactory) {
+    myContentFactory = contentFactory;
+  }
+
+  public ToolWindowFactory getContentFactory() {
+    return myContentFactory;
   }
 }

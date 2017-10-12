@@ -42,6 +42,7 @@ import com.intellij.ui.content.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -169,6 +170,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
+  @RequiredUIAccess
   @Override
   public String getActiveToolWindowId() {
     return null;
@@ -211,6 +213,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
   public void setMaximized(@NotNull ToolWindow wnd, boolean maximized) {
   }
 
+  @RequiredUIAccess
   @Override
   public void initToolWindow(@NotNull ToolWindowEP bean) {
 
@@ -239,6 +242,8 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     return null;
   }
 
+  @NotNull
+  @RequiredUIAccess
   @Override
   public ToolWindowLayout getLayout() {
     return new ToolWindowLayout();

@@ -15,27 +15,28 @@
  */
 package consulo.web.wm.impl;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerListener;
+import com.intellij.openapi.project.*;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowEP;
+import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
-import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
+import com.intellij.openapi.wm.impl.WindowInfoImpl;
+import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.ui.*;
 import consulo.ui.ex.WGwtToolWindowPanel;
 import consulo.web.application.WebApplication;
 import consulo.wm.impl.ToolWindowManagerBase;
@@ -45,6 +46,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -103,15 +105,16 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     myFrame = null;
   }
 
+  @RequiredUIAccess
   @Override
   public void initToolWindow(@NotNull ToolWindowEP bean) {
-   /* WindowInfoImpl before = myLayout.getInfo(bean.id, false);
+    WindowInfoImpl before = myLayout.getInfo(bean.id, false);
     boolean visible = before != null && before.isVisible();
-    JLabel label = createInitializingLabel();
+    Component label = createInitializingLabel();
     ToolWindowAnchor toolWindowAnchor = ToolWindowAnchor.fromText(bean.anchor);
     final ToolWindowFactory factory = bean.getToolWindowFactory();
     ToolWindow window = registerToolWindow(bean.id, label, toolWindowAnchor, false, bean.canCloseContents, DumbService.isDumbAware(factory), factory.shouldBeAvailable(myProject));
-    final ToolWindowImpl toolWindow = (ToolWindowImpl)registerDisposable(bean.id, myProject, window);
+    final WebToolWindowImpl toolWindow = (WebToolWindowImpl)registerDisposable(bean.id, myProject, window);
     toolWindow.setContentFactory(factory);
     if (bean.icon != null && toolWindow.getIcon() == null) {
       Icon icon = IconLoader.findIcon(bean.icon, factory.getClass());
@@ -141,13 +144,14 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
       runnable.run();
     }
     else {
-      UiNotifyConnector.doWhenFirstShown(label, () -> ApplicationManager.getApplication().invokeLater(runnable));
-    } */
+      //UiNotifyConnector.doWhenFirstShown(label, () -> ApplicationManager.getApplication().invokeLater(runnable));
+    }
   }
 
-  /*@NotNull
-  private ToolWindow registerToolWindow(@NotNull final String id,
-                                        @Nullable final JComponent component,
+  @Override
+  @NotNull
+  protected ToolWindow registerToolWindow(@NotNull final String id,
+                                        @Nullable final Object component,
                                         @NotNull final ToolWindowAnchor anchor,
                                         boolean sideTool,
                                         boolean canCloseContent,
@@ -156,7 +160,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     if (LOG.isDebugEnabled()) {
       LOG.debug("enter: installToolWindow(" + id + "," + component + "," + anchor + "\")");
     }
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     boolean known = myLayout.isToolWindowUnregistered(id);
     if (myLayout.isToolWindowRegistered(id)) {
       throw new IllegalArgumentException("window with id=\"" + id + "\" is already registered");
@@ -173,8 +177,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
     // Create decorator
 
-    WebToolWindowImpl toolWindow = new WebToolWindowImpl(this, id, canCloseContent, component);
-    InternalDecorator decorator = new InternalDecorator(myProject, info.copy(), toolWindow, canWorkInDumbMode);
+    WebToolWindowImpl toolWindow = new WebToolWindowImpl(this, id, canCloseContent, (Component)component);
+    /*InternalDecorator decorator = new InternalDecorator(myProject, info.copy(), toolWindow, canWorkInDumbMode);
     ActivateToolWindowAction.ensureToolWindowActionRegistered(toolWindow);
     myId2InternalDecorator.put(id, decorator);
     decorator.addInternalDecoratorListener(myInternalDecoratorListener);
@@ -184,9 +188,9 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     // Create and show tool button
 
     final StripeButton button = new StripeButton(decorator, myToolWindowsPane);
-    myId2StripeButton.put(id, button);
+    myId2StripeButton.put(id, button);     */
     List<FinalizableCommand> commandsList = new ArrayList<>();
-    appendAddButtonCmd(button, info, commandsList);
+   /* appendAddButtonCmd(button, info, commandsList);
 
     // If preloaded info is visible or active then we have to show/activate the installed
     // tool window. This step has sense only for windows which are not in the auto hide
@@ -203,26 +207,20 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     }
     else if (wasActive) { // tool window was active but it cannot be activate again
       activateEditorComponentImpl(commandsList, true);
-    }
+    }   */
 
     execute(commandsList);
     fireToolWindowRegistered(id);
     return toolWindow;
   }
-            */
-  @Override
-  public void addToolWindowManagerListener(@NotNull ToolWindowManagerListener l) {
 
-  }
-
-  @Override
-  public void addToolWindowManagerListener(@NotNull ToolWindowManagerListener l, @NotNull Disposable parentDisposable) {
-
-  }
-
-  @Override
-  public void removeToolWindowManagerListener(@NotNull ToolWindowManagerListener l) {
-
+  @NotNull
+  @RequiredUIAccess
+  private static consulo.ui.Component createInitializingLabel() {
+    Label label = Components.label("Initializing...");
+    DockLayout dock = Layouts.dock();
+    dock.center(label);
+    return label;
   }
 
   @Nullable
@@ -234,21 +232,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   @Nullable
   @Override
   public String getLastActiveToolWindowId(@Nullable Condition<JComponent> condition) {
-    return null;
-  }
-
-  @Override
-  public ToolWindowLayout getLayout() {
-    return null;
-  }
-
-  @Override
-  public void setLayoutToRestoreLater(ToolWindowLayout layout) {
-
-  }
-
-  @Override
-  public ToolWindowLayout getLayoutToRestoreLater() {
     return null;
   }
 
@@ -268,11 +251,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public List<String> getIdsOn(@NotNull ToolWindowAnchor anchor) {
-    return null;
-  }
-
-  @Override
   public void dispose() {
 
   }
@@ -284,66 +262,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public void loadState(Element state) {
-
-  }
-
-  @Override
   public boolean canShowNotification(@NotNull String toolWindowId) {
     return false;
-  }
-
-  @NotNull
-  @Override
-  public ToolWindow registerToolWindow(@NotNull String id, @NotNull JComponent component, @NotNull ToolWindowAnchor anchor) {
-    return null;
-  }
-
-  @NotNull
-  @Override
-  public ToolWindow registerToolWindow(@NotNull String id, @NotNull JComponent component, @NotNull ToolWindowAnchor anchor, @NotNull Disposable parentDisposable) {
-    return null;
-  }
-
-  @NotNull
-  @Override
-  public ToolWindow registerToolWindow(@NotNull String id, @NotNull JComponent component, @NotNull ToolWindowAnchor anchor, Disposable parentDisposable, boolean canWorkInDumbMode) {
-    return null;
-  }
-
-  @NotNull
-  @Override
-  public ToolWindow registerToolWindow(@NotNull String id,
-                                       @NotNull JComponent component,
-                                       @NotNull ToolWindowAnchor anchor,
-                                       Disposable parentDisposable,
-                                       boolean canWorkInDumbMode,
-                                       boolean canCloseContents) {
-    return null;
-  }
-
-  @NotNull
-  @Override
-  public ToolWindow registerToolWindow(@NotNull String id, boolean canCloseContent, @NotNull ToolWindowAnchor anchor) {
-    return null;
-  }
-
-  @NotNull
-  @Override
-  public ToolWindow registerToolWindow(@NotNull String id, boolean canCloseContent, @NotNull ToolWindowAnchor anchor, boolean secondary) {
-    return null;
-  }
-
-  @NotNull
-  @Override
-  public ToolWindow registerToolWindow(@NotNull String id, boolean canCloseContent, @NotNull ToolWindowAnchor anchor, Disposable parentDisposable, boolean canWorkInDumbMode) {
-    return null;
-  }
-
-  @NotNull
-  @Override
-  public ToolWindow registerToolWindow(@NotNull String id, boolean canCloseContent, @NotNull ToolWindowAnchor anchor, Disposable parentDisposable, boolean canWorkInDumbMode, boolean secondary) {
-    return null;
   }
 
   @Override
@@ -361,31 +281,8 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     return false;
   }
 
-  @NotNull
-  @Override
-  public String[] getToolWindowIds() {
-    return new String[0];
-  }
-
-  @Nullable
-  @Override
-  public String getActiveToolWindowId() {
-    return null;
-  }
-
   @Override
   public ToolWindow getToolWindow(String id) {
-    return null;
-  }
-
-  @Override
-  public void invokeLater(@NotNull Runnable runnable) {
-
-  }
-
-  @NotNull
-  @Override
-  public IdeFocusManager getFocusManager() {
     return null;
   }
 
@@ -413,10 +310,5 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   @Override
   public void setMaximized(@NotNull ToolWindow wnd, boolean maximized) {
 
-  }
-
-  @Override
-  public boolean isToolWindowRegistered(String id) {
-    return false;
   }
 }
