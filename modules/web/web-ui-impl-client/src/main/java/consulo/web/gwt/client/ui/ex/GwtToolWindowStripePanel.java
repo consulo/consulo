@@ -44,6 +44,9 @@ public class GwtToolWindowStripePanel implements IsWidget {
     }
   }
 
+  public void addButton(GwtToolWindowStripeButton button) {
+    myCellPanel.add(button);
+  }
 
   @Override
   public Widget asWidget() {
