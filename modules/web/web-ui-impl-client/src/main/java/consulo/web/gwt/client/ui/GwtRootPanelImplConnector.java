@@ -18,6 +18,7 @@ package consulo.web.gwt.client.ui;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.util.GwtUIUtil;
+import consulo.web.gwt.shared.ui.state.RootPanelState;
 
 /**
  * @author VISTALL
@@ -27,11 +28,16 @@ import consulo.web.gwt.client.util.GwtUIUtil;
 public class GwtRootPanelImplConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
-    getWidget().setChildren(GwtUIUtil.remapWidgets(this));
+    getWidget().setChildren(GwtUIUtil.remapWidgets(this), getState());
   }
 
   @Override
   public GwtRootPanelImpl getWidget() {
     return (GwtRootPanelImpl)super.getWidget();
+  }
+
+  @Override
+  public RootPanelState getState() {
+    return (RootPanelState)super.getState();
   }
 }

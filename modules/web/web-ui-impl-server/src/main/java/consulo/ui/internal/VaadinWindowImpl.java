@@ -31,9 +31,6 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
   public VaadinWindowImpl(boolean modal) {
     setModal(modal);
     setContent((com.vaadin.ui.Component)myRootPanel);
-    MenuBar bar = MenuItems.menuBar();
-    bar.add(MenuItems.item("Help"));
-    setMenuBar(bar);
   }
 
   @RequiredUIAccess

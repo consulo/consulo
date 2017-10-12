@@ -19,6 +19,7 @@ import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
+import consulo.web.gwt.shared.ui.state.RootPanelState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,21 +35,30 @@ public class WGwtRootPanelImpl extends AbstractComponentContainer implements con
   private Component myMenuBar;
   private Component myCenterComponent;
 
-  public void setMenuBar(consulo.ui.Component menuBar) {
-    if(myMenuBar != null) {
+  public void setMenuBar(@Nullable consulo.ui.Component menuBar) {
+    if (myMenuBar != null) {
       removeComponent(myMenuBar);
     }
     myMenuBar = (Component)menuBar;
-    addComponent(myMenuBar);
+    if (menuBar != null) {
+      addComponent((Component)menuBar);
+    }
+
+    getState().menuBarExists = menuBar != null;
+    markAsDirty();
   }
 
-  public void setCenterComponent(Component centerComponent) {
+  public void setCenterComponent(@Nullable Component centerComponent) {
     if (myCenterComponent != null) {
       removeComponent(myCenterComponent);
     }
-
     myCenterComponent = centerComponent;
-    addComponent(myCenterComponent);
+    if (centerComponent != null) {
+      addComponent(myCenterComponent);
+    }
+
+    getState().contentExists = centerComponent != null;
+    markAsDirty();
   }
 
   @Override
@@ -89,6 +99,10 @@ public class WGwtRootPanelImpl extends AbstractComponentContainer implements con
   @RequiredUIAccess
   @Override
   public void setSize(@NotNull Size size) {
+  }
 
+  @Override
+  protected RootPanelState getState() {
+    return (RootPanelState)super.getState();
   }
 }

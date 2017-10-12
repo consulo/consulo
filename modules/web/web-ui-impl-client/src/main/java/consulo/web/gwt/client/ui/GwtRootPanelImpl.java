@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.util.ArrayUtil2;
 import consulo.web.gwt.client.util.GwtUIUtil;
+import consulo.web.gwt.shared.ui.state.RootPanelState;
 
 import java.util.List;
 
@@ -34,18 +35,18 @@ public class GwtRootPanelImpl extends Grid {
     GwtUIUtil.fill(this);
   }
 
-  public void setChildren(List<Widget> children) {
+  public void setChildren(List<Widget> children, RootPanelState state) {
     clear();
     resize(2, 1);
 
     int rows = 0;
-    final Widget menuComponent = ArrayUtil2.safeGet(children, 0);
-    if (menuComponent != null) {
+    final Widget menuComponent = state.menuBarExists ? ArrayUtil2.safeGet(children, 0) : null;
+    if (state.menuBarExists) {
       rows++;
     }
 
-    final Widget contentComponent = ArrayUtil2.safeGet(children, 1);
-    if (contentComponent != null) {
+    final Widget contentComponent = state.contentExists ? ArrayUtil2.safeGet(children, state.menuBarExists ? 1 : 0) : null;
+    if (state.contentExists) {
       rows++;
     }
 
