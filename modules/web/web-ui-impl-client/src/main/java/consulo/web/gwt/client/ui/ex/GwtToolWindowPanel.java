@@ -80,12 +80,11 @@ public class GwtToolWindowPanel extends DockPanel {
 
     setAnywhereSize(myCenterSplitLayout, "100%", "100%", null);
 
-    TextArea widget = new TextArea();
-    widget.setValue("Editor hello world");
+    GwtEditorImpl widget = new GwtEditorImpl();
     widget.setSize("100%", "100%");
 
-    myCenterSplitLayout.addWest(myLeftPanel, 200);
-    myCenterSplitLayout.addEast(myRightPanel, 200);
+    myCenterSplitLayout.addWest(myLeftPanel, 250);
+    myCenterSplitLayout.addEast(myRightPanel, 250);
 
     myCenterSplitLayout.setWidgetHidden(myLeftPanel, true);
     myCenterSplitLayout.setWidgetHidden(myRightPanel, true);
@@ -145,7 +144,7 @@ public class GwtToolWindowPanel extends DockPanel {
 
       if(isActive) {
         simplePanel.setWidget(decorator);
-        myCenterSplitLayout.setWidgetSize(simplePanel, 200);
+        myCenterSplitLayout.setWidgetSize(simplePanel, 250);
       }
       else {
         simplePanel.setWidget(null);
