@@ -283,6 +283,12 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
       Disposer.register(project, myContentManager);
     }
 
+    @NotNull
+    @Override
+    public String getId() {
+      return null;
+    }
+
     @Override
     public boolean isActive() {
       return false;
@@ -477,7 +483,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     }
 
     @Override
-    public InternalDecorator getDecorator() {
+    public DesktopInternalDecorator getDecorator() {
       return null;
     }
 

@@ -40,7 +40,7 @@ import java.awt.event.WindowEvent;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public final class FloatingDecorator extends JDialog {
+public final class DesktopFloatingDecorator extends JDialog {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.FloatingDecorator");
 
   static final int DIVIDER_WIDTH = 3;
@@ -53,7 +53,7 @@ public final class FloatingDecorator extends JDialog {
   private static final int DELAY = 15; // Delay between frames
   private static final int TOTAL_FRAME_COUNT = 7; // Total number of frames in animation sequence
 
-  private final InternalDecorator myInternalDecorator;
+  private final DesktopInternalDecorator myInternalDecorator;
   private final MyUISettingsListener myUISettingsListener;
   private WindowInfoImpl myInfo;
 
@@ -66,7 +66,7 @@ public final class FloatingDecorator extends JDialog {
   private float myEndRatio; // start and end alpha ratio for transparency animation
 
 
-  FloatingDecorator(final IdeFrameImpl owner, final WindowInfoImpl info, final InternalDecorator internalDecorator) {
+  DesktopFloatingDecorator(final IdeFrameImpl owner, final WindowInfoImpl info, final DesktopInternalDecorator internalDecorator) {
     super(owner, internalDecorator.getToolWindow().getId());
     MnemonicHelper.init(getContentPane());
     myInternalDecorator = internalDecorator;
@@ -222,7 +222,7 @@ public final class FloatingDecorator extends JDialog {
         newPoint.x = Math.min(Math.max(newPoint.x, screenBounds.x), screenBounds.width);
         newPoint.y = Math.min(Math.max(newPoint.y, screenBounds.y), screenBounds.height);
 
-        final Rectangle oldBounds = FloatingDecorator.this.getBounds();
+        final Rectangle oldBounds = DesktopFloatingDecorator.this.getBounds();
         final Rectangle newBounds = new Rectangle(oldBounds);
 
         if ((myMotionMask & ANCHOR_TOP) > 0) {
@@ -262,7 +262,7 @@ public final class FloatingDecorator extends JDialog {
         // It's much better to resize frame this way then via Component.setBounds() method.
         // Component.setBounds() method cause annoying repainting and blinking.
         //FloatingDecorator.this.getPeer().setBounds(newBounds.x,newBounds.y,newBounds.width,newBounds.height, 0);
-        FloatingDecorator.this.setBounds(newBounds.x, newBounds.y, newBounds.width, newBounds.height);
+        DesktopFloatingDecorator.this.setBounds(newBounds.x, newBounds.y, newBounds.width, newBounds.height);
 
         myLastPoint = newPoint;
       }
@@ -284,8 +284,8 @@ public final class FloatingDecorator extends JDialog {
           break;
         }
         case MouseEvent.MOUSE_RELEASED: {
-          FloatingDecorator.this.validate();
-          FloatingDecorator.this.repaint();
+          DesktopFloatingDecorator.this.validate();
+          DesktopFloatingDecorator.this.repaint();
           myDragging = false;
           break;
         }
@@ -394,7 +394,7 @@ public final class FloatingDecorator extends JDialog {
     public final void run() {
       final WindowManagerEx windowManager = WindowManagerEx.getInstanceEx();
       if (isDisplayable() && isShowing()) {
-        windowManager.setAlphaModeRatio(FloatingDecorator.this, getCurrentAlphaRatio());
+        windowManager.setAlphaModeRatio(DesktopFloatingDecorator.this, getCurrentAlphaRatio());
       }
       if (myCurrentFrame < TOTAL_FRAME_COUNT) {
         myCurrentFrame++;
@@ -414,12 +414,12 @@ public final class FloatingDecorator extends JDialog {
       myDelayAlarm.cancelAllRequests();
       if (uiSettings.ENABLE_ALPHA_MODE) {
         if (!myInfo.isActive()) {
-          windowManager.setAlphaModeEnabled(FloatingDecorator.this, true);
-          windowManager.setAlphaModeRatio(FloatingDecorator.this, uiSettings.ALPHA_MODE_RATIO);
+          windowManager.setAlphaModeEnabled(DesktopFloatingDecorator.this, true);
+          windowManager.setAlphaModeRatio(DesktopFloatingDecorator.this, uiSettings.ALPHA_MODE_RATIO);
         }
       }
       else {
-        windowManager.setAlphaModeEnabled(FloatingDecorator.this, false);
+        windowManager.setAlphaModeEnabled(DesktopFloatingDecorator.this, false);
       }
     }
   }

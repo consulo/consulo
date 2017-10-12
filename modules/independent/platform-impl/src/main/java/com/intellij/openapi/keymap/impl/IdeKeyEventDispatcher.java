@@ -47,7 +47,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.openapi.wm.impl.FloatingDecorator;
+import com.intellij.openapi.wm.impl.DesktopFloatingDecorator;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneEx;
 import com.intellij.ui.ColoredListCellRenderer;
@@ -271,7 +271,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
       return false;
     }
 
-    boolean isFloatingDecorator = window instanceof FloatingDecorator;
+    boolean isFloatingDecorator = window instanceof DesktopFloatingDecorator;
 
     boolean isPopup = !(component instanceof JFrame) && !(component instanceof JDialog);
     if (isPopup) {

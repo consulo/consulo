@@ -28,6 +28,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.wm.ToolWindowStripeButton;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -41,16 +42,16 @@ import java.util.List;
 /**
  * @author Eugene Belyaev
  */
-final class Stripe extends JPanel {
+final class DesktopStripePanelImpl extends JPanel {
   private final int myAnchor;
-  private final ArrayList<StripeButton> myButtons = new ArrayList<StripeButton>();
+  private final ArrayList<DesktopStripeButton> myButtons = new ArrayList<DesktopStripeButton>();
   private final MyKeymapManagerListener myWeakKeymapManagerListener;
   private final MyUISettingsListener myUISettingsListener;
 
   private Dimension myPrefSize;
-  private StripeButton myDragButton;
+  private DesktopStripeButton myDragButton;
   private Rectangle myDropRectangle;
-  private final ToolWindowManagerImpl myManager;
+  private final DesktopToolWindowManagerImpl myManager;
   private JComponent myDragButtonImage;
   private LayoutData myLastLayoutData;
   private boolean myFinishingDrop;
@@ -58,7 +59,7 @@ final class Stripe extends JPanel {
   private final Disposable myDisposable = Disposer.newDisposable();
   private BufferedImage myCachedBg;
 
-  Stripe(final int anchor, ToolWindowManagerImpl manager) {
+  DesktopStripePanelImpl(final int anchor, DesktopToolWindowManagerImpl manager) {
     super(new GridBagLayout());
     setOpaque(true);
     myManager = manager;
@@ -119,7 +120,7 @@ final class Stripe extends JPanel {
 
     @Override
     public Insets getBorderInsets(Component c) {
-      Stripe stripe = (Stripe)c;
+      DesktopStripePanelImpl stripe = (DesktopStripePanelImpl)c;
       ToolWindowAnchor anchor = stripe.getAnchor();
 
       Insets result = new Insets(0, 0, 0, 0);
@@ -175,7 +176,7 @@ final class Stripe extends JPanel {
     super.removeNotify();
   }
 
-  void addButton(final StripeButton button, final Comparator<StripeButton> comparator) {
+  void addButton(final DesktopStripeButton button, final Comparator<ToolWindowStripeButton> comparator) {
     myPrefSize = null;
     myButtons.add(button);
     Collections.sort(myButtons, comparator);
@@ -183,14 +184,14 @@ final class Stripe extends JPanel {
     revalidate();
   }
 
-  void removeButton(final StripeButton button) {
+  void removeButton(final DesktopStripeButton button) {
     myPrefSize = null;
     myButtons.remove(button);
     remove(button);
     revalidate();
   }
 
-  public List<StripeButton> getButtons() {
+  public List<DesktopStripeButton> getButtons() {
     return Collections.unmodifiableList(myButtons);
   }
 
@@ -236,7 +237,7 @@ final class Stripe extends JPanel {
     boolean processDrop = isDroppingButton() && stripeSensetiveRec.intersects(myDropRectangle) && !noDrop;
 
     if (toFitWith == null) {
-      for (StripeButton eachButton : myButtons) {
+      for (DesktopStripeButton eachButton : myButtons) {
         if (!isConsideredInLayout(eachButton)) continue;
         final Dimension eachSize = eachButton.getPreferredSize();
         data.fitSize.width = Math.max(eachSize.width, data.fitSize.width);
@@ -268,7 +269,7 @@ final class Stripe extends JPanel {
     int insertOrder = -1;
     boolean sidesStarted = false;
 
-    for (StripeButton eachButton : getButtonsToLayOut()) {
+    for (DesktopStripeButton eachButton : getButtonsToLayOut()) {
       insertOrder = eachButton.getDecorator().getWindowInfo().getOrder();
       final Dimension eachSize = eachButton.getPreferredSize();
 
@@ -368,13 +369,13 @@ final class Stripe extends JPanel {
     }
   }
 
-  private List<StripeButton> getButtonsToLayOut() {
-    List<StripeButton> result = new ArrayList<StripeButton>();
+  private List<DesktopStripeButton> getButtonsToLayOut() {
+    List<DesktopStripeButton> result = new ArrayList<DesktopStripeButton>();
 
-    List<StripeButton> tools = new ArrayList<StripeButton>();
-    List<StripeButton> sideTools = new ArrayList<StripeButton>();
+    List<DesktopStripeButton> tools = new ArrayList<DesktopStripeButton>();
+    List<DesktopStripeButton> sideTools = new ArrayList<DesktopStripeButton>();
 
-    for (StripeButton b : myButtons) {
+    for (DesktopStripeButton b : myButtons) {
       if (!isConsideredInLayout(b)) continue;
 
       if (b.getWindowInfo().isSplit()) {
@@ -428,8 +429,8 @@ final class Stripe extends JPanel {
     repaint();
   }
 
-  public StripeButton getButtonFor(final String toolWindowId) {
-    for (StripeButton each : myButtons) {
+  public DesktopStripeButton getButtonFor(final String toolWindowId) {
+    for (DesktopStripeButton each : myButtons) {
       if (each.getWindowInfo().getId().equals(toolWindowId)) return each;
     }
     return null;
@@ -479,7 +480,7 @@ final class Stripe extends JPanel {
   }
 
   void updatePresentation() {
-    for (StripeButton button : myButtons) {
+    for (DesktopStripeButton button : myButtons) {
       button.updatePresentation();
     }
   }
@@ -520,7 +521,7 @@ final class Stripe extends JPanel {
     repaint();
   }
 
-  public void processDropButton(final StripeButton button, JComponent buttonImage, Point screenPoint) {
+  public void processDropButton(final DesktopStripeButton button, JComponent buttonImage, Point screenPoint) {
     if (!isDroppingButton()) {
       final BufferedImage image = UIUtil.createImage(button.getWidth(), button.getHeight(), BufferedImage.TYPE_INT_RGB);
       buttonImage.paint(image.getGraphics());
@@ -542,7 +543,7 @@ final class Stripe extends JPanel {
     return myDragButton != null;
   }
 
-  private boolean isConsideredInLayout(final StripeButton each) {
+  private boolean isConsideredInLayout(final DesktopStripeButton each) {
     return each.isVisible();
   }
 

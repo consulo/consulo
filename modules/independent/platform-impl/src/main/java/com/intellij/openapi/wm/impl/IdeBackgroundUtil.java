@@ -48,6 +48,7 @@ import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,6 +63,8 @@ import java.util.Set;
 /**
  * @author gregsh
  */
+@Deprecated
+@DeprecationInfo("We don't support background image set")
 public class IdeBackgroundUtil {
 
   public static final String EDITOR_PROP = "idea.background.editor";
@@ -104,7 +107,7 @@ public class IdeBackgroundUtil {
            component instanceof EditorGutterComponentEx ? "editor" :
            component instanceof JBLoadingPanel ? "loading" :
            component instanceof JBTabs ? "tabs" :
-           component instanceof ToolWindowHeader ? "title" :
+           component instanceof DesktopToolWindowHeader ? "title" :
            component instanceof JBPanelWithEmptyText ? "panel" :
            component instanceof JPanel && ourKnownNames.contains(component.getName()) ? component.getName() :
            null;

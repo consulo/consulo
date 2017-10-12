@@ -34,6 +34,7 @@ import com.intellij.ui.PopupHandler;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.wm.ToolWindowStripeButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +48,7 @@ import java.awt.image.BufferedImage;
  * @author Eugene Belyaev
  * @author Vladimir Kondratyev
  */
-public final class StripeButton extends AnchoredButton implements ActionListener, Disposable {
+public final class DesktopStripeButton extends AnchoredButton implements ActionListener, Disposable, ToolWindowStripeButton {
   private final Color ourBackgroundColor = new Color(247, 243, 239);
 
   /**
@@ -55,19 +56,19 @@ public final class StripeButton extends AnchoredButton implements ActionListener
    * because it causes typing of "funny" characters into the editor.
    */
   private int myMnemonic;
-  private final InternalDecorator myDecorator;
+  private final DesktopInternalDecorator myDecorator;
   private boolean myPressedWhenSelected;
 
   private JLayeredPane myDragPane;
-  private final ToolWindowsPane myPane;
+  private final DesktopToolWindowPanelImpl myPane;
   private JLabel myDragButtonImage;
   private Point myPressedPoint;
-  private Stripe myLastStripe;
+  private DesktopStripePanelImpl myLastStripe;
   private KeyEventDispatcher myDragKeyEventDispatcher;
   private boolean myDragCancelled = false;
-  private final StripeButton.MyKeymapListener myKeymapListener;
+  private final DesktopStripeButton.MyKeymapListener myKeymapListener;
 
-  StripeButton(@NotNull final InternalDecorator decorator, ToolWindowsPane pane) {
+  DesktopStripeButton(@NotNull final DesktopInternalDecorator decorator, DesktopToolWindowPanelImpl pane) {
     myDecorator = decorator;
     myKeymapListener = new MyKeymapListener();
     myPane = pane;
@@ -101,8 +102,9 @@ public final class StripeButton extends AnchoredButton implements ActionListener
     return getWindowInfo().getAnchor();
   }
 
+  @Override
   @NotNull
-  WindowInfoImpl getWindowInfo() {
+  public WindowInfoImpl getWindowInfo() {
     return myDecorator.getWindowInfo();
   }
 
@@ -172,7 +174,7 @@ public final class StripeButton extends AnchoredButton implements ActionListener
   }
 
   @NotNull
-  public InternalDecorator getDecorator() {
+  public DesktopInternalDecorator getDecorator() {
     return myDecorator;
   }
 
@@ -195,7 +197,7 @@ public final class StripeButton extends AnchoredButton implements ActionListener
       myDragButtonImage = new JLabel(new JBImageIcon(image)) {
 
         public String toString() {
-          return "Image for: " + StripeButton.this.toString();
+          return "Image for: " + DesktopStripeButton.this.toString();
         }
       };
 
@@ -226,7 +228,7 @@ public final class StripeButton extends AnchoredButton implements ActionListener
 
     SwingUtilities.convertPointToScreen(xy, myDragPane);
 
-    final Stripe stripe = myPane.getStripeFor(new Rectangle(xy, myDragButtonImage.getSize()), (Stripe)getParent());
+    final DesktopStripePanelImpl stripe = myPane.getStripeFor(new Rectangle(xy, myDragButtonImage.getSize()), (DesktopStripePanelImpl)getParent());
     if (stripe == null) {
       if (myLastStripe != null) {
         myLastStripe.resetDrop();
@@ -322,13 +324,8 @@ public final class StripeButton extends AnchoredButton implements ActionListener
 
   @Override
   public void updateUI() {
-    setUI(StripeButtonUI.createUI(this));
+    setUI(DesktopStripeButtonUI.createUI(this));
     Font font = UIUtil.getLabelFont(UIUtil.FontSize.SMALL);
-    /*
-    if (font.getSize() % 2 == 1) { // that's a trick. Size of antialiased font isn't properly calculated for fonts with odd size
-      font = font.deriveFont(font.getStyle(), font.getSize() - 1);
-    }
-    */
     setFont(font);
   }
 
@@ -357,7 +354,7 @@ public final class StripeButton extends AnchoredButton implements ActionListener
   }
 
   private void updateState() {
-    ToolWindowImpl window = myDecorator.getToolWindow();
+    DesktopToolWindowImpl window = myDecorator.getToolWindow();
     boolean toShow = window.isAvailable() || window.isPlaceholderMode();
     if (UISettings.getInstance().ALWAYS_SHOW_WINDOW_BUTTONS) {
       setVisible(window.isShowStripeButton() || isSelected());
@@ -403,7 +400,7 @@ public final class StripeButton extends AnchoredButton implements ActionListener
     }
   }
 
-
+  @Override
   public String toString() {
     return StringUtil.getShortName(getClass().getName()) + " text: " + getText();
   }

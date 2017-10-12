@@ -51,11 +51,11 @@ import java.util.Map;
  * @author Eugene Belyaev
  * @author Vladimir Kondratyev
  */
-public final class InternalDecorator extends JPanel implements Queryable, DataProvider {
+public final class DesktopInternalDecorator extends JPanel implements Queryable, DataProvider {
 
   private Project myProject;
   private WindowInfoImpl myInfo;
-  private final ToolWindowImpl myToolWindow;
+  private final DesktopToolWindowImpl myToolWindow;
   private final MyDivider myDivider;
   private final EventDispatcher<InternalDecoratorListener> myDispatcher = EventDispatcher.create(InternalDecoratorListener.class);
   /*
@@ -81,10 +81,10 @@ public final class InternalDecorator extends JPanel implements Queryable, DataPr
   @NonNls public static final String TOGGLE_SIDE_MODE_ACTION_ID = "ToggleSideMode";
   @NonNls private static final String TOGGLE_CONTENT_UI_TYPE_ACTION_ID = "ToggleContentUiTypeMode";
 
-  private ToolWindowHeader myHeader;
+  private DesktopToolWindowHeader myHeader;
   private ActionGroup myToggleToolbarGroup;
 
-  InternalDecorator(final Project project, @NotNull WindowInfoImpl info, final ToolWindowImpl toolWindow, boolean dumbAware) {
+  DesktopInternalDecorator(final Project project, @NotNull WindowInfoImpl info, final DesktopToolWindowImpl toolWindow, boolean dumbAware) {
     super(new BorderLayout());
     myProject = project;
     myToolWindow = toolWindow;
@@ -103,9 +103,7 @@ public final class InternalDecorator extends JPanel implements Queryable, DataPr
     setFocusable(false);
     setFocusTraversalPolicy(new LayoutFocusTraversalPolicy());
 
-    myHeader = new ToolWindowHeader(toolWindow, info, () -> {
-      return createPopupGroup(true);
-    }) {
+    myHeader = new DesktopToolWindowHeader(toolWindow, info, () -> createPopupGroup(true)) {
       @Override
       protected boolean isActive() {
         return myToolWindow.isActive();
@@ -180,7 +178,7 @@ public final class InternalDecorator extends JPanel implements Queryable, DataPr
     // Push "apply" request forward
 
     if (myInfo.isFloating() && myInfo.isVisible()) {
-      final FloatingDecorator floatingDecorator = (FloatingDecorator)SwingUtilities.getAncestorOfClass(FloatingDecorator.class, this);
+      final DesktopFloatingDecorator floatingDecorator = (DesktopFloatingDecorator)SwingUtilities.getAncestorOfClass(DesktopFloatingDecorator.class, this);
       if (floatingDecorator != null) {
         floatingDecorator.apply(myInfo);
       }
@@ -346,8 +344,8 @@ public final class InternalDecorator extends JPanel implements Queryable, DataPr
     public Insets getBorderInsets(final Component c) {
       if (myProject == null) return new Insets(0, 0, 0, 0);
       ToolWindowManager toolWindowManager =  ToolWindowManager.getInstance(myProject);
-      if (!(toolWindowManager instanceof ToolWindowManagerImpl)
-          || !((ToolWindowManagerImpl)toolWindowManager).isToolWindowRegistered(myInfo.getId())
+      if (!(toolWindowManager instanceof DesktopToolWindowManagerImpl)
+          || !((DesktopToolWindowManagerImpl)toolWindowManager).isToolWindowRegistered(myInfo.getId())
           || myWindow.getType() == ToolWindowType.FLOATING) {
         return new Insets(0, 0, 0, 0);
       }
@@ -487,7 +485,7 @@ public final class InternalDecorator extends JPanel implements Queryable, DataPr
   /**
    * @return tool window associated with the decorator.
    */
-  final ToolWindowImpl getToolWindow() {
+  final DesktopToolWindowImpl getToolWindow() {
     return myToolWindow;
   }
 
@@ -665,7 +663,7 @@ public final class InternalDecorator extends JPanel implements Queryable, DataPr
   }
 
   private final class HideAction extends AnAction implements DumbAware {
-    @NonNls public static final String HIDE_ACTIVE_WINDOW_ACTION_ID = InternalDecorator.HIDE_ACTIVE_WINDOW_ACTION_ID;
+    @NonNls public static final String HIDE_ACTIVE_WINDOW_ACTION_ID = DesktopInternalDecorator.HIDE_ACTIVE_WINDOW_ACTION_ID;
 
     public HideAction() {
       copyFrom(ActionManager.getInstance().getAction(HIDE_ACTIVE_WINDOW_ACTION_ID));
@@ -778,25 +776,25 @@ public final class InternalDecorator extends JPanel implements Queryable, DataPr
         MouseEvent event = SwingUtilities.convertMouseEvent(e.getComponent(), e, MyDivider.this);
         final ToolWindowAnchor anchor = myInfo.getAnchor();
         final Point point = event.getPoint();
-        final Container windowPane = InternalDecorator.this.getParent();
+        final Container windowPane = DesktopInternalDecorator.this.getParent();
         myLastPoint = SwingUtilities.convertPoint(MyDivider.this, point, windowPane);
         myLastPoint.x = Math.min(Math.max(myLastPoint.x, 0), windowPane.getWidth());
         myLastPoint.y = Math.min(Math.max(myLastPoint.y, 0), windowPane.getHeight());
 
-        final Rectangle bounds = InternalDecorator.this.getBounds();
+        final Rectangle bounds = DesktopInternalDecorator.this.getBounds();
         if (anchor == ToolWindowAnchor.TOP) {
-          InternalDecorator.this.setBounds(0, 0, bounds.width, myLastPoint.y);
+          DesktopInternalDecorator.this.setBounds(0, 0, bounds.width, myLastPoint.y);
         }
         else if (anchor == ToolWindowAnchor.LEFT) {
-          InternalDecorator.this.setBounds(0, 0, myLastPoint.x, bounds.height);
+          DesktopInternalDecorator.this.setBounds(0, 0, myLastPoint.x, bounds.height);
         }
         else if (anchor == ToolWindowAnchor.BOTTOM) {
-          InternalDecorator.this.setBounds(0, myLastPoint.y, bounds.width, windowPane.getHeight() - myLastPoint.y);
+          DesktopInternalDecorator.this.setBounds(0, myLastPoint.y, bounds.width, windowPane.getHeight() - myLastPoint.y);
         }
         else if (anchor == ToolWindowAnchor.RIGHT) {
-          InternalDecorator.this.setBounds(myLastPoint.x, 0, windowPane.getWidth() - myLastPoint.x, bounds.height);
+          DesktopInternalDecorator.this.setBounds(myLastPoint.x, 0, windowPane.getWidth() - myLastPoint.x, bounds.height);
         }
-        InternalDecorator.this.validate();
+        DesktopInternalDecorator.this.validate();
         e.consume();
       }
     }

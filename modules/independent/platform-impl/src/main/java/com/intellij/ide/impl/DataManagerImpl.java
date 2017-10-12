@@ -46,7 +46,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.FloatingDecorator;
+import com.intellij.openapi.wm.impl.DesktopFloatingDecorator;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.KeyedLazyInstanceEP;
 import com.intellij.util.containers.WeakValueHashMap;
@@ -270,7 +270,7 @@ public class DataManagerImpl extends DataManager {
     // we want this other component to receive key events.
     // Walking up the window ownership hierarchy from the floating toolwindow would have led us to the main IdeFrame
     // whereas we want to be able to type in other frames as well.
-    if (activeWindow instanceof FloatingDecorator) {
+    if (activeWindow instanceof DesktopFloatingDecorator) {
       IdeFocusManager ideFocusManager = IdeFocusManager.findInstanceByComponent(activeWindow);
       IdeFrame lastFocusedFrame = ideFocusManager.getLastFocusedFrame();
       JComponent frameComponent = lastFocusedFrame != null ? lastFocusedFrame.getComponent() : null;

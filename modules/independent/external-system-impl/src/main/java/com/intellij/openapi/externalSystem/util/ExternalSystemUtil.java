@@ -83,7 +83,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowEP;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
-import com.intellij.openapi.wm.impl.ToolWindowImpl;
+import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBScrollPane;
@@ -186,8 +186,8 @@ public class ExternalSystemUtil {
     final ToolWindow toolWindow = toolWindowManager.getToolWindow(externalSystemId.getReadableName());
     if (toolWindow == null) return null;
 
-    if (toolWindow instanceof ToolWindowImpl) {
-      ((ToolWindowImpl)toolWindow).ensureContentInitialized();
+    if (toolWindow instanceof DesktopToolWindowImpl) {
+      ((DesktopToolWindowImpl)toolWindow).ensureContentInitialized();
     }
     return toolWindow;
   }

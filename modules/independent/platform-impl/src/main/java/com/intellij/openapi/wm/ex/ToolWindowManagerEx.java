@@ -33,12 +33,14 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
   @RequiredUIAccess
   public abstract void initToolWindow(@NotNull ToolWindowEP bean);
 
-  public static ToolWindowManagerEx getInstanceEx(final Project project){
+  public static ToolWindowManagerEx getInstanceEx(final Project project) {
     return (ToolWindowManagerEx)getInstance(project);
   }
 
   public abstract void addToolWindowManagerListener(@NotNull ToolWindowManagerListener l);
+
   public abstract void addToolWindowManagerListener(@NotNull ToolWindowManagerListener l, @NotNull Disposable parentDisposable);
+
   public abstract void removeToolWindowManagerListener(@NotNull ToolWindowManagerListener l);
 
   /**
@@ -72,6 +74,10 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
   public abstract void clearSideStack();
 
   public abstract void hideToolWindow(@NotNull String id, boolean hideSide);
+
+  public void hideToolWindow(final String id, final boolean hideSide, final boolean moveFocus) {
+    hideToolWindow(id, hideSide);
+  }
 
   public abstract List<String> getIdsOn(@NotNull ToolWindowAnchor anchor);
 }

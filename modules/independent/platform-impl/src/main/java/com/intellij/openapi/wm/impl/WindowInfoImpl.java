@@ -175,6 +175,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   /**
    * @return <code>ID</code> of the tool window.
    */
+  @Override
   @NotNull
   public String getId() {
     return myId;

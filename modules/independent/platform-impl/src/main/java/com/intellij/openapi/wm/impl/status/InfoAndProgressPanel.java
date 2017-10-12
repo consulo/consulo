@@ -41,7 +41,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
-import com.intellij.openapi.wm.impl.ToolWindowsPane;
+import com.intellij.openapi.wm.impl.DesktopToolWindowPanelImpl;
 import com.intellij.ui.BalloonLayoutImpl;
 import com.intellij.ui.Gray;
 import com.intellij.ui.InplaceButton;
@@ -474,7 +474,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   }
 
   private static boolean isBottomSideToolWindowsVisible(@NotNull JRootPane parent) {
-    ToolWindowsPane pane = UIUtil.findComponentOfType(parent, ToolWindowsPane.class);
+    DesktopToolWindowPanelImpl pane = UIUtil.findComponentOfType(parent, DesktopToolWindowPanelImpl.class);
     return pane != null && pane.isBottomSideToolWindowsVisible();
   }
 

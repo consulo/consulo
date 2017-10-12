@@ -20,7 +20,7 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.impl.StaticAnchoredButton;
-import com.intellij.openapi.wm.impl.StripeButtonUI;
+import com.intellij.openapi.wm.impl.DesktopStripeButtonUI;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.JBUI;
@@ -148,7 +148,7 @@ public class StripeTabPanel extends JPanel {
     button.addItemListener(myItemListener);
     button.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
     button.setBackground(new Color(247, 243, 239));
-    button.setUI((ButtonUI)StripeButtonUI.createUI(button));
+    button.setUI((ButtonUI)DesktopStripeButtonUI.createUI(button));
 
     myTabPanel.add(button);
 

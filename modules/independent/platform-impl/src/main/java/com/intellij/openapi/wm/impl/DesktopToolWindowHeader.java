@@ -59,25 +59,25 @@ import java.util.List;
 /**
  * @author pegov
  */
-public abstract class ToolWindowHeader extends JPanel implements Disposable, UISettingsListener {
+public abstract class DesktopToolWindowHeader extends JPanel implements Disposable, UISettingsListener {
   @NonNls private static final String HIDE_ACTIVE_WINDOW_ACTION_ID = "HideActiveWindow";
   @NonNls private static final String HIDE_ACTIVE_SIDE_WINDOW_ACTION_ID = "HideSideWindows";
 
   private ToolWindow myToolWindow;
   private WindowInfoImpl myInfo;
-  private final ToolWindowHeader.ActionButton myHideButton;
+  private final DesktopToolWindowHeader.ActionButton myHideButton;
   private BufferedImage myImage;
   private BufferedImage myActiveImage;
   private ToolWindowType myImageType;
   private final JPanel myButtonPanel;
-  private final ToolWindowHeader.ActionButton myGearButton;
+  private final DesktopToolWindowHeader.ActionButton myGearButton;
 
   private final PresentationFactory myPresentationFactory = new PresentationFactory();
   private final ToolbarUpdater myUpdater;
   private final DefaultActionGroup myActionGroup = new DefaultActionGroup();
   private List<AnAction> myVisibleActions = ContainerUtil.newArrayListWithCapacity(2);
 
-  public ToolWindowHeader(final ToolWindowImpl toolWindow, @NotNull WindowInfoImpl info, @NotNull final NotNullProducer<ActionGroup> gearProducer) {
+  public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @NotNull WindowInfoImpl info, @NotNull final NotNullProducer<ActionGroup> gearProducer) {
     super(new BorderLayout());
 
     myToolWindow = toolWindow;
@@ -214,7 +214,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
     myUpdater = new ToolbarUpdater(this) {
       @Override
       protected void updateActionsImpl(boolean transparentOnly, boolean forced) {
-        ToolWindowHeader.this.updateActionsImpl(transparentOnly, forced);
+        DesktopToolWindowHeader.this.updateActionsImpl(transparentOnly, forced);
       }
 
       @Override
@@ -227,7 +227,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
     new DoubleClickListener(){
       @Override
       protected boolean onDoubleClick(MouseEvent event) {
-        ToolWindowManagerImpl mgr = toolWindow.getToolWindowManager();
+        DesktopToolWindowManagerImpl mgr = toolWindow.getToolWindowManager();
         mgr.setMaximized(myToolWindow, !mgr.isMaximized(myToolWindow));
         return true;
       }
@@ -238,7 +238,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
         Runnable runnable = new Runnable() {
           @Override
           public void run() {
-            ToolWindowHeader.this.dispatchEvent(SwingUtilities.convertMouseEvent(e.getComponent(), e, ToolWindowHeader.this));
+            DesktopToolWindowHeader.this.dispatchEvent(SwingUtilities.convertMouseEvent(e.getComponent(), e, DesktopToolWindowHeader.this));
           }
         };
         //noinspection SSBasedInspection
@@ -568,7 +568,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
     }
 
     public boolean isActive() {
-      return ToolWindowHeader.this.isActive();
+      return DesktopToolWindowHeader.this.isActive();
     }
 
     public void setIcon(final Icon active, Icon inactive, Icon hovered) {
@@ -607,7 +607,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
   }
 
   private abstract class HideSideAction extends AnAction implements DumbAware {
-    @NonNls public static final String HIDE_ACTIVE_SIDE_WINDOW_ACTION_ID = ToolWindowHeader.HIDE_ACTIVE_SIDE_WINDOW_ACTION_ID;
+    @NonNls public static final String HIDE_ACTIVE_SIDE_WINDOW_ACTION_ID = DesktopToolWindowHeader.HIDE_ACTIVE_SIDE_WINDOW_ACTION_ID;
 
     public HideSideAction() {
       copyFrom(ActionManager.getInstance().getAction(HIDE_ACTIVE_SIDE_WINDOW_ACTION_ID));
@@ -627,7 +627,7 @@ public abstract class ToolWindowHeader extends JPanel implements Disposable, UIS
   }
 
   private abstract class HideAction extends AnAction implements DumbAware {
-    @NonNls public static final String HIDE_ACTIVE_WINDOW_ACTION_ID = ToolWindowHeader.HIDE_ACTIVE_WINDOW_ACTION_ID;
+    @NonNls public static final String HIDE_ACTIVE_WINDOW_ACTION_ID = DesktopToolWindowHeader.HIDE_ACTIVE_WINDOW_ACTION_ID;
 
     public HideAction() {
       copyFrom(ActionManager.getInstance().getAction(HIDE_ACTIVE_WINDOW_ACTION_ID));

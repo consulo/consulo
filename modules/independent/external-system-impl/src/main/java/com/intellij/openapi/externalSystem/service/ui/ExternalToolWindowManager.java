@@ -8,7 +8,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.impl.ToolWindowImpl;
+import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,8 +69,8 @@ public class ExternalToolWindowManager {
       return null;
     }
     ToolWindow result = toolWindowManager.getToolWindow(externalSystemId.getReadableName());
-    if (result instanceof ToolWindowImpl) {
-      ((ToolWindowImpl)result).ensureContentInitialized();
+    if (result instanceof DesktopToolWindowImpl) {
+      ((DesktopToolWindowImpl)result).ensureContentInitialized();
     }
     return result;
   }

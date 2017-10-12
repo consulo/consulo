@@ -17,7 +17,7 @@ package com.intellij.openapi.wm.impl.commands;
 
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
-import com.intellij.openapi.wm.impl.ToolWindowImpl;
+import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 
 public class SetContentUiTypeCmd extends FinalizableCommand {
 
@@ -32,6 +32,6 @@ public class SetContentUiTypeCmd extends FinalizableCommand {
   }
 
   public void run() {
-    ((ToolWindowImpl)myWindow).getContentUI().setType(myType);
+    ((DesktopToolWindowImpl)myWindow).getContentUI().setType(myType);
   }
 }

@@ -21,6 +21,7 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
+import consulo.wm.ToolWindowStripeButton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -231,7 +232,7 @@ public final class ToolWindowLayout {
    * specified <code>anchor</code>.
    */
   @NotNull
-  final Comparator<StripeButton> comparator(@NotNull ToolWindowAnchor anchor) {
+  public final Comparator<ToolWindowStripeButton> comparator(@NotNull ToolWindowAnchor anchor) {
     return new MyStripeButtonComparator(anchor);
   }
 
@@ -339,7 +340,7 @@ public final class ToolWindowLayout {
     }
   }
 
-  private final class MyStripeButtonComparator implements Comparator<StripeButton> {
+  private final class MyStripeButtonComparator implements Comparator<ToolWindowStripeButton> {
     private final HashMap<String, WindowInfoImpl> myId2Info = new HashMap<>();
 
     public MyStripeButtonComparator(@NotNull ToolWindowAnchor anchor) {
@@ -352,7 +353,7 @@ public final class ToolWindowLayout {
     }
 
     @Override
-    public final int compare(final StripeButton obj1, final StripeButton obj2) {
+    public final int compare(final ToolWindowStripeButton obj1, final ToolWindowStripeButton obj2) {
       final WindowInfoImpl info1 = myId2Info.get(obj1.getWindowInfo().getId());
       final int order1 = info1 != null ? info1.getOrder() : 0;
 

@@ -29,7 +29,7 @@ import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
-import com.intellij.openapi.wm.impl.ToolWindowImpl;
+import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.content.*;
@@ -66,7 +66,7 @@ public class ToolWindowContentUi extends JPanel implements ContentUI, PropertyCh
 
 
   final JPanel myContent = new JPanel(new BorderLayout());
-  ToolWindowImpl myWindow;
+  DesktopToolWindowImpl myWindow;
 
   TabbedContentAction.CloseAllAction myCloseAllAction;
   TabbedContentAction.MyNextTabAction myNextTabAction;
@@ -80,7 +80,7 @@ public class ToolWindowContentUi extends JPanel implements ContentUI, PropertyCh
   private ToolWindowContentUiType myType = ToolWindowContentUiType.TABBED;
   private boolean myShouldNotShowPopup;
 
-  public ToolWindowContentUi(ToolWindowImpl window) {
+  public ToolWindowContentUi(DesktopToolWindowImpl window) {
     myWindow = window;
     myContent.setOpaque(false);
     myContent.setFocusable(false);

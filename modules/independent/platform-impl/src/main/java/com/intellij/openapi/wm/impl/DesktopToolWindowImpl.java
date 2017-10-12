@@ -55,9 +55,9 @@ import java.util.ArrayList;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public final class ToolWindowImpl implements ToolWindowEx {
+public final class DesktopToolWindowImpl implements ToolWindowEx {
   private final PropertyChangeSupport myChangeSupport;
-  private final ToolWindowManagerImpl myToolWindowManager;
+  private final DesktopToolWindowManagerImpl myToolWindowManager;
   private final String myId;
   private final JComponent myComponent;
   private boolean myAvailable;
@@ -68,7 +68,7 @@ public final class ToolWindowImpl implements ToolWindowEx {
   private static final Content EMPTY_CONTENT = new ContentImpl(new JLabel(), "", false);
   private final ToolWindowContentUi myContentUI;
 
-  private InternalDecorator myDecorator;
+  private DesktopInternalDecorator myDecorator;
 
   private boolean myHideOnEmptyContent = false;
   private boolean myPlaceholderMode;
@@ -83,9 +83,9 @@ public final class ToolWindowImpl implements ToolWindowEx {
   };
   private boolean myUseLastFocused = true;
 
-  private static final Logger LOG = Logger.getInstance(ToolWindowImpl.class);
+  private static final Logger LOG = Logger.getInstance(DesktopToolWindowImpl.class);
 
-  ToolWindowImpl(final ToolWindowManagerImpl toolWindowManager, final String id, boolean canCloseContent, @Nullable final JComponent component) {
+  DesktopToolWindowImpl(final DesktopToolWindowManagerImpl toolWindowManager, final String id, boolean canCloseContent, @Nullable final JComponent component) {
     myToolWindowManager = toolWindowManager;
     myChangeSupport = new PropertyChangeSupport(this);
     myId = id;
@@ -290,7 +290,7 @@ public final class ToolWindowImpl implements ToolWindowEx {
   }
 
   @Override
-  public InternalDecorator getDecorator() {
+  public DesktopInternalDecorator getDecorator() {
     return myDecorator;
   }
 
@@ -405,7 +405,7 @@ public final class ToolWindowImpl implements ToolWindowEx {
     return selected != null ? selected : EMPTY_CONTENT;
   }
 
-  public void setDecorator(final InternalDecorator decorator) {
+  public void setDecorator(final DesktopInternalDecorator decorator) {
     myDecorator = decorator;
   }
 
@@ -428,7 +428,7 @@ public final class ToolWindowImpl implements ToolWindowEx {
   }
 
 
-  public ToolWindowManagerImpl getToolWindowManager() {
+  public DesktopToolWindowManagerImpl getToolWindowManager() {
     return myToolWindowManager;
   }
 

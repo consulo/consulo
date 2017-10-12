@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.impl.IdeRootPane;
-import com.intellij.openapi.wm.impl.ToolWindowsPane;
+import com.intellij.openapi.wm.impl.DesktopToolWindowPanelImpl;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
@@ -304,7 +304,7 @@ public class BalloonLayoutImpl implements BalloonLayout {
       columns = createColumns(layoutRec);
     }
 
-    ToolWindowsPane pane = UIUtil.findComponentOfType(myParent, ToolWindowsPane.class);
+    DesktopToolWindowPanelImpl pane = UIUtil.findComponentOfType(myParent, DesktopToolWindowPanelImpl.class);
     JComponent layeredPane = pane != null ? pane.getMyLayeredPane() : null;
     int eachColumnX = (layeredPane == null ? myLayeredPane.getWidth() : layeredPane.getX() + layeredPane.getWidth()) - 4;
 
@@ -313,7 +313,7 @@ public class BalloonLayoutImpl implements BalloonLayout {
 
   private void newLayout(List<Balloon> balloons, int startX, int bottomY) {
     int y = bottomY;
-    ToolWindowsPane pane = UIUtil.findComponentOfType(myParent, ToolWindowsPane.class);
+    DesktopToolWindowPanelImpl pane = UIUtil.findComponentOfType(myParent, DesktopToolWindowPanelImpl.class);
     if (pane != null) {
       y -= pane.getBottomHeight();
     }

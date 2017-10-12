@@ -31,20 +31,20 @@ import java.awt.geom.AffineTransform;
 /**
  * @author Vladimir Kondratyev
  */
-public final class StripeButtonUI extends MetalToggleButtonUI {
+public final class DesktopStripeButtonUI extends MetalToggleButtonUI {
   private final Rectangle myIconRect = new Rectangle();
   private final Rectangle myTextRect = new Rectangle();
   private final Rectangle myViewRect = new Rectangle();
   private Insets myViewInsets = new Insets(0, 0, 0, 0);
 
-  private StripeButtonUI() {
+  private DesktopStripeButtonUI() {
   }
 
   /**
    * Invoked by reflection
    */
   public static ComponentUI createUI(final JComponent c) {
-    return new StripeButtonUI();
+    return new DesktopStripeButtonUI();
   }
 
   @Override

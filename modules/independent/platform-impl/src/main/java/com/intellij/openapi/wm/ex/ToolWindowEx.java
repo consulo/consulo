@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowType;
-import com.intellij.openapi.wm.impl.InternalDecorator;
+import com.intellij.openapi.wm.impl.DesktopInternalDecorator;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +49,7 @@ public interface ToolWindowEx extends ToolWindow {
 
   void stretchHeight(int value);
 
-  InternalDecorator getDecorator();
+  DesktopInternalDecorator getDecorator();
 
   void setAdditionalGearActions(@Nullable ActionGroup additionalGearActions);
 

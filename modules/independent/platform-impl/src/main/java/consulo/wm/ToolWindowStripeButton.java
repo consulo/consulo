@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,40 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.wm;
 
-package com.intellij.openapi.wm;
-
-import consulo.ui.Rectangle2D;
+import com.intellij.openapi.wm.WindowInfo;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public interface WindowInfo {
+/**
+ * @author VISTALL
+ * @since 12-Oct-17
+ */
+public interface ToolWindowStripeButton {
   @NotNull
-  String getId();
-
-  @NotNull
-  ToolWindowAnchor getAnchor();
-
-  @Nullable
-  Rectangle2D getFloatingBounds();
-
-  boolean isSplit();
-
-  ToolWindowType getType();
-
-  boolean isActive();
-
-  boolean isAutoHide();
-
-  boolean isDocked();
-
-  boolean isFloating();
-
-  boolean isWindowed();
-
-  boolean isSliding();
-
-  boolean isShowStripeButton();
-
-  ToolWindowContentUiType getContentUiType();
+  WindowInfo getWindowInfo();
 }

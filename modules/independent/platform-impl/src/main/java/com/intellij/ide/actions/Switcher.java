@@ -49,8 +49,8 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.ToolWindowImpl;
-import com.intellij.openapi.wm.impl.ToolWindowManagerImpl;
+import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
+import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
@@ -680,7 +680,7 @@ public class Switcher extends AnAction implements DumbAware {
       final Map<String, ToolWindow> keymap = new HashMap<>(windows.size());
       final List<ToolWindow> otherTW = new ArrayList<>();
       for (ToolWindow window : windows) {
-        int index = ActivateToolWindowAction.getMnemonicForToolWindow(((ToolWindowImpl)window).getId());
+        int index = ActivateToolWindowAction.getMnemonicForToolWindow(((DesktopToolWindowImpl)window).getId());
         if (index >= '0' && index <= '9') {
           keymap.put(getIndexShortcut(index - '0'), window);
         }
@@ -790,9 +790,8 @@ public class Switcher extends AnAction implements DumbAware {
         }
         else if (value instanceof ToolWindow) {
           final ToolWindow toolWindow = (ToolWindow)value;
-          if (twManager instanceof ToolWindowManagerImpl) {
-            ToolWindowManagerImpl manager = (ToolWindowManagerImpl)twManager;
-            manager.hideToolWindow(((ToolWindowImpl)toolWindow).getId(), false, false);
+          if (twManager instanceof ToolWindowManagerEx) {
+            ((ToolWindowManagerEx)twManager).hideToolWindow(toolWindow.getId(), false, false);
           }
           else {
             toolWindow.hide(null);

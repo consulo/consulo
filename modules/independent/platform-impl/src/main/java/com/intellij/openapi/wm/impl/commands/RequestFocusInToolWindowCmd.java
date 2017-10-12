@@ -24,8 +24,8 @@ import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
-import com.intellij.openapi.wm.impl.FloatingDecorator;
-import com.intellij.openapi.wm.impl.ToolWindowImpl;
+import com.intellij.openapi.wm.impl.DesktopFloatingDecorator;
+import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.openapi.wm.impl.WindowManagerImpl;
 import com.intellij.openapi.wm.impl.WindowWatcher;
 import com.intellij.util.Alarm;
@@ -41,13 +41,13 @@ import java.awt.*;
  */
 public final class RequestFocusInToolWindowCmd extends FinalizableCommand {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.commands.RequestFocusInToolWindowCmd");
-  private final ToolWindowImpl myToolWindow;
+  private final DesktopToolWindowImpl myToolWindow;
   private final FocusWatcher myFocusWatcher;
 
   private final Project myProject;
   private final Expirable myTimestamp;
 
-  public RequestFocusInToolWindowCmd(IdeFocusManager focusManager, final ToolWindowImpl toolWindow, final FocusWatcher focusWatcher, final Runnable finishCallBack, Project project) {
+  public RequestFocusInToolWindowCmd(IdeFocusManager focusManager, final DesktopToolWindowImpl toolWindow, final FocusWatcher focusWatcher, final Runnable finishCallBack, Project project) {
     super(finishCallBack);
     myToolWindow = toolWindow;
     myFocusWatcher = focusWatcher;
@@ -131,7 +131,7 @@ public final class RequestFocusInToolWindowCmd extends FinalizableCommand {
     // isn't active.
     if (owner != null && owner.getFocusOwner() == null) {
       final Window activeWindow = getActiveWindow(owner.getOwnedWindows());
-      if (activeWindow == null || activeWindow instanceof FloatingDecorator) {
+      if (activeWindow == null || activeWindow instanceof DesktopFloatingDecorator) {
         LOG.debug("owner.toFront()");
         //Thread.dumpStack();
         //System.out.println("------------------------------------------------------");

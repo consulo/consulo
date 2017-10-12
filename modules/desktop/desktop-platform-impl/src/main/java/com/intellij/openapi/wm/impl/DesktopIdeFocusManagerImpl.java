@@ -32,10 +32,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class IdeFocusManagerImpl extends IdeFocusManager {
-  private final ToolWindowManagerImpl myToolWindowManager;
+public class DesktopIdeFocusManagerImpl extends IdeFocusManager {
+  private final DesktopToolWindowManagerImpl myToolWindowManager;
 
-  public IdeFocusManagerImpl(ToolWindowManagerImpl twManager) {
+  public DesktopIdeFocusManagerImpl(DesktopToolWindowManagerImpl twManager) {
     myToolWindowManager = twManager;
   }
 

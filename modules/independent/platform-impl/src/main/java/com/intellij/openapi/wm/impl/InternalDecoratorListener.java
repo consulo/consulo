@@ -25,25 +25,24 @@ import java.util.EventListener;
 /**
  * @author Vladimir Kondratyev
  */
-interface InternalDecoratorListener extends EventListener{
+interface InternalDecoratorListener extends EventListener {
+  void anchorChanged(@NotNull DesktopInternalDecorator source, @NotNull ToolWindowAnchor anchor);
 
-  void anchorChanged(@NotNull InternalDecorator source, @NotNull ToolWindowAnchor anchor);
+  void autoHideChanged(@NotNull DesktopInternalDecorator source, boolean autoHide);
 
-  void autoHideChanged(@NotNull InternalDecorator source, boolean autoHide);
+  void hidden(@NotNull DesktopInternalDecorator source);
 
-  void hidden(@NotNull InternalDecorator source);
+  void hiddenSide(@NotNull DesktopInternalDecorator source);
 
-  void hiddenSide(@NotNull InternalDecorator source);
+  void resized(@NotNull DesktopInternalDecorator source);
 
-  void resized(@NotNull InternalDecorator source);
+  void activated(@NotNull DesktopInternalDecorator source);
 
-  void activated(@NotNull InternalDecorator source);
+  void typeChanged(@NotNull DesktopInternalDecorator source, @NotNull ToolWindowType type);
 
-  void typeChanged(@NotNull InternalDecorator source, @NotNull ToolWindowType type);
+  void sideStatusChanged(@NotNull DesktopInternalDecorator source, boolean isSideTool);
 
-  void sideStatusChanged(@NotNull InternalDecorator source, boolean isSideTool);
+  void contentUiTypeChanges(@NotNull DesktopInternalDecorator sources, @NotNull ToolWindowContentUiType type);
 
-  void contentUiTypeChanges(@NotNull InternalDecorator sources, @NotNull ToolWindowContentUiType type);
-
-  void visibleStripeButtonChanged(@NotNull InternalDecorator source, boolean visible);
+  void visibleStripeButtonChanged(@NotNull DesktopInternalDecorator source, boolean visible);
 }

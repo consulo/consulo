@@ -26,7 +26,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.impl.ToolWindowImpl;
+import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.ui.SizedIcon;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +52,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     return myToolWindowId;
   }
 
-  public static void ensureToolWindowActionRegistered(@NotNull ToolWindowImpl toolWindow) {
+  public static void ensureToolWindowActionRegistered(@NotNull DesktopToolWindowImpl toolWindow) {
     ActionManager actionManager = ActionManager.getInstance();
     String actionId = getActionIdForToolWindow(toolWindow.getId());
     AnAction action = actionManager.getAction(actionId);
@@ -63,7 +63,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     }
   }
 
-  public static void updateToolWindowActionPresentation(@NotNull ToolWindowImpl toolWindow) {
+  public static void updateToolWindowActionPresentation(@NotNull DesktopToolWindowImpl toolWindow) {
     ActionManager actionManager = ActionManager.getInstance();
     String actionId = getActionIdForToolWindow(toolWindow.getId());
     AnAction action = actionManager.getAction(actionId);

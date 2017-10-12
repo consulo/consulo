@@ -23,7 +23,7 @@ import com.intellij.openapi.wm.ToolWindowContentUiType;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
-import com.intellij.openapi.wm.impl.InternalDecorator;
+import com.intellij.openapi.wm.impl.DesktopInternalDecorator;
 import com.intellij.ui.content.ContentManager;
 import consulo.ui.Component;
 import org.jetbrains.annotations.NotNull;
@@ -71,7 +71,7 @@ public class WebToolWindowImpl implements ToolWindowEx {
   }
 
   @Override
-  public InternalDecorator getDecorator() {
+  public DesktopInternalDecorator getDecorator() {
     return null;
   }
 
@@ -93,6 +93,12 @@ public class WebToolWindowImpl implements ToolWindowEx {
   @Override
   public boolean isUseLastFocusedOnActivation() {
     return false;
+  }
+
+  @NotNull
+  @Override
+  public String getId() {
+    return null;
   }
 
   @Override

@@ -72,7 +72,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
   /**
    * Current {@code ToolWindowsPane}. If there is no such pane then this field is null.
    */
-  private ToolWindowsPane myToolWindowsPane;
+  private DesktopToolWindowPanelImpl myToolWindowsPane;
   private JBPanel myContentPane;
   private final ActionManager myActionManager;
 
@@ -154,7 +154,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
    * If {@code toolWindowsPane} is {@code null} then the method just removes
    * the current tool windows pane.
    */
-  final void setToolWindowsPane(@Nullable final ToolWindowsPane toolWindowsPane) {
+  final void setToolWindowsPane(@Nullable final DesktopToolWindowPanelImpl toolWindowsPane) {
     final JComponent contentPane = (JComponent)getContentPane();
     if(myToolWindowsPane != null){
       contentPane.remove(myToolWindowsPane);

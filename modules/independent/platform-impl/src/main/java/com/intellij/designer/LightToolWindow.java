@@ -27,8 +27,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.impl.AnchoredButton;
-import com.intellij.openapi.wm.impl.InternalDecorator;
-import com.intellij.openapi.wm.impl.StripeButtonUI;
+import com.intellij.openapi.wm.impl.DesktopInternalDecorator;
+import com.intellij.openapi.wm.impl.DesktopStripeButtonUI;
 import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
 import com.intellij.ui.*;
 import com.intellij.ui.components.panels.Wrapper;
@@ -154,7 +154,7 @@ public class LightToolWindow extends JPanel {
     myMinimizeButton = new AnchoredButton(title, icon) {
       @Override
       public void updateUI() {
-        setUI(StripeButtonUI.createUI(this));
+        setUI(DesktopStripeButtonUI.createUI(this));
         setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
       }
 
@@ -396,7 +396,7 @@ public class LightToolWindow extends JPanel {
 
   private class TogglePinnedModeAction extends ToggleAction {
     public TogglePinnedModeAction() {
-      copyFrom(ActionManager.getInstance().getAction(InternalDecorator.TOGGLE_PINNED_MODE_ACTION_ID));
+      copyFrom(ActionManager.getInstance().getAction(DesktopInternalDecorator.TOGGLE_PINNED_MODE_ACTION_ID));
     }
 
     @Override
@@ -414,7 +414,7 @@ public class LightToolWindow extends JPanel {
 
   private class ToggleDockModeAction extends ToggleAction {
     public ToggleDockModeAction() {
-      copyFrom(ActionManager.getInstance().getAction(InternalDecorator.TOGGLE_DOCK_MODE_ACTION_ID));
+      copyFrom(ActionManager.getInstance().getAction(DesktopInternalDecorator.TOGGLE_DOCK_MODE_ACTION_ID));
     }
 
     @Override
@@ -438,7 +438,7 @@ public class LightToolWindow extends JPanel {
 
   private class ToggleFloatingModeAction extends ToggleAction {
     public ToggleFloatingModeAction() {
-      copyFrom(ActionManager.getInstance().getAction(InternalDecorator.TOGGLE_FLOATING_MODE_ACTION_ID));
+      copyFrom(ActionManager.getInstance().getAction(DesktopInternalDecorator.TOGGLE_FLOATING_MODE_ACTION_ID));
     }
 
     @Override
@@ -462,7 +462,7 @@ public class LightToolWindow extends JPanel {
 
   private class ToggleSideModeAction extends ToggleAction {
     public ToggleSideModeAction() {
-      copyFrom(ActionManager.getInstance().getAction(InternalDecorator.TOGGLE_SIDE_MODE_ACTION_ID));
+      copyFrom(ActionManager.getInstance().getAction(DesktopInternalDecorator.TOGGLE_SIDE_MODE_ACTION_ID));
     }
 
     @Override

@@ -36,6 +36,8 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
+import consulo.wm.ToolWindowPanel;
+import consulo.wm.ToolWindowStripeButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,15 +56,15 @@ import java.util.List;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public final class ToolWindowsPane extends JBLayeredPane implements UISettingsListener, Disposable {
+public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements UISettingsListener, Disposable, ToolWindowPanel {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.ToolWindowsPane");
 
   private final IdeFrameImpl myFrame;
 
-  private final HashMap<String, StripeButton> myId2Button = new HashMap<>();
-  private final HashMap<String, InternalDecorator> myId2Decorator = new HashMap<>();
-  private final HashMap<StripeButton, WindowInfoImpl> myButton2Info = new HashMap<>();
-  private final HashMap<InternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
+  private final HashMap<String, DesktopStripeButton> myId2Button = new HashMap<>();
+  private final HashMap<String, DesktopInternalDecorator> myId2Decorator = new HashMap<>();
+  private final HashMap<DesktopStripeButton, WindowInfoImpl> myButton2Info = new HashMap<>();
+  private final HashMap<DesktopInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
   private final HashMap<String, Float> myId2SplitProportion = new HashMap<>();
   private Pair<ToolWindow, Integer> myMaximizedProportion;
   /**
@@ -79,14 +81,14 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
   /*
    * Tool stripes.
    */
-  private final Stripe myLeftStripe;
-  private final Stripe myRightStripe;
-  private final Stripe myBottomStripe;
-  private final Stripe myTopStripe;
+  private final DesktopStripePanelImpl myLeftStripe;
+  private final DesktopStripePanelImpl myRightStripe;
+  private final DesktopStripePanelImpl myBottomStripe;
+  private final DesktopStripePanelImpl myTopStripe;
 
-  private final List<Stripe> myStripes = new ArrayList<>();
+  private final List<DesktopStripePanelImpl> myStripes = new ArrayList<>();
 
-  private final ToolWindowManagerImpl myManager;
+  private final DesktopToolWindowManagerImpl myManager;
 
   private boolean myStripesOverlayed;
   private final Disposable myDisposable = Disposer.newDisposable();
@@ -94,7 +96,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
   private boolean myLeftHorizontalSplit;
   private boolean myRightHorizontalSplit;
 
-  ToolWindowsPane(@NotNull IdeFrameImpl frame, @NotNull ToolWindowManagerImpl manager) {
+  DesktopToolWindowPanelImpl(@NotNull IdeFrameImpl frame, @NotNull DesktopToolWindowManagerImpl manager) {
     myManager = manager;
 
     setOpaque(false);
@@ -123,13 +125,13 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
 
     // Tool stripes
 
-    myTopStripe = new Stripe(SwingConstants.TOP, manager);
+    myTopStripe = new DesktopStripePanelImpl(SwingConstants.TOP, manager);
     myStripes.add(myTopStripe);
-    myLeftStripe = new Stripe(SwingConstants.LEFT, manager);
+    myLeftStripe = new DesktopStripePanelImpl(SwingConstants.LEFT, manager);
     myStripes.add(myLeftStripe);
-    myBottomStripe = new Stripe(SwingConstants.BOTTOM, manager);
+    myBottomStripe = new DesktopStripePanelImpl(SwingConstants.BOTTOM, manager);
     myStripes.add(myBottomStripe);
-    myRightStripe = new Stripe(SwingConstants.RIGHT, manager);
+    myRightStripe = new DesktopStripePanelImpl(SwingConstants.RIGHT, manager);
     myStripes.add(myRightStripe);
 
     updateToolStripesVisibility();
@@ -222,15 +224,16 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
    * @param comparator     which is used to sort buttons within the stripe.
    * @param finishCallBack invoked when the command is completed.
    */
+  @Override
   @NotNull
-  final FinalizableCommand createAddButtonCmd(final StripeButton button,
+  public final FinalizableCommand createAddButtonCmd(final ToolWindowStripeButton button,
                                               @NotNull WindowInfoImpl info,
-                                              @NotNull Comparator<StripeButton> comparator,
+                                              @NotNull Comparator<ToolWindowStripeButton> comparator,
                                               @NotNull Runnable finishCallBack) {
     final WindowInfoImpl copiedInfo = info.copy();
-    myId2Button.put(copiedInfo.getId(), button);
-    myButton2Info.put(button, copiedInfo);
-    return new AddToolStripeButtonCmd(button, copiedInfo, comparator, finishCallBack);
+    myId2Button.put(copiedInfo.getId(), (DesktopStripeButton)button);
+    myButton2Info.put((DesktopStripeButton)button, copiedInfo);
+    return new AddToolStripeButtonCmd((DesktopStripeButton)button, copiedInfo, comparator, finishCallBack);
   }
 
   /**
@@ -241,7 +244,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
    *                  the decorator. Moreover in this (dirty) mode animation doesn't work.
    */
   @NotNull
-  final FinalizableCommand createAddDecoratorCmd(@NotNull InternalDecorator decorator,
+  final FinalizableCommand createAddDecoratorCmd(@NotNull DesktopInternalDecorator decorator,
                                                  @NotNull WindowInfoImpl info,
                                                  final boolean dirtyMode,
                                                  @NotNull Runnable finishCallBack) {
@@ -273,9 +276,10 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
    *
    * @param id <code>ID</code> of the button to be removed.
    */
+  @Override
   @NotNull
-  final FinalizableCommand createRemoveButtonCmd(@NotNull String id, @NotNull Runnable finishCallBack) {
-    final StripeButton button = getButtonById(id);
+  public FinalizableCommand createRemoveButtonCmd(@NotNull String id, @NotNull Runnable finishCallBack) {
+    final DesktopStripeButton button = getButtonById(id);
     final WindowInfoImpl info = getButtonInfoById(id);
 
     myButton2Info.remove(button);
@@ -336,7 +340,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
   }
 
   @Nullable
-  private StripeButton getButtonById(final String id) {
+  private DesktopStripeButton getButtonById(final String id) {
     return myId2Button.get(id);
   }
 
@@ -456,7 +460,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
   }
 
   @Nullable
-  Stripe getStripeFor(String id) {
+  DesktopStripePanelImpl getStripeFor(String id) {
     ToolWindow window = myManager.getToolWindow(id);
     if (window == null) {
       return null;
@@ -480,12 +484,12 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
   }
 
   @Nullable
-  Stripe getStripeFor(@NotNull Rectangle screenRec, @NotNull Stripe preferred) {
+  DesktopStripePanelImpl getStripeFor(@NotNull Rectangle screenRec, @NotNull DesktopStripePanelImpl preferred) {
     if (preferred.containsScreen(screenRec)) {
       return myStripes.get(myStripes.indexOf(preferred));
     }
 
-    for (Stripe each : myStripes) {
+    for (DesktopStripePanelImpl each : myStripes) {
       if (each.containsScreen(screenRec)) {
         return myStripes.get(myStripes.indexOf(each));
       }
@@ -495,13 +499,13 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
   }
 
   void startDrag() {
-    for (Stripe each : myStripes) {
+    for (DesktopStripePanelImpl each : myStripes) {
       each.startDrag();
     }
   }
 
   void stopDrag() {
-    for (Stripe each : myStripes) {
+    for (DesktopStripePanelImpl each : myStripes) {
       each.stopDrag();
     }
   }
@@ -597,8 +601,8 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
       JComponent component = getComponentAt(ToolWindowAnchor.LEFT);
       if (component instanceof Splitter) {
         Splitter splitter = (Splitter)component;
-        InternalDecorator first = (InternalDecorator)splitter.getFirstComponent();
-        InternalDecorator second = (InternalDecorator)splitter.getSecondComponent();
+        DesktopInternalDecorator first = (DesktopInternalDecorator)splitter.getFirstComponent();
+        DesktopInternalDecorator second = (DesktopInternalDecorator)splitter.getSecondComponent();
         setComponent(splitter, ToolWindowAnchor.LEFT, ToolWindowAnchor.LEFT.isSplitVertically()
                                                       ? first.getWindowInfo().getWeight()
                                                       : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight());
@@ -609,8 +613,8 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
       JComponent component = getComponentAt(ToolWindowAnchor.RIGHT);
       if (component instanceof Splitter) {
         Splitter splitter = (Splitter)component;
-        InternalDecorator first = (InternalDecorator)splitter.getFirstComponent();
-        InternalDecorator second = (InternalDecorator)splitter.getSecondComponent();
+        DesktopInternalDecorator first = (DesktopInternalDecorator)splitter.getFirstComponent();
+        DesktopInternalDecorator second = (DesktopInternalDecorator)splitter.getSecondComponent();
         setComponent(splitter, ToolWindowAnchor.RIGHT, ToolWindowAnchor.RIGHT.isSplitVertically()
                                                        ? first.getWindowInfo().getWeight()
                                                        : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight());
@@ -835,8 +839,8 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
         }
         JComponent c = getComponentAt(anchor);
         float newWeight;
-        if (c instanceof InternalDecorator) {
-          InternalDecorator oldComponent = (InternalDecorator)c;
+        if (c instanceof DesktopInternalDecorator) {
+          DesktopInternalDecorator oldComponent = (DesktopInternalDecorator)c;
           if (myInfo.isSplit()) {
             splitter.setFirstComponent(oldComponent);
             splitter.setSecondComponent(myNewComponent);
@@ -953,13 +957,13 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
   }
 
   private final class AddToolStripeButtonCmd extends FinalizableCommand {
-    private final StripeButton myButton;
+    private final DesktopStripeButton myButton;
     private final WindowInfoImpl myInfo;
-    private final Comparator<StripeButton> myComparator;
+    private final Comparator<ToolWindowStripeButton> myComparator;
 
-    public AddToolStripeButtonCmd(final StripeButton button,
+    public AddToolStripeButtonCmd(final DesktopStripeButton button,
                                   @NotNull WindowInfoImpl info,
-                                  @NotNull Comparator<StripeButton> comparator,
+                                  @NotNull Comparator<ToolWindowStripeButton> comparator,
                                   @NotNull Runnable finishCallBack) {
       super(finishCallBack);
       myButton = button;
@@ -996,10 +1000,10 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
   }
 
   private final class RemoveToolStripeButtonCmd extends FinalizableCommand {
-    private final StripeButton myButton;
+    private final DesktopStripeButton myButton;
     private final WindowInfoImpl myInfo;
 
-    public RemoveToolStripeButtonCmd(@NotNull StripeButton button, @NotNull WindowInfoImpl info, @NotNull Runnable finishCallBack) {
+    public RemoveToolStripeButtonCmd(@NotNull DesktopStripeButton button, @NotNull WindowInfoImpl info, @NotNull Runnable finishCallBack) {
       super(finishCallBack);
       myButton = button;
       myInfo = info;
@@ -1077,8 +1081,8 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
         JComponent c = getComponentAt(anchor);
         if (c instanceof Splitter) {
           Splitter splitter = (Splitter)c;
-          final InternalDecorator component =
-                  myInfo.isSplit() ? (InternalDecorator)splitter.getFirstComponent() : (InternalDecorator)splitter.getSecondComponent();
+          final DesktopInternalDecorator component =
+                  myInfo.isSplit() ? (DesktopInternalDecorator)splitter.getFirstComponent() : (DesktopInternalDecorator)splitter.getSecondComponent();
           if (myInfo.isSplit() && component != null) {
             myId2SplitProportion.put(component.getWindowInfo().getId(), splitter.getProportion());
           }
@@ -1193,7 +1197,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
     @Override
     public void run() {
       try {
-        StripeButton stripeButton = getButtonById(myId);
+        DesktopStripeButton stripeButton = getButtonById(myId);
         if (stripeButton == null) {
           return;
         }
@@ -1290,7 +1294,7 @@ public final class ToolWindowsPane extends JBLayeredPane implements UISettingsLi
       // Resize components at the PALETTE layer
       components = getComponentsInLayer(JLayeredPane.PALETTE_LAYER.intValue());
       for (final Component component : components) {
-        if (!(component instanceof InternalDecorator)) {
+        if (!(component instanceof DesktopInternalDecorator)) {
           continue;
         }
         final WindowInfoImpl info = myDecorator2Info.get(component);
