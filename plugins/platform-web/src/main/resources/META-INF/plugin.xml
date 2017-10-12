@@ -22,12 +22,20 @@
       <interface-class>com.intellij.openapi.wm.WindowManager</interface-class>
       <implementation-class>consulo.web.wm.impl.WebWindowManagerImpl</implementation-class>
     </component>
+    <component>
+      <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
+      <implementation-class>consulo.web.wm.impl.WebIdeFocusManagerImpl</implementation-class>
+    </component>
   </application-components>
 
   <project-components>
     <component>
       <interface-class>com.intellij.openapi.wm.ToolWindowManager</interface-class>
       <implementation-class>consulo.web.wm.impl.WebToolWindowManagerImpl</implementation-class>
+    </component>
+    <component>
+      <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
+      <implementation-class>consulo.web.wm.impl.WebIdeFocusManagerImpl</implementation-class>
     </component>
   </project-components>
 

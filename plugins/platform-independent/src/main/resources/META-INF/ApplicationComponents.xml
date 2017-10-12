@@ -264,12 +264,6 @@
       <implementation-class>com.intellij.ide.SystemHealthMonitor</implementation-class>
       <headless-implementation-class/>
     </component>
-    
-    <component>
-      <interface-class>com.intellij.openapi.wm.IdeFocusManager</interface-class>
-      <implementation-class>com.intellij.openapi.wm.impl.FocusManagerImpl</implementation-class>
-      <headless-implementation-class>com.intellij.openapi.wm.impl.IdeFocusManagerHeadless</headless-implementation-class>
-    </component>
 
     <component>
       <interface-class>consulo.compiler.impl.TranslatingCompilerFilesMonitor</interface-class>

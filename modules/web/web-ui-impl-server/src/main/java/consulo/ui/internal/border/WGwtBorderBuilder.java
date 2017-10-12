@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal.border;
 
+import consulo.ui.ColorValue;
 import consulo.ui.RGBColor;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.internal.VaadinWrapper;
@@ -38,11 +39,9 @@ public class WGwtBorderBuilder {
       borderState.myPosition = (byte)info.myBorderPosition.ordinal();
       borderState.myStyle = (byte)info.myBorderStyle.ordinal();
 
-      RGBColor color = currentStyle.getColor(info.myColorKey);
-      if (color == null) {
-        System.err.println("No color for key " + info.myColorKey);
-        continue;
-      }
+      ColorValue colorValue = currentStyle.getColor(info.myColorKey);
+
+      RGBColor color = colorValue.toRGB();
 
       borderState.myColor = new RGBColorShared(color.getRed(), color.getGreed(), color.getBlue());
       borderState.myWidth = info.myWidth;
