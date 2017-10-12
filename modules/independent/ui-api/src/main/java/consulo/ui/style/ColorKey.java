@@ -15,9 +15,18 @@
  */
 package consulo.ui.style;
 
+import consulo.ui.ColorValue;
+import consulo.ui.RGBColor;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 22-Jun-16
  */
-public interface ColorKey {
+public interface ColorKey extends ColorValue {
+  @NotNull
+  @Override
+  default RGBColor toRGB() {
+    return StyleManager.get().getCurrentStyle().getColor(this).toRGB();
+  }
 }

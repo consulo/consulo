@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.style;
+package consulo.ui;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 22-Jun-16
+ * @since 12-Oct-17
  */
-public enum Colors implements ColorKey {
-  RED,
-  BLUE,
-  GREEN
+public interface ColorValue {
+  @NotNull
+  RGBColor toRGB();
 }

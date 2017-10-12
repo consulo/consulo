@@ -20,8 +20,6 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 
 /**
- * Utility wrapper around JColorChooser. Helps to avoid memory leak through JColorChooser.ColorChooserDialog.cancelButton.
- *
  * @author max
  * @author Konstantin Bulenkov
  */

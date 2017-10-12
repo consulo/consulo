@@ -15,16 +15,19 @@
  */
 package consulo.ui;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 /**
  * @author VISTALL
  * @since 21-Jun-16
  */
-public final class RGBColor implements Serializable {
+public final class RGBColor implements Serializable, ColorValue {
   private int myRed;
   private int myGreed;
   private int myBlue;
+  private float myAlpha;
 
   private RGBColor() {
   }
@@ -33,6 +36,19 @@ public final class RGBColor implements Serializable {
     myRed = red;
     myGreed = greed;
     myBlue = blue;
+  }
+
+  public RGBColor(int red, int greed, int blue, float alpha) {
+    myRed = red;
+    myGreed = greed;
+    myBlue = blue;
+    myAlpha = alpha;
+  }
+
+  @NotNull
+  @Override
+  public RGBColor toRGB() {
+    return this;
   }
 
   public int getRed() {
@@ -47,6 +63,10 @@ public final class RGBColor implements Serializable {
     return myBlue;
   }
 
+  public float getAlpha() {
+    return myAlpha;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -57,6 +77,7 @@ public final class RGBColor implements Serializable {
     if (myRed != rgbColor.myRed) return false;
     if (myGreed != rgbColor.myGreed) return false;
     if (myBlue != rgbColor.myBlue) return false;
+    if (Float.compare(rgbColor.myAlpha, myAlpha) != 0) return false;
 
     return true;
   }
@@ -66,6 +87,7 @@ public final class RGBColor implements Serializable {
     int result = myRed;
     result = 31 * result + myGreed;
     result = 31 * result + myBlue;
+    result = 31 * result + (myAlpha != +0.0f ? Float.floatToIntBits(myAlpha) : 0);
     return result;
   }
 
@@ -75,6 +97,7 @@ public final class RGBColor implements Serializable {
     sb.append("myRed=").append(myRed);
     sb.append(", myGreed=").append(myGreed);
     sb.append(", myBlue=").append(myBlue);
+    sb.append(", myAlpha=").append(myAlpha);
     sb.append('}');
     return sb.toString();
   }

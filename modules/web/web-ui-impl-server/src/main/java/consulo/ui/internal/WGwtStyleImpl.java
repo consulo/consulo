@@ -15,15 +15,14 @@
  */
 package consulo.ui.internal;
 
+import consulo.ui.ColorValue;
 import consulo.ui.RGBColor;
 import consulo.ui.style.ColorKey;
-import consulo.ui.style.Colors;
 import consulo.ui.style.ComponentColors;
+import consulo.ui.style.StandardColors;
 import consulo.ui.style.Style;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,21 +31,17 @@ import java.util.Map;
  * @since 15-Sep-17
  */
 public class WGwtStyleImpl implements Style {
-  private Map<ColorKey, RGBColor> myColors = new HashMap<>();
+  private Map<ColorKey, ColorValue> myColors = new HashMap<>();
   private final String myName;
 
   public WGwtStyleImpl(String name) {
     myName = name;
 
-    myColors.put(Colors.RED, to(Color.RED));
-    myColors.put(Colors.GREEN, to(Color.GREEN));
-    myColors.put(Colors.BLUE, to(Color.BLUE));
+    for (StandardColors color : StandardColors.values()) {
+      myColors.put(color, color.getStaticValue());
+    }
 
-    myColors.put(ComponentColors.BORDER, to(Color.lightGray));
-  }
-
-  private static RGBColor to(Color color) {
-    return new RGBColor(color.getRed(), color.getGreen(), color.getBlue());
+    myColors.put(ComponentColors.BORDER, new RGBColor(192, 192, 192));
   }
 
   @NotNull
@@ -55,9 +50,9 @@ public class WGwtStyleImpl implements Style {
     return myName;
   }
 
-  @Nullable
+  @NotNull
   @Override
-  public RGBColor getColor(@NotNull ColorKey colorKey) {
+  public ColorValue getColor(@NotNull ColorKey colorKey) {
     return myColors.get(colorKey);
   }
 }

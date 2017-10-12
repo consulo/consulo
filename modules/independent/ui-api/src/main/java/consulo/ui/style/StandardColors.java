@@ -16,16 +16,26 @@
 package consulo.ui.style;
 
 import consulo.ui.ColorValue;
+import consulo.ui.RGBColor;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 22-Jun-16
  */
-public interface Style {
-  @NotNull
-  String getName();
+public enum StandardColors implements ColorKey {
+  RED(new RGBColor(255, 0, 0)),
+  GREEN(new RGBColor(0, 255, 0)),
+  BLUE(new RGBColor(0, 0, 255));
+
+  private final ColorValue myStaticValue;
+
+  StandardColors(ColorValue staticValue) {
+    myStaticValue = staticValue;
+  }
 
   @NotNull
-  ColorValue getColor(@NotNull ColorKey colorKey);
+  public ColorValue getStaticValue() {
+    return myStaticValue;
+  }
 }

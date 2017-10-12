@@ -18,8 +18,7 @@ package com.intellij.ui;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.*;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ElementColorProvider;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
@@ -48,32 +47,20 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
 
     @RequiredReadAction
     public MyInfo(@NotNull final PsiElement element, final Color color, final ElementColorProvider colorProvider) {
-      super(element,
-            element.getTextRange(),
-            new ColorIcon(JBUI.scaleFontSize(12), color),
-            Pass.UPDATE_ALL,
-            FunctionUtil.<Object, String>nullConstant(),
-            new GutterIconNavigationHandler<PsiElement>() {
-              @Override
-              @RequiredDispatchThread
-              public void navigate(MouseEvent e, PsiElement elt) {
-                if (!elt.isWritable()) return;
+      super(element, element.getTextRange(), new ColorIcon(JBUI.scaleFontSize(12), color), Pass.UPDATE_ALL, FunctionUtil.nullConstant(), new GutterIconNavigationHandler<PsiElement>() {
+        @Override
+        @RequiredDispatchThread
+        public void navigate(MouseEvent e, PsiElement elt) {
+          if (!elt.isWritable()) return;
 
-                final Editor editor = PsiUtilBase.findEditor(element);
-                assert editor != null;
-                final Color c = ColorChooser.chooseColor(editor.getComponent(), "Choose Color", color, true);
-                if (c != null) {
-                  AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(ColorLineMarkerProvider.class);
-                  try {
-                    colorProvider.setColorTo(element, c);
-                  }
-                  finally {
-                    token.finish();
-                  }
-                }
-              }
-            },
-            GutterIconRenderer.Alignment.LEFT);
+          final Editor editor = PsiUtilBase.findEditor(element);
+          assert editor != null;
+          final Color c = ColorChooser.chooseColor(editor.getComponent(), "Choose Color", color, true);
+          if (c != null) {
+            WriteAction.run(() -> colorProvider.setColorTo(element, c));
+          }
+        }
+      }, GutterIconRenderer.Alignment.LEFT);
       myColor = color;
     }
 
