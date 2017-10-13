@@ -253,7 +253,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     return myLayout.getInfo(id, true);
   }
 
-  public void setDefaultContentUiType(DesktopToolWindowImpl toolWindow, ToolWindowContentUiType type) {
+  public void setDefaultContentUiType(ToolWindow toolWindow, ToolWindowContentUiType type) {
     final WindowInfoImpl info = getInfo(toolWindow.getId());
     if (info.wasRead()) return;
     toolWindow.setContentUiType(type, null);

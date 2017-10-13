@@ -39,7 +39,7 @@ import java.awt.*;
  *
  * @author Vladimir Kondratyev
  */
-public final class RequestFocusInToolWindowCmd extends FinalizableCommand {
+public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.commands.RequestFocusInToolWindowCmd");
   private final DesktopToolWindowImpl myToolWindow;
   private final FocusWatcher myFocusWatcher;
@@ -47,7 +47,7 @@ public final class RequestFocusInToolWindowCmd extends FinalizableCommand {
   private final Project myProject;
   private final Expirable myTimestamp;
 
-  public RequestFocusInToolWindowCmd(IdeFocusManager focusManager, final DesktopToolWindowImpl toolWindow, final FocusWatcher focusWatcher, final Runnable finishCallBack, Project project) {
+  public DesktopRequestFocusInToolWindowCmd(IdeFocusManager focusManager, final DesktopToolWindowImpl toolWindow, final FocusWatcher focusWatcher, final Runnable finishCallBack, Project project) {
     super(finishCallBack);
     myToolWindow = toolWindow;
     myFocusWatcher = focusWatcher;

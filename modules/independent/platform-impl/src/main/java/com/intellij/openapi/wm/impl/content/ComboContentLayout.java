@@ -28,7 +28,7 @@ class ComboContentLayout extends ContentLayout {
 
   ContentComboLabel myComboLabel;
 
-  ComboContentLayout(ToolWindowContentUi ui) {
+  ComboContentLayout(DesktopToolWindowContentUi ui) {
     super(ui);
   }
 
@@ -92,10 +92,10 @@ class ComboContentLayout extends ContentLayout {
     myUi.removeAll();
 
     myUi.add(myIdLabel);
-    ToolWindowContentUi.initMouseListeners(myIdLabel, myUi);
+    DesktopToolWindowContentUi.initMouseListeners(myIdLabel, myUi);
 
     myUi.add(myComboLabel);
-    ToolWindowContentUi.initMouseListeners(myComboLabel, myUi);
+    DesktopToolWindowContentUi.initMouseListeners(myComboLabel, myUi);
   }
 
   boolean isToDrawCombo() {

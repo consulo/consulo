@@ -29,7 +29,7 @@ import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.impl.AnchoredButton;
 import com.intellij.openapi.wm.impl.DesktopInternalDecorator;
 import com.intellij.openapi.wm.impl.DesktopStripeButtonUI;
-import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
+import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.ui.*;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.TabsUtil;
@@ -349,7 +349,7 @@ public class LightToolWindow extends JPanel {
   private void showGearPopup(Component component, int x, int y) {
     ActionPopupMenu popupMenu =
             ((ActionManagerImpl)ActionManager.getInstance())
-                    .createActionPopupMenu(ToolWindowContentUi.POPUP_PLACE, createGearPopupGroup(), new MenuItemPresentationFactory(true));
+                    .createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE, createGearPopupGroup(), new MenuItemPresentationFactory(true));
     popupMenu.getComponent().show(component, x, y);
   }
 

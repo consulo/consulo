@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
-import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
+import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
@@ -67,7 +67,7 @@ public final class DesktopToolWindowImpl implements ToolWindowEx {
   private String myStripeTitle;
 
   private static final Content EMPTY_CONTENT = new ContentImpl(new JLabel(), "", false);
-  private final ToolWindowContentUi myContentUI;
+  private final DesktopToolWindowContentUi myContentUI;
 
   private DesktopInternalDecorator myDecorator;
 
@@ -93,7 +93,7 @@ public final class DesktopToolWindowImpl implements ToolWindowEx {
     myAvailable = true;
 
     final ContentFactory contentFactory = ServiceManager.getService(ContentFactory.class);
-    myContentUI = new ToolWindowContentUi(this);
+    myContentUI = new DesktopToolWindowContentUi(this);
     myContentManager = contentFactory.createContentManager(myContentUI, canCloseContent, toolWindowManager.getProject());
 
     if (component != null) {
@@ -344,7 +344,7 @@ public final class DesktopToolWindowImpl implements ToolWindowEx {
     return myContentManager;
   }
 
-  public ToolWindowContentUi getContentUI() {
+  public DesktopToolWindowContentUi getContentUI() {
     return myContentUI;
   }
 

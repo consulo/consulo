@@ -41,10 +41,10 @@ abstract class ContentLayout {
   static final int TAB_ARC = 2;
   static final int TAB_SHIFT = 2;
 
-  ToolWindowContentUi myUi;
+  DesktopToolWindowContentUi myUi;
   BaseLabel myIdLabel;
 
-  ContentLayout(ToolWindowContentUi ui) {
+  ContentLayout(DesktopToolWindowContentUi ui) {
     myUi = ui;
   }
 
@@ -116,7 +116,7 @@ abstract class ContentLayout {
 
   protected boolean shouldShowId() {
     final JComponent component = myUi.myWindow.getComponent();
-    return component != null && !"true".equals(component.getClientProperty(ToolWindowContentUi.HIDE_ID_LABEL));
+    return component != null && !"true".equals(component.getClientProperty(DesktopToolWindowContentUi.HIDE_ID_LABEL));
   }
 
   boolean isIdVisible() {

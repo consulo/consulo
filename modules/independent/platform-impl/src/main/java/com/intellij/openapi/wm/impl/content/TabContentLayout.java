@@ -66,7 +66,7 @@ class TabContentLayout extends ContentLayout {
     }
   };
 
-  TabContentLayout(ToolWindowContentUi ui) {
+  TabContentLayout(DesktopToolWindowContentUi ui) {
     super(ui);
 
     myPopupListener = new MyPopupListener();
@@ -300,7 +300,7 @@ class TabContentLayout extends ContentLayout {
     public int eachY;
     public int contentCount;
 
-    LayoutData(ToolWindowContentUi ui) {
+    LayoutData(DesktopToolWindowContentUi ui) {
       layoutSize = ui.getSize();
       contentCount = ui.myManager.getContentCount();
     }

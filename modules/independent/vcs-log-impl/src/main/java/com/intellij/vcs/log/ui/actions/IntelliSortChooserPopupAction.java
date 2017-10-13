@@ -20,7 +20,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
+import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsLogDataKeys;
@@ -51,7 +51,7 @@ public class IntelliSortChooserPopupAction extends DumbAwareAction {
 
     ListPopup popup = JBPopupFactory.getInstance()
             .createActionGroupPopup(null, settingsGroup, e.getDataContext(), JBPopupFactory.ActionSelectionAid.MNEMONICS, true,
-                                    ToolWindowContentUi.POPUP_PLACE);
+                                    DesktopToolWindowContentUi.POPUP_PLACE);
     Component component = e.getInputEvent().getComponent();
     if (component instanceof ActionButtonComponent) {
       popup.showUnderneathOf(component);

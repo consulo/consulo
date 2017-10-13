@@ -27,13 +27,13 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BaseLabel extends JLabel {
-  protected ToolWindowContentUi myUi;
+  protected DesktopToolWindowContentUi myUi;
 
   private Color myActiveFg;
   private Color myPassiveFg;
   private boolean myBold;
 
-  public BaseLabel(ToolWindowContentUi ui, boolean bold) {
+  public BaseLabel(DesktopToolWindowContentUi ui, boolean bold) {
     myUi = ui;
     setOpaque(false);
     myBold = bold;

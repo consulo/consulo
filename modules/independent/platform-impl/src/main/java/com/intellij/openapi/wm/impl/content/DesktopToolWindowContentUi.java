@@ -57,7 +57,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToolWindowContentUi extends JPanel implements ContentUI, PropertyChangeListener, DataProvider, SwitchProvider {
+public class DesktopToolWindowContentUi extends JPanel implements ContentUI, PropertyChangeListener, DataProvider, SwitchProvider {
   public static final String POPUP_PLACE = "ToolwindowPopup";
   // when client property is put in toolwindow component, hides toolwindow label
   public static final String HIDE_ID_LABEL = "HideIdLabel";
@@ -80,7 +80,7 @@ public class ToolWindowContentUi extends JPanel implements ContentUI, PropertyCh
   private ToolWindowContentUiType myType = ToolWindowContentUiType.TABBED;
   private boolean myShouldNotShowPopup;
 
-  public ToolWindowContentUi(DesktopToolWindowImpl window) {
+  public DesktopToolWindowContentUi(DesktopToolWindowImpl window) {
     myWindow = window;
     myContent.setOpaque(false);
     myContent.setFocusable(false);
@@ -138,13 +138,13 @@ public class ToolWindowContentUi extends JPanel implements ContentUI, PropertyCh
       @Override
       public void contentAdded(final ContentManagerEvent event) {
         getCurrentLayout().contentAdded(event);
-        event.getContent().addPropertyChangeListener(ToolWindowContentUi.this);
+        event.getContent().addPropertyChangeListener(DesktopToolWindowContentUi.this);
         rebuild();
       }
 
       @Override
       public void contentRemoved(final ContentManagerEvent event) {
-        event.getContent().removePropertyChangeListener(ToolWindowContentUi.this);
+        event.getContent().removePropertyChangeListener(DesktopToolWindowContentUi.this);
         getCurrentLayout().contentRemoved(event);
         ensureSelectedContentVisible();
         rebuild();
@@ -303,7 +303,7 @@ public class ToolWindowContentUi extends JPanel implements ContentUI, PropertyCh
     return getCurrentLayout().getNextContentActionName();
   }
 
-  public static void initMouseListeners(final JComponent c, final ToolWindowContentUi ui) {
+  public static void initMouseListeners(final JComponent c, final DesktopToolWindowContentUi ui) {
     if (c.getClientProperty(ui) != null) return;
 
 

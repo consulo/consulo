@@ -29,7 +29,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowType;
-import com.intellij.openapi.wm.impl.content.ToolWindowContentUi;
+import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.PopupHandler;
@@ -120,7 +120,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
         final InputEvent inputEvent = e.getInputEvent();
         final ActionPopupMenu popupMenu =
                 ((ActionManagerImpl)ActionManager.getInstance())
-                        .createActionPopupMenu(ToolWindowContentUi.POPUP_PLACE, gearProducer.produce(), new MenuItemPresentationFactory(true));
+                        .createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE, gearProducer.produce(), new MenuItemPresentationFactory(true));
 
         int x = 0;
         int y = 0;
