@@ -22,6 +22,7 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.ui.image.ImageConverter;
+import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,7 +66,12 @@ public class GwtToolWindowStripeButton extends SimplePanel {
     }, MouseOutEvent.getType());
 
     addDomHandler(event -> {
-      // toolWindowPanel.showOrHide(labelText);
+      GwtToolWindowStripe stripe = GwtUIUtil.getParentOf(this, GwtToolWindowStripe.class);
+      if (stripe == null) {
+        return;
+      }
+
+      stripe.showOrHide(this);
     }, ClickEvent.getType());
   }
 

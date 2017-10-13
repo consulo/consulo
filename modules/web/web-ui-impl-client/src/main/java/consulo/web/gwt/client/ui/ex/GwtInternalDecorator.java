@@ -16,13 +16,15 @@
 package consulo.web.gwt.client.ui.ex;
 
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author VISTALL
  * @since 12-Oct-17
  */
 public class GwtInternalDecorator extends VerticalPanel {
-  public GwtInternalDecorator(GwtToolWindowStripeButton button) {
-    //widget.setSize("100%", "100%");
+  public GwtInternalDecorator(Widget widget) {
+    widget.setSize("100%", "100%");
+    add(widget);
   }
 }

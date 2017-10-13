@@ -40,13 +40,14 @@ public class GwtUIUtil {
     Widget target = widget;
 
     do {
-      if(target.getClass() == type) {
+      if (target.getClass() == type) {
         return (T)target;
       }
 
       target = target.getParent();
     }
     while (target != null);
+
     return null;
   }
 

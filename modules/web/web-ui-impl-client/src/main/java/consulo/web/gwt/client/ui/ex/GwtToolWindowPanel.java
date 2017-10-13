@@ -31,8 +31,6 @@ import java.util.Map;
 public class GwtToolWindowPanel extends VerticalPanel {
   private final Map<DockLayoutState.Constraint, GwtToolWindowStripe> myStripes = new HashMap<>();
 
-  private final Map<String, GwtToolWindowStripeButton> myButtons = new HashMap<>();
-
   private SplitLayoutPanel myCenterSplitLayout;
 
   private SimplePanel myLeftPanel = new SimplePanel();
@@ -117,12 +115,7 @@ public class GwtToolWindowPanel extends VerticalPanel {
     myRootPanel.setWidget(GwtUIUtil.fillAndReturn(new GwtEditorImpl()));
   }
 
-  public void showOrHide(DockLayoutState.Constraint position, GwtInternalDecorator decorator, String id) {
-    GwtToolWindowStripeButton button = myButtons.get(id);
-    if (button == null) {
-      return;
-    }
-
+  public void showOrHide(DockLayoutState.Constraint position, GwtInternalDecorator decorator, GwtToolWindowStripeButton button) {
     boolean isActive = !button.isActive();
 
     button.setActive(isActive);

@@ -15,6 +15,7 @@
  */
 package consulo.web.gwt.client.ui.ex;
 
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
@@ -64,7 +65,7 @@ public class GwtToolWindowStripe extends SimplePanel {
 
     inner.add(button, false);
 
-    myInternalDecorators.put(button, new GwtInternalDecorator(button));
+    myInternalDecorators.put(button, new GwtInternalDecorator(new Label("test")));
 
     if (myPosition == DockLayoutState.Constraint.LEFT || myPosition == DockLayoutState.Constraint.RIGHT) {
       button.setWidth("22px");
@@ -75,6 +76,19 @@ public class GwtToolWindowStripe extends SimplePanel {
     }
 
     myToolWindowPanel.doLayout();
+  }
+
+  public void showOrHide(GwtToolWindowStripeButton button) {
+    GwtInternalDecorator internalDecorator = myInternalDecorators.get(button);
+    if(internalDecorator == null || myToolWindowPanel == null) {
+      return;
+    }
+
+    myToolWindowPanel.showOrHide(myPosition, internalDecorator, button);
+  }
+
+  public DockLayoutState.Constraint getPosition() {
+    return myPosition;
   }
 
   public boolean canShow() {
