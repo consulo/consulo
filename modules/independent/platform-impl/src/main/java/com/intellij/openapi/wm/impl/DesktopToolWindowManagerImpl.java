@@ -384,7 +384,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     myToolWindowPanel = new DesktopToolWindowPanelImpl(myFrame, this);
     Disposer.register(myProject, getToolWindowPanel());
-    ((IdeRootPane)myFrame.getRootPane()).setToolWindowsPane(getToolWindowPanel());
+    ((IdeRootPane)myFrame.getRootPane()).setToolWindowsPane(myToolWindowPanel);
     myFrame.setTitle(FrameTitleBuilder.getInstance().getProjectTitle(myProject));
     ((IdeRootPane)myFrame.getRootPane()).updateToolbar();
 

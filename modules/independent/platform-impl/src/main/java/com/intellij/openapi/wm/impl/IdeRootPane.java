@@ -46,6 +46,7 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.ex.ToolWindowPanel;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -70,9 +71,9 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
   private final List<IdeRootPaneNorthExtension> myNorthComponents = new ArrayList<>();
 
   /**
-   * Current {@code ToolWindowsPane}. If there is no such pane then this field is null.
+   * Current {@code ToolWindowPanel}. If there is no such pane then this field is null.
    */
-  private DesktopToolWindowPanelImpl myToolWindowsPane;
+  private ToolWindowPanel myToolWindowsPane;
   private JBPanel myContentPane;
   private final ActionManager myActionManager;
 
@@ -154,15 +155,15 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
    * If {@code toolWindowsPane} is {@code null} then the method just removes
    * the current tool windows pane.
    */
-  final void setToolWindowsPane(@Nullable final DesktopToolWindowPanelImpl toolWindowsPane) {
+  final void setToolWindowsPane(@Nullable final ToolWindowPanel toolWindowsPane) {
     final JComponent contentPane = (JComponent)getContentPane();
     if(myToolWindowsPane != null){
-      contentPane.remove(myToolWindowsPane);
+      contentPane.remove((Component)myToolWindowsPane);
     }
 
     myToolWindowsPane = toolWindowsPane;
     if(myToolWindowsPane != null) {
-      contentPane.add(myToolWindowsPane,BorderLayout.CENTER);
+      contentPane.add((Component)myToolWindowsPane, BorderLayout.CENTER);
     }
 
     contentPane.revalidate();
