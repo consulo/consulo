@@ -16,7 +16,6 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 
@@ -25,16 +24,12 @@ import java.awt.*;
 /**
  * @author yole
  */
-@State(
-        name = "ProjectFrameBounds",
-        storages = { @Storage(
-                file = StoragePathMacros.WORKSPACE_FILE) }
-)
+@State(name = "ProjectFrameBounds", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class ProjectFrameBounds implements PersistentStateComponent<Rectangle> {
   public static ProjectFrameBounds getInstance(Project project) {
     return ServiceManager.getService(project, ProjectFrameBounds.class);
   }
-  
+
   private final Project myProject;
   private Rectangle myBounds;
 

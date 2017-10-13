@@ -31,6 +31,7 @@ public interface ToolWindowEx extends ToolWindow {
   @NonNls String PROP_TITLE = "title";
   @NonNls String PROP_STRIPE_TITLE = "stripe-title";
 
+  void addPropertyChangeListener(final PropertyChangeListener l);
   /**
    * Removes specified property change listener.
    *

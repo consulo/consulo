@@ -16,9 +16,9 @@
 
 package com.intellij.openapi.wm.impl.commands;
 
-import com.intellij.openapi.wm.impl.DesktopInternalDecorator;
-import com.intellij.openapi.wm.impl.DesktopStripeButton;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
+import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.ui.ex.ToolWindowStripeButton;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -27,10 +27,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class ApplyWindowInfoCmd extends FinalizableCommand {
   private final WindowInfoImpl myInfo;
-  private final DesktopStripeButton myButton;
-  private final DesktopInternalDecorator myDecorator;
+  private final ToolWindowStripeButton myButton;
+  private final ToolWindowInternalDecorator myDecorator;
 
-  public ApplyWindowInfoCmd(@NotNull final WindowInfoImpl info, @NotNull final DesktopStripeButton button, @NotNull final DesktopInternalDecorator decorator, @NotNull Runnable finishCallBack) {
+  public ApplyWindowInfoCmd(@NotNull final WindowInfoImpl info, @NotNull final ToolWindowStripeButton button, @NotNull final ToolWindowInternalDecorator decorator, @NotNull Runnable finishCallBack) {
     super(finishCallBack);
     myInfo = info.copy();
     myButton = button;

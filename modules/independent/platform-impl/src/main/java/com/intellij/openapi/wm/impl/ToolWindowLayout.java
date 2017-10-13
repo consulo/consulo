@@ -21,7 +21,7 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
-import consulo.wm.ToolWindowStripeButton;
+import consulo.ui.ex.ToolWindowStripeButton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -283,7 +283,7 @@ public final class ToolWindowLayout {
     }
   }
 
-  final void setSplitMode(@NotNull String id, boolean split) {
+  public void setSplitMode(@NotNull String id, boolean split) {
     final WindowInfoImpl info = getInfo(id, true);
     info.setSplit(split);
   }

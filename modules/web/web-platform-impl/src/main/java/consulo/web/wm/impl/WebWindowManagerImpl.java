@@ -22,7 +22,7 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManagerListener;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.CommandProcessor;
+import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
@@ -172,7 +172,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
   }
 
   @Override
-  public CommandProcessor getCommandProcessor() {
+  public CommandProcessorBase getCommandProcessor() {
     return null;
   }
 

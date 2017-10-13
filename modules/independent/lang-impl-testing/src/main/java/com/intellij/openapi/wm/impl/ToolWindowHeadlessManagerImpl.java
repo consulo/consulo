@@ -340,11 +340,13 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     public void setAnchor(@NotNull ToolWindowAnchor anchor, @Nullable Runnable runnable) {
     }
 
+    @RequiredUIAccess
     @Override
     public boolean isSplitMode() {
       return false;
     }
 
+    @RequiredUIAccess
     @Override
     public void setSplitMode(final boolean isSideTool, @Nullable final Runnable runnable) {
 
@@ -463,6 +465,11 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     @Override
     public ActionCallback getActivation() {
       return ActionCallback.DONE;
+    }
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener l) {
+
     }
 
     @Override

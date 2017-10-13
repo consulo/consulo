@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2000-2009 JetBrains s.r.o.
  *
@@ -26,8 +25,8 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.ui.SizedIcon;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,7 +51,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     return myToolWindowId;
   }
 
-  public static void ensureToolWindowActionRegistered(@NotNull DesktopToolWindowImpl toolWindow) {
+  public static void ensureToolWindowActionRegistered(@NotNull ToolWindow toolWindow) {
     ActionManager actionManager = ActionManager.getInstance();
     String actionId = getActionIdForToolWindow(toolWindow.getId());
     AnAction action = actionManager.getAction(actionId);
@@ -63,7 +62,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     }
   }
 
-  public static void updateToolWindowActionPresentation(@NotNull DesktopToolWindowImpl toolWindow) {
+  public static void updateToolWindowActionPresentation(@NotNull ToolWindow toolWindow) {
     ActionManager actionManager = ActionManager.getInstance();
     String actionId = getActionIdForToolWindow(toolWindow.getId());
     AnAction action = actionManager.getAction(actionId);
@@ -72,7 +71,9 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     }
   }
 
-  public void update(AnActionEvent e) {
+  @RequiredDispatchThread
+  @Override
+  public void update(@NotNull AnActionEvent e) {
     Project project = getEventProject(e);
     Presentation presentation = e.getPresentation();
     if (project == null || project.isDisposed()) {
@@ -101,7 +102,9 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     presentation.setIcon(icon == null ? null : new SizedIcon(icon, icon.getIconHeight(), icon.getIconHeight()));
   }
 
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredDispatchThread
+  @Override
+  public void actionPerformed(@NotNull AnActionEvent e) {
     Project project = getEventProject(e);
     if (project == null) return;
     ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
@@ -137,14 +140,12 @@ public class ActivateToolWindowAction extends DumbAwareAction {
       if (shortcut instanceof KeyboardShortcut) {
         KeyStroke keyStroke = ((KeyboardShortcut)shortcut).getFirstKeyStroke();
         int modifiers = keyStroke.getModifiers();
-        if (
-                modifiers == (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_MASK) ||
-                modifiers == InputEvent.ALT_MASK ||
-                modifiers == InputEvent.ALT_DOWN_MASK ||
-                modifiers == (InputEvent.META_DOWN_MASK | InputEvent.META_MASK) ||
-                modifiers == InputEvent.META_MASK ||
-                modifiers == InputEvent.META_DOWN_MASK
-                ) {
+        if (modifiers == (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_MASK) ||
+            modifiers == InputEvent.ALT_MASK ||
+            modifiers == InputEvent.ALT_DOWN_MASK ||
+            modifiers == (InputEvent.META_DOWN_MASK | InputEvent.META_MASK) ||
+            modifiers == InputEvent.META_MASK ||
+            modifiers == InputEvent.META_DOWN_MASK) {
           int keyCode = keyStroke.getKeyCode();
           if (KeyEvent.VK_0 <= keyCode && keyCode <= KeyEvent.VK_9) {
             char c = (char)('0' + keyCode - KeyEvent.VK_0);

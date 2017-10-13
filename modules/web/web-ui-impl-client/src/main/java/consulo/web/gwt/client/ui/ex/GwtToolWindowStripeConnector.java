@@ -15,26 +15,37 @@
  */
 package consulo.web.gwt.client.ui.ex;
 
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.ui.GwtLayoutConnector;
 import consulo.web.gwt.client.util.GwtUIUtil;
+import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeState;
+
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 25-Sep-17
+ * @since 12-Oct-17
  */
-@Connect(canonicalName = "consulo.ui.ex.WGwtToolWindowPanel")
-public class GwtToolWindowPanelConnector extends GwtLayoutConnector {
+@Connect(canonicalName = "consulo.ui.ex.WGwtToolWindowStripe")
+public class GwtToolWindowStripeConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
-    GwtToolWindowPanel widget = getWidget();
+    List<Widget> widgets = GwtUIUtil.remapWidgets(this);
 
-    widget.build(GwtUIUtil.remapWidgets(this));
+    for (Widget widget : widgets) {
+      getWidget().addButton((GwtToolWindowStripeButton)widget);
+    }
   }
 
   @Override
-  public GwtToolWindowPanel getWidget() {
-    return (GwtToolWindowPanel)super.getWidget();
+  public GwtToolWindowStripe getWidget() {
+    return (GwtToolWindowStripe)super.getWidget();
+  }
+
+  @Override
+  public ToolWindowStripeState getState() {
+    return (ToolWindowStripeState)super.getState();
   }
 }

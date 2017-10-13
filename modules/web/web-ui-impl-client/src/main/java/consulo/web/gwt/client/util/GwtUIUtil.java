@@ -24,6 +24,7 @@ import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,25 +34,20 @@ import java.util.List;
  * @since 20-May-16
  */
 public class GwtUIUtil {
-  public static Widget loadingPanel() {
-    // http://tobiasahlin.com/spinkit/
-    // MIT
-    FlowPanel flowPanel = new FlowPanel();
-    flowPanel.addStyleName("sk-cube-grid");
+  @Nullable
+  @SuppressWarnings("unchecked")
+  public static <T extends Widget> T getParentOf(Widget widget, Class<T> type) {
+    Widget target = widget;
 
-    for(int i = 1; i <= 9; i++) {
-      FlowPanel child = new FlowPanel();
-      child.addStyleName("sk-cube sk-cube" + i);
-      flowPanel.add(child);
+    do {
+      if(target.getClass() == type) {
+        return (T)target;
+      }
+
+      target = target.getParent();
     }
-
-    FlowPanel container = GwtUIUtil.fillAndReturn(new FlowPanel());
-    container.getElement().getStyle().setProperty("display", "flex");
-    container.getElement().getStyle().setProperty("justifyContent", "center");
-
-    flowPanel.getElement().getStyle().setProperty("alignSelf", "center");
-    container.add(flowPanel);
-    return container;
+    while (target != null);
+    return null;
   }
 
   @Deprecated

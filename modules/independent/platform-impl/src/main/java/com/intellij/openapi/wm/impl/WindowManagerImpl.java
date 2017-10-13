@@ -45,6 +45,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.platform.WindowUtils;
 import consulo.ui.RequiredUIAccess;
+import consulo.wm.impl.DesktopCommandProcessorImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -102,7 +103,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
 
   private final EventDispatcher<WindowManagerListener> myEventDispatcher = EventDispatcher.create(WindowManagerListener.class);
 
-  private final CommandProcessor myCommandProcessor;
+  private final CommandProcessorBase myCommandProcessor;
   private final WindowWatcher myWindowWatcher;
   /**
    * That is the default layout.
@@ -143,7 +144,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
       });
     }
 
-    myCommandProcessor = new CommandProcessor();
+    myCommandProcessor = new DesktopCommandProcessorImpl();
     myWindowWatcher = new WindowWatcher();
     final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener(FOCUSED_WINDOW_PROPERTY_NAME, myWindowWatcher);
@@ -657,7 +658,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
    */
   @Override
   @NotNull
-  public final CommandProcessor getCommandProcessor() {
+  public final CommandProcessorBase getCommandProcessor() {
     return myCommandProcessor;
   }
 

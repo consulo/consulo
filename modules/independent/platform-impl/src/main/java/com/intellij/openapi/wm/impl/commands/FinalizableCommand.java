@@ -22,16 +22,16 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Vladimir Kondratyev
  */
-public abstract class FinalizableCommand implements Runnable{
+public abstract class FinalizableCommand implements Runnable {
   private final Runnable myFinishCallBack;
 
   protected ToolWindowManager myManager;
 
-  public FinalizableCommand(final Runnable finishCallBack){
-    myFinishCallBack=finishCallBack;
+  public FinalizableCommand(final Runnable finishCallBack) {
+    myFinishCallBack = finishCallBack;
   }
 
-  public final void finish(){
+  public final void finish() {
     myFinishCallBack.run();
   }
 
@@ -47,5 +47,4 @@ public abstract class FinalizableCommand implements Runnable{
   public boolean willChangeState() {
     return true;
   }
-
 }

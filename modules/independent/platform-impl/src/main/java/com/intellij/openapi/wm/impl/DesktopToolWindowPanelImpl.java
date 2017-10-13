@@ -36,8 +36,8 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
-import consulo.wm.ToolWindowPanel;
-import consulo.wm.ToolWindowStripeButton;
+import consulo.ui.ex.ToolWindowPanel;
+import consulo.ui.ex.ToolWindowStripeButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -329,8 +329,9 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     return new SetEditorComponentCmd(component, finishCallBack);
   }
 
+  @Override
   @NotNull
-  final FinalizableCommand createUpdateButtonPositionCmd(@NotNull String id, @NotNull Runnable finishCallback) {
+  public FinalizableCommand createUpdateButtonPositionCmd(@NotNull String id, @NotNull Runnable finishCallback) {
     return new UpdateButtonPositionCmd(id, finishCallback);
   }
 

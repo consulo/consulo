@@ -15,13 +15,11 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class CommandProcessor implements Runnable {
+public abstract class CommandProcessorBase implements Runnable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.CommandProcessor");
   private final Object myLock = new Object();
 
@@ -47,7 +45,7 @@ public final class CommandProcessor implements Runnable {
     synchronized (myLock) {
       myFlushed = true;
       //noinspection StatementWithEmptyBody
-      while (run(true));
+      while (run(true)) ;
     }
   }
 
@@ -70,6 +68,7 @@ public final class CommandProcessor implements Runnable {
     }
   }
 
+  @Override
   public final void run() {
     run(true);
   }
@@ -96,9 +95,8 @@ public final class CommandProcessor implements Runnable {
       // max. I'm not actually quite sure this should have NON_MODAL modality but it should
       // definitely have some since runnables in command list may (and do) request some PSI activity
       final boolean queueNext = myCommandCount > 0;
-      Application application = ApplicationManager.getApplication();
-      ModalityState modalityState = Registry.is("ide.perProjectModality") ? ModalityState.current() : ModalityState.NON_MODAL;
-      application.getInvokator().invokeLater(command, modalityState, expire).doWhenDone(() -> {
+
+      invokeLater(command, expire).doWhenDone(() -> {
         if (queueNext) {
           run(false);
         }
@@ -106,6 +104,9 @@ public final class CommandProcessor implements Runnable {
       return true;
     }
   }
+
+  @NotNull
+  protected abstract ActionCallback invokeLater(@NotNull Runnable command, @NotNull Condition<?> condition);
 
   @Nullable
   private CommandGroup getNextCommandGroup() {

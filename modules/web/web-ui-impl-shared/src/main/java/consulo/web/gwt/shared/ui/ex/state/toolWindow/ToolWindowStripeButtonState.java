@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.wm;
+package consulo.web.gwt.shared.ui.ex.state.toolWindow;
 
-import com.intellij.openapi.wm.WindowInfo;
-import org.jetbrains.annotations.NotNull;
+import com.vaadin.shared.AbstractComponentState;
+import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 /**
  * @author VISTALL
  * @since 12-Oct-17
  */
-public interface ToolWindowStripeButton {
-  @NotNull
-  WindowInfo getWindowInfo();
+public class ToolWindowStripeButtonState extends AbstractComponentState {
+  public MultiImageState myImageState;
+
+  public boolean mySecondary;
 }

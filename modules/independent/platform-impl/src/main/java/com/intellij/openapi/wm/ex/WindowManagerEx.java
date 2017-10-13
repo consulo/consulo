@@ -18,7 +18,7 @@ package com.intellij.openapi.wm.ex;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.CommandProcessor;
+import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.ui.AppIcon;
 import consulo.ui.RequiredUIAccess;
@@ -74,7 +74,7 @@ public abstract class WindowManagerEx extends WindowManager {
 
   public abstract IdeFrame findFrameFor(@Nullable Project project);
 
-  public abstract CommandProcessor getCommandProcessor();
+  public abstract CommandProcessorBase getCommandProcessor();
 
   /**
    * @return default layout for tool windows.

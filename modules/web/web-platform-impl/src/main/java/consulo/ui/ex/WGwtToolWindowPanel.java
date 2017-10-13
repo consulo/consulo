@@ -15,40 +15,132 @@
  */
 package consulo.ui.ex;
 
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.wm.ToolWindowAnchor;
+import com.intellij.openapi.wm.WindowInfo;
+import com.intellij.openapi.wm.impl.WindowInfoImpl;
+import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
-import consulo.ui.StaticPosition;
 import consulo.ui.internal.VaadinWrapper;
+import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class WGwtToolWindowPanel extends AbstractComponentContainer implements consulo.ui.Component, VaadinWrapper {
-  private final Map<StaticPosition, Component> myComponents = new LinkedHashMap<>();
+public class WGwtToolWindowPanel extends AbstractComponentContainer implements consulo.ui.Component, VaadinWrapper, ToolWindowPanel {
+  private static final Logger LOGGER = Logger.getInstance(WGwtToolWindowPanel.class);
 
-  public WGwtToolWindowPanel() {
-    for (StaticPosition position : StaticPosition.values()) {
-      if(position == StaticPosition.CENTER) {
-        add(position, new WGwtToolWindowCenterPanel());
+  private final class AddToolStripeButtonCmd extends FinalizableCommand {
+    private final WGwtToolWindowStripeButton myButton;
+    private final WindowInfoImpl myInfo;
+    private final Comparator<ToolWindowStripeButton> myComparator;
+
+    public AddToolStripeButtonCmd(final WGwtToolWindowStripeButton button, @NotNull WindowInfoImpl info, @NotNull Comparator<ToolWindowStripeButton> comparator, @NotNull Runnable finishCallBack) {
+      super(finishCallBack);
+      myButton = button;
+      myInfo = info;
+      myComparator = comparator;
+    }
+
+    @Override
+    public final void run() {
+      try {
+        final ToolWindowAnchor anchor = myInfo.getAnchor();
+        if (ToolWindowAnchor.TOP == anchor) {
+          myTopStripe.addButton(myButton, myComparator);
+        }
+        else if (ToolWindowAnchor.LEFT == anchor) {
+          myLeftStripe.addButton(myButton, myComparator);
+        }
+        else if (ToolWindowAnchor.BOTTOM == anchor) {
+          myBottomStripe.addButton(myButton, myComparator);
+        }
+        else if (ToolWindowAnchor.RIGHT == anchor) {
+          myRightStripe.addButton(myButton, myComparator);
+        }
+        else {
+          LOGGER.error("unknown anchor: " + anchor);
+        }
+        markAsDirtyRecursive();
       }
-      else {
-        add(position, new WGwtToolWindowStripe());
+      finally {
+        finish();
       }
     }
   }
 
-  private void add(StaticPosition position, Component component) {
-    myComponents.put(position, component);
+  private final class UpdateButtonPositionCmd extends FinalizableCommand {
+    private final String myId;
 
+    private UpdateButtonPositionCmd(@NotNull String id, @NotNull Runnable finishCallBack) {
+      super(finishCallBack);
+      myId = id;
+    }
+
+    @Override
+    public void run() {
+      try {
+        WGwtToolWindowStripeButton stripeButton = getButtonById(myId);
+        if (stripeButton == null) {
+          return;
+        }
+
+        WindowInfo info = stripeButton.getWindowInfo();
+        ToolWindowAnchor anchor = info.getAnchor();
+
+        if (ToolWindowAnchor.TOP == anchor) {
+          myTopStripe.markAsDirtyRecursive();
+        }
+        else if (ToolWindowAnchor.LEFT == anchor) {
+          myLeftStripe.markAsDirtyRecursive();
+        }
+        else if (ToolWindowAnchor.BOTTOM == anchor) {
+          myBottomStripe.markAsDirtyRecursive();
+        }
+        else if (ToolWindowAnchor.RIGHT == anchor) {
+          myRightStripe.markAsDirtyRecursive();
+        }
+        else {
+          LOGGER.error("unknown anchor: " + anchor);
+        }
+      }
+      finally {
+        finish();
+      }
+    }
+  }
+
+  private WGwtToolWindowStripe myTopStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.TOP);
+  private WGwtToolWindowStripe myBottomStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.BOTTOM);
+  private WGwtToolWindowStripe myLeftStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.LEFT);
+  private WGwtToolWindowStripe myRightStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.RIGHT);
+
+  private final Map<String, WGwtToolWindowStripeButton> myId2Button = new HashMap<>();
+  private final List<Component> myChildren = new ArrayList<>();
+
+  public WGwtToolWindowPanel() {
+    add(myTopStripe);
+    add(myBottomStripe);
+    add(myLeftStripe);
+    add(myRightStripe);
+  }
+
+  private void add(Component component) {
     addComponent(component);
+    myChildren.add(component);
+  }
+
+  @Nullable
+  private WGwtToolWindowStripeButton getButtonById(final String id) {
+    return myId2Button.get(id);
   }
 
   @Override
@@ -58,16 +150,35 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
 
   @Override
   public int getComponentCount() {
-    return myComponents.size();
+    return myChildren.size();
   }
 
   @Override
   public Iterator<Component> iterator() {
-    return myComponents.values().iterator();
+    return myChildren.iterator();
   }
 
   @RequiredUIAccess
   @Override
   public void setSize(@NotNull Size size) {
+  }
+
+  @NotNull
+  @Override
+  public FinalizableCommand createAddButtonCmd(ToolWindowStripeButton button, @NotNull WindowInfoImpl info, @NotNull Comparator<ToolWindowStripeButton> comparator, @NotNull Runnable finishCallBack) {
+    final WindowInfoImpl copiedInfo = info.copy();
+    myId2Button.put(copiedInfo.getId(), (WGwtToolWindowStripeButton)button);
+    return new AddToolStripeButtonCmd((WGwtToolWindowStripeButton)button, copiedInfo, comparator, finishCallBack);
+  }
+
+  @NotNull
+  @Override
+  public FinalizableCommand createRemoveButtonCmd(@NotNull String id, @NotNull Runnable finishCallBack) {
+    return null;
+  }
+
+  @Override
+  public FinalizableCommand createUpdateButtonPositionCmd(@NotNull String id, @NotNull Runnable finishCallback) {
+    return new UpdateButtonPositionCmd(id, finishCallback);
   }
 }

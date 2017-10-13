@@ -26,6 +26,8 @@ import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.impl.DesktopInternalDecorator;
 import com.intellij.ui.content.ContentManager;
 import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,16 +35,25 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * @author VISTALL
  * @since 25-Sep-17
  */
 public class WebToolWindowImpl implements ToolWindowEx {
+  private final PropertyChangeSupport myChangeSupport;
+
   private ActionCallback myActivation;
   private ToolWindowFactory myContentFactory;
+  private WebToolWindowManagerImpl myToolWindowManager;
+  private String myId;
+  private Icon myIcon;
 
-  public WebToolWindowImpl(WebToolWindowManagerImpl webToolWindowManager, String id, boolean canCloseContent, Component component) {
+  public WebToolWindowImpl(WebToolWindowManagerImpl toolWindowManager, String id, boolean canCloseContent, Component component) {
+    myToolWindowManager = toolWindowManager;
+    myId = id;
+    myChangeSupport = new PropertyChangeSupport(this);
   }
 
   @Override
@@ -51,8 +62,13 @@ public class WebToolWindowImpl implements ToolWindowEx {
   }
 
   @Override
-  public void removePropertyChangeListener(PropertyChangeListener l) {
+  public void addPropertyChangeListener(PropertyChangeListener l) {
+    myChangeSupport.addPropertyChangeListener(l);
+  }
 
+  @Override
+  public void removePropertyChangeListener(PropertyChangeListener l) {
+    myChangeSupport.removePropertyChangeListener(l);
   }
 
   @Override
@@ -98,7 +114,7 @@ public class WebToolWindowImpl implements ToolWindowEx {
   @NotNull
   @Override
   public String getId() {
-    return null;
+    return myId;
   }
 
   @Override
@@ -146,14 +162,21 @@ public class WebToolWindowImpl implements ToolWindowEx {
 
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isSplitMode() {
-    return false;
+    UIAccess.assertIsUIThread();
+    return myToolWindowManager.isSplitMode(myId);
   }
 
+  @RequiredUIAccess
   @Override
-  public void setSplitMode(boolean split, @Nullable Runnable runnable) {
-
+  public void setSplitMode(boolean isSideTool, @Nullable Runnable runnable) {
+    UIAccess.assertIsUIThread();
+    myToolWindowManager.setSideTool(myId, isSideTool);
+    if (runnable != null) {
+      myToolWindowManager.invokeLater(runnable);
+    }
   }
 
   @Override
@@ -178,12 +201,17 @@ public class WebToolWindowImpl implements ToolWindowEx {
 
   @Override
   public Icon getIcon() {
-    return null;
+    return myIcon;
   }
 
   @Override
   public void setIcon(Icon icon) {
+    UIAccess.assertIsUIThread();
+    myIcon = icon;
+    final Icon oldIcon = getIcon();
 
+    myIcon = icon;
+    myChangeSupport.firePropertyChange(PROP_ICON, oldIcon, icon);
   }
 
   @Override
@@ -199,7 +227,7 @@ public class WebToolWindowImpl implements ToolWindowEx {
   @NotNull
   @Override
   public String getStripeTitle() {
-    return null;
+    return getId();
   }
 
   @Override

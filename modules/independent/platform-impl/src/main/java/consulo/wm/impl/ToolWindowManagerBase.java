@@ -15,8 +15,10 @@
  */
 package consulo.wm.impl;
 
+import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
@@ -27,26 +29,28 @@ import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.*;
+import com.intellij.openapi.wm.impl.commands.ApplyWindowInfoCmd;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.openapi.wm.impl.commands.InvokeLaterCmd;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
+import com.intellij.util.SmartList;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import consulo.wm.ToolWindowPanel;
-import consulo.wm.ToolWindowStripeButton;
+import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.ui.ex.ToolWindowPanel;
+import consulo.ui.ex.ToolWindowStripeButton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -92,21 +96,38 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   @NonNls
   protected static final String LAYOUT_TO_RESTORE = "layout-to-restore";
 
+  private static final Logger LOG = Logger.getInstance(ToolWindowManagerBase.class);
+
+  protected final Map<String, ToolWindowInternalDecorator> myId2InternalDecorator = new HashMap<>();
+
+  protected final Map<String, ToolWindowStripeButton> myId2StripeButton = new HashMap<>();
+
+  protected final ToolWindowSideStack mySideStack = new ToolWindowSideStack();
+
   protected final Project myProject;
+  protected final WindowManagerEx myWindowManager;
   protected final EventDispatcher<ToolWindowManagerListener> myDispatcher = EventDispatcher.create(ToolWindowManagerListener.class);
-  protected final CommandProcessor myCommandProcessor = new CommandProcessor();
+  protected final CommandProcessorBase myCommandProcessor;
   protected final ToolWindowLayout myLayout = new ToolWindowLayout();
   protected ToolWindowLayout myLayoutToRestoreLater = null;
   protected boolean myEditorWasActive;
 
   protected ToolWindowPanel myToolWindowPanel;
 
-  protected ToolWindowManagerBase(Project project) {
+  protected ToolWindowManagerBase(Project project, WindowManagerEx windowManagerEx) {
     myProject = project;
+    myWindowManager = windowManagerEx;
+
+    myCommandProcessor = createCommandProcessor();
   }
+
+  @NotNull
+  protected abstract CommandProcessorBase createCommandProcessor();
 
   protected void initAll(List<FinalizableCommand> commandsList) {
   }
+
+  protected abstract void applyInfo(String id, WindowInfoImpl info, List<FinalizableCommand> commandsList);
 
   /**
    * This is helper method. It delegated its functionality to the WindowManager.
@@ -183,6 +204,22 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     return window;
   }
 
+  /**
+   * @return internal decorator for the tool window with specified <code>ID</code>.
+   */
+  @Nullable
+  protected ToolWindowInternalDecorator getInternalDecorator(final String id) {
+    return myId2InternalDecorator.get(id);
+  }
+
+  /**
+   * @return tool button for the window with specified <code>ID</code>.
+   */
+  @Nullable
+  protected ToolWindowStripeButton getStripeButton(final String id) {
+    return myId2StripeButton.get(id);
+  }
+
   private static boolean checkCondition(Project project, ToolWindowEP toolWindowEP) {
     Condition<Project> condition = toolWindowEP.getCondition();
     if (condition != null && !condition.value(project)) {
@@ -222,9 +259,72 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     toolWindow.setContentUiType(type, null);
   }
 
-  protected void appendAddButtonCmd(final DesktopStripeButton button, final WindowInfoImpl info, final List<FinalizableCommand> commandsList) {
+  /**
+   * Helper method. It deactivates (and hides) window with specified <code>id</code>.
+   *
+   * @param id         <code>id</code> of the tool window to be deactivated.
+   * @param shouldHide if <code>true</code> then also hides specified tool window.
+   */
+  protected void deactivateToolWindowImpl(@NotNull String id, final boolean shouldHide, @NotNull List<FinalizableCommand> commandsList) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("enter: deactivateToolWindowImpl(" + id + "," + shouldHide + ")");
+    }
+
+    WindowInfoImpl info = getInfo(id);
+    if (shouldHide && info.isVisible()) {
+      applyInfo(id, info, commandsList);
+    }
+    info.setActive(false);
+    appendApplyWindowInfoCmd(info, commandsList);
+  }
+
+  @RequiredUIAccess
+  public boolean isSplitMode(String id) {
+    UIAccess.assertIsUIThread();
+    checkId(id);
+    return getInfo(id).isSplit();
+  }
+
+  public void setSideTool(String id, boolean isSide) {
+    List<FinalizableCommand> commandList = new SmartList<>();
+    setSplitModeImpl(id, isSide, commandList);
+    execute(commandList);
+  }
+
+  private void setSplitModeImpl(final String id, final boolean isSplit, final List<FinalizableCommand> commandList) {
+    checkId(id);
+    final WindowInfoImpl info = getInfo(id);
+    if (isSplit == info.isSplit()) {
+      return;
+    }
+
+    myLayout.setSplitMode(id, isSplit);
+
+    boolean wasActive = info.isActive();
+    if (wasActive) {
+      deactivateToolWindowImpl(id, true, commandList);
+    }
+    final WindowInfoImpl[] infos = myLayout.getInfos();
+    for (WindowInfoImpl info1 : infos) {
+      appendApplyWindowInfoCmd(info1, commandList);
+    }
+    if (wasActive) {
+      activateToolWindowImpl(id, commandList, true, true);
+    }
+    commandList.add(myToolWindowPanel.createUpdateButtonPositionCmd(id, myCommandProcessor));
+  }
+
+  protected abstract void activateToolWindowImpl(final String id, List<FinalizableCommand> commandList, boolean forced, boolean autoFocusContents);
+
+  protected void appendApplyWindowInfoCmd(final WindowInfoImpl info, final List<FinalizableCommand> commandsList) {
+    final ToolWindowStripeButton button = getStripeButton(info.getId());
+    final ToolWindowInternalDecorator decorator = getInternalDecorator(info.getId());
+    commandsList.add(new ApplyWindowInfoCmd(info, button, decorator, myCommandProcessor));
+  }
+
+  protected void appendAddButtonCmd(final ToolWindowStripeButton button, final WindowInfoImpl info, final List<FinalizableCommand> commandsList) {
     final Comparator<ToolWindowStripeButton> comparator = myLayout.comparator(info.getAnchor());
-    final CommandProcessor commandProcessor = myCommandProcessor;
+    final CommandProcessorBase commandProcessor = myCommandProcessor;
     final FinalizableCommand command = myToolWindowPanel.createAddButtonCmd(button, info, comparator, commandProcessor);
     commandsList.add(command);
   }
@@ -390,5 +490,43 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   public String getActiveToolWindowId() {
     UIAccess.assertIsUIThread();
     return myLayout.getActiveId();
+  }
+
+  @Override
+  public void clearSideStack() {
+    mySideStack.clear();
+  }
+
+  @Override
+  public void dispose() {
+    for (String id : new ArrayList<>(myId2StripeButton.keySet())) {
+      unregisterToolWindow(id);
+    }
+
+    assert myId2StripeButton.isEmpty();
+  }
+
+  public void setShowStripeButton(@NotNull String id, boolean visibleOnPanel) {
+    checkId(id);
+    WindowInfoImpl info = getInfo(id);
+    if (visibleOnPanel == info.isShowStripeButton()) {
+      return;
+    }
+    info.setShowStripeButton(visibleOnPanel);
+    UsageTrigger.trigger("StripeButton[" + id + "]." + (visibleOnPanel ? "shown" : "hidden"));
+
+    List<FinalizableCommand> commandList = new ArrayList<>();
+    appendApplyWindowInfoCmd(info, commandList);
+    execute(commandList);
+  }
+
+  public boolean isShowStripeButton(@NotNull String id) {
+    WindowInfoImpl info = getInfo(id);
+    return info == null || info.isShowStripeButton();
+  }
+
+  @NotNull
+  public Project getProject() {
+    return myProject;
   }
 }

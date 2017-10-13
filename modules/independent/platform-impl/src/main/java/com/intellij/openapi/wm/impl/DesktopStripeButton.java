@@ -29,12 +29,13 @@ import com.intellij.openapi.keymap.KeymapManagerListener;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowAnchor;
+import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.ui.MouseDragHelper;
 import com.intellij.ui.PopupHandler;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.wm.ToolWindowStripeButton;
+import consulo.ui.ex.ToolWindowStripeButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -307,7 +308,8 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     FeatureUsageTracker.getInstance().triggerFeatureUsed("toolwindow.clickstat." + myDecorator.getToolWindow().getId());
   }
 
-  public void apply(@NotNull WindowInfoImpl info) {
+  @Override
+  public void apply(@NotNull WindowInfo info) {
     setSelected(info.isVisible() || info.isActive());
     updateState();
   }

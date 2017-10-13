@@ -15,10 +15,14 @@
  */
 package consulo.ui.ex;
 
+import com.vaadin.shared.communication.SharedState;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Component;
+import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeState;
+import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,11 +31,37 @@ import java.util.List;
  * @since 25-Sep-17
  */
 public class WGwtToolWindowStripe extends AbstractComponentContainer {
-  private List<Component> myButtons = new ArrayList<>();
+  private final List<Component> myButtons = new ArrayList<>();
 
-  public void add(WGwtToolWindowStripeButton button) {
+  private final DockLayoutState.Constraint myConstraint;
+
+  public WGwtToolWindowStripe(DockLayoutState.Constraint constraint) {
+    myConstraint = constraint;
+  }
+
+  public void addButton(WGwtToolWindowStripeButton button, Comparator<ToolWindowStripeButton> comparator) {
     myButtons.add(button);
+
+    myButtons.sort((o1, o2) -> comparator.compare((ToolWindowStripeButton)o1, (ToolWindowStripeButton)o2));
+
     addComponent(button);
+  }
+
+  @Override
+  protected ToolWindowStripeState getState() {
+    return (ToolWindowStripeState)super.getState();
+  }
+
+  @Override
+  protected ToolWindowStripeState getState(boolean markAsDirty) {
+    return (ToolWindowStripeState)super.getState(markAsDirty);
+  }
+
+  @Override
+  protected SharedState createState() {
+    ToolWindowStripeState state = new ToolWindowStripeState();
+    state.myConstraint = myConstraint;
+    return state;
   }
 
   @Override

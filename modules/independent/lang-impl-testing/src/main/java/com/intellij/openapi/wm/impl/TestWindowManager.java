@@ -274,7 +274,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
   }
 
   @Override
-  public final CommandProcessor getCommandProcessor() {
+  public final CommandProcessorBase getCommandProcessor() {
     throw new UnsupportedOperationException();
   }
 

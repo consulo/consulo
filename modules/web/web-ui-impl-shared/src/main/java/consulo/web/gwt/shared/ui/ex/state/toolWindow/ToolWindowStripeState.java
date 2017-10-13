@@ -13,24 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.wm;
+package consulo.web.gwt.shared.ui.ex.state.toolWindow;
 
-import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Comparator;
+import com.vaadin.shared.ui.AbstractComponentContainerState;
+import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
 /**
  * @author VISTALL
  * @since 12-Oct-17
- * <p>
- * TODO [VISTALL] implement {@link consulo.ui.Component}
  */
-public interface ToolWindowPanel {
-  @NotNull
-  FinalizableCommand createAddButtonCmd(final ToolWindowStripeButton button, @NotNull WindowInfoImpl info, @NotNull Comparator<ToolWindowStripeButton> comparator, @NotNull Runnable finishCallBack);
-
-  @NotNull
-  FinalizableCommand createRemoveButtonCmd(@NotNull String id, @NotNull Runnable finishCallBack);
+public class ToolWindowStripeState extends AbstractComponentContainerState {
+  public DockLayoutState.Constraint myConstraint;
 }

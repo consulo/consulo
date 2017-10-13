@@ -253,6 +253,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     return ToolWindowType.SLIDING == myType;
   }
 
+  @Override
   public boolean isVisible() {
     return myVisible;
   }

@@ -15,11 +15,60 @@
  */
 package consulo.ui.ex;
 
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.WindowInfo;
 import com.vaadin.ui.AbstractComponent;
+import consulo.ui.internal.image.WGwtImageUrlCache;
+import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState;
+import consulo.web.wm.impl.WebToolWindowInternalDecorator;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class WGwtToolWindowStripeButton extends AbstractComponent {
+public class WGwtToolWindowStripeButton extends AbstractComponent implements ToolWindowStripeButton {
+  private WebToolWindowInternalDecorator myDecorator;
+
+  public WGwtToolWindowStripeButton(WebToolWindowInternalDecorator decorator, WGwtToolWindowPanel toolWindowPanel) {
+    myDecorator = decorator;
+  }
+
+  @Override
+  public void beforeClientResponse(boolean initial) {
+    super.beforeClientResponse(initial);
+
+    WindowInfo windowInfo = getWindowInfo();
+    ToolWindowStripeButtonState state = getState();
+    ToolWindow toolWindow = myDecorator.getToolWindow();
+
+    state.mySecondary = windowInfo.isSplit();
+    state.caption = windowInfo.getId();
+
+    Icon icon = toolWindow.getIcon();
+
+    try {
+      state.myImageState = icon == null ? null : WGwtImageUrlCache.fixSwingImageRef((consulo.ui.image.Image)icon).getState();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  protected ToolWindowStripeButtonState getState() {
+    return (ToolWindowStripeButtonState)super.getState();
+  }
+
+  @NotNull
+  @Override
+  public WindowInfo getWindowInfo() {
+    return myDecorator.getWindowInfo();
+  }
+
+  @Override
+  public void apply(@NotNull WindowInfo windowInfo) {
+  }
 }

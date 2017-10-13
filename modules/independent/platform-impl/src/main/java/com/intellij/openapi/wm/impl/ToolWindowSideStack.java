@@ -26,24 +26,24 @@ import java.util.Stack;
  *
  * @author Vladimir Kondratyev
  */
-final class SideStack {
+public final class ToolWindowSideStack {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.SideStack");
   private final Stack myStack;
 
-  SideStack() {
+  public ToolWindowSideStack() {
     myStack = new Stack();
   }
 
   /**
    * Pushes <code>info</code> into the stack. The method stores cloned copy of original <code>info</code>.
    */
-  void push(final WindowInfoImpl info) {
+  public void push(final WindowInfoImpl info) {
     LOG.assertTrue(info.isDocked());
     LOG.assertTrue(!info.isAutoHide());
     myStack.push(info.copy());
   }
 
-  WindowInfoImpl pop(final ToolWindowAnchor anchor) {
+  public WindowInfoImpl pop(final ToolWindowAnchor anchor) {
     for (int i = myStack.size() - 1; true; i--) {
       final WindowInfoImpl info = (WindowInfoImpl)myStack.get(i);
       if (anchor == info.getAnchor()) {
@@ -55,9 +55,9 @@ final class SideStack {
 
   /**
    * @return <code>true</code> if and only if there is window in the state with the same
-   *         <code>anchor</code> as the specified <code>info</code>.
+   * <code>anchor</code> as the specified <code>info</code>.
    */
-  boolean isEmpty(final ToolWindowAnchor anchor) {
+  public boolean isEmpty(final ToolWindowAnchor anchor) {
     for (int i = myStack.size() - 1; i > -1; i--) {
       final WindowInfoImpl info = (WindowInfoImpl)myStack.get(i);
       if (anchor == info.getAnchor()) {
@@ -70,8 +70,8 @@ final class SideStack {
   /**
    * Removes all <code>WindowInfo</code>s with the specified <code>id</code>.
    */
-  void remove(final String id) {
-    for (Iterator i = myStack.iterator(); i.hasNext();) {
+  public void remove(final String id) {
+    for (Iterator i = myStack.iterator(); i.hasNext(); ) {
       final WindowInfoImpl info = (WindowInfoImpl)i.next();
       if (id.equals(info.getId())) {
         i.remove();
@@ -79,7 +79,7 @@ final class SideStack {
     }
   }
 
-  void clear() {
+  public void clear() {
     myStack.clear();
   }
 }

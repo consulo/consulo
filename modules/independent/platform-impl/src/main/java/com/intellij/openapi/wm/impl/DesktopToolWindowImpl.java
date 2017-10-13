@@ -41,6 +41,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -212,6 +213,7 @@ public final class DesktopToolWindowImpl implements ToolWindowEx {
     }
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isSplitMode() {
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -238,6 +240,7 @@ public final class DesktopToolWindowImpl implements ToolWindowEx {
     return myToolWindowManager.getContentUiType(myId);
   }
 
+  @RequiredUIAccess
   @Override
   public void setSplitMode(final boolean isSideTool, @Nullable final Runnable runnable) {
     ApplicationManager.getApplication().assertIsDispatchThread();

@@ -28,7 +28,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.wm.ToolWindowStripeButton;
+import consulo.ui.ex.ToolWindowStripeButton;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -44,7 +44,7 @@ import java.util.List;
  */
 final class DesktopStripePanelImpl extends JPanel {
   private final int myAnchor;
-  private final ArrayList<DesktopStripeButton> myButtons = new ArrayList<DesktopStripeButton>();
+  private final ArrayList<DesktopStripeButton> myButtons = new ArrayList<>();
   private final MyKeymapManagerListener myWeakKeymapManagerListener;
   private final MyUISettingsListener myUISettingsListener;
 
@@ -370,10 +370,10 @@ final class DesktopStripePanelImpl extends JPanel {
   }
 
   private List<DesktopStripeButton> getButtonsToLayOut() {
-    List<DesktopStripeButton> result = new ArrayList<DesktopStripeButton>();
+    List<DesktopStripeButton> result = new ArrayList<>();
 
-    List<DesktopStripeButton> tools = new ArrayList<DesktopStripeButton>();
-    List<DesktopStripeButton> sideTools = new ArrayList<DesktopStripeButton>();
+    List<DesktopStripeButton> tools = new ArrayList<>();
+    List<DesktopStripeButton> sideTools = new ArrayList<>();
 
     for (DesktopStripeButton b : myButtons) {
       if (!isConsideredInLayout(b)) continue;
@@ -504,12 +504,7 @@ final class DesktopStripePanelImpl extends JPanel {
     myManager.setSideToolAndAnchor(info.getId(), ToolWindowAnchor.get(myAnchor), myLastLayoutData.dragInsertPosition,
                                    myLastLayoutData.dragToSide);
 
-    myManager.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        resetDrop();
-      }
-    });
+    myManager.invokeLater(this::resetDrop);
   }
 
   public void resetDrop() {

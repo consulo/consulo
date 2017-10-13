@@ -22,15 +22,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.DecoratedPopupPanel;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.service.EditorColorSchemeService;
 import consulo.web.gwt.client.ui.EditorSegmentBuilder;
 import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
@@ -38,13 +30,7 @@ import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.client.util.GwtUtil;
 import consulo.web.gwt.client.util.ReportableCallable;
-import consulo.web.gwt.shared.transport.GwtColor;
-import consulo.web.gwt.shared.transport.GwtEditorColorScheme;
-import consulo.web.gwt.shared.transport.GwtHighlightInfo;
-import consulo.web.gwt.shared.transport.GwtNavigatable;
-import consulo.web.gwt.shared.transport.GwtNavigateInfo;
-import consulo.web.gwt.shared.transport.GwtTextAttributes;
-import consulo.web.gwt.shared.transport.GwtTextRange;
+import consulo.web.gwt.shared.transport.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -80,7 +66,7 @@ public class GwtEditorImpl extends SimplePanel {
 
     @Override
     public void updateUI() {
-      if(Boolean.TRUE) {
+      if (Boolean.TRUE) {
         return;
       }
       Element parentElement = getElement().getParentElement();
@@ -113,7 +99,7 @@ public class GwtEditorImpl extends SimplePanel {
 
     @Override
     public void updateUI() {
-      if(Boolean.TRUE) {
+      if (Boolean.TRUE) {
         return;
       }
       GwtEditorColorScheme scheme = myEditor.getScheme();
@@ -159,7 +145,7 @@ public class GwtEditorImpl extends SimplePanel {
 
     @Override
     public void updateUI() {
-      if(Boolean.TRUE) {
+      if (Boolean.TRUE) {
         return;
       }
       GwtEditorColorScheme scheme = myEditor.getScheme();
@@ -184,7 +170,7 @@ public class GwtEditorImpl extends SimplePanel {
 
     @Override
     public void updateUI() {
-      if(Boolean.TRUE) {
+      if (Boolean.TRUE) {
         return;
       }
       final Style style = getElement().getStyle();
@@ -257,8 +243,89 @@ public class GwtEditorImpl extends SimplePanel {
   public GwtEditorImpl() {
     sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS | Event.ONKEYUP);
 
-    String text = "some text\nvfdsavfdasvfsdavafv";
-    myScheme = new GwtEditorColorScheme() ;
+    String text = "some text\nvfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv\n" +
+                  "vfdsavfdasvfsdavafv";
+
+    myScheme = new GwtEditorColorScheme();
     setDefaultTextColors(this);
 
     addStyleName("scroll");
@@ -328,7 +395,7 @@ public class GwtEditorImpl extends SimplePanel {
   }
 
   private void setDefaultTextColors(Element element) {
-    if(Boolean.TRUE) {
+    if (Boolean.TRUE) {
       return;
     }
     GwtTextAttributes textAttr = myScheme.getAttributes(GwtEditorColorScheme.TEXT);
@@ -426,8 +493,7 @@ public class GwtEditorImpl extends SimplePanel {
               }
 
               myLastCursorPsiElementTextRange = resultElementRange;
-              GwtHighlightInfo highlightInfo =
-                      new GwtHighlightInfo(myScheme.getAttributes(GwtEditorColorScheme.CTRL_CLICKABLE), resultElementRange, Integer.MAX_VALUE);
+              GwtHighlightInfo highlightInfo = new GwtHighlightInfo(myScheme.getAttributes(GwtEditorColorScheme.CTRL_CLICKABLE), resultElementRange, Integer.MAX_VALUE);
 
               myLastNavigationInfo = result;
 

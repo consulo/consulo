@@ -37,6 +37,7 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.content.Content;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.ex.ToolWindowInternalDecorator;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +52,7 @@ import java.util.Map;
  * @author Eugene Belyaev
  * @author Vladimir Kondratyev
  */
-public final class DesktopInternalDecorator extends JPanel implements Queryable, DataProvider {
+public final class DesktopInternalDecorator extends JPanel implements Queryable, DataProvider, ToolWindowInternalDecorator {
 
   private Project myProject;
   private WindowInfoImpl myInfo;
@@ -143,11 +144,12 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
   /**
    * Applies specified decoration.
    */
-  public final void apply(@NotNull WindowInfoImpl info) {
+  @Override
+  public void apply(@NotNull WindowInfo info) {
     if (Comparing.equal(myInfo, info) || myProject == null || myProject.isDisposed()) {
       return;
     }
-    myInfo = info;
+    myInfo = (WindowInfoImpl)info;
 
     // Anchor
     final ToolWindowAnchor anchor = myInfo.getAnchor();
@@ -485,15 +487,17 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
   /**
    * @return tool window associated with the decorator.
    */
-  final DesktopToolWindowImpl getToolWindow() {
+  @Override
+  public DesktopToolWindowImpl getToolWindow() {
     return myToolWindow;
   }
 
   /**
    * @return last window info applied to the decorator.
    */
+  @Override
   @NotNull
-  final WindowInfoImpl getWindowInfo() {
+  public WindowInfoImpl getWindowInfo() {
     return myInfo;
   }
 

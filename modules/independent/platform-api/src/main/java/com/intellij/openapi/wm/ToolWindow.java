@@ -19,6 +19,7 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.content.ContentManager;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,12 +84,14 @@ public interface ToolWindow extends BusyObject {
   /**
    * @throws IllegalStateException if tool window isn't installed.
    */
+  @RequiredUIAccess
   boolean isSplitMode();
 
   /**
    * @throws IllegalStateException if tool window isn't installed.
    */
-  void setSplitMode(boolean split, @Nullable Runnable runnable);
+  @RequiredUIAccess
+  void setSplitMode(boolean isSideTool, @Nullable Runnable runnable);
 
   /**
    * @throws IllegalStateException if tool window isn't installed.

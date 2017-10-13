@@ -16,39 +16,61 @@
 package consulo.web.gwt.client.ui.ex;
 
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import consulo.web.gwt.client.util.GwtUIUtil;
-import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
 /**
  * @author VISTALL
  * @since 12-Oct-17
  */
 public class GwtToolWindowStripeButton extends HorizontalPanel {
+  private static int ourIndex = 0;
+
   private boolean myActive;
-  private DockLayoutState.Constraint myConstraint;
+  private Label myLabel;
 
-  public GwtToolWindowStripeButton(String labelText, DockLayoutState.Constraint constraint, GwtToolWindowPanel toolWindowPanel) {
-    myConstraint = constraint;
-    Label label = GwtUIUtil.fillAndReturn(new Label(labelText));
-    label.setHorizontalAlignment(ALIGN_CENTER);
-    add(label);
-
-    // too dirty hack. most browsers may not support that
-    getElement().getStyle().setProperty("writingMode", "vertical-rl");
-    getElement().getStyle().setProperty("transform", "rotate(180deg)");
-
-    sinkEvents(Event.ONCLICK);
+  public GwtToolWindowStripeButton() {
+    getElement().setId("GwtToolWindowStripeButton-" + ourIndex++);
+    sinkEvents(Event.ONCLICK | Event.ONFOCUS);
 
     addDomHandler(event -> {
-      toolWindowPanel.showOrHide(labelText);
+      if(myActive) {
+        return;
+      }
+
+      getElement().getStyle().setBackgroundColor("lightGray");
+    }, MouseOverEvent.getType());
+
+    addDomHandler(event -> {
+      if (myActive) {
+        return;
+      }
+
+      getElement().getStyle().setBackgroundColor(null);
+    }, MouseOutEvent.getType());
+  }
+
+  public void build(String text) {
+    clear();
+
+    myLabel = GwtUIUtil.fillAndReturn(new InlineLabel(text));
+    myLabel.setHorizontalAlignment(ALIGN_CENTER);
+    add(myLabel);
+
+    addDomHandler(event -> {
+      // toolWindowPanel.showOrHide(labelText);
     }, ClickEvent.getType());
   }
 
-  public DockLayoutState.Constraint getPosition() {
-    return myConstraint;
+  public void setVerticalText() {
+    // too dirty hack. most browsers may not support that
+    getElement().getStyle().setProperty("writingMode", "vertical-rl");
+    getElement().getStyle().setProperty("transform", "rotate(180deg)");
   }
 
   public void setActive(boolean value) {
