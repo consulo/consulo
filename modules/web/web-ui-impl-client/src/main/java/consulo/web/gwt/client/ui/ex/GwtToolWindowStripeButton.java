@@ -76,8 +76,7 @@ public class GwtToolWindowStripeButton extends SimplePanel {
   }
 
   public void build(String text, @Nullable MultiImageState imageState) {
-    CellPanel w = (CellPanel)getWidget();
-    w.getElement().setId("GwtToolWindowStripeButton-" + ourIndex++);
+    CellPanel cell = (CellPanel)getWidget();
 
     CellPanel panel = myVertical ? new VerticalPanel() : new HorizontalPanel();
 
@@ -108,13 +107,13 @@ public class GwtToolWindowStripeButton extends SimplePanel {
       getElement().getStyle().setPaddingTop(10, Style.Unit.PX);
       getElement().getStyle().setPaddingBottom(10, Style.Unit.PX);
 
-      w.add(panel);
+      cell.add(panel);
 
       if (imageState != null) {
         panel.getElement().getStyle().setMarginBottom(5, Style.Unit.PX);
 
         Widget widget = ImageConverter.create(imageState);
-        w.add(widget);
+        cell.add(widget);
       }
     }
     else {
@@ -125,10 +124,10 @@ public class GwtToolWindowStripeButton extends SimplePanel {
         panel.getElement().getStyle().setMarginLeft(5, Style.Unit.PX);
 
         Widget widget = ImageConverter.create(imageState);
-        w.add(widget);
+        cell.add(widget);
       }
 
-      w.add(panel);
+      cell.add(panel);
     }
   }
 
