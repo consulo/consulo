@@ -15,6 +15,7 @@
  */
 package consulo.web.gwt.client.ui.ex;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
@@ -27,7 +28,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class GwtToolWindowPanel extends DockPanel {
+public class GwtToolWindowPanel extends VerticalPanel {
   private final Map<DockLayoutState.Constraint, GwtToolWindowStripe> myStripes = new HashMap<>();
 
   private final Map<String, GwtToolWindowStripeButton> myButtons = new HashMap<>();
@@ -57,39 +58,43 @@ public class GwtToolWindowPanel extends DockPanel {
         GwtUIUtil.fill(panel);
 
         myStripes.put(constraint, (GwtToolWindowStripe)panel);
-
-        switch (constraint) {
-          case TOP:
-            add(panel, NORTH);
-
-            setAnywhereSize(panel, "22px", "100%", "Bottom");
-            break;
-          case BOTTOM:
-            add(panel, SOUTH);
-
-            setAnywhereSize(panel, "22px", "100%", "Top");
-            break;
-          case LEFT:
-            add(panel, WEST);
-
-            setAnywhereSize(panel, "100%", "22px", "Right");
-            break;
-          case RIGHT:
-            add(panel, EAST);
-
-            setAnywhereSize(panel, "100%", "22px", "Left");
-            break;
-          case CENTER:
-            break;
-        }
       }
     }
 
+    GwtToolWindowStripe topLayout = myStripes.get(DockLayoutState.Constraint.TOP);
+    if (topLayout != null) {
+      add(topLayout);
+      setAnywhereSize(this, topLayout, "22px", "100%", "Bottom");
+    }
+
+    HorizontalPanel centerBlock = new HorizontalPanel();
+    GwtUIUtil.fill(centerBlock);
+
+    GwtToolWindowStripe leftLayout = myStripes.get(DockLayoutState.Constraint.LEFT);
+    if (leftLayout != null) {
+      centerBlock.add(leftLayout);
+      setAnywhereSize(centerBlock, leftLayout, "100%", "22px", "Right");
+    }
+
+    add(centerBlock);
+
     myCenterSplitLayout = new SplitLayoutPanel(2);
 
-    add(myCenterSplitLayout, CENTER);
+    centerBlock.add(myCenterSplitLayout);
 
-    setAnywhereSize(myCenterSplitLayout, "100%", "100%", null);
+    setAnywhereSize(centerBlock, myCenterSplitLayout, "100%", "100%", null);
+
+    GwtToolWindowStripe rightLayout = myStripes.get(DockLayoutState.Constraint.RIGHT);
+    if (rightLayout != null) {
+      centerBlock.add(rightLayout);
+      setAnywhereSize(centerBlock, rightLayout, "100%", "22px", "Left");
+    }
+
+    GwtToolWindowStripe bottomLayout = myStripes.get(DockLayoutState.Constraint.BOTTOM);
+    if (bottomLayout != null) {
+      add(bottomLayout);
+      setAnywhereSize(this, bottomLayout, "22px", "100%", "Top");
+    }
 
     GwtUIUtil.fill(myRootPanel);
 
@@ -135,19 +140,19 @@ public class GwtToolWindowPanel extends DockPanel {
     }
   }
 
-  private void setAnywhereSize(IsWidget widget, String height, String width, String borderPosition) {
-    Widget w = widget.asWidget();
+  private static void setAnywhereSize(CellPanel panel, Widget widget, String height, String width, String borderPosition) {
+    widget.setHeight(height);
+    widget.setWidth(width);
 
-    w.setHeight(height);
-    w.setWidth(width);
+    panel.setCellHeight(widget, height);
+    panel.setCellWidth(widget, width);
 
-    setCellHeight(w, height);
-    setCellWidth(w, width);
 
     if (borderPosition != null) {
-      setCellStyleProperty(w, "border" + borderPosition + "Color", "gray");
-      setCellStyleProperty(w, "border" + borderPosition + "Style", "solid");
-      setCellStyleProperty(w, "border" + borderPosition + "Width", "1px");
+      Element widgetTd = panel.getWidgetTd(widget);
+      widgetTd.getStyle().setProperty("border" + borderPosition + "Color", "gray");
+      widgetTd.getStyle().setProperty("border" + borderPosition + "Style", "solid");
+      widgetTd.getStyle().setProperty("border" + borderPosition + "Width", "1px");
     }
   }
 }

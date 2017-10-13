@@ -15,13 +15,13 @@
  */
 package consulo.web.gwt.client.ui.ex;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.ui.image.ImageConverter;
-import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,11 +34,18 @@ import java.util.List;
  * @since 12-Oct-17
  */
 public class GwtToolWindowStripeButton extends SimplePanel {
+  private static int ourIndex;
+
   private boolean myActive;
   private boolean myVertical;
 
   public GwtToolWindowStripeButton() {
-    setWidget(new HorizontalPanel());
+    HorizontalPanel widget = new HorizontalPanel();
+    widget.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+    widget.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+    widget.setHeight("100%");
+
+    setWidget(widget);
     sinkEvents(Event.ONCLICK | Event.ONFOCUS);
 
     addDomHandler(event -> {
@@ -64,6 +71,7 @@ public class GwtToolWindowStripeButton extends SimplePanel {
 
   public void build(String text, @Nullable MultiImageState imageState) {
     CellPanel w = (CellPanel)getWidget();
+    w.getElement().setId("GwtToolWindowStripeButton-" + ourIndex++);
 
     CellPanel panel = myVertical ? new VerticalPanel() : new HorizontalPanel();
 
@@ -78,23 +86,38 @@ public class GwtToolWindowStripeButton extends SimplePanel {
 
     for (char c : list) {
       HTML child = new HTML(c == ' ' ? "&nbsp;" : String.valueOf(c));
-      if(myVertical) {
+      if (myVertical) {
         child.getElement().getStyle().setProperty("transform", "rotate(-90deg)");
-        child.getElement().getStyle().setProperty("lineHeight", "8px");
+        child.getElement().getStyle().setProperty("lineHeight", "0.6em");
       }
       panel.add(child);
     }
 
+    getElement().getStyle().clearPaddingLeft();
+    getElement().getStyle().clearPaddingRight();
+    getElement().getStyle().clearPaddingTop();
+    getElement().getStyle().clearPaddingBottom();
+
     if (myVertical) {
+      getElement().getStyle().setPaddingTop(10, Style.Unit.PX);
+      getElement().getStyle().setPaddingBottom(10, Style.Unit.PX);
+
       w.add(panel);
 
       if (imageState != null) {
+        panel.getElement().getStyle().setMarginBottom(5, Style.Unit.PX);
+
         Widget widget = ImageConverter.create(imageState);
         w.add(widget);
       }
     }
     else {
+      getElement().getStyle().setPaddingLeft(10, Style.Unit.PX);
+      getElement().getStyle().setPaddingRight(10, Style.Unit.PX);
+
       if (imageState != null) {
+        panel.getElement().getStyle().setMarginLeft(5, Style.Unit.PX);
+
         Widget widget = ImageConverter.create(imageState);
         w.add(widget);
       }
@@ -105,7 +128,10 @@ public class GwtToolWindowStripeButton extends SimplePanel {
 
   public void setVerticalText() {
     myVertical = true;
-    setWidget(new VerticalPanel());
+    VerticalPanel panel = new VerticalPanel();
+    panel.setWidth("100%");
+    panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+    setWidget(panel);
   }
 
   public void setActive(boolean value) {

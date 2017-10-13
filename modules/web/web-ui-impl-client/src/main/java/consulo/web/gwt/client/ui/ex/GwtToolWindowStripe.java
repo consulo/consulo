@@ -39,6 +39,7 @@ public class GwtToolWindowStripe extends SimplePanel {
     myInternalDecorators.clear();
     myButtons.clear();
     myPosition = position;
+
     switch (position) {
       case TOP:
       case BOTTOM:

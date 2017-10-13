@@ -61,6 +61,13 @@ class GwtToolWindowStripeInner extends SimplePanel {
   }
 
   private CellPanel createInner() {
-    return myVertical ? new VerticalPanel() : new HorizontalPanel();
+    if (myVertical) {
+      VerticalPanel panel = new VerticalPanel();
+      panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      return panel;
+    }
+    else {
+      return new HorizontalPanel();
+    }
   }
 }
