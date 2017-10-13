@@ -35,7 +35,6 @@ import java.util.List;
  */
 public class GwtToolWindowStripeButton extends SimplePanel {
   private boolean myActive;
-  private Label myLabel;
   private boolean myVertical;
 
   public GwtToolWindowStripeButton() {
@@ -78,15 +77,13 @@ public class GwtToolWindowStripeButton extends SimplePanel {
     }
 
     for (char c : list) {
-      Label child = new Label(String.valueOf(c));
+      HTML child = new HTML(c == ' ' ? "&nbsp;" : String.valueOf(c));
       if(myVertical) {
         child.getElement().getStyle().setProperty("transform", "rotate(-90deg)");
-        child.getElement().getStyle().setProperty("lineHeight", "10px");
+        child.getElement().getStyle().setProperty("lineHeight", "8px");
       }
       panel.add(child);
     }
-    myLabel = GwtUIUtil.fillAndReturn(new InlineLabel(text));
-    myLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
     if (myVertical) {
       w.add(panel);
