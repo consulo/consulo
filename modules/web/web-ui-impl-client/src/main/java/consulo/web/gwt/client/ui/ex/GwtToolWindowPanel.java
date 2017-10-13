@@ -42,6 +42,8 @@ public class GwtToolWindowPanel extends VerticalPanel {
 
   public GwtToolWindowPanel() {
     setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+
+    myCenterSplitLayout = new SplitLayoutPanel(2);
   }
 
   public void build(List<Widget> widgetList) {
@@ -53,7 +55,7 @@ public class GwtToolWindowPanel extends VerticalPanel {
       if (panel instanceof GwtToolWindowStripe) {
         DockLayoutState.Constraint constraint = DockLayoutState.Constraint.values()[i++];
 
-        ((GwtToolWindowStripe)panel).setPosition(constraint);
+        ((GwtToolWindowStripe)panel).assign(constraint, this);
 
         GwtUIUtil.fill(panel);
 
@@ -61,8 +63,14 @@ public class GwtToolWindowPanel extends VerticalPanel {
       }
     }
 
+    doLayout();
+  }
+
+  public void doLayout() {
+    clear();
+
     GwtToolWindowStripe topLayout = myStripes.get(DockLayoutState.Constraint.TOP);
-    if (topLayout != null) {
+    if (topLayout != null && topLayout.canShow()) {
       add(topLayout);
       setAnywhereSize(this, topLayout, "22px", "100%", "Bottom");
     }
@@ -71,27 +79,27 @@ public class GwtToolWindowPanel extends VerticalPanel {
     GwtUIUtil.fill(centerBlock);
 
     GwtToolWindowStripe leftLayout = myStripes.get(DockLayoutState.Constraint.LEFT);
-    if (leftLayout != null) {
+    if (leftLayout != null && leftLayout.canShow()) {
       centerBlock.add(leftLayout);
       setAnywhereSize(centerBlock, leftLayout, "100%", "22px", "Right");
     }
 
     add(centerBlock);
 
-    myCenterSplitLayout = new SplitLayoutPanel(2);
+    myCenterSplitLayout.clear();
 
     centerBlock.add(myCenterSplitLayout);
 
     setAnywhereSize(centerBlock, myCenterSplitLayout, "100%", "100%", null);
 
     GwtToolWindowStripe rightLayout = myStripes.get(DockLayoutState.Constraint.RIGHT);
-    if (rightLayout != null) {
+    if (rightLayout != null && rightLayout.canShow()) {
       centerBlock.add(rightLayout);
       setAnywhereSize(centerBlock, rightLayout, "100%", "22px", "Left");
     }
 
     GwtToolWindowStripe bottomLayout = myStripes.get(DockLayoutState.Constraint.BOTTOM);
-    if (bottomLayout != null) {
+    if (bottomLayout != null && bottomLayout.canShow()) {
       add(bottomLayout);
       setAnywhereSize(this, bottomLayout, "22px", "100%", "Top");
     }
@@ -106,7 +114,7 @@ public class GwtToolWindowPanel extends VerticalPanel {
 
     myCenterSplitLayout.add(myRootPanel);
 
-    myRootPanel.add(GwtUIUtil.fillAndReturn(new GwtEditorImpl()));
+    myRootPanel.setWidget(GwtUIUtil.fillAndReturn(new GwtEditorImpl()));
   }
 
   public void showOrHide(DockLayoutState.Constraint position, GwtInternalDecorator decorator, String id) {

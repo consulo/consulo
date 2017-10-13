@@ -32,10 +32,13 @@ public class GwtToolWindowStripe extends SimplePanel {
   private final List<GwtToolWindowStripeButton> myButtons = new ArrayList<>();
   private DockLayoutState.Constraint myPosition;
 
+  private GwtToolWindowPanel myToolWindowPanel;
+
   public GwtToolWindowStripe() {
   }
 
-  public void setPosition(DockLayoutState.Constraint position) {
+  public void assign(DockLayoutState.Constraint position, GwtToolWindowPanel toolWindowPanel) {
+    myToolWindowPanel = toolWindowPanel;
     myInternalDecorators.clear();
     myButtons.clear();
     myPosition = position;
@@ -70,5 +73,11 @@ public class GwtToolWindowStripe extends SimplePanel {
     else if (myPosition == DockLayoutState.Constraint.TOP || myPosition == DockLayoutState.Constraint.BOTTOM) {
       button.setHeight("22px");
     }
+
+    myToolWindowPanel.doLayout();
+  }
+
+  public boolean canShow() {
+    return !myButtons.isEmpty();
   }
 }
