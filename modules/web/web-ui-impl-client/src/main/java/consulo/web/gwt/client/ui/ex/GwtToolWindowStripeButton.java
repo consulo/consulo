@@ -19,27 +19,31 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.*;
+import consulo.web.gwt.client.ui.image.ImageConverter;
 import consulo.web.gwt.client.util.GwtUIUtil;
+import consulo.web.gwt.shared.ui.state.image.MultiImageState;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 12-Oct-17
  */
-public class GwtToolWindowStripeButton extends HorizontalPanel {
-  private static int ourIndex = 0;
-
+public class GwtToolWindowStripeButton extends SimplePanel {
   private boolean myActive;
   private Label myLabel;
+  private boolean myVertical;
 
   public GwtToolWindowStripeButton() {
-    getElement().setId("GwtToolWindowStripeButton-" + ourIndex++);
+    setWidget(new HorizontalPanel());
     sinkEvents(Event.ONCLICK | Event.ONFOCUS);
 
     addDomHandler(event -> {
-      if(myActive) {
+      if (myActive) {
         return;
       }
 
@@ -53,24 +57,58 @@ public class GwtToolWindowStripeButton extends HorizontalPanel {
 
       getElement().getStyle().setBackgroundColor(null);
     }, MouseOutEvent.getType());
-  }
-
-  public void build(String text) {
-    clear();
-
-    myLabel = GwtUIUtil.fillAndReturn(new InlineLabel(text));
-    myLabel.setHorizontalAlignment(ALIGN_CENTER);
-    add(myLabel);
 
     addDomHandler(event -> {
       // toolWindowPanel.showOrHide(labelText);
     }, ClickEvent.getType());
   }
 
+  public void build(String text, @Nullable MultiImageState imageState) {
+    CellPanel w = (CellPanel)getWidget();
+
+    CellPanel panel = myVertical ? new VerticalPanel() : new HorizontalPanel();
+
+    List<Character> list = new ArrayList<>(text.length());
+    for (char c : text.toCharArray()) {
+      list.add(c);
+    }
+
+    if (myVertical) {
+      Collections.reverse(list);
+    }
+
+    for (char c : list) {
+      Label child = new Label(String.valueOf(c));
+      if(myVertical) {
+        child.getElement().getStyle().setProperty("transform", "rotate(-90deg)");
+        child.getElement().getStyle().setProperty("lineHeight", "10px");
+      }
+      panel.add(child);
+    }
+    myLabel = GwtUIUtil.fillAndReturn(new InlineLabel(text));
+    myLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+
+    if (myVertical) {
+      w.add(panel);
+
+      if (imageState != null) {
+        Widget widget = ImageConverter.create(imageState);
+        w.add(widget);
+      }
+    }
+    else {
+      if (imageState != null) {
+        Widget widget = ImageConverter.create(imageState);
+        w.add(widget);
+      }
+
+      w.add(panel);
+    }
+  }
+
   public void setVerticalText() {
-    // too dirty hack. most browsers may not support that
-    getElement().getStyle().setProperty("writingMode", "vertical-rl");
-    getElement().getStyle().setProperty("transform", "rotate(180deg)");
+    myVertical = true;
+    setWidget(new VerticalPanel());
   }
 
   public void setActive(boolean value) {

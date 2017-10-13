@@ -35,7 +35,7 @@ public class GwtToolWindowStripeButtonConnector extends AbstractComponentConnect
 
     GwtToolWindowStripeButton widget = getWidget();
 
-    widget.build(getState().caption);
+    widget.build(getState().caption, getState().myImageState);
   }
 
   @OnStateChange("mySecondary")
