@@ -226,6 +226,11 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
 
   }
 
+  @Override
+  public void disposeRootFrame() {
+
+  }
+
   @Nullable
   @Override
   public Element getState() {

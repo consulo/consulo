@@ -45,5 +45,8 @@
 
     <applicationService serviceInterface="consulo.start.WelcomeFrameManager"
                         serviceImplementation="consulo.web.start.WebWelcomeFrameManager" />
+
+    <applicationService serviceInterface="com.intellij.ui.content.ContentFactory"
+                        serviceImplementation="consulo.web.ui.content.impl.WebContentFactoryImpl"/>
   </extensions>
 </idea-plugin>

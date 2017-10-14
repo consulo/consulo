@@ -1257,8 +1257,6 @@
 
     <applicationService serviceInterface="com.intellij.openapi.ui.DialogWrapperPeerFactory"
                         serviceImplementation="com.intellij.openapi.ui.impl.DialogWrapperPeerFactoryImpl"/>
-    <applicationService serviceInterface="com.intellij.ui.content.ContentFactory"
-                        serviceImplementation="com.intellij.ui.content.ContentFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.ui.TreeUIHelper"
                         serviceImplementation="com.intellij.ui.TreeUIHelperImpl"/>
     <applicationService serviceInterface="com.intellij.ui.ExpandableItemsHandlerFactory"

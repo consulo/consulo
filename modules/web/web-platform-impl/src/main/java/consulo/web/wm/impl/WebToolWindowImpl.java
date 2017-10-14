@@ -24,8 +24,6 @@ import consulo.wm.impl.ToolWindowManagerBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-
 /**
  * @author VISTALL
  * @since 25-Sep-17
@@ -38,17 +36,16 @@ public class WebToolWindowImpl extends ToolWindowBase {
 
   @Override
   public ActionCallback getReady(@NotNull Object requestor) {
-    throw new UnsupportedOperationException();
+    return ActionCallback.DONE;
   }
 
-  @NotNull
   @Override
   protected void init(boolean canCloseContent, @Nullable Object component) {
     final ContentFactory contentFactory = ContentFactory.getInstance();
-    ContentManager contentManager = myContentManager = contentFactory.createContentManager(null, canCloseContent, myToolWindowManager.getProject());
+    ContentManager contentManager = myContentManager = contentFactory.createContentManager(new WebToolWindowContentUI(), canCloseContent, myToolWindowManager.getProject());
 
     if (component != null) {
-      final Content content = contentFactory.createContent((JComponent)component, "", false);
+      final Content content = contentFactory.createUIContent(null, "", false);
       contentManager.addContent(content);
       contentManager.setSelectedContent(content, false);
     }
