@@ -90,7 +90,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   private final class MyToolWindowPropertyChangeListener implements PropertyChangeListener {
     @Override
     public void propertyChange(final PropertyChangeEvent e) {
-      DesktopToolWindowImpl toolWindow = (DesktopToolWindowImpl)e.getSource();
+      ToolWindow toolWindow = (ToolWindow)e.getSource();
       if (ToolWindowEx.PROP_AVAILABLE.equals(e.getPropertyName())) {
         final WindowInfoImpl info = getInfo(toolWindow.getId());
         if (!toolWindow.isAvailable() && info.isVisible()) {
