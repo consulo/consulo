@@ -27,4 +27,8 @@ public interface BalloonLayout {
   void add(@NotNull Balloon balloon);
 
   void add(@NotNull Balloon balloon, @Nullable Object layoutData);
+
+  default boolean isForWelcomeFrame() {
+    return false;
+  }
 }

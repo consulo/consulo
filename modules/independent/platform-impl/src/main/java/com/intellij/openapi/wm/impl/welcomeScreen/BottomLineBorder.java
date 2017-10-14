@@ -3,6 +3,8 @@
  */
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
+import consulo.ide.welcomeScreen.WelcomeScreenConstants;
+
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
@@ -13,7 +15,7 @@ public class BottomLineBorder extends EmptyBorder {
 
   @Override
   public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-    g.setColor(WelcomeScreenColors.BORDER_COLOR);
+    g.setColor(WelcomeScreenConstants.BORDER_COLOR);
     g.drawLine(x, y + height - 1, x + width, y + height - 1);
   }
 }

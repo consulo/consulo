@@ -26,7 +26,7 @@
   <application-components>
     <component>
       <interface-class>com.intellij.openapi.wm.WindowManager</interface-class>
-      <implementation-class>com.intellij.openapi.wm.impl.WindowManagerImpl</implementation-class>
+      <implementation-class>com.intellij.openapi.wm.impl.DesktopWindowManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.openapi.wm.impl.TestWindowManager</headless-implementation-class>
     </component>
     <component>
@@ -50,7 +50,16 @@
   </project-components>
 
   <extensions defaultExtensionNs="com.intellij">
+    <uiDebuggerExtension implementation="com.intellij.ui.debugger.extensions.PlaybackDebugger"/>
+
+    <applicationService serviceInterface="com.intellij.ui.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"
+                        serviceImplementation="com.intellij.ui.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"/>
+
+
     <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
                         serviceImplementation="com.intellij.openapi.fileChooser.impl.FileChooserFactoryImpl"/>
+
+    <applicationService serviceInterface="consulo.start.WelcomeFrameManager"
+                        serviceImplementation="consulo.start.DesktopWelcomeFrameManager"/>
   </extensions>
 </idea-plugin>

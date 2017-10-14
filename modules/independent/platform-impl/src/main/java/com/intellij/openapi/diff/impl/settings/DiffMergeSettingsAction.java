@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
+import consulo.wm.impl.ToolWindowContentUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +49,7 @@ public class DiffMergeSettingsAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     InputEvent inputEvent = e.getInputEvent();
-    ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE, myActionGroup);
+    ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ToolWindowContentUI.POPUP_PLACE, myActionGroup);
     int x = 0;
     int y = 0;
     if (inputEvent instanceof MouseEvent) {

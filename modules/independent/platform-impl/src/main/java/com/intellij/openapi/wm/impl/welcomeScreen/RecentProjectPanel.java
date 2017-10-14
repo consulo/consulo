@@ -47,6 +47,7 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -206,7 +207,7 @@ public class RecentProjectPanel extends JPanel {
       add(title, BorderLayout.NORTH);
     }
 
-    setBorder(new LineBorder(WelcomeScreenColors.BORDER_COLOR));
+    setBorder(new LineBorder(WelcomeScreenConstants.BORDER_COLOR));
   }
 
   protected static void removeRecentProjectElement(Object element) {
@@ -307,8 +308,8 @@ public class RecentProjectPanel extends JPanel {
     JLabel titleLabel = new JLabel(RECENT_PROJECTS_LABEL);
     title.add(titleLabel);
     titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    titleLabel.setForeground(WelcomeScreenColors.CAPTION_FOREGROUND);
-    title.setBackground(WelcomeScreenColors.CAPTION_BACKGROUND);
+    titleLabel.setForeground(WelcomeScreenConstants.CAPTION_FOREGROUND);
+    title.setBackground(WelcomeScreenConstants.CAPTION_BACKGROUND);
     return title;
   }
 

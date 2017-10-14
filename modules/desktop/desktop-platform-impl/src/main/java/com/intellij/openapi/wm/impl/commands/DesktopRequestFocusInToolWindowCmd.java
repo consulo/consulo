@@ -26,8 +26,8 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.openapi.wm.impl.DesktopFloatingDecorator;
 import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
-import com.intellij.openapi.wm.impl.WindowManagerImpl;
-import com.intellij.openapi.wm.impl.WindowWatcher;
+import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
+import com.intellij.openapi.wm.impl.DesktopWindowWatcher;
 import com.intellij.util.Alarm;
 import org.jetbrains.annotations.NotNull;
 
@@ -191,7 +191,7 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
   }
 
   private static void updateFocusedComponentForWatcher(final Component c) {
-    final WindowWatcher watcher = ((WindowManagerImpl)WindowManager.getInstance()).getWindowWatcher();
+    final DesktopWindowWatcher watcher = ((DesktopWindowManagerImpl)WindowManager.getInstance()).getWindowWatcher();
     final FocusWatcher focusWatcher = watcher.getFocusWatcherFor(c);
     if (focusWatcher != null && c.isFocusOwner()) {
       focusWatcher.setFocusedComponentImpl(c);

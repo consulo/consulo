@@ -15,20 +15,13 @@
  */
 package com.intellij.ui.content;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.content.impl.ContentImpl;
 import com.intellij.ui.content.impl.ContentManagerImpl;
-import com.intellij.openapi.project.Project;
+import consulo.ui.Component;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
 public class ContentFactoryImpl implements ContentFactory {
-  @NotNull
-  @Override
-  public ContentImpl createContent(JComponent component, String displayName, boolean isLockable) {
-    return new ContentImpl(component, displayName, isLockable);
-  }
-
   @NotNull
   @Override
   public ContentManagerImpl createContentManager(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project) {
@@ -40,4 +33,19 @@ public class ContentFactoryImpl implements ContentFactory {
   public ContentManager createContentManager(boolean canCloseContents, @NotNull Project project) {
     return createContentManager(new TabbedPaneContentUI(), canCloseContents, project);
   }
+
+  @NotNull
+  @Override
+  public Content createUIContent(@NotNull Component component, String displayName, boolean isLockable) {
+    return null;
+  }
+
+  // TODO [VISTALL] AWT & Swing dependency
+  // region AWT & Swing dependency
+  @NotNull
+  @Override
+  public ContentImpl createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
+    return new ContentImpl(component, displayName, isLockable);
+  }
+  // endregion
 }

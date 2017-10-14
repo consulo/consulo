@@ -331,7 +331,8 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     setFont(font);
   }
 
-  void updatePresentation() {
+  @Override
+  public void updatePresentation() {
     updateState();
     updateText();
     Icon icon = myDecorator.getToolWindow().getIcon();

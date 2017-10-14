@@ -30,9 +30,8 @@ import com.intellij.openapi.actionSystem.impl.WeakTimerListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.status.ClockPanel;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
@@ -54,8 +53,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,18 +96,14 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
     myPresentationFactory = new MenuItemPresentationFactory();
     myDataManager = dataManager;
 
-    if (WindowManagerImpl.isFloatingMenuBarSupported()) {
+    if (WindowManagerEx.getInstanceEx().isFloatingMenuBarSupported()) {
       myAnimator = new MyAnimator();
       myActivationWatcher = new Timer(100, new MyActionListener());
       myClockPanel = new ClockPanel();
       myButton = new MyExitFullScreenButton();
       add(myClockPanel);
       add(myButton);
-      addPropertyChangeListener(WindowManagerImpl.FULL_SCREEN, new PropertyChangeListener() {
-        @Override public void propertyChange(PropertyChangeEvent evt) {
-          updateState();
-        }
-      });
+      addPropertyChangeListener(WindowManagerEx.FULL_SCREEN, evt -> updateState());
       addMouseListener(new MyMouseListener());
     }
     else {

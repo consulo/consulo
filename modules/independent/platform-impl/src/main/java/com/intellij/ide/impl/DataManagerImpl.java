@@ -18,20 +18,8 @@ package com.intellij.ide.impl;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ProhibitAWTEvents;
-import com.intellij.ide.impl.dataRules.CopyProviderRule;
-import com.intellij.ide.impl.dataRules.CutProviderRule;
-import com.intellij.ide.impl.dataRules.FileEditorRule;
-import com.intellij.ide.impl.dataRules.FileTextRule;
-import com.intellij.ide.impl.dataRules.GetDataRule;
-import com.intellij.ide.impl.dataRules.InactiveEditorRule;
-import com.intellij.ide.impl.dataRules.NavigatableArrayRule;
-import com.intellij.ide.impl.dataRules.PasteProviderRule;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
+import com.intellij.ide.impl.dataRules.*;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
@@ -46,10 +34,10 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.DesktopFloatingDecorator;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.KeyedLazyInstanceEP;
 import com.intellij.util.containers.WeakValueHashMap;
+import consulo.ui.ex.ToolWindowFloatingDecorator;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -133,7 +121,7 @@ public class DataManagerImpl extends DataManager {
       dataProvider = (DataProvider)component;
     }
     else if (component instanceof TypeSafeDataProvider) {
-      dataProvider = new TypeSafeDataProviderAdapter((TypeSafeDataProvider) component);
+      dataProvider = new TypeSafeDataProviderAdapter((TypeSafeDataProvider)component);
     }
     else if (component instanceof JComponent) {
       dataProvider = getDataProvider((JComponent)component);
@@ -162,7 +150,7 @@ public class DataManagerImpl extends DataManager {
     GetDataRule rule = myDataConstantToRuleMap.get(dataId);
     if (rule == null && !myDataConstantToRuleMap.containsKey(dataId)) {
       final KeyedLazyInstanceEP<GetDataRule>[] eps = Extensions.getExtensions(GetDataRule.EP_NAME);
-      for(KeyedLazyInstanceEP<GetDataRule> ruleEP: eps) {
+      for (KeyedLazyInstanceEP<GetDataRule> ruleEP : eps) {
         if (ruleEP.key.equals(dataId)) {
           rule = ruleEP.getInstance();
         }
@@ -270,7 +258,7 @@ public class DataManagerImpl extends DataManager {
     // we want this other component to receive key events.
     // Walking up the window ownership hierarchy from the floating toolwindow would have led us to the main IdeFrame
     // whereas we want to be able to type in other frames as well.
-    if (activeWindow instanceof DesktopFloatingDecorator) {
+    if (activeWindow instanceof ToolWindowFloatingDecorator) {
       IdeFocusManager ideFocusManager = IdeFocusManager.findInstanceByComponent(activeWindow);
       IdeFrame lastFocusedFrame = ideFocusManager.getLastFocusedFrame();
       JComponent frameComponent = lastFocusedFrame != null ? lastFocusedFrame.getComponent() : null;
@@ -336,13 +324,9 @@ public class DataManagerImpl extends DataManager {
     public static final NullResult INSTANCE = new NullResult();
   }
 
-  private static final Set<String> ourSafeKeys = new HashSet<>(Arrays.asList(
-          CommonDataKeys.PROJECT.getName(),
-          CommonDataKeys.EDITOR.getName(),
-          PlatformDataKeys.IS_MODAL_CONTEXT.getName(),
-          PlatformDataKeys.CONTEXT_COMPONENT.getName(),
-          PlatformDataKeys.MODALITY_STATE.getName()
-  ));
+  private static final Set<String> ourSafeKeys = new HashSet<>(
+          Arrays.asList(CommonDataKeys.PROJECT.getName(), CommonDataKeys.EDITOR.getName(), PlatformDataKeys.IS_MODAL_CONTEXT.getName(), PlatformDataKeys.CONTEXT_COMPONENT.getName(),
+                        PlatformDataKeys.MODALITY_STATE.getName()));
 
   public static class MyDataContext implements DataContext, UserDataHolder {
     private int myEventCount;
@@ -369,8 +353,7 @@ public class DataManagerImpl extends DataManager {
       if (dataId == null) return null;
       int currentEventCount = IdeEventQueue.getInstance().getEventCount();
       if (myEventCount != -1 && myEventCount != currentEventCount) {
-        LOG.error("cannot share data context between Swing events; initial event count = " + myEventCount + "; current event count = " +
-                  currentEventCount);
+        LOG.error("cannot share data context between Swing events; initial event count = " + myEventCount + "; current event count = " + currentEventCount);
         return doGetData(dataId);
       }
 

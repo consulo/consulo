@@ -20,10 +20,10 @@ import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
@@ -39,24 +39,29 @@ import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.start.WelcomeFrameManager;
+import consulo.ui.Component;
+import consulo.ui.MenuBar;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
+import consulo.ui.style.ColorKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.EventListener;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, AccessibleContextAccessor, UISettingsListener {
-  @NotNull
-  public static Dimension getDefaultWindowSize() {
-    return TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize());
-  }
-
-  BalloonLayout myBalloonLayout;
+public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, AccessibleContextAccessor, UISettingsListener, consulo.ui.Window {
+  private BalloonLayout myBalloonLayout;
   private final FlatWelcomeScreen myScreen;
   private boolean myDisposed;
 
@@ -74,7 +79,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
     setDefaultTitle();
     AppUIUtil.updateWindowIcon(this);
     UIUtil.resetRootPaneAppearance(rootPane);
-    setSize(getDefaultWindowSize());
+    setSize(TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize()));
     setResizable(false);
     Point location = DimensionService.getInstance().getLocationNoRealKey(WelcomeFrame.DIMENSION_KEY);
     Rectangle screenBounds = ScreenUtil.getScreenRectangle(location != null ? location : new Point(0, 0));
@@ -87,11 +92,32 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
       }
     }, this);
 
-    myBalloonLayout = new WelcomeBalloonLayoutImpl(rootPane, JBUI.insets(8), myScreen.getMainWelcomePanel().myEventListener, myScreen.getMainWelcomePanel().myEventLocation);
+    myBalloonLayout = new WelcomeDesktopBalloonLayoutImpl(rootPane, JBUI.insets(8), myScreen.getMainWelcomePanel().myEventListener, myScreen.getMainWelcomePanel().myEventLocation);
 
-    WelcomeFrame.setupCloseAction(this);
+    setupCloseAction(this);
     MnemonicHelper.init(this);
     Disposer.register(ApplicationManager.getApplication(), this);
+  }
+
+  static void setupCloseAction(final JFrame frame) {
+    frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    frame.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(final WindowEvent e) {
+        saveLocation(frame.getBounds());
+
+        frame.dispose();
+
+        if (ProjectManager.getInstance().getOpenProjects().length == 0) {
+          ApplicationManagerEx.getApplicationEx().exit();
+        }
+      }
+    });
+  }
+
+  public static void saveLocation(Rectangle location) {
+    Point middle = new Point(location.x + location.width / 2, location.y = location.height / 2);
+    DimensionService.getInstance().setLocationNoRealKey(WelcomeFrame.DIMENSION_KEY, middle);
   }
 
   public void setDefaultTitle() {
@@ -108,7 +134,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
     super.dispose();
 
     if (myBalloonLayout != null) {
-      ((BalloonLayoutImpl)myBalloonLayout).dispose();
+      ((DesktopBalloonLayoutImpl)myBalloonLayout).dispose();
       myBalloonLayout = null;
     }
 
@@ -123,29 +149,9 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
     return null;
   }
 
-  public static Color getProjectsBackground() {
-    return new JBColor(Gray.xFF, Gray.x39);
-  }
-
-  public static Color getLinkNormalColor() {
-    return new JBColor(Gray._0, Gray.xBB);
-  }
-
-  public static Color getActionLinkSelectionColor() {
-    return new JBColor(0xdbe5f5, 0x485875);
-  }
-
-  public static Color getSeparatorColor() {
-    return UIUtil.getBorderColor();
-  }
-
   @Override
   public AccessibleContext getCurrentAccessibleContext() {
     return accessibleContext;
-  }
-
-  public static boolean isUseProjectGroups() {
-    return true;
   }
 
   @Override
@@ -189,14 +195,64 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
     UIUtil.resetRootPaneAppearance(getRootPane());
   }
 
+  // region Migration staff
+  @RequiredUIAccess
   @Override
-  public boolean isInFullScreen() {
-    return false;
+  public void setContent(@NotNull Component content) {
+    throw new UnsupportedOperationException();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setMenuBar(@Nullable MenuBar menuBar) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void setClosable(boolean value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void close() {
+    setVisible(false);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void addBorder(@NotNull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+    throw new UnsupportedOperationException();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void removeBorder(@NotNull BorderPosition borderPosition) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    throw new UnsupportedOperationException();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
+    throw new UnsupportedOperationException();
   }
 
   @NotNull
   @Override
-  public ActionCallback toggleFullScreen(boolean state) {
-    return ActionCallback.REJECTED;
+  public <T extends EventListener> T getListenerDispatcher(@NotNull Class<T> eventClass) {
+    throw new UnsupportedOperationException();
   }
+
+  @NotNull
+  @Override
+  public <T extends EventListener> Runnable addListener(@NotNull Class<T> eventClass, @NotNull T listener) {
+    throw new UnsupportedOperationException();
+  }
+  // endregion
 }

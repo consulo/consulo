@@ -107,7 +107,6 @@ public class IdeBackgroundUtil {
            component instanceof EditorGutterComponentEx ? "editor" :
            component instanceof JBLoadingPanel ? "loading" :
            component instanceof JBTabs ? "tabs" :
-           component instanceof DesktopToolWindowHeader ? "title" :
            component instanceof JBPanelWithEmptyText ? "panel" :
            component instanceof JPanel && ourKnownNames.contains(component.getName()) ? component.getName() :
            null;

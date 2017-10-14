@@ -25,7 +25,7 @@ import java.util.Comparator;
  * @author VISTALL
  * @since 12-Oct-17
  * <p>
- * TODO [VISTALL] implement {@link consulo.ui.Component}
+ * TODO [VISTALL] create method getComponent() with type {@link consulo.ui.Component}
  */
 public interface ToolWindowPanel {
   @NotNull

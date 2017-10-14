@@ -43,9 +43,9 @@ public class WebToolWindowImpl extends ToolWindowBase {
 
   @NotNull
   @Override
-  protected ContentManager init(boolean canCloseContent, @Nullable Object component) {
+  protected void init(boolean canCloseContent, @Nullable Object component) {
     final ContentFactory contentFactory = ContentFactory.getInstance();
-    ContentManager contentManager = contentFactory.createContentManager(myContentUI, canCloseContent, myToolWindowManager.getProject());
+    ContentManager contentManager = myContentManager = contentFactory.createContentManager(null, canCloseContent, myToolWindowManager.getProject());
 
     if (component != null) {
       final Content content = contentFactory.createContent((JComponent)component, "", false);
@@ -55,7 +55,6 @@ public class WebToolWindowImpl extends ToolWindowBase {
 
     // myComponent = contentManager.getComponent();
 
-    return contentManager;
   }
 
   @Override

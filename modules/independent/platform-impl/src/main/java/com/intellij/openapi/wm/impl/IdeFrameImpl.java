@@ -70,10 +70,7 @@ import java.lang.reflect.Field;
  * @author Vladimir Kondratyev
  */
 public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContextAccessor, DataProvider {
-
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.IdeFrameImpl");
-
-  public static final Key<Boolean> SHOULD_OPEN_IN_FULL_SCREEN = Key.create("should.open.in.full.screen");
 
   private static final String FULL_SCREEN = "FullScreen";
 
@@ -114,7 +111,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
     setupCloseAction();
     MnemonicHelper.init(this);
 
-    myBalloonLayout = new BalloonLayoutImpl(myRootPane, new Insets(8, 8, 8, 8));
+    myBalloonLayout = new DesktopBalloonLayoutImpl(myRootPane, new Insets(8, 8, 8, 8));
 
     // to show window thumbnail under Macs
     // http://lists.apple.com/archives/java-dev/2009/Dec/msg00240.html
@@ -460,7 +457,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
     MouseGestureManager.getInstance().remove(this);
 
     if (myBalloonLayout != null) {
-      ((BalloonLayoutImpl)myBalloonLayout).dispose();
+      ((DesktopBalloonLayoutImpl)myBalloonLayout).dispose();
       myBalloonLayout = null;
     }
 

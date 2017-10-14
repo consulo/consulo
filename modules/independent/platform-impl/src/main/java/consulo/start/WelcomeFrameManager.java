@@ -24,8 +24,6 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author VISTALL
  * @since 23-Sep-17
- *
- * TODO [VISTALL] migrate desktop frame to this class
  */
 public interface WelcomeFrameManager {
   @NotNull

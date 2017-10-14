@@ -8,8 +8,8 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.util.ui.UIUtil;
+import consulo.wm.impl.ToolWindowBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,9 +19,9 @@ import java.util.Set;
 /**
  * We want to hide an external system tool window when last external project is unlinked from the current ide project
  * and show it when the first external project is linked to the ide project.
- * <p/>
+ * <p>
  * This class encapsulates that functionality.
- * 
+ *
  * @author Denis Zhdanov
  * @since 6/14/13 7:01 PM
  */
@@ -53,7 +53,7 @@ public class ExternalToolWindowManager {
             UIUtil.invokeLaterIfNeeded(new Runnable() {
               @Override
               public void run() {
-                toolWindow.setAvailable(false, null); 
+                toolWindow.setAvailable(false, null);
               }
             });
           }
@@ -69,8 +69,8 @@ public class ExternalToolWindowManager {
       return null;
     }
     ToolWindow result = toolWindowManager.getToolWindow(externalSystemId.getReadableName());
-    if (result instanceof DesktopToolWindowImpl) {
-      ((DesktopToolWindowImpl)result).ensureContentInitialized();
+    if (result instanceof ToolWindowBase) {
+      ((ToolWindowBase)result).ensureContentInitialized();
     }
     return result;
   }

@@ -47,7 +47,6 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.openapi.wm.impl.DesktopFloatingDecorator;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneEx;
 import com.intellij.ui.ColoredListCellRenderer;
@@ -62,6 +61,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.KeyboardLayoutUtil;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.ex.ToolWindowFloatingDecorator;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -271,7 +271,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
       return false;
     }
 
-    boolean isFloatingDecorator = window instanceof DesktopFloatingDecorator;
+    boolean isFloatingDecorator = window instanceof ToolWindowFloatingDecorator;
 
     boolean isPopup = !(component instanceof JFrame) && !(component instanceof JDialog);
     if (isPopup) {
@@ -301,9 +301,13 @@ public final class IdeKeyEventDispatcher implements Disposable {
    * simultaneously. Therefore we are using reflection.
    */
   private static KeyStroke getKeyStrokeWithoutMouseModifiers(KeyStroke originalKeyStroke) {
-    int modifier = originalKeyStroke.getModifiers() & ~InputEvent.BUTTON1_DOWN_MASK & ~InputEvent.BUTTON1_MASK &
-                   ~InputEvent.BUTTON2_DOWN_MASK & ~InputEvent.BUTTON2_MASK &
-                   ~InputEvent.BUTTON3_DOWN_MASK & ~InputEvent.BUTTON3_MASK;
+    int modifier = originalKeyStroke.getModifiers() &
+                   ~InputEvent.BUTTON1_DOWN_MASK &
+                   ~InputEvent.BUTTON1_MASK &
+                   ~InputEvent.BUTTON2_DOWN_MASK &
+                   ~InputEvent.BUTTON2_MASK &
+                   ~InputEvent.BUTTON3_DOWN_MASK &
+                   ~InputEvent.BUTTON3_MASK;
     try {
       Method[] methods = AWTKeyStroke.class.getDeclaredMethods();
       Method getCachedStrokeMethod = null;
@@ -380,8 +384,8 @@ public final class IdeKeyEventDispatcher implements Disposable {
     return inInitState();
   }
 
-  @NonNls private static final Set<String> ALT_GR_LAYOUTS =
-          new HashSet<>(Arrays.asList("pl", "de", "fi", "fr", "no", "da", "se", "pt", "nl", "tr", "sl", "hu", "bs", "hr", "sr", "sk", "lv"));
+  @NonNls
+  private static final Set<String> ALT_GR_LAYOUTS = new HashSet<>(Arrays.asList("pl", "de", "fi", "fr", "no", "da", "se", "pt", "nl", "tr", "sl", "hu", "bs", "hr", "sr", "sk", "lv"));
 
   private boolean inInitState() {
     Component focusOwner = myContext.getFocusOwner();
@@ -419,8 +423,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
     if (SystemInfo.isMac) {
       boolean keyTyped = e.getID() == KeyEvent.KEY_TYPED;
-      boolean hasMnemonicsInWindow = e.getID() == KeyEvent.KEY_PRESSED && hasMnemonicInWindow(focusOwner, e.getKeyCode()) ||
-                                     keyTyped && hasMnemonicInWindow(focusOwner, e.getKeyChar());
+      boolean hasMnemonicsInWindow = e.getID() == KeyEvent.KEY_PRESSED && hasMnemonicInWindow(focusOwner, e.getKeyCode()) || keyTyped && hasMnemonicInWindow(focusOwner, e.getKeyChar());
       boolean imEnabled = IdeEventQueue.getInstance().isInputMethodEnabled();
 
       if (e.getModifiersEx() == InputEvent.ALT_DOWN_MASK && (hasMnemonicsInWindow || !imEnabled && keyTyped)) {
@@ -584,9 +587,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
       DataContext ctx = actionEvent.getDataContext();
       if (action instanceof ActionGroup && !((ActionGroup)action).canBePerformed(ctx)) {
         ActionGroup group = (ActionGroup)action;
-        JBPopupFactory.getInstance()
-                .createActionGroupPopup(group.getTemplatePresentation().getText(), group, ctx, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false)
-                .showInBestPositionFor(ctx);
+        JBPopupFactory.getInstance().createActionGroupPopup(group.getTemplatePresentation().getText(), group, ctx, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false).showInBestPositionFor(ctx);
       }
       else {
         ActionUtil.performActionDumbAware(action, actionEvent);
@@ -822,9 +823,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
   }
 
   private static class SecondaryKeystrokePopup extends ListPopupImpl {
-    private SecondaryKeystrokePopup(@NotNull final KeyStroke firstKeystroke,
-                                    @NotNull final List<Pair<AnAction, KeyStroke>> actions,
-                                    final DataContext context) {
+    private SecondaryKeystrokePopup(@NotNull final KeyStroke firstKeystroke, @NotNull final List<Pair<AnAction, KeyStroke>> actions, final DataContext context) {
       super(buildStep(actions, context));
       registerActions(firstKeystroke, actions, context);
     }
@@ -860,8 +859,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
     private static void invokeAction(@NotNull final AnAction action, final DataContext ctx) {
       TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> {
-        final AnActionEvent event =
-                new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, action.getTemplatePresentation().clone(), ActionManager.getInstance(), 0);
+        final AnActionEvent event = new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, action.getTemplatePresentation().clone(), ActionManager.getInstance(), 0);
         if (ActionUtil.lastUpdateAndCheckDumb(action, event, true)) {
           ActionUtil.performActionDumbAware(action, event);
         }

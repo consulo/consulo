@@ -53,12 +53,11 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     super(toolWindowManager, id, canCloseContent, component);
   }
 
-  @NotNull
   @Override
-  protected ContentManager init(boolean canCloseContent, @Nullable Object component) {
+  protected void init(boolean canCloseContent, @Nullable Object component) {
     final ContentFactory contentFactory = ContentFactory.getInstance();
     myContentUI = new DesktopToolWindowContentUi(this);
-    ContentManager contentManager = contentFactory.createContentManager(myContentUI, canCloseContent, myToolWindowManager.getProject());
+    ContentManager contentManager = myContentManager = contentFactory.createContentManager(myContentUI, canCloseContent, myToolWindowManager.getProject());
 
     if (component != null) {
       final Content content = contentFactory.createContent((JComponent)component, "", false);
@@ -75,7 +74,6 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
       }
     });
     Disposer.register(contentManager, notifyConnector);
-    return contentManager;
   }
 
   public DesktopToolWindowContentUi getContentUI() {
@@ -112,7 +110,7 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     return myAvailable && myComponent != null;
   }
 
-  @NotNull
+  @Nullable
   @Override
   public final JComponent getComponent() {
     return myComponent;

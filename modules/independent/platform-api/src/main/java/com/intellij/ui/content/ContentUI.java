@@ -21,8 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 public interface ContentUI extends Disposable {
-  JComponent getComponent();
-
   void setManager(@NotNull ContentManager manager);
 
   boolean isSingleSelection();
@@ -46,4 +44,9 @@ public interface ContentUI extends Disposable {
 
   @NotNull
   String getNextContentActionName();
+
+  // TODO [VISTALL] AWT & Swing dependency
+  // region AWT & Swing dependency
+  JComponent getComponent();
+  // endregion
 }

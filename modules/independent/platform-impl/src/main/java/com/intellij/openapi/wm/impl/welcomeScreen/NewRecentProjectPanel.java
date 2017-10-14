@@ -37,6 +37,7 @@ import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import org.jetbrains.annotations.Nullable;
@@ -55,10 +56,10 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
   public NewRecentProjectPanel(Disposable parentDisposable) {
     super(parentDisposable);
     setBorder(null);
-    setBackground(FlatWelcomeFrame.getProjectsBackground());
+    setBackground(WelcomeScreenConstants.getProjectsBackground());
     JScrollPane scrollPane = UIUtil.findComponentOfType(this, JScrollPane.class);
     if (scrollPane != null) {
-      scrollPane.setBackground(FlatWelcomeFrame.getProjectsBackground());
+      scrollPane.setBackground(WelcomeScreenConstants.getProjectsBackground());
       JBDimension size = JBUI.size(300, 460);
       scrollPane.setSize(size);
       scrollPane.setMinimumSize(size);
@@ -66,7 +67,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
     }
     ListWithFilter panel = UIUtil.findComponentOfType(this, ListWithFilter.class);
     if (panel != null) {
-      panel.setBackground(FlatWelcomeFrame.getProjectsBackground());
+      panel.setBackground(WelcomeScreenConstants.getProjectsBackground());
     }
   }
 
@@ -86,7 +87,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
   @Override
   protected JBList createList(AnAction[] recentProjectActions, Dimension size) {
     final JBList list = super.createList(recentProjectActions, size);
-    list.setBackground(FlatWelcomeFrame.getProjectsBackground());
+    list.setBackground(WelcomeScreenConstants.getProjectsBackground());
     list.addKeyListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
@@ -111,7 +112,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
             }
           }
           else {
-            FlatWelcomeFrame frame = UIUtil.getParentOfType(FlatWelcomeFrame.class, list);
+            JFrame frame = UIUtil.getParentOfType(JFrame.class, list);
             if (frame != null) {
               FocusTraversalPolicy policy = frame.getFocusTraversalPolicy();
               if (policy != null) {
@@ -152,7 +153,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
 
   @Override
   protected boolean isUseGroups() {
-    return FlatWelcomeFrame.isUseProjectGroups();
+    return true;
   }
 
   @Override

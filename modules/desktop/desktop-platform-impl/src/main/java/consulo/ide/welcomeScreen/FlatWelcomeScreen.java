@@ -119,7 +119,7 @@ public class FlatWelcomeScreen extends JPanel {
         // Don't allow focus, as the containing panel is going to focusable.
         link.setFocusable(false);
         link.setPaintUnderline(false);
-        link.setNormalColor(FlatWelcomeFrame.getLinkNormalColor());
+        link.setNormalColor(WelcomeScreenConstants.getLinkNormalColor());
         FlatWelcomePanel.JActionLinkPanel button = new FlatWelcomePanel.JActionLinkPanel(link);
         button.setBorder(JBUI.Borders.empty(8, 20));
         if (action instanceof WelcomePopupAction) {

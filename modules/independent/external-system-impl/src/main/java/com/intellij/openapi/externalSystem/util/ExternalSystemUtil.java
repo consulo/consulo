@@ -83,7 +83,6 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowEP;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
-import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBScrollPane;
@@ -96,6 +95,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.wm.impl.ToolWindowBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -186,8 +186,8 @@ public class ExternalSystemUtil {
     final ToolWindow toolWindow = toolWindowManager.getToolWindow(externalSystemId.getReadableName());
     if (toolWindow == null) return null;
 
-    if (toolWindow instanceof DesktopToolWindowImpl) {
-      ((DesktopToolWindowImpl)toolWindow).ensureContentInitialized();
+    if (toolWindow instanceof ToolWindowBase) {
+      ((ToolWindowBase)toolWindow).ensureContentInitialized();
     }
     return toolWindow;
   }

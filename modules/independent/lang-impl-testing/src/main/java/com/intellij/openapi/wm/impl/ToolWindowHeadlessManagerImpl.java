@@ -44,6 +44,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.ex.ToolWindowInternalDecorator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -216,12 +217,6 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
 
   @Override
   public void removeToolWindowManagerListener(@NotNull ToolWindowManagerListener listener) {
-  }
-
-  @RequiredUIAccess
-  @Override
-  public String getLastActiveToolWindowId(Condition<JComponent> condition) {
-    return null;
   }
 
   @NotNull
@@ -435,11 +430,6 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     }
 
     @Override
-    public JComponent getComponent() {
-      return null;
-    }
-
-    @Override
     public ContentManager getContentManager() {
       return myContentManager;
     }
@@ -457,10 +447,6 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     @RequiredUIAccess
     @Override
     public void activate(@Nullable Runnable runnable, boolean autoFocusContents, boolean forced) {
-    }
-
-    @Override
-    public void showContentPopup(InputEvent inputEvent) {
     }
 
     @Override
@@ -492,7 +478,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     }
 
     @Override
-    public DesktopInternalDecorator getDecorator() {
+    public ToolWindowInternalDecorator getDecorator() {
       return null;
     }
 

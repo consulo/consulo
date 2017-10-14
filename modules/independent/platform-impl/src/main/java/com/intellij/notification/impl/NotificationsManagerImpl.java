@@ -43,7 +43,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeBalloonLayoutImpl;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.*;
 import com.intellij.ui.components.GradientViewport;
@@ -207,7 +206,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         if (window instanceof IdeFrame) {
           BalloonLayout layout = ((IdeFrame)window).getBalloonLayout();
           if (layout != null) {
-            ((BalloonLayoutImpl)layout).remove(notification);
+            ((DesktopBalloonLayoutImpl)layout).remove(notification);
           }
         }
 
@@ -234,12 +233,12 @@ public class NotificationsManagerImpl extends NotificationsManager {
       if (project == null || project.isDefault()) {
         BalloonLayoutData layoutData = new BalloonLayoutData();
         layoutData.groupId = "";
-        layoutData.welcomeScreen = layout instanceof WelcomeBalloonLayoutImpl;
+        layoutData.welcomeScreen = layout.isForWelcomeFrame();
         layoutData.type = notification.getType();
         layoutDataRef.set(layoutData);
       }
       else {
-        BalloonLayoutData.MergeInfo mergeData = ((BalloonLayoutImpl)layout).preMerge(notification);
+        BalloonLayoutData.MergeInfo mergeData = ((DesktopBalloonLayoutImpl)layout).preMerge(notification);
         if (mergeData != null) {
           BalloonLayoutData layoutData = new BalloonLayoutData();
           layoutData.mergeData = mergeData;

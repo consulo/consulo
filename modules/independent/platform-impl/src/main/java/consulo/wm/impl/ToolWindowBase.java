@@ -55,7 +55,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
   private static final Logger LOG = Logger.getInstance(ToolWindowBase.class);
 
   protected final ToolWindowManagerBase myToolWindowManager;
-  protected final ContentManager myContentManager;
+  protected ContentManager myContentManager;
 
   private final PropertyChangeSupport myChangeSupport;
   private final String myId;
@@ -78,11 +78,10 @@ public abstract class ToolWindowBase implements ToolWindowEx {
     myId = id;
     myAvailable = true;
 
-    myContentManager = init(canCloseContent, component);
+    init(canCloseContent, component);
   }
 
-  @NotNull
-  protected abstract ContentManager init(boolean canCloseContent, @Nullable Object component);
+  protected abstract void init(boolean canCloseContent, @Nullable Object component);
 
   @Override
   public final void addPropertyChangeListener(final PropertyChangeListener l) {

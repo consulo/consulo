@@ -20,7 +20,6 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsLogDataKeys;
@@ -29,6 +28,7 @@ import com.intellij.vcs.log.data.MainVcsLogUiProperties;
 import com.intellij.vcs.log.data.VcsLogUiProperties;
 import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.ui.VcsLogInternalDataKeys;
+import consulo.wm.impl.ToolWindowContentUI;
 import icons.VcsLogIcons;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,14 +44,11 @@ public class IntelliSortChooserPopupAction extends DumbAwareAction {
     VcsLogUi logUI = e.getRequiredData(VcsLogDataKeys.VCS_LOG_UI);
     VcsLogUiProperties properties = e.getRequiredData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
 
-    ActionGroup settingsGroup = new DefaultActionGroup(ContainerUtil.map(PermanentGraph.SortType.values(),
-                                                                         (Function<PermanentGraph.SortType, AnAction>)sortType ->
-                                                                                 new SelectIntelliSortTypeAction(logUI, properties, sortType)));
+    ActionGroup settingsGroup = new DefaultActionGroup(
+            ContainerUtil.map(PermanentGraph.SortType.values(), (Function<PermanentGraph.SortType, AnAction>)sortType -> new SelectIntelliSortTypeAction(logUI, properties, sortType)));
 
 
-    ListPopup popup = JBPopupFactory.getInstance()
-            .createActionGroupPopup(null, settingsGroup, e.getDataContext(), JBPopupFactory.ActionSelectionAid.MNEMONICS, true,
-                                    DesktopToolWindowContentUi.POPUP_PLACE);
+    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(null, settingsGroup, e.getDataContext(), JBPopupFactory.ActionSelectionAid.MNEMONICS, true, ToolWindowContentUI.POPUP_PLACE);
     Component component = e.getInputEvent().getComponent();
     if (component instanceof ActionButtonComponent) {
       popup.showUnderneathOf(component);
@@ -78,9 +75,7 @@ public class IntelliSortChooserPopupAction extends DumbAwareAction {
     private final VcsLogUi myUI;
     private final VcsLogUiProperties myProperties;
 
-    public SelectIntelliSortTypeAction(@NotNull VcsLogUi ui,
-                                       @NotNull VcsLogUiProperties properties,
-                                       @NotNull PermanentGraph.SortType sortType) {
+    public SelectIntelliSortTypeAction(@NotNull VcsLogUi ui, @NotNull VcsLogUiProperties properties, @NotNull PermanentGraph.SortType sortType) {
       super(sortType.getName(), sortType.getDescription() + ".", null);
       myUI = ui;
       myProperties = properties;
@@ -95,8 +90,7 @@ public class IntelliSortChooserPopupAction extends DumbAwareAction {
 
     @Override
     public boolean isSelected(AnActionEvent e) {
-      return myProperties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE) &&
-             myProperties.get(MainVcsLogUiProperties.BEK_SORT_TYPE).equals(mySortType);
+      return myProperties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE) && myProperties.get(MainVcsLogUiProperties.BEK_SORT_TYPE).equals(mySortType);
     }
 
     @Override

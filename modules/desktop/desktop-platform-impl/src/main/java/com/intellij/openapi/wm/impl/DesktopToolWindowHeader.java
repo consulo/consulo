@@ -44,6 +44,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.util.ui.ToolwindowPaintUtil;
+import consulo.wm.impl.ToolWindowManagerBase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -227,7 +228,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     new DoubleClickListener(){
       @Override
       protected boolean onDoubleClick(MouseEvent event) {
-        DesktopToolWindowManagerImpl mgr = toolWindow.getToolWindowManager();
+        ToolWindowManagerBase mgr = toolWindow.getToolWindowManager();
         mgr.setMaximized(myToolWindow, !mgr.isMaximized(myToolWindow));
         return true;
       }

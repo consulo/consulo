@@ -39,6 +39,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
+import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.spash.AnimatedLogoLabel;
 import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NotNull;
@@ -124,56 +125,49 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
   }
 
   private JComponent createEventsLink() {
-    final Ref<ActionLink> actionLinkRef = new Ref<ActionLink>();
+    final Ref<ActionLink> actionLinkRef = new Ref<>();
     final JComponent panel = createActionLink("Events", AllIcons.Ide.Notification.NoEvents, actionLinkRef, new AnAction() {
       @RequiredDispatchThread
       @Override
       public void actionPerformed(@NotNull AnActionEvent e) {
-        ((WelcomeBalloonLayoutImpl)myFlatWelcomeFrame.myBalloonLayout).showPopup();
+        ((WelcomeDesktopBalloonLayoutImpl)myFlatWelcomeFrame.getBalloonLayout()).showPopup();
       }
     });
     panel.setVisible(false);
-    myEventListener = new ParameterizedRunnable<List<NotificationType>>() {
-      @Override
-      public void run(List<NotificationType> types) {
-        NotificationType type1 = null;
-        for (NotificationType t : types) {
-          if (NotificationType.ERROR == t) {
-            type1 = NotificationType.ERROR;
-            break;
-          }
-          if (NotificationType.WARNING == t) {
-            type1 = NotificationType.WARNING;
-          }
-          else if (type1 == null && NotificationType.INFORMATION == t) {
-            type1 = NotificationType.INFORMATION;
-          }
+    myEventListener = types -> {
+      NotificationType type1 = null;
+      for (NotificationType t : types) {
+        if (NotificationType.ERROR == t) {
+          type1 = NotificationType.ERROR;
+          break;
         }
+        if (NotificationType.WARNING == t) {
+          type1 = NotificationType.WARNING;
+        }
+        else if (type1 == null && NotificationType.INFORMATION == t) {
+          type1 = NotificationType.INFORMATION;
+        }
+      }
 
-        actionLinkRef.get().setIcon(IdeNotificationArea.createIconWithNotificationCount(actionLinkRef.get(), type1, types.size()));
-        panel.setVisible(true);
-      }
+      actionLinkRef.get().setIcon(IdeNotificationArea.createIconWithNotificationCount(actionLinkRef.get(), type1, types.size()));
+      panel.setVisible(true);
     };
-    myEventLocation = new Computable<Point>() {
-      @Override
-      public Point compute() {
-        Point location = SwingUtilities.convertPoint(panel, 0, 0, getRootPane().getLayeredPane());
-        return new Point(location.x, location.y + 5);
-      }
+    myEventLocation = () -> {
+      Point location = SwingUtilities.convertPoint(panel, 0, 0, getRootPane().getLayeredPane());
+      return new Point(location.x, location.y + 5);
     };
     return panel;
   }
 
   private JComponent createActionLink(final String text, final String groupId, Icon icon, boolean focusListOnLeft) {
-    final Ref<ActionLink> ref = new Ref<ActionLink>(null);
+    final Ref<ActionLink> ref = new Ref<>(null);
     AnAction action = new AnAction() {
       @RequiredDispatchThread
       @Override
       public void actionPerformed(@NotNull AnActionEvent e) {
         ActionGroup configureGroup = (ActionGroup)ActionManager.getInstance().getAction(groupId);
         final PopupFactoryImpl.ActionGroupPopup popup = (PopupFactoryImpl.ActionGroupPopup)JBPopupFactory.getInstance()
-                .createActionGroupPopup(null, new IconsFreeActionGroup(configureGroup), e.getDataContext(), JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                                        false, ActionPlaces.WELCOME_SCREEN);
+                .createActionGroupPopup(null, new IconsFreeActionGroup(configureGroup), e.getDataContext(), JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false, ActionPlaces.WELCOME_SCREEN);
         popup.showUnderneathOfLabel(ref.get());
         UsageTrigger.trigger("welcome.screen." + groupId);
       }
@@ -189,7 +183,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     // Don't allow focus, as the containing panel is going to focusable.
     link.setFocusable(false);
     link.setPaintUnderline(false);
-    link.setNormalColor(FlatWelcomeFrame.getLinkNormalColor());
+    link.setNormalColor(WelcomeScreenConstants.getLinkNormalColor());
     JActionLinkPanel panel = new JActionLinkPanel(link);
     panel.setBorder(JBUI.Borders.empty(4, 6, 4, 6));
     panel.add(createArrow(link), BorderLayout.EAST);
@@ -201,7 +195,8 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
    * Wraps an {@link com.intellij.ui.components.labels.ActionLink} component and delegates accessibility support to it.
    */
   public static class JActionLinkPanel extends JPanel {
-    @NotNull private ActionLink myActionLink;
+    @NotNull
+    private ActionLink myActionLink;
 
     public JActionLinkPanel(@NotNull ActionLink actionLink) {
       super(new BorderLayout());
@@ -295,7 +290,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
       @Override
       public void focusGained(FocusEvent e) {
         comp.setOpaque(true);
-        comp.setBackground(FlatWelcomeFrame.getActionLinkSelectionColor());
+        comp.setBackground(WelcomeScreenConstants.getActionLinkSelectionColor());
       }
 
       @Override
@@ -312,9 +307,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     if (policy != null) {
       Component prev = policy.getComponentBefore(myFlatWelcomeFrame, comp);
       if (prev != null) {
-        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-          IdeFocusManager.getGlobalInstance().requestFocus(prev, true);
-        });
+        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(prev, true));
       }
     }
   }
@@ -324,9 +317,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     if (policy != null) {
       Component next = policy.getComponentAfter(myFlatWelcomeFrame, comp);
       if (next != null) {
-        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-          IdeFocusManager.getGlobalInstance().requestFocus(next, true);
-        });
+        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(next, true));
       }
     }
   }

@@ -17,23 +17,11 @@ package com.intellij.ui.content;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.DeprecationInfo;
+import consulo.ui.Component;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
 public interface ContentFactory {
-  @Deprecated
-  class SERVICE {
-    private SERVICE() {
-    }
-
-    @NotNull
-    @Deprecated
-    public static ContentFactory getInstance() {
-      return ServiceManager.getService(ContentFactory.class);
-    }
-  }
-
   @NotNull
   static ContentFactory getInstance() {
     return ServiceManager.getService(ContentFactory.class);
@@ -45,6 +33,31 @@ public interface ContentFactory {
   @NotNull
   ContentManager createContentManager(boolean canCloseContents, @NotNull Project project);
 
+  /**
+   * do not rename due it will be conflicted with deprecated method
+   */
   @NotNull
-  Content createContent(JComponent component, String displayName, boolean isLockable);
+  Content createUIContent(@NotNull Component component, String displayName, boolean isLockable);
+
+  // TODO [VISTALL] AWT & Swing dependency
+  // region AWT & Swing dependency
+  @NotNull
+  @Deprecated
+  @DeprecationInfo("")
+  Content createContent(javax.swing.JComponent component, String displayName, boolean isLockable);
+  // endregion
+
+  // region Deprecated staff
+  @Deprecated
+  class SERVICE {
+    private SERVICE() {
+    }
+
+    @NotNull
+    @Deprecated
+    public static ContentFactory getInstance() {
+      return ServiceManager.getService(ContentFactory.class);
+    }
+  }
+  // endregion
 }

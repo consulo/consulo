@@ -68,12 +68,9 @@ import java.util.Set;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-@State(name = "WindowManager", storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED))
-public final class WindowManagerImpl extends WindowManagerEx implements NamedComponent, PersistentStateComponent<Element> {
+@State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED))
+public final class DesktopWindowManagerImpl extends WindowManagerEx implements NamedComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.WindowManagerImpl");
-
-  @NonNls
-  public static final String FULL_SCREEN = "ide.frame.full.screen";
 
   @NonNls
   private static final String FOCUSED_WINDOW_PROPERTY_NAME = "focusedWindow";
@@ -104,7 +101,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   private final EventDispatcher<WindowManagerListener> myEventDispatcher = EventDispatcher.create(WindowManagerListener.class);
 
   private final CommandProcessorBase myCommandProcessor;
-  private final WindowWatcher myWindowWatcher;
+  private final DesktopWindowWatcher myWindowWatcher;
   /**
    * That is the default layout.
    */
@@ -127,7 +124,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
   /**
    * invoked by reflection
    */
-  public WindowManagerImpl(DataManager dataManager, ActionManagerEx actionManager, MessageBus bus) {
+  public DesktopWindowManagerImpl(DataManager dataManager, ActionManagerEx actionManager, MessageBus bus) {
     myDataManager = dataManager;
     myActionManager = actionManager;
     if (myDataManager instanceof DataManagerImpl) {
@@ -145,7 +142,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     }
 
     myCommandProcessor = new DesktopCommandProcessorImpl();
-    myWindowWatcher = new WindowWatcher();
+    myWindowWatcher = new DesktopWindowWatcher();
     final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener(FOCUSED_WINDOW_PROPERTY_NAME, myWindowWatcher);
     myLayout = new ToolWindowLayout();
@@ -794,7 +791,7 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     return "WindowManager";
   }
 
-  public WindowWatcher getWindowWatcher() {
+  public DesktopWindowWatcher getWindowWatcher() {
     return myWindowWatcher;
   }
 
@@ -803,7 +800,8 @@ public final class WindowManagerImpl extends WindowManagerEx implements NamedCom
     return SystemInfo.isMacOSLion || SystemInfo.isWindows || SystemInfo.isXWindow && X11UiUtil.isFullScreenSupported();
   }
 
-  public static boolean isFloatingMenuBarSupported() {
+  @Override
+  public boolean isFloatingMenuBarSupported() {
     return !SystemInfo.isMac && getInstance().isFullScreenSupportedInCurrentOS();
   }
 

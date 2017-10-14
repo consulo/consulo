@@ -35,10 +35,11 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.status.IdeStatusBarImpl;
 import com.intellij.openapi.wm.impl.status.MemoryUsagePanel;
 import com.intellij.ui.BalloonLayout;
-import com.intellij.ui.BalloonLayoutImpl;
+import com.intellij.ui.DesktopBalloonLayoutImpl;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
@@ -96,11 +97,11 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
 
     myContentPane.add(myStatusBar, BorderLayout.SOUTH);
 
-    if (WindowManagerImpl.isFloatingMenuBarSupported()) {
+    if (WindowManagerEx.getInstanceEx().isFloatingMenuBarSupported()) {
       menuBar = new IdeMenuBar(actionManager, dataManager);
       getLayeredPane().add(menuBar, new Integer(JLayeredPane.DEFAULT_LAYER - 1));
       if (frame instanceof IdeFrameEx) {
-        addPropertyChangeListener(WindowManagerImpl.FULL_SCREEN, __ -> myFullScreen = ((IdeFrameEx)frame).isInFullScreen());
+        addPropertyChangeListener(WindowManagerEx.FULL_SCREEN, __ -> myFullScreen = ((IdeFrameEx)frame).isInFullScreen());
       }
     }
     else {
@@ -116,7 +117,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
 
   @Override
   protected LayoutManager createRootLayout() {
-    return WindowManagerImpl.isFloatingMenuBarSupported() ? new MyRootLayout() : super.createRootLayout();
+    return WindowManagerEx.getInstanceEx().isFloatingMenuBarSupported() ? new MyRootLayout() : super.createRootLayout();
   }
 
   @Override
@@ -299,7 +300,7 @@ public class IdeRootPane extends JRootPane implements UISettingsListener {
     }
     IdeFrame frame = UIUtil.getParentOfType(IdeFrame.class, this);
     BalloonLayout layout = frame != null ? frame.getBalloonLayout() : null;
-    if (layout instanceof BalloonLayoutImpl) ((BalloonLayoutImpl)layout).queueRelayout();
+    if (layout instanceof DesktopBalloonLayoutImpl) ((DesktopBalloonLayoutImpl)layout).queueRelayout();
   }
 
   private class MyRootLayout extends RootLayout {

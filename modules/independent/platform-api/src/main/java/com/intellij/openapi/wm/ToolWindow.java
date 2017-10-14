@@ -196,7 +196,7 @@ public interface ToolWindow extends BusyObject {
 
   //TODO [VISTALL] awt & swing dependency
 
-  // region awt & swing dependency
+  // region AWT & Swing dependency
 
   /**
    * @return window icon. Returns <code>null</code> if window has no icon.
@@ -211,7 +211,7 @@ public interface ToolWindow extends BusyObject {
   @RequiredUIAccess
   void setIcon(@Nullable javax.swing.Icon icon);
 
-  @NotNull
+  @Nullable
   default javax.swing.JComponent getComponent() {
     throw new AbstractMethodError();
   }

@@ -19,10 +19,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.TabbedPaneContentUI;
+import consulo.wm.impl.ToolWindowContentUI;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -75,7 +75,7 @@ public class PinToolwindowTabAction extends ToggleAction implements DumbAware {
 
     if (enabled) {
       presentation.setIcon(
-              TabbedPaneContentUI.POPUP_PLACE.equals(event.getPlace()) || DesktopToolWindowContentUi.POPUP_PLACE.equals(event.getPlace()) ? null : AllIcons.General.Pin_tab);
+              TabbedPaneContentUI.POPUP_PLACE.equals(event.getPlace()) || ToolWindowContentUI.POPUP_PLACE.equals(event.getPlace()) ? null : AllIcons.General.Pin_tab);
     }
 
     presentation.setEnabled(enabled);

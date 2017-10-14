@@ -44,8 +44,8 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.content.Content;
@@ -367,8 +367,8 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
       DaemonCodeAnalyzer.getInstance(openProject).restart();
     }
     for (IdeFrame frame : WindowManagerEx.getInstanceEx().getAllProjectFrames()) {
-      if (frame instanceof IdeFrameImpl) {
-        ((IdeFrameImpl)frame).updateView();
+      if (frame instanceof IdeFrameEx) {
+        ((IdeFrameEx)frame).updateView();
       }
     }
     ActionToolbarImpl.updateAllToolbarsImmediately();

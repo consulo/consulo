@@ -23,13 +23,13 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.impl.IdeRootPane;
-import com.intellij.openapi.wm.impl.DesktopToolWindowPanelImpl;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.BalloonLayoutEx;
+import consulo.ui.impl.ToolWindowPanelImplEx;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +40,7 @@ import java.awt.event.ComponentEvent;
 import java.util.*;
 import java.util.List;
 
-public class BalloonLayoutImpl implements BalloonLayout {
+public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
   private final ComponentAdapter myResizeListener = new ComponentAdapter() {
     @Override
     public void componentResized(@NotNull ComponentEvent e) {
@@ -77,7 +77,7 @@ public class BalloonLayoutImpl implements BalloonLayout {
 
   private final List<Runnable> myListeners = new ArrayList<>();
 
-  public BalloonLayoutImpl(@NotNull JRootPane parent, @NotNull Insets insets) {
+  public DesktopBalloonLayoutImpl(@NotNull JRootPane parent, @NotNull Insets insets) {
     myParent = parent;
     myLayeredPane = parent.getLayeredPane();
     myInsets = insets;
@@ -131,9 +131,7 @@ public class BalloonLayoutImpl implements BalloonLayout {
     ApplicationManager.getApplication().assertIsDispatchThread();
     Balloon merge = merge(layoutData);
     if (merge == null) {
-      if (getVisibleCount() > 0 &&
-          layoutData instanceof BalloonLayoutData &&
-          ((BalloonLayoutData)layoutData).groupId != null) {
+      if (getVisibleCount() > 0 && layoutData instanceof BalloonLayoutData && ((BalloonLayoutData)layoutData).groupId != null) {
         int index = -1;
         int count = 0;
         for (int i = 0, size = myBalloons.size(); i < size; i++) {
@@ -256,7 +254,7 @@ public class BalloonLayoutImpl implements BalloonLayout {
   }
 
   private static int getVisibleCount() {
-    return Registry.intValue("ide.new.notification.visible.count", 2);
+    return 2;
   }
 
   @NotNull
@@ -304,7 +302,7 @@ public class BalloonLayoutImpl implements BalloonLayout {
       columns = createColumns(layoutRec);
     }
 
-    DesktopToolWindowPanelImpl pane = UIUtil.findComponentOfType(myParent, DesktopToolWindowPanelImpl.class);
+    ToolWindowPanelImplEx pane = UIUtil.findComponentOfType2(myParent, ToolWindowPanelImplEx.class);
     JComponent layeredPane = pane != null ? pane.getMyLayeredPane() : null;
     int eachColumnX = (layeredPane == null ? myLayeredPane.getWidth() : layeredPane.getX() + layeredPane.getWidth()) - 4;
 
@@ -313,7 +311,7 @@ public class BalloonLayoutImpl implements BalloonLayout {
 
   private void newLayout(List<Balloon> balloons, int startX, int bottomY) {
     int y = bottomY;
-    DesktopToolWindowPanelImpl pane = UIUtil.findComponentOfType(myParent, DesktopToolWindowPanelImpl.class);
+    ToolWindowPanelImplEx pane = UIUtil.findComponentOfType2(myParent, ToolWindowPanelImplEx.class);
     if (pane != null) {
       y -= pane.getBottomHeight();
     }

@@ -22,7 +22,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import consulo.application.impl.FrameTitleUtil;
-import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.border.BorderPosition;
@@ -78,7 +77,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
     ActionManager actionManager = ActionManager.getInstance();
     ActionGroup quickStart = (ActionGroup)actionManager.getAction(IdeActions.GROUP_WELCOME_SCREEN_QUICKSTART);
     List<AnAction> group = new ArrayList<>();
-    FlatWelcomeScreen.collectAllActions(group, quickStart);
+    collectAllActions(group, quickStart);
 
     for (AnAction action : group) {
       AnActionEvent e = AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, DataManager.getInstance().getDataContext2(welcomeFrame));
@@ -102,5 +101,16 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
     welcomeFrame.setContent(layout);
     myWindow = welcomeFrame;
     return welcomeFrame;
+  }
+
+  public static void collectAllActions(List<AnAction> group, ActionGroup actionGroup) {
+    for (AnAction action : actionGroup.getChildren(null)) {
+      if (action instanceof ActionGroup && !((ActionGroup)action).isPopup()) {
+        collectAllActions(group, (ActionGroup)action);
+      }
+      else {
+        group.add(action);
+      }
+    }
   }
 }

@@ -37,8 +37,8 @@ import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.ex.ToolWindowInternalDecorator;
-import consulo.ui.ex.ToolWindowPanel;
 import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.impl.ToolWindowPanelImplEx;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +57,7 @@ import java.util.List;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements UISettingsListener, Disposable, ToolWindowPanel {
+public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements UISettingsListener, Disposable, ToolWindowPanelImplEx {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.ToolWindowsPane");
 
   private final IdeFrameImpl myFrame;
@@ -332,6 +332,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     return new UpdateButtonPositionCmd(id, finishCallback);
   }
 
+  @Override
   @NotNull
   public final JComponent getMyLayeredPane() {
     return myLayeredPane;

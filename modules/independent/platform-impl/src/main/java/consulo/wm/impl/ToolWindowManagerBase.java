@@ -568,7 +568,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
    *
    * @param dirtyMode if <code>true</code> then all UI operations are performed in "dirty" mode.
    *                  It means that UI isn't validated and repainted just after each add/remove operation.
-   * @see DesktopToolWindowManagerImpl#prepareForActivation
+   * @see #prepareForActivation
    */
   protected void showAndActivate(final String id, final boolean dirtyMode, List<FinalizableCommand> commandsList, boolean autoFocusContents, boolean forcedFocusRequest) {
     if (!getToolWindow(id).isAvailable()) {
@@ -680,9 +680,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     commandsList.add(command);
   }
 
-  /**
-   * @see DesktopToolWindowPanelImpl#createRemoveDecoratorCmd
-   */
   protected void appendRemoveDecoratorCmd(final String id, final boolean dirtyMode, final List<FinalizableCommand> commandsList) {
     final FinalizableCommand command = myToolWindowPanel.createRemoveDecoratorCmd(id, dirtyMode, myCommandProcessor);
     commandsList.add(command);

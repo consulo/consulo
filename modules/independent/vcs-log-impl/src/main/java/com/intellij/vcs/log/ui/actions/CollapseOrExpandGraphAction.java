@@ -17,7 +17,6 @@ package com.intellij.vcs.log.ui.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.data.MainVcsLogUiProperties;
@@ -26,6 +25,7 @@ import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.impl.VcsLogUtil;
 import com.intellij.vcs.log.ui.VcsLogInternalDataKeys;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
+import consulo.wm.impl.ToolWindowContentUI;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -97,6 +97,6 @@ abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
   protected abstract String getPrefix();
 
   private static boolean isIconHidden(@NotNull AnActionEvent e) {
-    return e.getPlace().equals(DesktopToolWindowContentUi.POPUP_PLACE);
+    return e.getPlace().equals(ToolWindowContentUI.POPUP_PLACE);
   }
 }

@@ -38,6 +38,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.wm.impl.ToolWindowManagerBase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -71,16 +72,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
   private final RemoveStripeButtonAction myHideStripeButtonAction;
 
   private ActionGroup myAdditionalGearActions;
-  /**
-   * Catches all event from tool window and modifies decorator's appearance.
-   */
-  @NonNls private static final String HIDE_ACTIVE_WINDOW_ACTION_ID = "HideActiveWindow";
-  @NonNls public static final String TOGGLE_PINNED_MODE_ACTION_ID = "TogglePinnedMode";
-  @NonNls public static final String TOGGLE_DOCK_MODE_ACTION_ID = "ToggleDockMode";
-  @NonNls public static final String TOGGLE_FLOATING_MODE_ACTION_ID = "ToggleFloatingMode";
-  @NonNls public static final String TOGGLE_WINDOWED_MODE_ACTION_ID = "ToggleWindowedMode";
-  @NonNls public static final String TOGGLE_SIDE_MODE_ACTION_ID = "ToggleSideMode";
-  @NonNls private static final String TOGGLE_CONTENT_UI_TYPE_ACTION_ID = "ToggleContentUiTypeMode";
+
 
   private DesktopToolWindowHeader myHeader;
   private ActionGroup myToggleToolbarGroup;
@@ -353,8 +345,8 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     public Insets getBorderInsets(final Component c) {
       if (myProject == null) return new Insets(0, 0, 0, 0);
       ToolWindowManager toolWindowManager =  ToolWindowManager.getInstance(myProject);
-      if (!(toolWindowManager instanceof DesktopToolWindowManagerImpl)
-          || !((DesktopToolWindowManagerImpl)toolWindowManager).isToolWindowRegistered(myInfo.getId())
+      if (!(toolWindowManager instanceof ToolWindowManagerBase)
+          || !((ToolWindowManagerBase)toolWindowManager).isToolWindowRegistered(myInfo.getId())
           || myWindow.getType() == ToolWindowType.FLOATING) {
         return new Insets(0, 0, 0, 0);
       }

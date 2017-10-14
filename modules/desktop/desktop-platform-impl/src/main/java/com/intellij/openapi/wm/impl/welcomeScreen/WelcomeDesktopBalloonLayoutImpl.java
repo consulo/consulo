@@ -46,7 +46,7 @@ import static com.intellij.notification.impl.NotificationsManagerImpl.FILL_COLOR
 /**
  * @author Alexander Lobas
  */
-public class WelcomeBalloonLayoutImpl extends BalloonLayoutImpl {
+public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
   private static final String TYPE_KEY = "Type";
 
   private final ParameterizedRunnable<List<NotificationType>> myListener;
@@ -55,13 +55,15 @@ public class WelcomeBalloonLayoutImpl extends BalloonLayoutImpl {
   private final BalloonPanel myBalloonPanel = new BalloonPanel();
   private boolean myVisible;
 
-  public WelcomeBalloonLayoutImpl(@NotNull JRootPane parent,
-                                  @NotNull Insets insets,
-                                  @NotNull ParameterizedRunnable<List<NotificationType>> listener,
-                                  @NotNull Computable<Point> buttonLocation) {
+  public WelcomeDesktopBalloonLayoutImpl(@NotNull JRootPane parent, @NotNull Insets insets, @NotNull ParameterizedRunnable<List<NotificationType>> listener, @NotNull Computable<Point> buttonLocation) {
     super(parent, insets);
     myListener = listener;
     myButtonLocation = buttonLocation;
+  }
+
+  @Override
+  public boolean isForWelcomeFrame() {
+    return true;
   }
 
   @Override

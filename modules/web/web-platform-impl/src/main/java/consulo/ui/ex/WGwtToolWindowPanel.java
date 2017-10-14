@@ -24,6 +24,7 @@ import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
+import consulo.ui.impl.ToolWindowPanelImplEx;
 import consulo.ui.internal.VaadinWrapper;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import org.jetbrains.annotations.NotNull;
@@ -177,6 +178,18 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     return null;
   }
 
+  @NotNull
+  @Override
+  public FinalizableCommand createRemoveDecoratorCmd(@NotNull String id, boolean dirtyMode, @NotNull Runnable finishCallBack) {
+    return null;
+  }
+
+  @Override
+  public FinalizableCommand createAddDecoratorCmd(@NotNull ToolWindowInternalDecorator decorator, @NotNull WindowInfoImpl info, boolean dirtyMode, @NotNull Runnable finishCallBack) {
+    return null;
+  }
+
+  @NotNull
   @Override
   public FinalizableCommand createUpdateButtonPositionCmd(@NotNull String id, @NotNull Runnable finishCallback) {
     return new UpdateButtonPositionCmd(id, finishCallback);

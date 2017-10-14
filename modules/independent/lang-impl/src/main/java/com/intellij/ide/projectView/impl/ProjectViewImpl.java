@@ -68,7 +68,6 @@ import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerAdapter;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
-import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.psi.util.PsiUtilCore;
@@ -91,6 +90,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.projectView.ProjectViewEx;
 import consulo.psi.PsiPackageSupportProviders;
+import consulo.wm.impl.ToolWindowContentUI;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Attribute;
@@ -548,7 +548,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       toolWindow.setDefaultContentUiType(ToolWindowContentUiType.COMBO);
       ((ToolWindowEx)toolWindow).setAdditionalGearActions(myActionGroup);
-      toolWindow.getComponent().putClientProperty(DesktopToolWindowContentUi.HIDE_ID_LABEL, "true");
+      toolWindow.getComponent().putClientProperty(ToolWindowContentUI.HIDE_ID_LABEL, "true");
     }
 
     GuiUtils.replaceJSplitPaneWithIDEASplitter(myPanel);

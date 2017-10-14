@@ -22,6 +22,7 @@ import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.ui.AppIcon;
 import consulo.ui.RequiredUIAccess;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,19 +35,28 @@ import java.awt.event.ComponentEvent;
  * @author Vladimir Kondratyev
  */
 public abstract class WindowManagerEx extends WindowManager {
-  public enum WindowShadowMode { NORMAL, SMALL, DISABLED }
+  public static final String ID = "WindowManager";
 
-  public static WindowManagerEx getInstanceEx(){
+  @NonNls
+  public static final String FULL_SCREEN = "ide.frame.full.screen";
+
+  public enum WindowShadowMode {
+    NORMAL,
+    SMALL,
+    DISABLED
+  }
+
+  public static WindowManagerEx getInstanceEx() {
     return (WindowManagerEx)WindowManager.getInstance();
   }
+
   @Override
   public abstract IdeFrameEx getIdeFrame(@Nullable Project project);
 
   @Override
   public void requestUserAttention(@NotNull IdeFrame frame, boolean critical) {
     Project project = frame.getProject();
-    if (project != null)
-      AppIcon.getInstance().requestAttention(project, critical);
+    if (project != null) AppIcon.getInstance().requestAttention(project, critical);
   }
 
   @NotNull
@@ -57,7 +67,7 @@ public abstract class WindowManagerEx extends WindowManager {
 
   /**
    * @return focus owner of the specified window.
-   * @exception IllegalArgumentException if <code>window</code> is <code>null</code>.
+   * @throws IllegalArgumentException if <code>window</code> is <code>null</code>.
    */
   public abstract Component getFocusedComponent(@NotNull Window window);
 
@@ -113,10 +123,17 @@ public abstract class WindowManagerEx extends WindowManager {
 
   /**
    * Either dispose the dialog immediately if project's frame has focus or just hide and dispose when frame gets focus or closes.
-   * @param dialog to hide and dispose later
+   *
+   * @param dialog  to hide and dispose later
    * @param project the dialog has been shown for
    */
   public abstract void hideDialog(JDialog dialog, Project project);
 
   public abstract void adjustContainerWindow(Component c, Dimension oldSize, Dimension newSize);
+
+  public abstract void disposeRootFrame();
+
+  public boolean isFloatingMenuBarSupported() {
+    return false;
+  }
 }

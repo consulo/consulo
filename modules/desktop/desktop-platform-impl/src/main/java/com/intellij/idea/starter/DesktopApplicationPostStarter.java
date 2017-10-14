@@ -28,7 +28,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.SystemDock;
-import com.intellij.openapi.wm.impl.WindowManagerImpl;
+import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.DesktopSplash;
 import consulo.annotations.Internal;
@@ -91,7 +91,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
     // It also cannot be changed before initialization of application components because IdeEventQueue uses other
     // application components. So it is proper to perform replacement only here.
     final ApplicationEx app = ApplicationManagerEx.getApplicationEx();
-    WindowManagerImpl windowManager = (WindowManagerImpl)WindowManager.getInstance();
+    DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
     IdeEventQueue.getInstance().setWindowManager(windowManager);
 
     RecentProjectsManagerBase recentProjectsManager = RecentProjectsManagerBase.getInstanceEx();

@@ -16,10 +16,13 @@
 package com.intellij.openapi.wm.ex;
 
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeFrame;
 import org.jetbrains.annotations.NotNull;
 
 public interface IdeFrameEx extends IdeFrame {
+  public static final Key<Boolean> SHOULD_OPEN_IN_FULL_SCREEN = Key.create("should.open.in.full.screen");
+
   default boolean isInFullScreen() {
     return false;
   }

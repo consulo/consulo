@@ -28,8 +28,8 @@ import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.impl.DesktopFloatingDecorator;
 import com.intellij.openapi.wm.impl.IdeFrameImpl;
+import consulo.ui.ex.ToolWindowFloatingDecorator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -118,7 +118,7 @@ public final class RequestFocusInEditorComponentCmd extends FinalizableCommand{
             // isn't active.
             if(!owner.isActive()){
               final Window activeWindow=getActiveWindow(owner.getOwnedWindows());
-              if(activeWindow == null || (activeWindow instanceof DesktopFloatingDecorator)){
+              if(activeWindow == null || (activeWindow instanceof ToolWindowFloatingDecorator)){
                 //Thread.dumpStack();
                 //System.out.println("------------------------------------------------------");
                 owner.toFront();

@@ -19,7 +19,8 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomeFrame;
+import consulo.awt.TargetAWT;
+import consulo.start.WelcomeFrameManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,7 +72,7 @@ public class NewProjectDialog extends DialogWrapper {
   @Nullable
   @Override
   protected String getDimensionServiceKey() {
-    Dimension defaultWindowSize = FlatWelcomeFrame.getDefaultWindowSize();
+    Dimension defaultWindowSize = TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize());
     setSize(defaultWindowSize.width, defaultWindowSize.height);
     return "NewProjectDialog";
   }

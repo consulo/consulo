@@ -29,6 +29,7 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.wm.impl.ToolWindowManagerBase;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -51,7 +52,7 @@ final class DesktopStripePanelImpl extends JPanel {
   private Dimension myPrefSize;
   private DesktopStripeButton myDragButton;
   private Rectangle myDropRectangle;
-  private final DesktopToolWindowManagerImpl myManager;
+  private final ToolWindowManagerBase myManager;
   private JComponent myDragButtonImage;
   private LayoutData myLastLayoutData;
   private boolean myFinishingDrop;
@@ -59,7 +60,7 @@ final class DesktopStripePanelImpl extends JPanel {
   private final Disposable myDisposable = Disposer.newDisposable();
   private BufferedImage myCachedBg;
 
-  DesktopStripePanelImpl(final int anchor, DesktopToolWindowManagerImpl manager) {
+  DesktopStripePanelImpl(final int anchor, ToolWindowManagerBase manager) {
     super(new GridBagLayout());
     setOpaque(true);
     myManager = manager;

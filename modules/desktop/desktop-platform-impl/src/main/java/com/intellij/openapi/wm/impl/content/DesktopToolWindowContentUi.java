@@ -42,10 +42,11 @@ import com.intellij.util.ContentUtilEx;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.ComparableObject;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.wm.impl.ToolWindowContentUI;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,13 +58,12 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DesktopToolWindowContentUi extends JPanel implements ContentUI, PropertyChangeListener, DataProvider, SwitchProvider {
-  public static final String POPUP_PLACE = "ToolwindowPopup";
+public class DesktopToolWindowContentUi extends JPanel implements ToolWindowContentUI, PropertyChangeListener, DataProvider, SwitchProvider {
+  public static final String POPUP_PLACE = ToolWindowContentUI.POPUP_PLACE;
   // when client property is put in toolwindow component, hides toolwindow label
-  public static final String HIDE_ID_LABEL = "HideIdLabel";
+  public static final String HIDE_ID_LABEL = ToolWindowContentUI.HIDE_ID_LABEL;
 
   ContentManager myManager;
-
 
   final JPanel myContent = new JPanel(new BorderLayout());
   DesktopToolWindowImpl myWindow;

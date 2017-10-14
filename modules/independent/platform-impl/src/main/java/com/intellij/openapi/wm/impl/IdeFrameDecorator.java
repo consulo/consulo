@@ -18,6 +18,7 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.mac.MacMainFrameDecorator;
 import org.jetbrains.annotations.NotNull;
@@ -62,8 +63,8 @@ public abstract class IdeFrameDecorator implements Disposable {
 
   protected void notifyFrameComponents(boolean state) {
     if (myFrame != null) {
-      myFrame.getRootPane().putClientProperty(WindowManagerImpl.FULL_SCREEN, state);
-      myFrame.getJMenuBar().putClientProperty(WindowManagerImpl.FULL_SCREEN, state);
+      myFrame.getRootPane().putClientProperty(WindowManagerEx.FULL_SCREEN, state);
+      myFrame.getJMenuBar().putClientProperty(WindowManagerEx.FULL_SCREEN, state);
     }
   }
 

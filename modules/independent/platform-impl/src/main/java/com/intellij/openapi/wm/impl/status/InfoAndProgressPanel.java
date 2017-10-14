@@ -41,8 +41,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
-import com.intellij.openapi.wm.impl.DesktopToolWindowPanelImpl;
-import com.intellij.ui.BalloonLayoutImpl;
+import com.intellij.ui.DesktopBalloonLayoutImpl;
 import com.intellij.ui.Gray;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.TabbedPaneWrapper;
@@ -55,6 +54,7 @@ import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.ui.impl.ToolWindowPanelImplEx;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -409,7 +409,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     Disposer.register(inline, delegate);
 
     Component anchor = getAnchor(pane);
-    final BalloonLayoutImpl balloonLayout = getBalloonLayout(pane);
+    final DesktopBalloonLayoutImpl balloonLayout = getBalloonLayout(pane);
 
     final Balloon balloon =
             JBPopupFactory.getInstance().createBalloonBuilder(panel.getProgressPanel()).setFadeoutTime(0).setFillColor(Gray.TRANSPARENT).setShowCallout(false)
@@ -455,10 +455,10 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   }
 
   @Nullable
-  private static BalloonLayoutImpl getBalloonLayout(@NotNull JRootPane pane) {
+  private static DesktopBalloonLayoutImpl getBalloonLayout(@NotNull JRootPane pane) {
     Component parent = UIUtil.findUltimateParent(pane);
     if (parent instanceof IdeFrame) {
-      return (BalloonLayoutImpl)((IdeFrame)parent).getBalloonLayout();
+      return (DesktopBalloonLayoutImpl)((IdeFrame)parent).getBalloonLayout();
     }
     return null;
   }
@@ -474,7 +474,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   }
 
   private static boolean isBottomSideToolWindowsVisible(@NotNull JRootPane parent) {
-    DesktopToolWindowPanelImpl pane = UIUtil.findComponentOfType(parent, DesktopToolWindowPanelImpl.class);
+    ToolWindowPanelImplEx pane = UIUtil.findComponentOfType2(parent, ToolWindowPanelImplEx.class);
     return pane != null && pane.isBottomSideToolWindowsVisible();
   }
 

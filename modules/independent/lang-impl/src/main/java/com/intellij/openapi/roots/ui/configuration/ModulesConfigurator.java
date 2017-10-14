@@ -17,6 +17,7 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.ide.actions.ImportModuleAction;
+import com.intellij.ide.impl.util.NewProjectUtilPlatform;
 import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.openapi.Disposable;
@@ -52,7 +53,6 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.newProject.NewProjectDialog;
-import consulo.ide.newProject.actions.NewProjectAction;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.roots.ContentFolderScopes;
@@ -378,7 +378,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
       Module newModule;
 
       if (dialog.showAndGet()) {
-        newModule = NewProjectAction.doCreate(dialog.getProjectPanel(), myModuleModel, moduleDir, false);
+        newModule = NewProjectUtilPlatform.doCreate(dialog.getProjectPanel(), myModuleModel, moduleDir, false);
       }
       else {
         newModule = null;
