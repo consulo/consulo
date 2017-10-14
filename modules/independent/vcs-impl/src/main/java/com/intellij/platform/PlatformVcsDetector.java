@@ -48,7 +48,7 @@ public class PlatformVcsDetector implements ProjectComponent {
         final DumbAwareRunnable runnable = new DumbAwareRunnable() {
           @Override
           public void run() {
-            VirtualFile file = ProjectBaseDirectory.getInstance(myProject).getBaseDir(myProject.getBaseDir());
+            VirtualFile file = myProject.getBaseDir();
             if (myVcsManager.needAutodetectMappings()) {
               AbstractVcs vcs = myVcsManager.findVersioningVcs(file);
               if (vcs != null && vcs != myVcsManager.getVcsFor(file)) {

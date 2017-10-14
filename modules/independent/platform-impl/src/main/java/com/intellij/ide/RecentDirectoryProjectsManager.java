@@ -24,7 +24,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.PlatformProjectOpenProcessor;
-import com.intellij.platform.ProjectBaseDirectory;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
@@ -45,8 +44,7 @@ public class RecentDirectoryProjectsManager extends RecentProjectsManagerBase {
   @Override
   @Nullable
   protected String getProjectPath(@NotNull Project project) {
-    final ProjectBaseDirectory baseDir = ProjectBaseDirectory.getInstance(project);
-    final VirtualFile baseDirVFile = baseDir.getBaseDir() != null ? baseDir.getBaseDir() : project.getBaseDir();
+    final VirtualFile baseDirVFile = project.getBaseDir();
     return baseDirVFile != null ? FileUtil.toSystemDependentName(baseDirVFile.getPath()) : null;
   }
 

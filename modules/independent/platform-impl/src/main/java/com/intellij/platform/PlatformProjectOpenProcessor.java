@@ -139,7 +139,6 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     }
 
     if (project == null) return null;
-    ProjectBaseDirectory.getInstance(project).setBaseDir(baseDir);
     openProjectToolWindow(project);
     openFileFromCommandLine(project, virtualFile, line);
     if (!projectManager.openProject(project)) {
@@ -265,7 +264,6 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     final VirtualFile finalBaseDir = baseDir;
 
     Consumer<Project> afterProjectAction = project -> {
-      ProjectBaseDirectory.getInstance(project).setBaseDir(finalBaseDir);
       openProjectToolWindow(project);
       openFileFromCommandLine(project, virtualFile, line);
       if (!projectManager.openProject(project, uiAccess)) {

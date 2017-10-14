@@ -21,7 +21,6 @@ import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.platform.ProjectBaseDirectory;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -89,6 +88,6 @@ public class DefaultFileIndexFacade extends FileIndexFacade {
   }
 
   private VirtualFile getBaseDir() {
-    return ProjectBaseDirectory.getInstance(myProject).getBaseDir(myBaseDir);
+    return myBaseDir;
   }
 }

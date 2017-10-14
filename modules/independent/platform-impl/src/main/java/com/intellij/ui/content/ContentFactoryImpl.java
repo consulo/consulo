@@ -20,6 +20,7 @@ import com.intellij.ui.content.impl.ContentImpl;
 import com.intellij.ui.content.impl.ContentManagerImpl;
 import consulo.ui.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ContentFactoryImpl implements ContentFactory {
   @NotNull
@@ -36,7 +37,7 @@ public class ContentFactoryImpl implements ContentFactory {
 
   @NotNull
   @Override
-  public Content createUIContent(@NotNull Component component, String displayName, boolean isLockable) {
+  public Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
     return null;
   }
 

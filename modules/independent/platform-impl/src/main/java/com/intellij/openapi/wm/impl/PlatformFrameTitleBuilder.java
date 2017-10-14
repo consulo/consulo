@@ -21,7 +21,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFilePathWrapper;
-import com.intellij.platform.ProjectBaseDirectory;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -54,8 +53,7 @@ public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
     String url = FileUtil.getLocationRelativeToUserHome(file.getPresentableUrl());
     if (url == null) url = file.getPresentableUrl();
 
-    VirtualFile baseDir = ProjectBaseDirectory.getInstance(project).getBaseDir();
-    if (baseDir == null) baseDir = project.getBaseDir();
+    VirtualFile baseDir = project.getBaseDir();
 
     if (baseDir != null) {
       final String projectHomeUrl = FileUtil.getLocationRelativeToUserHome(baseDir.getPresentableUrl());

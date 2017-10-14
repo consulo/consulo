@@ -2434,8 +2434,6 @@
     <projectService serviceInterface="com.intellij.refactoring.RefactoringFactory"
                     serviceImplementation="com.intellij.refactoring.openapi.impl.RefactoringFactoryImpl"/>
 
-    <projectService serviceInterface="com.intellij.platform.ProjectBaseDirectory"
-                    serviceImplementation="com.intellij.platform.ProjectBaseDirectory"/>
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable"/>
 
     <projectService serviceInterface="com.intellij.lang.injection.InjectedLanguageManager"

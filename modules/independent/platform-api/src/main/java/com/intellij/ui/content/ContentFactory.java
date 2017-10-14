@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface ContentFactory {
   @NotNull
@@ -37,7 +38,7 @@ public interface ContentFactory {
    * do not rename due it will be conflicted with deprecated method
    */
   @NotNull
-  Content createUIContent(@NotNull Component component, String displayName, boolean isLockable);
+  Content createUIContent(@Nullable Component component, String displayName, boolean isLockable);
 
   // TODO [VISTALL] AWT & Swing dependency
   // region AWT & Swing dependency
