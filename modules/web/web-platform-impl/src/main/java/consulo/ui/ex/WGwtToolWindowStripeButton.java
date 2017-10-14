@@ -71,4 +71,14 @@ public class WGwtToolWindowStripeButton extends AbstractComponent implements Too
   @Override
   public void apply(@NotNull WindowInfo windowInfo) {
   }
+
+  @Override
+  public void updatePresentation() {
+
+  }
+
+  @Override
+  public void dispose() {
+
+  }
 }

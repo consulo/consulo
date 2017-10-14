@@ -160,7 +160,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     return myContentUiType;
   }
 
-  void setContentUiType(@NotNull ToolWindowContentUiType type) {
+  public void setContentUiType(@NotNull ToolWindowContentUiType type) {
     myContentUiType = type;
   }
 
@@ -371,7 +371,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   /**
    * Sets new anchor.
    */
-  void setAnchor(@NotNull final ToolWindowAnchor anchor) {
+  public void setAnchor(@NotNull final ToolWindowAnchor anchor) {
     myAnchor = anchor;
   }
 
@@ -379,15 +379,15 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     myActive = active;
   }
 
-  void setAutoHide(final boolean autoHide) {
+  public void setAutoHide(final boolean autoHide) {
     myAutoHide = autoHide;
   }
 
-  void setFloatingBounds(@Nullable Rectangle2D floatingBounds) {
+  public void setFloatingBounds(@Nullable Rectangle2D floatingBounds) {
     myFloatingBounds = floatingBounds;
   }
 
-  void setType(@NotNull final ToolWindowType type) {
+  public void setType(@NotNull final ToolWindowType type) {
     if (ToolWindowType.DOCKED == type || ToolWindowType.SLIDING == type) {
       myInternalType = type;
     }

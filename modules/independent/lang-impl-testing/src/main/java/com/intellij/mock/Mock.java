@@ -551,11 +551,14 @@ public class Mock {
       return false;
     }
 
+    @NotNull
     @Override
     public ToolWindow registerToolWindow(@NotNull String id, @NotNull JComponent component, @NotNull ToolWindowAnchor anchor) {
       return null;
     }
 
+    @NotNull
+    @RequiredUIAccess
     @Override
     public ToolWindow registerToolWindow(@NotNull String id,
                                          @NotNull JComponent component,
@@ -565,31 +568,22 @@ public class Mock {
       return null;
     }
 
-    @Override
-    public ToolWindow registerToolWindow(@NotNull String id,
-                                         @NotNull JComponent component,
-                                         @NotNull ToolWindowAnchor anchor,
-                                         Disposable parentDisposable,
-                                         boolean canWorkInDumbMode) {
-      return null;
-    }
-
-    @Override
-    public ToolWindow registerToolWindow(@NotNull String id, @NotNull JComponent component, @NotNull ToolWindowAnchor anchor, Disposable parentDisposable) {
-      return null;
-    }
-
+    @NotNull
+    @RequiredUIAccess
     @Override
     public ToolWindow registerToolWindow(@NotNull final String id, final boolean canCloseContent, @NotNull final ToolWindowAnchor anchor) {
       return null;
     }
 
+    @NotNull
+    @RequiredUIAccess
     @Override
     public ToolWindow registerToolWindow(@NotNull final String id, final boolean canCloseContent, @NotNull final ToolWindowAnchor anchor,
                                          final Disposable parentDisposable, final boolean dumbAware) {
       return null;
     }
 
+    @RequiredUIAccess
     @NotNull
     @Override
     public ToolWindow registerToolWindow(@NotNull String id,
@@ -601,6 +595,8 @@ public class Mock {
       return null;
     }
 
+    @NotNull
+    @RequiredUIAccess
     @Override
     public ToolWindow registerToolWindow(@NotNull final String id, final boolean canCloseContent, @NotNull final ToolWindowAnchor anchor, final boolean secondary) {
       return null;
@@ -610,6 +606,7 @@ public class Mock {
       return null;
     }
 
+    @RequiredUIAccess
     @Override
     public void unregisterToolWindow(@NotNull String id) {
     }
@@ -631,6 +628,7 @@ public class Mock {
       return false;
     }
 
+    @NotNull
     @Override
     public String[] getToolWindowIds() {
       return ArrayUtil.EMPTY_STRING_ARRAY;
@@ -651,6 +649,7 @@ public class Mock {
     public void invokeLater(Runnable runnable) {
     }
 
+    @NotNull
     @Override
     public IdeFocusManager getFocusManager() {
       return IdeFocusManagerHeadless.INSTANCE;

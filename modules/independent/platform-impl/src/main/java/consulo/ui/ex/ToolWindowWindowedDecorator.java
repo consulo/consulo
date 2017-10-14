@@ -16,18 +16,11 @@
 package consulo.ui.ex;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.wm.WindowInfo;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 12-Oct-17
+ * @since 14-Oct-17
  */
-public interface ToolWindowStripeButton extends Disposable {
-  @NotNull
-  WindowInfo getWindowInfo();
-
-  void apply(@NotNull WindowInfo windowInfo);
-
-  void updatePresentation();
+public interface ToolWindowWindowedDecorator extends Disposable
+{
 }

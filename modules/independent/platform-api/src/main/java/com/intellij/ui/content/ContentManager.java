@@ -29,9 +29,6 @@ import java.util.List;
 public interface ContentManager extends Disposable, BusyObject {
   boolean canCloseContents();
 
-  @NotNull
-  JComponent getComponent();
-
   void addContent(@NotNull Content content);
   void addContent(@NotNull Content content, final int order);
   void addContent(@NotNull Content content, Object constraints);
@@ -125,4 +122,11 @@ public interface ContentManager extends Disposable, BusyObject {
   boolean isDisposed();
 
   boolean isSingleSelection();
+
+  // TODO [VISTALL] awt & swing dependency 
+  // region awt & swing dependency
+  @NotNull
+  JComponent getComponent();
+
+  // endregion
 }

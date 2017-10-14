@@ -25,12 +25,11 @@ import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public interface BusyObject {
-
   ActionCallback getReady(@NotNull Object requestor);
 
   abstract class Impl implements BusyObject {
 
-    private final Map<Object, ActionCallback> myReadyCallbacks = new WeakHashMap<Object, ActionCallback>();
+    private final Map<Object, ActionCallback> myReadyCallbacks = new WeakHashMap<>();
 
     public abstract boolean isReady();
 
@@ -47,7 +46,8 @@ public interface BusyObject {
         for (ActionCallback each : callbacks.getSecond()) {
           each.setRejected();
         }
-      } else {
+      }
+      else {
         ActionCallback[] callbacks = getReadyCallbacks();
         for (ActionCallback each : callbacks) {
           each.setDone();
@@ -100,10 +100,10 @@ public interface BusyObject {
         }
 
         myReadyCallbacks.remove(readyRequestor);
-        ArrayList<ActionCallback> rejected = new ArrayList<ActionCallback>();
+        ArrayList<ActionCallback> rejected = new ArrayList<>();
         rejected.addAll(myReadyCallbacks.values());
         myReadyCallbacks.clear();
-        return new Pair<ActionCallback, List<ActionCallback>>(done, rejected);
+        return new Pair<>(done, rejected);
       }
     }
 
@@ -120,18 +120,14 @@ public interface BusyObject {
       public ActionCallback execute(@NotNull ActiveRunnable runnable) {
         myBusyCount.addAndGet(1);
         ActionCallback cb = runnable.run();
-        cb.doWhenProcessed(new Runnable() {
-          @Override
-          public void run() {
-            myBusyCount.addAndGet(-1);
-            if (isReady()) {
-              onReady();
-            }
+        cb.doWhenProcessed(() -> {
+          myBusyCount.addAndGet(-1);
+          if (isReady()) {
+            onReady();
           }
         });
         return cb;
       }
     }
   }
-
 }

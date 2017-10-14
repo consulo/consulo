@@ -31,8 +31,14 @@ public interface ToolWindowPanel {
   @NotNull
   FinalizableCommand createAddButtonCmd(final ToolWindowStripeButton button, @NotNull WindowInfoImpl info, @NotNull Comparator<ToolWindowStripeButton> comparator, @NotNull Runnable finishCallBack);
 
+  @NotNull
   FinalizableCommand createUpdateButtonPositionCmd(@NotNull String id, @NotNull Runnable finishCallback);
 
   @NotNull
   FinalizableCommand createRemoveButtonCmd(@NotNull String id, @NotNull Runnable finishCallBack);
+
+  @NotNull
+  FinalizableCommand createRemoveDecoratorCmd(@NotNull String id, final boolean dirtyMode, @NotNull Runnable finishCallBack);
+
+  FinalizableCommand createAddDecoratorCmd(@NotNull ToolWindowInternalDecorator decorator, @NotNull WindowInfoImpl info, final boolean dirtyMode, @NotNull Runnable finishCallBack);
 }

@@ -199,15 +199,18 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     return null;
   }
 
-  final void addInternalDecoratorListener(InternalDecoratorListener l) {
+  @Override
+  public void addInternalDecoratorListener(InternalDecoratorListener l) {
     myDispatcher.addListener(l);
   }
 
-  final void removeInternalDecoratorListener(InternalDecoratorListener l) {
+  @Override
+  public void removeInternalDecoratorListener(InternalDecoratorListener l) {
     myDispatcher.removeListener(l);
   }
 
-  final void dispose() {
+  @Override
+  public void dispose() {
     removeAll();
 
     Disposer.dispose(myHeader);
@@ -226,21 +229,24 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
   /**
    * Fires event that "hide" button has been pressed.
    */
-  final void fireHidden() {
+  @Override
+  public void fireHidden() {
     myDispatcher.getMulticaster().hidden(this);
   }
 
   /**
    * Fires event that "hide" button has been pressed.
    */
-  final void fireHiddenSide() {
+  @Override
+  public void fireHiddenSide() {
     myDispatcher.getMulticaster().hiddenSide(this);
   }
 
   /**
    * Fires event that user performed click into the title bar area.
    */
-  final void fireActivated() {
+  @Override
+  public void fireActivated() {
     myDispatcher.getMulticaster().activated(this);
   }
 
@@ -294,6 +300,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
   }
 
+  @Override
   public void setTitleActions(AnAction[] actions) {
     myHeader.setAdditionalTitleActions(actions);
   }
@@ -376,7 +383,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
   }
 
-
+  @Override
   public final ActionGroup createPopupGroup() {
     return createPopupGroup(false);
   }
@@ -821,6 +828,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
   }
 
+  @Override
   public void setAdditionalGearActions(@Nullable ActionGroup additionalGearActions) {
     myAdditionalGearActions = additionalGearActions;
   }

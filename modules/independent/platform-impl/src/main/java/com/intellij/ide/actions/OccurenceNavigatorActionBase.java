@@ -19,9 +19,8 @@ package com.intellij.ide.actions;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.OccurenceNavigator;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -29,6 +28,7 @@ import com.intellij.pom.Navigatable;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerUtil;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -127,6 +127,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
   }
 
   @Nullable
+  @RequiredUIAccess
   private static Component getOccurenceNavigatorFromContext(DataContext dataContext) {
     Window window = WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow();
 
@@ -146,11 +147,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
 
     ToolWindowManagerEx mgr = ToolWindowManagerEx.getInstanceEx(project);
 
-    String id = mgr.getLastActiveToolWindowId(new Condition<JComponent>() {
-      public boolean value(final JComponent component) {
-        return findNavigator(component) != null;
-      }
-    });
+    String id = mgr.getLastActiveToolWindowId(component -> findNavigator(component) != null);
     if (id == null) {
       return null;
     }

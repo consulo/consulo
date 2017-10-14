@@ -28,6 +28,10 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.Rectangle2D;
+import consulo.ui.ex.ToolWindowFloatingDecorator;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +44,7 @@ import java.awt.event.WindowEvent;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public final class DesktopFloatingDecorator extends JDialog {
+public final class DesktopFloatingDecorator extends JDialog implements ToolWindowFloatingDecorator {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.FloatingDecorator");
 
   static final int DIVIDER_WIDTH = 3;
@@ -118,6 +122,7 @@ public final class DesktopFloatingDecorator extends JDialog {
     apply(info);
   }
 
+  @Override
   public final void show() {
     setFocusableWindowState(myInfo.isActive());
 
@@ -140,6 +145,7 @@ public final class DesktopFloatingDecorator extends JDialog {
     uiSettings.addUISettingsListener(myUISettingsListener, myDelayAlarm);
   }
 
+  @Override
   public final void dispose() {
     if (ScreenUtil.isStandardAddRemoveNotify(getParent())) {
       Disposer.dispose(myDelayAlarm);
@@ -176,6 +182,7 @@ public final class DesktopFloatingDecorator extends JDialog {
       }
       else { // make window transparent
         myDelayAlarm.addRequest(new Runnable() {
+          @Override
           public void run() {
             myFrameTicker.cancelAllRequests();
             myStartRatio = getCurrentAlphaRatio();
@@ -199,6 +206,12 @@ public final class DesktopFloatingDecorator extends JDialog {
     return Math.min(1.0f, Math.max(.0f, ratio));
   }
 
+  @NotNull
+  @Override
+  public Rectangle2D getDecoratorBounds() {
+    return TargetAWT.from(getBounds());
+  }
+
   private final class BorderItem extends JPanel {
     private static final int RESIZER_WIDTH = 10;
 
@@ -212,6 +225,7 @@ public final class DesktopFloatingDecorator extends JDialog {
       enableEvents(MouseEvent.MOUSE_EVENT_MASK | MouseEvent.MOUSE_MOTION_EVENT_MASK);
     }
 
+    @Override
     protected final void processMouseMotionEvent(final MouseEvent e) {
       super.processMouseMotionEvent(e);
       if (MouseEvent.MOUSE_DRAGGED == e.getID() && myLastPoint != null) {
@@ -273,6 +287,7 @@ public final class DesktopFloatingDecorator extends JDialog {
       }
     }
 
+    @Override
     protected final void processMouseEvent(final MouseEvent e) {
       super.processMouseEvent(e);
       switch (e.getID()) {
@@ -341,6 +356,7 @@ public final class DesktopFloatingDecorator extends JDialog {
       }
     }
 
+    @Override
     public final Dimension getPreferredSize() {
       final Dimension d = super.getPreferredSize();
       if (ANCHOR_TOP == myAnchor || ANCHOR_BOTTOM == myAnchor) {
@@ -352,6 +368,7 @@ public final class DesktopFloatingDecorator extends JDialog {
       return d;
     }
 
+    @Override
     public final void paint(final Graphics g) {
       super.paint(g);
       final JBColor lightGray = new JBColor(Color.lightGray, Gray._95);
@@ -384,6 +401,7 @@ public final class DesktopFloatingDecorator extends JDialog {
   }
 
   private final class MyWindowListener extends WindowAdapter {
+    @Override
     public void windowClosing(final WindowEvent e) {
       myInternalDecorator.fireResized();
       myInternalDecorator.fireHidden();
@@ -391,6 +409,7 @@ public final class DesktopFloatingDecorator extends JDialog {
   }
 
   private final class MyAnimator implements Runnable {
+    @Override
     public final void run() {
       final WindowManagerEx windowManager = WindowManagerEx.getInstanceEx();
       if (isDisplayable() && isShowing()) {
@@ -407,6 +426,7 @@ public final class DesktopFloatingDecorator extends JDialog {
   }
 
   private final class MyUISettingsListener implements UISettingsListener {
+    @Override
     public void uiSettingsChanged(final UISettings uiSettings) {
       LOG.assertTrue(isDisplayable());
       LOG.assertTrue(isShowing());

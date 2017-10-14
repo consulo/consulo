@@ -47,13 +47,20 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
    * @return <code>ID</code> of tool window that was activated last time.
    */
   @Nullable
-  public abstract String getLastActiveToolWindowId();
+  @RequiredUIAccess
+  public String getLastActiveToolWindowId() {
+    return getLastActiveToolWindowId(null);
+  }
 
   /**
    * @return <code>ID</code> of tool window which was last activated among tool windows satisfying the current condition
    */
   @Nullable
-  public abstract String getLastActiveToolWindowId(@Nullable Condition<JComponent> condition);
+  @RequiredUIAccess
+  //TODO [VISTALL] remove JComponent dependency
+  public String getLastActiveToolWindowId(@Nullable Condition<JComponent> condition) {
+    return null;
+  }
 
   /**
    * @return layout of tool windows.
@@ -69,12 +76,15 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
   /**
    * Copied <code>layout</code> into internal layout and rearranges tool windows.
    */
+  @RequiredUIAccess
   public abstract void setLayout(@NotNull ToolWindowLayout layout);
 
   public abstract void clearSideStack();
 
+  @RequiredUIAccess
   public abstract void hideToolWindow(@NotNull String id, boolean hideSide);
 
+  @RequiredUIAccess
   public void hideToolWindow(final String id, final boolean hideSide, final boolean moveFocus) {
     hideToolWindow(id, hideSide);
   }

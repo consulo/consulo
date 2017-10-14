@@ -35,8 +35,6 @@ import java.util.List;
  * @since 12-Oct-17
  */
 public class GwtToolWindowStripeButton extends SimplePanel {
-  private static int ourIndex;
-
   private boolean myActive;
   private boolean myVertical;
 

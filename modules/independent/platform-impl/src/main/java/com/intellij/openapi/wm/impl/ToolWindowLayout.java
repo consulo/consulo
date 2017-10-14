@@ -125,7 +125,7 @@ public final class ToolWindowLayout {
     return info;
   }
 
-  final void unregister(@NotNull String id) {
+  public void unregister(@NotNull String id) {
     final WindowInfoImpl info = myRegisteredId2Info.remove(id).copy();
     myUnregisteredId2Info.put(id, info);
     // invalidate caches
@@ -259,7 +259,7 @@ public final class ToolWindowLayout {
    * @param newAnchor new anchor
    * @param newOrder  new order
    */
-  final void setAnchor(@NotNull String id, @NotNull ToolWindowAnchor newAnchor, int newOrder) {
+  public final void setAnchor(@NotNull String id, @NotNull ToolWindowAnchor newAnchor, int newOrder) {
     if (newOrder == -1) { // if order isn't defined then the window will the last in the stripe
       newOrder = getMaxOrder(newAnchor) + 1;
     }

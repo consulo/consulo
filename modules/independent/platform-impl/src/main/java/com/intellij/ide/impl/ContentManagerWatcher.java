@@ -21,7 +21,6 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class ContentManagerWatcher {
@@ -29,34 +28,32 @@ public class ContentManagerWatcher {
   private final ContentManager myContentManager;
   private final PropertyChangeListener myPropertyChangeListener;
 
-  public ContentManagerWatcher(ToolWindow toolWindow,ContentManager contentManager) {
+  public ContentManagerWatcher(ToolWindow toolWindow, ContentManager contentManager) {
     myToolWindow = toolWindow;
     myContentManager = contentManager;
-    myToolWindow.setAvailable(contentManager.getContentCount()>0,null);
+    myToolWindow.setAvailable(contentManager.getContentCount() > 0, null);
 
-    myPropertyChangeListener = new PropertyChangeListener() {
-      public void propertyChange(PropertyChangeEvent e) {
-      }
+    myPropertyChangeListener = e -> {
     };
 
-    contentManager.addContentManagerListener(
-      new ContentManagerAdapter(){
-        public void contentAdded(ContentManagerEvent e) {
-          e.getContent().addPropertyChangeListener(myPropertyChangeListener);
-          myToolWindow.setAvailable(true,null);
-        }
-
-        public void contentRemoved(ContentManagerEvent e) {
-          e.getContent().removePropertyChangeListener(myPropertyChangeListener);
-          myToolWindow.setAvailable(myContentManager.getContentCount()>0,null);
-        }
+    contentManager.addContentManagerListener(new ContentManagerAdapter() {
+      @Override
+      public void contentAdded(ContentManagerEvent e) {
+        e.getContent().addPropertyChangeListener(myPropertyChangeListener);
+        myToolWindow.setAvailable(true, null);
       }
-    );
+
+      @Override
+      public void contentRemoved(ContentManagerEvent e) {
+        e.getContent().removePropertyChangeListener(myPropertyChangeListener);
+        myToolWindow.setAvailable(myContentManager.getContentCount() > 0, null);
+      }
+    });
 
     // Synchonize title with current state of manager
 
-    for(int i=0;i<myContentManager.getContentCount();i++){
-      Content content=myContentManager.getContent(i);
+    for (int i = 0; i < myContentManager.getContentCount(); i++) {
+      Content content = myContentManager.getContent(i);
       content.addPropertyChangeListener(myPropertyChangeListener);
     }
   }

@@ -42,17 +42,16 @@ import com.intellij.ui.content.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
-import java.awt.*;
 import java.awt.event.InputEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
-import java.util.List;
 
 @SuppressWarnings("ConstantConditions")
 public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
@@ -83,20 +82,11 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
 
   @NotNull
   @Override
-  public ToolWindow registerToolWindow(@NotNull String id,
-                                       @NotNull JComponent component,
-                                       @NotNull ToolWindowAnchor anchor,
-                                       @NotNull Disposable parentDisposable,
-                                       boolean canWorkInDumbMode) {
-    return doRegisterToolWindow(id, parentDisposable);
-  }
-
-  @NotNull
-  @Override
   public ToolWindow registerToolWindow(@NotNull String id, @NotNull JComponent component, @NotNull ToolWindowAnchor anchor) {
     return doRegisterToolWindow(id, null);
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public ToolWindow registerToolWindow(@NotNull String id,
@@ -108,21 +98,14 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     return doRegisterToolWindow(id, parentDisposable);
   }
 
-  @NotNull
-  @Override
-  public ToolWindow registerToolWindow(@NotNull String id,
-                                       @NotNull JComponent component,
-                                       @NotNull ToolWindowAnchor anchor,
-                                       @NotNull Disposable parentDisposable) {
-    return doRegisterToolWindow(id, parentDisposable);
-  }
-
+  @RequiredUIAccess
   @NotNull
   @Override
   public ToolWindow registerToolWindow(@NotNull final String id, final boolean canCloseContent, @NotNull final ToolWindowAnchor anchor) {
     return doRegisterToolWindow(id, null);
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public ToolWindow registerToolWindow(@NotNull final String id,
@@ -132,6 +115,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     return doRegisterToolWindow(id, null);
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public ToolWindow registerToolWindow(@NotNull final String id, final boolean canCloseContent, @NotNull final ToolWindowAnchor anchor,
@@ -139,6 +123,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     return doRegisterToolWindow(id, parentDisposable);
   }
 
+  @RequiredUIAccess
   @NotNull
   @Override
   public ToolWindow registerToolWindow(@NotNull String id,
@@ -150,6 +135,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     return doRegisterToolWindow(id, parentDisposable);
   }
 
+  @RequiredUIAccess
   @Override
   public void unregisterToolWindow(@NotNull String id) {
     myToolWindows.remove(id);
@@ -232,11 +218,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
   public void removeToolWindowManagerListener(@NotNull ToolWindowManagerListener listener) {
   }
 
-  @Override
-  public String getLastActiveToolWindowId() {
-    return null;
-  }
-
+  @RequiredUIAccess
   @Override
   public String getLastActiveToolWindowId(Condition<JComponent> condition) {
     return null;
@@ -258,6 +240,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     return new ToolWindowLayout();
   }
 
+  @RequiredUIAccess
   @Override
   public void setLayout(@NotNull ToolWindowLayout layout) {
   }
@@ -289,11 +272,13 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
       return null;
     }
 
+    @RequiredUIAccess
     @Override
     public boolean isActive() {
       return false;
     }
 
+    @RequiredUIAccess
     @Override
     public void activate(@Nullable Runnable runnable) {
     }
@@ -323,10 +308,12 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
       return ActionCallback.DONE;
     }
 
+    @RequiredUIAccess
     @Override
     public void show(@Nullable Runnable runnable) {
     }
 
+    @RequiredUIAccess
     @Override
     public void hide(@Nullable Runnable runnable) {
     }
@@ -336,6 +323,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
       return ToolWindowAnchor.BOTTOM;
     }
 
+    @RequiredUIAccess
     @Override
     public void setAnchor(@NotNull ToolWindowAnchor anchor, @Nullable Runnable runnable) {
     }
@@ -352,11 +340,13 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
 
     }
 
+    @RequiredUIAccess
     @Override
     public boolean isAutoHide() {
       return false;
     }
 
+    @RequiredUIAccess
     @Override
     public void setAutoHide(boolean state) {
     }
@@ -375,34 +365,41 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
       return ToolWindowType.SLIDING;
     }
 
+    @RequiredUIAccess
     @Override
     public void setType(@NotNull ToolWindowType type, @Nullable Runnable runnable) {
     }
 
+    @RequiredUIAccess
     @Override
     public Icon getIcon() {
       return null;
     }
 
+    @RequiredUIAccess
     @Override
     public void setIcon(Icon icon) {
     }
 
+    @RequiredUIAccess
     @Override
     public String getTitle() {
       return "";
     }
 
+    @RequiredUIAccess
     @Override
     public void setTitle(String title) {
     }
 
+    @RequiredUIAccess
     @NotNull
     @Override
     public String getStripeTitle() {
       return "";
     }
 
+    @RequiredUIAccess
     @Override
     public void setStripeTitle(@NotNull String title) {
     }
@@ -412,6 +409,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
       return false;
     }
 
+    @RequiredUIAccess
     @Override
     public void setContentUiType(@NotNull ToolWindowContentUiType type, @Nullable Runnable runnable) {
     }
@@ -420,18 +418,20 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     public void setDefaultContentUiType(@NotNull ToolWindowContentUiType type) {
     }
 
+    @RequiredUIAccess
     @NotNull
     @Override
     public ToolWindowContentUiType getContentUiType() {
       return ToolWindowContentUiType.TABBED;
     }
 
+    @RequiredUIAccess
     @Override
     public void setAvailable(boolean available, @Nullable Runnable runnable) {
     }
 
     @Override
-    public void installWatcher(ContentManager contentManager) {
+    public void installWatcher(@NotNull ContentManager contentManager) {
     }
 
     @Override
@@ -445,15 +445,16 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     }
 
     @Override
-    public void setDefaultState(@Nullable final ToolWindowAnchor anchor,
-                                @Nullable final ToolWindowType type,
-                                @Nullable final Rectangle floatingBounds) {
+    public void setDefaultState(@Nullable ToolWindowAnchor anchor, @Nullable ToolWindowType type, @Nullable Rectangle2D floatingBounds) {
+
     }
 
+    @RequiredUIAccess
     @Override
     public void activate(@Nullable final Runnable runnable, final boolean autoFocusContents) {
     }
 
+    @RequiredUIAccess
     @Override
     public void activate(@Nullable Runnable runnable, boolean autoFocusContents, boolean forced) {
     }
@@ -476,6 +477,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     public void removePropertyChangeListener(PropertyChangeListener l) {
     }
 
+    @RequiredUIAccess
     @Override
     public ToolWindowType getInternalType() {
       return ToolWindowType.DOCKED;

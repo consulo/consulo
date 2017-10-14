@@ -34,53 +34,55 @@ public abstract class ToolWindowManager {
 
   public abstract boolean canShowNotification(@NotNull String toolWindowId);
 
-  public static ToolWindowManager getInstance(@NotNull Project project){
+  public static ToolWindowManager getInstance(@NotNull Project project) {
     return project.getComponent(ToolWindowManager.class);
   }
 
   /**
    * Register specified tool window into IDE window system.
-   * @param id <code>id</code> of tool window to be registered.
+   *
+   * @param id        <code>id</code> of tool window to be registered.
    * @param component <code>component</code> which represents tool window content.
-   * May be null. Content can be further added via content manager for this tool window (See {@link ToolWindow#getContentManager()})
-   * @param anchor the default anchor for first registration. It uses only first time the
-   * tool window with the specified <code>id</code> is being registered into the window system.
-   * After the first registration window's anchor is stored in project file
-   * and <code>anchor</code> is ignored.
-   * @exception IllegalArgumentException if the same window is already installed or one
-   * of the parameters is <code>null</code>.
+   *                  May be null. Content can be further added via content manager for this tool window (See {@link ToolWindow#getContentManager()})
+   * @param anchor    the default anchor for first registration. It uses only first time the
+   *                  tool window with the specified <code>id</code> is being registered into the window system.
+   *                  After the first registration window's anchor is stored in project file
+   *                  and <code>anchor</code> is ignored.
    * @return tool window
-   * @deprecated  {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
+   * @throws IllegalArgumentException if the same window is already installed or one
+   *                                  of the parameters is <code>null</code>.
+   * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
    */
   @Deprecated
   @NotNull
   public abstract ToolWindow registerToolWindow(@NotNull String id, @NotNull JComponent component, @NotNull ToolWindowAnchor anchor);
 
   /**
-   * @deprecated  {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
+   * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
    */
   @Deprecated
   @NotNull
-  public abstract ToolWindow registerToolWindow(@NotNull String id,
-                                                @NotNull JComponent component,
-                                                @NotNull ToolWindowAnchor anchor,
-                                                @NotNull Disposable parentDisposable);
+  @RequiredUIAccess
+  public ToolWindow registerToolWindow(@NotNull String id, @NotNull JComponent component, @NotNull ToolWindowAnchor anchor, @NotNull Disposable parentDisposable) {
+    return registerToolWindow(id, component, anchor, parentDisposable, false, false);
+  }
 
   /**
-   * @deprecated  {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
+   * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
    */
   @Deprecated
   @NotNull
-  public abstract ToolWindow registerToolWindow(@NotNull String id,
-                                                @NotNull JComponent component,
-                                                @NotNull ToolWindowAnchor anchor,
-                                                Disposable parentDisposable,
-                                                boolean canWorkInDumbMode);
+  @RequiredUIAccess
+  public ToolWindow registerToolWindow(@NotNull String id, @NotNull JComponent component, @NotNull ToolWindowAnchor anchor, Disposable parentDisposable, boolean canWorkInDumbMode) {
+    return registerToolWindow(id, component, anchor, parentDisposable, canWorkInDumbMode, false);
+  }
+
   /**
-   * @deprecated  {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
+   * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
    */
   @Deprecated
   @NotNull
+  @RequiredUIAccess
   public abstract ToolWindow registerToolWindow(@NotNull String id,
                                                 @NotNull JComponent component,
                                                 @NotNull ToolWindowAnchor anchor,
@@ -89,28 +91,36 @@ public abstract class ToolWindowManager {
                                                 boolean canCloseContents);
 
   @NotNull
+  @RequiredUIAccess
   public abstract ToolWindow registerToolWindow(@NotNull String id, boolean canCloseContent, @NotNull ToolWindowAnchor anchor);
 
   @NotNull
+  @RequiredUIAccess
   public abstract ToolWindow registerToolWindow(@NotNull String id, boolean canCloseContent, @NotNull ToolWindowAnchor anchor, boolean secondary);
 
   @NotNull
+  @RequiredUIAccess
   public abstract ToolWindow registerToolWindow(@NotNull String id, boolean canCloseContent, @NotNull ToolWindowAnchor anchor, Disposable parentDisposable, boolean canWorkInDumbMode);
 
   @NotNull
-  public abstract ToolWindow registerToolWindow(@NotNull String id, boolean canCloseContent, @NotNull ToolWindowAnchor anchor, Disposable parentDisposable, boolean canWorkInDumbMode, boolean secondary);
+  @RequiredUIAccess
+  public abstract ToolWindow registerToolWindow(@NotNull String id,
+                                                boolean canCloseContent,
+                                                @NotNull ToolWindowAnchor anchor,
+                                                Disposable parentDisposable,
+                                                boolean canWorkInDumbMode,
+                                                boolean secondary);
 
   @NotNull
-  public ToolWindow registerToolWindow(@NotNull final String id,
-                                       final boolean canCloseContent,
-                                       @NotNull final ToolWindowAnchor anchor,
-                                       final Disposable parentDisposable) {
+  @RequiredUIAccess
+  public ToolWindow registerToolWindow(@NotNull final String id, final boolean canCloseContent, @NotNull final ToolWindowAnchor anchor, final Disposable parentDisposable) {
     return registerToolWindow(id, canCloseContent, anchor, parentDisposable, false);
   }
 
   /**
    * does nothing if tool window with specified isn't registered.
    */
+  @RequiredUIAccess
   public abstract void unregisterToolWindow(@NotNull String id);
 
   /**

@@ -15,15 +15,20 @@
  */
 package consulo.ui.ex;
 
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
+import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 12-Oct-17
  */
-public interface ToolWindowInternalDecorator {
+public interface ToolWindowInternalDecorator extends Disposable {
   @NotNull
   WindowInfo getWindowInfo();
 
@@ -31,4 +36,27 @@ public interface ToolWindowInternalDecorator {
 
   @NotNull
   ToolWindow getToolWindow();
+
+  void addInternalDecoratorListener(InternalDecoratorListener l);
+
+  void removeInternalDecoratorListener(InternalDecoratorListener l);
+
+  void fireActivated();
+
+  void fireHidden();
+
+  void fireHiddenSide();
+
+  @NotNull
+  ActionGroup createPopupGroup();
+
+  boolean isFocused();
+
+  boolean hasFocus();
+
+  default void setTitleActions(AnAction... actions) {
+  }
+
+  default void setAdditionalGearActions(@Nullable ActionGroup gearActions) {
+  }
 }

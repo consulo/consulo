@@ -15,94 +15,58 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.ide.UiActivity;
-import com.intellij.ide.UiActivityMonitor;
-import com.intellij.ide.impl.ContentManagerWatcher;
-import com.intellij.notification.EventLog;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.wm.*;
-import com.intellij.openapi.wm.ex.ToolWindowEx;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
-import com.intellij.ui.content.impl.ContentImpl;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.ui.RequiredUIAccess;
+import consulo.wm.impl.ToolWindowBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.InputEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
 /**
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public final class DesktopToolWindowImpl implements ToolWindowEx {
-  private final PropertyChangeSupport myChangeSupport;
-  private final DesktopToolWindowManagerImpl myToolWindowManager;
-  private final String myId;
-  private final JComponent myComponent;
-  private boolean myAvailable;
-  private final ContentManager myContentManager;
-  private Icon myIcon;
-  private String myStripeTitle;
+public final class DesktopToolWindowImpl extends ToolWindowBase {
+  private DesktopToolWindowContentUi myContentUI;
+  private JComponent myComponent;
 
-  private static final Content EMPTY_CONTENT = new ContentImpl(new JLabel(), "", false);
-  private final DesktopToolWindowContentUi myContentUI;
-
-  private DesktopInternalDecorator myDecorator;
-
-  private boolean myHideOnEmptyContent = false;
-  private boolean myPlaceholderMode;
-  private ToolWindowFactory myContentFactory;
-
-  private ActionCallback myActivation = new ActionCallback.Done();
   private final BusyObject.Impl myShowing = new BusyObject.Impl() {
     @Override
     public boolean isReady() {
       return myComponent != null && myComponent.isShowing();
     }
   };
-  private boolean myUseLastFocused = true;
 
-  private static final Logger LOG = Logger.getInstance(DesktopToolWindowImpl.class);
+  protected DesktopToolWindowImpl(DesktopToolWindowManagerImpl toolWindowManager, String id, boolean canCloseContent, @Nullable JComponent component) {
+    super(toolWindowManager, id, canCloseContent, component);
+  }
 
-  DesktopToolWindowImpl(final DesktopToolWindowManagerImpl toolWindowManager, final String id, boolean canCloseContent, @Nullable final JComponent component) {
-    myToolWindowManager = toolWindowManager;
-    myChangeSupport = new PropertyChangeSupport(this);
-    myId = id;
-    myAvailable = true;
-
-    final ContentFactory contentFactory = ServiceManager.getService(ContentFactory.class);
+  @NotNull
+  @Override
+  protected ContentManager init(boolean canCloseContent, @Nullable Object component) {
+    final ContentFactory contentFactory = ContentFactory.getInstance();
     myContentUI = new DesktopToolWindowContentUi(this);
-    myContentManager = contentFactory.createContentManager(myContentUI, canCloseContent, toolWindowManager.getProject());
+    ContentManager contentManager = contentFactory.createContentManager(myContentUI, canCloseContent, myToolWindowManager.getProject());
 
     if (component != null) {
-      final Content content = contentFactory.createContent(component, "", false);
-      myContentManager.addContent(content);
-      myContentManager.setSelectedContent(content, false);
+      final Content content = contentFactory.createContent((JComponent)component, "", false);
+      contentManager.addContent(content);
+      contentManager.setSelectedContent(content, false);
     }
 
-    myComponent = myContentManager.getComponent();
+    myComponent = contentManager.getComponent();
 
     UiNotifyConnector notifyConnector = new UiNotifyConnector(myComponent, new Activatable.Adapter() {
       @Override
@@ -110,50 +74,12 @@ public final class DesktopToolWindowImpl implements ToolWindowEx {
         myShowing.onReady();
       }
     });
-    Disposer.register(myContentManager, notifyConnector);
+    Disposer.register(contentManager, notifyConnector);
+    return contentManager;
   }
 
-  public final void addPropertyChangeListener(final PropertyChangeListener l) {
-    myChangeSupport.addPropertyChangeListener(l);
-  }
-
-  @Override
-  public final void removePropertyChangeListener(final PropertyChangeListener l) {
-    myChangeSupport.removePropertyChangeListener(l);
-  }
-
-  @Override
-  public final void activate(final Runnable runnable) {
-    activate(runnable, true);
-  }
-
-  @Override
-  public void activate(@Nullable final Runnable runnable, final boolean autoFocusContents) {
-    activate(runnable, autoFocusContents, true);
-  }
-
-  @Override
-  public void activate(@Nullable final Runnable runnable, boolean autoFocusContents, boolean forced) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-
-    final UiActivity activity = new UiActivity.Focus("toolWindow:" + myId);
-    UiActivityMonitor.getInstance().addActivity(myToolWindowManager.getProject(), activity, ModalityState.NON_MODAL);
-
-    myToolWindowManager.activateToolWindow(myId, forced, autoFocusContents);
-
-    getActivation().doWhenDone(() -> myToolWindowManager.invokeLater(() -> {
-      if (runnable != null) {
-        runnable.run();
-      }
-      UiActivityMonitor.getInstance().removeActivity(myToolWindowManager.getProject(), activity);
-    }));
-  }
-
-  @Override
-  public final boolean isActive() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    if (myToolWindowManager.isEditorComponentActive()) return false;
-    return myToolWindowManager.isToolWindowActive(myId) || myDecorator != null && myDecorator.isFocused();
+  public DesktopToolWindowContentUi getContentUI() {
+    return myContentUI;
   }
 
   @NotNull
@@ -161,7 +87,7 @@ public final class DesktopToolWindowImpl implements ToolWindowEx {
   public ActionCallback getReady(@NotNull final Object requestor) {
     final ActionCallback result = new ActionCallback();
     myShowing.getReady(this).doWhenDone(() -> {
-      ArrayList<FinalizableCommand> cmd = new ArrayList<FinalizableCommand>();
+      ArrayList<FinalizableCommand> cmd = new ArrayList<>();
       cmd.add(new FinalizableCommand(null) {
         @Override
         public void run() {
@@ -176,349 +102,34 @@ public final class DesktopToolWindowImpl implements ToolWindowEx {
     return result;
   }
 
-  @Override
-  public final void show(final Runnable runnable) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    myToolWindowManager.showToolWindow(myId);
-    if (runnable != null) {
-      getActivation().doWhenDone(() -> myToolWindowManager.invokeLater(runnable));
-    }
-  }
-
-  @Override
-  public final void hide(@Nullable final Runnable runnable) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    myToolWindowManager.hideToolWindow(myId, false);
-    if (runnable != null) {
-      myToolWindowManager.invokeLater(runnable);
-    }
-  }
-
-  @Override
-  public final boolean isVisible() {
-    return myToolWindowManager.isToolWindowVisible(myId);
-  }
-
-  @Override
-  public final ToolWindowAnchor getAnchor() {
-    return myToolWindowManager.getToolWindowAnchor(myId);
-  }
-
-  @Override
-  public final void setAnchor(final ToolWindowAnchor anchor, @Nullable final Runnable runnable) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    myToolWindowManager.setToolWindowAnchor(myId, anchor);
-    if (runnable != null) {
-      myToolWindowManager.invokeLater(runnable);
-    }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean isSplitMode() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    return myToolWindowManager.isSplitMode(myId);
-  }
-
-  @Override
-  public void setContentUiType(ToolWindowContentUiType type, @Nullable Runnable runnable) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    myToolWindowManager.setContentUiType(myId, type);
-    if (runnable != null) {
-      myToolWindowManager.invokeLater(runnable);
-    }
-  }
-
-  @Override
-  public void setDefaultContentUiType(@NotNull ToolWindowContentUiType type) {
-    myToolWindowManager.setDefaultContentUiType(this, type);
-  }
-
-  @Override
-  public ToolWindowContentUiType getContentUiType() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    return myToolWindowManager.getContentUiType(myId);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSplitMode(final boolean isSideTool, @Nullable final Runnable runnable) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    myToolWindowManager.setSideTool(myId, isSideTool);
-    if (runnable != null) {
-      myToolWindowManager.invokeLater(runnable);
-    }
-  }
-
-  @Override
-  public final void setAutoHide(final boolean state) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    myToolWindowManager.setToolWindowAutoHide(myId, state);
-  }
-
-  @Override
-  public final boolean isAutoHide() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    return myToolWindowManager.isToolWindowAutoHide(myId);
-  }
-
-  @Override
-  public final ToolWindowType getType() {
-    return myToolWindowManager.getToolWindowType(myId);
-  }
-
-  @Override
-  public final void setType(final ToolWindowType type, @Nullable final Runnable runnable) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    myToolWindowManager.setToolWindowType(myId, type);
-    if (runnable != null) {
-      myToolWindowManager.invokeLater(runnable);
-    }
-  }
-
-  @Override
-  public final ToolWindowType getInternalType() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    return myToolWindowManager.getToolWindowInternalType(myId);
-  }
-
-  @Override
-  public void stretchWidth(int value) {
-    myToolWindowManager.stretchWidth(this, value);
-  }
-
-  @Override
-  public void stretchHeight(int value) {
-    myToolWindowManager.stretchHeight(this, value);
-  }
-
-  @Override
-  public DesktopInternalDecorator getDecorator() {
-    return myDecorator;
-  }
-
-  @Override
-  public void setAdditionalGearActions(ActionGroup additionalGearActions) {
-    getDecorator().setAdditionalGearActions(additionalGearActions);
-  }
-
-  @Override
-  public void setTitleActions(AnAction... actions) {
-    getDecorator().setTitleActions(actions);
-  }
-
-  @Override
-  public final void setAvailable(final boolean available, final Runnable runnable) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    final Boolean oldAvailable = myAvailable ? Boolean.TRUE : Boolean.FALSE;
-    myAvailable = available;
-    myChangeSupport.firePropertyChange(PROP_AVAILABLE, oldAvailable, myAvailable ? Boolean.TRUE : Boolean.FALSE);
-    if (runnable != null) {
-      myToolWindowManager.invokeLater(runnable);
-    }
-  }
-
-  @Override
-  public void installWatcher(ContentManager contentManager) {
-    new ContentManagerWatcher(this, contentManager);
-  }
-
   /**
    * @return <code>true</code> if the component passed into constructor is not instance of
    * <code>ContentManager</code> class. Otherwise it delegates the functionality to the
    * passed content manager.
    */
   @Override
-  public final boolean isAvailable() {
+  public boolean isAvailable() {
     return myAvailable && myComponent != null;
   }
 
+  @NotNull
   @Override
   public final JComponent getComponent() {
     return myComponent;
   }
 
   @Override
-  public ContentManager getContentManager() {
-    ensureContentInitialized();
-    return myContentManager;
-  }
-
-  public DesktopToolWindowContentUi getContentUI() {
-    return myContentUI;
+  public void stretchWidth(int value) {
+    ((DesktopToolWindowManagerImpl)myToolWindowManager).stretchWidth(this, value);
   }
 
   @Override
-  public final Icon getIcon() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    return myIcon;
-    //return getSelectedContent().getIcon();
-  }
-
-  public final String getId() {
-    return myId;
-  }
-
-  @Override
-  public final String getTitle() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    return getSelectedContent().getDisplayName();
-  }
-
-  @Override
-  @NotNull
-  public final String getStripeTitle() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    return ObjectUtil.notNull(myStripeTitle, myId);
-  }
-
-  @Override
-  public final void setIcon(final Icon icon) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    final Icon oldIcon = getIcon();
-    if (!EventLog.LOG_TOOL_WINDOW_ID.equals(getId())) {
-      if (oldIcon != icon && icon != null && !(icon instanceof LayeredIcon) && (icon.getIconHeight() != Math.floor(JBUI.scale(13f)) ||
-                                                                                icon.getIconWidth() != Math.floor(JBUI.scale(13f)))) {
-        LOG.warn("ToolWindow icons should be 13x13. Please fix ToolWindow (ID:  " + getId() + ") or icon " + icon);
-      }
-    }
-    //getSelectedContent().setIcon(icon);
-    myIcon = icon;
-    myChangeSupport.firePropertyChange(PROP_ICON, oldIcon, icon);
-  }
-
-  @Override
-  public final void setTitle(String title) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    String oldTitle = getTitle();
-    getSelectedContent().setDisplayName(title);
-    myChangeSupport.firePropertyChange(PROP_TITLE, oldTitle, title);
-  }
-
-  @Override
-  public final void setStripeTitle(@NotNull String stripeTitle) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    String oldTitle = myStripeTitle;
-    myStripeTitle = stripeTitle;
-    myChangeSupport.firePropertyChange(PROP_STRIPE_TITLE, oldTitle, stripeTitle);
-  }
-
-  private Content getSelectedContent() {
-    final Content selected = getContentManager().getSelectedContent();
-    return selected != null ? selected : EMPTY_CONTENT;
-  }
-
-  public void setDecorator(final DesktopInternalDecorator decorator) {
-    myDecorator = decorator;
-  }
-
-  public void fireActivated() {
-    if (myDecorator != null) {
-      myDecorator.fireActivated();
-    }
-  }
-
-  public void fireHidden() {
-    if (myDecorator != null) {
-      myDecorator.fireHidden();
-    }
-  }
-
-  public void fireHiddenSide() {
-    if (myDecorator != null) {
-      myDecorator.fireHiddenSide();
-    }
-  }
-
-
-  public DesktopToolWindowManagerImpl getToolWindowManager() {
-    return myToolWindowManager;
-  }
-
-  @Nullable
-  public ActionGroup getPopupGroup() {
-    return myDecorator != null ? myDecorator.createPopupGroup() : null;
-  }
-
-  @Override
-  public void setDefaultState(@Nullable final ToolWindowAnchor anchor, @Nullable final ToolWindowType type, @Nullable final Rectangle floatingBounds) {
-    myToolWindowManager.setDefaultState(this, anchor, type, floatingBounds);
-  }
-
-  @Override
-  public void setToHideOnEmptyContent(final boolean hideOnEmpty) {
-    myHideOnEmptyContent = hideOnEmpty;
-  }
-
-  @Override
-  public boolean isToHideOnEmptyContent() {
-    return myHideOnEmptyContent;
-  }
-
-  @Override
-  public void setShowStripeButton(boolean show) {
-    myToolWindowManager.setShowStripeButton(myId, show);
-  }
-
-  @Override
-  public boolean isShowStripeButton() {
-    return myToolWindowManager.isShowStripeButton(myId);
-  }
-
-  @Override
-  public boolean isDisposed() {
-    return myContentManager.isDisposed();
-  }
-
-  public boolean isPlaceholderMode() {
-    return myPlaceholderMode;
-  }
-
-  public void setPlaceholderMode(final boolean placeholderMode) {
-    myPlaceholderMode = placeholderMode;
-  }
-
-  @Override
-  public ActionCallback getActivation() {
-    return myActivation;
-  }
-
-  public ActionCallback setActivation(ActionCallback activation) {
-    if (myActivation != null && !myActivation.isProcessed() && !myActivation.equals(activation)) {
-      myActivation.setRejected();
-    }
-
-    myActivation = activation;
-    return myActivation;
-  }
-
-  public void setContentFactory(ToolWindowFactory contentFactory) {
-    myContentFactory = contentFactory;
-    contentFactory.init(this);
-  }
-
-  public void ensureContentInitialized() {
-    if (myContentFactory != null) {
-      ToolWindowFactory contentFactory = myContentFactory;
-      // clear it first to avoid SOE
-      myContentFactory = null;
-      myContentManager.removeAllContents(false);
-      contentFactory.createToolWindowContent(myToolWindowManager.getProject(), this);
-    }
+  public void stretchHeight(int value) {
+    ((DesktopToolWindowManagerImpl)myToolWindowManager).stretchHeight(this, value);
   }
 
   @Override
   public void showContentPopup(InputEvent inputEvent) {
     myContentUI.toggleContentPopup();
-  }
-
-  @Override
-  public void setUseLastFocusedOnActivation(boolean focus) {
-    myUseLastFocused = focus;
-  }
-
-  @Override
-  public boolean isUseLastFocusedOnActivation() {
-    return myUseLastFocused;
   }
 }

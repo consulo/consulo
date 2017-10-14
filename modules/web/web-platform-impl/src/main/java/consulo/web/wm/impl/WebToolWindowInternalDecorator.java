@@ -15,10 +15,14 @@
  */
 package consulo.web.wm.impl;
 
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
+import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
+import com.intellij.util.EventDispatcher;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public class WebToolWindowInternalDecorator implements ToolWindowInternalDecorator {
   private final WindowInfoImpl myWindowInfo;
   private final WebToolWindowImpl myToolWindow;
+  private final EventDispatcher<InternalDecoratorListener> myDispatcher = EventDispatcher.create(InternalDecoratorListener.class);
 
   public WebToolWindowInternalDecorator(Project project, WindowInfoImpl windowInfo, WebToolWindowImpl toolWindow, boolean canWorkInDumbMode) {
     myWindowInfo = windowInfo;
@@ -50,5 +55,51 @@ public class WebToolWindowInternalDecorator implements ToolWindowInternalDecorat
   @Override
   public ToolWindow getToolWindow() {
     return myToolWindow;
+  }
+
+  @Override
+  public void addInternalDecoratorListener(InternalDecoratorListener l) {
+    myDispatcher.addListener(l);
+  }
+
+  @Override
+  public void removeInternalDecoratorListener(InternalDecoratorListener l) {
+    myDispatcher.removeListener(l);
+  }
+
+  @Override
+  public void fireActivated() {
+    myDispatcher.getMulticaster().activated(this);
+  }
+
+  @Override
+  public void fireHidden() {
+    myDispatcher.getMulticaster().hidden(this);
+  }
+
+  @Override
+  public void fireHiddenSide() {
+    myDispatcher.getMulticaster().hiddenSide(this);
+  }
+
+  @NotNull
+  @Override
+  public ActionGroup createPopupGroup() {
+    return new DefaultActionGroup();
+  }
+
+  @Override
+  public boolean isFocused() {
+    return false;
+  }
+
+  @Override
+  public boolean hasFocus() {
+    return false;
+  }
+
+  @Override
+  public void dispose() {
+
   }
 }

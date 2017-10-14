@@ -17,9 +17,10 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.FrameWrapper;
+import consulo.ui.ex.ToolWindowWindowedDecorator;
 import org.jetbrains.annotations.NotNull;
 
-public final class DesktopWindowedDecorator extends FrameWrapper {
+public final class DesktopWindowedDecorator extends FrameWrapper implements ToolWindowWindowedDecorator {
   private final Project myProject;
 
   DesktopWindowedDecorator(@NotNull Project project, @NotNull WindowInfoImpl info, @NotNull DesktopInternalDecorator internalDecorator) {

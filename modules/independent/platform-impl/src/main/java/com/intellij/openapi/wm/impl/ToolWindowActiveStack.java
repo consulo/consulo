@@ -27,7 +27,7 @@ import java.util.Stack;
  *
  * @author Vladimir Kondratyev
  */
-final class ActiveStack {
+public class ToolWindowActiveStack {
   /**
    * Contains <code>id</code>s of tool window that were activated. This stack
    * is cleared each time when editor is being activated.
@@ -42,7 +42,7 @@ final class ActiveStack {
   /**
    * Creates enabled window stack.
    */
-  ActiveStack() {
+  public ToolWindowActiveStack() {
     myStack = new Stack<>();
     myPersistentStack = new Stack<>();
   }
@@ -57,27 +57,27 @@ final class ActiveStack {
   /**
    * Return whether the stack of active (not persistent) <code>id</code>s is empty or not.
    */
-  boolean isEmpty() {
+  public boolean isEmpty() {
     return myStack.isEmpty();
   }
 
-  String pop() {
+  public String pop() {
     return myStack.pop();
   }
 
-  String peek() {
+  public String peek() {
     return myStack.peek();
   }
 
-  int getSize() {
+  public int getSize() {
     return myStack.size();
   }
 
-  String peek(int i) {
+  public String peek(int i) {
     return myStack.get(getSize() - i - 1);
   }
 
-  String[] getStack() {
+  public String[] getStack() {
     String[] result = new String[getSize()];
     for (int i = 0; i < getSize(); i++) {
       result[i] = peek(i);
@@ -85,28 +85,28 @@ final class ActiveStack {
     return result;
   }
 
-  String[] getPersistentStack() {
+  public String[] getPersistentStack() {
     String[] result = new String[getPersistentSize()];
     for (int i = 0; i < getPersistentSize(); i++) {
-      result[i] = peekPersistent(i);  
+      result[i] = peekPersistent(i);
     }
     return result;
   }
 
-  void push(final String id) {
+  public void push(final String id) {
     remove(id, true);
     myStack.push(id);
     myPersistentStack.push(id);
   }
 
-  int getPersistentSize() {
+  public int getPersistentSize() {
     return myPersistentStack.size();
   }
 
   /**
    * Peeks element at the persistent stack. <code>0</code> means the top of the stack.
    */
-  String peekPersistent(final int index) {
+  public String peekPersistent(final int index) {
     return myPersistentStack.get(myPersistentStack.size() - index - 1);
   }
 
@@ -117,14 +117,14 @@ final class ActiveStack {
    * @param removePersistentAlso if <code>true</code> then clears last active <code>ID</code>
    *                             if it's the last active <code>ID</code>.
    */
-  void remove(final String id, final boolean removePersistentAlso) {
-    for (Iterator i = myStack.iterator(); i.hasNext();) {
+  public void remove(final String id, final boolean removePersistentAlso) {
+    for (Iterator i = myStack.iterator(); i.hasNext(); ) {
       if (id.equals(i.next())) {
         i.remove();
       }
     }
     if (removePersistentAlso) {
-      for (Iterator i = myPersistentStack.iterator(); i.hasNext();) {
+      for (Iterator i = myPersistentStack.iterator(); i.hasNext(); ) {
         if (id.equals(i.next())) {
           i.remove();
         }

@@ -40,11 +40,11 @@ public interface ContentFactory {
   }
 
   @NotNull
-  Content createContent(JComponent component, String displayName, boolean isLockable);
-
-  @NotNull
   ContentManager createContentManager(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project);
 
   @NotNull
   ContentManager createContentManager(boolean canCloseContents, @NotNull Project project);
+
+  @NotNull
+  Content createContent(JComponent component, String displayName, boolean isLockable);
 }

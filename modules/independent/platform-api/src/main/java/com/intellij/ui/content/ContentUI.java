@@ -22,10 +22,13 @@ import javax.swing.*;
 
 public interface ContentUI extends Disposable {
   JComponent getComponent();
+
   void setManager(@NotNull ContentManager manager);
 
   boolean isSingleSelection();
+
   boolean isToSelectAddedContent();
+
   boolean canBeEmptySelection();
 
   void beforeDispose();
@@ -34,10 +37,13 @@ public interface ContentUI extends Disposable {
 
   @NotNull
   String getCloseActionName();
+
   @NotNull
   String getCloseAllButThisActionName();
+
   @NotNull
   String getPreviousContentActionName();
+
   @NotNull
   String getNextContentActionName();
 }

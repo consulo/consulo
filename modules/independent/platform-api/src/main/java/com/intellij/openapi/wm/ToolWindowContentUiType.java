@@ -18,8 +18,7 @@ package com.intellij.openapi.wm;
 import com.intellij.openapi.diagnostic.Logger;
 
 public class ToolWindowContentUiType {
-
-  private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.ToolWindowContentUiType");
+  private static final Logger LOG = Logger.getInstance(ToolWindowContentUiType.class);
 
   public static ToolWindowContentUiType TABBED = new ToolWindowContentUiType("tabs");
   public static ToolWindowContentUiType COMBO = new ToolWindowContentUiType("combo");

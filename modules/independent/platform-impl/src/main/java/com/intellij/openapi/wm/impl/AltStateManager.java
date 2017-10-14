@@ -16,17 +16,23 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.EventDispatcher;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
-import java.util.List;
+import java.util.EventListener;
 
 /**
  * @author pegov
  */
 public class AltStateManager implements AWTEventListener {
+  public interface AltListener extends EventListener {
+    void altPressed();
+
+    void altReleased();
+  }
 
   private static final AltStateManager ourInstance;
 
@@ -37,27 +43,22 @@ public class AltStateManager implements AWTEventListener {
     }
   }
 
-  private final List<AltListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-
-  public interface AltListener {
-    void altPressed();
-
-    void altReleased();
-  }
-
-  private AltStateManager() {
-  }
-
+  @NotNull
   public static AltStateManager getInstance() {
     return ourInstance;
   }
 
+  private final EventDispatcher<AltListener> myDispatcher = EventDispatcher.create(AltListener.class);
+
+  private AltStateManager() {
+  }
+
   public void addListener(AltListener listener) {
-    myListeners.add(listener);
+    myDispatcher.addListener(listener);
   }
 
   public void removeListener(AltListener listener) {
-    myListeners.remove(listener);
+    myDispatcher.removeListener(listener);
   }
 
   @Override
@@ -74,14 +75,10 @@ public class AltStateManager implements AWTEventListener {
   }
 
   private void fireReleased() {
-    for (AltListener listener : myListeners) {
-      listener.altReleased();
-    }
+    myDispatcher.getMulticaster().altReleased();
   }
 
   private void firePressed() {
-    for (AltListener listener : myListeners) {
-      listener.altPressed();
-    }
+    myDispatcher.getMulticaster().altPressed();
   }
 }

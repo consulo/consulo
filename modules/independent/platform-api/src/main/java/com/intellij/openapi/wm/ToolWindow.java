@@ -19,17 +19,13 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.content.ContentManager;
+import consulo.ui.Component;
+import consulo.ui.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.InputEvent;
-
 public interface ToolWindow extends BusyObject {
-
   Key<Boolean> SHOW_CONTENT_ICON = new Key<>("ContentIcon");
 
   @NotNull
@@ -38,16 +34,20 @@ public interface ToolWindow extends BusyObject {
   /**
    * @throws IllegalStateException if tool window isn't installed.
    */
+  @RequiredUIAccess
   boolean isActive();
 
   /**
    * @param runnable A command to execute right after the window gets activated.  The call is asynchronous since it may require animation.
    * @throws IllegalStateException if tool window isn't installed.
    */
+  @RequiredUIAccess
   void activate(@Nullable Runnable runnable);
 
+  @RequiredUIAccess
   void activate(@Nullable Runnable runnable, boolean autoFocusContents);
 
+  @RequiredUIAccess
   void activate(@Nullable Runnable runnable, boolean autoFocusContents, boolean forced);
 
   /**
@@ -60,6 +60,7 @@ public interface ToolWindow extends BusyObject {
    * @param runnable A command to execute right after the window shows up.  The call is asynchronous since it may require animation.
    * @throws IllegalStateException if tool window isn't installed.
    */
+  @RequiredUIAccess
   void show(@Nullable Runnable runnable);
 
   /**
@@ -69,6 +70,7 @@ public interface ToolWindow extends BusyObject {
    * @param runnable A command to execute right after the window hides.  The call is asynchronous since it may require animation.
    * @throws IllegalStateException if tool window isn't installed.
    */
+  @RequiredUIAccess
   void hide(@Nullable Runnable runnable);
 
   /**
@@ -79,6 +81,7 @@ public interface ToolWindow extends BusyObject {
   /**
    * @throws IllegalStateException if tool window isn't installed.
    */
+  @RequiredUIAccess
   void setAnchor(@NotNull ToolWindowAnchor anchor, @Nullable Runnable runnable);
 
   /**
@@ -96,52 +99,50 @@ public interface ToolWindow extends BusyObject {
   /**
    * @throws IllegalStateException if tool window isn't installed.
    */
+  @RequiredUIAccess
   boolean isAutoHide();
 
   /**
    * @throws IllegalStateException if tool window isn't installed.
    */
+  @RequiredUIAccess
   void setAutoHide(boolean state);
 
   /**
    * @throws IllegalStateException if tool window isn't installed.
    */
+  @NotNull
   ToolWindowType getType();
 
   /**
    * @throws IllegalStateException if tool window isn't installed.
    */
+  @RequiredUIAccess
   void setType(@NotNull ToolWindowType type, @Nullable Runnable runnable);
-
-  /**
-   * @return window icon. Returns <code>null</code> if window has no icon.
-   */
-  Icon getIcon();
-
-  /**
-   * Sets new window icon.
-   */
-  void setIcon(Icon icon);
 
   /**
    * @return window title. Returns <code>null</code> if window has no title.
    */
+  @RequiredUIAccess
   String getTitle();
 
   /**
    * Sets new window title.
    */
+  @RequiredUIAccess
   void setTitle(String title);
 
   /**
    * @return window stripe button text.
    */
   @NotNull
+  @RequiredUIAccess
   String getStripeTitle();
 
   /**
    * Sets new window stripe button text.
    */
+  @RequiredUIAccess
   void setStripeTitle(@NotNull String title);
 
   /**
@@ -155,28 +156,23 @@ public interface ToolWindow extends BusyObject {
    *
    * @throws IllegalStateException if tool window isn't installed.
    */
+  @RequiredUIAccess
   void setAvailable(boolean available, @Nullable Runnable runnable);
 
+  @RequiredUIAccess
   void setContentUiType(@NotNull ToolWindowContentUiType type, @Nullable Runnable runnable);
 
   void setDefaultContentUiType(@NotNull ToolWindowContentUiType type);
 
   @NotNull
+  @RequiredUIAccess
   ToolWindowContentUiType getContentUiType();
 
-  void installWatcher(ContentManager contentManager);
-
-  /**
-   * @return component which represents window content.
-   */
-  JComponent getComponent();
-
+  void installWatcher(@NotNull ContentManager contentManager);
 
   ContentManager getContentManager();
 
-
-  void setDefaultState(@Nullable ToolWindowAnchor anchor, @Nullable ToolWindowType type, @Nullable Rectangle floatingBounds);
-
+  void setDefaultState(@Nullable ToolWindowAnchor anchor, @Nullable ToolWindowType type, @Nullable Rectangle2D floatingBounds);
 
   void setToHideOnEmptyContent(boolean hideOnEmpty);
 
@@ -191,18 +187,36 @@ public interface ToolWindow extends BusyObject {
 
   boolean isDisposed();
 
-  void showContentPopup(InputEvent inputEvent);
-
   ActionCallback getActivation();
 
-  class Border extends EmptyBorder {
-    public Border() {
-      this(true, true, true, true);
-    }
-
-    public Border(boolean top, boolean left, boolean right, boolean bottom) {
-      super(top ? 2 : 0, left ? 2 : 0, right ? 2 : 0, bottom ? 2 : 0);
-    }
+  @NotNull
+  default Component getUIComponent() {
+    throw new AbstractMethodError();
   }
 
+  //TODO [VISTALL] awt & swing dependency
+
+  // region awt & swing dependency
+
+  /**
+   * @return window icon. Returns <code>null</code> if window has no icon.
+   */
+  @Nullable
+  @RequiredUIAccess
+  javax.swing.Icon getIcon();
+
+  /**
+   * Sets new window icon.
+   */
+  @RequiredUIAccess
+  void setIcon(@Nullable javax.swing.Icon icon);
+
+  @NotNull
+  default javax.swing.JComponent getComponent() {
+    throw new AbstractMethodError();
+  }
+
+  default void showContentPopup(java.awt.event.InputEvent inputEvent) {
+  }
+  //endregion
 }

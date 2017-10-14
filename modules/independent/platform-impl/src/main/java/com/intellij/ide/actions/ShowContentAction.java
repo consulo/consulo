@@ -22,6 +22,8 @@ import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
 import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -41,8 +43,9 @@ public class ShowContentAction extends AnAction implements DumbAware {
     copyFrom(original);
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     final ToolWindow window = getWindow(e);
     e.getPresentation().setEnabled(window != null && window.getContentManager().getContentCount() > 1);
     e.getPresentation().setText(window == null || window.getContentUiType() == ToolWindowContentUiType.TABBED
@@ -50,8 +53,9 @@ public class ShowContentAction extends AnAction implements DumbAware {
                                 : "Show List of Views");
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     getWindow(e).showContentPopup(e.getInputEvent());
   }
 

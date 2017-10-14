@@ -32,7 +32,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
-import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
@@ -1364,6 +1363,12 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
     }
   }
 
+  static class MyBorder extends EmptyBorder {
+    public MyBorder(boolean top, boolean left, boolean right, boolean bottom) {
+      super(top ? 2 : 0, left ? 2 : 0, right ? 2 : 0, bottom ? 2 : 0);
+    }
+  }
+
   private class MyComponent extends NonOpaquePanel implements DataProvider, QuickActionProvider {
     private boolean myWasEverAdded;
 
@@ -1371,7 +1376,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
       super(layout);
       setOpaque(true);
       setFocusCycleRoot(true);
-      setBorder(new ToolWindow.Border(false, false, false, false));
+      setBorder(new MyBorder(false, false, false, false));
     }
 
     @Override

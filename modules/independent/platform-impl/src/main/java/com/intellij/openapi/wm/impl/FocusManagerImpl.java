@@ -426,7 +426,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
     return request != null && !request.isExpired() ? request : null;
   }
 
-  boolean isUnforcedRequestAllowed() {
+  public boolean isUnforcedRequestAllowed() {
     if (getLastEffectiveForcedRequest() == null) return true;
     return myModalityStateForLastForcedRequest != getCurrentModalityCount();
   }
