@@ -117,7 +117,9 @@ public interface ContentManager extends Disposable, BusyObject {
   void addDataProvider(@NotNull DataProvider provider);
 
   @NotNull
-  ContentFactory getFactory();
+  default ContentFactory getFactory() {
+    return ContentFactory.getInstance();
+  }
 
   boolean isDisposed();
 

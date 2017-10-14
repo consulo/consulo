@@ -21,7 +21,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
@@ -643,12 +642,6 @@ public class ContentManagerImpl implements ContentManager, PropertyChangeListene
     if (Content.PROP_COMPONENT.equals(event.getPropertyName())) {
       myContentWithChangedComponent.add((Content)event.getSource());
     }
-  }
-
-  @Override
-  @NotNull
-  public ContentFactory getFactory() {
-    return ServiceManager.getService(ContentFactory.class);
   }
 
   @Override

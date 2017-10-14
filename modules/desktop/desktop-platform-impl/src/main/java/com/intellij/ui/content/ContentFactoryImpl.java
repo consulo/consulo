@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 public class ContentFactoryImpl implements ContentFactory {
   @NotNull
   @Override
-  public ContentManagerImpl createContentManager(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project) {
+  public ContentManager createContentManager(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project) {
     return new ContentManagerImpl(contentUI, canCloseContents, project);
   }
 
