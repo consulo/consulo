@@ -43,8 +43,8 @@ final class ActiveStack {
    * Creates enabled window stack.
    */
   ActiveStack() {
-    myStack = new Stack<String>();
-    myPersistentStack = new Stack<String>();
+    myStack = new Stack<>();
+    myPersistentStack = new Stack<>();
   }
 
   /**
