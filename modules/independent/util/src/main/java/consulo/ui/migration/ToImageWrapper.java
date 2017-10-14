@@ -21,7 +21,6 @@ import consulo.ui.image.Image;
  * @author VISTALL
  * @since 14-Sep-17
  */
-public interface
-ToImageWrapper extends Image {
+public interface ToImageWrapper extends Image {
   Image toImage();
 }
