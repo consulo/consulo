@@ -19,7 +19,6 @@ import com.intellij.execution.BeforeRunTask;
 import com.intellij.execution.RunManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.util.IconUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -27,12 +26,10 @@ import javax.swing.*;
 /**
  * Factory for run configuration instances.
  *
- * @see com.intellij.execution.configurations.ConfigurationType#getConfigurationFactories()
  * @author dyoma
+ * @see com.intellij.execution.configurations.ConfigurationType#getConfigurationFactories()
  */
 public abstract class ConfigurationFactory {
-  public static final Icon ADD_ICON = IconUtil.getAddIcon();
-
   private final ConfigurationType myType;
 
   protected ConfigurationFactory(@NotNull final ConfigurationType type) {
@@ -42,7 +39,7 @@ public abstract class ConfigurationFactory {
   /**
    * Creates a new run configuration with the specified name by cloning the specified template.
    *
-   * @param name the name for the new run configuration.
+   * @param name     the name for the new run configuration.
    * @param template the template from which the run configuration is copied
    * @return the new run configuration.
    */
@@ -82,10 +79,6 @@ public abstract class ConfigurationFactory {
     return myType.getDisplayName();
   }
 
-  public Icon getAddIcon() {
-    return ADD_ICON;
-  }
-
   public Icon getIcon(@NotNull final RunConfiguration configuration) {
     return getIcon();
   }
@@ -101,6 +94,7 @@ public abstract class ConfigurationFactory {
 
   /**
    * In this method you can configure defaults for the task, which are preferable to be used for your particular configuration type
+   *
    * @param providerID
    * @param task
    */
