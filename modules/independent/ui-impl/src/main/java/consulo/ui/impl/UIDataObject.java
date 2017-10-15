@@ -15,60 +15,90 @@
  */
 package consulo.ui.impl;
 
+import com.intellij.openapi.util.AtomicNotNullLazyValue;
+import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.EventDispatcher;
+import com.intellij.util.containers.ConcurrentMultiMap;
+import com.intellij.util.containers.MultiMap;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.style.ColorKey;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EventListener;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 14-Sep-17
  */
-public class UIDataObject {
-  public static class BorderInfo {
-    public BorderPosition myBorderPosition;
-    public BorderStyle myBorderStyle;
-    public ColorKey myColorKey;
-    public int myWidth;
+public class UIDataObject extends UserDataHolderBase {
+  private final Map<Class, EventDispatcher> myListeners = new ConcurrentHashMap<>();
 
-    public BorderInfo(BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
-      myBorderPosition = borderPosition;
-      myBorderStyle = borderStyle;
-      myColorKey = colorKey;
-      myWidth = width;
-    }
-  }
+  @Nullable
+  private Map<BorderPosition, BorderInfo> myBorders;
 
-  private Map<Class, EventDispatcher> myListeners = new ConcurrentHashMap<>();
-  private Map<BorderPosition, BorderInfo> myBorders = new ConcurrentHashMap<>();
+  private final AtomicNotNullLazyValue<MultiMap<Key, Supplier>> myUserDataProviders = AtomicNotNullLazyValue.createValue(ConcurrentMultiMap::new);
 
   @SuppressWarnings("unchecked")
   public <T extends EventListener> Runnable addListener(Class<T> clazz, T value) {
-    EventDispatcher<T> eventDispatcher = myListeners.computeIfAbsent(clazz, aClass -> EventDispatcher.create(aClass));
+    EventDispatcher<T> eventDispatcher = myListeners.computeIfAbsent(clazz, EventDispatcher::create);
     eventDispatcher.addListener(value);
     return () -> eventDispatcher.removeListener(value);
   }
 
   @SuppressWarnings("unchecked")
   public <T extends EventListener> T getDispatcher(Class<T> clazz) {
-    return (T)myListeners.computeIfAbsent(clazz, aClass -> EventDispatcher.create(aClass)).getMulticaster();
+    return (T)myListeners.computeIfAbsent(clazz, EventDispatcher::create).getMulticaster();
+  }
+
+  @NotNull
+  public <T> Runnable addUserDataProvider(@NotNull Key<T> key, @NotNull Supplier<T> supplier) {
+    myUserDataProviders.getValue().putValue(key, supplier);
+    return () -> myUserDataProviders.getValue().remove(key, supplier);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T> T getUserData(@NotNull Key<T> key) {
+    Collection<Supplier> collection = myUserDataProviders.getValue().get(key);
+    for (Supplier supplier : collection) {
+      Object o = supplier.get();
+      if (o != null) {
+        return (T)o;
+      }
+    }
+    return super.getUserData(key);
   }
 
   public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+    if (myBorders == null) {
+      myBorders = new ConcurrentHashMap<>();
+    }
+
     BorderInfo borderInfo = new BorderInfo(borderPosition, borderStyle, colorKey, width);
     myBorders.put(borderPosition, borderInfo);
   }
 
   public void removeBorder(BorderPosition borderPosition) {
+    if (myBorders == null) {
+      return;
+    }
+
     myBorders.remove(borderPosition);
   }
 
+  @NotNull
   public Collection<BorderInfo> getBorders() {
+    if (myBorders == null) {
+      return Collections.emptyList();
+    }
     return myBorders.values();
   }
 }

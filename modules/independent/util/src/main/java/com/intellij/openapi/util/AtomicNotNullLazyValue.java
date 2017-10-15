@@ -22,9 +22,21 @@ import org.jetbrains.annotations.NotNull;
  * @author peter
  */
 public abstract class AtomicNotNullLazyValue<T> extends NotNullLazyValue<T> {
+  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
+  @NotNull
+  public static <T> AtomicNotNullLazyValue<T> createValue(@NotNull final NotNullFactory<T> value) {
+    return new AtomicNotNullLazyValue<T>() {
+      @NotNull
+      @Override
+      protected T compute() {
+        return value.create();
+      }
+    };
+  }
 
   private volatile T myValue;
 
+  @Override
   @NotNull
   public final T getValue() {
     T value = myValue;

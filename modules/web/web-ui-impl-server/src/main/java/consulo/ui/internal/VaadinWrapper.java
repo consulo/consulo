@@ -17,20 +17,15 @@ package consulo.ui.internal;
 
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
+import consulo.ui.impl.SomeUIWrapper;
 import consulo.ui.impl.UIDataObject;
-import consulo.ui.style.ColorKey;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.EventListener;
 
 /**
  * @author VISTALL
  * @since 14-Sep-17
  */
-public interface VaadinWrapper extends Component {
+public interface VaadinWrapper extends SomeUIWrapper {
   default com.vaadin.ui.Component toVaadin() {
     return (com.vaadin.ui.Component)this;
   }
@@ -40,6 +35,8 @@ public interface VaadinWrapper extends Component {
     return (Component)toVaadin().getParent();
   }
 
+  @NotNull
+  @Override
   default UIDataObject dataObject() {
     AbstractComponent component = (AbstractComponent)toVaadin();
     UIDataObject data = (UIDataObject)component.getData();
@@ -47,29 +44,5 @@ public interface VaadinWrapper extends Component {
       component.setData(data = new UIDataObject());
     }
     return data;
-  }
-
-  @NotNull
-  @Override
-  default <T extends EventListener> Runnable addListener(@NotNull Class<T> eventClass, @NotNull T listener) {
-    return dataObject().addListener(eventClass, listener);
-  }
-
-  @NotNull
-  @Override
-  default <T extends EventListener> T getListenerDispatcher(@NotNull Class<T> eventClass) {
-    return dataObject().getDispatcher(eventClass);
-  }
-
-  @RequiredUIAccess
-  @Override
-  default void addBorder(@NotNull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
-    dataObject().addBorder(borderPosition, borderStyle, colorKey, width);
-  }
-
-  @RequiredUIAccess
-  @Override
-  default void removeBorder(@NotNull BorderPosition borderPosition) {
-    dataObject().removeBorder(borderPosition);
   }
 }

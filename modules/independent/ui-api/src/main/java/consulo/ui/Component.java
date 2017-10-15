@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EventListener;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -74,6 +76,9 @@ public interface Component extends Disposable, UserDataHolder {
 
   @RequiredUIAccess
   void setSize(@NotNull Size size);
+
+  @NotNull
+  <T> Runnable addUserDataProvider(@NotNull Key<T> key, @NotNull Supplier<T> supplier);
 
   /**
    * @return runner for unregister listener
