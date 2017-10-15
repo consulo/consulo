@@ -16,6 +16,7 @@
 package com.intellij.openapi.fileEditor;
 
 import com.intellij.openapi.editor.Caret;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.editor.Editor;
@@ -24,5 +25,5 @@ import com.intellij.openapi.editor.Editor;
  * @author peter
  */
 public interface EditorDataProvider {
-  @Nullable Object getData(@NotNull String dataId, @NotNull Editor e, @NotNull Caret caret);
+  @Nullable Object getData(@NotNull Key<?> dataId, @NotNull Editor e, @NotNull Caret caret);
 }

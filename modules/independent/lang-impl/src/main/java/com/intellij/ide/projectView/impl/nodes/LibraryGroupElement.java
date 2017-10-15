@@ -16,8 +16,8 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
  * Time: 7:08:03 PM
  */
 public final class LibraryGroupElement {
-  public static final DataKey<LibraryGroupElement[]> ARRAY_DATA_KEY = DataKey.create("libraryGroup.array");
+  public static final Key<LibraryGroupElement[]> ARRAY_DATA_KEY = Key.create("libraryGroup.array");
   
   private final Module myModule;
 

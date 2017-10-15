@@ -48,6 +48,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -572,8 +573,8 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
 
     @Nullable
-    protected Object getEditorData(@NotNull EditorEx editor, String dataId) {
-      if (OpenFileDescriptor.NAVIGATE_IN_EDITOR.is(dataId)) {
+    protected Object getEditorData(@NotNull EditorEx editor, Key dataId) {
+      if (OpenFileDescriptor.NAVIGATE_IN_EDITOR == dataId) {
         return editor;
       }
       else if (project.isInitialized()) {

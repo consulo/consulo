@@ -38,6 +38,7 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.Conditions;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.annotate.ShowAllAffectedGenericAction;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
@@ -447,25 +448,25 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
   }
 
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (CommonDataKeys.PROJECT.is(dataId)) {
+  public Object getData(@NonNls Key<?> dataId) {
+    if (CommonDataKeys.PROJECT == dataId) {
       return myProject;
     }
-    else if (VcsDataKeys.VCS_VIRTUAL_FILE.is(dataId)) {
+    else if (VcsDataKeys.VCS_VIRTUAL_FILE == dataId) {
       return myFile;
     }
-    else if (VcsDataKeys.VCS_FILE_REVISION.is(dataId)) {
+    else if (VcsDataKeys.VCS_FILE_REVISION == dataId) {
       VcsFileRevision selectedObject = myList.getSelectedObject();
       return selectedObject instanceof CurrentRevision ? null : selectedObject;
     }
-    else if (VcsDataKeys.VCS_FILE_REVISIONS.is(dataId)) {
+    else if (VcsDataKeys.VCS_FILE_REVISIONS == dataId) {
       List<VcsFileRevision> revisions = ContainerUtil.filter(myList.getSelectedObjects(), Conditions.notEqualTo(myLocalRevision));
       return ArrayUtil.toObjectArray(revisions, VcsFileRevision.class);
     }
-    else if (VcsDataKeys.VCS.is(dataId)) {
+    else if (VcsDataKeys.VCS == dataId) {
       return myActiveVcs.getKeyInstanceMethod();
     }
-    else if (PlatformDataKeys.HELP_ID.is(dataId)) {
+    else if (PlatformDataKeys.HELP_ID == dataId) {
       return myHelpId;
     }
     return null;

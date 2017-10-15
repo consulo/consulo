@@ -17,6 +17,7 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.PlaceProvider;
 import org.intellij.lang.annotations.JdkConstants;
@@ -57,8 +58,7 @@ public class AnActionEvent implements PlaceProvider<String> {
 
   /**
    * @throws IllegalArgumentException if {@code dataContext} is {@code null} or
-   * {@code place} is {@code null} or {@code presentation} is {@code null}
-   *
+   *                                  {@code place} is {@code null} or {@code presentation} is {@code null}
    * @see ActionManager#getInstance()
    */
   public AnActionEvent(InputEvent inputEvent,
@@ -102,10 +102,7 @@ public class AnActionEvent implements PlaceProvider<String> {
   }
 
   @NotNull
-  public static AnActionEvent createFromAnAction(@NotNull AnAction action,
-                                                 @Nullable InputEvent event,
-                                                 @NotNull String place,
-                                                 @NotNull DataContext dataContext) {
+  public static AnActionEvent createFromAnAction(@NotNull AnAction action, @Nullable InputEvent event, @NotNull String place, @NotNull DataContext dataContext) {
     int modifiers = event == null ? 0 : event.getModifiers();
     Presentation presentation = action.getTemplatePresentation().clone();
     AnActionEvent anActionEvent = new AnActionEvent(event, dataContext, place, presentation, ActionManager.getInstance(), modifiers);
@@ -120,10 +117,7 @@ public class AnActionEvent implements PlaceProvider<String> {
 
 
   @NotNull
-  public static AnActionEvent createFromInputEvent(@Nullable InputEvent event,
-                                                   @NotNull String place,
-                                                   @NotNull Presentation presentation,
-                                                   @NotNull DataContext dataContext) {
+  public static AnActionEvent createFromInputEvent(@Nullable InputEvent event, @NotNull String place, @NotNull Presentation presentation, @NotNull DataContext dataContext) {
     return new AnActionEvent(event, dataContext, place, presentation, ActionManager.getInstance(), event == null ? 0 : event.getModifiers());
   }
 
@@ -135,8 +129,7 @@ public class AnActionEvent implements PlaceProvider<String> {
                                                    @NotNull DataContext dataContext,
                                                    boolean isContextMenuAction,
                                                    boolean isToolbarAction) {
-    return new AnActionEvent(event, dataContext, place, presentation, ActionManager.getInstance(),
-                             event == null ? 0 : event.getModifiers(), isContextMenuAction, isToolbarAction);
+    return new AnActionEvent(event, dataContext, place, presentation, ActionManager.getInstance(), event == null ? 0 : event.getModifiers(), isContextMenuAction, isToolbarAction);
   }
 
   /**
@@ -202,6 +195,11 @@ public class AnActionEvent implements PlaceProvider<String> {
     return key.getData(getDataContext());
   }
 
+  @Nullable
+  public <T> T getData(@NotNull Key<T> key) {
+    return getDataContext().getData(key);
+  }
+
   /**
    * Returns not null data by a data key. This method assumes that data has been checked for null in AnAction#update method.
    * <br/><br/>
@@ -225,6 +223,13 @@ public class AnActionEvent implements PlaceProvider<String> {
    *
    * </pre>
    */
+  @NotNull
+  public <T> T getRequiredData(@NotNull Key<T> key) {
+    T data = getData(key);
+    assert data != null;
+    return data;
+  }
+
   @NotNull
   public <T> T getRequiredData(@NotNull DataKey<T> key) {
     T data = getData(key);

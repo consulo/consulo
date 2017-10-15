@@ -45,12 +45,12 @@ import java.util.List;
 public class CompileAction extends CompileActionBase {
   @RequiredDispatchThread
   protected void doAction(DataContext dataContext, Project project) {
-    final Module module = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
+    final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     if (module != null) {
       CompilerManager.getInstance(project).compile(module, null);
     }
     else {
-      VirtualFile[] files = getCompilableFiles(project, PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext));
+      VirtualFile[] files = getCompilableFiles(project, dataContext.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY));
       if (files.length > 0) {
         CompilerManager.getInstance(project).compile(files, null);
       }
@@ -70,15 +70,15 @@ public class CompileAction extends CompileActionBase {
     presentation.setText(ActionsBundle.actionText(IdeActions.ACTION_COMPILE));
     presentation.setVisible(true);
 
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
 
-    final Module module = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
+    final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
 
-    final VirtualFile[] files = getCompilableFiles(project, PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext));
+    final VirtualFile[] files = getCompilableFiles(project, dataContext.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY));
     if (module == null && files.length == 0) {
       presentation.setEnabled(false);
       presentation.setVisible(!ActionPlaces.isPopupPlace(event.getPlace()));
@@ -98,7 +98,7 @@ public class CompileAction extends CompileActionBase {
         }
       }
       else {
-        PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+        PsiElement element = dataContext.getData(LangDataKeys.PSI_ELEMENT);
         if (element instanceof PsiPackage) {
           aPackage = (PsiPackage)element;
         }

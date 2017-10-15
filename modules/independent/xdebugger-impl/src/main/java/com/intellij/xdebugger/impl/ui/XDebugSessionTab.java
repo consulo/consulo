@@ -36,6 +36,7 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -166,22 +167,22 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (XWatchesView.DATA_KEY.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (XWatchesView.DATA_KEY == dataId) {
       return myWatchesView;
     }
-    else if (TAB_KEY.is(dataId)) {
+    else if (TAB_KEY == dataId) {
       return this;
     }
-    else if (XDebugSessionData.DATA_KEY.is(dataId)) {
+    else if (XDebugSessionData.DATA_KEY == dataId) {
       return mySessionData;
     }
 
     if (mySession != null) {
-      if (XDebugSession.DATA_KEY.is(dataId)) {
+      if (XDebugSession.DATA_KEY == dataId) {
         return mySession;
       }
-      else if (LangDataKeys.CONSOLE_VIEW.is(dataId)) {
+      else if (LangDataKeys.CONSOLE_VIEW == dataId) {
         return mySession.getConsoleView();
       }
     }

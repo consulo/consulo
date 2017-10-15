@@ -36,7 +36,7 @@ public class MoveArrangementGroupingRuleUpAction extends AnAction implements Dum
 
   @Override
   public void update(AnActionEvent e) {
-    ArrangementGroupingRulesControl control = ArrangementGroupingRulesControl.KEY.getData(e.getDataContext());
+    ArrangementGroupingRulesControl control = e.getData(ArrangementGroupingRulesControl.KEY);
     if (control == null) {
       e.getPresentation().setEnabled(false);
       return;
@@ -48,7 +48,7 @@ public class MoveArrangementGroupingRuleUpAction extends AnAction implements Dum
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    ArrangementGroupingRulesControl control = ArrangementGroupingRulesControl.KEY.getData(e.getDataContext());
+    ArrangementGroupingRulesControl control = e.getData(ArrangementGroupingRulesControl.KEY);
     if (control == null) {
       return;
     }

@@ -40,6 +40,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -340,7 +341,7 @@ public class CommanderPanel extends JPanel {
   private List<AbstractTreeNode> getSelectedNodes() {
     if (myBuilder == null) return Collections.emptyList();
     final int[] indices = myList.getSelectedIndices();
-    ArrayList<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
+    ArrayList<AbstractTreeNode> result = new ArrayList<>();
     for (int index : indices) {
       if (index >= myModel.getSize()) continue;
       Object elementAtIndex = myModel.getElementAt(index);
@@ -361,7 +362,7 @@ public class CommanderPanel extends JPanel {
     if (myBuilder == null) return PsiElement.EMPTY_ARRAY;
     final int[] indices = myList.getSelectedIndices();
 
-    final ArrayList<PsiElement> elements = new ArrayList<PsiElement>();
+    final ArrayList<PsiElement> elements = new ArrayList<>();
     for (int index : indices) {
       final PsiElement element = getSelectedElement(index);
       if (element != null) {
@@ -440,49 +441,49 @@ public class CommanderPanel extends JPanel {
     myTitlePanel.setVisible(flag);
   }
 
-  public final Object getDataImpl(final String dataId) {
+  public final Object getDataImpl(final Key<?> dataId) {
     if (myBuilder == null) return null;
     final Object selectedValue = getSelectedValue();
-    if (LangDataKeys.PSI_ELEMENT.is(dataId)) {
+    if (LangDataKeys.PSI_ELEMENT == dataId) {
       final PsiElement selectedElement = getSelectedElement();
       return selectedElement != null && selectedElement.isValid() ? selectedElement : null;
     }
-    if (LangDataKeys.PSI_ELEMENT_ARRAY.is(dataId)) {
+    if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
       return filterInvalidElements(getSelectedElements());
     }
-    if (LangDataKeys.PASTE_TARGET_PSI_ELEMENT.is(dataId)) {
+    if (LangDataKeys.PASTE_TARGET_PSI_ELEMENT == dataId) {
       final AbstractTreeNode parentNode = myBuilder.getParentNode();
       final Object element = parentNode != null ? parentNode.getValue() : null;
       return element instanceof PsiElement && ((PsiElement)element).isValid() ? element : null;
     }
-    if (PlatformDataKeys.NAVIGATABLE_ARRAY.is(dataId)) {
+    if (PlatformDataKeys.NAVIGATABLE_ARRAY == dataId) {
       return getNavigatables();
     }
-    if (PlatformDataKeys.COPY_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return myCopyPasteDelegator != null ? myCopyPasteDelegator.getCopyProvider() : null;
     }
-    if (PlatformDataKeys.CUT_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.CUT_PROVIDER == dataId) {
       return myCopyPasteDelegator != null ? myCopyPasteDelegator.getCutProvider() : null;
     }
-    if (PlatformDataKeys.PASTE_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
       return myCopyPasteDelegator != null ? myCopyPasteDelegator.getPasteProvider() : null;
     }
-    if (LangDataKeys.IDE_VIEW.is(dataId)) {
+    if (LangDataKeys.IDE_VIEW == dataId) {
       return myIdeView;
     }
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
       return myDeleteElementProvider;
     }
-    if (LangDataKeys.MODULE.is(dataId)) {
+    if (LangDataKeys.MODULE == dataId) {
       return selectedValue instanceof Module ? selectedValue : null;
     }
-    if (ModuleGroup.ARRAY_DATA_KEY.is(dataId)) {
+    if (ModuleGroup.ARRAY_DATA_KEY == dataId) {
       return selectedValue instanceof ModuleGroup ? new ModuleGroup[]{(ModuleGroup)selectedValue} : null;
     }
-    if (LibraryGroupElement.ARRAY_DATA_KEY.is(dataId)) {
+    if (LibraryGroupElement.ARRAY_DATA_KEY == dataId) {
       return selectedValue instanceof LibraryGroupElement ? new LibraryGroupElement[]{(LibraryGroupElement)selectedValue} : null;
     }
-    if (NamedLibraryElement.ARRAY_DATA_KEY.is(dataId)) {
+    if (NamedLibraryElement.ARRAY_DATA_KEY == dataId) {
       return selectedValue instanceof NamedLibraryElement ? new NamedLibraryElement[]{(NamedLibraryElement)selectedValue} : null;
     }
 
@@ -498,7 +499,7 @@ public class CommanderPanel extends JPanel {
     final int[] indices = myList.getSelectedIndices();
     if (indices == null || indices.length == 0) return null;
 
-    final ArrayList<Navigatable> elements = new ArrayList<Navigatable>();
+    final ArrayList<Navigatable> elements = new ArrayList<>();
     for (int index : indices) {
       final Object element = myModel.getElementAt(index);
       if (element instanceof AbstractTreeNode) {
@@ -514,7 +515,7 @@ public class CommanderPanel extends JPanel {
     if (elements == null || elements.length == 0) {
       return null;
     }
-    final List<PsiElement> validElements = new ArrayList<PsiElement>(elements.length);
+    final List<PsiElement> validElements = new ArrayList<>(elements.length);
     for (final PsiElement element : elements) {
       if (element.isValid()) {
         validElements.add(element);

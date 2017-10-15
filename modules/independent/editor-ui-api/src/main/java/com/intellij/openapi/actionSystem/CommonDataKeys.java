@@ -19,37 +19,38 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
-public class CommonDataKeys {
-  public static final DataKey<Project> PROJECT = DataKey.create("project");
-  public static final DataKey<Module> MODULE = DataKey.create("module");
-  public static final DataKey<Editor> EDITOR = DataKey.create("editor");
+public interface CommonDataKeys {
+  Key<Project> PROJECT = Key.create("project");
+  Key<Module> MODULE = Key.create("module");
+  Key<Editor> EDITOR = Key.create("editor");
   /**
    * This key can be used to obtain reference to host editor instance, in case {@link #EDITOR} key is referring to an injected editor.
    */
-  public static final DataKey<Editor> HOST_EDITOR = DataKey.create("host.editor");
+  Key<Editor> HOST_EDITOR = Key.create("host.editor");
   /**
    * A key to retrieve caret instance (in host or injected editor, depending on context).
    */
-  public static final DataKey<Caret> CARET = DataKey.create("caret");
+  Key<Caret> CARET = Key.create("caret");
   /**
    * Returns com.intellij.openapi.editor.Editor even if focus currently is in find bar
    */
-  public static final DataKey<Editor> EDITOR_EVEN_IF_INACTIVE = DataKey.create("editor.even.if.inactive");
-  public static final DataKey<Navigatable> NAVIGATABLE = DataKey.create("Navigatable");
-  public static final DataKey<Navigatable[]> NAVIGATABLE_ARRAY = DataKey.create("NavigatableArray");
-  public static final DataKey<VirtualFile> VIRTUAL_FILE = DataKey.create("virtualFile");
-  public static final DataKey<VirtualFile[]> VIRTUAL_FILE_ARRAY = DataKey.create("virtualFileArray");
+  Key<Editor> EDITOR_EVEN_IF_INACTIVE = Key.create("editor.even.if.inactive");
+  Key<Navigatable> NAVIGATABLE = Key.create("Navigatable");
+  Key<Navigatable[]> NAVIGATABLE_ARRAY = Key.create("NavigatableArray");
+  Key<VirtualFile> VIRTUAL_FILE = Key.create("virtualFile");
+  Key<VirtualFile[]> VIRTUAL_FILE_ARRAY = Key.create("virtualFileArray");
 
-  public static final DataKey<PsiElement> PSI_ELEMENT = DataKey.create("psi.Element");
-  public static final DataKey<PsiFile> PSI_FILE = DataKey.create("psi.File");
+  Key<PsiElement> PSI_ELEMENT = Key.create("psi.Element");
+  Key<PsiFile> PSI_FILE = Key.create("psi.File");
   /**
    * This key can be used to check if the current context relates to a virtual space in editor.
    * @see com.intellij.openapi.editor.EditorSettings#setVirtualSpace(boolean)
    */
-  public static final DataKey<Boolean> EDITOR_VIRTUAL_SPACE = DataKey.create("editor.virtual.space");
+  Key<Boolean> EDITOR_VIRTUAL_SPACE = Key.create("editor.virtual.space");
 }

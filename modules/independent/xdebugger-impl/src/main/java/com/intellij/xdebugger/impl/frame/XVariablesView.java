@@ -134,8 +134,8 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {
+  public Object getData(@NonNls Key dataId) {
+    if (CommonDataKeys.VIRTUAL_FILE == dataId) {
       return getCurrentFile(getTree());
     }
     return null;

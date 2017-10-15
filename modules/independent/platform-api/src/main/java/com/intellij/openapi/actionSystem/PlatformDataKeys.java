@@ -21,6 +21,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diff.DiffViewer;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.ContentManager;
@@ -31,63 +32,63 @@ import java.util.Comparator;
 /**
  * @author yole
  */
-public class PlatformDataKeys extends CommonDataKeys {
-  public static final DataKey<FileEditor> FILE_EDITOR = DataKey.create("fileEditor");
+public interface PlatformDataKeys extends CommonDataKeys {
+  Key<FileEditor> FILE_EDITOR = Key.create("fileEditor");
 
   /**
    *  Returns the text of currently selected file/file revision
    */
-  public static final DataKey<String> FILE_TEXT = DataKey.create("fileText");
+  Key<String> FILE_TEXT = Key.create("fileText");
 
   /**
    * Returns Boolean.TRUE if action is executed in modal context and
    * Boolean.FALSE if action is executed not in modal context. If context
    * is unknown then the value of this data constant is <code>null</code>.
    */
-  public static final DataKey<Boolean> IS_MODAL_CONTEXT = DataKey.create("isModalContext");
-  public static final DataKey<DiffViewer> DIFF_VIEWER = DataKey.create("diffViewer");
-  public static final DataKey<DiffViewer> COMPOSITE_DIFF_VIEWER = DataKey.create("compositeDiffViewer");
+  Key<Boolean> IS_MODAL_CONTEXT = Key.create("isModalContext");
+  Key<DiffViewer> DIFF_VIEWER = Key.create("diffViewer");
+  Key<DiffViewer> COMPOSITE_DIFF_VIEWER = Key.create("compositeDiffViewer");
 
   /**
    * Returns help id (String)
    */
-  public static final DataKey<String> HELP_ID = DataKey.create("helpId");
+  Key<String> HELP_ID = Key.create("helpId");
 
   /**
    * Returns project if project node is selected (in project view)
    */
-  public static final DataKey<Project> PROJECT_CONTEXT = DataKey.create("context.Project");
+  Key<Project> PROJECT_CONTEXT = Key.create("context.Project");
 
   /**
    * Returns java.awt.Component currently in focus, DataContext should be retrieved for
    */
-  public static final DataKey<Component> CONTEXT_COMPONENT = DataKey.create("contextComponent");
-  public static final DataKey<CopyProvider> COPY_PROVIDER = DataKey.create("copyProvider");
-  public static final DataKey<CutProvider> CUT_PROVIDER = DataKey.create("cutProvider");
-  public static final DataKey<PasteProvider> PASTE_PROVIDER = DataKey.create("pasteProvider");
-  public static final DataKey<DeleteProvider> DELETE_ELEMENT_PROVIDER = DataKey.create("deleteElementProvider");
-  public static final DataKey<Object> SELECTED_ITEM = DataKey.create("selectedItem");
-  public static final DataKey<Object[]> SELECTED_ITEMS = DataKey.create("selectedItems");
-  public static final DataKey<Rectangle> DOMINANT_HINT_AREA_RECTANGLE = DataKey.create("dominant.hint.rectangle");
-  public static final DataKey<ContentManager> CONTENT_MANAGER = DataKey.create("contentManager");
-  public static final DataKey<ToolWindow> TOOL_WINDOW = DataKey.create("TOOL_WINDOW");
-  public static final DataKey<TreeExpander> TREE_EXPANDER = DataKey.create("treeExpander");
-  public static final DataKey<ExporterToTextFile> EXPORTER_TO_TEXT_FILE = DataKey.create("exporterToTextFile");
-  public static final DataKey<VirtualFile> PROJECT_FILE_DIRECTORY = DataKey.create("context.ProjectFileDirectory");
-  public static final DataKey<Disposable> UI_DISPOSABLE = DataKey.create("ui.disposable");
+  Key<Component> CONTEXT_COMPONENT = Key.create("contextComponent");
+  Key<CopyProvider> COPY_PROVIDER = Key.create("copyProvider");
+  Key<CutProvider> CUT_PROVIDER = Key.create("cutProvider");
+  Key<PasteProvider> PASTE_PROVIDER = Key.create("pasteProvider");
+  Key<DeleteProvider> DELETE_ELEMENT_PROVIDER = Key.create("deleteElementProvider");
+  Key<Object> SELECTED_ITEM = Key.create("selectedItem");
+  Key<Object[]> SELECTED_ITEMS = Key.create("selectedItems");
+  Key<Rectangle> DOMINANT_HINT_AREA_RECTANGLE = Key.create("dominant.hint.rectangle");
+  Key<ContentManager> CONTENT_MANAGER = Key.create("contentManager");
+  Key<ToolWindow> TOOL_WINDOW = Key.create("TOOL_WINDOW");
+  Key<TreeExpander> TREE_EXPANDER = Key.create("treeExpander");
+  Key<ExporterToTextFile> EXPORTER_TO_TEXT_FILE = Key.create("exporterToTextFile");
+  Key<VirtualFile> PROJECT_FILE_DIRECTORY = Key.create("context.ProjectFileDirectory");
+  Key<Disposable> UI_DISPOSABLE = Key.create("ui.disposable");
 
-  public static final DataKey<ContentManager> NONEMPTY_CONTENT_MANAGER = DataKey.create("nonemptyContentManager");
-  public static final DataKey<ModalityState> MODALITY_STATE = DataKey.create("ModalityState");
-  public static final DataKey<Boolean> SOURCE_NAVIGATION_LOCKED = DataKey.create("sourceNavigationLocked");
+  Key<ContentManager> NONEMPTY_CONTENT_MANAGER = Key.create("nonemptyContentManager");
+  Key<ModalityState> MODALITY_STATE = Key.create("ModalityState");
+  Key<Boolean> SOURCE_NAVIGATION_LOCKED = Key.create("sourceNavigationLocked");
 
-  public static final DataKey<String> PREDEFINED_TEXT = DataKey.create("predefined.text.value");
+  Key<String> PREDEFINED_TEXT = Key.create("predefined.text.value");
 
-  public static final DataKey<String> SEARCH_INPUT_TEXT = DataKey.create("search.input.text.value");
+  Key<String> SEARCH_INPUT_TEXT = Key.create("search.input.text.value");
   /**
    * Returns java.awt.Point to guess where to show context menu invoked by key.
    * This point should be relative to the currently focused component
    */
-  public static final DataKey<Point> CONTEXT_MENU_POINT = DataKey.create("contextMenuPoint");
+  Key<Point> CONTEXT_MENU_POINT = Key.create("contextMenuPoint");
 
   /**
    * It's allowed to assign multiple actions to the same keyboard shortcut. Actions system filters them on the current
@@ -103,5 +104,5 @@ public class PlatformDataKeys extends CommonDataKeys {
    * @deprecated use com.intellij.openapi.actionSystem.ActionPromoter
    */
   @Deprecated
-  public static final DataKey<Comparator<? super AnAction>> ACTIONS_SORTER = DataKey.create("actionsSorter");
+  Key<Comparator<? super AnAction>> ACTIONS_SORTER = Key.create("actionsSorter");
 }

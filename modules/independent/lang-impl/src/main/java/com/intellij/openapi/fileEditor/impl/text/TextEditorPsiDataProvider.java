@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.fileEditor.impl.text;
 
+import com.intellij.openapi.util.Key;
 import consulo.codeInsight.TargetElementUtil;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.util.EditorHelper;
@@ -45,7 +46,7 @@ import static com.intellij.util.containers.ContainerUtil.addIfNotNull;
 public class TextEditorPsiDataProvider implements EditorDataProvider {
   @Override
   @Nullable
-  public Object getData(@NotNull final String dataId, @NotNull final Editor e, @NotNull final Caret caret) {
+  public Object getData(@NotNull final Key<?> dataId, @NotNull final Editor e, @NotNull final Caret caret) {
     if (!(e instanceof EditorEx)) {
       return null;
     }

@@ -32,6 +32,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBPanelWithEmptyText;
 import com.intellij.ui.content.*;
@@ -54,10 +55,14 @@ import java.util.Set;
  * @author konstantin.aleev
  */
 public class RunDashboardContent extends JPanel implements TreeContent, Disposable {
-  public static final DataKey<RunDashboardContent> KEY = DataKey.create("runDashboardContent");
-  @NonNls private static final String PLACE_TOOLBAR = "RunDashboardContent#Toolbar";
-  @NonNls private static final String RUN_DASHBOARD_TOOLBAR = "RunDashboardToolbar";
-  @NonNls private static final String RUN_DASHBOARD_POPUP = "RunDashboardPopup";
+  public static final Key<RunDashboardContent> KEY = Key.create("runDashboardContent");
+
+  @NonNls
+  private static final String PLACE_TOOLBAR = "RunDashboardContent#Toolbar";
+  @NonNls
+  private static final String RUN_DASHBOARD_TOOLBAR = "RunDashboardToolbar";
+  @NonNls
+  private static final String RUN_DASHBOARD_POPUP = "RunDashboardPopup";
 
   private static final String MESSAGE_CARD = "message";
   private static final String CONTENT_CARD = "content";
@@ -73,10 +78,13 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
   private Set<Object> myCollapsedTreeNodeValues = new HashSet<>();
   private List<DashboardGrouper> myGroupers;
 
-  @NotNull private final ContentManager myContentManager;
-  @NotNull private final ContentManagerListener myContentManagerListener;
+  @NotNull
+  private final ContentManager myContentManager;
+  @NotNull
+  private final ContentManagerListener myContentManagerListener;
 
-  @NotNull private final Project myProject;
+  @NotNull
+  private final Project myProject;
 
   public RunDashboardContent(@NotNull Project project, @NotNull ContentManager contentManager, @NotNull List<DashboardGrouper> groupers) {
     super(new BorderLayout());
@@ -220,8 +228,7 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
     myBuilder = new AbstractTreeBuilder(myTree, myTreeModel, structure, IndexComparator.INSTANCE) {
       @Override
       protected boolean isAutoExpandNode(NodeDescriptor nodeDescriptor) {
-        return super.isAutoExpandNode(nodeDescriptor) ||
-               !myCollapsedTreeNodeValues.contains(((AbstractTreeNode)nodeDescriptor).getValue());
+        return super.isAutoExpandNode(nodeDescriptor) || !myCollapsedTreeNodeValues.contains(((AbstractTreeNode)nodeDescriptor).getValue());
       }
     };
     myBuilder.initRootNode();
@@ -241,8 +248,8 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
 
     myTree.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, new DataProvider() {
       @Override
-      public Object getData(@NonNls String dataId) {
-        if (KEY.getName().equals(dataId)) {
+      public Object getData(@NonNls Key dataId) {
+        if (KEY == dataId) {
           return RunDashboardContent.this;
         }
         return null;

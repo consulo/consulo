@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +38,9 @@ public interface DataContext {
    * @return the value, or null if no value is available in the current context for this identifier.
    */
   @Nullable
-  Object getData(@NonNls String dataId);
+  default Object getData(@NonNls String dataId) {
+    throw new AbstractMethodError("deprecated");
+  }
 
   DataContext EMPTY_CONTEXT = new DataContext() {
     @Nullable
@@ -57,5 +60,10 @@ public interface DataContext {
   @Nullable
   default <T> T getData(@NotNull DataKey<T> key) {
     return (T)getData(key.getName());
+  }
+
+  @Nullable
+  default <T> T getData(@NotNull Key<T> key) {
+    throw new AbstractMethodError();
   }
 }

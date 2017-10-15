@@ -6,6 +6,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.ide.util.treeView.TreeVisitor;
+import com.intellij.openapi.util.Key;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServersTreeStructure;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
@@ -49,7 +50,7 @@ import java.util.Set;
  * User: michael.golubev
  */
 public class ServersToolWindowContent extends JPanel implements Disposable {
-  public static final DataKey<ServersToolWindowContent> KEY = DataKey.create("serversToolWindowContent");
+  public static final Key<ServersToolWindowContent> KEY = Key.create("serversToolWindowContent");
   @NonNls private static final String PLACE_TOOLBAR = "ServersToolWindowContent#Toolbar";
   @NonNls private static final String SERVERS_TOOL_WINDOW_TOOLBAR = "RemoteServersViewToolbar";
 
@@ -221,8 +222,8 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
     myTree.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, new DataProvider() {
 
       @Override
-      public Object getData(@NonNls String dataId) {
-        if (KEY.getName().equals(dataId)) {
+      public Object getData(@NotNull Key dataId) {
+        if (KEY == dataId) {
           return ServersToolWindowContent.this;
         }
         for (RemoteServersViewContributor contributor : RemoteServersViewContributor.EP_NAME.getExtensions()) {

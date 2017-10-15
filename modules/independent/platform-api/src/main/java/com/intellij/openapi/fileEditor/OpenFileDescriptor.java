@@ -18,13 +18,13 @@ package com.intellij.openapi.fileEditor;
 import com.intellij.ide.*;
 import com.intellij.ide.FileEditorProvider;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.INativeFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -39,7 +39,7 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
    * Tells descriptor to navigate in specific editor rather than file editor in main IDEA window.
    * For example if you want to navigate in editor embedded into modal dialog, you should provide this data.
    */
-  public static final DataKey<Editor> NAVIGATE_IN_EDITOR = DataKey.create("NAVIGATE_IN_EDITOR");
+  public static final Key<Editor> NAVIGATE_IN_EDITOR = Key.create("NAVIGATE_IN_EDITOR");
 
   private final Project myProject;
   private final VirtualFile myFile;
@@ -134,7 +134,7 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
 
   private boolean navigateInRequestedEditor() {
     @SuppressWarnings("deprecation") DataContext ctx = DataManager.getInstance().getDataContext();
-    Editor e = NAVIGATE_IN_EDITOR.getData(ctx);
+    Editor e = ctx.getData(NAVIGATE_IN_EDITOR);
     if (e == null) return false;
     if (!Comparing.equal(FileDocumentManager.getInstance().getFile(e.getDocument()), myFile)) return false;
 

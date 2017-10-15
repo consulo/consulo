@@ -22,6 +22,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.UIUtil;
@@ -66,10 +67,10 @@ public class XDebuggerExpressionEditor extends XDebuggerEditorBase {
               }
 
               @Override
-              public Object getData(String dataId) {
-                if (LangDataKeys.CONTEXT_LANGUAGES.is(dataId)) {
+              public Object getData(Key dataId) {
+                if (LangDataKeys.CONTEXT_LANGUAGES == dataId) {
                   return new Language[]{myExpression.getLanguage()};
-                } else if (CommonDataKeys.PSI_FILE.is(dataId)) {
+                } else if (CommonDataKeys.PSI_FILE == dataId) {
                   return PsiDocumentManager.getInstance(getProject()).getPsiFile(getDocument());
                 }
                 return super.getData(dataId);

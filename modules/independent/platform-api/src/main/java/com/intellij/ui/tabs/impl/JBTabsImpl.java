@@ -77,7 +77,7 @@ public abstract class JBTabsImpl extends JComponent
 
   private static final String uiClassID = "JBEditorTabsUI";
 
-  public static final DataKey<JBTabsImpl> NAVIGATION_ACTIONS_KEY = DataKey.create("JBTabs");
+  public static final Key<JBTabsImpl> NAVIGATION_ACTIONS_KEY = Key.create("JBTabs");
   @NonNls
   public static final Key<Integer> SIDE_TABS_SIZE_LIMIT_KEY = Key.create("SIDE_TABS_SIZE_LIMIT_KEY");
   public static final int DEFAULT_MAX_TAB_WIDTH = JBUI.scale(300);
@@ -2322,21 +2322,21 @@ public abstract class JBTabsImpl extends JComponent
 
   @Override
   @Nullable
-  public Object getData(@NonNls final String dataId) {
+  public Object getData(@NonNls final Key<?> dataId) {
     if (myDataProvider != null) {
       final Object value = myDataProvider.getData(dataId);
       if (value != null) return value;
     }
 
-    if (SwitchProvider.KEY.getName().equals(dataId) && myOwnSwitchProvider) {
+    if (SwitchProvider.KEY == dataId && myOwnSwitchProvider) {
       return this;
     }
 
-    if (QuickActionProvider.KEY.getName().equals(dataId)) {
+    if (QuickActionProvider.KEY == dataId) {
       return this;
     }
 
-    return NAVIGATION_ACTIONS_KEY.is(dataId) ? this : null;
+    return NAVIGATION_ACTIONS_KEY == dataId ? this : null;
   }
 
   @Override

@@ -483,14 +483,14 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
 
   @Override
   @Nullable
-  public Object getData(@NonNls String dataId) {
-    if (PlatformDataKeys.TOOL_WINDOW.is(dataId)) return myWindow;
+  public Object getData(@NonNls Key<?> dataId) {
+    if (PlatformDataKeys.TOOL_WINDOW == dataId) return myWindow;
 
-    if (CloseAction.CloseTarget.KEY.is(dataId)) {
+    if (CloseAction.CloseTarget.KEY == dataId) {
       return computeCloseTarget();
     }
 
-    if (SwitchProvider.KEY.is(dataId) && myType == ToolWindowContentUiType.TABBED) {
+    if (SwitchProvider.KEY == dataId && myType == ToolWindowContentUiType.TABBED) {
       return this;
     }
 

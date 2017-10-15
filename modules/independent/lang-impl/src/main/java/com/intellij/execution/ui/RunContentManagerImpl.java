@@ -134,10 +134,10 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
       private int myInsideGetData = 0;
 
       @Override
-      public Object getData(String dataId) {
+      public Object getData(Key<?> dataId) {
         myInsideGetData++;
         try {
-          if (PlatformDataKeys.HELP_ID.is(dataId)) {
+          if (PlatformDataKeys.HELP_ID == dataId) {
             return executor.getHelpId();
           }
           else {

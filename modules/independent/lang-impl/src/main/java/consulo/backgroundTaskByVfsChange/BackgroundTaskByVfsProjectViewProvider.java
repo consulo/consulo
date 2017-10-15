@@ -78,10 +78,4 @@ public class BackgroundTaskByVfsProjectViewProvider implements SelectableTreeStr
     }
     return list;
   }
-
-  @Nullable
-  @Override
-  public Object getData(Collection<AbstractTreeNode> selected, String dataName) {
-    return null;
-  }
 }

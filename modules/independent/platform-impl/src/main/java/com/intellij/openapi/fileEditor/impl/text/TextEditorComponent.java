@@ -40,6 +40,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileListener;
@@ -262,7 +263,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
   }
 
   @Override
-  public Object getData(final String dataId) {
+  public Object getData(final Key<?> dataId) {
     final Editor e = validateCurrentEditor();
     if (e == null || e.isDisposed()) return null;
 
@@ -272,10 +273,10 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
       if (o != null) return o;
     }
 
-    if (CommonDataKeys.EDITOR.is(dataId)) {
+    if (CommonDataKeys.EDITOR == dataId) {
       return e;
     }
-    if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {
+    if (CommonDataKeys.VIRTUAL_FILE == dataId) {
       return myFile.isValid() ? myFile : null;  // fix for SCR 40329
     }
     return null;

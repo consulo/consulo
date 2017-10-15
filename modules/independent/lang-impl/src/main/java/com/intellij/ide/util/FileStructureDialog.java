@@ -39,6 +39,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
@@ -412,16 +413,16 @@ public class FileStructureDialog extends DialogWrapper {
     }
 
     @Override
-    public Object getData(String dataId) {
+    public Object getData(Key dataId) {
       Object selectedElement = myCommanderPanel.getSelectedValue();
 
       if (selectedElement instanceof TreeElement) selectedElement = ((StructureViewTreeElement)selectedElement).getValue();
 
-      if (PlatformDataKeys.NAVIGATABLE.is(dataId)) {
+      if (PlatformDataKeys.NAVIGATABLE == dataId) {
         return selectedElement instanceof Navigatable ? selectedElement : myNavigatable;
       }
 
-      if (OpenFileDescriptor.NAVIGATE_IN_EDITOR.is(dataId)) return myEditor;
+      if (OpenFileDescriptor.NAVIGATE_IN_EDITOR == dataId) return myEditor;
 
       return getDataImpl(dataId);
     }

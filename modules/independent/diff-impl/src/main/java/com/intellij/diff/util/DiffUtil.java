@@ -1271,7 +1271,7 @@ public class DiffUtil {
   }
 
   @Nullable
-  public static Object getData(@Nullable DataProvider provider, @Nullable DataProvider fallbackProvider, @NonNls String dataId) {
+  public static Object getData(@Nullable DataProvider provider, @Nullable DataProvider fallbackProvider, @NonNls Key<?> dataId) {
     if (provider != null) {
       Object data = provider.getData(dataId);
       if (data != null) return data;

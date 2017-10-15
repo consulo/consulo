@@ -37,6 +37,7 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -187,21 +188,21 @@ class HeavyIdeaTestFixtureImpl extends BaseFixture implements HeavyIdeaTestFixtu
   private class MyDataProvider implements DataProvider {
     @Override
     @Nullable
-    public Object getData(@NonNls String dataId) {
-      if (CommonDataKeys.PROJECT.is(dataId)) {
+    public Object getData(@NonNls Key<?> dataId) {
+      if (CommonDataKeys.PROJECT == dataId) {
         return myProject;
       }
-      else if (PlatformDataKeys.EDITOR.is(dataId) || OpenFileDescriptor.NAVIGATE_IN_EDITOR.is(dataId)) {
+      else if (PlatformDataKeys.EDITOR == dataId || OpenFileDescriptor.NAVIGATE_IN_EDITOR == dataId) {
         if (myProject == null) return null;
         return FileEditorManager.getInstance(myProject).getSelectedTextEditor();
       }
       else {
-        Editor editor = (Editor)getData(PlatformDataKeys.EDITOR.getName());
+        Editor editor = (Editor)getData(PlatformDataKeys.EDITOR);
         if (editor != null) {
           FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(myProject);
           return manager.getData(dataId, editor, editor.getCaretModel().getCurrentCaret());
         }
-        else if (LangDataKeys.IDE_VIEW.is(dataId)) {
+        else if (LangDataKeys.IDE_VIEW == dataId) {
           VirtualFile[] contentRoots = ProjectRootManager.getInstance(myProject).getContentRoots();
           final PsiDirectory psiDirectory = PsiManager.getInstance(myProject).findDirectory(contentRoots[0]);
           if (contentRoots.length > 0) {

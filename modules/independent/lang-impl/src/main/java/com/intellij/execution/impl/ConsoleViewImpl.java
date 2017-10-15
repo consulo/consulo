@@ -808,8 +808,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   @Override
-  public Object getData(final String dataId) {
-    if (CommonDataKeys.NAVIGATABLE.is(dataId)) {
+  public Object getData(final Key dataId) {
+    if (CommonDataKeys.NAVIGATABLE == dataId) {
       if (myEditor == null) {
         return null;
       }
@@ -822,13 +822,13 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
       return openFileDescriptor;
     }
 
-    if (CommonDataKeys.EDITOR.is(dataId)) {
+    if (CommonDataKeys.EDITOR == dataId) {
       return myEditor;
     }
-    if (PlatformDataKeys.HELP_ID.is(dataId)) {
+    if (PlatformDataKeys.HELP_ID == dataId) {
       return myHelpId;
     }
-    if (LangDataKeys.CONSOLE_VIEW.is(dataId)) {
+    if (LangDataKeys.CONSOLE_VIEW == dataId) {
       return this;
     }
     return null;

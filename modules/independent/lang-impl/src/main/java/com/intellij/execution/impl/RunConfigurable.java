@@ -35,10 +35,7 @@ import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.ui.popup.ListPopupStep;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Trinity;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.labels.ActionLink;
@@ -601,8 +598,8 @@ class RunConfigurable extends BaseConfigurable {
     DataManager.registerDataProvider(myWholePanel, new DataProvider() {
       @Nullable
       @Override
-      public Object getData(@NonNls String dataId) {
-        return RunConfigurationSelector.KEY.getName().equals(dataId) ? new RunConfigurationSelector() {
+      public Object getData(@NonNls Key dataId) {
+        return RunConfigurationSelector.KEY == dataId ? new RunConfigurationSelector() {
           @Override
           public void select(@NotNull RunConfiguration configuration) {
             selectConfiguration(configuration);

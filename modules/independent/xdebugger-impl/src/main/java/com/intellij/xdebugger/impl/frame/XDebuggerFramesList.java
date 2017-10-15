@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.ListItemDescriptorAdapter;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.scope.NonProjectFilesScope;
@@ -104,12 +105,12 @@ public class XDebuggerFramesList extends DebuggerFramesList {
     setDataProvider(new DataProvider() {
       @Nullable
       @Override
-      public Object getData(@NonNls String dataId) {
+      public Object getData(@NonNls Key dataId) {
         if (mySelectedFrame != null) {
-          if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {
+          if (CommonDataKeys.VIRTUAL_FILE == dataId) {
             return getFile(mySelectedFrame);
           }
-          else if (CommonDataKeys.PSI_FILE.is(dataId)) {
+          else if (CommonDataKeys.PSI_FILE == dataId) {
             VirtualFile file = getFile(mySelectedFrame);
             if (file != null && file.isValid()) {
               return PsiManager.getInstance(myProject).findFile(file);

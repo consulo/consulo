@@ -27,44 +27,45 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 
 /**
  * @author yole
  */
-public class LangDataKeys extends PlatformDataKeys {
-  public static final DataKey<Module> MODULE = DataKey.create("module");
+public interface LangDataKeys extends PlatformDataKeys {
+  Key<Module> MODULE = Key.create("module");
   /**
    * Returns module if module node is selected (in module view)
    */
-  public static final DataKey<Module> MODULE_CONTEXT = DataKey.create("context.Module");
-  public static final DataKey<Module[]> MODULE_CONTEXT_ARRAY = DataKey.create("context.Module.Array");
-  public static final DataKey<ModifiableModuleModel> MODIFIABLE_MODULE_MODEL = DataKey.create("modifiable.module.model");
+  Key<Module> MODULE_CONTEXT = Key.create("context.Module");
+  Key<Module[]> MODULE_CONTEXT_ARRAY = Key.create("context.Module.Array");
+  Key<ModifiableModuleModel> MODIFIABLE_MODULE_MODEL = Key.create("modifiable.module.model");
 
-  public static final DataKey<Language> LANGUAGE = DataKey.create("Language");
-  public static final DataKey<Language[]> CONTEXT_LANGUAGES = DataKey.create("context.Languages");
-  public static final DataKey<PsiElement[]> PSI_ELEMENT_ARRAY = DataKey.create("psi.Element.array");
+  Key<Language> LANGUAGE = Key.create("Language");
+  Key<Language[]> CONTEXT_LANGUAGES = Key.create("context.Languages");
+  Key<PsiElement[]> PSI_ELEMENT_ARRAY = Key.create("psi.Element.array");
 
   /**
    * Returns {@link com.intellij.ide.IdeView} (one of project, packages, commander or favorites view).
    */
-  public static final DataKey<IdeView> IDE_VIEW = DataKey.create("IDEView");
-  public static final DataKey<Boolean> NO_NEW_ACTION = DataKey.create("IDEview.no.create.element.action");
-  public static final DataKey<Condition<AnAction>> PRESELECT_NEW_ACTION_CONDITION = DataKey.create("newElementAction.preselect.id");
+  Key<IdeView> IDE_VIEW = Key.create("IDEView");
+  Key<Boolean> NO_NEW_ACTION = Key.create("IDEview.no.create.element.action");
+  Key<Condition<AnAction>> PRESELECT_NEW_ACTION_CONDITION = Key.create("newElementAction.preselect.id");
 
-  public static final DataKey<PsiElement> TARGET_PSI_ELEMENT = DataKey.create("psi.TargetElement");
-  public static final DataKey<Module> TARGET_MODULE = DataKey.create("module.TargetModule");
-  public static final DataKey<PsiElement> PASTE_TARGET_PSI_ELEMENT = DataKey.create("psi.pasteTargetElement");
+  Key<PsiElement> TARGET_PSI_ELEMENT = Key.create("psi.TargetElement");
+  Key<Module> TARGET_MODULE = Key.create("module.TargetModule");
+  Key<PsiElement> PASTE_TARGET_PSI_ELEMENT = Key.create("psi.pasteTargetElement");
 
-  public static final DataKey<ConsoleView> CONSOLE_VIEW = DataKey.create("consoleView");
+  Key<ConsoleView> CONSOLE_VIEW = Key.create("consoleView");
 
-  public static final DataKey<JBPopup> POSITION_ADJUSTER_POPUP = DataKey.create("chooseByNameDropDown");
-  public static final DataKey<JBPopup> PARENT_POPUP = DataKey.create("chooseByNamePopup");
+  Key<JBPopup> POSITION_ADJUSTER_POPUP = Key.create("chooseByNameDropDown");
+  Key<JBPopup> PARENT_POPUP = Key.create("chooseByNamePopup");
 
 
-  public static final DataKey<Library> LIBRARY = DataKey.create("project.model.library");
+  Key<Library> LIBRARY = Key.create("project.model.library");
 
-  public static final DataKey<RunProfile> RUN_PROFILE = DataKey.create("runProfile");
-  public static final DataKey<ExecutionEnvironment> EXECUTION_ENVIRONMENT = DataKey.create("executionEnvironment");
-  public static final DataKey<RunContentDescriptor> RUN_CONTENT_DESCRIPTOR = DataKey.create("RUN_CONTENT_DESCRIPTOR");
+  Key<RunProfile> RUN_PROFILE = Key.create("runProfile");
+  Key<ExecutionEnvironment> EXECUTION_ENVIRONMENT = Key.create("executionEnvironment");
+  Key<RunContentDescriptor> RUN_CONTENT_DESCRIPTOR = Key.create("RUN_CONTENT_DESCRIPTOR");
 }

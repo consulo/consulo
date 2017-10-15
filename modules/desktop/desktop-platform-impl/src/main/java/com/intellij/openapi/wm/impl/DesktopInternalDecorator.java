@@ -27,6 +27,7 @@ import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.*;
@@ -184,8 +185,8 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (PlatformDataKeys.TOOL_WINDOW.is(dataId)) {
+  public Object getData(@NonNls Key<?> dataId) {
+    if (PlatformDataKeys.TOOL_WINDOW == dataId) {
       return myToolWindow;
     }
     return null;

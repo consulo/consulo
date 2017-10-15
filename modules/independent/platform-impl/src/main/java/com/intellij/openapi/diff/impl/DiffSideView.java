@@ -35,6 +35,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.ScrollUtil;
@@ -87,11 +88,11 @@ public class DiffSideView {
       insertComponent(fileEditor == null ? MOCK_COMPONENT : fileEditor.getComponent());
       DataManager.registerDataProvider(myPanel, new DataProvider() {
         @Override
-        public Object getData(@NonNls String dataId) {
-          if (CommonDataKeys.PROJECT.is(dataId)) {
+        public Object getData(@NonNls Key<?> dataId) {
+          if (CommonDataKeys.PROJECT == dataId) {
             return project;
           }
-          if (PlatformDataKeys.FILE_EDITOR.is(dataId)) {
+          if (PlatformDataKeys.FILE_EDITOR == dataId) {
             return fileEditor;
           }
           return null;

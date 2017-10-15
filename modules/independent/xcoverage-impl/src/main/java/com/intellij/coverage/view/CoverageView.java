@@ -19,6 +19,7 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
@@ -230,11 +231,11 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     myBuilder.select(file);
   }
 
-  public Object getData(@NonNls String dataId) {
-    if (CommonDataKeys.NAVIGATABLE.is(dataId)) {
+  public Object getData(@NonNls Key dataId) {
+    if (CommonDataKeys.NAVIGATABLE == dataId) {
       return getSelectedValue();
     }
-    if (PlatformDataKeys.HELP_ID.is(dataId)) {
+    if (PlatformDataKeys.HELP_ID == dataId) {
       return HELP_ID;
     }
     return null;

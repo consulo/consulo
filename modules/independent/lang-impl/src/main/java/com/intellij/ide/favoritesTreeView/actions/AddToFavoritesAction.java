@@ -70,11 +70,11 @@ public class AddToFavoritesAction extends AnAction {
   }
 
   public static Collection<AbstractTreeNode> getNodesToAdd(final DataContext dataContext, final boolean inProjectView) {
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
     if (project == null) return Collections.emptyList();
 
-    Module moduleContext = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
+    Module moduleContext = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
 
     Collection<AbstractTreeNode> nodesToAdd = null;
     for (FavoriteNodeProvider provider : Extensions.getExtensions(FavoriteNodeProvider.EP_NAME, project)) {

@@ -18,6 +18,7 @@ package com.intellij.ui.components.labels;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import com.intellij.openapi.util.Key;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
@@ -110,12 +111,12 @@ public class ActionLink extends LinkLabel implements DataProvider {
   }
 
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE.is(dataId)) {
+  public Object getData(@NonNls Key dataId) {
+    if (PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
       final Point p = SwingUtilities.getRoot(this).getLocationOnScreen();
       return new Rectangle(p.x, p.y + getHeight(), 0, 0);
     }
-    if (PlatformDataKeys.CONTEXT_MENU_POINT.is(dataId)) {
+    if (PlatformDataKeys.CONTEXT_MENU_POINT == dataId) {
       return SwingUtilities.convertPoint(this, 0, getHeight(), UIUtil.getRootPane(this));
     }
 

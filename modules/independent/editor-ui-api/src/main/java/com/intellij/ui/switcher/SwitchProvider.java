@@ -15,16 +15,14 @@
  */
 package com.intellij.ui.switcher;
 
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 
 import java.util.List;
 
 public interface SwitchProvider extends QuickAccessProvider {
-
-  DataKey<SwitchProvider> KEY = DataKey.create("SwitchProvider");
+  Key<SwitchProvider> KEY = Key.create("SwitchProvider");
 
   List<SwitchTarget> getTargets(boolean onlyVisible, boolean originalProvider);
+
   SwitchTarget getCurrentTarget();
-
-
 }

@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EventListener;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -49,7 +50,13 @@ public interface SomeUIWrapper extends Component {
   @NotNull
   @Override
   default <T> Runnable addUserDataProvider(@NotNull Key<T> key, @NotNull Supplier<T> supplier) {
-    return dataObject().addUserDataProvider(key, supplier);
+    return addUserDataProvider(k -> k == key ? supplier.get() : null);
+  }
+
+  @Override
+  @NotNull
+  default Runnable addUserDataProvider(@NotNull Function<Key<?>, Object> function) {
+    return dataObject().addUserDataProvider(function);
   }
 
   @NotNull

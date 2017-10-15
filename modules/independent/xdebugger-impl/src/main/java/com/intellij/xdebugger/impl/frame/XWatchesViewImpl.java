@@ -26,6 +26,7 @@ import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.EmptyRunnable;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.*;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.Alarm;
@@ -276,8 +277,8 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (XWatchesView.DATA_KEY.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (XWatchesView.DATA_KEY == dataId) {
       return this;
     }
     return super.getData(dataId);

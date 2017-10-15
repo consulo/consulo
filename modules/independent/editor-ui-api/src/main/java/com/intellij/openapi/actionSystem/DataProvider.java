@@ -15,7 +15,9 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -37,5 +39,14 @@ public interface DataProvider {
    * @return the value, or null if no value is available in the current context for this identifier.
    */
   @Nullable
-  Object getData(@NonNls String dataId);
+  default Object getData(@NonNls String dataId) {
+    Key<?> keyByName = Key.findKeyByName(dataId);
+    if(keyByName == null) {
+      throw new IllegalArgumentException("dataId");
+    }
+    return getData(keyByName);
+  }
+
+  @Nullable
+  Object getData(@NotNull Key<?> key);
 }

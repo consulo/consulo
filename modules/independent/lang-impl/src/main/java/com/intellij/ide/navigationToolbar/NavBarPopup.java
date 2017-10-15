@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiElement;
@@ -160,7 +161,7 @@ public class NavBarPopup extends LightweightHint implements Disposable{
     final JBListWithHintProvider list = new NavbarPopupList(panel, siblings);
     list.setDataProvider(new DataProvider() {
       @Override
-      public Object getData(@NonNls String dataId) {
+      public Object getData(@NonNls Key dataId) {
         return panel.getData(dataId);
       }
     });

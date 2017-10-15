@@ -189,7 +189,7 @@ public abstract class FileEditorManager {
    * {@link #registerExtraEditorDataProvider(EditorDataProvider, com.intellij.openapi.Disposable)} method.
    */
   @Nullable
-  public abstract Object getData(@NotNull String dataId, @NotNull Editor editor, @NotNull Caret caret);
+  public abstract Object getData(@NotNull Key<?> dataId, @NotNull Editor editor, @NotNull Caret caret);
 
   /**
    * Selects a specified file editor tab for the specified editor.

@@ -21,6 +21,7 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.impl.AbstractEditorTest;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.testFramework.LeakHunter;
 import com.intellij.testFramework.TestFileType;
@@ -134,8 +135,8 @@ public class BookmarkManagerTest extends AbstractEditorTest {
   }
 
   @Override
-  public Object getData(String dataId) {
-    if (dataId.equals(OpenFileDescriptor.NAVIGATE_IN_EDITOR.getName())) {
+  public Object getData(Key dataId) {
+    if (OpenFileDescriptor.NAVIGATE_IN_EDITOR == dataId) {
       return myEditor;
     }
     return super.getData(dataId);

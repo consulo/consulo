@@ -21,12 +21,12 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.HtmlPanel;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -120,8 +120,8 @@ class DetailsPanel extends HtmlPanel implements DataProvider, CopyProvider {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (PlatformDataKeys.COPY_PROVIDER.is(dataId)) {
+  public Object getData(@NotNull Key dataId) {
+    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return this;
     }
     return null;
