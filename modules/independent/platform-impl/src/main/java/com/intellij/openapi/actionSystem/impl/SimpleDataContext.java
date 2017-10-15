@@ -19,51 +19,51 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.containers.HashMap;
 
 import java.util.Map;
 
 public class SimpleDataContext implements DataContext {
-  private final Map<String, Object> myDataId2Data;
+  private final Map<Key, Object> myDataId2Data;
   private final DataContext myParent;
 
-  private SimpleDataContext(String dataId, Object data, DataContext parent) {
-    myDataId2Data = new HashMap<String, Object>(1);
+  private SimpleDataContext(Key dataId, Object data, DataContext parent) {
+    myDataId2Data = new HashMap<>(1);
     myDataId2Data.put(dataId, data);
     myParent = parent;
   }
-  
-  private SimpleDataContext(Map<String, Object> dataid2data, DataContext parent) {
+
+  private SimpleDataContext(Map<Key, Object> dataid2data, DataContext parent) {
     myDataId2Data = dataid2data;
     myParent = parent;
   }
 
   @Override
-  public Object getData(String dataId) {
-    Object result =  myDataId2Data.containsKey(dataId) ? myDataId2Data.get(dataId) : 
-           myParent == null ? null : myParent.getData(dataId);
-    
-    if (result == null && PlatformDataKeys.CONTEXT_COMPONENT.getName().equals(dataId)) {
+  public Object getData(Key dataId) {
+    Object result = myDataId2Data.containsKey(dataId) ? myDataId2Data.get(dataId) : myParent == null ? null : myParent.getData(dataId);
+
+    if (result == null && PlatformDataKeys.CONTEXT_COMPONENT == dataId) {
       result = IdeFocusManager.getGlobalInstance().getFocusOwner();
     }
 
     return result;
   }
 
-  public static DataContext getSimpleContext(String dataId, Object data, DataContext parent) {
+  public static DataContext getSimpleContext(Key dataId, Object data, DataContext parent) {
     return new SimpleDataContext(dataId, data, parent);
   }
-  
-  public static DataContext getSimpleContext(Map<String,Object> dataId2data, DataContext parent) {
+
+  public static DataContext getSimpleContext(Map<Key, Object> dataId2data, DataContext parent) {
     return new SimpleDataContext(dataId2data, parent);
   }
 
-  public static DataContext getSimpleContext(String dataId, Object data) {
+  public static DataContext getSimpleContext(Key dataId, Object data) {
     return getSimpleContext(dataId, data, null);
   }
 
   public static DataContext getProjectContext(Project project) {
-    return getSimpleContext(CommonDataKeys.PROJECT.getName(), project);
+    return getSimpleContext(CommonDataKeys.PROJECT, project);
   }
 }

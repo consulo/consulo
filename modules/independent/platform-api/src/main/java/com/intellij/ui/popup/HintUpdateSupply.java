@@ -63,9 +63,7 @@ public abstract class HintUpdateSupply {
   }
 
   public static void installDataContextHintUpdateSupply(@NotNull JComponent component) {
-    installHintUpdateSupply(component, o -> o instanceof PsiElement
-                                            ? (PsiElement)o
-                                            : CommonDataKeys.PSI_ELEMENT.getData(DataManager.getInstance().getDataContext(component)));
+    installHintUpdateSupply(component, o -> o instanceof PsiElement ? (PsiElement)o : DataManager.getInstance().getDataContext(component).getData(CommonDataKeys.PSI_ELEMENT));
   }
 
   public static void installHintUpdateSupply(@NotNull final JComponent component, final Function<Object, PsiElement> provider) {

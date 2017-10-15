@@ -25,13 +25,13 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.navigation.PsiElementNavigationItem;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
@@ -59,8 +59,7 @@ import java.util.Collection;
 /**
  * @author max
  */
-public class PsiElement2UsageTargetAdapter
-        implements PsiElementUsageTarget, TypeSafeDataProvider, PsiElementNavigationItem, ItemPresentation, ConfigurableUsageTarget {
+public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, TypeSafeDataProvider, PsiElementNavigationItem, ItemPresentation, ConfigurableUsageTarget {
   private final SmartPsiElementPointer myPointer;
   @NotNull
   protected final FindUsagesOptions myOptions;
@@ -152,8 +151,7 @@ public class PsiElement2UsageTargetAdapter
     // in case of injected file, use host file to highlight all occurrences of the target in each injected file
     PsiFile context = InjectedLanguageManager.getInstance(project).getTopLevelFile(file);
     SearchScope searchScope = new LocalSearchScope(context);
-    Collection<PsiReference> refs =
-            handler == null ? ReferencesSearch.search(target, searchScope, false).findAll() : handler.findReferencesToHighlight(target, searchScope);
+    Collection<PsiReference> refs = handler == null ? ReferencesSearch.search(target, searchScope, false).findAll() : handler.findReferencesToHighlight(target, searchScope);
 
     new HighlightUsagesHandler.DoHighlightRunnable(new ArrayList<>(refs), project, target, editor, context, clearHighlights).run();
   }
@@ -200,7 +198,7 @@ public class PsiElement2UsageTargetAdapter
   }
 
   @Override
-  public void calcData(final DataKey key, final DataSink sink) {
+  public void calcData(final Key<?> key, final DataSink sink) {
     if (key == UsageView.USAGE_INFO_KEY) {
       PsiElement element = getElement();
       if (element != null && element.getTextRange() != null) {
@@ -226,8 +224,7 @@ public class PsiElement2UsageTargetAdapter
 
     return psiElement == null
            ? UsageViewBundle.message("node.invalid")
-           : FindBundle.message("recent.find.usages.action.popup", StringUtil.capitalize(UsageViewUtil.getType(psiElement)),
-                                DescriptiveNameUtil.getDescriptiveName(psiElement), scopeString);
+           : FindBundle.message("recent.find.usages.action.popup", StringUtil.capitalize(UsageViewUtil.getType(psiElement)), DescriptiveNameUtil.getDescriptiveName(psiElement), scopeString);
   }
 
   @Override

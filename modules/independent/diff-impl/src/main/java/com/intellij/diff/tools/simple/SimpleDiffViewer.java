@@ -42,6 +42,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -742,11 +743,11 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
       return myPrevNextDifferenceIterable;
     }
-    else if (DiffDataKeys.CURRENT_CHANGE_RANGE.is(dataId)) {
+    else if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
       SimpleDiffChange change = getSelectedChange(getCurrentSide());
       if (change != null) {
         return new LineRange(change.getStartLine(getCurrentSide()), change.getEndLine(getCurrentSide()));

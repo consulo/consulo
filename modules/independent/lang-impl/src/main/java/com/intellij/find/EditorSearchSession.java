@@ -36,6 +36,7 @@ import com.intellij.openapi.editor.event.SelectionListener;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.components.labels.LinkLabel;
@@ -43,7 +44,6 @@ import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,12 +56,8 @@ import java.util.regex.Pattern;
 /**
  * @author max, andrey.zaytsev
  */
-public class EditorSearchSession implements SearchSession,
-                                            DataProvider,
-                                            SelectionListener,
-                                            SearchResults.SearchResultsListener,
-                                            SearchReplaceComponent.Listener {
-  public static DataKey<EditorSearchSession> SESSION_KEY = DataKey.create("EditorSearchSession");
+public class EditorSearchSession implements SearchSession, DataProvider, SelectionListener, SearchResults.SearchResultsListener, SearchReplaceComponent.Listener {
+  public static Key<EditorSearchSession> SESSION_KEY = Key.create("EditorSearchSession");
 
   private final Editor myEditor;
   private final LivePreviewController myLivePreviewController;
@@ -94,39 +90,16 @@ public class EditorSearchSession implements SearchSession,
     mySearchResults = new SearchResults(myEditor, project);
     myLivePreviewController = new LivePreviewController(mySearchResults, this, myDisposable);
 
-    myComponent = SearchReplaceComponent
-            .buildFor(project, myEditor.getContentComponent())
-            .addPrimarySearchActions(new PrevOccurrenceAction(),
-                                     new NextOccurrenceAction(),
-                                     new FindAllAction(),
-                                     new AnSeparator(),
-                                     new AddOccurrenceAction(),
-                                     new RemoveOccurrenceAction(),
-                                     new SelectAllAction(),
-                                     new AnSeparator())
-            .addSecondarySearchActions(new ToggleInCommentsAction(),
-                                       new ToggleInLiteralsOnlyAction(),
-                                       new ToggleExceptCommentsAction(),
-                                       new ToggleExceptLiteralsAction(),
+    myComponent = SearchReplaceComponent.buildFor(project, myEditor.getContentComponent())
+            .addPrimarySearchActions(new PrevOccurrenceAction(), new NextOccurrenceAction(), new FindAllAction(), new AnSeparator(), new AddOccurrenceAction(), new RemoveOccurrenceAction(),
+                                     new SelectAllAction(), new AnSeparator())
+            .addSecondarySearchActions(new ToggleInCommentsAction(), new ToggleInLiteralsOnlyAction(), new ToggleExceptCommentsAction(), new ToggleExceptLiteralsAction(),
                                        new ToggleExceptCommentsAndLiteralsAction())
-            .addExtraSearchActions(new ToggleMatchCase(),
-                                   new ToggleRegex(),
-                                   new ToggleWholeWordsOnlyAction(),
-                                   new StatusTextAction(),
-                                   new DefaultCustomComponentAction(myClickToHighlightLabel))
-            .addSearchFieldActions(new RestorePreviousSettingsAction())
-            .addPrimaryReplaceActions(new ReplaceAction(),
-                                      new ReplaceAllAction(),
-                                      new ExcludeAction())
-            .addExtraReplaceAction(new TogglePreserveCaseAction(),
-                                   new ToggleSelectionOnlyAction())
-            .addReplaceFieldActions(new PrevOccurrenceAction(false),
-                                    new NextOccurrenceAction(false))
-            .withDataProvider(this)
-            .withCloseAction(() -> close())
-            .withReplaceAction(() -> replaceCurrent())
-            .withSecondarySearchActionsIsModifiedGetter(() -> myFindModel.getSearchContext() != FindModel.SearchContext.ANY)
-            .build();
+            .addExtraSearchActions(new ToggleMatchCase(), new ToggleRegex(), new ToggleWholeWordsOnlyAction(), new StatusTextAction(), new DefaultCustomComponentAction(myClickToHighlightLabel))
+            .addSearchFieldActions(new RestorePreviousSettingsAction()).addPrimaryReplaceActions(new ReplaceAction(), new ReplaceAllAction(), new ExcludeAction())
+            .addExtraReplaceAction(new TogglePreserveCaseAction(), new ToggleSelectionOnlyAction()).addReplaceFieldActions(new PrevOccurrenceAction(false), new NextOccurrenceAction(false))
+            .withDataProvider(this).withCloseAction(() -> close()).withReplaceAction(() -> replaceCurrent())
+            .withSecondarySearchActionsIsModifiedGetter(() -> myFindModel.getSearchContext() != FindModel.SearchContext.ANY).build();
 
     myComponent.addListener(this);
     new UiNotifyConnector(myComponent, new Activatable() {
@@ -181,7 +154,7 @@ public class EditorSearchSession implements SearchSession,
   public static EditorSearchSession get(@Nullable Editor editor) {
     JComponent headerComponent = editor != null ? editor.getHeaderComponent() : null;
     SearchReplaceComponent searchReplaceComponent = ObjectUtils.tryCast(headerComponent, SearchReplaceComponent.class);
-    return searchReplaceComponent != null ? SESSION_KEY.getData(searchReplaceComponent) : null;
+    return searchReplaceComponent != null ? searchReplaceComponent.getDataUnchecked(SESSION_KEY) : null;
   }
 
   @NotNull
@@ -224,14 +197,14 @@ public class EditorSearchSession implements SearchSession,
 
   @Override
   @Nullable
-  public Object getData(@NonNls final String dataId) {
-    if (SearchSession.KEY.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (SearchSession.KEY == dataId) {
       return this;
     }
-    if (SESSION_KEY.is(dataId)) {
+    if (SESSION_KEY == dataId) {
       return this;
     }
-    if (CommonDataKeys.EDITOR_EVEN_IF_INACTIVE.is(dataId)) {
+    if (CommonDataKeys.EDITOR_EVEN_IF_INACTIVE == dataId) {
       return myEditor;
     }
     return null;
@@ -242,12 +215,11 @@ public class EditorSearchSession implements SearchSession,
     if (sr.getFindModel() == null) return;
     if (myComponent.getSearchTextComponent().getText().isEmpty()) {
       updateUIWithEmptyResults();
-    } else {
+    }
+    else {
       int matches = sr.getMatchesCount();
       boolean tooManyMatches = matches > mySearchResults.getMatchesLimit();
-      myComponent.setStatusText(tooManyMatches
-                                ? ApplicationBundle.message("editorsearch.toomuch", mySearchResults.getMatchesLimit())
-                                : ApplicationBundle.message("editorsearch.matches", matches));
+      myComponent.setStatusText(tooManyMatches ? ApplicationBundle.message("editorsearch.toomuch", mySearchResults.getMatchesLimit()) : ApplicationBundle.message("editorsearch.matches", matches));
       myClickToHighlightLabel.setVisible(tooManyMatches);
       if (!tooManyMatches && matches <= 0) {
         myComponent.setNotFoundBackground();
@@ -283,8 +255,7 @@ public class EditorSearchSession implements SearchSession,
   }
 
   private void updateMultiLineStateIfNeed() {
-    myFindModel.setMultiline(myComponent.getSearchTextComponent().getText().contains("\n") ||
-                             myComponent.getReplaceTextComponent().getText().contains("\n"));
+    myFindModel.setMultiline(myComponent.getSearchTextComponent().getText().contains("\n") || myComponent.getReplaceTextComponent().getText().contains("\n"));
   }
 
   @Override
@@ -323,18 +294,12 @@ public class EditorSearchSession implements SearchSession,
   }
 
   public void updateUIWithFindModel() {
-    myComponent.update(myFindModel.getStringToFind(),
-                       myFindModel.getStringToReplace(),
-                       myFindModel.isReplaceState(),
-                       myFindModel.isMultiline());
+    myComponent.update(myFindModel.getStringToFind(), myFindModel.getStringToReplace(), myFindModel.isReplaceState(), myFindModel.isMultiline());
     myLivePreviewController.setTrackingSelection(!myFindModel.isGlobal());
   }
 
   private static boolean wholeWordsApplicable(String stringToFind) {
-    return !stringToFind.startsWith(" ") &&
-           !stringToFind.startsWith("\t") &&
-           !stringToFind.endsWith(" ") &&
-           !stringToFind.endsWith("\t");
+    return !stringToFind.startsWith(" ") && !stringToFind.startsWith("\t") && !stringToFind.endsWith(" ") && !stringToFind.endsWith("\t");
   }
 
   private void setMatchesLimit(int value) {

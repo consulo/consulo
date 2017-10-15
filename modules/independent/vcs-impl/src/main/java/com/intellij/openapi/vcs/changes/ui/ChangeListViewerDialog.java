@@ -129,7 +129,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     return "VCS.ChangeListViewerDialog";
   }
 
-  public Object getData(@NonNls final Key<?> dataId) {
+  public Object getData(@NotNull @NonNls final Key<?> dataId) {
     if (VcsDataKeys.CHANGES == dataId) {
       return myChanges;
     }
@@ -160,7 +160,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
       }
 
       @Override
-      public Object getData(@NonNls Key dataId) {
+      public Object getData(@NotNull @NonNls Key dataId) {
         Object data = super.getData(dataId);
         if (data != null) {
           return data;

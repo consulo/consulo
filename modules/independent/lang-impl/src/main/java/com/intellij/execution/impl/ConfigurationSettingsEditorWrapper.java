@@ -23,12 +23,12 @@ import com.intellij.execution.configurations.UnknownRunConfiguration;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.HideableDecorator;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -42,10 +42,11 @@ import java.util.List;
  * User: anna
  * Date: 27-Mar-2006
  */
-public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAndConfigurationSettings>
-  implements BeforeRunStepsPanel.StepsBeforeRunListener {
-  public static DataKey<ConfigurationSettingsEditorWrapper> CONFIGURATION_EDITOR_KEY = DataKey.create("ConfigurationSettingsEditor");
-  @NonNls private static final String EXPAND_PROPERTY_KEY = "ExpandBeforeRunStepsPanel";
+public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAndConfigurationSettings> implements BeforeRunStepsPanel.StepsBeforeRunListener {
+  public static Key<ConfigurationSettingsEditorWrapper> CONFIGURATION_EDITOR_KEY = Key.create("ConfigurationSettingsEditor");
+
+  @NonNls
+  private static final String EXPAND_PROPERTY_KEY = "ExpandBeforeRunStepsPanel";
   private JPanel myComponentPlace;
   private JPanel myWholePanel;
 
@@ -71,6 +72,7 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
         super.off();
         storeState();
       }
+
       private void storeState() {
         PropertiesComponent.getInstance().setValue(EXPAND_PROPERTY_KEY, String.valueOf(isExpanded()));
       }
@@ -125,7 +127,8 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
     RunnerAndConfigurationSettings runManagerSettings = runManager.getSettings(runConfiguration);
     if (runManagerSettings != null) {
       runManagerSettings.setEditBeforeRun(myBeforeRunStepsPanel.needEditBeforeRun());
-    } else {
+    }
+    else {
       settings.setEditBeforeRun(myBeforeRunStepsPanel.needEditBeforeRun());
     }
   }
@@ -150,8 +153,8 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
 
   private class MyDataProvider implements TypeSafeDataProvider {
     @Override
-    public void calcData(DataKey key, DataSink sink) {
-      if (key.equals(CONFIGURATION_EDITOR_KEY)) {
+    public void calcData(Key key, DataSink sink) {
+      if (CONFIGURATION_EDITOR_KEY == key) {
         sink.put(CONFIGURATION_EDITOR_KEY, ConfigurationSettingsEditorWrapper.this);
       }
     }

@@ -598,7 +598,7 @@ class RunConfigurable extends BaseConfigurable {
     DataManager.registerDataProvider(myWholePanel, new DataProvider() {
       @Nullable
       @Override
-      public Object getData(@NonNls Key dataId) {
+      public Object getData(@NotNull @NonNls Key dataId) {
         return RunConfigurationSelector.KEY == dataId ? new RunConfigurationSelector() {
           @Override
           public void select(@NotNull RunConfiguration configuration) {

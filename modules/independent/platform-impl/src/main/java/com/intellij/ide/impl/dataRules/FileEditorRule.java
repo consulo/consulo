@@ -20,9 +20,10 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.ui.EditorTextField;
+import org.jetbrains.annotations.NotNull;
 
 public class FileEditorRule implements GetDataRule {
-  public Object getData(DataProvider dataProvider) {
+  public Object getData(@NotNull DataProvider dataProvider) {
     final Editor editor = (Editor)dataProvider.getData(PlatformDataKeys.EDITOR.getName());
     if (editor == null) {
       return null;

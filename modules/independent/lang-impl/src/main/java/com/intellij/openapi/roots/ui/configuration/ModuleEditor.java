@@ -32,6 +32,7 @@ import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.EventDispatcher;
@@ -524,8 +525,8 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
     }
 
     @Override
-    public Object getData(String dataId) {
-      if (LangDataKeys.MODULE_CONTEXT.is(dataId)) {
+    public Object getData(@NotNull Key<?> dataId) {
+      if (LangDataKeys.MODULE_CONTEXT == dataId) {
         return getModule();
       }
       return null;

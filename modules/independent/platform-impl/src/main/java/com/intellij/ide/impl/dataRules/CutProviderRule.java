@@ -15,16 +15,26 @@
  */
 package com.intellij.ide.impl.dataRules;
 
+import com.intellij.ide.CutProvider;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.util.Key;
+import org.jetbrains.annotations.NotNull;
 
-public class CutProviderRule implements GetDataRule {
-  public Object getData(DataProvider dataProvider) {
-    final Editor editor = PlatformDataKeys.EDITOR.getData(dataProvider);
+public class CutProviderRule implements GetDataRule<CutProvider> {
+  @NotNull
+  @Override
+  public Key<CutProvider> getKey() {
+    return PlatformDataKeys.CUT_PROVIDER;
+  }
+
+  @Override
+  public CutProvider getData(@NotNull DataProvider dataProvider) {
+    final Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
     if (editor instanceof EditorEx) {
-      return ((EditorEx) editor).getCutProvider();
+      return ((EditorEx)editor).getCutProvider();
     }
     return null;
   }

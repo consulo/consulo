@@ -185,7 +185,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
   @Nullable
   @Override
-  public Object getData(@NonNls Key<?> dataId) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
     if (PlatformDataKeys.TOOL_WINDOW == dataId) {
       return myToolWindow;
     }

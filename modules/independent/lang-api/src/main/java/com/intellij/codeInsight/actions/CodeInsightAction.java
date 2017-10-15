@@ -46,7 +46,7 @@ public abstract class CodeInsightAction extends AnAction {
   @Nullable
   @RequiredDispatchThread
   protected Editor getEditor(@NotNull DataContext dataContext, @NotNull Project project) {
-    return CommonDataKeys.EDITOR.getData(dataContext);
+    return dataContext.getData(CommonDataKeys.EDITOR);
   }
 
   @RequiredDispatchThread

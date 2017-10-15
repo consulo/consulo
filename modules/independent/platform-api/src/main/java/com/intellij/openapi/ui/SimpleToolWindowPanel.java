@@ -18,12 +18,13 @@ package com.intellij.openapi.ui;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.ui.AwtVisitor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -94,8 +95,8 @@ public class SimpleToolWindowPanel extends JPanel implements QuickActionProvider
   }
 
   @Nullable
-  public Object getData(@NonNls String dataId) {
-    return QuickActionProvider.KEY.is(dataId) && myProvideQuickActions ? this : null;
+  public Object getData(@NotNull Key<?> dataId) {
+    return QuickActionProvider.KEY == dataId && myProvideQuickActions ? this : null;
   }
 
   public SimpleToolWindowPanel setProvideQuickActions(boolean provide) {

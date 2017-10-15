@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,28 +28,35 @@ public interface DiffTool {
   /**
    * @see DiffManager#getIdeaDiffTool()
    */
-  @NonNls Object HINT_SHOW_MODAL_DIALOG = "showModalDialog";
+  @NonNls
+  Object HINT_SHOW_MODAL_DIALOG = "showModalDialog";
 
   /**
    * @see DiffManager#getIdeaDiffTool()
    */
-  @NonNls Object HINT_SHOW_FRAME = "showNotModalWindow";
+  @NonNls
+  Object HINT_SHOW_FRAME = "showNotModalWindow";
 
   /**
    * @see DiffManager#getIdeaDiffTool()
    */
-  @NonNls Object HINT_SHOW_NOT_MODAL_DIALOG = "showNotModalDialog";
+  @NonNls
+  Object HINT_SHOW_NOT_MODAL_DIALOG = "showNotModalDialog";
 
-  @NonNls Object HINT_DIFF_IS_APPROXIMATE = "warnThatDiffIsApproximate";
+  @NonNls
+  Object HINT_DIFF_IS_APPROXIMATE = "warnThatDiffIsApproximate";
 
   /**
    * @see DiffManager#getIdeaDiffTool()
    */
-  @NonNls Object HINT_DO_NOT_IGNORE_WHITESPACES = "doNotIgnoreWhitespaces";
+  @NonNls
+  Object HINT_DO_NOT_IGNORE_WHITESPACES = "doNotIgnoreWhitespaces";
 
-  @NonNls Object HINT_ALLOW_NO_DIFFERENCES = "allowNoDifferences";
+  @NonNls
+  Object HINT_ALLOW_NO_DIFFERENCES = "allowNoDifferences";
 
-  @NonNls DataKey SCROLL_TO_LINE = DataKey.create("scrollToLine");
+  @NonNls
+  Key SCROLL_TO_LINE = Key.create("scrollToLine");
 
   /**
    * Opens window to compare contents. Clients should call {@link #canShow(com.intellij.openapi.diff.DiffRequest)} first.

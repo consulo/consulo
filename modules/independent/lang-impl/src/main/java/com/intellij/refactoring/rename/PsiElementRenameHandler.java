@@ -20,7 +20,6 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.scratch.ScratchFileType;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
@@ -32,6 +31,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
@@ -57,7 +57,7 @@ public class PsiElementRenameHandler implements RenameHandler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.refactoring.rename.PsiElementRenameHandler");
 
   public static final ExtensionPointName<Condition<PsiElement>> VETO_RENAME_CONDITION_EP = ExtensionPointName.create("com.intellij.vetoRenameCondition");
-  public static DataKey<String> DEFAULT_NAME = DataKey.create("DEFAULT_NAME");
+  public static Key<String> DEFAULT_NAME = Key.create("DEFAULT_NAME");
 
   @Override
   public void invoke(@NotNull Project project, Editor editor, PsiFile file, DataContext dataContext) {
@@ -67,7 +67,7 @@ public class PsiElementRenameHandler implements RenameHandler {
     }
 
     if (ApplicationManager.getApplication().isUnitTestMode()) {
-      final String newName = DEFAULT_NAME.getData(dataContext);
+      final String newName = dataContext.getData(DEFAULT_NAME);
       if (newName != null) {
         rename(element, project, element, editor, newName);
         return;
@@ -84,9 +84,9 @@ public class PsiElementRenameHandler implements RenameHandler {
     PsiElement element = elements.length == 1 ? elements[0] : null;
     if (element == null) element = getElement(dataContext);
     LOG.assertTrue(element != null);
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (ApplicationManager.getApplication().isUnitTestMode()) {
-      final String newName = DEFAULT_NAME.getData(dataContext);
+      final String newName = dataContext.getData(DEFAULT_NAME);
       LOG.assertTrue(newName != null);
       rename(element, project, element, editor, newName);
     }
@@ -108,8 +108,7 @@ public class PsiElementRenameHandler implements RenameHandler {
         !PsiManager.getInstance(project).isInProject(nameSuggestionContext)) {
       final String message = "Selected element is used from non-project files. These usages won't be renamed. Proceed anyway?";
       if (ApplicationManager.getApplication().isUnitTestMode()) throw new CommonRefactoringUtil.RefactoringErrorHintException(message);
-      if (Messages.showYesNoDialog(project, message,
-                                   RefactoringBundle.getCannotRefactorMessage(null), Messages.getWarningIcon()) != Messages.YES) {
+      if (Messages.showYesNoDialog(project, message, RefactoringBundle.getCannotRefactorMessage(null), Messages.getWarningIcon()) != Messages.YES) {
         return;
       }
     }
@@ -181,7 +180,8 @@ public class PsiElementRenameHandler implements RenameHandler {
       if (strings != null && strings.length > 0) {
         Arrays.sort(strings);
         defaultName = strings[0];
-      } else {
+      }
+      else {
         defaultName = "undefined"; // need to avoid show dialog in test
       }
     }
@@ -206,7 +206,7 @@ public class PsiElementRenameHandler implements RenameHandler {
 
   public static boolean isVetoed(PsiElement element) {
     if (element == null || element instanceof SyntheticElement) return true;
-    for(Condition<PsiElement> condition: Extensions.getExtensions(VETO_RENAME_CONDITION_EP)) {
+    for (Condition<PsiElement> condition : Extensions.getExtensions(VETO_RENAME_CONDITION_EP)) {
       if (condition.value(element)) return true;
     }
     return false;

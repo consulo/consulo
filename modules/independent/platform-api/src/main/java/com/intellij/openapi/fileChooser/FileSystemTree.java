@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileChooser;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +25,7 @@ import javax.swing.*;
 import java.util.List;
 
 public interface FileSystemTree extends Disposable {
-  DataKey<FileSystemTree> DATA_KEY = DataKey.create("FileSystemTree");
+  Key<FileSystemTree> DATA_KEY = Key.create("FileSystemTree");
 
   JTree getTree();
 
@@ -41,7 +41,7 @@ public interface FileSystemTree extends Disposable {
   VirtualFile getNewFileParent();
 
   @Nullable
-  <T> T getData(DataKey<T> key);
+  <T> T getData(Key<T> key);
 
   void select(VirtualFile file, @Nullable Runnable onDone);
   void select(VirtualFile[] files, @Nullable Runnable onDone);

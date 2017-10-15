@@ -808,7 +808,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   @Override
-  public Object getData(final Key dataId) {
+  public Object getData(@NotNull final Key<?> dataId) {
     if (CommonDataKeys.NAVIGATABLE == dataId) {
       if (myEditor == null) {
         return null;
@@ -1297,7 +1297,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
     @Nullable
     private static ConsoleViewImpl getRunningConsole(final DataContext context) {
-      final Editor editor = CommonDataKeys.EDITOR.getData(context);
+      final Editor editor = context.getData(CommonDataKeys.EDITOR);
       if (editor != null) {
         final ConsoleViewImpl console = editor.getUserData(CONSOLE_VIEW_IN_EDITOR_VIEW);
         if (console != null && console.myState.isRunning()) {

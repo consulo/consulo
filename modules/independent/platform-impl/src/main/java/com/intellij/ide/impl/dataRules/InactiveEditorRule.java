@@ -21,11 +21,12 @@ package com.intellij.ide.impl.dataRules;
 
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class InactiveEditorRule implements GetDataRule {
   @Nullable
-  public Object getData(final DataProvider dataProvider) {
+  public Object getData(@NotNull final DataProvider dataProvider) {
     return dataProvider.getData(PlatformDataKeys.EDITOR.getName());
   }
 }

@@ -52,6 +52,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolder;
@@ -1132,17 +1133,17 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
       return myPrevNextDifferenceIterable;
     }
-    else if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {
+    else if (CommonDataKeys.VIRTUAL_FILE == dataId) {
       return DiffUtil.getVirtualFile(myRequest, myMasterSide);
     }
-    else if (DiffDataKeys.CURRENT_EDITOR.is(dataId)) {
+    else if (DiffDataKeys.CURRENT_EDITOR == dataId) {
       return myEditor;
     }
-    else if (DiffDataKeys.CURRENT_CHANGE_RANGE.is(dataId)) {
+    else if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
       UnifiedDiffChange change = getCurrentChange();
       if (change != null) {
         return new LineRange(change.getLine1(), change.getLine2());

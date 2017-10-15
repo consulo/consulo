@@ -30,6 +30,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
@@ -307,11 +308,11 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
       return myPrevNextDifferenceIterable;
     }
-    else if (DiffDataKeys.CURRENT_CHANGE_RANGE.is(dataId)) {
+    else if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
       ThreesideDiffChangeBase change = getSelectedChange(getCurrentSide());
       if (change != null) {
         return new LineRange(change.getStartLine(getCurrentSide()), change.getEndLine(getCurrentSide()));

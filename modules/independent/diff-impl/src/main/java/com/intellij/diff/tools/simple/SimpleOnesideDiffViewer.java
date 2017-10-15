@@ -36,6 +36,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -218,8 +219,8 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (DiffDataKeys.CURRENT_CHANGE_RANGE.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
       int lineCount = getLineCount(getEditor().getDocument());
       return new LineRange(0, lineCount);
     }

@@ -287,7 +287,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   }
 
   @Override
-  public Object getData(Key dataId) {
+  public Object getData(@NotNull Key<?> dataId) {
     if (CommonDataKeys.NAVIGATABLE_ARRAY == dataId) {
       TreePath[] paths = getSelectionPaths();
       if (paths == null) return null;

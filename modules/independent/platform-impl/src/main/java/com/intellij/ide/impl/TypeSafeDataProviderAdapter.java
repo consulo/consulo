@@ -22,31 +22,33 @@
  */
 package com.intellij.ide.impl;
 
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.openapi.util.Key;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class TypeSafeDataProviderAdapter implements DataProvider, DataSink {
   private final TypeSafeDataProvider myProvider;
-  private DataKey myLastKey = null;
+  private Key<?> myLastKey = null;
   private Object myValue = null;
 
   public TypeSafeDataProviderAdapter(final TypeSafeDataProvider provider) {
     myProvider = provider;
   }
 
+  @Override
   @Nullable
-  public synchronized Object getData(@NonNls String dataId) {
+  public synchronized Object getData(@NotNull Key<?> dataId) {
     myValue = null;
-    myLastKey = DataKey.create(dataId);
+    myLastKey = dataId;
     myProvider.calcData(myLastKey, this);
     return myValue;
   }
 
-  public synchronized <T> void put(DataKey<T> key, T data) {
+  @Override
+  public synchronized <T> void put(Key<T> key, T data) {
     if (key == myLastKey) {
       myValue = data;
     }
@@ -54,6 +56,6 @@ public class TypeSafeDataProviderAdapter implements DataProvider, DataSink {
 
   @Override
   public String toString() {
-    return super.toString()+'('+ myProvider + ')';
+    return super.toString() + '(' + myProvider + ')';
   }
 }

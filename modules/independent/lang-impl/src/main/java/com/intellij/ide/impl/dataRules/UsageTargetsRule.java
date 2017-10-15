@@ -17,16 +17,26 @@
 package com.intellij.ide.impl.dataRules;
 
 import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.util.Key;
+import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageTargetUtil;
+import com.intellij.usages.UsageView;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author max
  */
-public class UsageTargetsRule implements GetDataRule {
+public class UsageTargetsRule implements GetDataRule<UsageTarget[]> {
+  @NotNull
+  @Override
+  public Key<UsageTarget[]> getKey() {
+    return UsageView.USAGE_TARGETS_KEY;
+  }
+
   @Override
   @Nullable
-  public Object getData(DataProvider dataProvider) {
+  public UsageTarget[] getData(@NotNull DataProvider dataProvider) {
     return UsageTargetUtil.findUsageTargets(dataProvider);
   }
 }

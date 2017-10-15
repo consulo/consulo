@@ -21,11 +21,11 @@ import com.intellij.codeInsight.lookup.LookupEx;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.DimensionService;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBList;
@@ -82,7 +82,7 @@ public class PopupPositionManager {
     }
   }
 
-  private static Component discoverPopup(final DataKey<JBPopup> datakey, Component focusOwner) {
+  private static Component discoverPopup(final Key<JBPopup> datakey, Component focusOwner) {
     if (focusOwner == null) {
       focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     }
@@ -92,7 +92,7 @@ public class PopupPositionManager {
     final DataContext dataContext = DataManager.getInstance().getDataContext(focusOwner);
     if (dataContext == null) return null;
 
-    final JBPopup popup = datakey.getData(dataContext);
+    final JBPopup popup = dataContext.getData(datakey);
     if (popup != null && popup.isVisible()) {
       return popup.getContent();
     }

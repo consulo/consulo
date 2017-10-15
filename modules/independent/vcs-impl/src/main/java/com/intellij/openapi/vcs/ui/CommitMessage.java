@@ -81,8 +81,8 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
   }
 
   @Override
-  public void calcData(DataKey key, DataSink sink) {
-    if (key.is(VcsDataKeys.COMMIT_MESSAGE_CONTROL.getName())) {
+  public void calcData(Key<?> key, DataSink sink) {
+    if (VcsDataKeys.COMMIT_MESSAGE_CONTROL == key) {
       sink.put(VcsDataKeys.COMMIT_MESSAGE_CONTROL, this);
     }
   }

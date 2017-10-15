@@ -15,11 +15,11 @@
  */
 package com.intellij.find;
 
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 
 public interface SearchSession {
-  DataKey<SearchSession> KEY = DataKey.create("search.replace.session");
+  Key<SearchSession> KEY = Key.create("search.replace.session");
   String INCORRECT_REGEX_MESSAGE = "Incorrect regular expression";
 
   @NotNull

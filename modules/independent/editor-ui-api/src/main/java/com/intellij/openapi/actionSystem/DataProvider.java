@@ -39,14 +39,11 @@ public interface DataProvider {
    * @return the value, or null if no value is available in the current context for this identifier.
    */
   @Nullable
-  default Object getData(@NonNls String dataId) {
-    Key<?> keyByName = Key.findKeyByName(dataId);
-    if(keyByName == null) {
-      throw new IllegalArgumentException("dataId");
-    }
-    return getData(keyByName);
-  }
+  Object getData(@NotNull Key<?> dataId);
 
   @Nullable
-  Object getData(@NotNull Key<?> key);
+  @SuppressWarnings("unchecked")
+  default <T> T getDataUnchecked(@NotNull Key<T> key) {
+    return (T)getData(key);
+  }
 }

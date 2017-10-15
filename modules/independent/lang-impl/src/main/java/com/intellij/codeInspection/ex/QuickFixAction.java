@@ -56,7 +56,7 @@ public class QuickFixAction extends AnAction {
   protected final InspectionToolWrapper myToolWrapper;
 
   public static InspectionResultsView getInvoker(AnActionEvent e) {
-    return InspectionResultsView.DATA_KEY.getData(e.getDataContext());
+    return e.getData(InspectionResultsView.DATA_KEY);
   }
 
   protected QuickFixAction(String text, @NotNull InspectionToolWrapper toolWrapper) {

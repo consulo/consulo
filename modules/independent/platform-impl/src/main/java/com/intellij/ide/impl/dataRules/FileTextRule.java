@@ -24,12 +24,13 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author mike
  */
 public class FileTextRule implements GetDataRule {
-  public Object getData(DataProvider dataProvider) {
+  public Object getData(@NotNull DataProvider dataProvider) {
     final VirtualFile virtualFile = (VirtualFile)dataProvider.getData(PlatformDataKeys.VIRTUAL_FILE.getName());
     if (virtualFile == null) {
       return null;

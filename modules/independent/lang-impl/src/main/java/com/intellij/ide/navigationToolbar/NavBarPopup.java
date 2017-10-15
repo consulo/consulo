@@ -161,7 +161,7 @@ public class NavBarPopup extends LightweightHint implements Disposable{
     final JBListWithHintProvider list = new NavbarPopupList(panel, siblings);
     list.setDataProvider(new DataProvider() {
       @Override
-      public Object getData(@NonNls Key dataId) {
+      public Object getData(@NotNull @NonNls Key dataId) {
         return panel.getData(dataId);
       }
     });

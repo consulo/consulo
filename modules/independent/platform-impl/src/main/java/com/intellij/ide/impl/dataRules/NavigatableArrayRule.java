@@ -18,9 +18,10 @@ package com.intellij.ide.impl.dataRules;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.pom.Navigatable;
+import org.jetbrains.annotations.NotNull;
 
 public class NavigatableArrayRule implements GetDataRule {
-  public Object getData(DataProvider dataProvider) {
+  public Object getData(@NotNull DataProvider dataProvider) {
     final Navigatable element = PlatformDataKeys.NAVIGATABLE.getData(dataProvider);
     if (element == null) {
       return null;

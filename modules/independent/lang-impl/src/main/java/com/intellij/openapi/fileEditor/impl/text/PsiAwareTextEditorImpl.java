@@ -31,6 +31,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
@@ -105,14 +106,14 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     }
 
     @Override
-    public Object getData(final String dataId) {
-      if (PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE.is(dataId)) {
+    public Object getData(@NotNull final Key<?> dataId) {
+      if (PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
         final LookupImpl lookup = (LookupImpl)LookupManager.getInstance(myProject).getActiveLookup();
         if (lookup != null && lookup.isVisible()) {
           return lookup.getBounds();
         }
       }
-      if (LangDataKeys.MODULE.is(dataId)) {
+      if (LangDataKeys.MODULE == dataId) {
         return ModuleUtilCore.findModuleForFile(myFile, myProject);
       }
       return super.getData(dataId);

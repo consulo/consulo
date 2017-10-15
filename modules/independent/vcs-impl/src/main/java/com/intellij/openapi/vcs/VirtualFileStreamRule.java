@@ -18,22 +18,29 @@ package com.intellij.openapi.vcs;
 import com.intellij.ide.impl.dataRules.GetDataRule;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class VirtualFileStreamRule implements GetDataRule {
+public class VirtualFileStreamRule implements GetDataRule<Stream<VirtualFile>> {
+  @NotNull
+  @Override
+  public Key<Stream<VirtualFile>> getKey() {
+    return VcsDataKeys.VIRTUAL_FILE_STREAM;
+  }
+
   @Nullable
   @Override
-  public Object getData(@NotNull DataProvider dataProvider) {
-    VirtualFile[] files = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataProvider);
+  public Stream<VirtualFile> getData(@NotNull DataProvider dataProvider) {
+    VirtualFile[] files = dataProvider.getDataUnchecked(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     if (files != null) {
       return Stream.of(files);
     }
 
-    VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(dataProvider);
+    VirtualFile file = dataProvider.getDataUnchecked(CommonDataKeys.VIRTUAL_FILE);
     if (file != null) {
       return Stream.of(file);
     }

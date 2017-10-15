@@ -16,10 +16,11 @@
 package com.intellij.execution.impl;
 
 import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 
 public interface RunConfigurationSelector {
-  DataKey<RunConfigurationSelector> KEY = DataKey.create("RunConfigurationSelector.Key");
+  Key<RunConfigurationSelector> KEY = Key.create("RunConfigurationSelector.Key");
+
   void select(@NotNull RunConfiguration configuration);
 }

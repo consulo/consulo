@@ -27,6 +27,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.AppIconScheme;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -52,34 +53,35 @@ public class TestsUIUtil {
   }
 
   @Nullable
-  public static Object getData(final AbstractTestProxy testProxy, final String dataId, final TestFrameworkRunningModel model) {
+  @SuppressWarnings("unchecked")
+  public static <T> T getData(final AbstractTestProxy testProxy, final Key<T> dataId, final TestFrameworkRunningModel model) {
     final TestConsoleProperties properties = model.getProperties();
     final Project project = properties.getProject();
     if (testProxy == null) return null;
-    if (AbstractTestProxy.DATA_KEY.is(dataId)) return testProxy;
-    if (CommonDataKeys.NAVIGATABLE.is(dataId)) return getOpenFileDescriptor(testProxy, model);
-    if (CommonDataKeys.PSI_ELEMENT.is(dataId)) {
+    if (AbstractTestProxy.DATA_KEY == dataId) return (T)testProxy;
+    if (CommonDataKeys.NAVIGATABLE == dataId) return (T)getOpenFileDescriptor(testProxy, model);
+    if (CommonDataKeys.PSI_ELEMENT == dataId) {
       final Location location = testProxy.getLocation(project, properties.getScope());
       if (location != null) {
         final PsiElement element = location.getPsiElement();
-        return element.isValid() ? element : null;
+        return element.isValid() ? (T)element : null;
       }
       else {
         return null;
       }
     }
-    if (Location.DATA_KEY.is(dataId)) return testProxy.getLocation(project, properties.getScope());
-    if (RunConfiguration.DATA_KEY.is(dataId)) {
+    if (Location.DATA_KEY == dataId) return (T)testProxy.getLocation(project, properties.getScope());
+    if (RunConfiguration.DATA_KEY == dataId) {
       final RunProfile configuration = properties.getConfiguration();
       if (configuration instanceof RunConfiguration) {
-        return configuration;
+        return (T)configuration;
       }
     }
     return null;
   }
 
   public static boolean isMultipleSelectionImpossible(DataContext dataContext) {
-    final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
+    final Component component = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     if (component instanceof JTree) {
       final TreePath[] selectionPaths = ((JTree)component).getSelectionPaths();
       if (selectionPaths == null || selectionPaths.length <= 1) {
@@ -91,13 +93,10 @@ public class TestsUIUtil {
 
   public static Navigatable getOpenFileDescriptor(final AbstractTestProxy testProxy, final TestFrameworkRunningModel model) {
     final TestConsoleProperties testConsoleProperties = model.getProperties();
-    return getOpenFileDescriptor(testProxy, testConsoleProperties,
-                                 TestConsoleProperties.OPEN_FAILURE_LINE.value(testConsoleProperties));
+    return getOpenFileDescriptor(testProxy, testConsoleProperties, TestConsoleProperties.OPEN_FAILURE_LINE.value(testConsoleProperties));
   }
 
-  private static Navigatable getOpenFileDescriptor(final AbstractTestProxy proxy,
-                                                   final TestConsoleProperties testConsoleProperties,
-                                                   final boolean openFailureLine) {
+  private static Navigatable getOpenFileDescriptor(final AbstractTestProxy proxy, final TestConsoleProperties testConsoleProperties, final boolean openFailureLine) {
     final Project project = testConsoleProperties.getProject();
 
     if (proxy != null) {
@@ -113,18 +112,11 @@ public class TestsUIUtil {
     return null;
   }
 
-  public static void notifyByBalloon(@NotNull final Project project,
-                                     boolean started,
-                                     final AbstractTestProxy root,
-                                     final TestConsoleProperties properties,
-                                     @Nullable final String comment) {
+  public static void notifyByBalloon(@NotNull final Project project, boolean started, final AbstractTestProxy root, final TestConsoleProperties properties, @Nullable final String comment) {
     notifyByBalloon(project, root, properties, new TestResultPresentation(root, started, comment).getPresentation());
   }
 
-  public static void notifyByBalloon(@NotNull final Project project,
-                                     final AbstractTestProxy root,
-                                     final TestConsoleProperties properties,
-                                     TestResultPresentation testResultPresentation) {
+  public static void notifyByBalloon(@NotNull final Project project, final AbstractTestProxy root, final TestConsoleProperties properties, TestResultPresentation testResultPresentation) {
     if (project.isDisposed()) return;
     if (properties == null) return;
 
@@ -162,12 +154,14 @@ public class TestsUIUtil {
           icon.setErrorBadge(project, String.valueOf(problemsCounter));
         }
       }
-    } else {
+    }
+    else {
       if (icon.hideProgress(project, TESTS)) {
         if (problemsCounter > 0) {
           icon.setErrorBadge(project, String.valueOf(problemsCounter));
           icon.requestAttention(project, false);
-        } else {
+        }
+        else {
           icon.setOkBadge(project, true);
           icon.requestAttention(project, false);
         }
@@ -234,7 +228,8 @@ public class TestsUIUtil {
         myBalloonText = myTitle = myStarted ? "Tests were interrupted" : ExecutionBundle.message("test.not.started.progress.text");
         myText = "";
         myType = MessageType.WARNING;
-      } else{
+      }
+      else {
         if (failedCount > 0) {
           myTitle = ExecutionBundle.message("junit.runing.info.tests.failed.label");
           myText = passedCount + " passed, " + failedCount + " failed" + (notStartedCount > 0 ? ", " + notStartedCount + " not started" : "");

@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.fileChooser.ex;
 
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.util.Key;
 
 /**
  * @author yole
  */
 public class FileChooserKeys {
-  public static final DataKey<FileType> NEW_FILE_TYPE = DataKey.create("NewFileType");
-  public static final DataKey<String> NEW_FILE_TEMPLATE_TEXT = DataKey.create("NewFileTemplateText");
-  public static final DataKey<Boolean> DELETE_ACTION_AVAILABLE = DataKey.create("FileChooserDeleteActionAvailable");
+  public static final Key<FileType> NEW_FILE_TYPE = Key.create("NewFileType");
+  public static final Key<String> NEW_FILE_TEMPLATE_TEXT = Key.create("NewFileTemplateText");
+  public static final Key<Boolean> DELETE_ACTION_AVAILABLE = Key.create("FileChooserDeleteActionAvailable");
 }

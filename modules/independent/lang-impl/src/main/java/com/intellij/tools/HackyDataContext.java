@@ -16,7 +16,8 @@
 package com.intellij.tools;
 
 import com.intellij.openapi.actionSystem.*;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.openapi.util.Key;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,7 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 class HackyDataContext implements DataContext {
-  private static DataKey[] keys = {CommonDataKeys.PROJECT,
+  private static Key[] keys = {CommonDataKeys.PROJECT,
     PlatformDataKeys.PROJECT_FILE_DIRECTORY,
     PlatformDataKeys.EDITOR,
     PlatformDataKeys.VIRTUAL_FILE,
@@ -39,20 +40,22 @@ class HackyDataContext implements DataContext {
   };
 
 
-  private final Map<String, Object> values = new HashMap<String, Object>();
+  private final Map<Key, Object> values = new HashMap<>();
   private AnActionEvent myActionEvent;
 
+  @SuppressWarnings("unchecked")
   public HackyDataContext(DataContext context, AnActionEvent e) {
     myActionEvent = e;
-    for (DataKey key : keys) {
-      values.put(key.getName(), key.getData(context));
+    for (Key key : keys) {
+      values.put(key, context.getData(key));
     }
   }
 
   @Override
-  public Object getData(@NonNls String dataId) {
+  @SuppressWarnings("unchecked")
+  public <T> T getData(@NotNull Key<T> dataId) {
     if (values.keySet().contains(dataId)) {
-      return values.get(dataId);
+      return (T)values.get(dataId);
     }
     //noinspection UseOfSystemOutOrSystemErr
     System.out.println("Please add " + dataId + " key in " + getClass().getName());

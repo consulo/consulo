@@ -22,6 +22,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.ui.border.CustomLineBorder;
@@ -57,7 +58,7 @@ import java.util.List;
  */
 public class XFramesView extends XDebugView {
   private static final Logger LOG = Logger.getInstance(XFramesView.class);
-  public static final DataKey<XFramesView> DATA_KEY = DataKey.create("XDEBUGGER_FRAMES_VIEW");
+  public static final Key<XFramesView> DATA_KEY = Key.create("XDEBUGGER_FRAMES_VIEW");
 
   private final JPanel myMainPanel;
   private final XDebuggerFramesList myFramesList;

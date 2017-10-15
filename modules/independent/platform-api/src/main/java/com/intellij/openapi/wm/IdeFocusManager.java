@@ -199,7 +199,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
   public static IdeFocusManager findInstanceByContext(@Nullable DataContext context) {
     IdeFocusManager instance = null;
     if (context != null) {
-      instance = getInstanceSafe(CommonDataKeys.PROJECT.getData(context));
+      instance = getInstanceSafe(context.getData(CommonDataKeys.PROJECT));
     }
 
     if (instance == null) {

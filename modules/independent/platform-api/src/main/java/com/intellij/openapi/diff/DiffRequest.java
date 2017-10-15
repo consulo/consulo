@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.diff;
 
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Factory;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -38,14 +38,14 @@ public abstract class DiffRequest {
   private ToolbarAddons myToolbarAddons = ToolbarAddons.NOTHING;
   private Factory<JComponent> myBottomComponentFactory = null;
   private final HashSet myHints = new HashSet();
-  private final Map<String, Object> myGenericData;
+  private final Map<Key<?>, Object> myGenericData;
   private Runnable myOnOkRunnable;
   private final List<Pair<String, DiffRequest>> myAdditional;
 
   protected DiffRequest(@Nullable Project project) {
     myProject = project;
-    myGenericData = new HashMap<String, Object>(2);
-    myAdditional = new ArrayList<Pair<String, DiffRequest>>(0);
+    myGenericData = new HashMap<>(2);
+    myAdditional = new ArrayList<>(0);
   }
 
   public void setToolbarAddons(@NotNull ToolbarAddons toolbarAddons) {
@@ -91,7 +91,7 @@ public abstract class DiffRequest {
   }
 
   public void addOtherLayer(final String name, DiffRequest request) {
-    myAdditional.add(new Pair<String, DiffRequest>(name, request));
+    myAdditional.add(new Pair<>(name, request));
   }
 
   public List<Pair<String, DiffRequest>> getOtherLayers() {
@@ -127,8 +127,8 @@ public abstract class DiffRequest {
     return Collections.unmodifiableCollection(myHints);
   }
 
-  public void passForDataContext(final DataKey key, final Object value) {
-    myGenericData.put(key.getName(), value);
+  public void passForDataContext(final Key<?> key, final Object value) {
+    myGenericData.put(key, value);
     if (haveMultipleLayers()) {
       for (Pair<String, DiffRequest> pair : myAdditional) {
         pair.getSecond().passForDataContext(key, value);
@@ -136,7 +136,7 @@ public abstract class DiffRequest {
     }
   }
 
-  public Map<String, Object> getGenericData() {
+  public Map<Key<?>, Object> getGenericData() {
     return myGenericData;
   }
 

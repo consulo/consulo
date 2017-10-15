@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MultiLineLabelUI;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +34,7 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
   @SuppressWarnings("UnresolvedPropertyKey")
   public static final String METHOD_TYPE = IdeBundle.message("title.hierarchy.method");
 
-  public static final DataKey<MethodHierarchyBrowserBase> DATA_KEY = DataKey.create("com.intellij.ide.hierarchy.MethodHierarchyBrowserBase");
+  public static final Key<MethodHierarchyBrowserBase> DATA_KEY = Key.create("com.intellij.ide.hierarchy.MethodHierarchyBrowserBase");
 
   public MethodHierarchyBrowserBase(final Project project, final PsiElement method) {
     super(project, method);
@@ -87,8 +88,8 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
 
   @Override
   @NotNull
-  protected String getBrowserDataKey() {
-    return DATA_KEY.getName();
+  protected Key getBrowserDataKey() {
+    return DATA_KEY;
   }
 
   @Override

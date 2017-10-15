@@ -23,6 +23,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.PopupHandler;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +44,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
   private final MyDeleteProvider myDeleteElementProvider = new MyDeleteProvider();
 
-  public static final DataKey<TypeHierarchyBrowserBase> DATA_KEY = DataKey.create("com.intellij.ide.hierarchy.TypeHierarchyBrowserBase");
+  public static final Key<TypeHierarchyBrowserBase> DATA_KEY = Key.create("com.intellij.ide.hierarchy.TypeHierarchyBrowserBase");
 
   public TypeHierarchyBrowserBase(final Project project, final PsiElement element) {
     super(project, element);
@@ -106,8 +107,8 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
   @Override
   @NotNull
-  protected String getBrowserDataKey() {
-    return DATA_KEY.getName();
+  protected Key getBrowserDataKey() {
+    return DATA_KEY;
   }
 
   @Override
@@ -117,8 +118,8 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
   }
 
   @Override
-  public final Object getData(final String dataId) {
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER.is(dataId)) {
+  public final Object getData(@NotNull Key<?> dataId) {
+    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
       return myDeleteElementProvider;
     }
     return super.getData(dataId);
@@ -166,7 +167,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
   protected static class BaseOnThisTypeAction extends BaseOnThisElementAction {
 
     public BaseOnThisTypeAction() {
-      super("", IdeActions.ACTION_TYPE_HIERARCHY, DATA_KEY.getName(), LanguageTypeHierarchy.INSTANCE);
+      super("", IdeActions.ACTION_TYPE_HIERARCHY, DATA_KEY, LanguageTypeHierarchy.INSTANCE);
     }
 
     @Override

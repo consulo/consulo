@@ -23,6 +23,7 @@ import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actions.TextComponentEditorAction;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -114,8 +115,8 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
     }
 
     @Override
-    public Object getData(String dataId) {
-      if (PlatformDataKeys.ACTIONS_SORTER.is(dataId)) {
+    public Object getData(@NotNull Key<?> dataId) {
+      if (PlatformDataKeys.ACTIONS_SORTER == dataId) {
         return ACTIONS_COMPARATOR;
       }
       return super.getData(dataId);

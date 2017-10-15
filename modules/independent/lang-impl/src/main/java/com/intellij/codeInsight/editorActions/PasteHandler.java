@@ -35,6 +35,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -83,14 +84,14 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
 
     final Document document = editor.getDocument();
-    if (!FileDocumentManager.getInstance().requestWriting(document, CommonDataKeys.PROJECT.getData(dataContext))) {
+    if (!FileDocumentManager.getInstance().requestWriting(document, dataContext.getData(CommonDataKeys.PROJECT))) {
       return;
     }
 
     DataContext context = new DataContext() {
       @Override
-      public Object getData(@NonNls String dataId) {
-        return PasteAction.TRANSFERABLE_PROVIDER.is(dataId) ? new Producer<Transferable>() {
+      public Object getData(@NonNls Key dataId) {
+        return PasteAction.TRANSFERABLE_PROVIDER == dataId ? new Producer<Transferable>() {
           @Nullable
           @Override
           public Transferable produce() {

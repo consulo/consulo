@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileChooser.actions.VirtualFileDeleteProvider;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.VcsDataKeys;
@@ -63,10 +64,10 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   private final CopyProvider myCopyProvider;
 
   @NonNls public static final String HELP_ID = "ideaInterface.changes";
-  @NonNls public static final DataKey<Stream<VirtualFile>> UNVERSIONED_FILES_DATA_KEY = DataKey.create("ChangeListView.UnversionedFiles");
-  @NonNls public static final DataKey<Stream<VirtualFile>> IGNORED_FILES_DATA_KEY = DataKey.create("ChangeListView.IgnoredFiles");
-  @NonNls public static final DataKey<List<FilePath>> MISSING_FILES_DATA_KEY = DataKey.create("ChangeListView.MissingFiles");
-  @NonNls public static final DataKey<List<LocallyDeletedChange>> LOCALLY_DELETED_CHANGES = DataKey.create("ChangeListView.LocallyDeletedChanges");
+  @NonNls public static final Key<Stream<VirtualFile>> UNVERSIONED_FILES_DATA_KEY = Key.create("ChangeListView.UnversionedFiles");
+  @NonNls public static final Key<Stream<VirtualFile>> IGNORED_FILES_DATA_KEY = Key.create("ChangeListView.IgnoredFiles");
+  @NonNls public static final Key<List<FilePath>> MISSING_FILES_DATA_KEY = Key.create("ChangeListView.MissingFiles");
+  @NonNls public static final Key<List<LocallyDeletedChange>> LOCALLY_DELETED_CHANGES = Key.create("ChangeListView.LocallyDeletedChanges");
 
   public ChangesListView(@NotNull Project project) {
     myProject = project;
@@ -134,7 +135,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   }
 
   @Override
-  public void calcData(DataKey key, DataSink sink) {
+  public void calcData(Key<?> key, DataSink sink) {
     if (key == VcsDataKeys.CHANGES) {
       sink.put(VcsDataKeys.CHANGES, getSelectedChanges().toArray(Change[]::new));
     }

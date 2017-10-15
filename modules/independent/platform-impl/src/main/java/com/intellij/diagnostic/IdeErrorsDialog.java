@@ -26,8 +26,6 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.*;
 import com.intellij.openapi.extensions.ExtensionException;
 import com.intellij.openapi.extensions.PluginId;
@@ -38,6 +36,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
@@ -74,8 +73,10 @@ import java.util.List;
 public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListener, TypeSafeDataProvider {
   private static final Logger LOG = Logger.getInstance(IdeErrorsDialog.class.getName());
   private final boolean myInternalMode;
-  @NonNls private static final String ACTIVE_TAB_OPTION = IdeErrorsDialog.class.getName() + "activeTab";
-  public static DataKey<String> CURRENT_TRACE_KEY = DataKey.create("current_stack_trace_key");
+  @NonNls
+  private static final String ACTIVE_TAB_OPTION = IdeErrorsDialog.class.getName() + "activeTab";
+  public static Key<String> CURRENT_TRACE_KEY = Key.create("current_stack_trace_key");
+
   public static final int COMPONENTS_WIDTH = 670;
   public static Collection<Developer> ourDevelopersList = Collections.emptyList();
 
@@ -470,8 +471,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     })).isEmpty()) {
       myAttachmentWarningPanel.setVisible(true);
       if (includedAttachments.size() == 1) {
-        myAttachmentWarningLabel
-                .setHtmlText(DiagnosticBundle.message("diagnostic.error.report.include.attachment.warning", includedAttachments.get(0).getName()));
+        myAttachmentWarningLabel.setHtmlText(DiagnosticBundle.message("diagnostic.error.report.include.attachment.warning", includedAttachments.get(0).getName()));
       }
       else {
         myAttachmentWarningLabel.setHtmlText(DiagnosticBundle.message("diagnostic.error.report.include.attachments.warning", includedAttachments.size()));
@@ -551,8 +551,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     else {
       text.append(DiagnosticBundle.message("error.list.message.blame.plugin", PluginManager.getPlugin(pluginId).getName()));
     }
-    text.append(" ").append(DiagnosticBundle.message("error.list.message.info", DateFormatUtil.formatPrettyDateTime(message.getDate()),
-                                                     myMergedMessages.get(myIndex).size()));
+    text.append(" ").append(DiagnosticBundle.message("error.list.message.info", DateFormatUtil.formatPrettyDateTime(message.getDate()), myMergedMessages.get(myIndex).size()));
 
     String url = null;
     if (message.isSubmitted()) {
@@ -626,12 +625,10 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         }
         else {
           if (StringUtil.isEmpty(contactInfo)) {
-            myForeignPluginWarningLabel.setText(DiagnosticBundle.message("error.dialog.foreign.plugin.warning.text.vendor") +
-                                                " " + vendor + ".");
+            myForeignPluginWarningLabel.setText(DiagnosticBundle.message("error.dialog.foreign.plugin.warning.text.vendor") + " " + vendor + ".");
           }
           else {
-            myForeignPluginWarningLabel
-                    .setHyperlinkText(DiagnosticBundle.message("error.dialog.foreign.plugin.warning.text.vendor") + " " + vendor + " (", contactInfo, ").");
+            myForeignPluginWarningLabel.setHyperlinkText(DiagnosticBundle.message("error.dialog.foreign.plugin.warning.text.vendor") + " " + vendor + " (", contactInfo, ").");
             myForeignPluginWarningLabel.setHyperlinkTarget(contactInfo);
           }
         }
@@ -957,7 +954,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   }
 
   @Override
-  public void calcData(DataKey key, DataSink sink) {
+  public void calcData(Key<?> key, DataSink sink) {
     if (CURRENT_TRACE_KEY == key) {
       final AbstractMessage message = getSelectedMessage();
       if (message != null) {
@@ -1031,8 +1028,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     public void actionPerformed(ActionEvent e) {
       final DataContext dataContext = ((DataManagerImpl)DataManager.getInstance()).getDataContextTest((Component)e.getSource());
 
-      AnActionEvent event =
-              new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, myAnalyze.getTemplatePresentation(), ActionManager.getInstance(), e.getModifiers());
+      AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, myAnalyze.getTemplatePresentation(), ActionManager.getInstance(), e.getModifiers());
 
       final Project project = CommonDataKeys.PROJECT.getData(dataContext);
       if (project != null) {

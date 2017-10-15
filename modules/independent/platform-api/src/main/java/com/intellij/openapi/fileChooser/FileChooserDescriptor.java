@@ -16,10 +16,10 @@
 package com.intellij.openapi.fileChooser;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.LayeredIcon;
@@ -55,7 +55,7 @@ public class FileChooserDescriptor implements Cloneable {
   private Condition<VirtualFile> myFileFilter = null;
   private boolean myForcedToUseIdeaFileChooser = false;
 
-  private final Map<String, Object> myUserData = new HashMap<>();
+  private final Map<Key, Object> myUserData = new HashMap<>();
 
   /**
    * Creates new instance. Use methods from {@link FileChooserDescriptorFactory} for most used descriptors.
@@ -366,13 +366,13 @@ public class FileChooserDescriptor implements Cloneable {
   }
 
   @Nullable
-  public <T> T getUserData(@NotNull DataKey<T> key) {
-    @SuppressWarnings({"unchecked"}) final T t = (T)myUserData.get(key.getName());
+  public <T> T getUserData(@NotNull Key<T> key) {
+    @SuppressWarnings({"unchecked"}) final T t = (T)myUserData.get(key);
     return t;
   }
 
-  public <T> void putUserData(@NotNull DataKey<T> key, @Nullable T data) {
-    myUserData.put(key.getName(), data);
+  public <T> void putUserData(@NotNull Key<T> key, @Nullable T data) {
+    myUserData.put(key, data);
   }
 
   @Override

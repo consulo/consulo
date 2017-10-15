@@ -69,16 +69,15 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
   @Override
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
 
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
 
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
-    PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+    Editor editor = event.getData(CommonDataKeys.EDITOR);
+    PsiElement element = event.getData(CommonDataKeys.PSI_ELEMENT);
     if (editor == null && element == null) {
       presentation.setEnabled(false);
       return;
@@ -94,7 +93,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     }
     else {
       if (editor != null) {
-        if (EditorGutter.KEY.getData(event.getDataContext()) != null) {
+        if (event.getData(EditorGutter.KEY) != null) {
           presentation.setEnabled(false);
           return;
         }
@@ -124,11 +123,10 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
-    final PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+  public void actionPerformed(@NotNull AnActionEvent e) {
+    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Editor editor = e.getData(CommonDataKeys.EDITOR);
+    final PsiElement element = e.getData(CommonDataKeys.PSI_ELEMENT);
 
     if (project != null && editor != null) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_FEATURE);

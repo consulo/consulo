@@ -33,6 +33,7 @@ import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.ui.popup.StackingPopupDispatcher;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
@@ -45,7 +46,6 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,7 +82,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     if (myWindowManager != null) {
 
       if (project == null) {
-        project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+        project = DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
       }
 
       myProject = project;
@@ -643,7 +643,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     }
 
     @Override
-    public Object getData(@NonNls final String dataId) {
+    public Object getData(@NotNull Key<?> dataId) {
       final DialogWrapper wrapper = myDialogWrapper.get();
       if (wrapper instanceof DataProvider) {
         return ((DataProvider) wrapper).getData(dataId);

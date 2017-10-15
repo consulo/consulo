@@ -16,9 +16,9 @@
 package com.intellij.openapi.diff.impl;
 
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.diff.*;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.AbstractDataProviderPanel;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
@@ -44,8 +44,8 @@ public class ErrorDiffViewer implements DiffViewer {
 
     myPanel = new AbstractDataProviderPanel(new BorderLayout(), false) {
       @Override
-      public void calcData(DataKey key, DataSink sink) {
-        final Object data = myRequest.getGenericData().get(key.getName());
+      public void calcData(Key key, DataSink sink) {
+        final Object data = myRequest.getGenericData().get(key);
         if (data != null) {
           sink.put(key, data);
         }

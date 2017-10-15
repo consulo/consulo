@@ -25,6 +25,7 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.VerticalFlowLayout;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiCompiledElement;
@@ -692,8 +693,8 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
   }
 
   @Override
-  public void calcData(final DataKey key, final DataSink sink) {
-    if (key.equals(CommonDataKeys.PSI_ELEMENT)) {
+  public void calcData(final Key key, final DataSink sink) {
+    if (CommonDataKeys.PSI_ELEMENT == key) {
       if (mySelectedElements != null && !mySelectedElements.isEmpty()) {
         T selectedElement = mySelectedElements.iterator().next();
         if (selectedElement instanceof ClassMemberWithElement) {

@@ -493,9 +493,10 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     return myHistoryPanelRefresh;
   }
 
-  public Object getData(String dataId) {
+  @Override
+  public Object getData(@NotNull Key<?> dataId) {
     VcsFileRevision firstSelectedRevision = getFirstSelectedRevision();
-    if (CommonDataKeys.NAVIGATABLE.is(dataId)) {
+    if (CommonDataKeys.NAVIGATABLE== dataId) {
       List selectedItems = getSelection();
       if (selectedItems.size() != 1) return null;
       if (!myHistorySession.isContentAvailable(firstSelectedRevision)) {
@@ -509,51 +510,51 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         return null;
       }
     }
-    else if (CommonDataKeys.PROJECT.is(dataId)) {
+    else if (CommonDataKeys.PROJECT== dataId) {
       return myVcs.getProject();
     }
-    else if (VcsDataKeys.VCS_FILE_REVISION.is(dataId)) {
+    else if (VcsDataKeys.VCS_FILE_REVISION== dataId) {
       return firstSelectedRevision;
     }
-    else if (VcsDataKeys.VCS_NON_LOCAL_HISTORY_SESSION.is(dataId) && myHistorySession != null) {
+    else if (VcsDataKeys.VCS_NON_LOCAL_HISTORY_SESSION== dataId && myHistorySession != null) {
       return !myHistorySession.hasLocalSource();
     }
-    else if (VcsDataKeys.VCS.is(dataId)) {
+    else if (VcsDataKeys.VCS== dataId) {
       return myVcs.getKeyInstanceMethod();
     }
-    else if (VcsDataKeys.VCS_FILE_REVISIONS.is(dataId)) {
+    else if (VcsDataKeys.VCS_FILE_REVISIONS== dataId) {
       return getSelectedRevisions();
     }
-    else if (VcsDataKeys.REMOTE_HISTORY_CHANGED_LISTENER.is(dataId)) {
+    else if (VcsDataKeys.REMOTE_HISTORY_CHANGED_LISTENER== dataId) {
       return (Consumer<String>)s -> myDualView.rebuild();
     }
-    else if (VcsDataKeys.CHANGES.is(dataId)) {
+    else if (VcsDataKeys.CHANGES== dataId) {
       return getChanges();
     }
-    else if (VcsDataKeys.VCS_VIRTUAL_FILE.is(dataId)) {
+    else if (VcsDataKeys.VCS_VIRTUAL_FILE== dataId) {
       if (firstSelectedRevision == null) return null;
       return createVirtualFileForRevision(firstSelectedRevision);
     }
-    else if (VcsDataKeys.FILE_PATH.is(dataId)) {
+    else if (VcsDataKeys.FILE_PATH== dataId) {
       return myFilePath;
     }
-    else if (VcsDataKeys.IO_FILE.is(dataId)) {
+    else if (VcsDataKeys.IO_FILE== dataId) {
       return myFilePath.getIOFile();
     }
-    else if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {
+    else if (CommonDataKeys.VIRTUAL_FILE== dataId) {
       VirtualFile virtualFile = getVirtualFile();
       return virtualFile == null || !virtualFile.isValid() ? null : virtualFile;
     }
-    else if (VcsDataKeys.FILE_HISTORY_PANEL.is(dataId)) {
+    else if (VcsDataKeys.FILE_HISTORY_PANEL== dataId) {
       return this;
     }
-    else if (VcsDataKeys.HISTORY_SESSION.is(dataId)) {
+    else if (VcsDataKeys.HISTORY_SESSION== dataId) {
       return myHistorySession;
     }
-    else if (VcsDataKeys.HISTORY_PROVIDER.is(dataId)) {
+    else if (VcsDataKeys.HISTORY_PROVIDER== dataId) {
       return myProvider;
     }
-    else if (PlatformDataKeys.COPY_PROVIDER.is(dataId)) {
+    else if (PlatformDataKeys.COPY_PROVIDER== dataId) {
       return this;
     }
     else {
@@ -943,12 +944,12 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
       return mySelectionProvider.getSelection().size() == mySuitableSelectedElements;
     }
 
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
       if (!isEnabled()) return;
       executeAction(e);
     }
 
-    public void update(AnActionEvent e) {
+    public void update(@NotNull AnActionEvent e) {
       Presentation presentation = e.getPresentation();
       presentation.setVisible(true);
       presentation.setEnabled(isEnabled());
@@ -1391,7 +1392,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
       if (myFilePath.isDirectory()) {
         final List<TreeNodeOnVcsRevision> selection = getSelection();
         if (selection.size() != 1) return;
@@ -1403,7 +1404,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@NotNull AnActionEvent e) {
       e.getPresentation().setVisible(true);
       if (myFilePath.isNonLocal()) {
         e.getPresentation().setEnabled(false);

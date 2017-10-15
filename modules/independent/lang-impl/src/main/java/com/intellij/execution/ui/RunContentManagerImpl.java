@@ -134,7 +134,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
       private int myInsideGetData = 0;
 
       @Override
-      public Object getData(Key<?> dataId) {
+      public Object getData(@NotNull Key<?> dataId) {
         myInsideGetData++;
         try {
           if (PlatformDataKeys.HELP_ID == dataId) {

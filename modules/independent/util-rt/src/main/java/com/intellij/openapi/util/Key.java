@@ -16,6 +16,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.util.Function;
+import consulo.annotations.DeprecationInfo;
 import consulo.util.KeyRegistry;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -48,6 +49,8 @@ public class Key<T> {
   private final String myName; // for debug purposes only
   private final int myIndex;
 
+  @Deprecated
+  @DeprecationInfo("Use #create(name)")
   public Key(@NotNull @NonNls String name) {
     myName = name;
     myIndex = ourRegistry.register(this);

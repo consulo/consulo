@@ -67,7 +67,7 @@ public class XDebuggerExpressionEditor extends XDebuggerEditorBase {
               }
 
               @Override
-              public Object getData(Key dataId) {
+              public Object getData(@NotNull Key dataId) {
                 if (LangDataKeys.CONTEXT_LANGUAGES == dataId) {
                   return new Language[]{myExpression.getLanguage()};
                 } else if (CommonDataKeys.PSI_FILE == dataId) {

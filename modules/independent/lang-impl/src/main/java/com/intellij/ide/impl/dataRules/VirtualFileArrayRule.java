@@ -34,13 +34,14 @@ import com.intellij.usages.UsageDataUtil;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageView;
 import com.intellij.util.containers.ContainerUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class VirtualFileArrayRule implements GetDataRule {
   @Override
-  public Object getData(final DataProvider dataProvider) {
+  public Object getData(@NotNull final DataProvider dataProvider) {
     // Try to detect multiselection.
 
     Project project = PlatformDataKeys.PROJECT_CONTEXT.getData(dataProvider);

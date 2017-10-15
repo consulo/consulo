@@ -55,6 +55,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -567,8 +568,8 @@ public class MergePanel2 implements DiffViewer {
 
   private class MyDataProvider extends GenericDataProvider {
     @Override
-    public Object getData(String dataId) {
-      if (FocusDiffSide.DATA_KEY.is(dataId)) {
+    public Object getData(@NotNull Key<?> dataId) {
+      if (FocusDiffSide.DATA_KEY == dataId) {
         int index = getFocusedEditorIndex();
         if (index < 0) return null;
         switch (index) {
@@ -580,7 +581,7 @@ public class MergePanel2 implements DiffViewer {
             return new BranchFocusedSide(FragmentSide.SIDE2);
         }
       }
-      else if (PlatformDataKeys.DIFF_VIEWER.is(dataId)) return MergePanel2.this;
+      else if (PlatformDataKeys.DIFF_VIEWER == dataId) return MergePanel2.this;
       return super.getData(dataId);
     }
 
@@ -636,7 +637,7 @@ public class MergePanel2 implements DiffViewer {
 
   @Nullable
   public static MergePanel2 fromDataContext(DataContext dataContext) {
-    DiffViewer diffComponent = PlatformDataKeys.DIFF_VIEWER.getData(dataContext);
+    DiffViewer diffComponent = dataContext.getData(PlatformDataKeys.DIFF_VIEWER);
     return diffComponent instanceof MergePanel2 ? (MergePanel2)diffComponent : null;
   }
 

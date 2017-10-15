@@ -38,10 +38,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.ShadowAction;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
@@ -457,29 +454,29 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
 
   private class MyDataProvider implements DataProvider {
     @Override
-    public Object getData(@NonNls final String dataId) {
-      if (CommonDataKeys.PROJECT.is(dataId)) {
+    public Object getData(@NotNull Key<?> dataId) {
+      if (CommonDataKeys.PROJECT == dataId) {
         return myProject;
       }
-      if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {
+      if (CommonDataKeys.VIRTUAL_FILE == dataId) {
         final VirtualFile selectedFile = myWindow.getSelectedFile();
         return selectedFile != null && selectedFile.isValid() ? selectedFile : null;
       }
-      if (EditorWindow.DATA_KEY.is(dataId)) {
+      if (EditorWindow.DATA_KEY == dataId) {
         return myWindow;
       }
-      if (PlatformDataKeys.HELP_ID.is(dataId)) {
+      if (PlatformDataKeys.HELP_ID == dataId) {
         return HELP_ID;
       }
 
-      if (CloseAction.CloseTarget.KEY.is(dataId)) {
+      if (CloseAction.CloseTarget.KEY == dataId) {
         TabInfo selected = myTabs.getSelectedInfo();
         if (selected != null) {
           return EditorTabbedContainer.this;
         }
       }
 
-      if (EditorWindow.DATA_KEY.is(dataId)) {
+      if (EditorWindow.DATA_KEY == dataId) {
         return myWindow;
       }
 

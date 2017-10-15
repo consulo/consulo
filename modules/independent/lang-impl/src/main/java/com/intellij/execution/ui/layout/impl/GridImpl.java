@@ -24,11 +24,13 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.switcher.SwitchTarget;
 import com.intellij.ui.tabs.JBTabsPresentation;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -379,11 +381,11 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
 
   @Override
   @Nullable
-  public Object getData(@NonNls final String dataId) {
-    if (ViewContext.CONTEXT_KEY.is(dataId)) {
+  public Object getData(@NotNull @NonNls final Key<?> dataId) {
+    if (ViewContext.CONTEXT_KEY == dataId) {
       return myViewContext;
     }
-    else if (ViewContext.CONTENT_KEY.is(dataId)) {
+    else if (ViewContext.CONTENT_KEY == dataId) {
       List<Content> contents = getContents();
       return contents.toArray(new Content[contents.size()]);
     }

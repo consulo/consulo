@@ -21,9 +21,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Base class for {@link EditorActionHandler} instances, which need to modify the document.
@@ -45,11 +45,11 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
     if (editor.isViewer()) return;
 
     if (dataContext != null) {
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project != null && !FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)) return;
     }
 
-    ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(editor.getDocument(),editor.getProject()) {
+    ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
       @Override
       public void run() {
         final Document doc = editor.getDocument();

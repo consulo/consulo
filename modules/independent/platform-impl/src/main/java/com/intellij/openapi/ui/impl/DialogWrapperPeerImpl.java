@@ -57,7 +57,6 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.OwnerOptional;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,7 +97,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
 
       if (project == null) {
         //noinspection deprecation
-        project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+        project = DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
       }
 
       myProject = project;
@@ -611,7 +610,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     }
 
     @Override
-    public Object getData(String dataId) {
+    public Object getData(@NotNull Key<?> dataId) {
       final DialogWrapper wrapper = myDialogWrapper.get();
       if (wrapper instanceof DataProvider) {
         return ((DataProvider)wrapper).getData(dataId);
@@ -680,7 +679,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
         myDimensionServiceKey = dialogWrapper.getDimensionKey();
 
         if (myDimensionServiceKey != null) {
-          final Project projectGuess = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(this));
+          final Project projectGuess = DataManager.getInstance().getDataContext(this).getData(CommonDataKeys.PROJECT);
           location = DimensionService.getInstance().getLocation(myDimensionServiceKey, projectGuess);
           Dimension size = DimensionService.getInstance().getSize(myDimensionServiceKey, projectGuess);
           if (size != null) {
@@ -876,7 +875,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
         if (myDimensionServiceKey != null &&
             myInitialSize != null &&
             myOpened) { // myInitialSize can be null only if dialog is disposed before first showing
-          final Project projectGuess = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(MyDialog.this));
+          final Project projectGuess = DataManager.getInstance().getDataContext(MyDialog.this).getData(CommonDataKeys.PROJECT);
 
           // Save location
           Point location = getLocation();
@@ -1068,9 +1067,9 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
       }
 
       @Override
-      public Object getData(@NonNls String dataId) {
+      public Object getData(@NotNull Key<?> dataId) {
         final DialogWrapper wrapper = myDialogWrapper.get();
-        return wrapper != null && PlatformDataKeys.UI_DISPOSABLE.is(dataId) ? wrapper.getDisposable() : null;
+        return wrapper != null && PlatformDataKeys.UI_DISPOSABLE == dataId ? wrapper.getDisposable() : null;
       }
     }
   }

@@ -248,7 +248,7 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
 
     myTree.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, new DataProvider() {
       @Override
-      public Object getData(@NonNls Key dataId) {
+      public Object getData(@NotNull @NonNls Key dataId) {
         if (KEY == dataId) {
           return RunDashboardContent.this;
         }

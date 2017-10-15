@@ -26,6 +26,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.PanelWithActionsAndCloseButton;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
@@ -229,21 +230,22 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     }
   }
 
-  public Object getData(String dataId) {
+  @Override
+  public Object getData(@NotNull Key<?> dataId) {
     if (myTreeBrowser != null && myTreeBrowser.isVisible()) {
       return null;
     }
-    if (CommonDataKeys.NAVIGATABLE.is(dataId)) {
+    if (CommonDataKeys.NAVIGATABLE == dataId) {
       if (mySelectedFile == null || !mySelectedFile.isValid()) return null;
       return new OpenFileDescriptor(myProject, mySelectedFile);
     }
-    else if (CommonDataKeys.VIRTUAL_FILE_ARRAY.is(dataId)) {
+    else if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
       return getVirtualFileArray();
     }
-    else if (VcsDataKeys.IO_FILE_ARRAY.is(dataId)) {
+    else if (VcsDataKeys.IO_FILE_ARRAY == dataId) {
       return getFileArray();
     }
-    else if (PlatformDataKeys.TREE_EXPANDER.is(dataId)) {
+    else if (PlatformDataKeys.TREE_EXPANDER == dataId) {
       if (myGroupByChangeList) {
         return myTreeBrowser != null ? myTreeBrowser.getTreeExpander() : null;
       }
@@ -251,16 +253,16 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
         return myTreeExpander;
       }
     }
-    else if (VcsDataKeys.UPDATE_VIEW_SELECTED_PATH.is(dataId)) {
+    else if (VcsDataKeys.UPDATE_VIEW_SELECTED_PATH == dataId) {
       return mySelectedUrl;
     }
-    else if (VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE.is(dataId)) {
+    else if (VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE == dataId) {
       return myTreeIterable;
     }
-    else if (VcsDataKeys.LABEL_BEFORE.is(dataId)) {
+    else if (VcsDataKeys.LABEL_BEFORE == dataId) {
       return myBefore;
     }
-    else if (VcsDataKeys.LABEL_AFTER.is(dataId)) {
+    else if (VcsDataKeys.LABEL_AFTER == dataId) {
       return myAfter;
     }
 

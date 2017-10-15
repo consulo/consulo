@@ -20,12 +20,13 @@ import com.intellij.execution.PsiLocation;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.psi.PsiElement;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 /**
  * @author Dmitry Avdeev
@@ -69,8 +70,8 @@ public class LineMarkerActionWrapper extends AnAction {
     @Nullable
     @Override
     @RequiredDispatchThread
-    public synchronized Object getData(@NonNls String dataId) {
-      if (Location.DATA_KEY.is(dataId)) return myElement.isValid() ? new PsiLocation<PsiElement>(myElement) : null;
+    public synchronized Object getData(@NonNls Key dataId) {
+      if (Location.DATA_KEY == dataId) return myElement.isValid() ? new PsiLocation<>(myElement) : null;
       return myDelegate.getData(dataId);
     }
   }

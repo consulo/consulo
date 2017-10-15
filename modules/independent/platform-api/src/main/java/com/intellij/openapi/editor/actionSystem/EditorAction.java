@@ -21,6 +21,8 @@ import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.util.Key;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,8 +68,9 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     }
   }
 
+  @RequiredDispatchThread
   @Override
-  public final void actionPerformed(AnActionEvent e) {
+  public final void actionPerformed(@NotNull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     Editor editor = getEditor(dataContext);
     actionPerformed(editor, dataContext);
@@ -75,7 +78,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
 
   @Nullable
   protected Editor getEditor(@NotNull DataContext dataContext) {
-    return CommonDataKeys.EDITOR.getData(dataContext);
+    return dataContext.getData(CommonDataKeys.EDITOR);
   }
 
   public final void actionPerformed(final Editor editor, @NotNull final DataContext dataContext) {
@@ -131,14 +134,14 @@ public abstract class EditorAction extends AnAction implements DumbAware {
   }
 
   private static DataContext getProjectAwareDataContext(final Editor editor, @NotNull final DataContext original) {
-    if (CommonDataKeys.PROJECT.getData(original) == editor.getProject()) {
+    if (original.getData(CommonDataKeys.PROJECT) == editor.getProject()) {
       return original;
     }
 
     return new DataContext() {
       @Override
-      public Object getData(String dataId) {
-        if (CommonDataKeys.PROJECT.is(dataId)) {
+      public Object getData(Key dataId) {
+        if (CommonDataKeys.PROJECT == dataId) {
           return editor.getProject();
         }
         return original.getData(dataId);

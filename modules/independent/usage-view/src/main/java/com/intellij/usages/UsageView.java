@@ -16,7 +16,7 @@
 package com.intellij.usages;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.usageView.UsageInfo;
 import org.jetbrains.annotations.NotNull;
@@ -34,22 +34,15 @@ public interface UsageView extends Disposable {
   /**
    * Returns {@link com.intellij.usages.UsageTarget} to look usages for
    */
-  DataKey<UsageTarget[]> USAGE_TARGETS_KEY = DataKey.create("usageTarget");
-  @Deprecated String USAGE_TARGETS = USAGE_TARGETS_KEY.getName();
-
+  Key<UsageTarget[]> USAGE_TARGETS_KEY = Key.create("usageTarget");
   /**
    * Returns {@link com.intellij.usages.Usage} which are selected in usage view
    */
-  DataKey<Usage[]> USAGES_KEY = DataKey.create("usages");
-  @Deprecated String USAGES = USAGES_KEY.getName();
-
-  DataKey<UsageView> USAGE_VIEW_KEY = DataKey.create("UsageView.new");
-  @Deprecated String USAGE_VIEW = USAGE_VIEW_KEY.getName();
-
-  DataKey<UsageInfo> USAGE_INFO_KEY = DataKey.create("UsageInfo");
-  DataKey<SearchScope> USAGE_SCOPE = DataKey.create("UsageScope");
-
-  DataKey<List<UsageInfo>> USAGE_INFO_LIST_KEY = DataKey.create("UsageInfo.List");
+  Key<Usage[]> USAGES_KEY = Key.create("usages");
+  Key<UsageView> USAGE_VIEW_KEY = Key.create("UsageView.new");
+  Key<UsageInfo> USAGE_INFO_KEY = Key.create("UsageInfo");
+  Key<SearchScope> USAGE_SCOPE = Key.create("UsageScope");
+  Key<List<UsageInfo>> USAGE_INFO_LIST_KEY = Key.create("UsageInfo.List");
 
   void appendUsage(@NotNull Usage usage);
   void removeUsage(@NotNull Usage usage);

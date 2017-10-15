@@ -22,34 +22,43 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Eugene Zhuravlev
  *         Date: Feb 10, 2004
  */
-public class ModuleRule implements GetDataRule {
+public class ModuleRule implements GetDataRule<Module> {
+  @NotNull
   @Override
-  public Object getData(DataProvider dataProvider) {
-    Object moduleContext = LangDataKeys.MODULE_CONTEXT.getData(dataProvider);
+  public Key<Module> getKey() {
+    return CommonDataKeys.MODULE;
+  }
+
+  @Override
+  public Module getData(@NotNull DataProvider dataProvider) {
+    Module moduleContext = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT);
     if (moduleContext != null) {
       return moduleContext;
     }
-    Project project = CommonDataKeys.PROJECT.getData(dataProvider);
+    Project project = dataProvider.getDataUnchecked(CommonDataKeys.PROJECT);
     if (project == null) {
-      PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataProvider);
+      PsiElement element = dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT);
       if (element == null || !element.isValid()) return null;
       project = element.getProject();
     }
 
-    VirtualFile virtualFile = PlatformDataKeys.VIRTUAL_FILE.getData(dataProvider);
+    VirtualFile virtualFile = dataProvider.getDataUnchecked(PlatformDataKeys.VIRTUAL_FILE);
     if (virtualFile == null) {
-      GetDataRule dataRule = ((DataManagerImpl)DataManager.getInstance()).getDataRule(PlatformDataKeys.VIRTUAL_FILE.getName());
+      GetDataRule<VirtualFile> dataRule = ((DataManagerImpl)DataManager.getInstance()).getDataRule(PlatformDataKeys.VIRTUAL_FILE);
       if (dataRule != null) {
-        virtualFile = (VirtualFile)dataRule.getData(dataProvider);
+        virtualFile = dataRule.getData(dataProvider);
       }
     }
 

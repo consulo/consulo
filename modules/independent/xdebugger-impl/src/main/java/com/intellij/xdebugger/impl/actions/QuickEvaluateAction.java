@@ -69,7 +69,7 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
         return false;
       }
 
-      if (EditorGutter.KEY.getData(event.getDataContext()) != null) {
+      if (event.getData(EditorGutter.KEY) != null) {
         return false;
       }
 

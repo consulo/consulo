@@ -26,6 +26,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowserBase;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowserNode;
@@ -55,7 +56,7 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
 
   protected SpecificFilesViewDialog(@NotNull Project project,
                                     @NotNull String title,
-                                    @NotNull DataKey<Stream<VirtualFile>> shownDataKey,
+                                    @NotNull Key<Stream<VirtualFile>> shownDataKey,
                                     @NotNull List<VirtualFile> initDataFiles) {
     super(project, true);
     setTitle(title);
@@ -63,9 +64,9 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
     final Runnable closer = () -> this.close(0);
     myView = new ChangesListView(project) {
       @Override
-      public void calcData(DataKey key, DataSink sink) {
+      public void calcData(Key<?> key, DataSink sink) {
         super.calcData(key, sink);
-        if (shownDataKey.is(key.getName())) {
+        if (shownDataKey == key) {
           sink.put(shownDataKey, getSelectedFiles());
         }
       }

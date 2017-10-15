@@ -62,7 +62,7 @@ public class EventLogToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     SimpleToolWindowPanel panel = new SimpleToolWindowPanel(false, true) {
       @Override
-      public Object getData(@NonNls Key dataId) {
+      public Object getData(@NotNull @NonNls Key dataId) {
         return PlatformDataKeys.HELP_ID == dataId ? EventLog.HELP_ID : super.getData(dataId);
       }
     };

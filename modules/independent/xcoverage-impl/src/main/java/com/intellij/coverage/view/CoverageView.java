@@ -231,7 +231,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     myBuilder.select(file);
   }
 
-  public Object getData(@NonNls Key dataId) {
+  public Object getData(@NotNull @NonNls Key dataId) {
     if (CommonDataKeys.NAVIGATABLE == dataId) {
       return getSelectedValue();
     }

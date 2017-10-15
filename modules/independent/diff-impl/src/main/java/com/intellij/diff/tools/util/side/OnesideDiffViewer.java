@@ -29,6 +29,7 @@ import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -124,11 +125,11 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (CommonDataKeys.VIRTUAL_FILE == dataId) {
       return DiffUtil.getVirtualFile(myRequest, mySide);
     }
-    else if (DiffDataKeys.CURRENT_CONTENT.is(dataId)) {
+    else if (DiffDataKeys.CURRENT_CONTENT == dataId) {
       return getContent();
     }
     return super.getData(dataId);

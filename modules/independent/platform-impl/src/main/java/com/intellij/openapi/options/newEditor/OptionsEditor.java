@@ -35,10 +35,7 @@ import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.options.ex.GlassPanel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.*;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.EdtRunnable;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
@@ -75,7 +72,7 @@ import java.util.*;
 import java.util.List;
 
 public class OptionsEditor implements DataProvider, Place.Navigator, Disposable, AWTEventListener, UISettingsListener {
-  public static DataKey<OptionsEditor> KEY = DataKey.create("options.editor");
+  public static Key<OptionsEditor> KEY = Key.create("options.editor");
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.options.newEditor.OptionsEditor");
 
@@ -788,11 +785,11 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
 
   @Override
-  public Object getData(@NonNls final String dataId) {
-    if (KEY.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (KEY == dataId) {
       return this;
     }
-    return History.KEY.is(dataId) ? myHistory : null;
+    return History.KEY == dataId ? myHistory : null;
   }
 
   public JTree getPreferredFocusedComponent() {

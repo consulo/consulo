@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui;
 
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.xdebugger.XExpression;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * @author nik
  */
 public class XDebugSessionData extends UserDataHolderBase {
-  public static final DataKey<XDebugSessionData> DATA_KEY = DataKey.create("XDebugSessionData");
+  public static final Key<XDebugSessionData> DATA_KEY = Key.create("XDebugSessionData");
 
   @NotNull
   private XExpression[] myWatchExpressions;

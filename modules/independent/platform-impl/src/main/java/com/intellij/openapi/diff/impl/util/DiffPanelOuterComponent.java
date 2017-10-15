@@ -24,6 +24,7 @@ import com.intellij.openapi.diff.impl.DiffToolbarComponent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.util.Getter;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -136,14 +137,14 @@ public class DiffPanelOuterComponent extends JPanel implements DataProvider {
     }
   }
 
-  public Object getData(String dataId) {
-    if (PlatformDataKeys.SOURCE_NAVIGATION_LOCKED.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (PlatformDataKeys.SOURCE_NAVIGATION_LOCKED == dataId) {
       return Boolean.TRUE;
     }
     if (myDataProvider == null) {
       return null;
     }
-    if (PlatformDataKeys.EDITOR.is(dataId)) {
+    if (PlatformDataKeys.EDITOR == dataId) {
       if (myBottomComponent != null) {
         // we don't want editor actions to be executed when the bottom component has focus
         final Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
@@ -151,7 +152,7 @@ public class DiffPanelOuterComponent extends JPanel implements DataProvider {
           return null;
         }
       }
-      final FocusDiffSide side = (FocusDiffSide)myDataProvider.getData(FocusDiffSide.DATA_KEY.getName());
+      final FocusDiffSide side = myDataProvider.getDataUnchecked(FocusDiffSide.DATA_KEY);
       if (side != null) {
         final Editor editor = side.getEditor();
         return editor != null && editor.getComponent().hasFocus() ? editor : null;

@@ -412,7 +412,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     @Nullable
     @Override
-    public Object getData(Key<?> dataId) {
+    public Object getData(@NotNull Key<?> dataId) {
       Object data;
 
       DataProvider contentProvider = DataManagerImpl.getDataProviderEx(myContentPanel.getTargetComponent());

@@ -56,10 +56,7 @@ import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Getter;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -211,7 +208,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     //control+tab switches editors
     new AnAction(){
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         if (getEditor1() != null && getEditor2() != null) {
           Editor focus = getEditor1().getContentComponent().hasFocus() ? getEditor2() : getEditor1();
           IdeFocusManager.getGlobalInstance().requestFocus(focus.getContentComponent(), true);
@@ -748,7 +745,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
 
   @Nullable
   public static DiffPanelImpl fromDataContext(DataContext dataContext) {
-    DiffViewer viewer = PlatformDataKeys.DIFF_VIEWER.getData(dataContext);
+    DiffViewer viewer = dataContext.getData(PlatformDataKeys.DIFF_VIEWER);
     return viewer instanceof DiffPanelImpl ? (DiffPanelImpl)viewer : null;
   }
 
@@ -945,20 +942,20 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     };
 
     @Override
-    public Object getData(String dataId) {
-      if (PlatformDataKeys.DIFF_VIEWER.is(dataId)) {
+    public Object getData(@NotNull Key<?> dataId) {
+      if (PlatformDataKeys.DIFF_VIEWER == dataId) {
         return myDiffPanel;
       }
-      if (FocusDiffSide.DATA_KEY.is(dataId)) {
+      if (FocusDiffSide.DATA_KEY == dataId) {
         return myDiffPanel.myCurrentSide == null ? null : myFocusDiffSide;
       }
-      if (CommonDataKeys.NAVIGATABLE.is(dataId)) {
+      if (CommonDataKeys.NAVIGATABLE == dataId) {
         final DiffSideView currentSide = myDiffPanel.myCurrentSide;
         if (currentSide != null) {
           return new DiffNavigatable(currentSide);
         }
       }
-      if (PlatformDataKeys.HELP_ID.is(dataId)) {
+      if (PlatformDataKeys.HELP_ID == dataId) {
         return "reference.dialogs.diff.file";
       }
 

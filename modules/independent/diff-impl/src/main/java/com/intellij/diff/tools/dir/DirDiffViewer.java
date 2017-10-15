@@ -92,7 +92,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
     myPanel.add(myDirDiffPanel.getPanel(), BorderLayout.CENTER);
     DataManager.registerDataProvider(myPanel, new DataProvider() {
       @Override
-      public Object getData(@NonNls Key dataId) {
+      public Object getData(@NotNull @NonNls Key dataId) {
         if (PlatformDataKeys.HELP_ID == dataId) {
           return "reference.dialogs.diff.folder";
         }

@@ -260,7 +260,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     };
     DataProvider helpDataProvider = new DataProvider() {
       @Override
-      public Object getData(@NonNls Key dataId) {
+      public Object getData(@NotNull @NonNls Key dataId) {
         return PlatformDataKeys.HELP_ID == dataId ? DOCUMENTATION_TOPIC_ID : null;
       }
     };

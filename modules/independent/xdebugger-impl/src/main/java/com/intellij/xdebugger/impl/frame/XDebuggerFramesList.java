@@ -105,7 +105,7 @@ public class XDebuggerFramesList extends DebuggerFramesList {
     setDataProvider(new DataProvider() {
       @Nullable
       @Override
-      public Object getData(@NonNls Key dataId) {
+      public Object getData(@NotNull @NonNls Key dataId) {
         if (mySelectedFrame != null) {
           if (CommonDataKeys.VIRTUAL_FILE == dataId) {
             return getFile(mySelectedFrame);

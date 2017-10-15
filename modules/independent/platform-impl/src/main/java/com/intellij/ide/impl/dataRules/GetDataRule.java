@@ -17,12 +17,16 @@ package com.intellij.ide.impl.dataRules;
 
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.util.KeyedLazyInstanceEP;
+import com.intellij.openapi.util.Key;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface GetDataRule {
-  ExtensionPointName<KeyedLazyInstanceEP<GetDataRule>> EP_NAME = ExtensionPointName.create("com.intellij.getDataRule");
+public interface GetDataRule<T> {
+  ExtensionPointName<GetDataRule> EP_NAME = ExtensionPointName.create("com.intellij.getDataRule");
+
+  @NotNull
+  Key<T> getKey();
 
   @Nullable
-  Object getData(DataProvider dataProvider);
+  T getData(@NotNull DataProvider dataProvider);
 }

@@ -21,20 +21,29 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import org.jetbrains.annotations.NotNull;
 
-public class PsiFileRule implements GetDataRule {
+public class PsiFileRule implements GetDataRule<PsiFile> {
+  @NotNull
   @Override
-  public Object getData(DataProvider dataProvider) {
-    final PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataProvider);
+  public Key<PsiFile> getKey() {
+    return CommonDataKeys.PSI_FILE;
+  }
+
+  @Override
+  public PsiFile getData(@NotNull DataProvider dataProvider) {
+    final PsiElement element = dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT);
     if (element != null) {
       return element.getContainingFile();
     }
-    Project project = CommonDataKeys.PROJECT.getData(dataProvider);
+    Project project = dataProvider.getDataUnchecked(CommonDataKeys.PROJECT);
     if (project != null) {
-      VirtualFile vFile = PlatformDataKeys.VIRTUAL_FILE.getData(dataProvider);
+      VirtualFile vFile = dataProvider.getDataUnchecked(PlatformDataKeys.VIRTUAL_FILE);
       if (vFile != null) {
         return PsiManager.getInstance(project).findFile(vFile);
       }

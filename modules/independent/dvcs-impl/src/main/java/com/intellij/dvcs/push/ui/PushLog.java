@@ -21,6 +21,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.TextRevisionNumber;
@@ -394,19 +395,16 @@ public class PushLog extends JPanel implements DataProvider {
   // Make changes available for diff action; revisionNumber for create patch and copy revision number actions
   @Nullable
   @Override
-  public Object getData(String id) {
-    if (VcsDataKeys.CHANGES.is(id)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (VcsDataKeys.CHANGES == dataId) {
       List<CommitNode> commitNodes = getSelectedCommitNodes();
       return ArrayUtil.toObjectArray(collectAllChanges(commitNodes), Change.class);
     }
-    else if (VcsDataKeys.VCS_REVISION_NUMBERS.is(id)) {
+    else if (VcsDataKeys.VCS_REVISION_NUMBERS == dataId) {
       List<CommitNode> commitNodes = getSelectedCommitNodes();
-      return ArrayUtil.toObjectArray(ContainerUtil.map(commitNodes, new Function<CommitNode, VcsRevisionNumber>() {
-        @Override
-        public VcsRevisionNumber fun(CommitNode commitNode) {
-          Hash hash = commitNode.getUserObject().getId();
-          return new TextRevisionNumber(hash.asString(), hash.toShortString());
-        }
+      return ArrayUtil.toObjectArray(ContainerUtil.map(commitNodes, (Function<CommitNode, VcsRevisionNumber>)commitNode -> {
+        Hash hash = commitNode.getUserObject().getId();
+        return new TextRevisionNumber(hash.asString(), hash.toShortString());
       }), VcsRevisionNumber.class);
     }
     return null;

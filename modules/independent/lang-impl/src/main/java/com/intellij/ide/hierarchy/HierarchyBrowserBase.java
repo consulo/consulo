@@ -25,6 +25,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
+import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
@@ -36,7 +37,6 @@ import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -247,28 +247,28 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
 
   @Override
   @Nullable
-  public Object getData(@NonNls final String dataId) {
-    if (LangDataKeys.PSI_ELEMENT.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (LangDataKeys.PSI_ELEMENT == dataId) {
       final PsiElement anElement = getSelectedElement();
       return anElement != null && anElement.isValid() ? anElement : super.getData(dataId);
     }
-    if (LangDataKeys.PSI_ELEMENT_ARRAY.is(dataId)) {
+    if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
       return getSelectedElements();
     }
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
       return null;
     }
-    if (PlatformDataKeys.NAVIGATABLE.is(dataId)) {
+    if (PlatformDataKeys.NAVIGATABLE == dataId) {
       final DefaultMutableTreeNode selectedNode = getSelectedNode();
       if (selectedNode == null) return null;
       final HierarchyNodeDescriptor descriptor = getDescriptor(selectedNode);
       if (descriptor == null) return null;
       return getNavigatable(descriptor);
     }
-    if (PlatformDataKeys.NAVIGATABLE_ARRAY.is(dataId)) {
+    if (PlatformDataKeys.NAVIGATABLE_ARRAY == dataId) {
       return getNavigatables();
     }
-    if (PlatformDataKeys.TREE_EXPANDER.is(dataId)) {
+    if (PlatformDataKeys.TREE_EXPANDER == dataId) {
       final JTree tree = getCurrentTree();
       if (tree != null) {
         return new DefaultTreeExpander(tree);

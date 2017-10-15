@@ -448,7 +448,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
   }
 
   @Override
-  public Object getData(@NonNls Key<?> dataId) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
     if (CommonDataKeys.PROJECT == dataId) {
       return myProject;
     }

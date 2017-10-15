@@ -43,11 +43,11 @@ public abstract class TextComponentEditorAction extends EditorAction {
 
   @Nullable
   public static Editor getEditorFromContext(@NotNull DataContext dataContext) {
-    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor != null) return editor;
-    final Object data = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
+    final Object data = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     if (data instanceof JTextComponent) {
-      return new TextComponentEditorImpl(CommonDataKeys.PROJECT.getData(dataContext), (JTextComponent) data);
+      return new TextComponentEditorImpl(dataContext.getData(CommonDataKeys.PROJECT), (JTextComponent) data);
     }
     return null;
   }

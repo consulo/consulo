@@ -66,7 +66,7 @@ public abstract class EditorActionHandler {
       if (editor == null) {
         return false;
       }
-      Editor hostEditor = dataContext == null ? null : CommonDataKeys.HOST_EDITOR.getData(dataContext);
+      Editor hostEditor = dataContext == null ? null : dataContext.getData(CommonDataKeys.HOST_EDITOR);
       if (hostEditor == null) {
         hostEditor = editor;
       }
@@ -99,7 +99,7 @@ public abstract class EditorActionHandler {
     DataContext caretContext = context == null ? null : new CaretSpecificDataContext(context, hostCaret);
     if (myWorksInInjected && caretContext != null) {
       DataContext injectedCaretContext = AnActionEvent.getInjectedDataContext(caretContext);
-      Caret injectedCaret = CommonDataKeys.CARET.getData(injectedCaretContext);
+      Caret injectedCaret = injectedCaretContext.getData(CommonDataKeys.CARET);
       if (injectedCaret != null && injectedCaret != hostCaret && isEnabledForCaret(injectedCaret.getEditor(), injectedCaret, injectedCaretContext)) {
         task.perform(injectedCaret, injectedCaretContext);
         return;
@@ -192,7 +192,7 @@ public abstract class EditorActionHandler {
    * @param dataContext the data context for the action.
    */
   public final void execute(@NotNull Editor editor, @Nullable final Caret contextCaret, final DataContext dataContext) {
-    Editor hostEditor = dataContext == null ? null : CommonDataKeys.HOST_EDITOR.getData(dataContext);
+    Editor hostEditor = dataContext == null ? null : dataContext.getData(CommonDataKeys.HOST_EDITOR);
     if (hostEditor == null) {
       hostEditor = editor;
     }

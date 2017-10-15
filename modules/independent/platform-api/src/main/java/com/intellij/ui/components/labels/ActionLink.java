@@ -111,7 +111,7 @@ public class ActionLink extends LinkLabel implements DataProvider {
   }
 
   @Override
-  public Object getData(@NonNls Key dataId) {
+  public Object getData(@NotNull @NonNls Key dataId) {
     if (PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
       final Point p = SwingUtilities.getRoot(this).getLocationOnScreen();
       return new Rectangle(p.x, p.y + getHeight(), 0, 0);

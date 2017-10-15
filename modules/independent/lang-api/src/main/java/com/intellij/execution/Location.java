@@ -15,27 +15,30 @@
  */
 package com.intellij.execution;
 
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 
 public abstract class Location<E extends PsiElement> {
-  public static final DataKey<Location<?>> DATA_KEY = DataKey.create("Location");
-  public static final DataKey<Location<?>[]> DATA_KEYS = DataKey.create("LocationArray");
-  @Deprecated @NonNls public static final String LOCATION = DATA_KEY.getName();
+  public static final Key<Location<?>> DATA_KEY = Key.create("Location");
+  public static final Key<Location<?>[]> DATA_KEYS = Key.create("LocationArray");
 
-  @NotNull public abstract E getPsiElement();
-  @NotNull public abstract Project getProject();
-  @NotNull public abstract <T extends PsiElement> Iterator<Location<T>> getAncestors(Class<T> ancestorClass, boolean strict);
+  @NotNull
+  public abstract E getPsiElement();
+
+  @NotNull
+  public abstract Project getProject();
+
+  @NotNull
+  public abstract <T extends PsiElement> Iterator<Location<T>> getAncestors(Class<T> ancestorClass, boolean strict);
 
   @Nullable
   public VirtualFile getVirtualFile() {

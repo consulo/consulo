@@ -51,7 +51,7 @@ public class EditSourceOnDoubleClickHandler {
         if (ModalityState.current().dominates(ModalityState.NON_MODAL)) return false;
         if (treeTable.getTree().getPathForLocation(e.getX(), e.getY()) == null) return false;
         DataContext dataContext = DataManager.getInstance().getDataContext(treeTable);
-        Project project = CommonDataKeys.PROJECT.getData(dataContext);
+        Project project = dataContext.getData(CommonDataKeys.PROJECT);
         if (project == null) return false;
         OpenSourceUtil.openSourcesFrom(dataContext, true);
         return true;
@@ -67,7 +67,7 @@ public class EditSourceOnDoubleClickHandler {
         if (table.columnAtPoint(e.getPoint()) < 0) return false;
         if (table.rowAtPoint(e.getPoint()) < 0) return false;
         DataContext dataContext = DataManager.getInstance().getDataContext(table);
-        Project project = CommonDataKeys.PROJECT.getData(dataContext);
+        Project project = dataContext.getData(CommonDataKeys.PROJECT);
         if (project == null) return false;
         OpenSourceUtil.openSourcesFrom(dataContext, true);
         return true;
@@ -111,7 +111,7 @@ public class EditSourceOnDoubleClickHandler {
       if (clickPath == null) return false;
 
       final DataContext dataContext = DataManager.getInstance().getDataContext(myTree);
-      final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      final Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project == null) return false;
 
       final TreePath selectionPath = myTree.getSelectionPath();

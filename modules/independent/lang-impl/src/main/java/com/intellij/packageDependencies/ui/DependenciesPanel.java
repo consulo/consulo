@@ -453,7 +453,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   @Override
   @Nullable
   @NonNls
-  public Object getData(@NonNls Key dataId) {
+  public Object getData(@NotNull @NonNls Key dataId) {
     if (LangDataKeys.PSI_ELEMENT == dataId) {
       final PackageDependenciesNode selectedNode = myRightTree.getSelectedNode();
       if (selectedNode != null) {
@@ -767,12 +767,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
   private static class MyTree extends Tree implements DataProvider {
     @Override
-    public Object getData(String dataId) {
+    public Object getData(@NotNull Key<?> dataId) {
       PackageDependenciesNode node = getSelectedNode();
-      if (PlatformDataKeys.NAVIGATABLE.is(dataId)) {
+      if (PlatformDataKeys.NAVIGATABLE == dataId) {
         return node;
       }
-      if (LangDataKeys.PSI_ELEMENT.is(dataId) && node != null)  {
+      if (LangDataKeys.PSI_ELEMENT == dataId && node != null)  {
         final PsiElement element = node.getPsiElement();
         return element != null && element.isValid() ? element : null;
       }

@@ -19,7 +19,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.CloseAction;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -71,7 +70,7 @@ import static com.intellij.openapi.wm.IdeFocusManager.getGlobalInstance;
 public class EditorWindow {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.EditorWindow");
 
-  public static final DataKey<EditorWindow> DATA_KEY = DataKey.create("editorWindow");
+  public static final Key<EditorWindow> DATA_KEY = Key.create("editorWindow");
 
   protected JPanel myPanel;
   private EditorTabbedContainer myTabbedPane;
@@ -542,12 +541,12 @@ public class EditorWindow {
     }
 
     @Override
-    public Object getData(String dataId) {
-      if (CommonDataKeys.VIRTUAL_FILE.is(dataId)){
+    public Object getData(@NotNull Key<?> dataId) {
+      if (CommonDataKeys.VIRTUAL_FILE == dataId){
         final VirtualFile virtualFile = myEditor.getFile();
         return virtualFile.isValid() ? virtualFile : null;
       }
-      if (CommonDataKeys.PROJECT.is(dataId)) {
+      if (CommonDataKeys.PROJECT == dataId) {
         return myEditor.getFileEditorManager().getProject();
       }
       return null;
@@ -560,12 +559,12 @@ public class EditorWindow {
     }
 
     @Override
-    public Object getData(String dataId) {
+    public Object getData(@NotNull Key<?> dataId) {
       // this is essential for ability to close opened file
-      if (DATA_KEY.is(dataId)){
+      if (DATA_KEY == dataId){
         return myWindow;
       }
-      if (CloseAction.CloseTarget.KEY.is(dataId)) {
+      if (CloseAction.CloseTarget.KEY == dataId) {
         return this;
       }
       return super.getData(dataId);

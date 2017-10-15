@@ -32,6 +32,7 @@ import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.NamedConfigurable;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
@@ -62,7 +63,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
   /**
    * Data key for order path element
    */
-  public static DataKey<ModuleDependenciesAnalyzer.OrderPathElement> ORDER_PATH_ELEMENT_KEY = DataKey.create("ORDER_PATH_ELEMENT");
+  public static Key<ModuleDependenciesAnalyzer.OrderPathElement> ORDER_PATH_ELEMENT_KEY = Key.create("ORDER_PATH_ELEMENT");
   /**
    * The module being analyzed
    */
@@ -324,18 +325,18 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
-    public Object getData(@NonNls String dataId) {
-      if (CommonDataKeys.PROJECT.is(dataId)) {
+    public Object getData(@NotNull @NonNls Key<?> dataId) {
+      if (CommonDataKeys.PROJECT == dataId) {
         return myModule.getProject();
       }
-      if (LangDataKeys.MODULE.is(dataId)) {
+      if (LangDataKeys.MODULE == dataId) {
         return myModule;
       }
       TreePath selectionPath = myExplanationTree.getSelectionPath();
       DefaultMutableTreeNode node = selectionPath == null ? null : (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
       Object o = node == null ? null : node.getUserObject();
       if (o instanceof ModuleDependenciesAnalyzer.OrderPathElement) {
-        if (ORDER_PATH_ELEMENT_KEY.is(dataId)) {
+        if (ORDER_PATH_ELEMENT_KEY == dataId) {
           return o;
         }
       }

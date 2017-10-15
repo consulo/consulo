@@ -17,11 +17,13 @@ package com.intellij.ide.navigationToolbar;
 
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -70,11 +72,11 @@ class NavBarListWrapper extends JBScrollPane implements DataProvider {
 
   @Override
   @Nullable
-  public Object getData(@NonNls String dataId) {
-    if (PlatformDataKeys.SELECTED_ITEM.is(dataId)){
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (PlatformDataKeys.SELECTED_ITEM == dataId){
       return myList.getSelectedValue();
     }
-    if (PlatformDataKeys.SELECTED_ITEMS.is(dataId)){
+    if (PlatformDataKeys.SELECTED_ITEMS == dataId){
       return myList.getSelectedValues();
     }
     return null;

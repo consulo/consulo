@@ -21,6 +21,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.KeyedLazyInstanceEP;
 import com.intellij.util.containers.HashMap;
@@ -30,15 +31,15 @@ import java.lang.reflect.Array;
 import java.util.Map;
 
 public abstract class DataValidator<T> {
+  private static final Logger LOG = Logger.getInstance(DataValidator.class);
+
+  public static final ExtensionPointName<KeyedLazyInstanceEP<DataValidator>> EP_NAME = ExtensionPointName.create("com.intellij.dataValidator");
+
   private static boolean ourExtensionsLoaded;
 
-  public static final ExtensionPointName<KeyedLazyInstanceEP<DataValidator>> EP_NAME =
-    ExtensionPointName.create("com.intellij.dataValidator");
-
-  Logger LOG = Logger.getInstance("#com.intellij.ide.impl.DataValidator");
-
-  private static final Map<String, DataValidator> ourValidators = new HashMap<String, DataValidator>();
+  private static final Map<Key, DataValidator> ourValidators = new HashMap<>();
   private static final DataValidator<VirtualFile> VIRTUAL_FILE_VALIDATOR = new DataValidator<VirtualFile>() {
+    @Override
     public VirtualFile findInvalid(final String dataId, VirtualFile file, final Object dataSource) {
       return file.isValid() ? null : file;
     }
@@ -63,7 +64,7 @@ public abstract class DataValidator<T> {
     return ourValidators.get(dataId);
   }
 
-  public static <T> T findInvalidData(String dataId, Object data, final Object dataSource) {
+  public static <T> T findInvalidData(Key<T> dataId, T data, final Object dataSource) {
     if (data == null) return null;
     DataValidator<T> validator = getValidator(dataId);
     if (validator != null) return validator.findInvalid(dataId, (T)data, dataSource);
@@ -71,9 +72,9 @@ public abstract class DataValidator<T> {
   }
 
   static {
-    ourValidators.put(PlatformDataKeys.VIRTUAL_FILE.getName(), VIRTUAL_FILE_VALIDATOR);
-    ourValidators.put(PlatformDataKeys.VIRTUAL_FILE_ARRAY.getName(), new ArrayValidator<VirtualFile>(VIRTUAL_FILE_VALIDATOR));
-    ourValidators.put(CommonDataKeys.PROJECT.getName(), PROJECT_VALIDATOR);
+    ourValidators.put(PlatformDataKeys.VIRTUAL_FILE, VIRTUAL_FILE_VALIDATOR);
+    ourValidators.put(PlatformDataKeys.VIRTUAL_FILE_ARRAY, new ArrayValidator<>(VIRTUAL_FILE_VALIDATOR));
+    ourValidators.put(CommonDataKeys.PROJECT, PROJECT_VALIDATOR);
   }
 
   public static class ArrayValidator<T> extends DataValidator<T[]> {
@@ -83,11 +84,11 @@ public abstract class DataValidator<T> {
       myElementValidator = elementValidator;
     }
 
+    @Override
     public T[] findInvalid(final String dataId, T[] array, final Object dataSource) {
       for (T element : array) {
         if (element == null) {
-          LOG.error(
-            "Data isn't valid. " + dataId + "=null Provided by: " + dataSource.getClass().getName() + " (" + dataSource.toString() + ")");
+          LOG.error("Data isn't valid. " + dataId + "=null Provided by: " + dataSource.getClass().getName() + " (" + dataSource.toString() + ")");
         }
         T invalid = myElementValidator.findInvalid(dataId, element, dataSource);
         if (invalid != null) {

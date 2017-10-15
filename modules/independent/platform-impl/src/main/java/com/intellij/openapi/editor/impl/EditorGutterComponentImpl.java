@@ -50,10 +50,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.ScalableIcon;
-import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
@@ -567,13 +564,13 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
     if (myEditor.isDisposed()) return null;
 
-    if (EditorGutter.KEY.is(dataId)) {
+    if (EditorGutter.KEY == dataId) {
       return this;
     }
-    if (CommonDataKeys.EDITOR.is(dataId)) {
+    if (CommonDataKeys.EDITOR == dataId) {
       return myEditor;
     }
     return null;

@@ -17,9 +17,9 @@
 package com.intellij.ui.navigation;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,15 +28,14 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public final class History {
+  public static Key<History> KEY = Key.create("History");
 
-  public static DataKey<History> KEY = DataKey.create("History");
-
-  private final List<Place> myHistory = new ArrayList<Place>();
+  private final List<Place> myHistory = new ArrayList<>();
   private int myCurrentPos;
   private final Place.Navigator myRoot;
 
   private boolean myNavigatedNow;
-  private final CopyOnWriteArraySet<HistoryListener> myListeners = new CopyOnWriteArraySet<HistoryListener>();
+  private final CopyOnWriteArraySet<HistoryListener> myListeners = new CopyOnWriteArraySet<>();
 
   public History(@NotNull Place.Navigator root) {
     myRoot = root;

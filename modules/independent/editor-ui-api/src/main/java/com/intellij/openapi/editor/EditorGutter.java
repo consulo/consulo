@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor;
 
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  * @see Editor#getGutter()
  */
 public interface EditorGutter {
-  DataKey<EditorGutter> KEY = DataKey.create("EditorGutter");
+  Key<EditorGutter> KEY = Key.create("EditorGutter");
 
   /**
    * Adds a provider for drawing custom text annotations in the editor gutter.

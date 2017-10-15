@@ -627,7 +627,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     //panel.add(createSouthPanel(), BorderLayout.SOUTH);
     DataManager.registerDataProvider(panel, new DataProvider() {
       @Override
-      public Object getData(@NonNls Key dataId) {
+      public Object getData(@NotNull @NonNls Key dataId) {
         if (CommonDataKeys.PROJECT == dataId) {
           return myProject;
         }

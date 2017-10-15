@@ -19,7 +19,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.DiffContent;
@@ -52,13 +51,8 @@ public class MergeList implements UserDataHolder {
   public static final FragmentSide BRANCH_SIDE = FragmentSide.SIDE2;
   public static final FragmentSide BASE_SIDE = FragmentSide.SIDE1;
 
-  public static final DataKey<MergeList> DATA_KEY = DataKey.create("mergeList");
-  public static final Condition<Change> NOT_CONFLICTS = new Condition<Change>() {
-    @Override
-    public boolean value(Change change) {
-      return !(change instanceof ConflictChange);
-    }
-  };
+  public static final Key<MergeList> DATA_KEY = Key.create("mergeList");
+  public static final Condition<Change> NOT_CONFLICTS = change -> !(change instanceof ConflictChange);
 
   @NotNull private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
   @NotNull private final ChangeList myBaseToLeftChangeList;
@@ -283,7 +277,7 @@ public class MergeList implements UserDataHolder {
 
   @Nullable
   public static MergeList fromDataContext(DataContext dataContext) {
-    MergeList mergeList = DATA_KEY.getData(dataContext);
+    MergeList mergeList = dataContext.getData(DATA_KEY);
     if (mergeList != null) return mergeList;
     MergePanel2 mergePanel = MergePanel2.fromDataContext(dataContext);
     return mergePanel == null ? null : mergePanel.getMergeList();

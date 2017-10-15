@@ -293,7 +293,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
 
   @Override
   @Nullable
-  public Object getData(@NonNls final Key dataId) {
+  public Object getData(@NotNull @NonNls final Key dataId) {
     if (XDEBUGGER_TREE_KEY == dataId) {
       return this;
     }

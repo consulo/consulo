@@ -19,9 +19,11 @@ import com.intellij.ide.actions.CloseTabToolbarAction;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.content.*;
 import com.intellij.util.ContentsUtil;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,8 +89,8 @@ public abstract class PanelWithActionsAndCloseButton extends JPanel implements D
     }
   }
 
-  public Object getData(String dataId) {
-    if (PlatformDataKeys.HELP_ID.is(dataId)){
+  public Object getData(@NotNull Key<?> dataId) {
+    if (PlatformDataKeys.HELP_ID == dataId){
       return myHelpId;
     }
     return null;

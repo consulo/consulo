@@ -125,7 +125,7 @@ public abstract class ChooseByNameBase {
   private JComponent myToolArea;
 
   protected JScrollPane myListScrollPane; // Located in the layered pane
-  private final MyListModel<Object> myListModel = new MyListModel<Object>();
+  private final MyListModel<Object> myListModel = new MyListModel<>();
   protected final JList myList = new JBList(myListModel);
   private final List<Pair<String, Integer>> myHistory = ContainerUtil.newArrayList();
   private final List<Pair<String, Integer>> myFuture = ContainerUtil.newArrayList();
@@ -276,19 +276,19 @@ public abstract class ChooseByNameBase {
     }
 
     @Override
-    public Object getData(String dataId) {
-      if (PlatformDataKeys.SEARCH_INPUT_TEXT.is(dataId)) {
+    public Object getData(@NotNull Key<?> dataId) {
+      if (PlatformDataKeys.SEARCH_INPUT_TEXT == dataId) {
         return myTextField == null ? null : myTextField.getText();
       }
 
-      if (PlatformDataKeys.HELP_ID.is(dataId)) {
+      if (PlatformDataKeys.HELP_ID == dataId) {
         return myModel.getHelpId();
       }
 
       if (myCalcElementsThread != null) {
         return null;
       }
-      if (CommonDataKeys.PSI_ELEMENT.is(dataId)) {
+      if (CommonDataKeys.PSI_ELEMENT == dataId) {
         Object element = getChosenElement();
 
         if (element instanceof PsiElement) {
@@ -299,10 +299,10 @@ public abstract class ChooseByNameBase {
           return ((DataProvider)element).getData(dataId);
         }
       }
-      else if (LangDataKeys.PSI_ELEMENT_ARRAY.is(dataId)) {
+      else if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
         final List<Object> chosenElements = getChosenElements();
         if (chosenElements != null) {
-          List<PsiElement> result = new ArrayList<PsiElement>(chosenElements.size());
+          List<PsiElement> result = new ArrayList<>(chosenElements.size());
           for (Object element : chosenElements) {
             if (element instanceof PsiElement) {
               result.add((PsiElement)element);
@@ -311,10 +311,10 @@ public abstract class ChooseByNameBase {
           return PsiUtilCore.toPsiElementArray(result);
         }
       }
-      else if (PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE.is(dataId)) {
+      else if (PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
         return getBounds();
       }
-      else if (PlatformDataKeys.SEARCH_INPUT_TEXT.is(dataId)) {
+      else if (PlatformDataKeys.SEARCH_INPUT_TEXT == dataId) {
         return myTextField == null ? null : myTextField.getText();
       }
       return null;
@@ -437,15 +437,15 @@ public abstract class ChooseByNameBase {
       @Override
       public PsiElement[][] getElements() {
         final Object[] objects = myListModel.toArray();
-        final List<PsiElement> prefixMatchElements = new ArrayList<PsiElement>(objects.length);
-        final List<PsiElement> nonPrefixMatchElements = new ArrayList<PsiElement>(objects.length);
+        final List<PsiElement> prefixMatchElements = new ArrayList<>(objects.length);
+        final List<PsiElement> nonPrefixMatchElements = new ArrayList<>(objects.length);
         List<PsiElement> curElements = prefixMatchElements;
         for (Object object : objects) {
           if (object instanceof PsiElement) {
             curElements.add((PsiElement)object);
           }
           else if (object instanceof DataProvider) {
-            final PsiElement psi = CommonDataKeys.PSI_ELEMENT.getData((DataProvider)object);
+            final PsiElement psi = ((DataProvider)object).getDataUnchecked(CommonDataKeys.PSI_ELEMENT);
             if (psi != null) {
               curElements.add(psi);
             }
@@ -720,7 +720,7 @@ public abstract class ChooseByNameBase {
 
   @NotNull
   private static Set<KeyStroke> getShortcuts(@NotNull String actionId) {
-    Set<KeyStroke> result = new HashSet<KeyStroke>();
+    Set<KeyStroke> result = new HashSet<>();
     Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
     Shortcut[] shortcuts = keymap.getShortcuts(actionId);
     if (shortcuts == null) {
@@ -758,7 +758,7 @@ public abstract class ChooseByNameBase {
         myTextFieldPanel.updateHint((PsiElement)element);
       }
       else if (element instanceof DataProvider) {
-        final Object o = ((DataProvider)element).getData(CommonDataKeys.PSI_ELEMENT.getName());
+        final Object o = ((DataProvider)element).getData(CommonDataKeys.PSI_ELEMENT);
         if (o instanceof PsiElement) {
           myTextFieldPanel.updateHint((PsiElement)o);
         }
@@ -1278,13 +1278,13 @@ public abstract class ChooseByNameBase {
     }
 
     @Override
-    public void calcData(final DataKey key, @NotNull final DataSink sink) {
-      if (LangDataKeys.POSITION_ADJUSTER_POPUP.equals(key)) {
+    public void calcData(final Key key, @NotNull final DataSink sink) {
+      if (LangDataKeys.POSITION_ADJUSTER_POPUP == key) {
         if (myDropdownPopup != null && myDropdownPopup.isVisible()) {
           sink.put(key, myDropdownPopup);
         }
       }
-      else if (LangDataKeys.PARENT_POPUP.equals(key)) {
+      else if (LangDataKeys.PARENT_POPUP == key) {
         if (myTextPopup != null && myTextPopup.isVisible()) {
           sink.put(key, myTextPopup);
         }
@@ -1520,7 +1520,7 @@ public abstract class ChooseByNameBase {
     public Continuation performInReadAction(@NotNull ProgressIndicator indicator) throws ProcessCanceledException {
       if (myProject != null && myProject.isDisposed()) return null;
 
-      final Set<Object> elements = new LinkedHashSet<Object>();
+      final Set<Object> elements = new LinkedHashSet<>();
 
       boolean scopeExpanded = fillWithScopeExpansion(elements, myPattern);
 
@@ -1693,14 +1693,14 @@ public abstract class ChooseByNameBase {
       presentation.setTabText(prefixPattern);
       presentation.setTargetsNodeText("Unsorted " + StringUtil.toLowerCase(patternToLowerCase(prefixPattern)));
       final Object[][] elements = getElements();
-      final List<PsiElement> targets = new ArrayList<PsiElement>();
-      final List<Usage> usages = new ArrayList<Usage>();
+      final List<PsiElement> targets = new ArrayList<>();
+      final List<Usage> usages = new ArrayList<>();
       fillUsages(Arrays.asList(elements[0]), usages, targets, false);
       fillUsages(Arrays.asList(elements[1]), usages, targets, true);
       if (myListModel.contains(EXTRA_ELEM)) { //start searching for the rest
         final boolean everywhere = myCheckBox.isSelected();
-        final Set<Object> prefixMatchElementsArray = new LinkedHashSet<Object>();
-        final Set<Object> nonPrefixMatchElementsArray = new LinkedHashSet<Object>();
+        final Set<Object> prefixMatchElementsArray = new LinkedHashSet<>();
+        final Set<Object> nonPrefixMatchElementsArray = new LinkedHashSet<>();
         hideHint();
         ProgressManager.getInstance().run(new Task.Modal(myProject, prefixPattern, true) {
           private ChooseByNameBase.CalcElementsThread myCalcUsagesThread;

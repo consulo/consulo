@@ -19,7 +19,7 @@ import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.TestTreeView;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerNodeDescriptor;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,9 +31,11 @@ import javax.swing.tree.TreePath;
  * @author: Roman Chernyatchik
  */
 public class SMTRunnerTestTreeView extends TestTreeView {
-  public static final DataKey<SMTRunnerTestTreeView> SM_TEST_RUNNER_VIEW  = DataKey.create("SM_TEST_RUNNER_VIEW");
 
-  @Nullable private TestResultsViewer myResultsViewer;
+  public static final Key<SMTRunnerTestTreeView> SM_TEST_RUNNER_VIEW = Key.create("SM_TEST_RUNNER_VIEW");
+
+  @Nullable
+  private TestResultsViewer myResultsViewer;
 
   protected TreeCellRenderer getRenderer(final TestConsoleProperties properties) {
     return new TestTreeRenderer(properties);
@@ -67,8 +69,8 @@ public class SMTRunnerTestTreeView extends TestTreeView {
   }
 
   @Override
-  public Object getData(final String dataId) {
-    if (SM_TEST_RUNNER_VIEW.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (SM_TEST_RUNNER_VIEW == dataId) {
       return this;
     }
     return super.getData(dataId);

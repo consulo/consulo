@@ -23,9 +23,9 @@ import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -243,8 +243,8 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
   }
 
   private static class CachingDataContext implements DataContext {
-    private static final DataKey[] keys = {PROJECT, PROJECT_FILE_DIRECTORY, EDITOR, VIRTUAL_FILE, MODULE, PSI_FILE};
-    private final Map<String, Object> values = new HashMap<String, Object>();
+    private static final Key[] keys = {PROJECT, PROJECT_FILE_DIRECTORY, EDITOR, VIRTUAL_FILE, MODULE, PSI_FILE};
+    private final Map<Key, Object> values = new HashMap<>();
 
     @NotNull
     static CachingDataContext cacheIfNeed(@NotNull DataContext context) {
@@ -254,14 +254,15 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     }
 
     private CachingDataContext(DataContext context) {
-      for (DataKey key : keys) {
-        values.put(key.getName(), key.getData(context));
+      for (Key key : keys) {
+        values.put(key, context.getData(key));
       }
     }
 
     @Override
-    public Object getData(@NonNls String dataId) {
-      return values.get(dataId);
+    @SuppressWarnings("unchekced")
+    public <T> T getData(@NonNls Key<T> dataId) {
+      return (T)values.get(dataId);
     }
   }
 }

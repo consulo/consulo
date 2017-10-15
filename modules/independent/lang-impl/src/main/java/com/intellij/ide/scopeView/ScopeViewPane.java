@@ -30,6 +30,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
@@ -240,7 +241,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   }
 
   @Override
-  public Object getData(final String dataId) {
+  public Object getData(@NotNull final Key<?> dataId) {
     final Object data = super.getData(dataId);
     if (data != null) {
       return data;
@@ -248,6 +249,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     return myViewPanel != null ? myViewPanel.getData(dataId) : null;
   }
 
+  @NotNull
   @Override
   public ActionCallback getReady(@NotNull Object requestor) {
     final ActionCallback callback = myViewPanel.getActionCallback();

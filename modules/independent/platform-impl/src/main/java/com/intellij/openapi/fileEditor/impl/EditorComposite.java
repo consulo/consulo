@@ -456,14 +456,14 @@ public abstract class EditorComposite implements Disposable {
     }
 
     @Override
-    public final Object getData(String dataId){
-      if (PlatformDataKeys.FILE_EDITOR.is(dataId)) {
+    public final Object getData(@NotNull Key<?> dataId){
+      if (PlatformDataKeys.FILE_EDITOR == dataId) {
         return getSelectedEditor();
       }
-      else if(CommonDataKeys.VIRTUAL_FILE.is(dataId)){
+      else if(CommonDataKeys.VIRTUAL_FILE == dataId){
         return myFile.isValid() ? myFile : null;
       }
-      else if(CommonDataKeys.VIRTUAL_FILE_ARRAY.is(dataId)){
+      else if(CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId){
         return myFile.isValid() ? new VirtualFile[] {myFile} : null;
       }
       else{

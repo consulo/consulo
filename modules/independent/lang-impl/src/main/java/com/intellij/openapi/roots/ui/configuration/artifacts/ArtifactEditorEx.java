@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
@@ -31,8 +31,7 @@ import javax.swing.*;
  * @author nik
  */
 public interface ArtifactEditorEx extends ArtifactEditor, Disposable {
-  DataKey<ArtifactEditorEx> ARTIFACTS_EDITOR_KEY = DataKey.create("artifactsEditor");
-
+  Key<ArtifactEditorEx> ARTIFACTS_EDITOR_KEY = Key.create("artifactsEditor");
 
   void addNewPackagingElement(@NotNull PackagingElementType<?> type);
 

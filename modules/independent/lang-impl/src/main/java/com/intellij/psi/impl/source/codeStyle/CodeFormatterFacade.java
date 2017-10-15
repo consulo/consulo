@@ -741,9 +741,9 @@ public class CodeFormatterFacade {
     final DataContext baseDataContext = DataManager.getInstance().getDataContext(component);
     return new DelegatingDataContext(baseDataContext) {
       @Override
-      public Object getData(@NonNls String dataId) {
+      public Object getData(@NonNls Key dataId) {
         Object result = baseDataContext.getData(dataId);
-        if (result == null && CommonDataKeys.PROJECT.is(dataId)) {
+        if (result == null && CommonDataKeys.PROJECT == dataId) {
           result = project;
         }
         return result;
@@ -767,7 +767,7 @@ public class CodeFormatterFacade {
     }
 
     @Override
-    public Object getData(@NonNls String dataId) {
+    public Object getData(@NonNls Key dataId) {
       return myDataContextDelegate.getData(dataId);
     }
 

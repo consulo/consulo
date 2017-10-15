@@ -64,7 +64,7 @@ import javax.swing.*;
 import java.util.List;
 
 public class XDebugSessionTab extends DebuggerSessionTabBase {
-  public static final DataKey<XDebugSessionTab> TAB_KEY = DataKey.create("XDebugSessionTab");
+  public static final Key<XDebugSessionTab> TAB_KEY = Key.create("XDebugSessionTab");
 
   private XWatchesViewImpl myWatchesView;
   private boolean myWatchesInVariables = Registry.is("debugger.watches.in.variables");
@@ -91,7 +91,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     if (contentToReuse != null && SystemProperties.getBooleanProperty("xdebugger.reuse.session.tab", false)) {
       JComponent component = contentToReuse.getComponent();
       if (component != null) {
-        XDebugSessionTab oldTab = TAB_KEY.getData(DataManager.getInstance().getDataContext(component));
+        XDebugSessionTab oldTab = DataManager.getInstance().getDataContext(component).getData(TAB_KEY);
         if (oldTab != null) {
           oldTab.setSession(session, environment, icon);
           oldTab.attachToSession(session);
@@ -362,7 +362,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
       JComponent component = tab.getUi().getComponent();
       if (component instanceof DataProvider) {
-        RunnerContentUi ui = RunnerContentUi.KEY.getData(((DataProvider)component));
+        RunnerContentUi ui = ((DataProvider)component).getDataUnchecked(RunnerContentUi.KEY);
         if (ui != null) {
           Content content = ui.findContent(viewId);
 
@@ -430,7 +430,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
   private void restoreContent(String contentId) {
     JComponent component = myUi.getComponent();
     if (component instanceof DataProvider) {
-      RunnerContentUi ui = RunnerContentUi.KEY.getData(((DataProvider)component));
+      RunnerContentUi ui = ((DataProvider)component).getDataUnchecked(RunnerContentUi.KEY);
       if (ui != null) {
         ui.restoreContent(contentId);
       }

@@ -28,6 +28,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -315,11 +316,11 @@ class ProjectViewDropTarget implements DnDNativeTarget {
       DataContext context = new DataContext() {
         @Override
         @Nullable
-        public Object getData(@NonNls String dataId) {
-          if (LangDataKeys.TARGET_MODULE.is(dataId)) {
+        public Object getData(@NonNls Key dataId) {
+          if (LangDataKeys.TARGET_MODULE == dataId) {
             if (module != null) return module;
           }
-          if (LangDataKeys.TARGET_PSI_ELEMENT.is(dataId)) {
+          if (LangDataKeys.TARGET_PSI_ELEMENT == dataId) {
             return targetElement;
           }
           else {

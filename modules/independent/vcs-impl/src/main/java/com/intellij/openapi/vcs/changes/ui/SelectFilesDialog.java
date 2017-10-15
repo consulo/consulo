@@ -22,6 +22,7 @@ import com.intellij.ide.DeleteProvider;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileChooser.actions.VirtualFileDeleteProvider;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
 import com.intellij.openapi.vcs.changes.actions.DeleteUnversionedFilesAction;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -119,13 +120,13 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
     }
 
     @Override
-    public void calcData(DataKey key, DataSink sink) {
+    public void calcData(Key<?> key, DataSink sink) {
       super.calcData(key, sink);
-      if (key.equals(PlatformDataKeys.DELETE_ELEMENT_PROVIDER) && myDeleteProvider != null) {
-        sink.put(key, myDeleteProvider);
+      if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == key && myDeleteProvider != null) {
+        sink.put(PlatformDataKeys.DELETE_ELEMENT_PROVIDER, myDeleteProvider);
       }
-      else if (key.equals(CommonDataKeys.VIRTUAL_FILE_ARRAY)) {
-        sink.put(key, ArrayUtil.toObjectArray(getSelectedChanges(), VirtualFile.class));
+      else if (CommonDataKeys.VIRTUAL_FILE_ARRAY == key) {
+        sink.put(CommonDataKeys.VIRTUAL_FILE_ARRAY, ArrayUtil.toObjectArray(getSelectedChanges(), VirtualFile.class));
       }
     }
 

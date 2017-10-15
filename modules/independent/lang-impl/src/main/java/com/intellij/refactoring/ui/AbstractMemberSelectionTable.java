@@ -17,10 +17,10 @@
 package com.intellij.refactoring.ui;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.classMembers.MemberInfoBase;
@@ -158,7 +158,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
   }
 
   @Override
-  public void calcData(final DataKey key, final DataSink sink) {
+  public void calcData(final Key key, final DataSink sink) {
     if (key == CommonDataKeys.PSI_ELEMENT) {
       final Collection<M> memberInfos = getSelectedMemberInfos();
       if (memberInfos.size() > 0) {
@@ -168,7 +168,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
   }
 
   public void scrollSelectionInView() {
-    for(int i=0; i<myMemberInfos.size(); i++) {
+    for (int i = 0; i < myMemberInfos.size(); i++) {
       if (isMemberInfoSelected(myMemberInfos.get(i))) {
         Rectangle rc = getCellRect(i, 0, false);
         scrollRectToVisible(rc);
@@ -275,8 +275,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
           else {
             return myTable.myMemberInfoModel.isCheckedWhenDisabled(memberInfo);
           }
-        case ABSTRACT_COLUMN:
-        {
+        case ABSTRACT_COLUMN: {
           return myTable.getAbstractColumnValue(memberInfo);
         }
         case DISPLAY_NAME_COLUMN:
@@ -370,15 +369,13 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
     }
 
     @Override
-    public void customizeCellRenderer(JTable table, final Object value,
-                                      boolean isSelected, boolean hasFocus, final int row, final int column) {
+    public void customizeCellRenderer(JTable table, final Object value, boolean isSelected, boolean hasFocus, final int row, final int column) {
 
       final int modelColumn = myTable.convertColumnIndexToModel(column);
       final M memberInfo = myTable.myMemberInfos.get(row);
       setToolTipText(myTable.myMemberInfoModel.getTooltipText(memberInfo));
       switch (modelColumn) {
-        case DISPLAY_NAME_COLUMN:
-        {
+        case DISPLAY_NAME_COLUMN: {
           Icon memberIcon = myTable.getMemberIcon(memberInfo, 0);
           Icon overrideIcon = myTable.getOverrideIcon(memberInfo);
 
@@ -389,8 +386,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
           setIcon(icon);
           break;
         }
-        default:
-        {
+        default: {
           setIcon(null);
         }
       }
@@ -430,10 +426,8 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
       if (component instanceof JCheckBox) {
         int modelColumn = myTable.convertColumnIndexToModel(column);
         M memberInfo = myTable.myMemberInfos.get(row);
-        component.setEnabled(
-                (modelColumn == CHECKED_COLUMN && myTable.myMemberInfoModel.isMemberEnabled(memberInfo)) ||
-                (modelColumn == ABSTRACT_COLUMN && memberInfo.isChecked() && myTable.isAbstractColumnEditable(row))
-        );
+        component.setEnabled((modelColumn == CHECKED_COLUMN && myTable.myMemberInfoModel.isMemberEnabled(memberInfo)) ||
+                             (modelColumn == ABSTRACT_COLUMN && memberInfo.isChecked() && myTable.isAbstractColumnEditable(row)));
       }
       return component;
     }

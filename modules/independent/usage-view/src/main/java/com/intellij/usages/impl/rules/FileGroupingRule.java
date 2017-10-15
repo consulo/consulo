@@ -17,13 +17,13 @@ package com.intellij.usages.impl.rules;
 
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -143,7 +143,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     @Override
-    public void calcData(final DataKey key, final DataSink sink) {
+    public void calcData(final Key<?> key, final DataSink sink) {
       if (!isValid()) return;
       if (key == CommonDataKeys.VIRTUAL_FILE) {
         sink.put(CommonDataKeys.VIRTUAL_FILE, myFile);

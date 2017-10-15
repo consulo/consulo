@@ -38,6 +38,7 @@ import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.actions.IconWithTextAction;
 import com.intellij.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -283,8 +284,8 @@ public class ContentEntryTreeEditor {
 
     @Override
     @Nullable
-    public Object getData(@NonNls final String dataId) {
-      if (FileSystemTree.DATA_KEY.is(dataId)) {
+    public Object getData(@NotNull @NonNls final Key<?> dataId) {
+      if (FileSystemTree.DATA_KEY == dataId) {
         return myFileSystemTree;
       }
       return null;

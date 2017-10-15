@@ -2322,7 +2322,7 @@ public abstract class JBTabsImpl extends JComponent
 
   @Override
   @Nullable
-  public Object getData(@NonNls final Key<?> dataId) {
+  public Object getData(@NotNull @NonNls final Key<?> dataId) {
     if (myDataProvider != null) {
       final Object value = myDataProvider.getData(dataId);
       if (value != null) return value;

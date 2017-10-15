@@ -477,7 +477,7 @@ public class AbstractPopup implements JBPopup {
 
   @Override
   public void showInBestPositionFor(@NotNull DataContext dataContext) {
-    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor != null) {
       showInBestPositionFor(editor);
     }
@@ -500,7 +500,7 @@ public class AbstractPopup implements JBPopup {
   }
 
   private RelativePoint relativePointByQuickSearch(final DataContext dataContext) {
-    Rectangle dominantArea = PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE.getData(dataContext);
+    Rectangle dominantArea = dataContext.getData(PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE);
 
     if (dominantArea != null) {
       final Component focusedComponent = getWndManager().getFocusedComponent(myProject);
@@ -536,7 +536,7 @@ public class AbstractPopup implements JBPopup {
     // inside the component (e.g. editor) it appears on top of.
     AccessibleContextUtil.setParent(myComponent, editor.getContentComponent());
     DataContext context = ((EditorEx)editor).getDataContext();
-    Rectangle dominantArea = PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE.getData(context);
+    Rectangle dominantArea = context.getData(PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE);
     if (dominantArea != null && !myRequestFocus) {
       final JLayeredPane layeredPane = editor.getContentComponent().getRootPane().getLayeredPane();
       show(relativePointWithDominantRectangle(layeredPane, dominantArea));
@@ -1071,7 +1071,7 @@ public class AbstractPopup implements JBPopup {
     final Component c = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (c != null) {
       final DataContext context = DataManager.getInstance().getDataContext(c);
-      final Project project = CommonDataKeys.PROJECT.getData(context);
+      final Project project = context.getData(CommonDataKeys.PROJECT);
       if (project != null) {
         myProjectDisposable = new Disposable() {
 
@@ -1513,7 +1513,7 @@ public class AbstractPopup implements JBPopup {
 
     @Nullable
     @Override
-    public Object getData(@NonNls String dataId) {
+    public Object getData(@NotNull @NonNls Key<?> dataId) {
       return myDataProvider != null ? myDataProvider.getData(dataId) : null;
     }
 

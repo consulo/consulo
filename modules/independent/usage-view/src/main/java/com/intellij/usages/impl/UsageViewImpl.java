@@ -34,10 +34,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.ui.Splitter;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Factory;
-import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -1673,7 +1670,7 @@ public class UsageViewImpl implements UsageView {
     }
 
     @Override
-    public void calcData(final DataKey key, final DataSink sink) {
+    public void calcData(final Key key, final DataSink sink) {
       if (key == CommonDataKeys.PROJECT) {
         sink.put(CommonDataKeys.PROJECT, myProject);
       }
@@ -1724,7 +1721,7 @@ public class UsageViewImpl implements UsageView {
           }
           else if (userObject instanceof DataProvider) {
             DataProvider dataProvider = (DataProvider)userObject;
-            Object data = dataProvider.getData(key.getName());
+            Object data = dataProvider.getData(key);
             if (data != null) {
               sink.put(key, data);
             }

@@ -15,14 +15,24 @@
  */
 package com.intellij.ide.impl.dataRules;
 
+import com.intellij.ide.PasteProvider;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.util.Key;
+import org.jetbrains.annotations.NotNull;
 
-public class PasteProviderRule implements GetDataRule {
-  public Object getData(DataProvider dataProvider) {
-    final Editor editor = PlatformDataKeys.EDITOR.getData(dataProvider);
+public class PasteProviderRule implements GetDataRule<PasteProvider> {
+  @NotNull
+  @Override
+  public Key<PasteProvider> getKey() {
+    return PlatformDataKeys.PASTE_PROVIDER;
+  }
+
+  @Override
+  public PasteProvider getData(@NotNull DataProvider dataProvider) {
+    final Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
     if (editor instanceof EditorEx) {
       return ((EditorEx) editor).getPasteProvider();
     }

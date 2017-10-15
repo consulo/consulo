@@ -17,9 +17,9 @@ package com.intellij.execution.testframework;
 
 import com.intellij.execution.Location;
 import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +33,7 @@ import java.util.List;
  * @since 23-May-2007
  */
 public abstract class AbstractTestProxy extends CompositePrintable {
-  public static final DataKey<AbstractTestProxy> DATA_KEY = DataKey.create("testProxy");
+  public static final Key<AbstractTestProxy> DATA_KEY = Key.create("testProxy");
 
   protected Printer myPrinter = null;
 

@@ -27,6 +27,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
@@ -203,24 +204,24 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   }
 
   @Override
-  public Object getData(String dataId) {
-    if (PlatformDataKeys.COPY_PROVIDER.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return this;
     }
-    if (PlatformDataKeys.NAVIGATABLE.is(dataId)) {
+    if (PlatformDataKeys.NAVIGATABLE == dataId) {
       final NavigatableMessageElement selectedMessageElement = getSelectedMessageElement();
       return selectedMessageElement != null ? selectedMessageElement.getNavigatable() : null;
     }
-    else if (PlatformDataKeys.HELP_ID.is(dataId)) {
+    else if (PlatformDataKeys.HELP_ID == dataId) {
       return myHelpId;
     }
-    else if (PlatformDataKeys.TREE_EXPANDER.is(dataId)) {
+    else if (PlatformDataKeys.TREE_EXPANDER == dataId) {
       return myTreeExpander;
     }
-    else if (PlatformDataKeys.EXPORTER_TO_TEXT_FILE.is(dataId)) {
+    else if (PlatformDataKeys.EXPORTER_TO_TEXT_FILE == dataId) {
       return myExporterToTextFile;
     }
-    else if (CURRENT_EXCEPTION_DATA_KEY.is(dataId)) {
+    else if (CURRENT_EXCEPTION_DATA_KEY == dataId) {
       NavigatableMessageElement selectedMessageElement = getSelectedMessageElement();
       return selectedMessageElement != null ? selectedMessageElement.getData() : null;
     }
@@ -384,7 +385,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
       return;
     }
     DefaultActionGroup group = new DefaultActionGroup();
-    if (getData(PlatformDataKeys.NAVIGATABLE.getName()) != null) {
+    if (getData(PlatformDataKeys.NAVIGATABLE) != null) {
       group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE));
     }
     group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_COPY));

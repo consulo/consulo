@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.wm;
 
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.BalloonLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,8 +26,7 @@ import java.awt.*;
 import java.io.File;
 
 public interface IdeFrame {
-
-  DataKey<IdeFrame> KEY = DataKey.create("IdeFrame");
+  Key<IdeFrame> KEY = Key.create("IdeFrame");
 
   StatusBar getStatusBar();
 

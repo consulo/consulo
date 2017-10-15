@@ -21,6 +21,7 @@ import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.util.Key;
 import consulo.testFramework.util.TestPathUtil;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
@@ -467,17 +468,17 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
   }
 
   @Override
-  public Object getData(String dataId) {
-    if (PlatformDataKeys.EDITOR.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (PlatformDataKeys.EDITOR == dataId) {
       return myEditor;
     }
-    if (dataId.equals(AnActionEvent.injectedId(PlatformDataKeys.EDITOR.getName()))) {
+    if (dataId == AnActionEvent.injectedId(PlatformDataKeys.EDITOR)) {
       return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(getEditor(), getFile());
     }
-    if (LangDataKeys.PSI_FILE.is(dataId)) {
+    if (LangDataKeys.PSI_FILE == dataId) {
       return myFile;
     }
-    if (dataId.equals(AnActionEvent.injectedId(LangDataKeys.PSI_FILE.getName()))) {
+    if (dataId == AnActionEvent.injectedId(LangDataKeys.PSI_FILE)) {
       Editor editor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(getEditor(), getFile());
       return editor instanceof EditorWindow ? ((EditorWindow)editor).getInjectedFile() : getFile();
     }
@@ -620,17 +621,17 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
     return new DataContext() {
       @Override
       @Nullable
-      public Object getData(@NonNls String dataId) {
-        if (PlatformDataKeys.EDITOR.is(dataId)) {
+      public Object getData(@NonNls Key dataId) {
+        if (PlatformDataKeys.EDITOR == dataId) {
           return getEditor();
         }
-        if (CommonDataKeys.PROJECT.is(dataId)) {
+        if (CommonDataKeys.PROJECT == dataId) {
           return getProject();
         }
-        if (LangDataKeys.PSI_FILE.is(dataId)) {
+        if (LangDataKeys.PSI_FILE == dataId) {
           return getFile();
         }
-        if (LangDataKeys.PSI_ELEMENT.is(dataId)) {
+        if (LangDataKeys.PSI_ELEMENT == dataId) {
           PsiFile file = getFile();
           if (file == null) return null;
           Editor editor = getEditor();
