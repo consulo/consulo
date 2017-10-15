@@ -46,6 +46,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -453,6 +454,19 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     @Override
     public ActionCallback getActivation() {
       return ActionCallback.DONE;
+    }
+
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    public Image getIconUI() {
+      return null;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setIconUI(@Nullable Image image) {
+
     }
 
     @Override

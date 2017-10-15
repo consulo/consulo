@@ -51,6 +51,7 @@ import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -111,8 +112,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   public IdeErrorsDialog(MessagePool messagePool, @Nullable LogMessage defaultMessage) {
     super(JOptionPane.getRootFrame(), false);
     myMessagePool = messagePool;
-    ApplicationEx app = ApplicationManagerEx.getApplicationEx();
-    myInternalMode = app != null && app.isInternal();
+    myInternalMode = SandboxUtil.isInsideSandbox();
     setTitle(DiagnosticBundle.message("error.list.title"));
     init();
     rebuildHeaders();
@@ -409,7 +409,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     IdeaPluginDescriptor plugin = PluginManager.getPlugin(pluginId);
     final Ref<Boolean> hasDependants = new Ref<Boolean>(false);
     PluginManager.checkDependants(plugin, PluginManager::getPlugin, pluginId1 -> {
-      if (PluginManager.CORE_PLUGIN.equals(pluginId1)) {
+      if (PluginManager.isSystemPlugin(pluginId1)) {
         return true;
       }
       hasDependants.set(true);

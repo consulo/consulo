@@ -40,7 +40,7 @@ public class DefaultIdeaErrorLogger implements ErrorLogger {
 
   @Override
   public boolean canHandle(IdeaLoggingEvent event) {
-    return ourLoggerBroken = true;
+    return !ourLoggerBroken;
   }
 
   @Override
