@@ -19,14 +19,9 @@ package com.intellij.openapi.roots.ui.configuration;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,30 +68,6 @@ public class ProjectSettingsService {
   }
 
   public void openLibraryOrSdkSettings(final @NotNull OrderEntry orderEntry) {
-    Configurable additionalSettingsConfigurable = getLibrarySettingsConfigurable(orderEntry);
-    if (additionalSettingsConfigurable != null) {
-      ShowSettingsUtil.getInstance().showSettingsDialog(orderEntry.getOwnerModule().getProject(),
-                                                        additionalSettingsConfigurable.getDisplayName());
-    }
-  }
-
-  public boolean canOpenLibraryOrSdkSettings(final OrderEntry orderEntry) {
-    return getLibrarySettingsConfigurable(orderEntry) != null;
-  }
-
-  @Nullable
-  private static Configurable getLibrarySettingsConfigurable(OrderEntry orderEntry) {
-    if (!(orderEntry instanceof LibraryOrderEntry)) return null;
-    LibraryOrderEntry libOrderEntry = (LibraryOrderEntry)orderEntry;
-    Library lib = libOrderEntry.getLibrary();
-    if (lib instanceof LibraryEx) {
-      Project project = libOrderEntry.getOwnerModule().getProject();
-      PersistentLibraryKind<?> libKind = ((LibraryEx)lib).getKind();
-      if (libKind != null) {
-        return LibrarySettingsProvider.getAdditionalSettingsConfigurable(project, libKind);
-      }
-    }
-    return null;
   }
 
   public boolean processModulesMoved(final Module[] modules, @Nullable final ModuleGroup targetGroup) {
