@@ -24,12 +24,11 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.DumbAwareRunnable;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
@@ -49,6 +48,7 @@ import consulo.ui.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.*;
+import consulo.ui.migration.SwingImageRef;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -1029,6 +1029,55 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected static boolean isStackEnabled() {
     return Registry.is("ide.enable.toolwindow.stack");
   }
+
+  @RequiredUIAccess
+  @Override
+  public void initToolWindow(@NotNull ToolWindowEP bean) {
+    WindowInfoImpl before = myLayout.getInfo(bean.id, false);
+    boolean visible = before != null && before.isVisible();
+    Object label = createInitializingLabel();
+    ToolWindowAnchor toolWindowAnchor = ToolWindowAnchor.fromText(bean.anchor);
+    final ToolWindowFactory factory = bean.getToolWindowFactory();
+    ToolWindow window = registerToolWindow(bean.id, label, toolWindowAnchor, false, bean.canCloseContents, DumbService.isDumbAware(factory), factory.shouldBeAvailable(myProject));
+    final ToolWindowBase toolWindow = (ToolWindowBase)registerDisposable(bean.id, myProject, window);
+    toolWindow.setContentFactory(factory);
+    if (bean.icon != null && toolWindow.getIconObject() == null) {
+      SwingImageRef icon = IconLoader.findIcon(bean.icon, factory.getClass());
+      if (icon == null) {
+        try {
+          icon = IconLoader.getIcon(bean.icon);
+        }
+        catch (Exception ignored) {
+        }
+      }
+      toolWindow.setIconUI(icon);
+    }
+
+    WindowInfoImpl info = getInfo(bean.id);
+    if (!info.isSplit() && bean.secondary && !info.wasRead()) {
+      toolWindow.setSplitMode(true, null);
+    }
+
+    // ToolWindow activation is not needed anymore and should be removed in 2017
+    toolWindow.setActivation(new ActionCallback()).setDone();
+    final DumbAwareRunnable runnable = () -> {
+      if (toolWindow.isDisposed()) return;
+
+      toolWindow.ensureContentInitialized();
+    };
+    if (visible) {
+      runnable.run();
+    }
+    else {
+      doWhenFirstShown(label, runnable);
+    }
+  }
+
+  @NotNull
+  protected abstract Object createInitializingLabel();
+
+  @RequiredUIAccess
+  protected abstract void doWhenFirstShown(Object component, Runnable runnable);
 
   @NotNull
   @RequiredUIAccess

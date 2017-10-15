@@ -19,15 +19,12 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.project.*;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.ToolWindowEP;
-import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -47,8 +44,6 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.event.HyperlinkListener;
 import java.util.List;
 
 /**
@@ -101,47 +96,20 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     myFrame = null;
   }
 
+  @Override
+  @NotNull
+  @RequiredUIAccess
+  protected consulo.ui.Component createInitializingLabel() {
+    Label label = Components.label("Initializing...");
+    DockLayout dock = Layouts.dock();
+    dock.center(label);
+    return label;
+  }
+
   @RequiredUIAccess
   @Override
-  public void initToolWindow(@NotNull ToolWindowEP bean) {
-    WindowInfoImpl before = myLayout.getInfo(bean.id, false);
-    boolean visible = before != null && before.isVisible();
-    Component label = createInitializingLabel();
-    ToolWindowAnchor toolWindowAnchor = ToolWindowAnchor.fromText(bean.anchor);
-    final ToolWindowFactory factory = bean.getToolWindowFactory();
-    ToolWindow window = registerToolWindow(bean.id, label, toolWindowAnchor, false, bean.canCloseContents, DumbService.isDumbAware(factory), factory.shouldBeAvailable(myProject));
-    final WebToolWindowImpl toolWindow = (WebToolWindowImpl)registerDisposable(bean.id, myProject, window);
-    toolWindow.setContentFactory(factory);
-    if (bean.icon != null && toolWindow.getIcon() == null) {
-      Icon icon = IconLoader.findIcon(bean.icon, factory.getClass());
-      if (icon == null) {
-        try {
-          icon = IconLoader.getIcon(bean.icon);
-        }
-        catch (Exception ignored) {
-        }
-      }
-      toolWindow.setIcon(icon);
-    }
-
-    WindowInfoImpl info = getInfo(bean.id);
-    if (!info.isSplit() && bean.secondary && !info.wasRead()) {
-      toolWindow.setSplitMode(true, null);
-    }
-
-    // ToolWindow activation is not needed anymore and should be removed in 2017
-    toolWindow.setActivation(new ActionCallback()).setDone();
-    final DumbAwareRunnable runnable = () -> {
-      if (toolWindow.isDisposed()) return;
-
-      toolWindow.ensureContentInitialized();
-    };
-    if (visible) {
-      runnable.run();
-    }
-    else {
-      UIAccess.get().give(runnable); //TODO  UiNotifyConnector.doWhenFirstShown(label, () -> ApplicationManager.getApplication().invokeLater(runnable));
-    }
+  protected void doWhenFirstShown(Object component, Runnable runnable) {
+    UIAccess.get().give(runnable);
   }
 
   @NotNull
@@ -214,15 +182,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     return false;
   }
 
-  @NotNull
-  @RequiredUIAccess
-  private static consulo.ui.Component createInitializingLabel() {
-    Label label = Components.label("Initializing...");
-    DockLayout dock = Layouts.dock();
-    dock.center(label);
-    return label;
-  }
-
   @Nullable
   @Override
   public Element getState() {
@@ -247,11 +206,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @Override
   public void notifyByBalloon(@NotNull String toolWindowId, @NotNull MessageType type, @NotNull String htmlBody) {
-
-  }
-
-  @Override
-  public void notifyByBalloon(@NotNull String toolWindowId, @NotNull MessageType type, @NotNull String htmlBody, @Nullable Icon icon, @Nullable HyperlinkListener listener) {
 
   }
 

@@ -244,6 +244,7 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
   public void clearSideStack() {
   }
 
+  @RequiredUIAccess
   @Override
   public void hideToolWindow(@NotNull final String id, final boolean hideSide) {
   }

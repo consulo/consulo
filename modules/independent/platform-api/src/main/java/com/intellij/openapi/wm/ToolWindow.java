@@ -19,9 +19,11 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.content.ContentManager;
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
 import consulo.ui.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -190,9 +192,16 @@ public interface ToolWindow extends BusyObject {
   ActionCallback getActivation();
 
   @NotNull
-  default Component getUIComponent() {
+  default Component getComponentUI() {
     throw new AbstractMethodError();
   }
+
+  @Nullable
+  @RequiredUIAccess
+  Image getIconUI();
+
+  @RequiredUIAccess
+  void setIconUI(@Nullable Image image);
 
   //TODO [VISTALL] awt & swing dependency
 
@@ -203,12 +212,14 @@ public interface ToolWindow extends BusyObject {
    */
   @Nullable
   @RequiredUIAccess
+  @DeprecationInfo("Use #getIconUI()")
   javax.swing.Icon getIcon();
 
   /**
    * Sets new window icon.
    */
   @RequiredUIAccess
+  @DeprecationInfo("Use #setIconUI()")
   void setIcon(@Nullable javax.swing.Icon icon);
 
   @Nullable

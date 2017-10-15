@@ -39,16 +39,18 @@ import consulo.ui.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 /**
  * @author VISTALL
  * @since 14-Oct-17
- *
+ * <p>
  * Extracted part independent part from IDEA ToolWindowImpl (named DesktopToolWindowImpl)
  */
 public abstract class ToolWindowBase implements ToolWindowEx {
@@ -69,6 +71,9 @@ public abstract class ToolWindowBase implements ToolWindowEx {
   private ToolWindowFactory myContentFactory;
 
   private ActionCallback myActivation = new ActionCallback.Done();
+
+  // fixme [vistall] later replace for consulo.ui.Image
+  private Object myIcon;
 
   private boolean myUseLastFocused = true;
 
@@ -448,21 +453,54 @@ public abstract class ToolWindowBase implements ToolWindowEx {
     return myUseLastFocused;
   }
 
+  @RequiredUIAccess
+  @Override
+  public void setIconUI(@Nullable Image image) {
+    UIAccess.assertIsUIThread();
+    Object oldIcon = myIcon;
+
+    myIcon = image;
+    myChangeSupport.firePropertyChange(PROP_ICON, oldIcon, image);
+  }
+
+  @RequiredUIAccess
+  @Nullable
+  @Override
+  public Image getIconUI() {
+    UIAccess.assertIsUIThread();
+    if (myIcon instanceof Image) {
+      return (Image)myIcon;
+    }
+    return null;
+  }
+
+  /**
+   * FIXME [VISTALL] remove this method then swing dependency removed
+   */
+  @Nullable
+  public Object getIconObject() {
+    return myIcon;
+  }
+
   // TODO [VISTALL]  AWT & Swing dependency
   // region AWT & Swing dependency
   private static final Content EMPTY_CONTENT = new ContentImpl(new javax.swing.JLabel(), "", false);
-  private javax.swing.Icon myIcon;
 
   @RequiredUIAccess
   @Override
+  @Deprecated
   public final javax.swing.Icon getIcon() {
     UIAccess.assertIsUIThread();
-    return myIcon;
+    if (myIcon instanceof Icon) {
+      return (Icon)myIcon;
+    }
+    return null;
   }
 
   @RequiredUIAccess
   @Override
-  public final void setIcon(final javax.swing.Icon icon) {
+  @Deprecated
+  public void setIcon(final javax.swing.Icon icon) {
     UIAccess.assertIsUIThread();
     final javax.swing.Icon oldIcon = getIcon();
     if (!EventLog.LOG_TOOL_WINDOW_ID.equals(getId())) {

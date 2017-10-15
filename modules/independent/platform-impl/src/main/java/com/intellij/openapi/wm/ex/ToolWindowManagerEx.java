@@ -26,7 +26,6 @@ import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 
 public abstract class ToolWindowManagerEx extends ToolWindowManager {
@@ -50,16 +49,6 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
   @RequiredUIAccess
   public String getLastActiveToolWindowId() {
     return getLastActiveToolWindowId(null);
-  }
-
-  /**
-   * @return <code>ID</code> of tool window which was last activated among tool windows satisfying the current condition
-   */
-  @Nullable
-  @RequiredUIAccess
-  //TODO [VISTALL] remove JComponent dependency
-  public String getLastActiveToolWindowId(@Nullable Condition<JComponent> condition) {
-    return null;
   }
 
   /**
@@ -90,4 +79,17 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
   }
 
   public abstract List<String> getIdsOn(@NotNull ToolWindowAnchor anchor);
+
+  // TODO [VISTALL] AWT & Swing dependency
+  // region AWT & Swing dependency
+  /**
+   * @return <code>ID</code> of tool window which was last activated among tool windows satisfying the current condition
+   */
+  @Nullable
+  @RequiredUIAccess
+  @Deprecated
+  public String getLastActiveToolWindowId(@Nullable Condition<javax.swing.JComponent> condition) {
+    return null;
+  }
+  // endregion
 }

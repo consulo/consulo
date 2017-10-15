@@ -36,7 +36,9 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.EditorsSplitters;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
-import com.intellij.openapi.project.*;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Splitter;
@@ -506,51 +508,9 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     return FileEditorManagerEx.getInstanceEx(project).getComponent();
   }
 
-  @RequiredUIAccess
-  @Override
-  public void initToolWindow(@NotNull ToolWindowEP bean) {
-    WindowInfoImpl before = myLayout.getInfo(bean.id, false);
-    boolean visible = before != null && before.isVisible();
-    JLabel label = createInitializingLabel();
-    ToolWindowAnchor toolWindowAnchor = ToolWindowAnchor.fromText(bean.anchor);
-    final ToolWindowFactory factory = bean.getToolWindowFactory();
-    ToolWindow window = registerToolWindow(bean.id, label, toolWindowAnchor, false, bean.canCloseContents, DumbService.isDumbAware(factory), factory.shouldBeAvailable(myProject));
-    final DesktopToolWindowImpl toolWindow = (DesktopToolWindowImpl)registerDisposable(bean.id, myProject, window);
-    toolWindow.setContentFactory(factory);
-    if (bean.icon != null && toolWindow.getIcon() == null) {
-      Icon icon = IconLoader.findIcon(bean.icon, factory.getClass());
-      if (icon == null) {
-        try {
-          icon = IconLoader.getIcon(bean.icon);
-        }
-        catch (Exception ignored) {
-        }
-      }
-      toolWindow.setIcon(icon);
-    }
-
-    WindowInfoImpl info = getInfo(bean.id);
-    if (!info.isSplit() && bean.secondary && !info.wasRead()) {
-      toolWindow.setSplitMode(true, null);
-    }
-
-    // ToolWindow activation is not needed anymore and should be removed in 2017
-    toolWindow.setActivation(new ActionCallback()).setDone();
-    final DumbAwareRunnable runnable = () -> {
-      if (toolWindow.isDisposed()) return;
-
-      toolWindow.ensureContentInitialized();
-    };
-    if (visible) {
-      runnable.run();
-    }
-    else {
-      UiNotifyConnector.doWhenFirstShown(label, () -> ApplicationManager.getApplication().invokeLater(runnable));
-    }
-  }
-
   @NotNull
-  private static JLabel createInitializingLabel() {
+  @Override
+  protected JLabel createInitializingLabel() {
     JLabel label = new JLabel("Initializing...", SwingConstants.CENTER);
     label.setOpaque(true);
     final Color treeBg = UIManager.getColor("Tree.background");
@@ -558,6 +518,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     final Color treeFg = UIUtil.getTreeForeground();
     label.setForeground(ColorUtil.toAlpha(treeFg, 180));
     return label;
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected void doWhenFirstShown(Object component, Runnable runnable) {
+    UiNotifyConnector.doWhenFirstShown((JComponent)component, () -> ApplicationManager.getApplication().invokeLater(runnable));
   }
 
   public void projectClosed() {
