@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.util.UserDataHolder;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.style.ColorKey;
@@ -29,7 +30,7 @@ import java.util.EventListener;
  * @author VISTALL
  * @since 09-Jun-16
  */
-public interface Component extends Disposable {
+public interface Component extends Disposable, UserDataHolder {
   @RequiredUIAccess
   default void addBorder(@NotNull BorderPosition borderPosition) {
     addBorder(borderPosition, BorderStyle.LINE, ComponentColors.BORDER, 1);

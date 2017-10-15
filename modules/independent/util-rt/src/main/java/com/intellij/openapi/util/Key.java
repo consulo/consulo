@@ -15,14 +15,15 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.containers.ConcurrentIntObjectMap;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.Function;
+import consulo.util.KeyRegistry;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ServiceLoader;
 
 /**
  * Provides type-safe access to data.
@@ -32,14 +33,24 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @SuppressWarnings({"EqualsWhichDoesntCheckParameterClass"})
 public class Key<T> {
-  private static final AtomicInteger ourKeysCounter = new AtomicInteger();
-  private final int myIndex = ourKeysCounter.getAndIncrement();
+  @NotNull
+  static KeyRegistry locateRegistry() {
+    ServiceLoader<KeyRegistry> serviceLoader = ServiceLoader.load(KeyRegistry.class, Key.class.getClassLoader());
+    Iterator<KeyRegistry> iterator = serviceLoader.iterator();
+    if (iterator.hasNext()) {
+      return iterator.next();
+    }
+    throw new Error("Unable to find 'consulo.util.KeyRegistry' implementation");
+  }
+
+  private static final KeyRegistry ourRegistry = locateRegistry();
+
   private final String myName; // for debug purposes only
-  private static final ConcurrentIntObjectMap<Key> allKeys = ContainerUtil.createConcurrentIntObjectWeakValueMap();
+  private final int myIndex;
 
   public Key(@NotNull @NonNls String name) {
     myName = name;
-    allKeys.put(myIndex, this);
+    myIndex = ourRegistry.register(this);
   }
 
   // made final because many classes depend on one-to-one key index <-> key instance relationship. See e.g. UserDataHolderBase
@@ -103,8 +114,7 @@ public class Key<T> {
 
   @Nullable("can become null if the key has been gc-ed")
   public static <T> Key<T> getKeyByIndex(int index) {
-    //noinspection unchecked
-    return (Key<T>)allKeys.get(index);
+    return ourRegistry.getKeyByIndex(index);
   }
 
   /**
@@ -112,12 +122,11 @@ public class Key<T> {
    */
   @Nullable
   public static Key<?> findKeyByName(String name) {
-    for (ConcurrentIntObjectMap.IntEntry<Key> key : allKeys.entries()) {
-      if (name.equals(key.getValue().myName)) {
-        //noinspection unchecked
-        return key.getValue();
+    return ourRegistry.findKeyByName(name, new Function<Key<?>, String>() {
+      @Override
+      public String fun(Key<?> key) {
+        return key.myName;
       }
-    }
-    return null;
+    });
   }
 }
