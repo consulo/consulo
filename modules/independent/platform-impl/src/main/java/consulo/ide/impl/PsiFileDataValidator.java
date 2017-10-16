@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.ide.impl;
 
-package com.intellij.ide.actions;
-
-import com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.ide.impl.DataValidator;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.util.Key;
+import com.intellij.psi.PsiFile;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class EditFileTemplatesAction extends AnAction{
-  public EditFileTemplatesAction(String text) {
-    super(text);
+/**
+ * @author VISTALL
+ * @since 16-Oct-17
+ */
+public class PsiFileDataValidator implements DataValidator<PsiFile> {
+  @NotNull
+  @Override
+  public Key<PsiFile> getKey() {
+    return CommonDataKeys.PSI_FILE;
   }
 
+  @Nullable
   @Override
-  public void actionPerformed(AnActionEvent e){
-    ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(e.getDataContext().getData(CommonDataKeys.PROJECT));
-    dialog.show();
+  public PsiFile findInvalid(Key<PsiFile> key, PsiFile data, Object dataSource) {
+    return data.isValid() ? null : data;
   }
 }

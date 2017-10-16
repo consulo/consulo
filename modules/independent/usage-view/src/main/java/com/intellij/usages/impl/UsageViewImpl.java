@@ -1863,7 +1863,7 @@ public class UsageViewImpl implements UsageView {
 
   private List<UsageInfo> getSelectedUsageInfos() {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    return USAGE_INFO_LIST_KEY.getData(DataManager.getInstance().getDataContext(myRootPanel));
+    return DataManager.getInstance().getDataContext(myRootPanel).getData(USAGE_INFO_LIST_KEY);
   }
 
   public GroupNode getRoot() {

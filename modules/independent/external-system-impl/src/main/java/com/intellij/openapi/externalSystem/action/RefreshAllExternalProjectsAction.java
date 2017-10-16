@@ -36,7 +36,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
 
   @Override
   public void update(AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null) {
       e.getPresentation().setEnabled(false);
       return;
@@ -63,7 +63,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null) {
       e.getPresentation().setEnabled(false);
       return;
@@ -86,7 +86,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
   private static List<ProjectSystemId> getSystemIds(AnActionEvent e) {
     final List<ProjectSystemId> systemIds = ContainerUtil.newArrayList();
 
-    final ProjectSystemId externalSystemId = ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID.getData(e.getDataContext());
+    final ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
     if (externalSystemId != null) {
       systemIds.add(externalSystemId);
     }

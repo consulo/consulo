@@ -144,10 +144,7 @@
 
     <extensionPoint name="getDataRule" interface="com.intellij.ide.impl.dataRules.GetDataRule"/>
 
-    <extensionPoint name="dataValidator"
-                    beanClass="com.intellij.util.KeyedLazyInstanceEP">
-      <with attribute="implementationClass" implements="com.intellij.ide.impl.DataValidator"/>
-    </extensionPoint>
+    <extensionPoint name="dataValidator" interface="com.intellij.ide.impl.DataValidator" />
 
     <extensionPoint name="cutElementMarker"
                     interface="com.intellij.openapi.ide.CutElementMarker"/>
@@ -2003,10 +2000,10 @@
     <getDataRule implementation="com.intellij.ide.impl.dataRules.UsageInfo2ListRule"/>
     <getDataRule implementation="com.intellij.ide.impl.dataRules.ModuleRule"/>
 
-    <dataValidator key="psi.File" implementationClass="com.intellij.ide.impl.PsiElementDataValidator"/>
-    <dataValidator key="psi.Element" implementationClass="com.intellij.ide.impl.PsiElementDataValidator"/>
-    <dataValidator key="psi.Element.array" implementationClass="com.intellij.ide.impl.PsiElementArrayDataValidator"/>
-    <dataValidator key="module" implementationClass="com.intellij.ide.impl.ModuleDataValidator"/>
+    <dataValidator implementation="consulo.ide.impl.PsiFileDataValidator"/>
+    <dataValidator implementation="com.intellij.ide.impl.PsiElementDataValidator"/>
+    <dataValidator implementation="com.intellij.ide.impl.PsiElementArrayDataValidator"/>
+    <dataValidator implementation="com.intellij.ide.impl.ModuleDataValidator"/>
 
     <patternDialectProvider implementation="com.intellij.packageDependencies.ui.ProjectPatternProvider" id="file"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.DefaultScopesProvider"/>

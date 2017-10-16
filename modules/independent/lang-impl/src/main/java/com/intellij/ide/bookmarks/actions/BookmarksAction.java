@@ -54,14 +54,14 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   @Override
   public void update(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     e.getPresentation().setEnabled(project != null);
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     if (myPopup != null && myPopup.isVisible()) return;
@@ -200,7 +200,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
 
       BookmarkManager bookmarkManager = BookmarkManager.getInstance(myProject);
       if (ToolWindowManager.getInstance(myProject).isEditorComponentActive()) {
-        Editor editor = PlatformDataKeys.EDITOR.getData(myDataContext);
+        Editor editor = myDataContext.getData(PlatformDataKeys.EDITOR);
         if (editor != null) {
           Document document = editor.getDocument();
           myLine = editor.getCaretModel().getLogicalPosition().line;
@@ -210,7 +210,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
       }
 
       if (myFile == null) {
-        myFile = PlatformDataKeys.VIRTUAL_FILE.getData(myDataContext);
+        myFile = myDataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
         myLine = -1;
 
         if (myBookmarkAtPlace == null && myFile != null) {

@@ -40,7 +40,7 @@ public class ShowQuickDocAtPinnedWindowFromTooltipAction extends AbstractDocumen
 
   @Override
   protected void doActionPerformed(@NotNull DataContext context, @NotNull PsiElement docAnchor, @NotNull PsiElement originalElement) {
-    Project project = CommonDataKeys.PROJECT.getData(context);
+    Project project = context.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }

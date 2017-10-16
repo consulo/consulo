@@ -93,7 +93,7 @@ public class MoveFilesOrDirectoriesHandler extends MoveHandlerDelegate {
                            final Editor editor) {
     if ((element instanceof PsiFile && ((PsiFile)element).getVirtualFile() != null)
         || element instanceof PsiDirectory) {
-      doMove(project, new PsiElement[]{element}, LangDataKeys.TARGET_PSI_ELEMENT.getData(dataContext), null);
+      doMove(project, new PsiElement[]{element}, dataContext.getData(LangDataKeys.TARGET_PSI_ELEMENT), null);
       return true;
     }
     if (element instanceof PsiPlainText) {

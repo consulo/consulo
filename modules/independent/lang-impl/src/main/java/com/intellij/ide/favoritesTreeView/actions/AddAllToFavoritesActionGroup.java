@@ -43,7 +43,7 @@ public class AddAllToFavoritesActionGroup extends ActionGroup {
     }
     final List<String> listNames = FavoritesManager.getInstance(project).getAvailableFavoritesListNames();
     final List<String> availableFavoritesLists = FavoritesManager.getInstance(project).getAvailableFavoritesListNames();
-    availableFavoritesLists.remove(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY.getData(e.getDataContext()));
+    availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
     if (availableFavoritesLists.isEmpty()) {
       return new AnAction[]{new AddAllOpenFilesToNewFavoritesListAction()};
     }

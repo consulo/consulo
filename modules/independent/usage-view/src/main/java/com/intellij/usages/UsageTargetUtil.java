@@ -32,15 +32,15 @@ public class UsageTargetUtil {
   private static final ExtensionPointName<UsageTargetProvider> EP_NAME = ExtensionPointName.create("com.intellij.usageTargetProvider");
 
   public static UsageTarget[] findUsageTargets(DataProvider dataProvider) {
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataProvider);
-    PsiFile file = LangDataKeys.PSI_FILE.getData(dataProvider);
+    Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
+    PsiFile file = dataProvider.getDataUnchecked(LangDataKeys.PSI_FILE);
 
-    List<UsageTarget> result = new ArrayList<UsageTarget>();
+    List<UsageTarget> result = new ArrayList<>();
     if (file != null && editor != null) {
       UsageTarget[] targets = findUsageTargets(editor, file);
       if (targets != null) Collections.addAll(result, targets);
     }
-    PsiElement psiElement = LangDataKeys.PSI_ELEMENT.getData(dataProvider);
+    PsiElement psiElement = dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT);
     if (psiElement != null) {
       UsageTarget[] targets = findUsageTargets(psiElement);
       if (targets != null)Collections.addAll(result, targets);
@@ -50,7 +50,7 @@ public class UsageTargetUtil {
   }
 
   public static UsageTarget[] findUsageTargets(Editor editor, PsiFile file) {
-    List<UsageTarget> result = new ArrayList<UsageTarget>();
+    List<UsageTarget> result = new ArrayList<>();
     for (UsageTargetProvider provider : Extensions.getExtensions(EP_NAME)) {
       UsageTarget[] targets = provider.getTargets(editor, file);
       if (targets != null) Collections.addAll(result, targets);
@@ -59,7 +59,7 @@ public class UsageTargetUtil {
   }
 
   public static UsageTarget[] findUsageTargets(PsiElement psiElement) {
-    List<UsageTarget> result = new ArrayList<UsageTarget>();
+    List<UsageTarget> result = new ArrayList<>();
     for (UsageTargetProvider provider : Extensions.getExtensions(EP_NAME)) {
       UsageTarget[] targets = provider.getTargets(psiElement);
       if (targets != null) Collections.addAll(result, targets);

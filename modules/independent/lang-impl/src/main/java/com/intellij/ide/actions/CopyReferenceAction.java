@@ -76,7 +76,7 @@ public class CopyReferenceAction extends DumbAwareAction {
     boolean enabled;
 
     DataContext dataContext = e.getDataContext();
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor != null && FileDocumentManager.getInstance().getFile(editor.getDocument()) != null) {
       enabled = true;
     }
@@ -100,8 +100,8 @@ public class CopyReferenceAction extends DumbAwareAction {
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     List<PsiElement> elements = getElementsToCopy(editor, dataContext);
 
     if (!doCopy(elements, project, editor) && editor != null && project != null) {
@@ -145,12 +145,12 @@ public class CopyReferenceAction extends DumbAwareAction {
     }
 
     if (elements.isEmpty()) {
-      ContainerUtil.addIfNotNull(elements, CommonDataKeys.PSI_ELEMENT.getData(dataContext));
+      ContainerUtil.addIfNotNull(elements, dataContext.getData(CommonDataKeys.PSI_ELEMENT));
     }
 
     if (elements.isEmpty() && editor == null) {
-      final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-      VirtualFile[] files = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+      final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
       if (project != null && files != null) {
         for (VirtualFile file : files) {
           ContainerUtil.addIfNotNull(elements, PsiManager.getInstance(project).findFile(file));

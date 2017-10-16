@@ -40,18 +40,18 @@ public class ShowModuleDependenciesAction extends AnAction{
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null){
       return;
     }
     ModulesDependenciesPanel panel;
     AnalysisScope scope = new AnalysisScope(project);
-    final Module[] modules = LangDataKeys.MODULE_CONTEXT_ARRAY.getData(dataContext);
+    final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     if (modules != null){
       panel = new ModulesDependenciesPanel(project, modules);
       scope = new AnalysisScope(modules);
     } else {
-      final PsiElement element = LangDataKeys.PSI_FILE.getData(dataContext);
+      final PsiElement element = dataContext.getData(LangDataKeys.PSI_FILE);
       final Module module = element != null ? ModuleUtil.findModuleForPsiElement(element) : null;
       if (module != null && ModuleManager.getInstance(project).getModules().length > 1){
         MyModuleOrProjectScope dlg = new MyModuleOrProjectScope(module.getName());
@@ -84,7 +84,7 @@ public class ShowModuleDependenciesAction extends AnAction{
   @Override
   public void update(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     e.getPresentation().setEnabled(project != null);
   }
 

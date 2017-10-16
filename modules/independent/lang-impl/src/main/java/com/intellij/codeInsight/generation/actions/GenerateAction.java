@@ -51,13 +51,13 @@ public class GenerateAction extends DumbAwareAction {
   public void update(@NotNull AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
 
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor == null) {
       presentation.setEnabled(false);
       return;

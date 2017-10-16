@@ -59,7 +59,7 @@ public class NewElementAction extends AnAction  implements DumbAware, PopupActio
 
   @Nullable
   protected Condition<AnAction> getPreselectActionCondition(DataContext dataContext) {
-    return LangDataKeys.PRESELECT_NEW_ACTION_CONDITION.getData(dataContext);
+    return dataContext.getData(LangDataKeys.PRESELECT_NEW_ACTION_CONDITION);
   }
 
   @Nullable
@@ -87,16 +87,16 @@ public class NewElementAction extends AnAction  implements DumbAware, PopupActio
   public void update(AnActionEvent e){
     final Presentation presentation = e.getPresentation();
     final DataContext context = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(context);
+    final Project project = context.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
-    if (Boolean.TRUE.equals(LangDataKeys.NO_NEW_ACTION.getData(context))) {
+    if (Boolean.TRUE.equals(context.getData(LangDataKeys.NO_NEW_ACTION))) {
       presentation.setEnabled(false);
       return;
     }
-    final IdeView ideView = LangDataKeys.IDE_VIEW.getData(context);
+    final IdeView ideView = context.getData(LangDataKeys.IDE_VIEW);
     if (ideView == null) {
       presentation.setEnabled(false);
       return;

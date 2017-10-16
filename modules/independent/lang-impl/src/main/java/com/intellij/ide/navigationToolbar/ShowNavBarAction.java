@@ -32,15 +32,15 @@ public class ShowNavBarAction extends AnAction implements DumbAware, PopupAction
   @Override
   public void actionPerformed(AnActionEvent e){
     final DataContext context = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(context);
+    final Project project = context.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       UISettings uiSettings = UISettings.getInstance();
       if (uiSettings.SHOW_NAVIGATION_BAR && !uiSettings.PRESENTATION_MODE){
         new SelectInNavBarTarget(project).select(null, false);
       } else {
-        final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(context);
+        final Component component = context.getData(PlatformDataKeys.CONTEXT_COMPONENT);
         if (!isInsideNavBar(component)) {
-          final Editor editor = PlatformDataKeys.EDITOR.getData(context);
+          final Editor editor = context.getData(PlatformDataKeys.EDITOR);
           final NavBarPanel toolbarPanel = new NavBarPanel(project, false);
           toolbarPanel.showHint(editor, context);
         }

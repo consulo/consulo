@@ -48,7 +48,7 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
 
   @Override
   public boolean isAvailableOnDataContext(DataContext dataContext) {
-    Module module = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
+    Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     return module != null;
   }
 
@@ -64,7 +64,7 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
 
   @Override
   public void invoke(@NotNull final Project project, @NotNull PsiElement[] elements, @NotNull DataContext dataContext) {
-    final Module module = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
+    final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     LOG.assertTrue(module != null);
     Messages.showInputDialog(project,
                              IdeBundle.message("prompt.enter.new.module.name"),

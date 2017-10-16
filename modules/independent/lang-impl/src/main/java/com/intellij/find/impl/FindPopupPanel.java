@@ -1208,7 +1208,7 @@ public class FindPopupPanel extends JBPanel implements FindUI {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-      if (PlatformDataKeys.CONTEXT_COMPONENT.getData(e.getDataContext()) == null) return;
+      if (e.getDataContext().getData(PlatformDataKeys.CONTEXT_COMPONENT) == null) return;
 
       ListPopup listPopup =
               JBPopupFactory.getInstance().createActionGroupPopup(null, mySwitchContextGroup, e.getDataContext(), false, null, 10);

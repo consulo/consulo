@@ -84,11 +84,11 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
         myWindow2Info.put(window, new WindowInfo(window, true));
       }
       myFocusedWindow = window;
-      final Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(myFocusedWindow));
+      final Project project = DataManager.getInstance().getDataContext(myFocusedWindow).getData(CommonDataKeys.PROJECT);
       for (Iterator i = myFocusedWindows.iterator(); i.hasNext(); ) {
         final Window w = (Window)i.next();
         final DataContext dataContext = DataManager.getInstance().getDataContext(w);
-        if (project == CommonDataKeys.PROJECT.getData(dataContext)) {
+        if (project == dataContext.getData(CommonDataKeys.PROJECT)) {
           i.remove();
         }
       }
@@ -303,7 +303,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
         }
       }
       final DataContext dataContext = DataManager.getInstance().getDataContext(window);
-      if (project == CommonDataKeys.PROJECT.getData(dataContext)) {
+      if (project == dataContext.getData(CommonDataKeys.PROJECT)) {
         return window;
       }
     }

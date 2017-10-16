@@ -84,7 +84,7 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
   }
 
   protected Result shouldSkipWithResult(@NotNull final PsiFile file, @NotNull final Editor editor, @NotNull final DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return Result.Continue;
     }

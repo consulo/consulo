@@ -180,7 +180,7 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
   protected abstract List<VirtualFile> getFiles();
 
   protected static ChangesBrowserBase getBrowserBase(@NotNull ChangesListView view) {
-    return ChangesBrowserBase.DATA_KEY.getData(DataManager.getInstance().getDataContext(view));
+    return DataManager.getInstance().getDataContext(view).getData(ChangesBrowserBase.DATA_KEY);
   }
 
   public static void refreshChanges(@NotNull Project project, @Nullable ChangesBrowserBase browser) {

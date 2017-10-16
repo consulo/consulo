@@ -69,7 +69,7 @@ public class DeleteHandler {
   public static class DefaultDeleteProvider implements DeleteProvider {
     @Override
     public boolean canDeleteElement(@NotNull DataContext dataContext) {
-      if (CommonDataKeys.PROJECT.getData(dataContext) == null) {
+      if (dataContext.getData(CommonDataKeys.PROJECT) == null) {
         return false;
       }
       final PsiElement[] elements = getPsiElements(dataContext);
@@ -78,14 +78,14 @@ public class DeleteHandler {
 
     @Nullable
     private static PsiElement[] getPsiElements(DataContext dataContext) {
-      PsiElement[] elements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
+      PsiElement[] elements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
       if (elements == null) {
-        final Object data = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+        final Object data = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
         if (data != null) {
           elements = new PsiElement[]{(PsiElement)data};
         }
         else {
-          final Object data1 = CommonDataKeys.PSI_FILE.getData(dataContext);
+          final Object data1 = dataContext.getData(CommonDataKeys.PSI_FILE);
           if (data1 != null) {
             elements = new PsiElement[]{(PsiFile)data1};
           }
@@ -98,7 +98,7 @@ public class DeleteHandler {
     public void deleteElement(@NotNull DataContext dataContext) {
       PsiElement[] elements = getPsiElements(dataContext);
       if (elements == null) return;
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
       LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeBundle.message("progress.deleting"));
       try {
@@ -202,7 +202,7 @@ public class DeleteHandler {
       }
 
       // deleted from project view or something like that.
-      if (CommonDataKeys.EDITOR.getData(DataManager.getInstance().getDataContext()) == null) {
+      if (DataManager.getInstance().getDataContext().getData(CommonDataKeys.EDITOR) == null) {
         CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
       }
 

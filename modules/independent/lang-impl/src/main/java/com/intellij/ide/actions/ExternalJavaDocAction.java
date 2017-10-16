@@ -55,12 +55,12 @@ public class ExternalJavaDocAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
 
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     PsiElement element = getElement(dataContext, editor);
     if (element == null) {
       Messages.showMessageDialog(
@@ -73,7 +73,7 @@ public class ExternalJavaDocAction extends AnAction {
     }
 
 
-    PsiFile context = CommonDataKeys.PSI_FILE.getData(dataContext);
+    PsiFile context = dataContext.getData(CommonDataKeys.PSI_FILE);
 
     PsiElement originalElement = getOriginalElement(context, editor);
     DocumentationManager.storeOriginalElement(project, originalElement, element);
@@ -88,7 +88,7 @@ public class ExternalJavaDocAction extends AnAction {
       return;
     }
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    final Component contextComponent = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
+    final Component contextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     ApplicationManager.getApplication().executeOnPooledThread(() -> {
       List<String> urls;
       if (StringUtil.isEmptyOrSpaces(docUrl)) {
@@ -144,10 +144,10 @@ public class ExternalJavaDocAction extends AnAction {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     PsiElement element = getElement(dataContext, editor);
-    final PsiElement originalElement = getOriginalElement(CommonDataKeys.PSI_FILE.getData(dataContext), editor);
-    DocumentationManager.storeOriginalElement(CommonDataKeys.PROJECT.getData(dataContext), originalElement, element);
+    final PsiElement originalElement = getOriginalElement(dataContext.getData(CommonDataKeys.PSI_FILE), editor);
+    DocumentationManager.storeOriginalElement(dataContext.getData(CommonDataKeys.PROJECT), originalElement, element);
     final DocumentationProvider provider = DocumentationManager.getProviderFromElement(element);
     boolean enabled;
     if (provider instanceof ExternalDocumentationProvider) {
@@ -174,7 +174,7 @@ public class ExternalJavaDocAction extends AnAction {
   }
 
   private static PsiElement getElement(DataContext dataContext, Editor editor) {
-    PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
     if (element == null && editor != null) {
       PsiReference reference = TargetElementUtil.findReference(editor, editor.getCaretModel().getOffset());
       if (reference != null) {

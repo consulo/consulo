@@ -48,7 +48,7 @@ public class ScanSourceCommentsAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
 
-    final Project p = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project p = e.getDataContext().getData(CommonDataKeys.PROJECT);
     final String file =
       Messages.showInputDialog(p, "Enter path to the file comments will be extracted to", "Comments File Path", Messages.getQuestionIcon());
 

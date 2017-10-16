@@ -44,7 +44,7 @@ public class MoveModulesToSubGroupAction extends MoveModulesToGroupAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Module[] modules = LangDataKeys.MODULE_CONTEXT_ARRAY.getData(dataContext);
+    final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     final String[] newGroup;
     if (myModuleGroup != null) {
       String message = IdeBundle.message("prompt.specify.name.of.module.subgroup", myModuleGroup.presentableText(), whatToMove(modules));

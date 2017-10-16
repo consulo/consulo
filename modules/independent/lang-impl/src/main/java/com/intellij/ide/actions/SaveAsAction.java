@@ -16,16 +16,16 @@ public class SaveAsAction extends DumbAwareAction {
   @Override
   public void update(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    final VirtualFile virtualFile = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final VirtualFile virtualFile = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
     e.getPresentation().setEnabled(project!=null && virtualFile!=null);
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    final VirtualFile virtualFile = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final VirtualFile virtualFile = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
     @SuppressWarnings({"ConstantConditions"}) final PsiElement element = PsiManager.getInstance(project).findFile(virtualFile);
     if(element==null) return;
     CopyHandler.doCopy(new PsiElement[] {element.getContainingFile()}, element.getContainingFile().getContainingDirectory());

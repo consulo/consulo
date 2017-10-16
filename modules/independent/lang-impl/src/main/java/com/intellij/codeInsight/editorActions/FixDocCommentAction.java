@@ -59,12 +59,12 @@ public class FixDocCommentAction extends EditorAction {
   private static final class MyHandler extends EditorActionHandler {
     @Override
     public void execute(Editor editor, DataContext dataContext) {
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project == null) {
         return;
       }
 
-      PsiFile psiFile = LangDataKeys.PSI_FILE.getData(dataContext);
+      PsiFile psiFile = dataContext.getData(LangDataKeys.PSI_FILE);
       if (psiFile == null) {
         return;
       }

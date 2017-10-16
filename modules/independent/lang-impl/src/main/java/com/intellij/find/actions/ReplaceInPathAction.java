@@ -25,7 +25,7 @@ public class ReplaceInPathAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
     ReplaceInProjectManager replaceManager = ReplaceInProjectManager.getInstance(project);
     if (!replaceManager.isEnabled()) {

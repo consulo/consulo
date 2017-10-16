@@ -63,9 +63,9 @@ public class RunInspectionAction extends GotoActionBase {
 
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    final PsiElement psiElement = CommonDataKeys.PSI_ELEMENT.getData(e.getDataContext());
-    final PsiFile psiFile = CommonDataKeys.PSI_FILE.getData(e.getDataContext());
-    final VirtualFile virtualFile = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+    final PsiElement psiElement = e.getDataContext().getData(CommonDataKeys.PSI_ELEMENT);
+    final PsiFile psiFile = e.getDataContext().getData(CommonDataKeys.PSI_FILE);
+    final VirtualFile virtualFile = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.goto.inspection");
 

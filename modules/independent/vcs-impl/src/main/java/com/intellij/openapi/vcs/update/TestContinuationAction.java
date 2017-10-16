@@ -41,7 +41,7 @@ public class TestContinuationAction extends AnAction {
 
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Test Continuation", true,
@@ -125,7 +125,7 @@ public class TestContinuationAction extends AnAction {
 
   @Override
   public void update(AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     e.getPresentation().setEnabled(project != null);
   }
 

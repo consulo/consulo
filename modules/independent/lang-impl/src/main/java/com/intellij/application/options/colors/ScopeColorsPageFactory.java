@@ -57,7 +57,7 @@ class ScopeColorsPageFactory implements ColorAndFontPanelFactory, Weighted {
     if (projects.length == 0) return panel;
     GridBagConstraints gc = new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                                                    new Insets(0, 0, 0, 0), 0, 0);
-    final Project contextProject = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+    final Project contextProject = DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
     final Project project = contextProject != null ? contextProject : projects[0];
 
     JButton button = new JButton(ApplicationBundle.message("button.edit.scopes"));
@@ -74,7 +74,7 @@ class ScopeColorsPageFactory implements ColorAndFontPanelFactory, Weighted {
     button.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        final OptionsEditor optionsEditor = OptionsEditor.KEY.getData(DataManager.getInstance().getDataContext());
+        final OptionsEditor optionsEditor = DataManager.getInstance().getDataContext().getData(OptionsEditor.KEY);
         if (optionsEditor != null) {
           try {
             Configurable configurable = optionsEditor.findConfigurableById(ScopeChooserConfigurable.PROJECT_SCOPES);

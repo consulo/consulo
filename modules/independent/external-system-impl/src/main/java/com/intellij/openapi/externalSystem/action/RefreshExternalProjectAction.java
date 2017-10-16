@@ -53,12 +53,12 @@ public class RefreshExternalProjectAction extends AnAction implements DumbAware,
     {
       return;
     }
-    ProjectSystemId externalSystemId = ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID.getData(e.getDataContext());
+    ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
     if (externalSystemId == null) {
       return;
     }
-    
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null) {
       e.getPresentation().setEnabled(false);
       return;

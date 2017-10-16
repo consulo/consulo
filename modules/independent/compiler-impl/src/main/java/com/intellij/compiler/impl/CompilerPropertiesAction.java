@@ -34,7 +34,7 @@ class CompilerPropertiesAction extends AnAction {
   }
 
   public void actionPerformed(AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       ShowSettingsUtil.getInstance().editConfigurable(project, new CompilerConfigurable(project));
     }

@@ -43,7 +43,7 @@ public class MoveModulesToGroupAction extends AnAction {
   public void update(AnActionEvent e) {
     Presentation presentation = getTemplatePresentation();
     final DataContext dataContext = e.getDataContext();
-    final Module[] modules = LangDataKeys.MODULE_CONTEXT_ARRAY.getData(dataContext);
+    final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
 
     String description = IdeBundle.message("message.move.modules.to.group", whatToMove(modules), myModuleGroup.presentableText());
     presentation.setDescription(description);
@@ -56,7 +56,7 @@ public class MoveModulesToGroupAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Module[] modules = LangDataKeys.MODULE_CONTEXT_ARRAY.getData(dataContext);
+    final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     doMove(modules, myModuleGroup, dataContext);
   }
 
@@ -64,7 +64,7 @@ public class MoveModulesToGroupAction extends AnAction {
     Project project = modules[0].getProject();
     for (final Module module : modules) {
       ModifiableModuleModel model = dataContext != null
-                                    ? LangDataKeys.MODIFIABLE_MODULE_MODEL.getData(dataContext)
+                                    ? dataContext.getData(LangDataKeys.MODIFIABLE_MODULE_MODEL)
                                     : null;
       if (model != null){
         model.setModuleGroupPath(module, group == null ? null : group.getGroupPath());

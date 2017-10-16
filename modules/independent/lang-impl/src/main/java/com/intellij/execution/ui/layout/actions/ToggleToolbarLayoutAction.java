@@ -45,7 +45,7 @@ public class ToggleToolbarLayoutAction extends ToggleAction {
 
   @Nullable
   public static RunnerContentUi getRunnerUi(final AnActionEvent e) {
-    return RunnerContentUi.KEY.getData(e.getDataContext());
+    return e.getDataContext().getData(RunnerContentUi.KEY);
   }
 
 }

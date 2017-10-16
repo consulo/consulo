@@ -47,10 +47,10 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
     super.update(e);
 
     final DataContext dc = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dc);
-    Object panel = CheckinProjectPanel.PANEL_KEY.getData(dc);
+    final Project project = dc.getData(CommonDataKeys.PROJECT);
+    Object panel = dc.getData(CheckinProjectPanel.PANEL_KEY);
     if (! (panel instanceof CommitMessageI)) {
-      panel = VcsDataKeys.COMMIT_MESSAGE_CONTROL.getData(dc);
+      panel = dc.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
     }
 
     if (project == null || panel == null) {
@@ -68,9 +68,9 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
     CommitMessageI commitMessageI;
     final DataContext dc = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dc);
-    final Refreshable panel = CheckinProjectPanel.PANEL_KEY.getData(dc);
-    commitMessageI = (panel instanceof CommitMessageI) ? (CommitMessageI)panel : VcsDataKeys.COMMIT_MESSAGE_CONTROL.getData(dc);
+    final Project project = dc.getData(CommonDataKeys.PROJECT);
+    final Refreshable panel = dc.getData(CheckinProjectPanel.PANEL_KEY);
+    commitMessageI = (panel instanceof CommitMessageI) ? (CommitMessageI)panel : dc.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
 
     if (commitMessageI != null && project != null) {
       final VcsConfiguration configuration = VcsConfiguration.getInstance(project);

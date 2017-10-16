@@ -95,7 +95,7 @@ public class RenameHandlerRegistry {
     if (availableHandlers.size() == 1) return availableHandlers.values().iterator().next();
     if (availableHandlers.size() > 1) {
       final String[] strings = ArrayUtil.toStringArray(availableHandlers.keySet());
-      final HandlersChooser chooser = new HandlersChooser(CommonDataKeys.PROJECT.getData(dataContext), strings);
+      final HandlersChooser chooser = new HandlersChooser(dataContext.getData(CommonDataKeys.PROJECT), strings);
       chooser.show();
       if (chooser.isOK()) {
         return availableHandlers.get(chooser.getSelection());

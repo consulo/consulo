@@ -29,7 +29,7 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
 
   @Override
   public void update(AnActionEvent e) {
-    ProjectSystemId externalSystemId = ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID.getData(e.getDataContext());
+    ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
     if (externalSystemId == null) {
       e.getPresentation().setEnabled(false);
       return;
@@ -45,7 +45,7 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
@@ -61,12 +61,12 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
 
   @Nullable
   private static VirtualFile getExternalConfig(@NotNull DataContext context) {
-    ProjectSystemId externalSystemId = ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID.getData(context);
+    ProjectSystemId externalSystemId = context.getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
     if (externalSystemId == null) {
       return null;
     }
 
-    ExternalProjectPojo projectPojo = ExternalSystemDataKeys.SELECTED_PROJECT.getData(context);
+    ExternalProjectPojo projectPojo = context.getData(ExternalSystemDataKeys.SELECTED_PROJECT);
     if (projectPojo == null) {
       return null;
     }

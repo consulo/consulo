@@ -28,11 +28,11 @@ public class ShowModulePropertiesAction extends AnAction{
 
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
-    final Module module = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
+    final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     if (module == null) {
       return;
     }
@@ -42,8 +42,8 @@ public class ShowModulePropertiesAction extends AnAction{
   public void update(AnActionEvent e) {
     super.update(e);
     final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    final Module module = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     e.getPresentation().setVisible(project != null && module != null);
   }
 }

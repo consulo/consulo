@@ -229,7 +229,7 @@ public class SeverityEditorDialog extends DialogWrapper {
     doOKAction();
     myOptionsList.clearSelection();
     final DataContext dataContext = DataManager.getInstance().getDataContext(myPanel);
-    final OptionsEditor optionsEditor = OptionsEditor.KEY.getData(dataContext);
+    final OptionsEditor optionsEditor = dataContext.getData(OptionsEditor.KEY);
     if (optionsEditor != null) {
       final ColorAndFontOptions colorAndFontOptions = optionsEditor.findConfigurable(ColorAndFontOptions.class);
       assert colorAndFontOptions != null;
@@ -251,7 +251,7 @@ public class SeverityEditorDialog extends DialogWrapper {
       try {
         final SearchableConfigurable javaPage = colorAndFontOptions.findSubConfigurable(InspectionColorSettingsPage.class);
         LOG.assertTrue(javaPage != null);
-        ShowSettingsUtil.getInstance().editConfigurable(CommonDataKeys.PROJECT.getData(dataContext), javaPage);
+        ShowSettingsUtil.getInstance().editConfigurable(dataContext.getData(CommonDataKeys.PROJECT), javaPage);
       }
       finally {
         for (Configurable configurable : configurables) {

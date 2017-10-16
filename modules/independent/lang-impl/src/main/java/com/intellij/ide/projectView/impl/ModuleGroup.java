@@ -78,7 +78,7 @@ public class ModuleGroup {
   }
 
   public Collection<ModuleGroup> childGroups(DataContext dataContext) {
-    return childGroups(LangDataKeys.MODIFIABLE_MODULE_MODEL.getData(dataContext), CommonDataKeys.PROJECT.getData(dataContext));
+    return childGroups(dataContext.getData(LangDataKeys.MODIFIABLE_MODULE_MODEL), dataContext.getData(CommonDataKeys.PROJECT));
   }
 
   public Collection<ModuleGroup> childGroups(ModifiableModuleModel model, Project project) {

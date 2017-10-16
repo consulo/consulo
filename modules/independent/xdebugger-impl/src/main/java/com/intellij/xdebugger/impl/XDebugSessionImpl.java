@@ -142,7 +142,7 @@ public class XDebugSessionImpl implements XDebugSession {
     if (contentToReuse != null) {
       JComponent component = contentToReuse.getComponent();
       if (component != null) {
-        oldSessionData = XDebugSessionData.DATA_KEY.getData(DataManager.getInstance().getDataContext(component));
+        oldSessionData = DataManager.getInstance().getDataContext(component).getData(XDebugSessionData.DATA_KEY);
       }
     }
 

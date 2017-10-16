@@ -35,7 +35,7 @@ public final class SourcepathMacro extends Macro {
 
   @Override
   public String expand(DataContext dataContext) {
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return null;
     return OrderEnumerator.orderEntries(project).withoutSdk().withoutLibraries().getSourcePathsList().getPathsString();
   }

@@ -46,7 +46,7 @@ public class SendToFavoritesAction extends AnAction {
     Project project = e.getProject();
     final FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
 
-    FavoritesTreeNodeDescriptor[] roots = FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY.getData(dataContext);
+    FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
     if (roots == null) return;
 
     for (FavoritesTreeNodeDescriptor root : roots) {
@@ -80,7 +80,7 @@ public class SendToFavoritesAction extends AnAction {
     if (project == null) {
       return false;
     }
-    FavoritesTreeNodeDescriptor[] roots = FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY.getData(e.getDataContext());
+    FavoritesTreeNodeDescriptor[] roots = e.getDataContext().getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
     if (roots == null || roots.length == 0) {
       return false;
     }

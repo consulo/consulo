@@ -45,8 +45,8 @@ import java.util.List;
 public class FileListPasteProvider implements PasteProvider {
   @Override
   public void performPaste(@NotNull DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    final IdeView ideView = LangDataKeys.IDE_VIEW.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final IdeView ideView = dataContext.getData(LangDataKeys.IDE_VIEW);
     if (project == null || ideView == null) return;
 
     if (!FileCopyPasteUtil.isFileListFlavorAvailable()) return;
@@ -89,7 +89,7 @@ public class FileListPasteProvider implements PasteProvider {
 
   @Override
   public boolean isPasteEnabled(@NotNull DataContext dataContext) {
-    return LangDataKeys.IDE_VIEW.getData(dataContext) != null &&
+    return dataContext.getData(LangDataKeys.IDE_VIEW) != null &&
            FileCopyPasteUtil.isFileListFlavorAvailable();
   }
 }

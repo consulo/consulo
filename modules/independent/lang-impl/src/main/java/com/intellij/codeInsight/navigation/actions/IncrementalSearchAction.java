@@ -33,8 +33,8 @@ public class IncrementalSearchAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor == null) return;
 
     new IncrementalSearchHandler().invoke(project, editor);
@@ -45,13 +45,13 @@ public class IncrementalSearchAction extends AnAction implements DumbAware {
   public void update(@NotNull AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
 
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor == null){
       presentation.setEnabled(false);
       return;

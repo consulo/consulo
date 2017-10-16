@@ -38,11 +38,11 @@ public class FilePathRelativeToProjectRootMacro extends Macro {
 
   @Override
   public String expand(final DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return null;
     }
-    VirtualFile file = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
+    VirtualFile file = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
     if (file == null) {
       return null;
     }

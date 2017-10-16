@@ -136,7 +136,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
                                                      @NotNull Artifact artifact,
                                                      final boolean enable) {
     final DataContext dataContext = DataManager.getInstance().getDataContext(runConfigurationEditorComponent);
-    final ConfigurationSettingsEditorWrapper editor = ConfigurationSettingsEditorWrapper.CONFIGURATION_EDITOR_KEY.getData(dataContext);
+    final ConfigurationSettingsEditorWrapper editor = dataContext.getData(ConfigurationSettingsEditorWrapper.CONFIGURATION_EDITOR_KEY);
     if (editor != null) {
       List<BeforeRunTask> tasks = editor.getStepsBeforeLaunch();
       List<AbstractArtifactsBeforeRunTask> myTasks = new ArrayList<AbstractArtifactsBeforeRunTask>();

@@ -45,13 +45,13 @@ public class ImportIntoShelfAction extends DumbAwareAction {
 
   @Override
   public void update(AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     e.getPresentation().setEnabled(project != null);
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, true);
     FileChooser.chooseFiles(descriptor, project, null, new Consumer<List<VirtualFile>>() {

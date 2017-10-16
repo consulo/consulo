@@ -39,7 +39,7 @@ public class EscapeHandler extends EditorActionHandler {
   public void execute(Editor editor, DataContext dataContext){
     editor.setHeaderComponent(null);
 
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       HighlightManagerImpl highlightManager = (HighlightManagerImpl)HighlightManager.getInstance(project);
       if (highlightManager != null && highlightManager.hideHighlights(editor, HighlightManager.HIDE_BY_ESCAPE | HighlightManager.HIDE_BY_ANY_KEY)) {
@@ -68,7 +68,7 @@ public class EscapeHandler extends EditorActionHandler {
   @Override
   public boolean isEnabled(Editor editor, DataContext dataContext) {
     if (editor.hasHeaderComponent()) return true;
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
     if (project != null) {
       HighlightManagerImpl highlightManager = (HighlightManagerImpl)HighlightManager.getInstance(project);

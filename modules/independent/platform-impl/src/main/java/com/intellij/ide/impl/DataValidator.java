@@ -15,90 +15,17 @@
  */
 package com.intellij.ide.impl;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.KeyedLazyInstanceEP;
-import com.intellij.util.containers.HashMap;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Array;
-import java.util.Map;
+public interface DataValidator<T> {
+  ExtensionPointName<DataValidator> EP_NAME = ExtensionPointName.create("com.intellij.dataValidator");
 
-public abstract class DataValidator<T> {
-  private static final Logger LOG = Logger.getInstance(DataValidator.class);
-
-  public static final ExtensionPointName<KeyedLazyInstanceEP<DataValidator>> EP_NAME = ExtensionPointName.create("com.intellij.dataValidator");
-
-  private static boolean ourExtensionsLoaded;
-
-  private static final Map<Key, DataValidator> ourValidators = new HashMap<>();
-  private static final DataValidator<VirtualFile> VIRTUAL_FILE_VALIDATOR = new DataValidator<VirtualFile>() {
-    @Override
-    public VirtualFile findInvalid(final String dataId, VirtualFile file, final Object dataSource) {
-      return file.isValid() ? null : file;
-    }
-  };
-  private static final DataValidator<Project> PROJECT_VALIDATOR = new DataValidator<Project>() {
-    @Override
-    public Project findInvalid(final String dataId, final Project project, final Object dataSource) {
-      return project.isDisposed() ? project : null;
-    }
-  };
+  @NotNull
+  Key<T> getKey();
 
   @Nullable
-  public abstract T findInvalid(final String dataId, T data, final Object dataSource);
-
-  private static <T> DataValidator<T> getValidator(String dataId) {
-    if (!ourExtensionsLoaded) {
-      ourExtensionsLoaded = true;
-      for (KeyedLazyInstanceEP<DataValidator> ep : Extensions.getExtensions(EP_NAME)) {
-        ourValidators.put(ep.key, ep.getInstance());
-      }
-    }
-    return ourValidators.get(dataId);
-  }
-
-  public static <T> T findInvalidData(Key<T> dataId, T data, final Object dataSource) {
-    if (data == null) return null;
-    DataValidator<T> validator = getValidator(dataId);
-    if (validator != null) return validator.findInvalid(dataId, (T)data, dataSource);
-    return null;
-  }
-
-  static {
-    ourValidators.put(PlatformDataKeys.VIRTUAL_FILE, VIRTUAL_FILE_VALIDATOR);
-    ourValidators.put(PlatformDataKeys.VIRTUAL_FILE_ARRAY, new ArrayValidator<>(VIRTUAL_FILE_VALIDATOR));
-    ourValidators.put(CommonDataKeys.PROJECT, PROJECT_VALIDATOR);
-  }
-
-  public static class ArrayValidator<T> extends DataValidator<T[]> {
-    private final DataValidator<T> myElementValidator;
-
-    public ArrayValidator(DataValidator<T> elementValidator) {
-      myElementValidator = elementValidator;
-    }
-
-    @Override
-    public T[] findInvalid(final String dataId, T[] array, final Object dataSource) {
-      for (T element : array) {
-        if (element == null) {
-          LOG.error("Data isn't valid. " + dataId + "=null Provided by: " + dataSource.getClass().getName() + " (" + dataSource.toString() + ")");
-        }
-        T invalid = myElementValidator.findInvalid(dataId, element, dataSource);
-        if (invalid != null) {
-          T[] result = (T[])Array.newInstance(array[0].getClass(), 1);
-          result[0] = invalid;
-          return result;
-        }
-      }
-      return null;
-    }
-  }
-
+  T findInvalid(Key<T> key, T data, final Object dataSource);
 }

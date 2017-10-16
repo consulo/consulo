@@ -39,7 +39,7 @@ public class UnSelectWordHandler extends EditorActionHandler {
 
   @Override
   public void execute(Editor editor, DataContext dataContext) {
-    Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(editor.getComponent()));
+    Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
     Document document = editor.getDocument();
     final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
 

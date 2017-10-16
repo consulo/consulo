@@ -39,11 +39,11 @@ public class CheckCommitMessageSpellingAction extends ToggleAction implements Du
     if (e == null) {
       return null;
     }
-    Refreshable data = Refreshable.PANEL_KEY.getData(e.getDataContext());
+    Refreshable data = e.getData(Refreshable.PANEL_KEY);
     if (data instanceof CommitMessageI) {
       return (CommitMessageI)data;
     }
-    CommitMessageI commitMessageI = VcsDataKeys.COMMIT_MESSAGE_CONTROL.getData(e.getDataContext());
+    CommitMessageI commitMessageI = e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
     if (commitMessageI != null) {
       return commitMessageI;
     }

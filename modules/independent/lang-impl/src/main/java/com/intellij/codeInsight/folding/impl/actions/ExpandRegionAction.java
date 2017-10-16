@@ -38,7 +38,7 @@ public class ExpandRegionAction extends EditorAction {
 
       @Override
       public boolean isEnabled(Editor editor, DataContext dataContext) {
-        return super.isEnabled(editor, dataContext) && CommonDataKeys.PROJECT.getData(dataContext) != null;
+        return super.isEnabled(editor, dataContext) && dataContext.getData(CommonDataKeys.PROJECT) != null;
       }
 
     });

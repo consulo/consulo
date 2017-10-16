@@ -29,10 +29,10 @@ public class AnalyzeStacktraceOnErrorAction extends AnAction {
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
 
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
-    final String message = IdeErrorsDialog.CURRENT_TRACE_KEY.getData(dataContext);
+    final String message = dataContext.getData(IdeErrorsDialog.CURRENT_TRACE_KEY);
     if (message != null) {
       AnalyzeStacktraceUtil.addConsole(project, null, "<Stacktrace>", message);
     }

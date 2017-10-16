@@ -39,7 +39,7 @@ public abstract class EditBreakpointActionHandler extends DebuggerActionHandler 
   @Override
   public void perform(@NotNull Project project, AnActionEvent event) {
     DataContext dataContext = event.getDataContext();
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor == null) return;
 
     final Pair<GutterIconRenderer,Object> pair = XBreakpointUtil.findSelectedBreakpoint(project, editor);

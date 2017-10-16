@@ -135,11 +135,11 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
 
   @Nullable
   private static Editor getEditor(@NotNull AnActionEvent e) {
-    return PlatformDataKeys.EDITOR.getData(e.getDataContext());
+    return e.getDataContext().getData(PlatformDataKeys.EDITOR);
   }
 
   @Nullable
   private static PsiFile getPsiFile(@NotNull AnActionEvent e) {
-    return LangDataKeys.PSI_FILE.getData(e.getDataContext());
+    return e.getDataContext().getData(LangDataKeys.PSI_FILE);
   }
 }

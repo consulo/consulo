@@ -560,7 +560,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
                                 ActionManager.getInstance(),
                                 0);
       actionManager.fireBeforeActionPerformed(action, dataContext, event);
-      final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
+      final Component component = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
       if (component != null && !component.isShowing()) {
         return;
       }

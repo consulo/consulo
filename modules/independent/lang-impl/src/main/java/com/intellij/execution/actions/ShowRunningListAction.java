@@ -29,10 +29,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.Trinity;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
@@ -91,7 +88,7 @@ public class ShowRunningListAction extends AnAction {
         BalloonBuilder builder = JBPopupFactory.getInstance().createBalloonBuilder(state.getFirst());
         builder.setShowCallout(false).setTitle(ExecutionBundle.message("show.running.list.balloon.title")).setBlockClicksThroughBalloon(true)
                 .setDialogMode(true).setHideOnKeyOutside(false);
-        IdeFrame frame = IdeFrame.KEY.getData(e.getDataContext());
+        IdeFrame frame = e.getDataContext().getData(IdeFrame.KEY);
         if (frame == null) {
           frame = WindowManagerEx.getInstance().getIdeFrame(project);
         }

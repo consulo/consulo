@@ -72,7 +72,7 @@ public abstract class BaseAnalysisAction extends AnAction {
     LOG.assertTrue(scope != null);
     final boolean rememberScope = e.getPlace().equals(ActionPlaces.MAIN_MENU);
     final AnalysisUIOptions uiOptions = AnalysisUIOptions.getInstance(project);
-    PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
     BaseAnalysisActionDialog dlg = new BaseAnalysisActionDialog(AnalysisScopeBundle.message("specify.analysis.scope", myTitle),
                                                                 AnalysisScopeBundle.message("analysis.scope.title", myAnalysisNoon),
                                                                 project,
@@ -125,7 +125,7 @@ public abstract class BaseAnalysisAction extends AnAction {
 
   @Nullable
   private AnalysisScope getInspectionScope(@NotNull DataContext dataContext) {
-    if (CommonDataKeys.PROJECT.getData(dataContext) == null) return null;
+    if (dataContext.getData(CommonDataKeys.PROJECT) == null) return null;
 
     AnalysisScope scope = getInspectionScopeImpl(dataContext);
 
@@ -135,17 +135,17 @@ public abstract class BaseAnalysisAction extends AnAction {
   @Nullable
   private AnalysisScope getInspectionScopeImpl(@NotNull DataContext dataContext) {
     //Possible scopes: file, directory, package, project, module.
-    Project projectContext = PlatformDataKeys.PROJECT_CONTEXT.getData(dataContext);
+    Project projectContext = dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT);
     if (projectContext != null) {
       return new AnalysisScope(projectContext);
     }
 
-    final AnalysisScope analysisScope = AnalysisScopeUtil.KEY.getData(dataContext);
+    final AnalysisScope analysisScope = dataContext.getData(AnalysisScopeUtil.KEY);
     if (analysisScope != null) {
       return analysisScope;
     }
 
-    final PsiFile psiFile = CommonDataKeys.PSI_FILE.getData(dataContext);
+    final PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
     if (psiFile != null && psiFile.getManager().isInProject(psiFile)) {
       final VirtualFile file = psiFile.getVirtualFile();
       if (file != null && file.isValid() && file.getFileType() instanceof ArchiveFileType && acceptNonProjectDirectories()) {
@@ -160,8 +160,8 @@ public abstract class BaseAnalysisAction extends AnAction {
       return new AnalysisScope(psiFile);
     }
 
-    VirtualFile[] virtualFiles = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    VirtualFile[] virtualFiles = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (virtualFiles != null && project != null) { //analyze on selection
       ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
       if (virtualFiles.length == 1) {
@@ -179,12 +179,12 @@ public abstract class BaseAnalysisAction extends AnAction {
       return new AnalysisScope(project, files);
     }
 
-    Module moduleContext = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
+    Module moduleContext = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     if (moduleContext != null) {
       return new AnalysisScope(moduleContext);
     }
 
-    Module[] modulesArray = LangDataKeys.MODULE_CONTEXT_ARRAY.getData(dataContext);
+    Module[] modulesArray = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     if (modulesArray != null) {
       return new AnalysisScope(modulesArray);
     }

@@ -35,7 +35,7 @@ public class DumpConfigurationTypesAction extends AnAction implements DumbAware 
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     final ConfigurationType[] factories =
       RunManager.getInstance(project).getConfigurationFactories();
     for (ConfigurationType factory : factories) {

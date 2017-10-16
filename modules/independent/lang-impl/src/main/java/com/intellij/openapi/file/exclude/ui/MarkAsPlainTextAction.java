@@ -19,7 +19,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.file.exclude.EnforcedPlainTextFileTypeFactory;
 import com.intellij.openapi.file.exclude.EnforcedPlainTextFileTypeManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +30,7 @@ public class MarkAsPlainTextAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final VirtualFile[] selectedFiles = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+    final VirtualFile[] selectedFiles = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
     if (selectedFiles == null || selectedFiles.length == 0) return;
     EnforcedPlainTextFileTypeManager typeManager = EnforcedPlainTextFileTypeManager.getInstance();
     assert typeManager != null;
@@ -50,7 +49,7 @@ public class MarkAsPlainTextAction extends AnAction {
   @Override
   public void update(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final VirtualFile[] selectedFiles = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+    final VirtualFile[] selectedFiles = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
     final Presentation presentation = e.getPresentation();
     final EnforcedPlainTextFileTypeManager typeManager = EnforcedPlainTextFileTypeManager.getInstance();
     presentation.setVisible(false);

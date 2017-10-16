@@ -48,15 +48,15 @@ import java.util.Map;
 public class ModuleDeleteProvider  implements DeleteProvider, TitledHandler  {
   @Override
   public boolean canDeleteElement(@NotNull DataContext dataContext) {
-    final Module[] modules = LangDataKeys.MODULE_CONTEXT_ARRAY.getData(dataContext);
+    final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     return modules != null;
   }
 
   @Override
   public void deleteElement(@NotNull DataContext dataContext) {
-    final Module[] modules = LangDataKeys.MODULE_CONTEXT_ARRAY.getData(dataContext);
+    final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     assert modules != null;
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     String names = StringUtil.join(Arrays.asList(modules), new Function<Module, String>() {
       @Override
       public String fun(final Module module) {

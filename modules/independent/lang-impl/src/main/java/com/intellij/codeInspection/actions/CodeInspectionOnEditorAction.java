@@ -32,11 +32,11 @@ public class CodeInspectionOnEditorAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null){
       return;
     }
-    PsiFile psiFile = CommonDataKeys.PSI_FILE.getData(dataContext);
+    PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
     if (psiFile != null){
       analyze(project, psiFile);
     }
@@ -57,8 +57,8 @@ public class CodeInspectionOnEditorAction extends AnAction {
   @Override
   public void update(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    final PsiFile psiFile = CommonDataKeys.PSI_FILE.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
     e.getPresentation().setEnabled(project != null && psiFile != null  && DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(psiFile));
   }
 }

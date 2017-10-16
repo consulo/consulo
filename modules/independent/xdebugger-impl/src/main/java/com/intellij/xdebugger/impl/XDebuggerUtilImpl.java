@@ -39,6 +39,7 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -423,7 +424,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Nullable
   private static Editor getEditor(@NotNull Project project, DataContext context) {
-    Editor editor = CommonDataKeys.EDITOR.getData(context);
+    Editor editor = context.getData(CommonDataKeys.EDITOR);
     if (editor == null) {
       return FileEditorManager.getInstance(project).getSelectedTextEditor();
     }

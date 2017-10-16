@@ -57,7 +57,7 @@ class RerunFailedTestsAction extends AnAction {
       return false;
     }
 
-    ExecutionEnvironment environment = LangDataKeys.EXECUTION_ENVIRONMENT.getData(DataManager.getInstance().getDataContext(component));
+    ExecutionEnvironment environment = DataManager.getInstance().getDataContext(component).getData(LangDataKeys.EXECUTION_ENVIRONMENT);
     if (environment == null) {
       return false;
     }

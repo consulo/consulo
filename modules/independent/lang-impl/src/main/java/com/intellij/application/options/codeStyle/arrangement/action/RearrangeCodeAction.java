@@ -40,7 +40,7 @@ public class RearrangeCodeAction extends AnAction {
   @RequiredDispatchThread
   @Override
   public void update(@NotNull AnActionEvent e) {
-    PsiFile file = CommonDataKeys.PSI_FILE.getData(e.getDataContext());
+    PsiFile file = e.getDataContext().getData(CommonDataKeys.PSI_FILE);
     boolean enabled = file != null && Rearranger.EXTENSION.forLanguage(file.getLanguage()) != null;
     e.getPresentation().setEnabled(enabled);
   }

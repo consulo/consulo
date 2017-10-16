@@ -55,7 +55,7 @@ public class SelectWordHandler extends EditorActionHandler {
     if (LOG.isDebugEnabled()) {
       LOG.debug("enter: execute(editor='" + editor + "')");
     }
-    Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(editor.getComponent()));
+    Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
     if (project == null) {
       if (myOriginalHandler != null) {
         myOriginalHandler.execute(editor, dataContext);

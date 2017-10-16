@@ -81,7 +81,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
 
   private static PsiElement adjustForRename(DataContext dataContext, PsiElement element) {
     if (element instanceof PsiDirectoryContainer) {
-      final Module module = LangDataKeys.MODULE.getData(dataContext);
+      final Module module = dataContext.getData(LangDataKeys.MODULE);
       if (module != null) {
         final PsiDirectory[] directories = ((PsiDirectoryContainer)element).getDirectories(GlobalSearchScope.moduleScope(module));
         if (directories.length >= 1) {
@@ -112,7 +112,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
     final PsiElement nameSuggestionContext = element;
     element = adjustForRename(dataContext, element);
     LOG.assertTrue(element != null);
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
     doRename(element, project, nameSuggestionContext, editor);
   }
 

@@ -35,14 +35,14 @@ public abstract class ToggleNumberedBookmarkActionBase extends AnAction implemen
   @Override
   public void update(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     e.getPresentation().setEnabled(project != null);
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
     BookmarksAction.BookmarkInContextInfo info = new BookmarksAction.BookmarkInContextInfo(dataContext, project).invoke();
     if (info.getFile() == null) return;

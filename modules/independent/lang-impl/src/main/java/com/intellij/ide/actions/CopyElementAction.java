@@ -36,7 +36,7 @@ public class CopyElementAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
@@ -47,7 +47,7 @@ public class CopyElementAction extends AnAction {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
       }
     }, "", null);
-    final Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
     PsiElement[] elements;
 
     PsiDirectory defaultTargetDirectory;
@@ -62,9 +62,9 @@ public class CopyElementAction extends AnAction {
       defaultTargetDirectory = file.getContainingDirectory();
     }
     else {
-      PsiElement element = LangDataKeys.TARGET_PSI_ELEMENT.getData(dataContext);
+      PsiElement element = dataContext.getData(LangDataKeys.TARGET_PSI_ELEMENT);
       defaultTargetDirectory = element instanceof PsiDirectory ? (PsiDirectory)element : null;
-      elements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
+      elements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
     }
     doCopy(elements, defaultTargetDirectory);
   }
@@ -77,13 +77,13 @@ public class CopyElementAction extends AnAction {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     presentation.setEnabled(false);
     if (project == null) {
       return;
     }
 
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
     if (editor != null) {
       updateForEditor(dataContext, presentation);
     }
@@ -94,13 +94,13 @@ public class CopyElementAction extends AnAction {
   }
 
   protected void updateForEditor(DataContext dataContext, Presentation presentation) {
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
     if (editor == null) {
       presentation.setVisible(false);
       return;
     }
 
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
 
@@ -119,7 +119,7 @@ public class CopyElementAction extends AnAction {
   }
 
   protected void updateForToolWindow(String toolWindowId, DataContext dataContext, Presentation presentation) {
-    PsiElement[] elements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
+    PsiElement[] elements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
     presentation.setEnabled(elements != null && CopyHandler.canCopy(elements));
   }
 

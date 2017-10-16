@@ -104,7 +104,7 @@ public class AddToFavoritesAction extends AnAction {
       return false;
     }
     if (e.getPlace().equals(ActionPlaces.FAVORITES_VIEW_POPUP)
-        && FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY.getData(dataContext) == null) {
+        && dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY) == null) {
       return false;
     }
     final boolean inProjectView = e.getPlace().equals(ActionPlaces.J2EE_VIEW_POPUP) ||
@@ -119,15 +119,15 @@ public class AddToFavoritesAction extends AnAction {
   }
 
   private static Object collectSelectedElements(final DataContext dataContext) {
-    Object elements = retrieveData(null, LangDataKeys.PSI_ELEMENT.getData(dataContext));
-    elements = retrieveData(elements, LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext));
-    elements = retrieveData(elements, LangDataKeys.PSI_FILE.getData(dataContext));
-    elements = retrieveData(elements, ModuleGroup.ARRAY_DATA_KEY.getData(dataContext));
-    elements = retrieveData(elements, LangDataKeys.MODULE_CONTEXT_ARRAY.getData(dataContext));
-    elements = retrieveData(elements, LibraryGroupElement.ARRAY_DATA_KEY.getData(dataContext));
-    elements = retrieveData(elements, NamedLibraryElement.ARRAY_DATA_KEY.getData(dataContext));
-    elements = retrieveData(elements, PlatformDataKeys.VIRTUAL_FILE.getData(dataContext));
-    elements = retrieveData(elements, PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext));
+    Object elements = retrieveData(null, dataContext.getData(LangDataKeys.PSI_ELEMENT));
+    elements = retrieveData(elements, dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY));
+    elements = retrieveData(elements, dataContext.getData(LangDataKeys.PSI_FILE));
+    elements = retrieveData(elements, dataContext.getData(ModuleGroup.ARRAY_DATA_KEY));
+    elements = retrieveData(elements, dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY));
+    elements = retrieveData(elements, dataContext.getData(LibraryGroupElement.ARRAY_DATA_KEY));
+    elements = retrieveData(elements, dataContext.getData(NamedLibraryElement.ARRAY_DATA_KEY));
+    elements = retrieveData(elements, dataContext.getData(PlatformDataKeys.VIRTUAL_FILE));
+    elements = retrieveData(elements, dataContext.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY));
     return elements;
   }
 

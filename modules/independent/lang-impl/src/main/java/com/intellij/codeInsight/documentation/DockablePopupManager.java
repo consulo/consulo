@@ -204,13 +204,13 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
   }
 
   private void updateComponentInner(@NotNull DataContext dataContext) {
-    if (CommonDataKeys.PROJECT.getData(dataContext) != myProject) {
+    if (dataContext.getData(CommonDataKeys.PROJECT) != myProject) {
       return;
     }
 
-    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor == null) {
-      PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+      PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
       if (element != null) {
         doUpdateComponent(element);
       }

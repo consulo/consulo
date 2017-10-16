@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MapDataContext implements DataContext {
-  private final Map<Key, Object> myMap = new HashMap<t>();
+  private final Map<Key, Object> myMap = new HashMap<>();
 
   @Override
   @SuppressWarnings("unchecked")

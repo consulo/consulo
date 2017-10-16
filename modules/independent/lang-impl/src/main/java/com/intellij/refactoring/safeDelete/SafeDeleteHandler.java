@@ -52,7 +52,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
 
   @Override
   public void invoke(@NotNull Project project, Editor editor, PsiFile file, DataContext dataContext) {
-    PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
     if (element == null || !SafeDeleteProcessor.validElement(element)) {
       String message = RefactoringBundle.getCannotRefactorMessage(RefactoringBundle.message("is.not.supported.in.the.current.context", REFACTORING_NAME));
@@ -64,7 +64,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
 
   @Override
   public void invoke(@NotNull final Project project, @NotNull PsiElement[] elements, DataContext dataContext) {
-    invoke(project, elements, LangDataKeys.MODULE.getData(dataContext), true, null);
+    invoke(project, elements, dataContext.getData(LangDataKeys.MODULE), true, null);
   }
 
   public static void invoke(final Project project, PsiElement[] elements, boolean checkDelegates) {

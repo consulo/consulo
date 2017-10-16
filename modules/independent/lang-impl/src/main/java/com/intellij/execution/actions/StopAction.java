@@ -261,21 +261,21 @@ class StopAction extends DumbAwareAction implements AnAction.TransparentUpdate {
 
   @Nullable
   static RunContentDescriptor getRecentlyStartedContentDescriptor(@NotNull DataContext dataContext) {
-    final RunContentDescriptor contentDescriptor = LangDataKeys.RUN_CONTENT_DESCRIPTOR.getData(dataContext);
+    final RunContentDescriptor contentDescriptor = dataContext.getData(LangDataKeys.RUN_CONTENT_DESCRIPTOR);
     if (contentDescriptor != null) {
       // toolwindow case
       return contentDescriptor;
     }
     else {
       // main menu toolbar
-      final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      final Project project = dataContext.getData(CommonDataKeys.PROJECT);
       return project == null ? null : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
     }
   }
 
   @NotNull
   private static List<RunContentDescriptor> getActiveStoppableDescriptors(final DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return Collections.emptyList();
     }

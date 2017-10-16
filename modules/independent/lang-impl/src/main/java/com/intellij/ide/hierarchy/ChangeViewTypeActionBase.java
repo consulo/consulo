@@ -66,6 +66,6 @@ abstract class ChangeViewTypeActionBase extends ToggleAction {
   }
 
   protected static TypeHierarchyBrowserBase getTypeHierarchyBrowser(final DataContext context) {
-    return TypeHierarchyBrowserBase.DATA_KEY.getData(context);
+    return context.getData(TypeHierarchyBrowserBase.DATA_KEY);
   }
 }

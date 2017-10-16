@@ -30,7 +30,7 @@ import java.util.List;
 public class VcsActionPromoter implements ActionPromoter {
   @Override
   public List<AnAction> promote(List<AnAction> actions, DataContext context) {
-    if (Refreshable.PANEL_KEY.getData(context) != null) {
+    if (context.getData(Refreshable.PANEL_KEY) != null) {
       for (AnAction action : actions) {
         if (action instanceof ShowMessageHistoryAction) {
           return Arrays.asList(action);

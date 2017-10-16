@@ -35,7 +35,7 @@ public final class FileNameWithoutExtension extends FileNameMacro {
 
   @Override
   public String expand(DataContext dataContext) {
-    VirtualFile file = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
+    VirtualFile file = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
     if (file == null) {
       return null;
     }

@@ -86,7 +86,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
   }
 
   private static boolean processTopHits(String pattern, Processor<MatchedValue> consumer, DataContext dataContext) {
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     final CollectConsumer<Object> collector = new CollectConsumer<Object>();
     for (SearchTopHitProvider provider : SearchTopHitProvider.EP_NAME.getExtensions()) {
       if (provider instanceof OptionsTopHitProvider.CoveredByToggleActions) continue;

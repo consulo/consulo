@@ -35,7 +35,7 @@ class VcsDataWrapper {
 
   VcsDataWrapper(final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    myProject = CommonDataKeys.PROJECT.getData(dataContext);
+    myProject = dataContext.getData(CommonDataKeys.PROJECT);
     if (myProject == null || myProject.isDefault()) {
       myManager = null;
       myVcses = null;

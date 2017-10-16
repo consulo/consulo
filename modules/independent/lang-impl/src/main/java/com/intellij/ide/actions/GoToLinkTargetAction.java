@@ -29,14 +29,14 @@ public class GoToLinkTargetAction extends DumbAwareAction {
   @Override
   public void update(AnActionEvent e) {
     Project project = getEventProject(e);
-    VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+    VirtualFile file = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
     e.getPresentation().setEnabledAndVisible(project != null && file != null && file.is(VFileProperty.SYMLINK));
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
     Project project = getEventProject(e);
-    VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+    VirtualFile file = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
     if (project != null && file != null && file.is(VFileProperty.SYMLINK)) {
       VirtualFile target = file.getCanonicalFile();
       if (target != null) {

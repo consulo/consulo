@@ -96,7 +96,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
   private void requestModelUpdateFromContextOrObject(DataContext dataContext, Object object) {
     final NavBarModel model = myPanel.getModel();
     if (dataContext != null) {
-      if (CommonDataKeys.PROJECT.getData(dataContext) != myPanel.getProject() || myPanel.isNodePopupShowing()) {
+      if (dataContext.getData(CommonDataKeys.PROJECT) != myPanel.getProject() || myPanel.isNodePopupShowing()) {
         requestModelUpdate(null, myPanel.getContextObject(), true);
         return;
       }

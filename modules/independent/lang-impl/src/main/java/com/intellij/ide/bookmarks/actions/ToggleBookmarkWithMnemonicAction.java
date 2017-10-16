@@ -41,7 +41,7 @@ public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
     super.actionPerformed(e);
 
     DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     final BookmarkInContextInfo info = new BookmarkInContextInfo(dataContext, project).invoke();
     final Bookmark bookmark = info.getBookmarkAtPlace();

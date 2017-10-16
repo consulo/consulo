@@ -79,7 +79,7 @@ public abstract class GotoActionBase extends AnAction {
   public void update(@NotNull final AnActionEvent event) {
     final Presentation presentation = event.getPresentation();
     final DataContext dataContext = event.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     presentation.setEnabled(!getClass().equals (myInAction) && (!requiresProject() || project != null) && hasContributors(dataContext));
     presentation.setVisible(hasContributors(dataContext));
   }

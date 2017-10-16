@@ -181,7 +181,7 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
           final JComponent comboComponent = changeAction.createCustomComponent(templatePresentation);
 
           DataContext dataContext = SimpleDataContext
-            .getSimpleContext(PlatformDataKeys.VIRTUAL_FILE.getName(), myVirtualFile, SimpleDataContext.getProjectContext(getProject()));
+            .getSimpleContext(PlatformDataKeys.VIRTUAL_FILE , myVirtualFile, SimpleDataContext.getProjectContext(getProject()));
           AnActionEvent event =
             new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, templatePresentation, ActionManager.getInstance(), 0);
           changeAction.update(event);

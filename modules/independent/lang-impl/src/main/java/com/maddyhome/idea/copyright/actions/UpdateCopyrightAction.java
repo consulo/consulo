@@ -45,7 +45,7 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
 
   private static boolean isEnabled(AnActionEvent event) {
     final DataContext context = event.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(context);
+    final Project project = context.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return false;
     }
@@ -53,8 +53,8 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
     if (!CopyrightManager.getInstance(project).hasAnyCopyrights()) {
       return false;
     }
-    final VirtualFile[] files = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(context);
-    final Editor editor = CommonDataKeys.EDITOR.getData(context);
+    final VirtualFile[] files = context.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final Editor editor = context.getData(CommonDataKeys.EDITOR);
     if (editor != null) {
       final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
       if (file == null || !CopyrightUpdaters.hasExtension(file)) {
@@ -74,24 +74,26 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
       }
 
     }
-    else if ((files == null || files.length != 1) &&
-             LangDataKeys.MODULE_CONTEXT.getData(context) == null &&
-             LangDataKeys.MODULE_CONTEXT_ARRAY.getData(context) == null &&
-             PlatformDataKeys.PROJECT_CONTEXT.getData(context) == null) {
-      final PsiElement[] elems = LangDataKeys.PSI_ELEMENT_ARRAY.getData(context);
-      if (elems != null) {
-        boolean copyrightEnabled = false;
-        for (PsiElement elem : elems) {
-          if (!(elem instanceof PsiDirectory)) {
-            final PsiFile file = elem.getContainingFile();
-            if (file == null || !CopyrightUpdaters.hasExtension(file.getVirtualFile())) {
-              copyrightEnabled = true;
-              break;
+    else {
+      if ((files == null || files.length != 1) &&
+          context.getData(LangDataKeys.MODULE_CONTEXT) == null &&
+          context.getData(LangDataKeys.MODULE_CONTEXT_ARRAY) == null &&
+          context.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
+        final PsiElement[] elems = context.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+        if (elems != null) {
+          boolean copyrightEnabled = false;
+          for (PsiElement elem : elems) {
+            if (!(elem instanceof PsiDirectory)) {
+              final PsiFile file = elem.getContainingFile();
+              if (file == null || !CopyrightUpdaters.hasExtension(file.getVirtualFile())) {
+                copyrightEnabled = true;
+                break;
+              }
             }
           }
-        }
-        if (!copyrightEnabled){
-          return false;
+          if (!copyrightEnabled){
+            return false;
+          }
         }
       }
     }

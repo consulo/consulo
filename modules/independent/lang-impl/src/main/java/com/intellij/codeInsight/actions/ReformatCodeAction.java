@@ -57,13 +57,13 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(@NotNull AnActionEvent event) {
     DataContext dataContext = event.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
     PsiDocumentManager.getInstance(project).commitAllDocuments();
-    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
-    final VirtualFile[] files = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
 
     PsiFile file = null;
     PsiDirectory dir = null;
@@ -97,27 +97,29 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
       }
       return;
     }
-    else if (PlatformDataKeys.PROJECT_CONTEXT.getData(dataContext) != null || LangDataKeys.MODULE_CONTEXT.getData(dataContext) != null) {
-      Module moduleContext = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
-      ReformatFilesOptions selectedFlags = getLayoutProjectOptions(project, moduleContext);
-      if (selectedFlags != null) {
-        reformatModule(project, moduleContext, selectedFlags);
-      }
-      return;
-    }
     else {
-      PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
-      if (element == null) return;
-      if (element instanceof PsiDirectoryContainer) {
-        dir = ((PsiDirectoryContainer)element).getDirectories()[0];
-      }
-      else if (element instanceof PsiDirectory) {
-        dir = (PsiDirectory)element;
+      if (dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT) != null || dataContext.getData(LangDataKeys.MODULE_CONTEXT) != null) {
+        Module moduleContext = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
+        ReformatFilesOptions selectedFlags = getLayoutProjectOptions(project, moduleContext);
+        if (selectedFlags != null) {
+          reformatModule(project, moduleContext, selectedFlags);
+        }
+        return;
       }
       else {
-        file = element.getContainingFile();
-        if (file == null) return;
-        dir = file.getContainingDirectory();
+        PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+        if (element == null) return;
+        if (element instanceof PsiDirectoryContainer) {
+          dir = ((PsiDirectoryContainer)element).getDirectories()[0];
+        }
+        else if (element instanceof PsiDirectory) {
+          dir = (PsiDirectory)element;
+        }
+        else {
+          file = element.getContainingFile();
+          if (file == null) return;
+          dir = file.getContainingDirectory();
+        }
       }
     }
 
@@ -260,15 +262,15 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
   public void update(@NotNull AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null){
       presentation.setEnabled(false);
       return;
     }
 
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
 
-    final VirtualFile[] files = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+    final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
 
     if (editor != null){
       PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -307,18 +309,20 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     else if (files != null && files.length == 1) {
       // skip. Both directories and single files are supported.
     }
-    else if (LangDataKeys.MODULE_CONTEXT.getData(dataContext) == null &&
-             PlatformDataKeys.PROJECT_CONTEXT.getData(dataContext) == null) {
-      PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
-      if (element == null) {
-        presentation.setEnabled(false);
-        return;
-      }
-      if (!(element instanceof PsiDirectory)) {
-        PsiFile file = element.getContainingFile();
-        if (file == null || LanguageFormatting.INSTANCE.forContext(file) == null) {
+    else {
+      if (dataContext.getData(LangDataKeys.MODULE_CONTEXT) == null &&
+          dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
+        PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+        if (element == null) {
           presentation.setEnabled(false);
           return;
+        }
+        if (!(element instanceof PsiDirectory)) {
+          PsiFile file = element.getContainingFile();
+          if (file == null || LanguageFormatting.INSTANCE.forContext(file) == null) {
+            presentation.setEnabled(false);
+            return;
+          }
         }
       }
     }

@@ -15,7 +15,7 @@ public class GenerateCoverageReportAction extends AnAction {
 
   public void actionPerformed(final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     assert project != null;
     final CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(project);
     final CoverageSuitesBundle currentSuite = coverageDataManager.getCurrentSuitesBundle();
@@ -36,7 +36,7 @@ public class GenerateCoverageReportAction extends AnAction {
     final Presentation presentation = e.getPresentation();
     presentation.setEnabled(false);
     presentation.setVisible(false);
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       final CoverageSuitesBundle currentSuite = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
       if (currentSuite != null) {

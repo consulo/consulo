@@ -37,6 +37,7 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakValueHashMap;
+import consulo.ide.impl.DataValidators;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
@@ -176,13 +177,9 @@ public class DataManagerImpl extends DataManager {
 
   @Nullable
   private static <T> T validated(@NotNull T data, @NotNull Key<T> dataId, @NotNull Object dataSource) {
-    Object invalidData = DataValidator.findInvalidData(dataId, data, dataSource);
+    T invalidData = DataValidators.findInvalidData(dataId, data, dataSource);
     if (invalidData != null) {
       return null;
-      /*
-      LOG.assertTrue(false, "Data isn't valid. " + dataId + "=" + invalidData + " Provided by: " + dataSource.getClass().getName() + " (" +
-                            dataSource.toString() + ")");
-      */
     }
     return data;
   }

@@ -49,17 +49,17 @@ class PrintManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeEditor.printing.PrintManager");
 
   public static void executePrint(DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
     final PrinterJob printerJob = PrinterJob.getPrinterJob();
 
     final PsiDirectory[] psiDirectory = new PsiDirectory[1];
-    PsiElement psiElement = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiElement psiElement = dataContext.getData(LangDataKeys.PSI_ELEMENT);
     if(psiElement instanceof PsiDirectory) {
       psiDirectory[0] = (PsiDirectory)psiElement;
     }
 
-    final PsiFile psiFile = LangDataKeys.PSI_FILE.getData(dataContext);
+    final PsiFile psiFile = dataContext.getData(LangDataKeys.PSI_FILE);
     final String[] shortFileName = new String[1];
     final String[] directoryName = new String[1];
     if(psiFile != null || psiDirectory[0] != null) {
@@ -74,7 +74,7 @@ class PrintManager {
       }
     }
 
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
     String text = null;
     if(editor != null) {
       if(editor.getSelectionModel().hasSelection()) {

@@ -162,7 +162,7 @@ public class CodeCompletionPanel {
 
     UISettings.getInstance().SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY = myCbSorting.isSelected();
 
-    final Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(myPanel));
+    final Project project = DataManager.getInstance().getDataContext(myPanel).getData(CommonDataKeys.PROJECT);
     if (project != null){
       DaemonCodeAnalyzer.getInstance(project).settingsChanged();
     }

@@ -52,6 +52,6 @@ public class ShowStatisticsAction extends AnAction {
 
   @Nullable
   private static Object getSelectedTestProxy(final AnActionEvent e) {
-    return AbstractTestProxy.DATA_KEY.getData(e.getDataContext());
+    return e.getDataContext().getData(AbstractTestProxy.DATA_KEY);
   }
 }

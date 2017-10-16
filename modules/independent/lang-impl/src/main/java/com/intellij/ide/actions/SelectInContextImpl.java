@@ -78,25 +78,25 @@ public abstract class SelectInContextImpl implements SelectInContext {
       return null;
     }
 
-    SelectInContext selectInContext = SelectInContext.DATA_KEY.getData(dataContext);
+    SelectInContext selectInContext = dataContext.getData(SelectInContext.DATA_KEY);
     if (selectInContext == null) {
       selectInContext = createPsiContext(event);
     }
 
     if (selectInContext == null) {
-      Navigatable descriptor = PlatformDataKeys.NAVIGATABLE.getData(dataContext);
+      Navigatable descriptor = dataContext.getData(PlatformDataKeys.NAVIGATABLE);
       if (descriptor instanceof OpenFileDescriptor) {
         final VirtualFile file = ((OpenFileDescriptor)descriptor).getFile();
         if (file.isValid()) {
-          Project project = CommonDataKeys.PROJECT.getData(dataContext);
+          Project project = dataContext.getData(CommonDataKeys.PROJECT);
           selectInContext = OpenFileDescriptorContext.create(project, file);
         }
       }
     }
 
     if (selectInContext == null) {
-      VirtualFile virtualFile = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      VirtualFile virtualFile = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
+      Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (virtualFile != null && project != null) {
         return new VirtualFileSelectInContext(project, virtualFile);
       }
@@ -107,8 +107,8 @@ public abstract class SelectInContextImpl implements SelectInContext {
 
   @Nullable
   private static SelectInContext createEditorContext(DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    final FileEditor editor = PlatformDataKeys.FILE_EDITOR.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final FileEditor editor = dataContext.getData(PlatformDataKeys.FILE_EDITOR);
     return createEditorContext(project, editor);
   }
 
@@ -135,7 +135,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
   @Nullable
   private static SelectInContext createPsiContext(AnActionEvent event) {
     final DataContext dataContext = event.getDataContext();
-    PsiElement psiElement = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiElement psiElement = dataContext.getData(LangDataKeys.PSI_ELEMENT);
     if (psiElement == null || !psiElement.isValid()) {
       return null;
     }
@@ -154,7 +154,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
       return (JComponent)source;
     }
     else {
-      return safeCast(PlatformDataKeys.CONTEXT_COMPONENT.getData(event.getDataContext()), JComponent.class);
+      return safeCast(event.getDataContext().getData(PlatformDataKeys.CONTEXT_COMPONENT), JComponent.class);
     }
   }
 

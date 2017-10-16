@@ -56,7 +56,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase {
 
   @Override
   public void execute(@NotNull Editor originalEditor, char charTyped, @NotNull DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     PsiFile file = project == null ? null : PsiUtilBase.getPsiFileInEditor(originalEditor, project);
 
     if (file == null) {

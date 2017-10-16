@@ -44,7 +44,7 @@ public class MatchBraceAction extends EditorAction {
 
     @Override
     public void execute(Editor editor, DataContext dataContext) {
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project == null) {
         return;
       }

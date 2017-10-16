@@ -33,7 +33,7 @@ public class SortValuesToggleAction extends ToggleAction implements DumbAware {
   @Override
   public void update(@NotNull AnActionEvent e) {
     super.update(e);
-    XDebugSession session = XDebugSession.DATA_KEY.getData(e.getDataContext());
+    XDebugSession session = e.getDataContext().getData(XDebugSession.DATA_KEY);
     e.getPresentation().setEnabledAndVisible(session != null && !session.getDebugProcess().isValuesCustomSorted());
   }
 

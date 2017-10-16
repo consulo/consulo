@@ -64,8 +64,8 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
   @Override
   protected final RefactoringActionHandler getHandler(@NotNull DataContext dataContext) {
     PsiElement element = null;
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
-    PsiFile file = CommonDataKeys.PSI_FILE.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
     if (editor != null && file != null) {
       element = getElementAtCaret(editor, file);
       if (element != null) {
@@ -76,7 +76,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
       }
     }
 
-    PsiElement referenced = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiElement referenced = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
     if (referenced != null) {
       RefactoringActionHandler handler = getHandler(referenced.getLanguage(), referenced);
       if (handler != null) {
@@ -84,7 +84,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
       }
     }
 
-    PsiElement[] psiElements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
+    PsiElement[] psiElements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
     if (psiElements != null && psiElements.length > 1) {
       RefactoringActionHandler handler = getHandler(psiElements[0].getLanguage(), psiElements[0]);
       if (handler != null && isEnabledOnElements(psiElements)) {
@@ -96,7 +96,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
       element = referenced;
     }
 
-    final Language[] languages = LangDataKeys.CONTEXT_LANGUAGES.getData(dataContext);
+    final Language[] languages = dataContext.getData(LangDataKeys.CONTEXT_LANGUAGES);
     if (languages != null) {
       for (Language language : languages) {
         RefactoringActionHandler handler = getHandler(language, element);

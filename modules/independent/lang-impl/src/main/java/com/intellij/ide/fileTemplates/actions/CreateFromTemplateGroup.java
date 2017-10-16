@@ -137,7 +137,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
   static boolean canCreateFromTemplate(AnActionEvent e, FileTemplate template) {
     if (e == null) return false;
     DataContext dataContext = e.getDataContext();
-    IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
+    IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
     if (view == null) return false;
 
     PsiDirectory[] dirs = view.getDirectories();

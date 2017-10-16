@@ -35,6 +35,6 @@ public class CompileDirtyAction extends CompileActionBase {
     if (!presentation.isEnabled()) {
       return;
     }
-    presentation.setEnabled(CommonDataKeys.PROJECT.getData(event.getDataContext()) != null);
+    presentation.setEnabled(event.getData(CommonDataKeys.PROJECT) != null);
   }
 }

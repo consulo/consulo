@@ -33,7 +33,7 @@ public class ShowStructureSettingsAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null) {
       project = ProjectManager.getInstance().getDefaultProject();
     }

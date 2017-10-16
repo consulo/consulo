@@ -55,7 +55,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
   public void update(@NotNull AnActionEvent e) {
-    ProjectSystemId externalSystemId = ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID.getData(e.getDataContext());
+    ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
     if (externalSystemId != null) {
       String name = externalSystemId.getReadableName();
       e.getPresentation().setText(ExternalSystemBundle.message("action.attach.external.project.text", name));
@@ -68,7 +68,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    ProjectSystemId externalSystemId = ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID.getData(e.getDataContext());
+    ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
     if (externalSystemId == null) {
       return;
     }
@@ -78,7 +78,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
       return;
     }
 
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }

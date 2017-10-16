@@ -101,8 +101,8 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     DataContext dataContext = e.getDataContext();
     Editor editor = getEditor(dataContext);
 
-    PsiFile file = CommonDataKeys.PSI_FILE.getData(dataContext);
-    PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
+    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
     element = getElement(project, file, editor, element);
 
     PsiFile containingFile = element != null ? element.getContainingFile() : file;
@@ -112,10 +112,10 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
 
 
   protected static Editor getEditor(@NotNull DataContext dataContext) {
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
 
     if (editor == null) {
-      final PsiFile file = CommonDataKeys.PSI_FILE.getData(dataContext);
+      final PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
       if (file != null) {
         final VirtualFile virtualFile = file.getVirtualFile();
         if (virtualFile != null) {
@@ -130,15 +130,15 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
   }
 
   public void performForContext(@NotNull DataContext dataContext, boolean invokedByShortcut) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    PsiFile file = CommonDataKeys.PSI_FILE.getData(dataContext);
+    PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
     Editor editor = getEditor(dataContext);
 
-    PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
-    boolean isInvokedFromEditor = CommonDataKeys.EDITOR.getData(dataContext) != null;
+    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+    boolean isInvokedFromEditor = dataContext.getData(CommonDataKeys.EDITOR) != null;
     element = getElement(project, file, editor, element);
 
     if (element == null && file == null) return;

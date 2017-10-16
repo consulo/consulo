@@ -59,12 +59,12 @@ class ExportToHTMLManager {
   @RequiredDispatchThread
   public static void executeExport(final DataContext dataContext) throws FileNotFoundException {
     PsiDirectory psiDirectory = null;
-    PsiElement psiElement = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiElement psiElement = dataContext.getData(LangDataKeys.PSI_ELEMENT);
     if(psiElement instanceof PsiDirectory) {
       psiDirectory = (PsiDirectory)psiElement;
     }
-    final PsiFile psiFile = LangDataKeys.PSI_FILE.getData(dataContext);
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final PsiFile psiFile = dataContext.getData(LangDataKeys.PSI_FILE);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     String shortFileName = null;
     String directoryName = null;
     if(psiFile != null || psiDirectory != null) {
@@ -79,7 +79,7 @@ class ExportToHTMLManager {
       }
     }
 
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
     boolean isSelectedTextEnabled = false;
     if(editor != null && editor.getSelectionModel().hasSelection()) {
       isSelectedTextEnabled = true;

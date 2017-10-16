@@ -50,12 +50,12 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
   public final void actionPerformed(final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
 
-    final IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
+    final IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
     if (view == null) {
       return;
     }
 
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
     final PsiDirectory dir = view.getOrChooseDirectory();
     if (dir == null || project == null) return;
@@ -124,8 +124,8 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
   }
 
   protected boolean isAvailable(DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    final IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
     return project != null && view != null && view.getDirectories().length != 0;
   }
 

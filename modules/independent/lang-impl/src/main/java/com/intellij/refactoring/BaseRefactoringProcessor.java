@@ -316,7 +316,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
   }
 
   protected boolean isGlobalUndoAction() {
-    return CommonDataKeys.EDITOR.getData(DataManager.getInstance().getDataContext()) == null;
+    return DataManager.getInstance().getDataContext().getData(CommonDataKeys.EDITOR) == null;
   }
 
   @SuppressWarnings("MethodMayBeStatic")

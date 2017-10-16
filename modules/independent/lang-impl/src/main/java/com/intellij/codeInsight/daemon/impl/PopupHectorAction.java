@@ -32,12 +32,12 @@ public class PopupHectorAction extends AnAction {
   @Override
   public void actionPerformed(final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final PsiFile file = LangDataKeys.PSI_FILE.getData(dataContext);
+    final PsiFile file = dataContext.getData(LangDataKeys.PSI_FILE);
     new HectorComponent(file).showComponent(JBPopupFactory.getInstance().guessBestPopupLocation(dataContext));
   }
 
   @Override
   public void update(final AnActionEvent e) {
-    e.getPresentation().setEnabled(LangDataKeys.PSI_FILE.getData(e.getDataContext()) != null);
+    e.getPresentation().setEnabled(e.getDataContext().getData(LangDataKeys.PSI_FILE) != null);
   }
 }

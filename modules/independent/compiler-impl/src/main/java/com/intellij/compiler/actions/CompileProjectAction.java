@@ -50,7 +50,7 @@ public class CompileProjectAction extends CompileActionBase {
     if (!presentation.isEnabled()) {
       return;
     }
-    Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
+    Project project = event.getData(CommonDataKeys.PROJECT);
     presentation.setEnabled(project != null);
   }
 }
