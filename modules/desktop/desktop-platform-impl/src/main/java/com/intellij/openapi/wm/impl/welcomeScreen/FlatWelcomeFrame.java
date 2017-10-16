@@ -26,6 +26,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
@@ -56,6 +57,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.EventListener;
+import java.util.function.Supplier;
 
 /**
  * @author Konstantin Bulenkov
@@ -245,6 +247,12 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
 
   @NotNull
   @Override
+  public <T> Runnable addUserDataProvider(@NotNull Key<T> key, @NotNull Supplier<T> supplier) {
+    throw new UnsupportedOperationException();
+  }
+
+  @NotNull
+  @Override
   public <T extends EventListener> T getListenerDispatcher(@NotNull Class<T> eventClass) {
     throw new UnsupportedOperationException();
   }
@@ -252,6 +260,17 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
   @NotNull
   @Override
   public <T extends EventListener> Runnable addListener(@NotNull Class<T> eventClass, @NotNull T listener) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Nullable
+  @Override
+  public <T> T getUserData(@NotNull Key<T> key) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
     throw new UnsupportedOperationException();
   }
   // endregion

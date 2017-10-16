@@ -1,6 +1,6 @@
 -Xms512m
 -Xmx1500m
--XX:ReservedCodeCacheSize=128m
+-XX:ReservedCodeCacheSize=240m
 -ea
 -Dsun.io.useCanonCaches=false
 -Djava.net.preferIPv4Stack=true
