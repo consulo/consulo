@@ -161,7 +161,7 @@ public class ExecutionUtil {
 
   private static void restart(@Nullable JComponent component) {
     if (component != null) {
-      ExecutionEnvironment environment = LangDataKeys.EXECUTION_ENVIRONMENT.getData(DataManager.getInstance().getDataContext(component));
+      ExecutionEnvironment environment = DataManager.getInstance().getDataContext(component).getData(LangDataKeys.EXECUTION_ENVIRONMENT);
       if (environment != null) {
         restart(environment);
       }

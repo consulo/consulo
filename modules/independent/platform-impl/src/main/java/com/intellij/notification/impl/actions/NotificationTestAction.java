@@ -41,7 +41,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
   }
 
   public void actionPerformed(final AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     final MessageBus messageBus = project == null ? ApplicationManager.getApplication().getMessageBus() : project.getMessageBus();
 
     final long l = System.currentTimeMillis();

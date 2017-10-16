@@ -27,7 +27,7 @@ import com.intellij.openapi.wm.impl.ToolWindowLayout;
  */
 public final class RestoreDefaultLayoutAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e){
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if(project==null){
       return;
     }
@@ -37,6 +37,6 @@ public final class RestoreDefaultLayoutAction extends AnAction implements DumbAw
 
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
-    presentation.setEnabled(CommonDataKeys.PROJECT.getData(event.getDataContext()) != null);
+    presentation.setEnabled(event.getData(CommonDataKeys.PROJECT) != null);
   }
 }

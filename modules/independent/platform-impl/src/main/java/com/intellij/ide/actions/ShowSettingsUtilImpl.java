@@ -134,7 +134,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable.Adapter() {
       @Override
       public void showNotify() {
-        final OptionsEditor editor = (OptionsEditor)dialog.getData(OptionsEditor.KEY.getName());
+        final OptionsEditor editor = dialog.getDataUnchecked(OptionsEditor.KEY);
         LOG.assertTrue(editor != null);
         editor.select(configurable2Select, filter);
       }

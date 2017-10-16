@@ -34,7 +34,7 @@ public abstract class UndoRedoAction extends DumbAwareAction {
 
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    FileEditor editor = PlatformDataKeys.FILE_EDITOR.getData(dataContext);
+    FileEditor editor = e.getData(PlatformDataKeys.FILE_EDITOR);
     UndoManager undoManager = getUndoManager(editor, dataContext);
     perform(editor, undoManager);
   }
@@ -42,11 +42,11 @@ public abstract class UndoRedoAction extends DumbAwareAction {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    FileEditor editor = PlatformDataKeys.FILE_EDITOR.getData(dataContext);
+    FileEditor editor = event.getData(PlatformDataKeys.FILE_EDITOR);
 
     // do not allow global undo in dialogs
     if (editor == null) {
-      final Boolean isModalContext = PlatformDataKeys.IS_MODAL_CONTEXT.getData(dataContext);
+      final Boolean isModalContext = event.getData(PlatformDataKeys.IS_MODAL_CONTEXT);
       if (isModalContext != null && isModalContext) {
         presentation.setEnabled(false);
         return;
@@ -77,7 +77,7 @@ public abstract class UndoRedoAction extends DumbAwareAction {
       project = ((TextEditor)editor).getEditor().getProject();
     }
     else {
-      project = CommonDataKeys.PROJECT.getData(dataContext);
+      project = dataContext.getData(CommonDataKeys.PROJECT);
     }
     return project;
   }

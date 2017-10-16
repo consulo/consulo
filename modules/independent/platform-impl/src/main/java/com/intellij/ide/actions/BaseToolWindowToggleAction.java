@@ -15,7 +15,10 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -27,13 +30,13 @@ public abstract class BaseToolWindowToggleAction extends ToggleAction implements
 
   @Override
   public final boolean isSelected(AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null || project.isDisposed()) {
       return false;
     }
-    ToolWindowManager mgr=ToolWindowManager.getInstance(project);
-    String id=mgr.getActiveToolWindowId();
-    if(id==null){
+    ToolWindowManager mgr = ToolWindowManager.getInstance(project);
+    String id = mgr.getActiveToolWindowId();
+    if (id == null) {
       return false;
     }
     return isSelected(mgr.getToolWindow(id));
@@ -43,17 +46,17 @@ public abstract class BaseToolWindowToggleAction extends ToggleAction implements
 
   @Override
   public final void setSelected(AnActionEvent e, boolean state) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
-    String id=ToolWindowManager.getInstance(project).getActiveToolWindowId();
-    if(id==null){
+    String id = ToolWindowManager.getInstance(project).getActiveToolWindowId();
+    if (id == null) {
       return;
     }
 
-    ToolWindowManagerEx mgr=ToolWindowManagerEx.getInstanceEx(project);
-    ToolWindowEx toolWindow=(ToolWindowEx)mgr.getToolWindow(id);
+    ToolWindowManagerEx mgr = ToolWindowManagerEx.getInstanceEx(project);
+    ToolWindowEx toolWindow = (ToolWindowEx)mgr.getToolWindow(id);
 
     setSelected(toolWindow, state);
   }
@@ -64,13 +67,13 @@ public abstract class BaseToolWindowToggleAction extends ToggleAction implements
   public final void update(AnActionEvent e) {
     super.update(e);
     Presentation presentation = e.getPresentation();
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
-    ToolWindowManager mgr=ToolWindowManager.getInstance(project);
-    String id=mgr.getActiveToolWindowId();
+    ToolWindowManager mgr = ToolWindowManager.getInstance(project);
+    String id = mgr.getActiveToolWindowId();
 
     if (id == null) {
       presentation.setEnabled(false);

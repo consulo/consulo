@@ -18,11 +18,19 @@ package com.intellij.ide.impl.dataRules;
 
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.util.Key;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
-public class PasteTargetRule implements GetDataRule {
+public class PasteTargetRule implements GetDataRule<PsiElement> {
+  @NotNull
   @Override
-  public Object getData(@NotNull DataProvider dataProvider) {
-    return LangDataKeys.PSI_ELEMENT.getData(dataProvider);
+  public Key<PsiElement> getKey() {
+    return LangDataKeys.PASTE_TARGET_PSI_ELEMENT;
+  }
+
+  @Override
+  public PsiElement getData(@NotNull DataProvider dataProvider) {
+    return dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT);
   }
 }

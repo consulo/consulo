@@ -298,7 +298,7 @@ public class IdeBackgroundUtil {
       if ("editor".equals(type)) {
         //noinspection CastConflictsWithInstanceof
         Editor editor = c instanceof EditorComponentImpl ? ((EditorComponentImpl)c).getEditor() :
-                        c instanceof EditorGutterComponentEx ? CommonDataKeys.EDITOR.getData((DataProvider)c) : null;
+                        c instanceof EditorGutterComponentEx ? ((DataProvider)c).getDataUnchecked(CommonDataKeys.EDITOR) : null;
         if (editor != null) {
           if (!(g instanceof MyGraphics) && Boolean.TRUE.equals(EditorTextField.SUPPLEMENTARY_KEY.get(editor))) return g;
           Graphics2D gg = withEditorBackground(g, c);

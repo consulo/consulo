@@ -40,8 +40,7 @@ public class AboutAction extends AnAction implements DumbAware {
   }
 
   public static void showAbout() {
-    Window window = WindowManager.getInstance().suggestParentWindow(
-      CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext()));
+    Window window = WindowManager.getInstance().suggestParentWindow(DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT));
 
     showAboutDialog(window);
   }

@@ -291,7 +291,7 @@ public class Utils {
       if (anAction instanceof AnSeparator) {
         continue;
       }
-      final Project project = CommonDataKeys.PROJECT.getData(context);
+      final Project project = context.getData(CommonDataKeys.PROJECT);
       if (project != null && DumbService.getInstance(project).isDumb() && !anAction.isDumbAware()) {
         continue;
       }

@@ -69,7 +69,7 @@ public abstract class Macro {
 
   @Nullable
   protected static VirtualFile getVirtualDirOrParent(DataContext dataContext) {
-    VirtualFile vFile = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
+    VirtualFile vFile = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
     if (vFile != null && !vFile.isDirectory()) {
       vFile = vFile.getParent();
     }

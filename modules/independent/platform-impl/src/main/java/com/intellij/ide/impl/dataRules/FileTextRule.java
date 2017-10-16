@@ -23,15 +23,23 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author mike
  */
-public class FileTextRule implements GetDataRule {
-  public Object getData(@NotNull DataProvider dataProvider) {
-    final VirtualFile virtualFile = (VirtualFile)dataProvider.getData(PlatformDataKeys.VIRTUAL_FILE.getName());
+public class FileTextRule implements GetDataRule<String> {
+  @NotNull
+  @Override
+  public Key<String> getKey() {
+    return PlatformDataKeys.FILE_TEXT;
+  }
+
+  @Override
+  public String getData(@NotNull DataProvider dataProvider) {
+    final VirtualFile virtualFile = dataProvider.getDataUnchecked(PlatformDataKeys.VIRTUAL_FILE);
     if (virtualFile == null) {
       return null;
     }
@@ -41,7 +49,7 @@ public class FileTextRule implements GetDataRule {
       return null;
     }
 
-    final Project project = (Project)dataProvider.getData(CommonDataKeys.PROJECT.getName());
+    final Project project = dataProvider.getDataUnchecked(CommonDataKeys.PROJECT);
     if (project == null) {
       return null;
     }

@@ -98,7 +98,7 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
 
   @Nullable
   private Project getProject() {
-    return CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext((Component)myStatusBar));
+    return DataManager.getInstance().getDataContext((Component)myStatusBar).getData(CommonDataKeys.PROJECT);
   }
 
   @Override

@@ -54,7 +54,8 @@ import java.awt.event.MouseEvent;
  */
 public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, CustomStatusBarWidget {
 
-  @NotNull private final TextPanel myComponent;
+  @NotNull
+  private final TextPanel myComponent;
 
   private boolean myActionEnabled;
 
@@ -69,8 +70,7 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
           final Rectangle r = getBounds();
           final Insets insets = getInsets();
           Icon arrows = AllIcons.Ide.Statusbar_arrows;
-          arrows.paintIcon(this, g, r.width - insets.right - arrows.getIconWidth() - 2,
-                           r.height / 2 - arrows.getIconHeight() / 2);
+          arrows.paintIcon(this, g, r.width - insets.right - arrows.getIconWidth() - 2, r.height / 2 - arrows.getIconHeight() / 2);
         }
       }
     };
@@ -97,12 +97,10 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
       if (file != null) {
         myActionEnabled = file.isWritable();
 
-        lineSeparator =
-                LoadTextUtil.detectLineSeparator(file, true);
+        lineSeparator = LoadTextUtil.detectLineSeparator(file, true);
 
         if (lineSeparator != null) {
-          toolTipText = String.format("Line separator: %s",
-                                      StringUtil.escapeLineBreak(lineSeparator));
+          toolTipText = String.format("Line separator: %s", StringUtil.escapeLineBreak(lineSeparator));
           panelText = LineSeparator.fromString(lineSeparator).toString();
         }
       }
@@ -121,17 +119,15 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
         toDoComment = "Click to change";
         myComponent.setForeground(UIUtil.getActiveTextColor());
         myComponent.setTextAlignment(Component.LEFT_ALIGNMENT);
-      } else {
+      }
+      else {
         toDoComment = "";
         myComponent.setForeground(UIUtil.getInactiveTextColor());
         myComponent.setTextAlignment(Component.CENTER_ALIGNMENT);
       }
 
-      myComponent.setToolTipText(String.format("%s%n%s",
-                                               toolTipText,
-                                               toDoComment));
+      myComponent.setToolTipText(String.format("%s%n%s", toolTipText, toDoComment));
       myComponent.setText(panelText);
-
 
 
       if (myStatusBar != null) {
@@ -150,13 +146,7 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
       return;
     }
 
-    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-            "Line separator",
-            (ActionGroup)group,
-            dataContext,
-            JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-            false
-    );
+    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup("Line separator", (ActionGroup)group, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
     Dimension dimension = popup.getContent().getPreferredSize();
     Point at = new Point(0, -dimension.height);
     popup.show(new RelativePoint(e.getComponent(), at));
@@ -179,14 +169,8 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
   private DataContext getContext() {
     Editor editor = getEditor();
     DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);
-    return SimpleDataContext.getSimpleContext(
-            CommonDataKeys.VIRTUAL_FILE_ARRAY.getName(),
-            new VirtualFile[] {getSelectedFile()},
-            SimpleDataContext.getSimpleContext(CommonDataKeys.PROJECT.getName(),
-                                               getProject(),
-                                               SimpleDataContext.getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT.getName(),
-                                                                                  editor == null ? null : editor.getComponent(), parent)
-            ));
+    return SimpleDataContext.getSimpleContext(CommonDataKeys.VIRTUAL_FILE_ARRAY, new VirtualFile[]{getSelectedFile()}, SimpleDataContext
+            .getSimpleContext(CommonDataKeys.PROJECT, getProject(), SimpleDataContext.getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent(), parent)));
   }
 
   @Override

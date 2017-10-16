@@ -32,7 +32,7 @@ import com.intellij.openapi.project.DumbAware;
  */
 public class EditMacrosAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
-    EditMacrosDialog dialog = new EditMacrosDialog(CommonDataKeys.PROJECT.getData(e.getDataContext()));
+    EditMacrosDialog dialog = new EditMacrosDialog(e.getData(CommonDataKeys.PROJECT));
     dialog.show();
   }
 

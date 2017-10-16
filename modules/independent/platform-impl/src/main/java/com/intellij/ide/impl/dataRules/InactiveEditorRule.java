@@ -19,14 +19,24 @@
  */
 package com.intellij.ide.impl.dataRules;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class InactiveEditorRule implements GetDataRule {
+public class InactiveEditorRule implements GetDataRule<Editor> {
+  @NotNull
+  @Override
+  public Key<Editor> getKey() {
+    return CommonDataKeys.EDITOR_EVEN_IF_INACTIVE;
+  }
+
+  @Override
   @Nullable
-  public Object getData(@NotNull final DataProvider dataProvider) {
-    return dataProvider.getData(PlatformDataKeys.EDITOR.getName());
+  public Editor getData(@NotNull final DataProvider dataProvider) {
+    return dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
   }
 }

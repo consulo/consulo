@@ -28,8 +28,7 @@ import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 public class CloseProjectAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
-    assert project != null;
+    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
 
     ProjectUtil.closeAndDispose(project);
     RecentProjectsManagerBase.getInstance().updateLastProjectPath();

@@ -46,7 +46,7 @@ public class StartStopMacroRecordingAction extends AnAction implements DumbAware
       manager.startRecording(IdeBundle.message("macro.noname"));
     }
     else {
-      ActionMacroManager.getInstance().stopRecording(CommonDataKeys.PROJECT.getData(e.getDataContext()));
+      ActionMacroManager.getInstance().stopRecording(e.getData(CommonDataKeys.PROJECT));
     }
   }
 }

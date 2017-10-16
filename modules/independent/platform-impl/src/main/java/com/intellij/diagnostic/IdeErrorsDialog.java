@@ -1030,7 +1030,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
       AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, myAnalyze.getTemplatePresentation(), ActionManager.getInstance(), e.getModifiers());
 
-      final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      final Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project != null) {
         myAnalyze.actionPerformed(event);
         doOKAction();

@@ -88,7 +88,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
 
     scrollPane.setBorder(null);
 
-    final Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+    final Project project = DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
     init(project, scrollPane, getPreferredFocusableComponent(), true, true, true, null,
          isResizable(), aStep.getTitle(), null, true, null, false, null, null, null, false, null, true, false, true, null, 0f,
          null, true, false, new Component[0], null, SwingConstants.LEFT, true, Collections.<Pair<ActionListener, KeyStroke>>emptyList(),

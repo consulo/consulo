@@ -29,7 +29,7 @@ public class SendStatisticsAction extends AnAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       StatisticsService service = StatisticsUploadAssistant.getStatisticsService();
       StatisticsResult result = service.send();

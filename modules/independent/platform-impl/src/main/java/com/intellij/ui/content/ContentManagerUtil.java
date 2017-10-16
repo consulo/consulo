@@ -30,7 +30,7 @@ public class ContentManagerUtil {
    * This is utility method. It returns <code>ContentManager</code> from the current context.
    */
   public static ContentManager getContentManagerFromContext(DataContext dataContext, boolean requiresVisibleToolWindow){
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return null;
     }
@@ -52,7 +52,7 @@ public class ContentManagerUtil {
       return null;
     }
 
-    final ContentManager fromContext = PlatformDataKeys.CONTENT_MANAGER.getData(dataContext);
+    final ContentManager fromContext = dataContext.getData(PlatformDataKeys.CONTENT_MANAGER);
     if (fromContext != null) return fromContext;
 
     return toolWindow != null ? toolWindow.getContentManager() : null;

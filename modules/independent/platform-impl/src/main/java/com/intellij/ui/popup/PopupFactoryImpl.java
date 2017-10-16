@@ -275,7 +275,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
                                int maxRowCount) {
       super(aParent, step, maxRowCount);
       myDisposeCallback = disposeCallback;
-      myComponent = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
+      myComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
       myActionPlace = actionPlace == null ? ActionPlaces.UNKNOWN : actionPlace;
 
       registerAction("handleActionToggle1", KeyEvent.VK_SPACE, 0, new AbstractAction() {
@@ -320,7 +320,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
                                             boolean honorActionMnemonics,
                                             Condition<AnAction> preselectActionCondition,
                                             @Nullable String actionPlace, boolean autoSelection) {
-      final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
+      final Component component = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
       LOG.assertTrue(component != null, "dataContext has no component for new ListPopupStep");
 
       final ActionStepBuilder builder =
@@ -602,11 +602,11 @@ public class PopupFactoryImpl extends JBPopupFactory {
   @NotNull
   @Override
   public RelativePoint guessBestPopupLocation(@NotNull DataContext dataContext) {
-    Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
+    Component component = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     JComponent focusOwner = component instanceof JComponent ? (JComponent)component : null;
 
     if (focusOwner == null) {
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      Project project = dataContext.getData(CommonDataKeys.PROJECT);
       JFrame frame = project == null ? null : WindowManager.getInstance().getFrame(project);
       focusOwner = frame == null ? null : frame.getRootPane();
       if (focusOwner == null) {
@@ -614,12 +614,12 @@ public class PopupFactoryImpl extends JBPopupFactory {
       }
     }
 
-    final Point point = PlatformDataKeys.CONTEXT_MENU_POINT.getData(dataContext);
+    final Point point = dataContext.getData(PlatformDataKeys.CONTEXT_MENU_POINT);
     if (point != null) {
       return new RelativePoint(focusOwner, point);
     }
 
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor != null && focusOwner == editor.getContentComponent()) {
       return guessBestPopupLocation(editor);
     }

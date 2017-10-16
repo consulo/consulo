@@ -53,7 +53,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    @Nullable final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    @Nullable final Project project = e.getData(CommonDataKeys.PROJECT);
     final boolean showFiles = project != null;
 
     final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {

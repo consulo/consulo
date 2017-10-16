@@ -50,7 +50,7 @@ public class UnindentSelectionAction extends EditorAction {
     @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, DataContext dataContext) {
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      Project project = dataContext.getData(CommonDataKeys.PROJECT);
       unindentSelection(editor, project);
     }
 

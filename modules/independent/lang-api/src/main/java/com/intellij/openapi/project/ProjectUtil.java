@@ -124,7 +124,7 @@ public class ProjectUtil {
     if (openProjects.length > 0) project = openProjects[0];
     if (project == null) {
       DataContext dataContext = component == null ? DataManager.getInstance().getDataContext() : DataManager.getInstance().getDataContext(component);
-      project = CommonDataKeys.PROJECT.getData(dataContext);
+      project = dataContext.getData(CommonDataKeys.PROJECT);
     }
     if (project == null) {
       project = ProjectManager.getInstance().getDefaultProject();

@@ -82,7 +82,7 @@ public class ITNReporter extends ErrorReportSubmitter {
                                   final ErrorBean errorBean,
                                   final String description) {
     final DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
     errorBean.setDescription(description);
     errorBean.setMessage(event.getMessage());

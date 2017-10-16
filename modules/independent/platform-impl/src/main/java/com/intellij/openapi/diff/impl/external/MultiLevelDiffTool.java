@@ -113,21 +113,20 @@ public class MultiLevelDiffTool implements DiffTool, DiscloseMultiRequest {
 
   private CompositeDiffPanel createPanel(final DiffRequest request, final Window window, @NotNull Disposable parentDisposable) {
     final CompositeDiffPanel panel = new CompositeDiffPanel(request.getProject(), this, window, parentDisposable);
-    request.getGenericData().put(PlatformDataKeys.COMPOSITE_DIFF_VIEWER.getName(), panel);
+    request.getGenericData().put(PlatformDataKeys.COMPOSITE_DIFF_VIEWER, panel);
     final List<Pair<String, DiffRequest>> layers = request.getOtherLayers();
     if (layers != null) {
       for (Pair<String, DiffRequest> layer : layers) {
-        layer.getSecond().getGenericData().put(PlatformDataKeys.COMPOSITE_DIFF_VIEWER.getName(), panel);
+        layer.getSecond().getGenericData().put(PlatformDataKeys.COMPOSITE_DIFF_VIEWER, panel);
       }
     }
     Disposer.register(parentDisposable, new Disposable() {
       @Override
       public void dispose() {
-        final String name = PlatformDataKeys.COMPOSITE_DIFF_VIEWER.getName();
-        request.getGenericData().remove(name);
+        request.getGenericData().remove(PlatformDataKeys.COMPOSITE_DIFF_VIEWER);
         if (layers != null) {
           for (Pair<String, DiffRequest> layer : layers) {
-            layer.getSecond().getGenericData().remove(name);
+            layer.getSecond().getGenericData().remove(PlatformDataKeys.COMPOSITE_DIFF_VIEWER);
           }
         }
       }

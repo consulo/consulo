@@ -31,7 +31,7 @@ public class ToggleAutoScrollAction extends ToggleActionButton implements DumbAw
 
   @Override
   public boolean isSelected(AnActionEvent e) {
-    DiffViewer viewer = PlatformDataKeys.DIFF_VIEWER.getData(e.getDataContext());
+    DiffViewer viewer = e.getData(PlatformDataKeys.DIFF_VIEWER);
     if (viewer instanceof DiffPanelEx) return ((DiffPanelEx)viewer).isAutoScrollEnabled();
     if (viewer instanceof MergePanel2) return ((MergePanel2)viewer).isAutoScrollEnabled();
     return true;
@@ -39,7 +39,7 @@ public class ToggleAutoScrollAction extends ToggleActionButton implements DumbAw
 
   @Override
   public void setSelected(AnActionEvent e, boolean state) {
-    DiffViewer viewer = PlatformDataKeys.DIFF_VIEWER.getData(e.getDataContext());
+    DiffViewer viewer = e.getDataContext().getData(PlatformDataKeys.DIFF_VIEWER);
     if (viewer instanceof DiffPanelEx) ((DiffPanelEx)viewer).setAutoScrollEnabled(state);
     if (viewer instanceof MergePanel2) ((MergePanel2)viewer).setAutoScrollEnabled(state);
   }

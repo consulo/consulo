@@ -154,7 +154,7 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
     Component focusOwner = IdeFocusManager.getGlobalInstance().getFocusOwner();
     DataContext dataContext = DataManager.getInstance().getDataContext(focusOwner);
     boolean isDisposeInProgress = ApplicationManager.getApplication().isDisposeInProgress(); // ignore caret placing when exiting
-    Editor activeEditor = isDisposeInProgress ? null : CommonDataKeys.EDITOR.getData(dataContext);
+    Editor activeEditor = isDisposeInProgress ? null : dataContext.getData(CommonDataKeys.EDITOR);
     if (activeEditor != null && activeEditor.getDocument() != document) {
       activeEditor = null;
     }

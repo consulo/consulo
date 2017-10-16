@@ -15,14 +15,23 @@
  */
 package com.intellij.ide.impl.dataRules;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NotNull;
 
-public class NavigatableArrayRule implements GetDataRule {
-  public Object getData(@NotNull DataProvider dataProvider) {
-    final Navigatable element = PlatformDataKeys.NAVIGATABLE.getData(dataProvider);
+public class NavigatableArrayRule implements GetDataRule<Navigatable[]> {
+  @NotNull
+  @Override
+  public Key<Navigatable[]> getKey() {
+    return CommonDataKeys.NAVIGATABLE_ARRAY;
+  }
+
+  @Override
+  public Navigatable[] getData(@NotNull DataProvider dataProvider) {
+    final Navigatable element = dataProvider.getDataUnchecked(PlatformDataKeys.NAVIGATABLE);
     if (element == null) {
       return null;
     }

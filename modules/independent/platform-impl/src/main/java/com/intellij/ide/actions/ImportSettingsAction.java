@@ -53,8 +53,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
+    final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     ChooseComponentsToExportDialog.chooseSettingsFile(PathManager.getConfigPath(), component, IdeBundle.message("title.import.file.location"),
                                                       IdeBundle.message("prompt.choose.import.file.path")).doWhenDone(ImportSettingsAction::doImport);
   }

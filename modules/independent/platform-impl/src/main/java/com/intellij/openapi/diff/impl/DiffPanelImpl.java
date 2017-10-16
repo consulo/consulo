@@ -115,8 +115,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
         toolbar.addAction(actionManager.getAction("ContextHelp"));
         toolbar.addAction(getEditSourceAction());
         toolbar.addSeparator();
-        toolbar.addAction(new DiffMergeSettingsAction(Arrays.asList(getEditor1(), getEditor2()),
-                                                      ServiceManager.getService(myProject, DiffToolSettings.class)));
+        toolbar.addAction(new DiffMergeSettingsAction(Arrays.asList(getEditor1(), getEditor2()), ServiceManager.getService(myProject, DiffToolSettings.class)));
       }
 
       @NotNull
@@ -133,19 +132,15 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
 
   private boolean myDisposed = false;
   private final GenericDataProvider myDataProvider;
-  @NotNull private final Project myProject;
+  @NotNull
+  private final Project myProject;
   private final boolean myIsHorizontal;
   private final DiffTool myParentTool;
   private EditorNotificationPanel myTopMessageDiffPanel;
   private final VisibleAreaListener myVisibleAreaListener;
   private final int myDiffDividerPolygonsOffset;
 
-  public DiffPanelImpl(final Window owner,
-                       @NotNull Project project,
-                       boolean enableToolbar,
-                       boolean horizontal,
-                       int diffDividerPolygonsOffset,
-                       DiffTool parentTool) {
+  public DiffPanelImpl(final Window owner, @NotNull Project project, boolean enableToolbar, boolean horizontal, int diffDividerPolygonsOffset, DiffTool parentTool) {
     myProject = project;
     myIsHorizontal = horizontal;
     myParentTool = parentTool;
@@ -156,7 +151,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     myOwnerWindow = owner;
     myIsSyncScroll = true;
     final boolean v = !horizontal;
-    myLeftSide =  new DiffSideView(this, new CustomLineBorder(1, 0, v ? 0 : 1, v ? 0 : 1));
+    myLeftSide = new DiffSideView(this, new CustomLineBorder(1, 0, v ? 0 : 1, v ? 0 : 1));
     myRightSide = new DiffSideView(this, new CustomLineBorder(v ? 0 : 1, v ? 0 : 1, 1, 0));
     myLeftSide.becomeMaster();
     myDiffUpdater = new Rediffers(this);
@@ -166,8 +161,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     myData = createDiffPanelState(this);
 
     if (horizontal) {
-      mySplitter = new DiffSplitter(myLeftSide.getComponent(), myRightSide.getComponent(),
-                                    new DiffDividerPaint(this, FragmentSide.SIDE1, diffDividerPolygonsOffset), myData);
+      mySplitter = new DiffSplitter(myLeftSide.getComponent(), myRightSide.getComponent(), new DiffDividerPaint(this, FragmentSide.SIDE1, diffDividerPolygonsOffset), myData);
     }
     else {
       mySplitter = new HorizontalDiffSplitter(myLeftSide.getComponent(), myRightSide.getComponent());
@@ -206,7 +200,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
 
   private void registerActions() {
     //control+tab switches editors
-    new AnAction(){
+    new AnAction() {
       @Override
       public void actionPerformed(@NotNull AnActionEvent e) {
         if (getEditor1() != null && getEditor2() != null) {
@@ -331,18 +325,15 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
 
   public void setLineNumberConvertors(@NotNull TIntFunction old, @NotNull TIntFunction newConvertor) {
     if (getEditor1() != null) {
-      ((EditorGutterComponentEx) getEditor1().getGutter()).setLineNumberConvertor(old);
+      ((EditorGutterComponentEx)getEditor1().getGutter()).setLineNumberConvertor(old);
     }
     if (getEditor2() != null) {
-      ((EditorGutterComponentEx) getEditor2().getGutter()).setLineNumberConvertor(newConvertor);
+      ((EditorGutterComponentEx)getEditor2().getGutter()).setLineNumberConvertor(newConvertor);
     }
   }
+
   // todo pay attention here
-  private static DiffHighlighterFactory createHighlighter(FileType contentType,
-                                                          VirtualFile file,
-                                                          VirtualFile otherFile,
-                                                          String path,
-                                                          Project project) {
+  private static DiffHighlighterFactory createHighlighter(FileType contentType, VirtualFile file, VirtualFile otherFile, String path, Project project) {
     VirtualFile baseFile = file;
     if (baseFile == null) baseFile = otherFile;
     if (baseFile == null && path != null) baseFile = LocalFileSystem.getInstance().findFileByPath(path);
@@ -560,8 +551,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
       return;
     }
 
-    final MouseListener mouseListener = PopupHandler
-            .installUnknownPopupHandler(editor.getContentComponent(), new MergeActionGroup(this, source.getSide()), ActionManager.getInstance());
+    final MouseListener mouseListener = PopupHandler.installUnknownPopupHandler(editor.getContentComponent(), new MergeActionGroup(this, source.getSide()), ActionManager.getInstance());
     myDiffUpdater.contentAdded(source);
     editor.getSettings().setLineNumbersShown(true);
     editor.getSettings().setFoldingOutlineShown(false);
@@ -603,7 +593,9 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     myCurrentSide = viewSide;
   }
 
-  public DiffSideView getCurrentSide() { return myCurrentSide; }
+  public DiffSideView getCurrentSide() {
+    return myCurrentSide;
+  }
 
   public Project getProject() {
     return myData.getProject();
@@ -629,12 +621,11 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     throw new IllegalArgumentException(String.valueOf(side));
   }
 
-  public LineBlocks getLineBlocks() { return myLineBlocks; }
+  public LineBlocks getLineBlocks() {
+    return myLineBlocks;
+  }
 
-  static JComponent createComponentForTitle(@Nullable String title,
-                                            @Nullable final LineSeparator sep1,
-                                            @Nullable final LineSeparator sep2,
-                                            boolean left) {
+  static JComponent createComponentForTitle(@Nullable String title, @Nullable final LineSeparator sep1, @Nullable final LineSeparator sep2, boolean left) {
     if (sep1 != null && sep2 != null && !sep1.equals(sep2)) {
       LineSeparator separator = left ? sep1 : sep2;
       JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -687,12 +678,9 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
 
     if (myIsRequestFocus) {
       IdeFocusManager fm = IdeFocusManager.getInstance(myProject);
-      boolean isEditor1Focused = getEditor1() != null
-                                 && fm.getFocusedDescendantFor(getEditor1().getComponent()) != null;
+      boolean isEditor1Focused = getEditor1() != null && fm.getFocusedDescendantFor(getEditor1().getComponent()) != null;
 
-      boolean isEditor2Focused = myData.getContent2() != null
-                                 && getEditor2() != null
-                                 && fm.getFocusedDescendantFor(getEditor2().getComponent()) != null;
+      boolean isEditor2Focused = myData.getContent2() != null && getEditor2() != null && fm.getFocusedDescendantFor(getEditor2().getComponent()) != null;
 
       if (isEditor1Focused || isEditor2Focused) {
         Editor e = isEditor2Focused ? getEditor2() : getEditor1();
@@ -770,11 +758,11 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
 
     public void scrollEditors() {
       getOptions().onNewContent(myCurrentSide);
-      final DiffNavigationContext scrollContext = myDiffRequest == null ? null :
-                                                  (DiffNavigationContext) myDiffRequest.getGenericData().get(DiffTool.SCROLL_TO_LINE.getName());
+      final DiffNavigationContext scrollContext = myDiffRequest == null ? null : (DiffNavigationContext)myDiffRequest.getGenericData().get(DiffTool.SCROLL_TO_LINE);
       if (scrollContext == null) {
         scrollCurrentToFirstDiff();
-      } else {
+      }
+      else {
         final Document document = myRightSide.getEditor().getDocument();
 
         final FragmentList fragmentList = getFragments();
@@ -784,16 +772,14 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
           @Override
           public void run() {
             final ChangedLinesIterator changedLinesIterator = new ChangedLinesIterator(fragmentList.iterator(), document, false);
-            final CacheOneStepIterator<Pair<Integer, String>> cacheOneStepIterator =
-                    new CacheOneStepIterator<Pair<Integer, String>>(changedLinesIterator);
+            final CacheOneStepIterator<Pair<Integer, String>> cacheOneStepIterator = new CacheOneStepIterator<Pair<Integer, String>>(changedLinesIterator);
             final NavigationContextChecker checker = new NavigationContextChecker(cacheOneStepIterator, scrollContext);
             int line = checker.contextMatchCheck();
             if (line < 0) {
               // this will work for the case, when spaces changes are ignored, and corresponding fragments are not reported as changed
               // just try to find target line  -> +-
               final ChangedLinesIterator changedLinesIterator2 = new ChangedLinesIterator(fragmentList.iterator(), document, true);
-              final CacheOneStepIterator<Pair<Integer, String>> cacheOneStepIterator2 =
-                      new CacheOneStepIterator<Pair<Integer, String>>(changedLinesIterator2);
+              final CacheOneStepIterator<Pair<Integer, String>> cacheOneStepIterator2 = new CacheOneStepIterator<Pair<Integer, String>>(changedLinesIterator2);
               final NavigationContextChecker checker2 = new NavigationContextChecker(cacheOneStepIterator2, scrollContext);
               line = checker2.contextMatchCheck();
             }
@@ -805,7 +791,8 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
                 if (finalLine >= 0) {
                   final int line = myLineBlocks.transform(myRightSide.getSide(), finalLine);
                   myLeftSide.scrollToFirstDiff(line);
-                } else {
+                }
+                else {
                   scrollCurrentToFirstDiff();
                 }
               }
@@ -841,7 +828,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
 
     @Override
     public Pair<Integer, String> next() {
-      if (! myBuffer.isEmpty()) {
+      if (!myBuffer.isEmpty()) {
         return myBuffer.remove(0);
       }
 
@@ -849,7 +836,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
       while (myFragmentsIterator.hasNext()) {
         fragment = myFragmentsIterator.next();
         final TextDiffTypeEnum type = fragment.getType();
-        if (! myIgnoreFragmentsType && (type == null || TextDiffTypeEnum.DELETED.equals(type) || TextDiffTypeEnum.NONE.equals(type))) continue;
+        if (!myIgnoreFragmentsType && (type == null || TextDiffTypeEnum.DELETED.equals(type) || TextDiffTypeEnum.NONE.equals(type))) continue;
         break;
       }
       if (fragment == null) return null;
@@ -903,7 +890,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
         while (myChangedLinesIterator.hasNext()) {
           final Pair<Integer, String> pair = myChangedLinesIterator.next();
           if (pair.getSecond().trim().equals(contextLine)) {
-            if (! iterator.hasNext()) break;
+            if (!iterator.hasNext()) break;
             contextLine = iterator.next().trim();
           }
         }
@@ -911,7 +898,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
           return -1;
         }
       }
-      if (! myChangedLinesIterator.hasNext()) return -1;
+      if (!myChangedLinesIterator.hasNext()) return -1;
 
       final String targetLine = myContext.getTargetString().trim();
       while (myChangedLinesIterator.hasNext()) {

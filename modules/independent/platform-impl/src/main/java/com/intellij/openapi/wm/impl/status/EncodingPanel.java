@@ -208,9 +208,9 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
   private DataContext getContext() {
     Editor editor = getEditor();
     DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);
-    return SimpleDataContext.getSimpleContext(CommonDataKeys.VIRTUAL_FILE.getName(), getSelectedFile(),
-                                              SimpleDataContext.getSimpleContext(CommonDataKeys.PROJECT.getName(), getProject(),
-                                                                                 SimpleDataContext.getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT.getName(), editor == null ? null : editor.getComponent(), parent)
+    return SimpleDataContext.getSimpleContext(CommonDataKeys.VIRTUAL_FILE, getSelectedFile(),
+                                              SimpleDataContext.getSimpleContext(CommonDataKeys.PROJECT, getProject(),
+                                                                                 SimpleDataContext.getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent(), parent)
                                               ));
   }
 

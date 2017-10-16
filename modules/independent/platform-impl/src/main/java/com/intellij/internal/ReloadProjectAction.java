@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public class ReloadProjectAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       ProjectManager.getInstance().reloadProject(project);
     }

@@ -1479,7 +1479,7 @@
     <editorNotificationProvider
         implementation="com.intellij.ide.plugins.pluginsAdvertisement.PluginAdvertiserEditorNotificationProvider"/>
 
-    <getDataRule key="context.ProjectFileDirectory" implementationClass="com.intellij.ide.impl.dataRules.ProjectFileDirectoryRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.ProjectFileDirectoryRule"/>
 
     <localInspection shortName="InconsistentLineSeparators" bundle="messages.InspectionsBundle" key="inconsistent.line.separators"
                      groupKey="group.names.portability.issues" enabledByDefault="false" level="WARNING"
@@ -1993,12 +1993,12 @@
     <lang.ast.leafFactory implementation="com.intellij.psi.impl.source.tree.PlainTextASTLeafFactory"/>
 
     <getDataRule implementation="com.intellij.ide.impl.dataRules.PsiFileRule"/>
-    <getDataRule key="psi.Element" implementationClass="com.intellij.ide.impl.dataRules.PsiElementFromSelectionRule"/>
-    <getDataRule key="psi.Element.array" implementationClass="com.intellij.ide.impl.dataRules.PsiElementFromSelectionsRule"/>
-    <getDataRule key="psi.pasteTargetElement" implementationClass="com.intellij.ide.impl.dataRules.PasteTargetRule"/>
-    <getDataRule key="virtualFile" implementationClass="com.intellij.ide.impl.dataRules.VirtualFileRule"/>
-    <getDataRule key="virtualFileArray" implementationClass="com.intellij.ide.impl.dataRules.VirtualFileArrayRule"/>
-    <getDataRule key="Navigatable" implementationClass="com.intellij.ide.impl.dataRules.NavigatableRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.PsiElementFromSelectionRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.PsiElementFromSelectionsRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.PasteTargetRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.VirtualFileRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.VirtualFileArrayRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.NavigatableRule"/>
     <getDataRule implementation="com.intellij.ide.impl.dataRules.UsageTargetsRule"/>
     <getDataRule implementation="com.intellij.ide.impl.dataRules.UsageInfo2ListRule"/>
     <getDataRule implementation="com.intellij.ide.impl.dataRules.ModuleRule"/>
@@ -2549,8 +2549,8 @@
     <additionalTextAttributes scheme="Darcula" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>
 
     <getDataRule implementation="com.intellij.openapi.vcs.VirtualFileStreamRule"/>
-    <getDataRule key="VCS_REVISION_NUMBERS" implementationClass="com.intellij.openapi.vcs.history.VcsRevisionNumberArrayRule"/>
-    <getDataRule key="vcs.ChangesSelection" implementationClass="com.intellij.openapi.vcs.changes.VcsChangesSelectionRule"/>
+    <getDataRule implementation="com.intellij.openapi.vcs.history.VcsRevisionNumberArrayRule"/>
+    <getDataRule implementation="com.intellij.openapi.vcs.changes.VcsChangesSelectionRule"/>
 
     <orderEntryType implementation="consulo.roots.orderEntry.LibraryOrderEntryType"/>
     <orderEntryType implementation="consulo.roots.orderEntry.ModuleExtensionWithSdkOrderEntryType"/>

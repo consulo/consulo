@@ -211,12 +211,12 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
         Editor editor = null;
         final Application application = ApplicationManager.getApplication();
         if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
-          editor = CommonDataKeys.EDITOR.getData(DataManager.getInstance().getDataContext());
+          editor = DataManager.getInstance().getDataContext().getData(CommonDataKeys.EDITOR);
         }
         else {
           Component component = WindowManagerEx.getInstanceEx().getFocusedComponent(myProject);
           if (component != null) {
-            editor = CommonDataKeys.EDITOR.getData(DataManager.getInstance().getDataContext(component));
+            editor = DataManager.getInstance().getDataContext(component).getData(CommonDataKeys.EDITOR);
           }
         }
 

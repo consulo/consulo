@@ -228,7 +228,7 @@ public class MacOSApplicationProvider implements ApplicationComponent {
 
     @SuppressWarnings("deprecation")
     private static Project getProject() {
-      return CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+      return DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
     }
   }
 }

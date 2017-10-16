@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 public class CutAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    CutProvider provider = PlatformDataKeys.CUT_PROVIDER.getData(dataContext);
+    CutProvider provider = e.getData(PlatformDataKeys.CUT_PROVIDER);
     if (provider == null) {
       return;
     }
@@ -33,8 +33,8 @@ public class CutAction extends AnAction implements DumbAware {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    CutProvider provider = PlatformDataKeys.CUT_PROVIDER.getData(dataContext);
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    CutProvider provider = event.getData(PlatformDataKeys.CUT_PROVIDER);
+    Project project = event.getData(CommonDataKeys.PROJECT);
     presentation.setEnabled(project != null && project.isOpen() && provider != null && provider.isCutEnabled(dataContext));
     if (event.getPlace().equals(ActionPlaces.EDITOR_POPUP) && provider != null) {
       presentation.setVisible(provider.isCutVisible(dataContext));

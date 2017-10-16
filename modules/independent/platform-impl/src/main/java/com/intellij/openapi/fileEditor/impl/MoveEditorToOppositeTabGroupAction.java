@@ -29,12 +29,12 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
 
   public void actionPerformed(final AnActionEvent event) {
     final DataContext dataContext = event.getDataContext();
-    final VirtualFile vFile = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final VirtualFile vFile = event.getData(PlatformDataKeys.VIRTUAL_FILE);
+    final Project project = event.getData(CommonDataKeys.PROJECT);
     if (vFile == null || project == null){
       return;
     }
-    final EditorWindow window = EditorWindow.DATA_KEY.getData(dataContext);
+    final EditorWindow window = event.getData(EditorWindow.DATA_KEY);
     if (window != null) {
       final EditorWindow[] siblings = window.findSiblings();
       if (siblings != null && siblings.length == 1) {
@@ -49,8 +49,8 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
   public void update(AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     final DataContext dataContext = e.getDataContext();
-    final VirtualFile vFile = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
-    final EditorWindow window = EditorWindow.DATA_KEY.getData(dataContext);
+    final VirtualFile vFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+    final EditorWindow window = e.getData(EditorWindow.DATA_KEY);
     if (ActionPlaces.isPopupPlace(e.getPlace())) {
       presentation.setVisible(isEnabled(vFile, window));
     }

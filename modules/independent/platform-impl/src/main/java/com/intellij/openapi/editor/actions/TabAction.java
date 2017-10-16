@@ -59,7 +59,7 @@ public class TabAction extends EditorAction {
       }
       CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.EDIT_COMMAND_GROUP);
       CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      Project project = dataContext.getData(CommonDataKeys.PROJECT);
       insertTabAtCaret(editor, caret, project);
     }
 

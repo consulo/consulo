@@ -22,15 +22,14 @@ import com.intellij.openapi.project.DumbAware;
 
 public class JumpToLastEditAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     IdeDocumentHistory.getInstance(project).navigatePreviousChange();
   }
 
-  public void update(AnActionEvent event){
-    Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+  public void update(AnActionEvent e){
+    Presentation presentation = e.getPresentation();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;

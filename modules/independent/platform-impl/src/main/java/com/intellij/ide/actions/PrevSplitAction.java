@@ -26,7 +26,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 
 public class PrevSplitAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     final CommandProcessor commandProcessor = CommandProcessor.getInstance();
     commandProcessor.executeCommand(
       project, new Runnable(){
@@ -39,7 +39,7 @@ public class PrevSplitAction extends AnAction implements DumbAware {
   }
   
   public void update(final AnActionEvent event){
-    final Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
+    final Project project = event.getData(CommonDataKeys.PROJECT);
     final Presentation presentation = event.getPresentation();
     if (project == null) {
       presentation.setEnabled(false);

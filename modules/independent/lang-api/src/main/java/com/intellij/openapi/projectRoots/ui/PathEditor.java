@@ -186,7 +186,7 @@ public class PathEditor {
 
   private VirtualFile[] doAdd() {
     VirtualFile baseDir = myAddBaseDir;
-    Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(myComponent));
+    Project project = DataManager.getInstance().getDataContext(myComponent).getData(CommonDataKeys.PROJECT);
     if (baseDir == null && project != null) {
       baseDir = project.getBaseDir();
     }

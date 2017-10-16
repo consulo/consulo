@@ -2105,13 +2105,18 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
 
   @NotNull
   private DataContext getProjectAwareDataContext(@NotNull final DataContext original) {
-    if (CommonDataKeys.PROJECT.getData(original) == myProject) return original;
+    if (original.getData(CommonDataKeys.PROJECT) == myProject) return original;
 
-    return dataId -> {
-      if (CommonDataKeys.PROJECT.is(dataId)) {
-        return myProject;
+    return new DataContext() {
+      @Nullable
+      @Override
+      @SuppressWarnings("unchecked")
+      public <T> T getData(@NotNull Key<T> dataId) {
+        if (CommonDataKeys.PROJECT == dataId) {
+          return (T)myProject;
+        }
+        return original.getData(dataId);
       }
-      return original.getData(dataId);
     };
   }
 

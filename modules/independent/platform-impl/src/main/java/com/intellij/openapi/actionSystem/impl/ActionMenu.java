@@ -211,9 +211,7 @@ public final class ActionMenu extends JMenu {
   }
 
   public static void showDescriptionInStatusBar(boolean isIncluded, Component component, String description) {
-    IdeFrame frame = component instanceof IdeFrame
-                     ? (IdeFrame)component
-                     : (IdeFrame)SwingUtilities.getAncestorOfClass(IdeFrame.class, component);
+    IdeFrame frame = component instanceof IdeFrame ? (IdeFrame)component : (IdeFrame)SwingUtilities.getAncestorOfClass(IdeFrame.class, component);
     StatusBar statusBar;
     if (frame != null && (statusBar = frame.getStatusBar()) != null) {
       statusBar.setInfo(isIncluded ? description : null);
@@ -267,7 +265,7 @@ public final class ActionMenu extends JMenu {
     else {
       @SuppressWarnings("deprecation") DataContext contextFromFocus = DataManager.getInstance().getDataContext();
       context = contextFromFocus;
-      if (PlatformDataKeys.CONTEXT_COMPONENT.getData(context) == null) {
+      if (context.getData(PlatformDataKeys.CONTEXT_COMPONENT) == null) {
         IdeFrame frame = UIUtil.getParentOfType(IdeFrame.class, this);
         context = DataManager.getInstance().getDataContext(IdeFocusManager.getGlobalInstance().getLastFocusedFor(frame));
       }

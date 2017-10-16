@@ -43,7 +43,7 @@ public class PinToolwindowTabAction extends ToggleAction implements DumbAware {
 
   @Nullable
   private static Content getContextContent(@NotNull AnActionEvent event) {
-    final ToolWindow window = PlatformDataKeys.TOOL_WINDOW.getData(event.getDataContext());
+    final ToolWindow window = event.getData(PlatformDataKeys.TOOL_WINDOW);
     if (window != null) {
       final ContentManager contentManager = window.getContentManager();
       if (contentManager != null) {

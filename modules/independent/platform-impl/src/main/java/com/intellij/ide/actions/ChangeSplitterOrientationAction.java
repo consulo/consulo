@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
  */
 public final class ChangeSplitterOrientationAction extends SplitterActionBase {
   public void actionPerformed(final AnActionEvent event) {
-    final Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
+    final Project project = event.getData(CommonDataKeys.PROJECT);
     final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
     fileEditorManager.changeSplitterOrientation ();
   }
