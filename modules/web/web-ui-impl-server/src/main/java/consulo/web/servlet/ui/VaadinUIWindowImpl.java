@@ -15,6 +15,7 @@
  */
 package consulo.web.servlet.ui;
 
+import com.intellij.openapi.util.Key;
 import com.vaadin.server.Page;
 import com.vaadin.ui.UI;
 import consulo.ui.*;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EventListener;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -96,6 +98,12 @@ class VaadinUIWindowImpl implements Window {
 
   @NotNull
   @Override
+  public <T> Runnable addUserDataProvider(@NotNull Key<T> key, @NotNull Supplier<T> supplier) {
+    throw new UnsupportedOperationException();
+  }
+
+  @NotNull
+  @Override
   public <T extends EventListener> T getListenerDispatcher(@NotNull Class<T> eventClass) {
     throw new UnsupportedOperationException();
   }
@@ -148,5 +156,16 @@ class VaadinUIWindowImpl implements Window {
   @Override
   public void close() {
     myUI.close();
+  }
+
+  @Nullable
+  @Override
+  public <T> T getUserData(@NotNull Key<T> key) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+    throw new UnsupportedOperationException();
   }
 }
