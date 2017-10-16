@@ -57,6 +57,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.EventListener;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -248,6 +249,12 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
   @NotNull
   @Override
   public <T> Runnable addUserDataProvider(@NotNull Key<T> key, @NotNull Supplier<T> supplier) {
+    throw new UnsupportedOperationException();
+  }
+
+  @NotNull
+  @Override
+  public Runnable addUserDataProvider(@NotNull Function<Key<?>, Object> function) {
     throw new UnsupportedOperationException();
   }
 
