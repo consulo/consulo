@@ -50,7 +50,7 @@ public class AutoHardWrapHandler {
    *
    * @see CodeStyleSettings#isWrapOnTyping(Language)
    */
-  public static final Key<Boolean> AUTO_WRAP_LINE_IN_PROGRESS_KEY = new Key<Boolean>("AUTO_WRAP_LINE_IN_PROGRESS");
+  public static final Key<Boolean> AUTO_WRAP_LINE_IN_PROGRESS_KEY = Key.create("AUTO_WRAP_LINE_IN_PROGRESS");
 
   private static final AutoHardWrapHandler INSTANCE = new AutoHardWrapHandler();
 

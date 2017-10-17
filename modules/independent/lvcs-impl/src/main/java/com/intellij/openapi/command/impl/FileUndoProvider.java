@@ -36,7 +36,7 @@ import java.io.IOException;
 public class FileUndoProvider implements UndoProvider, VirtualFileListener {
   public static final Logger LOG = Logger.getInstance(FileUndoProvider.class);
 
-  private final Key<DocumentReference> DELETION_WAS_UNDOABLE = new Key<>(FileUndoProvider.class.getName() + ".DeletionWasUndoable");
+  private final Key<DocumentReference> DELETION_WAS_UNDOABLE = Key.create(FileUndoProvider.class.getName() + ".DeletionWasUndoable");
 
   private final Project myProject;
   private boolean myIsInsideCommand;

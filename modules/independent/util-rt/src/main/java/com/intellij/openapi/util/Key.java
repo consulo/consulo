@@ -73,6 +73,7 @@ public class Key<T> {
   }
 
   @NotNull
+  @SuppressWarnings("deprecation")
   public static <T> Key<T> create(@NotNull @NonNls String name) {
     return new Key<T>(name);
   }
