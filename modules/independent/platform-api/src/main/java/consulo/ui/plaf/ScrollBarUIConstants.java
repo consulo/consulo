@@ -37,5 +37,5 @@ public interface ScrollBarUIConstants {
   /**
    * This key define a factory for custom increase button, which is used by the custom ScrollBarUI
    */
-  Key<Supplier<? extends JButton>> INCREASE_BUTTON_FACTORY = Key.create("JB_SCROLL_BAR_TRACK");
+  Key<Supplier<? extends JButton>> INCREASE_BUTTON_FACTORY = Key.create("SCROLL_INCREASE_BUTTON_FACTORY");
 }
