@@ -268,7 +268,7 @@ public class Tool implements SchemeElement {
    * @return <code>true</code> if task has been started successfully
    */
   public boolean execute(AnActionEvent event, DataContext dataContext, long executionId, @Nullable final ProcessListener processListener) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return false;
     }

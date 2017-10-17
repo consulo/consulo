@@ -16,10 +16,10 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMExternalizable;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * @see RefactoringListenerProvider
  */
 public interface RunConfiguration extends RunProfile, JDOMExternalizable, Cloneable {
-  DataKey<RunConfiguration> DATA_KEY = DataKey.create("runtimeConfiguration");
+  Key<RunConfiguration> DATA_KEY = Key.create("runtimeConfiguration");
 
   /**
    * Returns the type of the run configuration.

@@ -18,11 +18,20 @@ package com.intellij.diff.actions.impl;
 import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.ide.impl.dataRules.GetDataRule;
 import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
+import org.jetbrains.annotations.NotNull;
 
-public class DiffNavigatableArrayRule implements GetDataRule {
-  public Object getData(DataProvider dataProvider) {
-    final Navigatable element = DiffDataKeys.NAVIGATABLE.getData(dataProvider);
+public class DiffNavigatableArrayRule implements GetDataRule<Navigatable[]> {
+  @NotNull
+  @Override
+  public Key<Navigatable[]> getKey() {
+    return DiffDataKeys.NAVIGATABLE_ARRAY;
+  }
+
+  @Override
+  public Navigatable[] getData(@NotNull DataProvider dataProvider) {
+    final Navigatable element = dataProvider.getDataUnchecked(DiffDataKeys.NAVIGATABLE);
     if (element == null) {
       return null;
     }

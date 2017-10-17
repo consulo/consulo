@@ -36,6 +36,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -211,7 +212,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   protected abstract String getActionPlace();
 
   @NotNull
-  protected abstract String getBrowserDataKey();
+  protected abstract Key<?> getBrowserDataKey();
 
   protected final JTree createTree(boolean dndAware) {
     final Tree tree;
@@ -470,11 +471,11 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   }
 
   @Override
-  public Object getData(final String dataId) {
-    if (getBrowserDataKey().equals(dataId)) {
+  public Object getData(@NotNull final Key<?> dataId) {
+    if (getBrowserDataKey() == dataId) {
       return this;
     }
-    if (PlatformDataKeys.HELP_ID.is(dataId)) {
+    if (PlatformDataKeys.HELP_ID == dataId) {
       return HELP_ID;
     }
     return super.getData(dataId);
@@ -562,12 +563,12 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
   static class BaseOnThisElementAction extends AnAction {
     private final String myActionId;
-    private final String myBrowserDataKey;
+    private final Key<?> myBrowserDataKey;
     @NotNull private final LanguageExtension<HierarchyProvider> myProviderLanguageExtension;
 
     BaseOnThisElementAction(@NotNull String text,
                             @NotNull String actionId,
-                            @NotNull String browserDataKey,
+                            @NotNull Key<?> browserDataKey,
                             @NotNull LanguageExtension<HierarchyProvider> providerLanguageExtension) {
       super(text);
       myActionId = actionId;
@@ -577,7 +578,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     @RequiredDispatchThread
     @Override
-    public final void actionPerformed(final AnActionEvent event) {
+    public final void actionPerformed(@NotNull final AnActionEvent event) {
       final DataContext dataContext = event.getDataContext();
       final HierarchyBrowserBaseEx browser = (HierarchyBrowserBaseEx)dataContext.getData(myBrowserDataKey);
       if (browser == null) return;
@@ -604,7 +605,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     @RequiredDispatchThread
     @Override
-    public final void update(final AnActionEvent event) {
+    public final void update(@NotNull final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
 
       registerCustomShortcutSet(ActionManager.getInstance().getAction(myActionId).getShortcutSet(), null);
@@ -663,9 +664,9 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   public class ChangeScopeAction extends ComboBoxAction {
     @RequiredDispatchThread
     @Override
-    public final void update(final AnActionEvent e) {
+    public final void update(@NotNull final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
-      final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+      final Project project = e.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
       presentation.setEnabled(isEnabled());
       presentation.setText(getCurrentScopeType());
@@ -719,6 +720,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       });
     }
 
+    @NotNull
     @Override
     public final JComponent createCustomComponent(final Presentation presentation) {
       final JPanel panel = new JPanel(new GridBagLayout());
@@ -739,7 +741,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
       @RequiredDispatchThread
       @Override
-      public final void actionPerformed(final AnActionEvent e) {
+      public final void actionPerformed(@NotNull final AnActionEvent e) {
         selectScope(myScopeType);
       }
     }
@@ -751,7 +753,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@NotNull AnActionEvent e) {
         EditScopesDialog.showDialog(myProject, null);
         if (!getValidScopeNames().contains(myType2ScopeMap.get(myCurrentViewType))) {
           selectScope(SCOPE_ALL);

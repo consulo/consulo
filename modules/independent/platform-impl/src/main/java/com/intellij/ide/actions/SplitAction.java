@@ -35,15 +35,15 @@ public abstract class SplitAction extends AnAction implements DumbAware {
   }
 
   public void actionPerformed(final AnActionEvent event) {
-    final Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
+    final Project project = event.getData(CommonDataKeys.PROJECT);
     final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-    final EditorWindow window = EditorWindow.DATA_KEY.getData(event.getDataContext());
+    final EditorWindow window = event.getData(EditorWindow.DATA_KEY);
 
     fileEditorManager.createSplitter(myOrientation, window);
   }
 
   public void update(final AnActionEvent event) {
-    final Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
+    final Project project = event.getData(CommonDataKeys.PROJECT);
     final Presentation presentation = event.getPresentation();
     presentation.setText (myOrientation == SwingConstants.VERTICAL
                           ? IdeBundle.message("action.split.vertically")

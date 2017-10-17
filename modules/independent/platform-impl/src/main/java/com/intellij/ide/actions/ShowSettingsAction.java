@@ -47,7 +47,7 @@ public class ShowSettingsAction extends AnAction implements DumbAware {
   }
 
   public void actionPerformed(AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       project = ProjectManager.getInstance().getDefaultProject();
     }

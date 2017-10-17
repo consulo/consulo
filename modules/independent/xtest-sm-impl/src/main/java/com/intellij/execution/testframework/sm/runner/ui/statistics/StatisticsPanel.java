@@ -24,10 +24,10 @@ import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.PropagateSelectionHandler;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.PopupHandler;
@@ -51,7 +51,7 @@ import java.util.List;
  * @author Roman Chernyatchik
  */
 public class StatisticsPanel implements DataProvider {
-  public static final DataKey<StatisticsPanel> SM_TEST_RUNNER_STATISTICS  = DataKey.create("SM_TEST_RUNNER_STATISTICS");
+  public static final Key<StatisticsPanel> SM_TEST_RUNNER_STATISTICS  = Key.create("SM_TEST_RUNNER_STATISTICS");
 
   private TableView<SMTestProxy> myStatisticsTableView;
   private JPanel myContentPane;
@@ -159,8 +159,8 @@ public class StatisticsPanel implements DataProvider {
     };
   }
 
-  public Object getData(@NonNls final String dataId) {
-    if (SM_TEST_RUNNER_STATISTICS.is(dataId)) {
+  public Object getData(@NotNull @NonNls final Key<?> dataId) {
+    if (SM_TEST_RUNNER_STATISTICS == dataId) {
       return this;
     }
     return TestsUIUtil.getData(getSelectedItem(), dataId, myFrameworkRunningModel);

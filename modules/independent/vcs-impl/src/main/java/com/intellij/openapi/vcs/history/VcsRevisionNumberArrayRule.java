@@ -17,6 +17,7 @@ package com.intellij.openapi.vcs.history;
 
 import com.intellij.ide.impl.dataRules.GetDataRule;
 import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangeListByDateComparator;
@@ -34,11 +35,17 @@ import java.util.List;
 /**
  * @author Konstantin Kolosovsky.
  */
-public class VcsRevisionNumberArrayRule implements GetDataRule {
+public class VcsRevisionNumberArrayRule implements GetDataRule<VcsRevisionNumber[]> {
+
+  @NotNull
+  @Override
+  public Key<VcsRevisionNumber[]> getKey() {
+    return VcsDataKeys.VCS_REVISION_NUMBERS;
+  }
 
   @Nullable
   @Override
-  public Object getData(DataProvider dataProvider) {
+  public VcsRevisionNumber[] getData(@NotNull DataProvider dataProvider) {
     List<VcsRevisionNumber> revisionNumbers = getRevisionNumbers(dataProvider);
 
     return !ContainerUtil.isEmpty(revisionNumbers) ? ArrayUtil.toObjectArray(revisionNumbers, VcsRevisionNumber.class) : null;
@@ -46,12 +53,12 @@ public class VcsRevisionNumberArrayRule implements GetDataRule {
 
   @Nullable
   public List<VcsRevisionNumber> getRevisionNumbers(@NotNull DataProvider dataProvider) {
-    VcsRevisionNumber revisionNumber = VcsDataKeys.VCS_REVISION_NUMBER.getData(dataProvider);
+    VcsRevisionNumber revisionNumber = dataProvider.getDataUnchecked(VcsDataKeys.VCS_REVISION_NUMBER);
     if (revisionNumber != null) {
       return Collections.singletonList(revisionNumber);
     }
 
-    ChangeList[] changeLists = VcsDataKeys.CHANGE_LISTS.getData(dataProvider);
+    ChangeList[] changeLists = dataProvider.getDataUnchecked(VcsDataKeys.CHANGE_LISTS);
     if (changeLists != null && changeLists.length > 0) {
       List<CommittedChangeList> committedChangeLists = ContainerUtil.findAll(changeLists, CommittedChangeList.class);
 
@@ -62,7 +69,7 @@ public class VcsRevisionNumberArrayRule implements GetDataRule {
       }
     }
 
-    VcsFileRevision[] fileRevisions = VcsDataKeys.VCS_FILE_REVISIONS.getData(dataProvider);
+    VcsFileRevision[] fileRevisions = dataProvider.getDataUnchecked(VcsDataKeys.VCS_FILE_REVISIONS);
     if (fileRevisions != null && fileRevisions.length > 0) {
       return ContainerUtil.mapNotNull(fileRevisions, FileRevisionToRevisionNumberFunction.INSTANCE);
     }

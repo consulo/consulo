@@ -34,7 +34,7 @@ public final class FileEncodingMacro extends Macro {
 
   @Override
   public String expand(DataContext dataContext) {
-    VirtualFile file = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
+    VirtualFile file = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
     if (file == null) return null;
     return file.getCharset().displayName();
   }

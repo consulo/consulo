@@ -59,7 +59,7 @@ abstract class GotoBookmarkActionBase extends EditorAction {
 
       @Nullable
       private Bookmark getBookmarkToGo(DataContext dataContext, Editor editor) {
-        Project project = CommonDataKeys.PROJECT.getData(dataContext);
+        Project project = dataContext.getData(CommonDataKeys.PROJECT);
         if (project == null) return null;
         BookmarkManager manager = BookmarkManager.getInstance(project);
         return next ? manager.getNextBookmark(editor, true) : manager.getPreviousBookmark(editor, true);

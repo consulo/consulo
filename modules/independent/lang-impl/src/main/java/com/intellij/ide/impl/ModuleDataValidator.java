@@ -16,14 +16,25 @@
 
 package com.intellij.ide.impl;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.util.Key;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
  */
-public class ModuleDataValidator extends DataValidator<Module> {
+public class ModuleDataValidator implements DataValidator<Module> {
+  @NotNull
   @Override
-  public Module findInvalid(String dataId, Module data, Object dataSource) {
+  public Key<Module> getKey() {
+    return CommonDataKeys.MODULE;
+  }
+
+  @Nullable
+  @Override
+  public Module findInvalid(Key<Module> key, Module data, Object dataSource) {
     return data.isDisposed() ? data : null;
   }
 }

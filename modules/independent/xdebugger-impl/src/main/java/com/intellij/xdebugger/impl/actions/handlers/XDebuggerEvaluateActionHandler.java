@@ -54,22 +54,21 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
       return;
     }
 
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
 
     EvaluationMode mode = EvaluationMode.EXPRESSION;
     String selectedText = editor != null ? editor.getSelectionModel().getSelectedText() : null;
     if (selectedText != null) {
       selectedText = evaluator.formatTextForEvaluation(selectedText);
-      mode = evaluator.getEvaluationMode(selectedText, editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd(),
-                                         CommonDataKeys.PSI_FILE.getData(dataContext));
+      mode = evaluator.getEvaluationMode(selectedText, editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd(), dataContext.getData(CommonDataKeys.PSI_FILE));
     }
     String text = selectedText;
 
     if (text == null && editor != null) {
-      text = getExpressionText(evaluator, CommonDataKeys.PROJECT.getData(dataContext), editor);
+      text = getExpressionText(evaluator, dataContext.getData(CommonDataKeys.PROJECT), editor);
     }
 
-    final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(dataContext);
+    final VirtualFile file = dataContext.getData(CommonDataKeys.VIRTUAL_FILE);
 
     if (text == null) {
       XValue value = XDebuggerTreeActionBase.getSelectedValue(dataContext);

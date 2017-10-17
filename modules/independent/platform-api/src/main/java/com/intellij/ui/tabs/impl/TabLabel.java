@@ -354,8 +354,7 @@ public class TabLabel extends JPanel {
       toShow.addSeparator();
     }
 
-    JBTabsImpl tabs = JBTabsImpl.NAVIGATION_ACTIONS_KEY
-            .getData(DataManager.getInstance().getDataContext(e.getComponent(), e.getX(), e.getY()));
+    JBTabsImpl tabs = DataManager.getInstance().getDataContext(e.getComponent(), e.getX(), e.getY()).getData(JBTabsImpl.NAVIGATION_ACTIONS_KEY);
     if (tabs == myTabs && myTabs.myAddNavigationGroup) {
       toShow.addAll(myTabs.myNavigationActions);
     }

@@ -29,7 +29,7 @@ public abstract class AbstractArrangementRuleAction extends AnAction {
 
   @Nullable
   protected ArrangementMatchingRulesControl getRulesControl(AnActionEvent e) {
-    return ArrangementSectionRulesControl.KEY.getData(e.getDataContext());
+    return e.getData(ArrangementSectionRulesControl.KEY);
   }
 
   protected void scrollRowToVisible(@NotNull ArrangementMatchingRulesControl control, int row) {

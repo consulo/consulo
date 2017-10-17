@@ -74,7 +74,7 @@ public abstract class ProjectImportBuilder<T> extends ProjectBuilder {
 
   @Nullable
   public static Project getCurrentProject() {
-    return CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+    return DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
   }
 
   protected String getTitle() {

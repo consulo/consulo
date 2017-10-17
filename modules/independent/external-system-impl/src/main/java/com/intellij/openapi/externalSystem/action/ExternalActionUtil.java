@@ -35,17 +35,17 @@ import org.jetbrains.annotations.Nullable;
 public class ExternalActionUtil {
   @NotNull
   public static MyInfo getProcessingInfo(@NotNull DataContext context) {
-    ExternalProjectPojo externalProject = ExternalSystemDataKeys.SELECTED_PROJECT.getData(context);
+    ExternalProjectPojo externalProject = context.getData(ExternalSystemDataKeys.SELECTED_PROJECT);
     if (externalProject == null) {
       return MyInfo.EMPTY;
     }
 
-    ProjectSystemId externalSystemId = ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID.getData(context);
+    ProjectSystemId externalSystemId = context.getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
     if (externalSystemId == null) {
       return MyInfo.EMPTY;
     }
 
-    Project ideProject = CommonDataKeys.PROJECT.getData(context);
+    Project ideProject = context.getData(CommonDataKeys.PROJECT);
     if (ideProject == null) {
       return MyInfo.EMPTY;
     }

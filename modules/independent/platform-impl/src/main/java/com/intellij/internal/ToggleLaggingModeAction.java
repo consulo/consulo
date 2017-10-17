@@ -49,7 +49,7 @@ public class ToggleLaggingModeAction extends AnAction implements DumbAware {
   @Override
   public void update(final AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     presentation.setEnabled(project != null && myLagging == DumbServiceImpl.getInstance(project).isDumb());
     if (myLagging) {
       presentation.setText("Exit lagging mode");

@@ -112,7 +112,7 @@ public class ToggleColumnModeAction extends ToggleAction implements DumbAware {
   }
 
   private static EditorEx getEditor(AnActionEvent e) {
-    return (EditorEx) CommonDataKeys.EDITOR.getData(e.getDataContext());
+    return (EditorEx) e.getData(CommonDataKeys.EDITOR);
   }
 
   @Override

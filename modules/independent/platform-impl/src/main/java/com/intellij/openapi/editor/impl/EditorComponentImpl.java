@@ -128,28 +128,28 @@ public class EditorComponentImpl extends JTextComponent implements Scrollable, D
   }
 
   @Override
-  public Object getData(String dataId) {
+  public Object getData(@NotNull Key<?> dataId) {
     if (myEditor.isDisposed() || myEditor.isRendererMode()) return null;
 
-    if (CommonDataKeys.EDITOR.is(dataId)) {
+    if (CommonDataKeys.EDITOR == dataId) {
       return myEditor;
     }
-    if (CommonDataKeys.CARET.is(dataId)) {
+    if (CommonDataKeys.CARET == dataId) {
       return myEditor.getCaretModel().getCurrentCaret();
     }
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
       return myEditor.getDeleteProvider();
     }
-    if (PlatformDataKeys.CUT_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.CUT_PROVIDER == dataId) {
       return myEditor.getCutProvider();
     }
-    if (PlatformDataKeys.COPY_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return myEditor.getCopyProvider();
     }
-    if (PlatformDataKeys.PASTE_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
       return myEditor.getPasteProvider();
     }
-    if (CommonDataKeys.EDITOR_VIRTUAL_SPACE.is(dataId)) {
+    if (CommonDataKeys.EDITOR_VIRTUAL_SPACE == dataId) {
       LogicalPosition location = myEditor.myLastMousePressedLocation;
       if (location == null) {
         location = myEditor.getCaretModel().getLogicalPosition();

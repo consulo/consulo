@@ -29,7 +29,6 @@ import com.intellij.ide.impl.PackagesPaneSelectInTarget;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
-import consulo.ide.projectView.impl.nodes.PackageElement;
 import com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
@@ -42,11 +41,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NonNls;
@@ -59,7 +60,8 @@ import javax.swing.tree.DefaultTreeModel;
 import java.util.*;
 
 public final class PackageViewPane extends AbstractProjectViewPSIPane {
-  @NonNls public static final String ID = "PackagesPane";
+  @NonNls
+  public static final String ID = "PackagesPane";
   private final MyDeletePSIElementProvider myDeletePSIElementProvider = new MyDeletePSIElementProvider();
 
   public PackageViewPane(Project project) {
@@ -104,17 +106,17 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
   }
 
   @Override
-  public Object getData(final String dataId) {
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER.is(dataId)) {
+  public Object getData(@NotNull final Key<?> dataId) {
+    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
       final PackageElement selectedPackageElement = getSelectedPackageElement();
       if (selectedPackageElement != null) {
         return myDeletePSIElementProvider;
       }
     }
-    if (PackageElement.DATA_KEY.is(dataId)) {
-      final PackageElement packageElement = getSelectedPackageElement();
+    if (PackageElement.DATA_KEY == dataId) {
+      return getSelectedPackageElement();
     }
-    if (LangDataKeys.MODULE.is(dataId)) {
+    if (LangDataKeys.MODULE == dataId) {
       final PackageElement packageElement = getSelectedPackageElement();
       if (packageElement != null) {
         return packageElement.getModule();
@@ -152,8 +154,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
 
   private final class ShowLibraryContentsAction extends ToggleAction {
     private ShowLibraryContentsAction() {
-      super(IdeBundle.message("action.show.libraries.contents"), IdeBundle.message("action.show.hide.library.contents"),
-            AllIcons.ObjectBrowser.ShowLibraryContents);
+      super(IdeBundle.message("action.show.libraries.contents"), IdeBundle.message("action.show.hide.library.contents"), AllIcons.ObjectBrowser.ShowLibraryContents);
     }
 
     @Override
@@ -178,7 +179,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
 
   @Override
   public void addToolbarActions(DefaultActionGroup actionGroup) {
-    actionGroup.addAction(new ShowModulesAction(myProject){
+    actionGroup.addAction(new ShowModulesAction(myProject) {
       @Override
       protected String getId() {
         return PackageViewPane.this.getId();
@@ -199,7 +200,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
 
   @Override
   protected ProjectAbstractTreeStructureBase createStructure() {
-    return new ProjectTreeStructure(myProject, ID){
+    return new ProjectTreeStructure(myProject, ID) {
       @Override
       protected AbstractTreeNode createRoot(final Project project, ViewSettings settings) {
         return new PackageViewProjectNode(project, settings);
@@ -264,8 +265,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
       PsiPackage packageToUpdateFrom = aPackage;
       if (!packageTreeStructure.isFlattenPackages() && packageTreeStructure.isHideEmptyMiddlePackages()) {
         // optimization: this check makes sense only if flattenPackages == false && HideEmptyMiddle == true
-        while (packageToUpdateFrom != null && packageToUpdateFrom.isValid() && PackageNodeUtil
-          .isPackageEmpty(packageToUpdateFrom, module, true, false)) {
+        while (packageToUpdateFrom != null && packageToUpdateFrom.isValid() && PackageNodeUtil.isPackageEmpty(packageToUpdateFrom, module, true, false)) {
           packageToUpdateFrom = packageToUpdateFrom.getParentPackage();
         }
       }

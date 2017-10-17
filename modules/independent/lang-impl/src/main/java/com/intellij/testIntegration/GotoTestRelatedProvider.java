@@ -33,7 +33,7 @@ public class GotoTestRelatedProvider extends GotoRelatedProvider {
   @NotNull
   @Override
   public List<? extends GotoRelatedItem> getItems(@NotNull DataContext context) {
-    final PsiFile file = LangDataKeys.PSI_FILE.getData(context);
+    final PsiFile file = context.getData(LangDataKeys.PSI_FILE);
     List<PsiElement> result;
     final boolean isTest = TestFinderHelper.isTest(file);
     if (isTest) {

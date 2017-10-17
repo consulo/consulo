@@ -38,6 +38,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.PersistentFSConstants;
@@ -77,7 +78,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
 
   private JPanel[] myPanels = new JPanel[0];
   private final MergingUpdateQueue myUpdateQueue;
-  private final String myKey = new String("DATA_SELECTOR");
+  private static final Key<Object> ourDataSelectorKey = Key.create("DATA_SELECTOR");
 
   // -------------------------------------------------------------------------
   // Constructor
@@ -147,10 +148,10 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     }
 
     final DataContext dataContext = DataManager.getInstance().getDataContext(owner);
-    if (dataContext.getData(myKey) == this) return;
-    if (CommonDataKeys.PROJECT.getData(dataContext) != myProject) return;
+    if (dataContext.getData(ourDataSelectorKey) == this) return;
+    if (dataContext.getData(CommonDataKeys.PROJECT) != myProject) return;
 
-    final VirtualFile[] files = hasFocus() ? null : CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+    final VirtualFile[] files = hasFocus() ? null : dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     if (!myToolWindow.isVisible()) {
       if (files != null && files.length > 0) {
         myFile = files[0];
@@ -406,8 +407,8 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     }
 
     @Override
-    public Object getData(@NonNls String dataId) {
-      if (dataId.equals(myKey)) return StructureViewWrapperImpl.this;
+    public Object getData(@NotNull @NonNls Key dataId) {
+      if (dataId == ourDataSelectorKey) return StructureViewWrapperImpl.this;
       return null;
     }
   }

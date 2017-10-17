@@ -118,10 +118,10 @@ public final class MacroManager {
   }
 
   private static DataContext getCorrectContext(DataContext dataContext) {
-    if (PlatformDataKeys.FILE_EDITOR.getData(dataContext) != null) {
+    if (dataContext.getData(PlatformDataKeys.FILE_EDITOR) != null) {
       return dataContext;
     }
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return dataContext;
     }

@@ -24,6 +24,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.openapi.util.Couple;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -290,8 +291,8 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (PlatformDataKeys.COPY_PROVIDER.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key dataId) {
+    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return this;
     }
     return null;

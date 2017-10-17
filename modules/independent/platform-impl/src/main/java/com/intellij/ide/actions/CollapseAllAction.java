@@ -21,6 +21,6 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 
 public class CollapseAllAction extends TreeCollapseAllActionBase {
   protected TreeExpander getExpander(DataContext dataContext) {
-    return PlatformDataKeys.TREE_EXPANDER.getData(dataContext);
+    return dataContext.getData(PlatformDataKeys.TREE_EXPANDER);
   }
 }

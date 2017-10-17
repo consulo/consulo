@@ -43,7 +43,7 @@ public class CloneElementAction extends CopyElementAction {
   @Override
   protected void updateForToolWindow(String id, DataContext dataContext,Presentation presentation) {
     // work only with single selection
-    PsiElement[] elements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
+    PsiElement[] elements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
     presentation.setEnabled(elements != null && elements.length == 1 && CopyHandler.canClone(elements));
     presentation.setVisible(true);
     if (!ToolWindowId.COMMANDER.equals(id)) {

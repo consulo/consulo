@@ -21,6 +21,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +34,7 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
   @SuppressWarnings("UnresolvedPropertyKey")
   public static final String CALLER_TYPE = IdeBundle.message("title.hierarchy.callers.of");
 
-  private static final String CALL_HIERARCHY_BROWSER_DATA_KEY = "com.intellij.ide.hierarchy.CallHierarchyBrowserBase";
+  private static final Key<Object> CALL_HIERARCHY_BROWSER_DATA_KEY = Key.create("com.intellij.ide.hierarchy.CallHierarchyBrowserBase");
 
   public CallHierarchyBrowserBase(@NotNull Project project, @NotNull PsiElement method) {
     super(project, method);
@@ -47,7 +48,7 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
   @Override
   @NotNull
-  protected String getBrowserDataKey() {
+  protected Key<Object> getBrowserDataKey() {
     return CALL_HIERARCHY_BROWSER_DATA_KEY;
   }
 

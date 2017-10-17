@@ -67,8 +67,8 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (CommonDataKeys.EDITOR.getName().equals(dataId) && myEditor != null) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (CommonDataKeys.EDITOR == dataId && myEditor != null) {
       return myEditor;
     }
     return null;

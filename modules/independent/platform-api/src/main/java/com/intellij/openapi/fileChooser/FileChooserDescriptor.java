@@ -16,10 +16,10 @@
 package com.intellij.openapi.fileChooser;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.LayeredIcon;
@@ -31,12 +31,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @see FileChooserDescriptorFactory
  */
-public class FileChooserDescriptor implements Cloneable {
+public class FileChooserDescriptor extends UserDataHolderBase implements Cloneable {
   private final boolean myChooseFiles;
   private final boolean myChooseFolders;
   private final boolean myChooseJars;
@@ -54,8 +57,6 @@ public class FileChooserDescriptor implements Cloneable {
   private boolean myShowHiddenFiles = false;
   private Condition<VirtualFile> myFileFilter = null;
   private boolean myForcedToUseIdeaFileChooser = false;
-
-  private final Map<String, Object> myUserData = new HashMap<>();
 
   /**
    * Creates new instance. Use methods from {@link FileChooserDescriptorFactory} for most used descriptors.
@@ -352,27 +353,7 @@ public class FileChooserDescriptor implements Cloneable {
 
   @Override
   public final Object clone() {
-    try {
-      return super.clone();
-    }
-    catch (CloneNotSupportedException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @Nullable
-  public Object getUserData(String dataId) {
-    return myUserData.get(dataId);
-  }
-
-  @Nullable
-  public <T> T getUserData(@NotNull DataKey<T> key) {
-    @SuppressWarnings({"unchecked"}) final T t = (T)myUserData.get(key.getName());
-    return t;
-  }
-
-  public <T> void putUserData(@NotNull DataKey<T> key, @Nullable T data) {
-    myUserData.put(key.getName(), data);
+    return super.clone();
   }
 
   @Override

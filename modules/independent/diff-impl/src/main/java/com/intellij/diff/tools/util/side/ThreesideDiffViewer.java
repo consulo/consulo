@@ -35,6 +35,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -153,11 +154,11 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (CommonDataKeys.VIRTUAL_FILE == dataId) {
       return DiffUtil.getVirtualFile(myRequest, getCurrentSide());
     }
-    else if (DiffDataKeys.CURRENT_CONTENT.is(dataId)) {
+    else if (DiffDataKeys.CURRENT_CONTENT == dataId) {
       return getCurrentSide().select(myRequest.getContents());
     }
     return super.getData(dataId);

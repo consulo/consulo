@@ -16,24 +16,22 @@
 package com.intellij.testFramework;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MapDataContext implements DataContext {
-  private final Map<String, Object> myMap = new HashMap<String, Object>();
+  private final Map<Key, Object> myMap = new HashMap<>();
 
   @Override
-  public Object getData(String dataId) {
-    return myMap.get(dataId);
+  @SuppressWarnings("unchecked")
+  public <T> T getData(@NotNull Key<T> dataId) {
+    return (T)myMap.get(dataId);
   }
 
-  public void put(String dataId, Object data) {
-    myMap.put(dataId, data);
-  }
-
-  public <T> void put(DataKey<T> dataKey, T data) {
-    put(dataKey.getName(), data);
+  public <T> void put(Key<T> dataKey, T data) {
+    myMap.put(dataKey, data);
   }
 }

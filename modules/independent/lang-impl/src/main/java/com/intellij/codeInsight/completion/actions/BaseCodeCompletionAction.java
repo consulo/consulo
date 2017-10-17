@@ -59,10 +59,10 @@ public abstract class BaseCodeCompletionAction extends DumbAwareAction implement
   public void update(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     e.getPresentation().setEnabled(false);
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor == null) return;
 
     final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);

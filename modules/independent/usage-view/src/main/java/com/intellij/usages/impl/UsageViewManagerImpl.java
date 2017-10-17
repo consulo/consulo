@@ -17,7 +17,6 @@ package com.intellij.usages.impl;
 
 import com.intellij.find.SearchInBackgroundOption;
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.application.ApplicationManager;
@@ -62,10 +61,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   @Override
   @NotNull
-  public UsageView createUsageView(@NotNull UsageTarget[] targets,
-                                   @NotNull Usage[] usages,
-                                   @NotNull UsageViewPresentation presentation,
-                                   Factory<UsageSearcher> usageSearcherFactory) {
+  public UsageView createUsageView(@NotNull UsageTarget[] targets, @NotNull Usage[] usages, @NotNull UsageViewPresentation presentation, Factory<UsageSearcher> usageSearcherFactory) {
     UsageViewImpl usageView = new UsageViewImpl(myProject, presentation, targets, usageSearcherFactory);
     appendUsages(usages, usageView);
     usageView.setSearchInProgress(false);
@@ -74,10 +70,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   @Override
   @NotNull
-  public UsageView showUsages(@NotNull UsageTarget[] searchedFor,
-                              @NotNull Usage[] foundUsages,
-                              @NotNull UsageViewPresentation presentation,
-                              Factory<UsageSearcher> factory) {
+  public UsageView showUsages(@NotNull UsageTarget[] searchedFor, @NotNull Usage[] foundUsages, @NotNull UsageViewPresentation presentation, Factory<UsageSearcher> factory) {
     UsageView usageView = createUsageView(searchedFor, foundUsages, presentation, factory);
     addContent((UsageViewImpl)usageView, presentation);
     showToolWindow(true);
@@ -97,8 +90,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   void addContent(@NotNull UsageViewImpl usageView, @NotNull UsageViewPresentation presentation) {
     Content content = com.intellij.usageView.UsageViewManager.getInstance(myProject)
-            .addContent(presentation.getTabText(), presentation.getTabName(), presentation.getToolwindowTitle(), true, usageView.getComponent(),
-                        presentation.isOpenInNewTab(), true);
+            .addContent(presentation.getTabText(), presentation.getTabName(), presentation.getToolwindowTitle(), true, usageView.getComponent(), presentation.isOpenInNewTab(), true);
     usageView.setContent(content);
     content.putUserData(USAGE_VIEW_KEY, usageView);
   }
@@ -128,8 +120,8 @@ public class UsageViewManagerImpl extends UsageViewManager {
     Task.Backgroundable task = new Task.Backgroundable(myProject, getProgressTitle(presentation), true, new SearchInBackgroundOption()) {
       @Override
       public void run(@NotNull final ProgressIndicator indicator) {
-        new SearchForUsagesRunnable(UsageViewManagerImpl.this, UsageViewManagerImpl.this.myProject, usageViewRef, presentation, searchFor, searcherFactory,
-                                    processPresentation, searchScopeToWarnOfFallingOutOf, listener).run();
+        new SearchForUsagesRunnable(UsageViewManagerImpl.this, UsageViewManagerImpl.this.myProject, usageViewRef, presentation, searchFor, searcherFactory, processPresentation,
+                                    searchScopeToWarnOfFallingOutOf, listener).run();
       }
 
       @NotNull
@@ -153,7 +145,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
       final SearchScope[] scope = new SearchScope[1];
       ((TypeSafeDataProvider)target).calcData(UsageView.USAGE_SCOPE, new DataSink() {
         @Override
-        public <T> void put(DataKey<T> key, T data) {
+        public <T> void put(Key<T> key, T data) {
           scope[0] = (SearchScope)data;
         }
       });
@@ -243,14 +235,12 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   public static boolean isInScope(@NotNull Usage usage, @NotNull SearchScope searchScope) {
     PsiElement element = null;
-    VirtualFile file = usage instanceof UsageInFile
-                       ? ((UsageInFile)usage).getFile()
-                       : usage instanceof PsiElementUsage ? PsiUtilCore.getVirtualFile(element = ((PsiElementUsage)usage).getElement()) : null;
+    VirtualFile file =
+            usage instanceof UsageInFile ? ((UsageInFile)usage).getFile() : usage instanceof PsiElementUsage ? PsiUtilCore.getVirtualFile(element = ((PsiElementUsage)usage).getElement()) : null;
     if (file != null) {
       return isFileInScope(file, searchScope);
     }
-    return element != null &&
-           (searchScope instanceof EverythingGlobalScope || searchScope instanceof ProjectScopeImpl || searchScope instanceof ProjectAndLibrariesScope);
+    return element != null && (searchScope instanceof EverythingGlobalScope || searchScope instanceof ProjectScopeImpl || searchScope instanceof ProjectAndLibrariesScope);
   }
 
   private static boolean isFileInScope(@NotNull VirtualFile file, @NotNull SearchScope searchScope) {

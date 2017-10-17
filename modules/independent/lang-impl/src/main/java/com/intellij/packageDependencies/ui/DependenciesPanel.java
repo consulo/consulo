@@ -43,6 +43,7 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.StatusBar;
@@ -452,15 +453,15 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   @Override
   @Nullable
   @NonNls
-  public Object getData(@NonNls String dataId) {
-    if (LangDataKeys.PSI_ELEMENT.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key dataId) {
+    if (LangDataKeys.PSI_ELEMENT == dataId) {
       final PackageDependenciesNode selectedNode = myRightTree.getSelectedNode();
       if (selectedNode != null) {
         final PsiElement element = selectedNode.getPsiElement();
         return element != null && element.isValid() ? element : null;
       }
     }
-    if (PlatformDataKeys.HELP_ID.is(dataId)) {
+    if (PlatformDataKeys.HELP_ID == dataId) {
       return "dependency.viewer.tool.window";
     }
     return null;
@@ -766,12 +767,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
   private static class MyTree extends Tree implements DataProvider {
     @Override
-    public Object getData(String dataId) {
+    public Object getData(@NotNull Key<?> dataId) {
       PackageDependenciesNode node = getSelectedNode();
-      if (PlatformDataKeys.NAVIGATABLE.is(dataId)) {
+      if (PlatformDataKeys.NAVIGATABLE == dataId) {
         return node;
       }
-      if (LangDataKeys.PSI_ELEMENT.is(dataId) && node != null)  {
+      if (LangDataKeys.PSI_ELEMENT == dataId && node != null)  {
         final PsiElement element = node.getPsiElement();
         return element != null && element.isValid() ? element : null;
       }

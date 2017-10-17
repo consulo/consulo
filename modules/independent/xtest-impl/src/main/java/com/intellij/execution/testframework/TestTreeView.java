@@ -29,6 +29,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.*;
 import com.intellij.ui.treeStructure.Tree;
@@ -52,7 +53,7 @@ import java.util.Collection;
 import java.util.List;
 
 public abstract class TestTreeView extends Tree implements DataProvider, CopyProvider {
-  public static final DataKey<TestFrameworkRunningModel> MODEL_DATA_KEY = DataKey.create("testFrameworkModel.dataId");
+  public static final Key<TestFrameworkRunningModel> MODEL_DATA_KEY = Key.create("testFrameworkModel.dataId");
 
   private TestFrameworkRunningModel myModel;
 
@@ -95,20 +96,20 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
     setLargeModel(true);
   }
 
-  public Object getData(final String dataId) {
-    if (PlatformDataKeys.COPY_PROVIDER.is(dataId)) {
+  public Object getData(@NotNull final Key<?> dataId) {
+    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return this;
     }
 
-    if (LangDataKeys.PSI_ELEMENT_ARRAY.is(dataId)) {
+    if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
       TreePath[] paths = getSelectionPaths();
       if (paths != null && paths.length > 1) {
-        final List<PsiElement> els = new ArrayList<PsiElement>(paths.length);
+        final List<PsiElement> els = new ArrayList<>(paths.length);
         for (TreePath path : paths) {
           if (isPathSelected(path.getParentPath())) continue;
           AbstractTestProxy test = getSelectedTest(path);
           if (test != null) {
-            final PsiElement psiElement = (PsiElement)TestsUIUtil.getData(test, CommonDataKeys.PSI_ELEMENT.getName(), myModel);
+            final PsiElement psiElement = TestsUIUtil.getData(test, CommonDataKeys.PSI_ELEMENT, myModel);
             if (psiElement != null) {
               els.add(psiElement);
             }
@@ -118,15 +119,15 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
       }
     }
 
-    if (Location.DATA_KEYS.is(dataId)) {
+    if (Location.DATA_KEYS == dataId) {
       TreePath[] paths = getSelectionPaths();
       if (paths != null && paths.length > 1) {
-        final List<Location<?>> locations = new ArrayList<Location<?>>(paths.length);
+        final List<Location<?>> locations = new ArrayList<>(paths.length);
         for (TreePath path : paths) {
           if (isPathSelected(path.getParentPath())) continue;
           AbstractTestProxy test = getSelectedTest(path);
           if (test != null) {
-            final Location<?> location = (Location<?>)TestsUIUtil.getData(test, Location.DATA_KEY.getName(), myModel);
+            final Location<?> location = TestsUIUtil.getData(test, Location.DATA_KEY, myModel);
             if (location != null) {
               locations.add(location);
             }
@@ -136,7 +137,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
       }
     }
 
-    if (MODEL_DATA_KEY.is(dataId)) {
+    if (MODEL_DATA_KEY == dataId) {
       return myModel;
     }
 
@@ -149,15 +150,14 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
 
   @Override
   public void performCopy(@NotNull DataContext dataContext) {
-    final PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+    final PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
     final String fqn;
     if (element != null) {
       fqn = CopyReferenceAction.elementToFqn(element);
     }
     else {
       AbstractTestProxy selectedTest = getSelectedTest();
-      fqn = selectedTest instanceof TestProxyRoot ? ((TestProxyRoot)selectedTest).getRootLocation()
-                                                  : selectedTest != null ? selectedTest.getLocationUrl() : null;
+      fqn = selectedTest instanceof TestProxyRoot ? ((TestProxyRoot)selectedTest).getRootLocation() : selectedTest != null ? selectedTest.getLocationUrl() : null;
     }
     CopyPasteManager.getInstance().setContents(new StringSelection(fqn));
   }

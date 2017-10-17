@@ -17,7 +17,7 @@ package com.intellij.application.options.codeStyle.arrangement.match.tokens;
 
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ import java.util.List;
  * @author Svetlana.Zemlyanskaya
  */
 public class ArrangementRuleAliasControl extends ArrangementMatchingRulesControl {
-  @NotNull public static final DataKey<ArrangementRuleAliasControl> KEY = DataKey.create("Arrangement.Alias.Rule.Control");
+  @NotNull public static final Key<ArrangementRuleAliasControl> KEY = Key.create("Arrangement.Alias.Rule.Control");
 
   public ArrangementRuleAliasControl(@NotNull ArrangementStandardSettingsManager settingsManager,
                                      @NotNull ArrangementColorsProvider colorsProvider,

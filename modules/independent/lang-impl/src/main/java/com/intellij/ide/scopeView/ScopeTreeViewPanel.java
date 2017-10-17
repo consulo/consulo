@@ -52,6 +52,7 @@ import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.changes.*;
@@ -363,8 +364,8 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
   }
 
   @Nullable
-  public Object getData(String dataId) {
-    if (LangDataKeys.MODULE_CONTEXT.is(dataId)) {
+  public Object getData(Key<?> dataId) {
+    if (LangDataKeys.MODULE_CONTEXT == dataId) {
       final TreePath selectionPath = myTree.getSelectionPath();
       if (selectionPath != null) {
         PackageDependenciesNode node = (PackageDependenciesNode)selectionPath.getLastPathComponent();
@@ -373,7 +374,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         }
       }
     }
-    if (LangDataKeys.PSI_ELEMENT.is(dataId)) {
+    if (LangDataKeys.PSI_ELEMENT == dataId) {
       final TreePath selectionPath = myTree.getSelectionPath();
       if (selectionPath != null) {
         PackageDependenciesNode node = (PackageDependenciesNode)selectionPath.getLastPathComponent();
@@ -382,7 +383,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     }
     final TreePath[] treePaths = myTree.getSelectionPaths();
     if (treePaths != null) {
-      if (LangDataKeys.PSI_ELEMENT_ARRAY.is(dataId)) {
+      if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
         Set<PsiElement> psiElements = new HashSet<PsiElement>();
         for (TreePath treePath : treePaths) {
           final PackageDependenciesNode node = (PackageDependenciesNode)treePath.getLastPathComponent();
@@ -396,25 +397,25 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         return psiElements.isEmpty() ? null : PsiUtilBase.toPsiElementArray(psiElements);
       }
     }
-    if (LangDataKeys.IDE_VIEW.is(dataId)) {
+    if (LangDataKeys.IDE_VIEW == dataId) {
       return myIdeView;
     }
-    if (PlatformDataKeys.CUT_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.CUT_PROVIDER == dataId) {
       return myCopyPasteDelegator.getCutProvider();
     }
-    if (PlatformDataKeys.COPY_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return myCopyPasteDelegator.getCopyProvider();
     }
-    if (PlatformDataKeys.PASTE_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
       return myCopyPasteDelegator.getPasteProvider();
     }
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
       if (getSelectedModules() != null) {
         return myDeleteModuleProvider;
       }
       return myDeletePSIElementProvider;
     }
-    if (LangDataKeys.PASTE_TARGET_PSI_ELEMENT.is(dataId)) {
+    if (LangDataKeys.PASTE_TARGET_PSI_ELEMENT == dataId) {
       final TreePath selectionPath = myTree.getSelectionPath();
       if (selectionPath != null) {
         final Object pathComponent = selectionPath.getLastPathComponent();

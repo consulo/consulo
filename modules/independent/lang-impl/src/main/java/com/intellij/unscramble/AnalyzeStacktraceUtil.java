@@ -41,6 +41,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -151,8 +152,8 @@ public class AnalyzeStacktraceUtil {
     }
 
     @Override
-    public Object getData(String dataId) {
-      if (CommonDataKeys.EDITOR.is(dataId)) {
+    public Object getData(@NotNull Key<?> dataId) {
+      if (CommonDataKeys.EDITOR == dataId) {
         return myEditor;
       }
       return null;

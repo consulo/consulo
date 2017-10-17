@@ -19,26 +19,30 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.util.Key;
+import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 public class CloseAction extends AnAction implements DumbAware {
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     e.getPresentation().setIcon(ActionPlaces.isToolbarPlace(e.getPlace()) ? AllIcons.Actions.Cancel : null);
 
     CloseTarget closeTarget = e.getData(CloseTarget.KEY);
     e.getPresentation().setEnabled(closeTarget != null);
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     e.getData(CloseTarget.KEY).close();
   }
 
   public interface CloseTarget {
-    DataKey<CloseTarget> KEY = DataKey.create("GenericClosable");
+    Key<CloseTarget> KEY = Key.create("GenericClosable");
 
     void close();
   }

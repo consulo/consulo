@@ -44,7 +44,7 @@ public class RenameFavoritesListAction extends AnAction implements DumbAware {
       return;
     }
     final FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
-    String listName = FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY.getData(dataContext);
+    String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
     if (listName == null || favoritesManager.getListProvider(listName) != null) return;
     favoritesManager.renameList(project, listName);
   }
@@ -58,7 +58,7 @@ public class RenameFavoritesListAction extends AnAction implements DumbAware {
       return;
     }
     final FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
-    String listName = FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY.getData(dataContext);
+    String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
     e.getPresentation().setEnabled(listName != null && favoritesManager.getListProvider(listName) == null);
   }
 }

@@ -26,7 +26,6 @@ import com.intellij.execution.rmi.RemoteUtil;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -147,7 +146,7 @@ public class ExternalSystemUtil {
   @Nullable
   public static <T> T getToolWindowElement(@NotNull Class<T> clazz,
                                            @NotNull Project project,
-                                           @NotNull DataKey<T> key,
+                                           @NotNull com.intellij.openapi.util.Key<T> key,
                                            @NotNull ProjectSystemId externalSystemId) {
     if (project.isDisposed() || !project.isOpen()) {
       return null;
@@ -169,7 +168,7 @@ public class ExternalSystemUtil {
     for (Content content : contentManager.getContents()) {
       final JComponent component = content.getComponent();
       if (component instanceof DataProvider) {
-        final Object data = ((DataProvider)component).getData(key.getName());
+        final Object data = ((DataProvider)component).getData(key);
         if (data != null && clazz.isInstance(data)) {
           return (T)data;
         }

@@ -190,7 +190,7 @@ public class ToolEditorDialog extends DialogWrapper {
     myOutputFiltersButton = new JButton(ToolsBundle.message("tools.filters.button"));
 
     DataContext dataContext = DataManager.getInstance().getDataContext(parent);
-    myProject = CommonDataKeys.PROJECT.getData(dataContext);
+    myProject = dataContext.getData(CommonDataKeys.PROJECT);
     MacroManager.getInstance().cacheMacrosPreview(dataContext);
     setTitle(title);
     init();

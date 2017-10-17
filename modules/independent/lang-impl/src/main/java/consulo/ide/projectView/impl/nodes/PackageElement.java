@@ -17,9 +17,9 @@ package consulo.ide.projectView.impl.nodes;
 
 import com.intellij.ide.projectView.RootsProvider;
 import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.ui.Queryable;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import consulo.psi.PsiPackage;
@@ -36,7 +36,7 @@ import java.util.Set;
  * @since 13:58/07.07.13
  */
 public class PackageElement implements Queryable, RootsProvider {
-  public static final DataKey<javax.lang.model.element.PackageElement> DATA_KEY =  DataKey.create("package.element");
+  public static final Key<PackageElement> DATA_KEY = Key.create("package.element");
 
   @Nullable
   private final Module myModule;
@@ -52,7 +52,7 @@ public class PackageElement implements Queryable, RootsProvider {
 
   @Override
   public Collection<VirtualFile> getRoots() {
-    Set<VirtualFile> roots= new HashSet<VirtualFile>();
+    Set<VirtualFile> roots = new HashSet<VirtualFile>();
     final PsiDirectory[] dirs = PackageNodeUtil.getDirectories(getPackage(), getPackage().getProject(), getModule(), isLibraryElement());
     for (PsiDirectory each : dirs) {
       roots.add(each.getVirtualFile());

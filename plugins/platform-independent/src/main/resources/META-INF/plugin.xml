@@ -142,15 +142,9 @@
     <extensionPoint name="keymapExtension"
                     interface="com.intellij.openapi.keymap.KeymapExtension"/>
 
-    <extensionPoint name="getDataRule"
-                    beanClass="com.intellij.util.KeyedLazyInstanceEP">
-      <with attribute="implementationClass" implements="com.intellij.ide.impl.dataRules.GetDataRule"/>
-    </extensionPoint>
+    <extensionPoint name="getDataRule" interface="com.intellij.ide.impl.dataRules.GetDataRule"/>
 
-    <extensionPoint name="dataValidator"
-                    beanClass="com.intellij.util.KeyedLazyInstanceEP">
-      <with attribute="implementationClass" implements="com.intellij.ide.impl.DataValidator"/>
-    </extensionPoint>
+    <extensionPoint name="dataValidator" interface="com.intellij.ide.impl.DataValidator" />
 
     <extensionPoint name="cutElementMarker"
                     interface="com.intellij.openapi.ide.CutElementMarker"/>
@@ -1482,7 +1476,7 @@
     <editorNotificationProvider
         implementation="com.intellij.ide.plugins.pluginsAdvertisement.PluginAdvertiserEditorNotificationProvider"/>
 
-    <getDataRule key="context.ProjectFileDirectory" implementationClass="com.intellij.ide.impl.dataRules.ProjectFileDirectoryRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.ProjectFileDirectoryRule"/>
 
     <localInspection shortName="InconsistentLineSeparators" bundle="messages.InspectionsBundle" key="inconsistent.line.separators"
                      groupKey="group.names.portability.issues" enabledByDefault="false" level="WARNING"
@@ -1995,21 +1989,21 @@
     <lang.braceMatcher language="TEXT" implementationClass="com.intellij.ide.highlighter.custom.impl.CustomFileTypeBraceMatcher"/>
     <lang.ast.leafFactory implementation="com.intellij.psi.impl.source.tree.PlainTextASTLeafFactory"/>
 
-    <getDataRule key="psi.File" implementationClass="com.intellij.ide.impl.dataRules.PsiFileRule"/>
-    <getDataRule key="psi.Element" implementationClass="com.intellij.ide.impl.dataRules.PsiElementFromSelectionRule"/>
-    <getDataRule key="psi.Element.array" implementationClass="com.intellij.ide.impl.dataRules.PsiElementFromSelectionsRule"/>
-    <getDataRule key="psi.pasteTargetElement" implementationClass="com.intellij.ide.impl.dataRules.PasteTargetRule"/>
-    <getDataRule key="virtualFile" implementationClass="com.intellij.ide.impl.dataRules.VirtualFileRule"/>
-    <getDataRule key="virtualFileArray" implementationClass="com.intellij.ide.impl.dataRules.VirtualFileArrayRule"/>
-    <getDataRule key="Navigatable" implementationClass="com.intellij.ide.impl.dataRules.NavigatableRule"/>
-    <getDataRule key="usageTarget" implementationClass="com.intellij.ide.impl.dataRules.UsageTargetsRule"/>
-    <getDataRule key="UsageInfo.List" implementationClass="com.intellij.ide.impl.dataRules.UsageInfo2ListRule"/>
-    <getDataRule key="module" implementationClass="com.intellij.ide.impl.dataRules.ModuleRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.PsiFileRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.PsiElementFromSelectionRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.PsiElementFromSelectionsRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.PasteTargetRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.VirtualFileRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.VirtualFileArrayRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.NavigatableRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.UsageTargetsRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.UsageInfo2ListRule"/>
+    <getDataRule implementation="com.intellij.ide.impl.dataRules.ModuleRule"/>
 
-    <dataValidator key="psi.File" implementationClass="com.intellij.ide.impl.PsiElementDataValidator"/>
-    <dataValidator key="psi.Element" implementationClass="com.intellij.ide.impl.PsiElementDataValidator"/>
-    <dataValidator key="psi.Element.array" implementationClass="com.intellij.ide.impl.PsiElementArrayDataValidator"/>
-    <dataValidator key="module" implementationClass="com.intellij.ide.impl.ModuleDataValidator"/>
+    <dataValidator implementation="consulo.ide.impl.PsiFileDataValidator"/>
+    <dataValidator implementation="com.intellij.ide.impl.PsiElementDataValidator"/>
+    <dataValidator implementation="com.intellij.ide.impl.PsiElementArrayDataValidator"/>
+    <dataValidator implementation="com.intellij.ide.impl.ModuleDataValidator"/>
 
     <patternDialectProvider implementation="com.intellij.packageDependencies.ui.ProjectPatternProvider" id="file"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.DefaultScopesProvider"/>
@@ -2551,9 +2545,9 @@
     <additionalTextAttributes scheme="Default" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>
     <additionalTextAttributes scheme="Darcula" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>
 
-    <getDataRule key="virtualFileStream" implementationClass="com.intellij.openapi.vcs.VirtualFileStreamRule"/>
-    <getDataRule key="VCS_REVISION_NUMBERS" implementationClass="com.intellij.openapi.vcs.history.VcsRevisionNumberArrayRule"/>
-    <getDataRule key="vcs.ChangesSelection" implementationClass="com.intellij.openapi.vcs.changes.VcsChangesSelectionRule"/>
+    <getDataRule implementation="com.intellij.openapi.vcs.VirtualFileStreamRule"/>
+    <getDataRule implementation="com.intellij.openapi.vcs.history.VcsRevisionNumberArrayRule"/>
+    <getDataRule implementation="com.intellij.openapi.vcs.changes.VcsChangesSelectionRule"/>
 
     <orderEntryType implementation="consulo.roots.orderEntry.LibraryOrderEntryType"/>
     <orderEntryType implementation="consulo.roots.orderEntry.ModuleExtensionWithSdkOrderEntryType"/>

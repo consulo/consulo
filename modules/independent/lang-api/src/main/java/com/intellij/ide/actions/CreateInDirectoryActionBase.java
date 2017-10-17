@@ -64,7 +64,7 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
   }
 
   protected boolean isAvailable(final DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return false;
     }
@@ -73,7 +73,7 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
       return false;
     }
 
-    final IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
+    final IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
     if (view == null || view.getDirectories().length == 0) {
       return false;
     }

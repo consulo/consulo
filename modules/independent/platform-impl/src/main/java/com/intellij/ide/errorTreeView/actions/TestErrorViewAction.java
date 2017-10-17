@@ -43,7 +43,7 @@ public abstract class TestErrorViewAction extends AnAction{
   private int myMessageCount = 0;
 
   public void actionPerformed(AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }

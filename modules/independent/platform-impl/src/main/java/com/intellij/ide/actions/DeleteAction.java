@@ -51,7 +51,7 @@ public class DeleteAction extends AnAction implements DumbAware {
 
   @Nullable
   protected DeleteProvider getDeleteProvider(DataContext dataContext) {
-    return PlatformDataKeys.DELETE_ELEMENT_PROVIDER.getData(dataContext);
+    return dataContext.getData(PlatformDataKeys.DELETE_ELEMENT_PROVIDER);
   }
 
   public void update(AnActionEvent event){
@@ -62,7 +62,7 @@ public class DeleteAction extends AnAction implements DumbAware {
     else
       presentation.setText(IdeBundle.message("action.delete"));
     DataContext dataContext = event.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;
@@ -70,7 +70,7 @@ public class DeleteAction extends AnAction implements DumbAware {
     DeleteProvider provider = getDeleteProvider(dataContext);
     if (event.getInputEvent() instanceof KeyEvent) {
       KeyEvent keyEvent = (KeyEvent)event.getInputEvent();
-      Object component = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
+      Object component = event.getData(PlatformDataKeys.CONTEXT_COMPONENT);
       if (component instanceof JTextComponent) provider = null; // Do not override text deletion
       if (keyEvent.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
         // Do not override text deletion in speed search
@@ -79,7 +79,7 @@ public class DeleteAction extends AnAction implements DumbAware {
           if (searchSupply != null) provider = null;
         }
 
-        String activeSpeedSearchFilter = SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY.getData(dataContext);
+        String activeSpeedSearchFilter = event.getData(SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY);
         if (!StringUtil.isEmpty(activeSpeedSearchFilter)) {
           provider = null;
         }

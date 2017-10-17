@@ -16,10 +16,10 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Key;
 
 /**
  * @author Eugene Zhuravlev
@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Comparing;
  * Time: 7:08:30 PM
  */
 public final class NamedLibraryElement {
-  public static final DataKey<NamedLibraryElement[]> ARRAY_DATA_KEY = DataKey.create("namedLibrary.array");
+  public static final Key<NamedLibraryElement[]> ARRAY_DATA_KEY = Key.create("namedLibrary.array");
 
   private final Module myContextModule;
   private final OrderEntry myEntry;

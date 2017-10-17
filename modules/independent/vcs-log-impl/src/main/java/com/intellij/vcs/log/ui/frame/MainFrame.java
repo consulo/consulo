@@ -7,6 +7,7 @@ import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.TextRevisionNumber;
@@ -36,7 +37,6 @@ import com.intellij.vcs.log.ui.filter.VcsLogClassicFilterUi;
 import com.intellij.vcs.log.util.BekUtil;
 import com.intellij.vcs.log.util.VcsUserUtil;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -250,20 +250,20 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (VcsLogDataKeys.VCS_LOG.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (VcsLogDataKeys.VCS_LOG == dataId) {
       return myLog;
     }
-    else if (VcsLogDataKeys.VCS_LOG_UI.is(dataId)) {
+    else if (VcsLogDataKeys.VCS_LOG_UI == dataId) {
       return myUi;
     }
-    else if (VcsLogDataKeys.VCS_LOG_DATA_PROVIDER.is(dataId)) {
+    else if (VcsLogDataKeys.VCS_LOG_DATA_PROVIDER == dataId) {
       return myLogData;
     }
-    else if (VcsDataKeys.CHANGES.is(dataId) || VcsDataKeys.SELECTED_CHANGES.is(dataId)) {
+    else if (VcsDataKeys.CHANGES == dataId || VcsDataKeys.SELECTED_CHANGES == dataId) {
       return ArrayUtil.toObjectArray(myChangesBrowser.getCurrentDisplayedChanges(), Change.class);
     }
-    else if (VcsDataKeys.CHANGE_LISTS.is(dataId)) {
+    else if (VcsDataKeys.CHANGE_LISTS == dataId) {
       List<VcsFullCommitDetails> details = myLog.getSelectedDetails();
       if (details.size() > VcsLogUtil.MAX_SELECTED_COMMITS) return null;
       return ContainerUtil.map2Array(details, CommittedChangeListForRevision.class,
@@ -273,13 +273,13 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
                                                                                   detail.getChanges(),
                                                                                   convertToRevisionNumber(detail.getId())));
     }
-    else if (VcsDataKeys.VCS_REVISION_NUMBERS.is(dataId)) {
+    else if (VcsDataKeys.VCS_REVISION_NUMBERS == dataId) {
       List<CommitId> hashes = myLog.getSelectedCommits();
       if (hashes.size() > VcsLogUtil.MAX_SELECTED_COMMITS) return null;
       return ArrayUtil
               .toObjectArray(ContainerUtil.map(hashes, commitId -> convertToRevisionNumber(commitId.getHash())), VcsRevisionNumber.class);
     }
-    else if (VcsDataKeys.VCS.is(dataId)) {
+    else if (VcsDataKeys.VCS == dataId) {
       int[] selectedRows = myGraphTable.getSelectedRows();
       if (selectedRows.length == 0 || selectedRows.length > VcsLogUtil.MAX_SELECTED_COMMITS) return null;
       Set<VirtualFile> roots = ContainerUtil.map2Set(Ints.asList(selectedRows), row -> myGraphTable.getModel().getRoot(row));
@@ -287,15 +287,15 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
         return myLogData.getLogProvider(assertNotNull(getFirstItem(roots))).getSupportedVcs();
       }
     }
-    else if (VcsLogDataKeys.VCS_LOG_BRANCHES.is(dataId)) {
+    else if (VcsLogDataKeys.VCS_LOG_BRANCHES == dataId) {
       int[] selectedRows = myGraphTable.getSelectedRows();
       if (selectedRows.length != 1) return null;
       return myGraphTable.getModel().getBranchesAtRow(selectedRows[0]);
     }
-    else if (PlatformDataKeys.HELP_ID.is(dataId)) {
+    else if (PlatformDataKeys.HELP_ID == dataId) {
       return HELP_ID;
     }
-    else if (VcsLogInternalDataKeys.LOG_UI_PROPERTIES.is(dataId)) {
+    else if (VcsLogInternalDataKeys.LOG_UI_PROPERTIES == dataId) {
       return myUiProperties;
     }
     return null;

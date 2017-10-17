@@ -50,7 +50,7 @@ public class DeleteFromFavoritesAction extends AnActionButton implements DumbAwa
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     Project project = e.getProject();
-    FavoritesViewTreeBuilder builder = FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY.getData(dataContext);
+    FavoritesViewTreeBuilder builder = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
     if (project == null || builder == null) {
       return;
     }
@@ -59,14 +59,14 @@ public class DeleteFromFavoritesAction extends AnActionButton implements DumbAwa
       return;
     }
     FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
-    String listName = FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY.getData(dataContext);
+    String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
     FavoritesListProvider provider = favoritesManager.getListProvider(listName);
     if (provider != null && provider.willHandle(CommonActionsPanel.Buttons.REMOVE, project, selection)) {
       provider.handle(CommonActionsPanel.Buttons.REMOVE, project, selection, builder.getTree());
       return;
     }
-    FavoritesTreeNodeDescriptor[] roots = FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY.getData(dataContext);
-    final DnDAwareTree tree = FavoritesTreeViewPanel.FAVORITES_TREE_KEY.getData(dataContext);
+    FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
+    final DnDAwareTree tree = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_TREE_KEY);
 
     assert roots != null && tree != null;
     Map<String, List<AbstractTreeNode>> toRemove = new HashMap<String, List<AbstractTreeNode>>();
@@ -96,13 +96,13 @@ public class DeleteFromFavoritesAction extends AnActionButton implements DumbAwa
     e.getPresentation().setText(getTemplatePresentation().getText());
     final DataContext dataContext = e.getDataContext();
     Project project = e.getProject();
-    FavoritesViewTreeBuilder builder = FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY.getData(dataContext);
+    FavoritesViewTreeBuilder builder = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
     if (project == null || builder == null) {
       e.getPresentation().setEnabled(false);
       return;
     }
     Set<Object> selection = builder.getSelectedElements();
-    String listName = FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY.getData(dataContext);
+    String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
 
     FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
     FavoritesListProvider provider = favoritesManager.getListProvider(listName);
@@ -115,7 +115,7 @@ public class DeleteFromFavoritesAction extends AnActionButton implements DumbAwa
       return;
     }
 
-    FavoritesTreeNodeDescriptor[] roots = FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY.getData(dataContext);
+    FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
 
     if (roots == null || roots.length == 0 || selection.isEmpty()) {
       e.getPresentation().setEnabled(false);

@@ -47,10 +47,10 @@ public abstract class EditorMacro extends Macro {
 
   @Override
   public final String expand(DataContext dataContext) throws ExecutionCancelledException {
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return null;
     if (ToolWindowManager.getInstance(project).isEditorComponentActive()) {
-      Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+      Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
       if (editor != null){
         return expand(editor);
       }

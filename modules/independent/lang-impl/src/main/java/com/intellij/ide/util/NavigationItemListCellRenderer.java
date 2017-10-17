@@ -85,7 +85,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
 
   protected static Color getBackgroundColor(@Nullable Object value) {
     if (value instanceof PsiElement || value instanceof DataProvider) {
-      final PsiElement psiElement = value instanceof PsiElement ? (PsiElement)value : CommonDataKeys.PSI_ELEMENT.getData((DataProvider)value);
+      final PsiElement psiElement = value instanceof PsiElement ? (PsiElement)value : ((DataProvider)value).getDataUnchecked(CommonDataKeys.PSI_ELEMENT);
       if (psiElement != null && psiElement.isValid()) {
         VirtualFile virtualFile = PsiUtilCore.getVirtualFile(psiElement);
         Color fileColor = virtualFile == null ? null : EditorTabbedContainer.calcTabColor(psiElement.getProject(), virtualFile);
@@ -134,7 +134,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
                                         .isProblemFile(PsiUtilCore.getVirtualFile((PsiElement)element));
 
         if (element instanceof PsiElement || element instanceof DataProvider) {
-          final PsiElement psiElement = element instanceof PsiElement ? (PsiElement)element : CommonDataKeys.PSI_ELEMENT.getData((DataProvider)element);
+          final PsiElement psiElement = element instanceof PsiElement ? (PsiElement)element : ((DataProvider)element).getDataUnchecked(CommonDataKeys.PSI_ELEMENT);
           if (psiElement != null) {
             final Project project = psiElement.getProject();
 

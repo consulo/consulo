@@ -25,7 +25,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 public final class ChangeProjectViewAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
@@ -36,7 +36,7 @@ public final class ChangeProjectViewAction extends AnAction {
   @Override
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
-    Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
+    Project project = event.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null){
       presentation.setEnabled(false);
       return;

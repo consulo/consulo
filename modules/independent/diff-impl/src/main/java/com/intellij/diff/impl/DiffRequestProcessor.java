@@ -512,6 +512,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       EmptyAction.setupAction(this, "Diff.ShowInExternalTool", null);
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       if (!ExternalDiffTool.isEnabled()) {
@@ -522,6 +523,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       e.getPresentation().setVisible(true);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       try {
@@ -582,6 +584,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       myDiffTool = tool;
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
       if (myState.getActiveTool() == myDiffTool) return;
@@ -597,11 +600,13 @@ public abstract class DiffRequestProcessor implements Disposable {
       EmptyAction.setupAction(this, "Diff.ShowSettingsPopup", null);
     }
 
+    @RequiredDispatchThread
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(myPopupActionGroup != null && myPopupActionGroup.getChildrenCount() > 0);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(AnActionEvent e) {
       assert myPopupActionGroup != null;
@@ -643,6 +648,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   }
 
   protected class MyNextDifferenceAction extends NextDifferenceAction {
+    @RequiredDispatchThread
     @Override
     public void update(@NotNull AnActionEvent e) {
       if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
@@ -650,7 +656,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         return;
       }
 
-      PrevNextDifferenceIterable iterable = DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.getData(e.getDataContext());
+      PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
       if (iterable != null && iterable.canGoNext()) {
         e.getPresentation().setEnabled(true);
         return;
@@ -664,9 +670,10 @@ public abstract class DiffRequestProcessor implements Disposable {
       e.getPresentation().setEnabled(false);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-      PrevNextDifferenceIterable iterable = DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.getData(e.getDataContext());
+      PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
       if (iterable != null && iterable.canGoNext()) {
         iterable.goNext();
         myIterationState = IterationState.NONE;
@@ -686,6 +693,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   }
 
   protected class MyPrevDifferenceAction extends PrevDifferenceAction {
+    @RequiredDispatchThread
     @Override
     public void update(@NotNull AnActionEvent e) {
       if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
@@ -693,7 +701,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         return;
       }
 
-      PrevNextDifferenceIterable iterable = DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.getData(e.getDataContext());
+      PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
       if (iterable != null && iterable.canGoPrev()) {
         e.getPresentation().setEnabled(true);
         return;
@@ -707,9 +715,10 @@ public abstract class DiffRequestProcessor implements Disposable {
       e.getPresentation().setEnabled(false);
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-      PrevNextDifferenceIterable iterable = DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.getData(e.getDataContext());
+      PrevNextDifferenceIterable iterable = e.getDataContext().getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
       if (iterable != null && iterable.canGoPrev()) {
         iterable.goPrev();
         myIterationState = IterationState.NONE;
@@ -780,6 +789,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   // Iterate requests
 
   protected class MyNextChangeAction extends NextChangeAction {
+    @RequiredDispatchThread
     @Override
     public void update(@NotNull AnActionEvent e) {
       if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
@@ -796,6 +806,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       e.getPresentation().setEnabled(hasNextChange());
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
       if (!isNavigationEnabled() || !hasNextChange()) return;
@@ -805,6 +816,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   }
 
   protected class MyPrevChangeAction extends PrevChangeAction {
+    @RequiredDispatchThread
     @Override
     public void update(@NotNull AnActionEvent e) {
       if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
@@ -821,6 +833,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       e.getPresentation().setEnabled(hasPrevChange());
     }
 
+    @RequiredDispatchThread
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
       if (!isNavigationEnabled() || !hasPrevChange()) return;
@@ -847,7 +860,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     @Nullable
     @Override
-    public Object getData(@NonNls String dataId) {
+    public Object getData(@NotNull @NonNls Key<?> dataId) {
       Object data;
 
       DataProvider contentProvider = DataManagerImpl.getDataProviderEx(myContentPanel.getTargetComponent());
@@ -856,16 +869,16 @@ public abstract class DiffRequestProcessor implements Disposable {
         if (data != null) return data;
       }
 
-      if (OpenInEditorAction.KEY.is(dataId)) {
+      if (OpenInEditorAction.KEY == dataId) {
         return myOpenInEditorAction;
       }
-      else if (DiffDataKeys.DIFF_REQUEST.is(dataId)) {
+      else if (DiffDataKeys.DIFF_REQUEST == dataId) {
         return myActiveRequest;
       }
-      else if (CommonDataKeys.PROJECT.is(dataId)) {
+      else if (CommonDataKeys.PROJECT == dataId) {
         return myProject;
       }
-      else if (PlatformDataKeys.HELP_ID.is(dataId)) {
+      else if (PlatformDataKeys.HELP_ID == dataId) {
         if (myActiveRequest.getUserData(DiffUserDataKeys.HELP_ID) != null) {
           return myActiveRequest.getUserData(DiffUserDataKeys.HELP_ID);
         }
@@ -873,7 +886,7 @@ public abstract class DiffRequestProcessor implements Disposable {
           return "reference.dialogs.diff.file";
         }
       }
-      else if (DiffDataKeys.DIFF_CONTEXT.is(dataId)) {
+      else if (DiffDataKeys.DIFF_CONTEXT == dataId) {
         return myContext;
       }
 
@@ -931,16 +944,19 @@ public abstract class DiffRequestProcessor implements Disposable {
       myContext = context;
     }
 
+    @RequiredDispatchThread
     @Override
     public void reopenDiffRequest() {
       updateRequest(true);
     }
 
+    @RequiredDispatchThread
     @Override
     public void reloadDiffRequest() {
       reloadRequest();
     }
 
+    @RequiredDispatchThread
     @Override
     public void showProgressBar(boolean enabled) {
       if (enabled) {
@@ -1011,7 +1027,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     JComponent getPreferredFocusedComponent();
 
     @Nullable
-    Object getData(@NonNls String dataId);
+    Object getData(@NonNls Key<?> dataId);
 
     @NotNull
     DiffTool getActiveTool();
@@ -1020,10 +1036,12 @@ public abstract class DiffRequestProcessor implements Disposable {
   private static class EmptyState implements ViewerState {
     private static final EmptyState INSTANCE = new EmptyState();
 
+    @RequiredDispatchThread
     @Override
     public void init() {
     }
 
+    @RequiredDispatchThread
     @Override
     public void destroy() {
     }
@@ -1036,7 +1054,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     @Nullable
     @Override
-    public Object getData(@NonNls String dataId) {
+    public Object getData(@NonNls Key<?> dataId) {
       return null;
     }
 
@@ -1087,7 +1105,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     @Nullable
     @Override
-    public Object getData(@NonNls String dataId) {
+    public Object getData(@NonNls Key<?> dataId) {
       return null;
     }
 
@@ -1141,8 +1159,8 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     @Nullable
     @Override
-    public Object getData(@NonNls String dataId) {
-      if (DiffDataKeys.DIFF_VIEWER.is(dataId)) {
+    public Object getData(@NonNls Key<?> dataId) {
+      if (DiffDataKeys.DIFF_VIEWER == dataId) {
         return myViewer;
       }
       return null;
@@ -1212,11 +1230,11 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     @Nullable
     @Override
-    public Object getData(@NonNls String dataId) {
-      if (DiffDataKeys.WRAPPING_DIFF_VIEWER.is(dataId)) {
+    public Object getData(@NonNls Key<?> dataId) {
+      if (DiffDataKeys.WRAPPING_DIFF_VIEWER == dataId) {
         return myWrapperViewer;
       }
-      if (DiffDataKeys.DIFF_VIEWER.is(dataId)) {
+      if (DiffDataKeys.DIFF_VIEWER == dataId) {
         return myViewer;
       }
       return null;

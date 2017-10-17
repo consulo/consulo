@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EventListener;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -99,6 +100,12 @@ class VaadinUIWindowImpl implements Window {
   @NotNull
   @Override
   public <T> Runnable addUserDataProvider(@NotNull Key<T> key, @NotNull Supplier<T> supplier) {
+    throw new UnsupportedOperationException();
+  }
+
+  @NotNull
+  @Override
+  public Runnable addUserDataProvider(@NotNull Function<Key<?>, Object> function) {
     throw new UnsupportedOperationException();
   }
 

@@ -899,7 +899,7 @@ public class FocusManagerImpl extends IdeFocusManager implements Disposable {
       result = myLastFocusedAtDeactivation.get(getLastFocusedFrame());
     }
     else if (myRunContext != null) {
-      result = (Component)myRunContext.getData(PlatformDataKeys.CONTEXT_COMPONENT.getName());
+      result = myRunContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     }
 
     if (result == null) {

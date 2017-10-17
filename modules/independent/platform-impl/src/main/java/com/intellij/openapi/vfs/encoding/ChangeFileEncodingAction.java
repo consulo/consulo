@@ -89,11 +89,11 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
   @Nullable
   @RequiredDispatchThread
   public ListPopup createPopup(@NotNull DataContext dataContext) {
-    final VirtualFile virtualFile = CommonDataKeys.VIRTUAL_FILE.getData(dataContext);
+    final VirtualFile virtualFile = dataContext.getData(CommonDataKeys.VIRTUAL_FILE);
     if (virtualFile == null) return null;
     boolean enabled = checkEnabled(virtualFile);
     if (!enabled) return null;
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     FileDocumentManager documentManager = FileDocumentManager.getInstance();
     final Document document = documentManager.getDocument(virtualFile);
     if (!allowDirectories && virtualFile.isDirectory() || document == null && !virtualFile.isDirectory()) return null;

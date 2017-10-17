@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 public class ExportToTextFileAction extends AnAction {
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     ExporterToTextFile exporterToTextFile = getExporter(dataContext);
     if (project == null || exporterToTextFile == null) return;
     if (!exporterToTextFile.canExport()) return;
@@ -44,14 +44,13 @@ public class ExportToTextFileAction extends AnAction {
   }
 
   protected ExporterToTextFile getExporter(DataContext dataContext) {
-    return PlatformDataKeys.EXPORTER_TO_TEXT_FILE.getData(dataContext);
+    return dataContext.getData(PlatformDataKeys.EXPORTER_TO_TEXT_FILE);
   }
 
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
     ExporterToTextFile exporterToTextFile = getExporter(dataContext);
-    presentation.setEnabled(
-      CommonDataKeys.PROJECT.getData(dataContext) != null && exporterToTextFile != null && exporterToTextFile.canExport());
+    presentation.setEnabled(event.getData(CommonDataKeys.PROJECT) != null && exporterToTextFile != null && exporterToTextFile.canExport());
   }
 }

@@ -27,6 +27,7 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -651,7 +652,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
   }
 
   @Override
-  public void calcData(DataKey key, DataSink sink) {
+  public void calcData(Key<?> key, DataSink sink) {
     if (PlatformDataKeys.COPY_PROVIDER == key) {
       sink.put(PlatformDataKeys.COPY_PROVIDER, myTreeCopyProvider);
     }

@@ -161,7 +161,7 @@ public class IncomingChangesIndicator {
         public void consume(final MouseEvent mouseEvent) {
           if (myStatusBar != null) {
           DataContext dataContext = DataManager.getInstance().getDataContext((Component) myStatusBar);
-          final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+            final Project project = dataContext.getData(CommonDataKeys.PROJECT);
           if (project != null) {
             ToolWindow changesView = ToolWindowManager.getInstance(project).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
             changesView.show(new Runnable() {

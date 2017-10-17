@@ -144,8 +144,8 @@ public abstract class CopyPasteDelegator implements CopyPasteSupport {
       if (elements == null) return false;
       PsiDirectory targetDirectory = null;
       try {
-        PsiElement target = LangDataKeys.PASTE_TARGET_PSI_ELEMENT.getData(dataContext);
-        final Module module = LangDataKeys.MODULE.getData(dataContext);
+        PsiElement target = dataContext.getData(LangDataKeys.PASTE_TARGET_PSI_ELEMENT);
+        final Module module = dataContext.getData(LangDataKeys.MODULE);
         if (module != null && target instanceof PsiDirectoryContainer) {
           final PsiDirectory[] directories = ((PsiDirectoryContainer)target).getDirectories(GlobalSearchScope.moduleScope(module));
           if (directories.length == 1) {
@@ -206,14 +206,14 @@ public abstract class CopyPasteDelegator implements CopyPasteSupport {
     }
 
     private boolean isDefaultPasteEnabled(final DataContext dataContext) {
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project == null) {
         return false;
       }
 
       if (DumbService.isDumb(project)) return false;
 
-      Object target = LangDataKeys.PASTE_TARGET_PSI_ELEMENT.getData(dataContext);
+      Object target = dataContext.getData(LangDataKeys.PASTE_TARGET_PSI_ELEMENT);
       if (target == null) {
         return false;
       }

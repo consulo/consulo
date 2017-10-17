@@ -46,6 +46,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowId;
@@ -81,7 +82,7 @@ import java.util.List;
  * @author max
  */
 public class InspectionResultsView extends JPanel implements Disposable, OccurenceNavigator, DataProvider {
-  public static final DataKey<InspectionResultsView> DATA_KEY = DataKey.create("inspectionView");
+  public static final Key<InspectionResultsView> DATA_KEY = Key.create("inspectionView");
 
   private final Project myProject;
   private InspectionTree myTree;
@@ -612,16 +613,16 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
   }
 
   @Override
-  public Object getData(String dataId) {
-    if (PlatformDataKeys.HELP_ID.is(dataId)) return HELP_ID;
-    if (DATA_KEY.is(dataId)) return this;
+  public Object getData(@NotNull Key<?> dataId) {
+    if (PlatformDataKeys.HELP_ID == dataId) return HELP_ID;
+    if (DATA_KEY == dataId) return this;
     if (myTree == null) return null;
     TreePath[] paths = myTree.getSelectionPaths();
 
     if (paths == null || paths.length == 0) return null;
 
     if (paths.length > 1) {
-      if (LangDataKeys.PSI_ELEMENT_ARRAY.is(dataId)) {
+      if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
         return collectPsiElements();
       }
       return null;
@@ -653,14 +654,14 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
         }
       }
 
-      if (CommonDataKeys.NAVIGATABLE.is(dataId)) {
+      if (CommonDataKeys.NAVIGATABLE == dataId) {
         return getSelectedNavigatable(problem, psiElement);
       }
-      else if (CommonDataKeys.PSI_ELEMENT.is(dataId)) {
+      else if (CommonDataKeys.PSI_ELEMENT == dataId) {
         return psiElement.isValid() ? psiElement : null;
       }
     }
-    else if (selectedNode instanceof ProblemDescriptionNode && CommonDataKeys.NAVIGATABLE.is(dataId)) {
+    else if (selectedNode instanceof ProblemDescriptionNode && CommonDataKeys.NAVIGATABLE == dataId) {
       return getSelectedNavigatable(((ProblemDescriptionNode)selectedNode).getDescriptor());
     }
 

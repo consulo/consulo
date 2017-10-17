@@ -70,7 +70,7 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
     if (component == null) {
       return null;
     }
-    return LangDataKeys.EXECUTION_ENVIRONMENT.getData(DataManager.getInstance().getDataContext(component));
+    return DataManager.getInstance().getDataContext(component).getData(LangDataKeys.EXECUTION_ENVIRONMENT);
   }
 
   private static void clearRestarterListener(@NotNull ProcessHandler processHandler) {

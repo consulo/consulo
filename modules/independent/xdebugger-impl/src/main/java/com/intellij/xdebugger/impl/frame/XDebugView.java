@@ -19,7 +19,7 @@ import com.intellij.execution.ui.layout.ViewContext;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.SingleAlarm;
@@ -81,16 +81,16 @@ public abstract class XDebugView implements Disposable {
 
 
   @Nullable
-  public static <T> T getData(DataKey<T> key, @NotNull Component component) {
+  public static <T> T getData(Key<T> key, @NotNull Component component) {
     DataContext dataContext = DataManager.getInstance().getDataContext(component);
-    ViewContext viewContext = ViewContext.CONTEXT_KEY.getData(dataContext);
+    ViewContext viewContext = dataContext.getData(ViewContext.CONTEXT_KEY);
     ContentManager contentManager = viewContext == null ? null : viewContext.getContentManager();
     if (contentManager != null) {
-      T data = key.getData(DataManager.getInstance().getDataContext(contentManager.getComponent()));
+      T data = DataManager.getInstance().getDataContext(contentManager.getComponent()).getData(key);
       if (data != null) {
         return data;
       }
     }
-    return key.getData(dataContext);
+    return dataContext.getData(key);
   }
 }

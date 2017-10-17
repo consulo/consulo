@@ -160,7 +160,7 @@ public class ActionsTree {
     myRoot.removeAllChildren();
 
     ActionManager actionManager = ActionManager.getInstance();
-    Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(myComponent));
+    Project project = DataManager.getInstance().getDataContext(myComponent).getData(CommonDataKeys.PROJECT);
     Group mainGroup = ActionsTreeUtil.createMainGroup(project, myKeymap, allQuickLists, filter, true, filter != null && filter.length() > 0 ?
                                                                                                       ActionsTreeUtil.isActionFiltered(filter, true) :
                                                                                                       (shortcut != null ? ActionsTreeUtil.isActionFiltered(actionManager, myKeymap, shortcut) : null));

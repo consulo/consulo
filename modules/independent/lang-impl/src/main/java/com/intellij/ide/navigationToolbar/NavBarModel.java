@@ -98,11 +98,11 @@ public class NavBarModel {
   protected void updateModel(DataContext dataContext) {
     if (LaterInvocator.isInModalContext() || (updated && !isFixedComponent)) return;
 
-    if (PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext) instanceof NavBarPanel) return;
+    if (dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT) instanceof NavBarPanel) return;
 
-    PsiElement psiElement = LangDataKeys.PSI_FILE.getData(dataContext);
+    PsiElement psiElement = dataContext.getData(LangDataKeys.PSI_FILE);
     if (psiElement == null) {
-      psiElement = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+      psiElement = dataContext.getData(LangDataKeys.PSI_ELEMENT);
     }
 
     psiElement = normalize(psiElement);
@@ -114,9 +114,9 @@ public class NavBarModel {
     else {
       if (UISettings.getInstance().SHOW_NAVIGATION_BAR && !myModel.isEmpty()) return;
 
-      Object moduleOrProject = LangDataKeys.MODULE.getData(dataContext);
+      Object moduleOrProject = dataContext.getData(LangDataKeys.MODULE);
       if (moduleOrProject == null) {
-        moduleOrProject = CommonDataKeys.PROJECT.getData(dataContext);
+        moduleOrProject = dataContext.getData(CommonDataKeys.PROJECT);
       }
 
       if (moduleOrProject != null) {

@@ -32,7 +32,7 @@ public class PrintAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
@@ -43,13 +43,13 @@ public class PrintAction extends AnAction implements DumbAware {
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    VirtualFile file = PlatformDataKeys.VIRTUAL_FILE.getData(dataContext);
+    VirtualFile file = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
     if(file != null && file.isDirectory()) {
       presentation.setEnabled(true);
       return;
     }
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
-    PsiFile psiFile = LangDataKeys.PSI_FILE.getData(dataContext);
+    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    PsiFile psiFile = dataContext.getData(LangDataKeys.PSI_FILE);
     presentation.setEnabled(psiFile != null || editor != null);
   }
 

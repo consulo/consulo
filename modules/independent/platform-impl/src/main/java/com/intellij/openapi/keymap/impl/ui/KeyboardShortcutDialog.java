@@ -58,7 +58,7 @@ public class KeyboardShortcutDialog extends DialogWrapper {
     super(component, true);
     setTitle(KeyMapBundle.message("keyboard.shortcut.dialog.title"));
     myActionId = actionId;
-    final Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(component));
+    final Project project = DataManager.getInstance().getDataContext(component).getData(CommonDataKeys.PROJECT);
     myMainGroup = ActionsTreeUtil.createMainGroup(project, myKeymap, quickLists, null, false, null); //without current filter
     myEnableSecondKeystroke = new JCheckBox();
     UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myEnableSecondKeystroke);

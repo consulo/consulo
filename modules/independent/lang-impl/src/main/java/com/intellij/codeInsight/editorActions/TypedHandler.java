@@ -137,7 +137,7 @@ public class TypedHandler extends TypedActionHandlerBase {
 
   @Override
   public void execute(@NotNull final Editor originalEditor, final char charTyped, @NotNull final DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     final PsiFile originalFile;
 
     if (project == null || (originalFile = PsiUtilBase.getPsiFileInEditor(originalEditor, project)) == null) {

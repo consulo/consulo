@@ -45,8 +45,7 @@ public class PasteFromX11Action extends EditorAction {
   @Override
   public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    DataContext dataContext = e.getDataContext();
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = e.getData(CommonDataKeys.EDITOR);
     if (editor == null || !SystemInfo.isXWindow) {
       presentation.setEnabled(false);
     }

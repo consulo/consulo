@@ -42,7 +42,7 @@ public class PrevNextParameterHandler extends EditorActionHandler {
   @RequiredDispatchThread
   @Override
   protected boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return false;
 
     PsiDocumentManager.getInstance(project).commitAllDocuments();
@@ -68,7 +68,7 @@ public class PrevNextParameterHandler extends EditorActionHandler {
 
   @Nullable
   private static PsiElement getExpressionList(@NotNull Editor editor, int offset, DataContext dataContext) {
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     return project != null ? getExpressionList(editor, offset, project) : null;
   }
 

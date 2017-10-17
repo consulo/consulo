@@ -65,7 +65,7 @@ public class SingleSdkEditor extends DialogWrapper {
   }
 
   public SingleSdkEditor(Sdk sdk, Component parent){
-    this(sdk, CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext()), parent);
+    this(sdk, DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT), parent);
   }
 
   @Override

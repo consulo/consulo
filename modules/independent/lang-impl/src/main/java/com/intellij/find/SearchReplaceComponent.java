@@ -28,6 +28,7 @@ import com.intellij.openapi.editor.impl.EditorHeaderComponent;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.BooleanGetter;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -43,7 +44,6 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -262,8 +262,8 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY == dataId) {
       return mySearchTextComponent.getText();
     }
     return myDataProviderDelegate != null ? myDataProviderDelegate.getData(dataId) : null;

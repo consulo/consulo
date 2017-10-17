@@ -15,15 +15,16 @@
  */
 package com.intellij.openapi.diff.impl;
 
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.util.Key;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class GenericDataProvider implements DataProvider {
-  private final Map<String, Object> myGenericData;
+  private final Map<Key<?>, Object> myGenericData;
   private final DataProvider myParentProvider;
 
   public GenericDataProvider() {
@@ -32,23 +33,19 @@ public class GenericDataProvider implements DataProvider {
 
   public GenericDataProvider(@Nullable DataProvider provider) {
     myParentProvider = provider;
-    myGenericData = new HashMap<String, Object>();
+    myGenericData = new HashMap<>();
   }
 
-  public void putData(DataKey key, Object value) {
-    myGenericData.put(key.getName(), value);
-  }
-
-  public void putData(String key, Object value) {
+  public void putData(Key<?> key, Object value) {
     myGenericData.put(key, value);
   }
 
-  public void putData(final Map<String, Object> map) {
+  public void putData(final Map<Key<?>, Object> map) {
     myGenericData.putAll(map);
   }
 
   @Override
-  public Object getData(String dataId) {
+  public Object getData(@NotNull Key<?> dataId) {
     Object data = myGenericData.get(dataId);
     if (data != null) return data;
     return myParentProvider != null ? myParentProvider.getData(dataId) : null;

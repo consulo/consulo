@@ -22,6 +22,7 @@ import com.intellij.application.options.codeStyle.arrangement.util.TitleWithTool
 import com.intellij.ide.ui.customization.CustomizationUtil;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationBundle;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.ui.components.JBScrollPane;
@@ -93,8 +94,8 @@ public class ArrangementRuleAliasesPanel extends JPanel implements DataProvider 
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (ArrangementRuleAliasControl.KEY.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (ArrangementRuleAliasControl.KEY == dataId) {
       return myControl;
     }
     return null;

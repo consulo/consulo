@@ -39,9 +39,9 @@ public class SendToFavoritesGroup extends ActionGroup {
     if (e == null) {
       return EMPTY_ARRAY;
     }
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     final List<String> availableFavoritesLists = FavoritesManager.getInstance(project).getAvailableFavoritesListNames();
-    availableFavoritesLists.remove(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY.getData(e.getDataContext()));
+    availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
     if (availableFavoritesLists.isEmpty()) {
       return new AnAction[]{new SendToNewFavoritesListAction()};
     }
@@ -60,7 +60,7 @@ public class SendToFavoritesGroup extends ActionGroup {
   public void update(AnActionEvent e) {
     super.update(e);
     e.getPresentation().setVisible(SendToFavoritesAction.isEnabled(e)
-                                   && FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY.getData(e.getDataContext()) != null);
+                                   && e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY) != null);
   }
 
   private static class SendToNewFavoritesListAction extends AnAction {
@@ -72,8 +72,8 @@ public class SendToFavoritesGroup extends ActionGroup {
     public void actionPerformed(AnActionEvent e) {
       final DataContext dataContext = e.getDataContext();
       Project project = e.getProject();
-      FavoritesTreeNodeDescriptor[] roots = FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY.getData(dataContext);
-      String listName = FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY.getData(dataContext);
+      FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
+      String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
 
       String newName = AddNewFavoritesListAction.doAddNewFavoritesList(project);
       if (newName != null) {

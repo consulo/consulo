@@ -41,6 +41,7 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.pom.Navigatable;
@@ -103,8 +104,8 @@ public class DirDiffPanel implements Disposable, DataProvider {
   private final MyDiffRequestProcessor myDiffRequestProcessor;
   private final PrevNextDifferenceIterable myPrevNextDifferenceIterable;
   private String oldFilter;
-  public static final DataKey<DirDiffTableModel> DIR_DIFF_MODEL = DataKey.create("DIR_DIFF_MODEL");
-  public static final DataKey<JTable> DIR_DIFF_TABLE = DataKey.create("DIR_DIFF_TABLE");
+  public static final Key<DirDiffTableModel> DIR_DIFF_MODEL = Key.create("DIR_DIFF_MODEL");
+  public static final Key<JTable> DIR_DIFF_TABLE = Key.create("DIR_DIFF_TABLE");
 
   public DirDiffPanel(DirDiffTableModel model, DirDiffWindow wnd) {
     myModel = model;
@@ -497,20 +498,20 @@ public class DirDiffPanel implements Disposable, DataProvider {
   }
 
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (CommonDataKeys.PROJECT.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (CommonDataKeys.PROJECT == dataId) {
       return myModel.getProject();
     }
-    else if (DIR_DIFF_MODEL.is(dataId)) {
+    else if (DIR_DIFF_MODEL == dataId) {
       return myModel;
     }
-    else if (DIR_DIFF_TABLE.is(dataId)) {
+    else if (DIR_DIFF_TABLE == dataId) {
       return myTable;
     }
-    else if (DiffDataKeys.NAVIGATABLE_ARRAY.is(dataId)) {
+    else if (DiffDataKeys.NAVIGATABLE_ARRAY == dataId) {
       return getNavigatableArray();
     }
-    else if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.is(dataId)) {
+    else if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
       return myPrevNextDifferenceIterable;
     }
     return null;

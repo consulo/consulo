@@ -59,8 +59,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
     builder.createBalloon().show(new RelativePoint(ro, point), Balloon.Position.above);
 
 
-
-    final Project p = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project p = e.getData(CommonDataKeys.PROJECT);
     if (p != null) {
       ToolWindowManager.getInstance(p)
         .notifyByBalloon("TODO", MessageType.INFO, "Started. <a href=\"#a\">Click me!</a>", null, new HyperlinkListener() {

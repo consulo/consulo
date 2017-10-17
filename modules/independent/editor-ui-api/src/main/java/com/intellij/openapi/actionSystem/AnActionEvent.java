@@ -17,7 +17,7 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.PlaceProvider;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.event.InputEvent;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 
 /**
@@ -36,6 +37,52 @@ import java.util.Map;
  */
 
 public class AnActionEvent implements PlaceProvider<String> {
+  @NonNls
+  private static final String ourInjectedPrefix = "$injected$.";
+
+  // normal -> injected keys
+  private static final Map<Key, Key> ourInjectedKeys = new IdentityHashMap<>();
+  // injected -> normal keys
+  private static final Map<Key, Key> ourUnInjectedKeys = new IdentityHashMap<>();
+
+  @NonNls
+  @SuppressWarnings("unchecked")
+  public static <T> Key<T> injectedId(Key<T> dataId) {
+    synchronized (ourInjectedKeys) {
+      Key injected = ourInjectedKeys.get(dataId);
+      if (injected == null) {
+        injected = Key.create(ourInjectedPrefix + dataId);
+
+        ourInjectedKeys.put(dataId, injected);
+        ourUnInjectedKeys.put(injected, dataId);
+      }
+      return injected;
+    }
+  }
+
+  @NotNull
+  @SuppressWarnings("unchecked")
+  public static <T> Key<T> uninjectedId(@NotNull Key<T> injectedKey) {
+    Key normalKey = ourUnInjectedKeys.get(injectedKey);
+    if (normalKey == null) {
+      normalKey = injectedKey;
+    }
+    return normalKey;
+  }
+
+  @NotNull
+  public static DataContext getInjectedDataContext(final DataContext context) {
+    return new DataContextWrapper(context) {
+      @Nullable
+      @Override
+      public <T> T getData(@NotNull Key<T> dataId) {
+        T injected = super.getData(injectedId(dataId));
+        if (injected != null) return injected;
+        return super.getData(dataId);
+      }
+    };
+  }
+
   private final InputEvent myInputEvent;
   @NotNull
   private final ActionManager myActionManager;
@@ -48,17 +95,13 @@ public class AnActionEvent implements PlaceProvider<String> {
   @JdkConstants.InputEventMask
   private final int myModifiers;
   private boolean myWorksInInjected;
-  @NonNls
-  private static final String ourInjectedPrefix = "$injected$.";
-  private static final Map<String, String> ourInjectedIds = new HashMap<String, String>();
 
   private final boolean myIsContextMenuAction;
   private final boolean myIsActionToolbar;
 
   /**
    * @throws IllegalArgumentException if {@code dataContext} is {@code null} or
-   * {@code place} is {@code null} or {@code presentation} is {@code null}
-   *
+   *                                  {@code place} is {@code null} or {@code presentation} is {@code null}
    * @see ActionManager#getInstance()
    */
   public AnActionEvent(InputEvent inputEvent,
@@ -102,10 +145,7 @@ public class AnActionEvent implements PlaceProvider<String> {
   }
 
   @NotNull
-  public static AnActionEvent createFromAnAction(@NotNull AnAction action,
-                                                 @Nullable InputEvent event,
-                                                 @NotNull String place,
-                                                 @NotNull DataContext dataContext) {
+  public static AnActionEvent createFromAnAction(@NotNull AnAction action, @Nullable InputEvent event, @NotNull String place, @NotNull DataContext dataContext) {
     int modifiers = event == null ? 0 : event.getModifiers();
     Presentation presentation = action.getTemplatePresentation().clone();
     AnActionEvent anActionEvent = new AnActionEvent(event, dataContext, place, presentation, ActionManager.getInstance(), modifiers);
@@ -120,10 +160,7 @@ public class AnActionEvent implements PlaceProvider<String> {
 
 
   @NotNull
-  public static AnActionEvent createFromInputEvent(@Nullable InputEvent event,
-                                                   @NotNull String place,
-                                                   @NotNull Presentation presentation,
-                                                   @NotNull DataContext dataContext) {
+  public static AnActionEvent createFromInputEvent(@Nullable InputEvent event, @NotNull String place, @NotNull Presentation presentation, @NotNull DataContext dataContext) {
     return new AnActionEvent(event, dataContext, place, presentation, ActionManager.getInstance(), event == null ? 0 : event.getModifiers());
   }
 
@@ -135,8 +172,7 @@ public class AnActionEvent implements PlaceProvider<String> {
                                                    @NotNull DataContext dataContext,
                                                    boolean isContextMenuAction,
                                                    boolean isToolbarAction) {
-    return new AnActionEvent(event, dataContext, place, presentation, ActionManager.getInstance(),
-                             event == null ? 0 : event.getModifiers(), isContextMenuAction, isToolbarAction);
+    return new AnActionEvent(event, dataContext, place, presentation, ActionManager.getInstance(), event == null ? 0 : event.getModifiers(), isContextMenuAction, isToolbarAction);
   }
 
   /**
@@ -157,35 +193,6 @@ public class AnActionEvent implements PlaceProvider<String> {
     return getData(CommonDataKeys.PROJECT);
   }
 
-  @NonNls
-  public static String injectedId(String dataId) {
-    synchronized (ourInjectedIds) {
-      String injected = ourInjectedIds.get(dataId);
-      if (injected == null) {
-        injected = ourInjectedPrefix + dataId;
-        ourInjectedIds.put(dataId, injected);
-      }
-      return injected;
-    }
-  }
-
-  @NonNls
-  public static String uninjectedId(@NotNull String dataId) {
-    return StringUtil.trimStart(dataId, ourInjectedPrefix);
-  }
-
-  public static DataContext getInjectedDataContext(final DataContext context) {
-    return new DataContextWrapper(context) {
-      @Nullable
-      @Override
-      public Object getData(@NonNls String dataId) {
-        Object injected = super.getData(injectedId(dataId));
-        if (injected != null) return injected;
-        return super.getData(dataId);
-      }
-    };
-  }
-
   /**
    * Returns the context which allows to retrieve information about the state of IDEA related to
    * the action invocation (active editor, selection and so on).
@@ -198,8 +205,8 @@ public class AnActionEvent implements PlaceProvider<String> {
   }
 
   @Nullable
-  public <T> T getData(@NotNull DataKey<T> key) {
-    return key.getData(getDataContext());
+  public <T> T getData(@NotNull Key<T> key) {
+    return getDataContext().getData(key);
   }
 
   /**
@@ -226,7 +233,7 @@ public class AnActionEvent implements PlaceProvider<String> {
    * </pre>
    */
   @NotNull
-  public <T> T getRequiredData(@NotNull DataKey<T> key) {
+  public <T> T getRequiredData(@NotNull Key<T> key) {
     T data = getData(key);
     assert data != null;
     return data;

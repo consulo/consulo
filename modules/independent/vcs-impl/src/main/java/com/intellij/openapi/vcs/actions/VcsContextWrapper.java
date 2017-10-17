@@ -77,7 +77,7 @@ public class VcsContextWrapper implements VcsContext {
   @Nullable
   @Override
   public Project getProject() {
-    return CommonDataKeys.PROJECT.getData(myContext);
+    return myContext.getData(CommonDataKeys.PROJECT);
   }
 
   @Nullable
@@ -89,26 +89,26 @@ public class VcsContextWrapper implements VcsContext {
   @NotNull
   @Override
   public VirtualFile[] getSelectedFiles() {
-    VirtualFile[] fileArray = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(myContext);
+    VirtualFile[] fileArray = myContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     if (fileArray != null) {
       return Stream.of(fileArray).filter(VirtualFile::isInLocalFileSystem).toArray(VirtualFile[]::new);
     }
 
-    VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(myContext);
+    VirtualFile file = myContext.getData(CommonDataKeys.VIRTUAL_FILE);
     return file != null && file.isInLocalFileSystem() ? new VirtualFile[]{file} : VirtualFile.EMPTY_ARRAY;
   }
 
   @NotNull
   @Override
   public Stream<VirtualFile> getSelectedFilesStream() {
-    Stream<VirtualFile> result = VcsDataKeys.VIRTUAL_FILE_STREAM.getData(myContext);
+    Stream<VirtualFile> result = myContext.getData(VcsDataKeys.VIRTUAL_FILE_STREAM);
 
     return result != null ? result.filter(VirtualFile::isInLocalFileSystem) : VcsContext.super.getSelectedFilesStream();
   }
 
   @Override
   public Editor getEditor() {
-    return CommonDataKeys.EDITOR.getData(myContext);
+    return myContext.getData(CommonDataKeys.EDITOR);
   }
 
   @Override
@@ -119,18 +119,18 @@ public class VcsContextWrapper implements VcsContext {
   @Nullable
   @Override
   public File getSelectedIOFile() {
-    File file = VcsDataKeys.IO_FILE.getData(myContext);
+    File file = myContext.getData(VcsDataKeys.IO_FILE);
 
-    return file != null ? file : ArrayUtil.getFirstElement(VcsDataKeys.IO_FILE_ARRAY.getData(myContext));
+    return file != null ? file : ArrayUtil.getFirstElement(myContext.getData(VcsDataKeys.IO_FILE_ARRAY));
   }
 
   @Nullable
   @Override
   public File[] getSelectedIOFiles() {
-    File[] files = VcsDataKeys.IO_FILE_ARRAY.getData(myContext);
+    File[] files = myContext.getData(VcsDataKeys.IO_FILE_ARRAY);
     if (!ArrayUtil.isEmpty(files)) return files;
 
-    File file = VcsDataKeys.IO_FILE.getData(myContext);
+    File file = myContext.getData(VcsDataKeys.IO_FILE);
     return file != null ? new File[]{file} : null;
   }
 
@@ -141,7 +141,7 @@ public class VcsContextWrapper implements VcsContext {
 
   @Override
   public Refreshable getRefreshableDialog() {
-    return Refreshable.PANEL_KEY.getData(myContext);
+    return myContext.getData(Refreshable.PANEL_KEY);
   }
 
   @NotNull
@@ -153,11 +153,11 @@ public class VcsContextWrapper implements VcsContext {
   @NotNull
   @Override
   public Stream<FilePath> getSelectedFilePathsStream() {
-    FilePath path = VcsDataKeys.FILE_PATH.getData(myContext);
+    FilePath path = myContext.getData(VcsDataKeys.FILE_PATH);
 
     return concat(
             path != null ? Stream.of(path) : Stream.empty(),
-            stream(VcsDataKeys.FILE_PATH_ARRAY.getData(myContext)),
+            stream(myContext.getData(VcsDataKeys.FILE_PATH_ARRAY)),
             getSelectedFilesStream().map(VcsUtil::getFilePath),
             stream(getSelectedIOFiles()).map(VcsUtil::getFilePath)
     );
@@ -172,12 +172,12 @@ public class VcsContextWrapper implements VcsContext {
   @Nullable
   @Override
   public ChangeList[] getSelectedChangeLists() {
-    return VcsDataKeys.CHANGE_LISTS.getData(myContext);
+    return myContext.getData(VcsDataKeys.CHANGE_LISTS);
   }
 
   @Nullable
   @Override
   public Change[] getSelectedChanges() {
-    return VcsDataKeys.CHANGES.getData(myContext);
+    return myContext.getData(VcsDataKeys.CHANGES);
   }
 }

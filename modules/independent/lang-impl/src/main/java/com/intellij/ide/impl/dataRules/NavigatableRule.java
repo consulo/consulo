@@ -17,17 +17,26 @@
 package com.intellij.ide.impl.dataRules;
 
 import com.intellij.ide.util.EditSourceUtil;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.NotNull;
 
-public class NavigatableRule implements GetDataRule {
+public class NavigatableRule implements GetDataRule<Navigatable> {
+  @NotNull
   @Override
-  public Object getData(DataProvider dataProvider) {
-    final Navigatable navigatable = PlatformDataKeys.NAVIGATABLE.getData(dataProvider);
+  public Key<Navigatable> getKey() {
+    return CommonDataKeys.NAVIGATABLE;
+  }
+
+  @Override
+  public Navigatable getData(@NotNull DataProvider dataProvider) {
+    final Navigatable navigatable = dataProvider.getDataUnchecked(PlatformDataKeys.NAVIGATABLE);
     if (navigatable != null && navigatable instanceof OpenFileDescriptor) {
       final OpenFileDescriptor openFileDescriptor = (OpenFileDescriptor)navigatable;
 
@@ -35,17 +44,17 @@ public class NavigatableRule implements GetDataRule {
         return openFileDescriptor;
       }
     }
-    final PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataProvider);
+    final PsiElement element = dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT);
     if (element instanceof Navigatable) {
-      return element;
+      return (Navigatable)element;
     }
     if (element != null) {
       return EditSourceUtil.getDescriptor(element);
     }
 
-    final Object selection = PlatformDataKeys.SELECTED_ITEM.getData(dataProvider);
+    final Object selection = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEM);
     if (selection instanceof Navigatable) {
-      return selection;
+      return (Navigatable)selection;
     }
 
     return null;

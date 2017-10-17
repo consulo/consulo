@@ -20,10 +20,10 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CompareFilesAction extends BaseShowDiffAction {
-  public static final DataKey<DiffRequest> DIFF_REQUEST = DataKey.create("CompareFilesAction.DiffRequest");
+  public static final Key<DiffRequest> DIFF_REQUEST = Key.create("CompareFilesAction.DiffRequest");
 
   public static final String LAST_USED_FILE_KEY = "two.files.diff.last.used.file";
   public static final String LAST_USED_FOLDER_KEY = "two.files.diff.last.used.folder";

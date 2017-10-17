@@ -33,6 +33,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
@@ -149,14 +150,18 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     myBrowser.setLoading(true);
     ProgressManager.getInstance().run(new Task.Backgroundable(myProject, "Loading changes", true, BackgroundFromStartOption.getInstance()) {
       
+      @Override
       public void run(@NotNull final ProgressIndicator indicator) {
         try {
           final AsynchConsumer<List<CommittedChangeList>> appender = new AsynchConsumer<List<CommittedChangeList>>() {
+            @Override
             public void finished() {
             }
 
+            @Override
             public void consume(final List<CommittedChangeList> list) {
               new AbstractCalledLater(myProject, ModalityState.stateForComponent(myBrowser)) {
+                @Override
                 public void run() {
                   myBrowser.append(list);
                 }
@@ -166,9 +171,11 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
           final BufferedListConsumer<CommittedChangeList> bufferedListConsumer = new BufferedListConsumer<CommittedChangeList>(30, appender,-1);
 
           myProvider.loadCommittedChanges(mySettings, myLocation, myMaxCount, new AsynchConsumer<CommittedChangeList>() {
+            @Override
             public void finished() {
               bufferedListConsumer.flush();
             }
+            @Override
             public void consume(CommittedChangeList committedChangeList) {
               if (myDisposed) {
                 indicator.cancel();
@@ -181,6 +188,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
         catch (final VcsException e) {
           LOG.info(e);
           WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
+            @Override
             public void run() {
               Messages.showErrorDialog(myProject, "Error refreshing view: " + StringUtil.join(e.getMessages(), "\n"), "Committed Changes");
             }
@@ -211,6 +219,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
   private void refreshChangesFromCache(final boolean cacheOnly) {
     final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
     cache.hasCachesForAnyRoot(new Consumer<Boolean>() {
+      @Override
       public void consume(final Boolean notEmpty) {
         if (! notEmpty) {
           if (cacheOnly) {
@@ -221,11 +230,13 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
         }
         cache.getProjectChangesAsync(mySettings, myMaxCount, cacheOnly,
                                      new Consumer<List<CommittedChangeList>>() {
+                                       @Override
                                        public void consume(final List<CommittedChangeList> committedChangeLists) {
                                          updateFilteredModel(committedChangeLists, false);
                                          }
                                        },
                                      new Consumer<List<VcsException>>() {
+                                       @Override
                                        public void consume(final List<VcsException> vcsExceptions) {
                                          AbstractVcsHelper.getInstance(myProject).showErrors(vcsExceptions, "Error refreshing VCS history");
                                        }
@@ -285,8 +296,9 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     }
   }
 
-  public void calcData(DataKey key, DataSink sink) {
-    if (key.equals(VcsDataKeys.REMOTE_HISTORY_CHANGED_LISTENER)) {
+  @Override
+  public void calcData(Key<?> key, DataSink sink) {
+    if (VcsDataKeys.REMOTE_HISTORY_CHANGED_LISTENER == key) {
       sink.put(VcsDataKeys.REMOTE_HISTORY_CHANGED_LISTENER, myIfNotCachedReloader);
     } else if (VcsDataKeys.REMOTE_HISTORY_LOCATION.equals(key)) {
       sink.put(VcsDataKeys.REMOTE_HISTORY_LOCATION, myLocation);
@@ -296,6 +308,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     //}
   }
 
+  @Override
   public void dispose() {
     for (Runnable runnable : myShouldBeCalledOnDispose) {
       runnable.run();
@@ -315,26 +328,34 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
       return new CommittedChangesFilterKey("text", CommittedChangesFilterPriority.TEXT);
     }
 
+    @Override
     public void filter() {
       for (ChangeListener changeListener : myList) {
         changeListener.stateChanged(new ChangeEvent(this));
       }
     }
+    @Override
     public JComponent getFilterUI() {
       return null;
     }
+    @Override
     public void setFilterBase(List<CommittedChangeList> changeLists) {
     }
+    @Override
     public void addChangeListener(ChangeListener listener) {
       myList.add(listener);
     }
+    @Override
     public void removeChangeListener(ChangeListener listener) {
       myList.remove(listener);
     }
+    @Override
     public void resetFilterBase() {
     }
+    @Override
     public void appendFilterBase(List<CommittedChangeList> changeLists) {
     }
+    @Override
     @NotNull
     public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
       final FilterHelper filterHelper = new FilterHelper(myFilterComponent.getFilter());
@@ -352,12 +373,15 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
                                         final Project project, final VirtualFile root) {
     final LinkedList<CommittedChangeList> resultList = new LinkedList<CommittedChangeList>();
     myBrowser.reportLoadedLists(new CommittedChangeListsListener() {
+      @Override
       public void onBeforeStartReport() {
       }
+      @Override
       public boolean report(CommittedChangeList list) {
         resultList.add(list);
         return false;
       }
+      @Override
       public void onAfterEndReport() {
         if (! resultList.isEmpty()) {
           notification.execute(project, root, resultList);

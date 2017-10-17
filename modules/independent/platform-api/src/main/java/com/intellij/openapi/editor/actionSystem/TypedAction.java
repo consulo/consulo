@@ -137,7 +137,7 @@ public class TypedAction {
 
   public final void actionPerformed(@Nullable final Editor editor, final char charTyped, final DataContext dataContext) {
     if (editor == null) return;
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     FreezeLogger.getInstance().runUnderPerformanceMonitor(project, () -> myRawHandler.execute(editor, charTyped, dataContext));
   }
 
@@ -155,7 +155,7 @@ public class TypedAction {
 
     @Override
     public void execute(@NotNull final Editor editor, final char charTyped, @NotNull final DataContext dataContext) {
-      CommandProcessor.getInstance().executeCommand(CommonDataKeys.PROJECT.getData(dataContext), () -> {
+      CommandProcessor.getInstance().executeCommand(dataContext.getData(CommonDataKeys.PROJECT), () -> {
         if (!EditorModificationUtil.requestWriting(editor)) {
           HintManager.getInstance().showInformationHint(editor, "File is not writable");
           return;

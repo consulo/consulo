@@ -51,7 +51,7 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
   @Override
   public final void actionPerformed(@NotNull  AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
+    IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
     if (view == null) return;
     PsiDirectory dir = getTargetDirectory(dataContext, view);
     if (dir == null) return;

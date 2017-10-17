@@ -57,7 +57,7 @@ public class DiffUtil {
 
   @Nullable
   public static FocusDiffSide getFocusDiffSide(@NotNull DataContext dataContext) {
-    return FocusDiffSide.DATA_KEY.getData(dataContext);
+    return dataContext.getData(FocusDiffSide.DATA_KEY);
   }
 
   @NotNull

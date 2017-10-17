@@ -22,6 +22,8 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import com.intellij.openapi.util.Key;
+
 public interface TypeSafeDataProvider {
-  void calcData(DataKey key, DataSink sink);
+  void calcData(Key<?> key, DataSink sink);
 }

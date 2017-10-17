@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +26,7 @@ import java.util.List;
  * @author nik
  */
 public interface XWatchesView {
-  DataKey<XWatchesView> DATA_KEY = DataKey.create("XDEBUGGER_WATCHES_VIEW");
+  Key<XWatchesView> DATA_KEY = Key.create("XDEBUGGER_WATCHES_VIEW");
 
   void addWatchExpression(@NotNull XExpression expression, int index, boolean navigateToWatchNode);
 

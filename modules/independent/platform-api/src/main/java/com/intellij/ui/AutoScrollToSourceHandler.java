@@ -194,7 +194,7 @@ public abstract class AutoScrollToSourceHandler {
       @Override
       public void run() {
         DataContext context = DataManager.getInstance().getDataContext(tree);
-        final VirtualFile vFile = PlatformDataKeys.VIRTUAL_FILE.getData(context);
+        final VirtualFile vFile = context.getData(PlatformDataKeys.VIRTUAL_FILE);
         if (vFile != null) {
           // Attempt to navigate to the virtual file with unknown file type will show a modal dialog
           // asking to register some file type for this file. This behaviour is undesirable when autoscrolling.
@@ -203,7 +203,7 @@ public abstract class AutoScrollToSourceHandler {
           //IDEA-84881 Don't autoscroll to very large files
           if (vFile.getLength() > PersistentFSConstants.getMaxIntellisenseFileSize()) return;
         }
-        Navigatable[] navigatables = PlatformDataKeys.NAVIGATABLE_ARRAY.getData(context);
+        Navigatable[] navigatables = context.getData(PlatformDataKeys.NAVIGATABLE_ARRAY);
         if (navigatables != null) {
           if (navigatables.length > 1) {
             return;
@@ -240,7 +240,7 @@ public abstract class AutoScrollToSourceHandler {
   }
 
   private ActionCallback getReady(DataContext context) {
-    ToolWindow toolWindow = PlatformDataKeys.TOOL_WINDOW.getData(context);
+    ToolWindow toolWindow = context.getData(PlatformDataKeys.TOOL_WINDOW);
     return toolWindow != null ? toolWindow.getReady(this) : new ActionCallback.Done();
   }
 }

@@ -19,6 +19,7 @@ package com.intellij.openapi.ui.popup;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
@@ -547,11 +548,11 @@ public class PopupChooserBuilder {
     }
 
     @Nullable
-    public Object getData(@NonNls String dataId) {
-      if (PlatformDataKeys.SELECTED_ITEM.is(dataId)){
+    public Object getData(@NotNull @NonNls Key<?> dataId) {
+      if (PlatformDataKeys.SELECTED_ITEM == dataId){
         return myList.getSelectedValue();
       }
-      if (PlatformDataKeys.SELECTED_ITEMS.is(dataId)){
+      if (PlatformDataKeys.SELECTED_ITEMS == dataId){
         return myList.getSelectedValues();
       }
       return null;

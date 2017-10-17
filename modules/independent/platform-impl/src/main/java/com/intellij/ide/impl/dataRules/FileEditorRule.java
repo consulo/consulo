@@ -18,12 +18,22 @@ package com.intellij.ide.impl.dataRules;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.EditorTextField;
+import org.jetbrains.annotations.NotNull;
 
-public class FileEditorRule implements GetDataRule {
-  public Object getData(DataProvider dataProvider) {
-    final Editor editor = (Editor)dataProvider.getData(PlatformDataKeys.EDITOR.getName());
+public class FileEditorRule implements GetDataRule<FileEditor> {
+  @NotNull
+  @Override
+  public Key<FileEditor> getKey() {
+    return PlatformDataKeys.FILE_EDITOR;
+  }
+
+  @Override
+  public FileEditor getData(@NotNull DataProvider dataProvider) {
+    final Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
     if (editor == null) {
       return null;
     }

@@ -254,7 +254,7 @@ public class PsiUtilBase extends PsiUtilCore {
       // We assume that data context from focus-based retrieval should success if performed from EDT.
       AsyncResult<DataContext> asyncResult = DataManager.getInstance().getDataContextFromFocus();
       if (asyncResult.isDone()) {
-        Editor editor = CommonDataKeys.EDITOR.getData(asyncResult.getResult());
+        Editor editor = asyncResult.getResult().getData(CommonDataKeys.EDITOR);
         if (editor != null) {
           Document cachedDocument = PsiDocumentManager.getInstance(project).getCachedDocument(psiFile);
           // Ensure that target editor is found by checking its document against the one from given PSI element.

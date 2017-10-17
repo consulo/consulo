@@ -64,13 +64,13 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
 
   @Override
   protected boolean isAvailable(final DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    final IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
     if (project == null || view == null || view.getDirectories().length == 0) {
       return false;
     }
 
-    final Module module = LangDataKeys.MODULE.getData(dataContext);
+    final Module module = dataContext.getData(LangDataKeys.MODULE);
     if (module == null) {
       return false;
     }

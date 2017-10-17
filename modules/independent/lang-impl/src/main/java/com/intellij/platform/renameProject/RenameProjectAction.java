@@ -27,14 +27,14 @@ public class RenameProjectAction extends DumbAwareAction {
   @Override
   public void update(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     e.getPresentation().setEnabled(project != null && !project.isDefault());
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     LOG.assertTrue(project instanceof ProjectEx);
     Module module;
     Module[] modules = ModuleManager.getInstance(project).getModules();

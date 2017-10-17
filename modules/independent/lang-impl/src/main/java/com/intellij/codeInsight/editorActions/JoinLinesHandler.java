@@ -78,7 +78,7 @@ public class JoinLinesHandler extends EditorActionHandler {
       return;
     }
     final DocumentEx doc = (DocumentEx)editor.getDocument();
-    final Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(editor.getContentComponent()));
+    final Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(CommonDataKeys.PROJECT);
     if (project == null) return;
 
     final PsiDocumentManager docManager = PsiDocumentManager.getInstance(project);

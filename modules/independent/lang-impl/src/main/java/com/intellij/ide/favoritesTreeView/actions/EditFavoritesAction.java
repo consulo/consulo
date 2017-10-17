@@ -33,8 +33,8 @@ public class EditFavoritesAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     Project project = e.getProject();
-    FavoritesViewTreeBuilder treeBuilder = FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY.getData(e.getDataContext());
-    String listName = FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY.getData(e.getDataContext());
+    FavoritesViewTreeBuilder treeBuilder = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
+    String listName = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
     if (project == null || treeBuilder == null || listName == null) {
       return;
     }
@@ -54,8 +54,8 @@ public class EditFavoritesAction extends AnAction {
     e.getPresentation().setIcon(CommonActionsPanel.Buttons.EDIT.getIcon());
     e.getPresentation().setEnabled(true);
     Project project = e.getProject();
-    FavoritesViewTreeBuilder treeBuilder = FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY.getData(e.getDataContext());
-    String listName = FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY.getData(e.getDataContext());
+    FavoritesViewTreeBuilder treeBuilder = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
+    String listName = e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
     if (project == null || treeBuilder == null || listName == null) {
       e.getPresentation().setEnabled(false);
       return;

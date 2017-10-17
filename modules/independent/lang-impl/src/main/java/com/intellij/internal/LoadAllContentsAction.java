@@ -52,7 +52,7 @@ public class LoadAllContentsAction extends AnAction implements DumbAware {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     String m = "Started loading content";
     LOG.info(m);
     System.out.println(m);

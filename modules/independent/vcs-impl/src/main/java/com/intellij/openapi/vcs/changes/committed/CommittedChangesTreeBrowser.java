@@ -16,6 +16,7 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.SplitterProportionsData;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangesUtil;
@@ -373,34 +374,35 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
     return ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarGroup, true);
   }
 
-  public void calcData(DataKey key, DataSink sink) {
-    if (key.equals(VcsDataKeys.CHANGES)) {
+  @Override
+  public void calcData(Key<?> dataId, DataSink sink) {
+    if (VcsDataKeys.CHANGES == dataId) {
       final Collection<Change> changes = collectChanges(getSelectedChangeLists(), false);
       sink.put(VcsDataKeys.CHANGES, changes.toArray(new Change[changes.size()]));
     }
-    else if (key.equals(VcsDataKeys.HAVE_SELECTED_CHANGES)) {
+    else if (VcsDataKeys.HAVE_SELECTED_CHANGES == dataId) {
       final int count = myChangesTree.getSelectionCount();
       sink.put(VcsDataKeys.HAVE_SELECTED_CHANGES, count > 0 ? Boolean.TRUE : Boolean.FALSE);
     }
-    else if (key.equals(VcsDataKeys.CHANGES_WITH_MOVED_CHILDREN)) {
+    else if (VcsDataKeys.CHANGES_WITH_MOVED_CHILDREN == dataId) {
       final Collection<Change> changes = collectChanges(getSelectedChangeLists(), true);
       sink.put(VcsDataKeys.CHANGES_WITH_MOVED_CHILDREN, changes.toArray(new Change[changes.size()]));
     }
-    else if (key.equals(VcsDataKeys.CHANGE_LISTS)) {
+    else if (VcsDataKeys.CHANGE_LISTS == dataId) {
       final List<CommittedChangeList> lists = getSelectedChangeLists();
       if (!lists.isEmpty()) {
         sink.put(VcsDataKeys.CHANGE_LISTS, lists.toArray(new CommittedChangeList[lists.size()]));
       }
     }
-    else if (key.equals(CommonDataKeys.NAVIGATABLE_ARRAY)) {
+    else if (CommonDataKeys.NAVIGATABLE_ARRAY == dataId) {
       final Collection<Change> changes = collectChanges(getSelectedChangeLists(), false);
       Navigatable[] result = ChangesUtil.getNavigatableArray(myProject, ChangesUtil.getFilesFromChanges(changes));
       sink.put(CommonDataKeys.NAVIGATABLE_ARRAY, result);
     }
-    else if (key.equals(PlatformDataKeys.HELP_ID)) {
+    else if (PlatformDataKeys.HELP_ID == dataId) {
       sink.put(PlatformDataKeys.HELP_ID, myHelpId);
     }
-    else if (VcsDataKeys.SELECTED_CHANGES_IN_DETAILS.equals(key)) {
+    else if (VcsDataKeys.SELECTED_CHANGES_IN_DETAILS == dataId) {
       final List<Change> selectedChanges = myDetailsView.getSelectedChanges();
       sink.put(VcsDataKeys.SELECTED_CHANGES_IN_DETAILS, selectedChanges.toArray(new Change[selectedChanges.size()]));
     }
@@ -500,17 +502,16 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
       return true;
     }
 
-    public void calcData(final DataKey key, final DataSink sink) {
-      if (key.equals(PlatformDataKeys.COPY_PROVIDER)) {
+    public void calcData(final Key key, final DataSink sink) {
+      if (PlatformDataKeys.COPY_PROVIDER == key) {
         sink.put(PlatformDataKeys.COPY_PROVIDER, myCopyProvider);
       }
-      else if (key.equals(PlatformDataKeys.TREE_EXPANDER)) {
+      else if (PlatformDataKeys.TREE_EXPANDER == key) {
         sink.put(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
       }
       else {
-        final String name = key.getName();
-        if (VcsDataKeys.SELECTED_CHANGES.is(name) || VcsDataKeys.CHANGE_LEAD_SELECTION.is(name) || CommittedChangesBrowserUseCase.DATA_KEY.is(name)) {
-          final Object data = myDetailsView.getData(name);
+        if (VcsDataKeys.SELECTED_CHANGES == key || VcsDataKeys.CHANGE_LEAD_SELECTION == key || CommittedChangesBrowserUseCase.DATA_KEY == key) {
+          final Object data = myDetailsView.getData(key);
           if (data != null) {
             sink.put(key, data);
           }

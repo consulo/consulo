@@ -28,10 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.WindowStateService;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
@@ -68,7 +65,7 @@ public class FrameWrapper implements Disposable, DataProvider {
   private List<Image> myImages = null;
   private boolean myCloseOnEsc = false;
   private Window myFrame;
-  private final Map<String, Object> myDataMap = ContainerUtil.newHashMap();
+  private final Map<Key<?>, Object> myDataMap = ContainerUtil.newHashMap();
   private Project myProject;
   private final ProjectManagerListener myProjectListener = new MyProjectManagerListener();
   private FocusTrackback myFocusTrackback;
@@ -102,20 +99,15 @@ public class FrameWrapper implements Disposable, DataProvider {
     myDimensionKey = dimensionKey;
   }
 
-  public void setData(String dataId, Object data) {
+  public void setData(Key<?> dataId, Object data) {
     myDataMap.put(dataId, data);
   }
 
   public void setProject(@NotNull final Project project) {
     myProject = project;
-    setData(CommonDataKeys.PROJECT.getName(), project);
+    setData(CommonDataKeys.PROJECT, project);
     ProjectManager.getInstance().addProjectManagerListener(project, myProjectListener);
-    Disposer.register(this, new Disposable() {
-      @Override
-      public void dispose() {
-        ProjectManager.getInstance().removeProjectManagerListener(project, myProjectListener);
-      }
-    });
+    Disposer.register(this, () -> ProjectManager.getInstance().removeProjectManagerListener(project, myProjectListener));
   }
 
   public void show() {
@@ -303,15 +295,15 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (CommonDataKeys.PROJECT.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (CommonDataKeys.PROJECT == dataId) {
       return myProject;
     }
     return null;
   }
 
   @Nullable
-  private Object getDataInner(String dataId) {
+  private Object getDataInner(Key<?> dataId) {
     Object data = getData(dataId);
     return data != null ? data : myDataMap.get(dataId);
   }
@@ -471,8 +463,8 @@ public class FrameWrapper implements Disposable, DataProvider {
     }
 
     @Override
-    public Object getData(String dataId) {
-      if (IdeFrame.KEY.getName().equals(dataId)) {
+    public Object getData(@NotNull Key<?> dataId) {
+      if (IdeFrame.KEY == dataId) {
         return this;
       }
       return myOwner == null ? null : myOwner.getDataInner(dataId);
@@ -560,8 +552,8 @@ public class FrameWrapper implements Disposable, DataProvider {
     }
 
     @Override
-    public Object getData(String dataId) {
-      if (IdeFrame.KEY.getName().equals(dataId)) {
+    public Object getData(@NotNull Key<?> dataId) {
+      if (IdeFrame.KEY == dataId) {
         return this;
       }
       return myOwner == null ? null : myOwner.getDataInner(dataId);

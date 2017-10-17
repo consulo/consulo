@@ -42,14 +42,14 @@ public class FindUsagesInFileAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     PsiDocumentManager.getInstance(project).commitAllDocuments();
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
 
-    UsageTarget[] usageTargets = UsageView.USAGE_TARGETS_KEY.getData(dataContext);
+    UsageTarget[] usageTargets = dataContext.getData(UsageView.USAGE_TARGETS_KEY);
     if (usageTargets != null) {
-      FileEditor fileEditor = PlatformDataKeys.FILE_EDITOR.getData(dataContext);
+      FileEditor fileEditor = dataContext.getData(PlatformDataKeys.FILE_EDITOR);
       if (fileEditor != null) {
         usageTargets[0].findUsagesInEditor(fileEditor);
       }
@@ -73,14 +73,14 @@ public class FindUsagesInFileAction extends AnAction {
   }
 
   private static boolean isEnabled(DataContext dataContext) {
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return false;
     }
 
-    Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
     if (editor == null) {
-      UsageTarget[] target = UsageView.USAGE_TARGETS_KEY.getData(dataContext);
+      UsageTarget[] target = dataContext.getData(UsageView.USAGE_TARGETS_KEY);
       return target != null && target.length > 0;
     }
     else {

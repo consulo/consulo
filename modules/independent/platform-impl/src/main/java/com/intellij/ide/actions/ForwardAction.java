@@ -23,14 +23,14 @@ import com.intellij.openapi.project.DumbAware;
 
 public class ForwardAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     IdeDocumentHistory.getInstance(project).forward();
   }
 
-  public void update(AnActionEvent event){
-    Presentation presentation = event.getPresentation();
-    Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
+  public void update(AnActionEvent e){
+    Presentation presentation = e.getPresentation();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null || project.isDisposed()) {
       presentation.setEnabled(false);
       return;

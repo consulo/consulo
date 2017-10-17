@@ -59,7 +59,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
 
         // support nested content managers, e.g. RunnerLayoutUi as content component
         ContentManager contentManager =
-                component instanceof DataProvider ? PlatformDataKeys.CONTENT_MANAGER.getData((DataProvider)component) : null;
+                component instanceof DataProvider ? ((DataProvider)component).getDataUnchecked(PlatformDataKeys.CONTENT_MANAGER) : null;
         if (contentManager != null) contentManager.addContentManagerListener(this);
       }
     });

@@ -67,7 +67,7 @@ public class MacDockDelegate implements SystemDock.Delegate {
       menuItem.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          action.actionPerformed(AnActionEvent.createFromAnAction(action, null, ActionPlaces.DOCK_MENU, DataManager.getInstance().getDataContext(null)));
+          action.actionPerformed(AnActionEvent.createFromAnAction(action, null, ActionPlaces.DOCK_MENU, DataManager.getInstance().getDataContext((Component)null)));
         }
       });
       recentProjectsMenu.add(menuItem);

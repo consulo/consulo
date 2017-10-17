@@ -40,7 +40,7 @@ public class OpenModuleSettingsAction extends EditSourceAction {
   @Nullable
   @Override
   protected Navigatable[] getNavigatables(DataContext dataContext) {
-    Module data = LangDataKeys.MODULE.getData(dataContext);
+    Module data = dataContext.getData(LangDataKeys.MODULE);
     if(data == null) {
       return NavigationItem.EMPTY_ARRAY;
     }
@@ -50,9 +50,9 @@ public class OpenModuleSettingsAction extends EditSourceAction {
   protected static boolean isModuleInProjectViewPopup(AnActionEvent e) {
     if (ActionPlaces.PROJECT_VIEW_POPUP.equals(e.getPlace())) {
       final Project project = getEventProject(e);
-      final Module module = LangDataKeys.MODULE.getData(e.getDataContext());
+      final Module module = e.getDataContext().getData(LangDataKeys.MODULE);
       if (project != null && module != null) {
-        final VirtualFile moduleFolder = PlatformDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+        final VirtualFile moduleFolder = e.getDataContext().getData(PlatformDataKeys.VIRTUAL_FILE);
         if (moduleFolder == null) {
           return false;
         }

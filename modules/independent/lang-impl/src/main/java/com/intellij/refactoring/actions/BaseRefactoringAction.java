@@ -73,8 +73,8 @@ public abstract class BaseRefactoringAction extends AnAction {
     final RefactoringActionHandler handler = getHandler(dataContext);
     if (handler != null) {
       if (handler instanceof ContextAwareActionHandler) {
-        final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
-        final PsiFile file = CommonDataKeys.PSI_FILE.getData(dataContext);
+        final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+        final PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
         if (editor != null && file != null && !((ContextAwareActionHandler)handler).isAvailableForQuickList(editor, file, dataContext)) {
           return false;
         }
@@ -258,9 +258,9 @@ public abstract class BaseRefactoringAction extends AnAction {
 
   @NotNull
   public static PsiElement[] getPsiElementArray(DataContext dataContext) {
-    PsiElement[] psiElements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
+    PsiElement[] psiElements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
     if (psiElements == null || psiElements.length == 0) {
-      PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+      PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
       if (element != null) {
         psiElements = new PsiElement[]{element};
       }

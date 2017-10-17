@@ -69,12 +69,12 @@ public class DetachExternalProjectAction extends AnAction implements DumbAware {
       ExternalSystemBundle.message("action.detach.external.project.text",info.externalSystemId.getReadableName())
     );
 
-    ExternalSystemTasksTreeModel allTasksModel = ExternalSystemDataKeys.ALL_TASKS_MODEL.getData(e.getDataContext());
+    ExternalSystemTasksTreeModel allTasksModel = e.getDataContext().getData(ExternalSystemDataKeys.ALL_TASKS_MODEL);
     if (allTasksModel != null) {
       allTasksModel.pruneNodes(info.externalProject);
     }
 
-    ExternalSystemRecentTasksList recentTasksList = ExternalSystemDataKeys.RECENT_TASKS_LIST.getData(e.getDataContext());
+    ExternalSystemRecentTasksList recentTasksList = e.getDataContext().getData(ExternalSystemDataKeys.RECENT_TASKS_LIST);
     if (recentTasksList != null) {
       recentTasksList.getModel().forgetTasksFrom(info.externalProject.getPath());
     }

@@ -135,7 +135,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
     if (myCurrentOver != null) {
       final DataProvider provider = myCurrentOver.getDataProvider();
       if (provider != null) {
-        window = EditorWindow.DATA_KEY.getData(provider);
+        window = provider.getDataUnchecked(EditorWindow.DATA_KEY);
       }
     }
 

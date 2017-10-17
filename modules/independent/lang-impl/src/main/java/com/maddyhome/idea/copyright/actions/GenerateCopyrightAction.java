@@ -34,7 +34,7 @@ public class GenerateCopyrightAction extends AnAction {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext context = event.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(context);
+    Project project = context.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;
@@ -48,9 +48,9 @@ public class GenerateCopyrightAction extends AnAction {
 
   @Nullable
   private static PsiFile getFile(DataContext context, Project project) {
-    PsiFile file = LangDataKeys.PSI_FILE.getData(context);
+    PsiFile file = context.getData(LangDataKeys.PSI_FILE);
     if (file == null) {
-      Editor editor = PlatformDataKeys.EDITOR.getData(context);
+      Editor editor = context.getData(PlatformDataKeys.EDITOR);
       if (editor != null) {
         file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
       }
@@ -60,9 +60,9 @@ public class GenerateCopyrightAction extends AnAction {
 
   public void actionPerformed(AnActionEvent event) {
     DataContext context = event.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(context);
+    Project project = context.getData(CommonDataKeys.PROJECT);
     assert project != null;
-    Module module = LangDataKeys.MODULE.getData(context);
+    Module module = context.getData(LangDataKeys.MODULE);
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
 

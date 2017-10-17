@@ -52,7 +52,7 @@ public class RenameProjectHandler implements RenameHandler, TitledHandler {
   }
 
   static boolean isAvailable(DataContext dataContext) {
-    Module module = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
+    Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     return module != null;
   }
 
@@ -75,7 +75,7 @@ public class RenameProjectHandler implements RenameHandler, TitledHandler {
   public void invoke(@NotNull Project project, @NotNull PsiElement[] elements, DataContext dataContext) {
     LOG.assertTrue(project instanceof ProjectEx);
 
-    final Module module = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
+    final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     LOG.assertTrue(module != null);
     Messages.showInputDialog(project, RefactoringBundle.message("enter.new.project.name"), RefactoringBundle.message("rename.project"),
                              Messages.getQuestionIcon(),

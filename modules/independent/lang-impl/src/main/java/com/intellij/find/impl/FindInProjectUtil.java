@@ -48,6 +48,7 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -79,17 +80,19 @@ import java.util.regex.PatternSyntaxException;
 public class FindInProjectUtil {
   private static final int USAGES_PER_READ_ACTION = 100;
 
-  private FindInProjectUtil() {}
+  private FindInProjectUtil() {
+  }
 
   public static void setDirectoryName(@NotNull FindModel model, @NotNull DataContext dataContext) {
     PsiElement psiElement = null;
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
     if (project != null && !DumbServiceImpl.getInstance(project).isDumb()) {
       try {
-        psiElement = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+        psiElement = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
       }
-      catch (IndexNotReadyException ignore) {}
+      catch (IndexNotReadyException ignore) {
+      }
     }
 
     String directoryName = null;
@@ -100,15 +103,15 @@ public class FindInProjectUtil {
 
     if (directoryName == null && psiElement instanceof PsiDirectoryContainer) {
       final PsiDirectory[] directories = ((PsiDirectoryContainer)psiElement).getDirectories();
-      directoryName = directories.length == 1 ? directories[0].getVirtualFile().getPresentableUrl():null;
+      directoryName = directories.length == 1 ? directories[0].getVirtualFile().getPresentableUrl() : null;
     }
 
     if (directoryName == null) {
-      VirtualFile virtualFile = CommonDataKeys.VIRTUAL_FILE.getData(dataContext);
+      VirtualFile virtualFile = dataContext.getData(CommonDataKeys.VIRTUAL_FILE);
       if (virtualFile != null && virtualFile.isDirectory()) directoryName = virtualFile.getPresentableUrl();
     }
 
-    Module module = LangDataKeys.MODULE_CONTEXT.getData(dataContext);
+    Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     if (module != null) {
       model.setModuleName(module.getName());
     }
@@ -119,7 +122,7 @@ public class FindInProjectUtil {
       model.setModuleName(module.getName());
     }
 
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (model.getModuleName() == null || editor == null) {
       if (directoryName != null) {
         model.setDirectoryName(directoryName);
@@ -158,7 +161,7 @@ public class FindInProjectUtil {
             virtualFile = file;
             break;
           }
-          if(virtualFile == null){
+          if (virtualFile == null) {
             virtualFile = file;
           }
         }
@@ -179,7 +182,7 @@ public class FindInProjectUtil {
     String negativePattern = "";
     final List<String> masks = StringUtil.split(filter, ",");
 
-    for(String mask:masks) {
+    for (String mask : masks) {
       mask = mask.trim();
       if (StringUtil.startsWith(mask, "!")) {
         negativePattern += (negativePattern.isEmpty() ? "" : "|") + "(" + PatternUtil.convertToRegex(mask.substring(1)) + ")";
@@ -196,6 +199,7 @@ public class FindInProjectUtil {
     return new Condition<CharSequence>() {
       final Pattern regExp = Pattern.compile(finalPattern, Pattern.CASE_INSENSITIVE);
       final Pattern negativeRegExp = StringUtil.isEmpty(finalNegativePattern) ? null : Pattern.compile(finalNegativePattern, Pattern.CASE_INSENSITIVE);
+
       @Override
       public boolean value(CharSequence input) {
         return regExp.matcher(input).matches() && (negativeRegExp == null || !negativeRegExp.matcher(input).matches());
@@ -249,10 +253,7 @@ public class FindInProjectUtil {
   }
 
   // returns number of hits
-  static int processUsagesInFile(@NotNull final PsiFile psiFile,
-                                 @NotNull final VirtualFile virtualFile,
-                                 @NotNull final FindModel findModel,
-                                 @NotNull final Processor<UsageInfo> consumer) {
+  static int processUsagesInFile(@NotNull final PsiFile psiFile, @NotNull final VirtualFile virtualFile, @NotNull final FindModel findModel, @NotNull final Processor<UsageInfo> consumer) {
     if (findModel.getStringToFind().isEmpty()) {
       if (!ReadAction.compute(() -> consumer.process(new UsageInfo(psiFile)))) {
         throw new ProcessCanceledException();
@@ -279,8 +280,12 @@ public class FindInProjectUtil {
     return count;
   }
 
-  private static int addToUsages(@NotNull Document document, @NotNull Processor<UsageInfo> consumer, @NotNull FindModel findModel,
-                                 @NotNull final PsiFile psiFile, @NotNull int[] offsetRef, int maxUsages) {
+  private static int addToUsages(@NotNull Document document,
+                                 @NotNull Processor<UsageInfo> consumer,
+                                 @NotNull FindModel findModel,
+                                 @NotNull final PsiFile psiFile,
+                                 @NotNull int[] offsetRef,
+                                 int maxUsages) {
     int count = 0;
     CharSequence text = document.getCharsSequence();
     int textLength = document.getTextLength();
@@ -306,7 +311,7 @@ public class FindInProjectUtil {
         if (!((LocalSearchScope)customScope).containsRange(psiFile, range)) continue;
       }
       UsageInfo info = new FindResultUsageInfo(findManager, psiFile, prevOffset, findModel, result);
-      if (!consumer.process(info)){
+      if (!consumer.process(info)) {
         throw new ProcessCanceledException();
       }
       count++;
@@ -328,7 +333,7 @@ public class FindInProjectUtil {
     else if (findModel.getModuleName() != null) {
       scopeName = FindBundle.message("find.scope.module.title", findModel.getModuleName());
     }
-    else if(findModel.getCustomScopeName() != null) {
+    else if (findModel.getCustomScopeName() != null) {
       scopeName = findModel.getCustomScopeName();
     }
     else {
@@ -337,7 +342,7 @@ public class FindInProjectUtil {
 
     String result = scopeName;
     if (findModel.getFileFilter() != null) {
-      result += " "+FindBundle.message("find.scope.files.with.mask", findModel.getFileFilter());
+      result += " " + FindBundle.message("find.scope.files.with.mask", findModel.getFileFilter());
     }
 
     return result;
@@ -376,15 +381,11 @@ public class FindInProjectUtil {
   }
 
   @NotNull
-  public static FindUsagesProcessPresentation setupProcessPresentation(@NotNull final Project project,
-                                                                       final boolean showPanelIfOnlyOneUsage,
-                                                                       @NotNull final UsageViewPresentation presentation) {
+  public static FindUsagesProcessPresentation setupProcessPresentation(@NotNull final Project project, final boolean showPanelIfOnlyOneUsage, @NotNull final UsageViewPresentation presentation) {
     FindUsagesProcessPresentation processPresentation = new FindUsagesProcessPresentation(presentation);
     processPresentation.setShowNotFoundMessage(true);
     processPresentation.setShowPanelIfOnlyOneUsage(showPanelIfOnlyOneUsage);
-    processPresentation.setProgressIndicatorFactory(
-            () -> new FindProgressIndicator(project, presentation.getScopeText())
-    );
+    processPresentation.setProgressIndicatorFactory(() -> new FindProgressIndicator(project, presentation.getScopeText()));
     return processPresentation;
   }
 
@@ -401,11 +402,11 @@ public class FindInProjectUtil {
     List<PsiElement> result = null;
     final PsiElement[] children = file.getChildren();
 
-    for (PsiElement child:children) {
+    for (PsiElement child : children) {
       PsiElement[] grandChildren = child.getChildren();
       if (grandChildren.length != 1) return Collections.emptyList(); // a | b, more than one branch, can not predict in current way
 
-      for(PsiElement grandGrandChild:grandChildren[0].getChildren()) {
+      for (PsiElement grandGrandChild : grandChildren[0].getChildren()) {
         if (result == null) result = new ArrayList<>();
         result.add(grandGrandChild);
       }
@@ -438,16 +439,18 @@ public class FindInProjectUtil {
   }
 
   public static void initStringToFindFromDataContext(FindModel findModel, @NotNull DataContext dataContext) {
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     FindUtil.initStringToFindWithSelection(findModel, editor);
     if (editor == null || !editor.getSelectionModel().hasSelection()) {
-      FindUtil.useFindStringFromFindInFileModel(findModel, CommonDataKeys.EDITOR_EVEN_IF_INACTIVE.getData(dataContext));
+      FindUtil.useFindStringFromFindInFileModel(findModel, dataContext.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE));
     }
   }
 
   public static class StringUsageTarget implements ConfigurableUsageTarget, ItemPresentation, TypeSafeDataProvider {
-    @NotNull protected final Project myProject;
-    @NotNull protected final FindModel myFindModel;
+    @NotNull
+    protected final Project myProject;
+    @NotNull
+    protected final FindModel myFindModel;
 
     public StringUsageTarget(@NotNull Project project, @NotNull FindModel findModel) {
       myProject = project;
@@ -483,9 +486,12 @@ public class FindInProjectUtil {
     }
 
     @Override
-    public void findUsagesInEditor(@NotNull FileEditor editor) {}
+    public void findUsagesInEditor(@NotNull FileEditor editor) {
+    }
+
     @Override
-    public void highlightUsages(@NotNull PsiFile file, @NotNull Editor editor, boolean clearHighlights) {}
+    public void highlightUsages(@NotNull PsiFile file, @NotNull Editor editor, boolean clearHighlights) {
+    }
 
     @Override
     public boolean isValid() {
@@ -546,18 +552,16 @@ public class FindInProjectUtil {
     }
 
     @Override
-    public void calcData(DataKey key, DataSink sink) {
-      if (UsageView.USAGE_SCOPE.equals(key)) {
+    public void calcData(Key key, DataSink sink) {
+      if (UsageView.USAGE_SCOPE == key) {
         SearchScope scope = getScopeFromModel(myProject, myFindModel);
         sink.put(UsageView.USAGE_SCOPE, scope);
       }
     }
   }
 
-  private static void addSourceDirectoriesFromLibraries(@NotNull Project project,
-                                                        @NotNull VirtualFile directory,
-                                                        @NotNull Collection<VirtualFile> outSourceRoots) {
-    ProjectFileIndex index = ProjectFileIndex.SERVICE.getInstance(project);
+  private static void addSourceDirectoriesFromLibraries(@NotNull Project project, @NotNull VirtualFile directory, @NotNull Collection<VirtualFile> outSourceRoots) {
+    ProjectFileIndex index = ProjectFileIndex.getInstance(project);
     // if we already are in the sources, search just in this directory only
     if (!index.isInLibraryClasses(directory)) return;
     VirtualFile classRoot = index.getClassRootForFile(directory);
@@ -604,16 +608,13 @@ public class FindInProjectUtil {
     return findModel.isCustomScope() && customScope != null ? customScope.intersectWith(GlobalSearchScope.allScope(project)) :
            // we don't have to check for myProjectFileIndex.isExcluded(file) here like FindInProjectTask.collectFilesInScope() does
            // because all found usages are guaranteed to be not in excluded dir
-           directory != null ? forDirectory(project, findModel.isWithSubdirectories(), directory) :
-           module != null ? module.getModuleContentScope() :
-           findModel.isProjectScope() ? ProjectScope.getContentScope(project) :
-           GlobalSearchScope.allScope(project);
+           directory != null
+           ? forDirectory(project, findModel.isWithSubdirectories(), directory)
+           : module != null ? module.getModuleContentScope() : findModel.isProjectScope() ? ProjectScope.getContentScope(project) : GlobalSearchScope.allScope(project);
   }
 
   @NotNull
-  private static GlobalSearchScope forDirectory(@NotNull Project project,
-                                                boolean withSubdirectories,
-                                                @NotNull VirtualFile directory) {
+  private static GlobalSearchScope forDirectory(@NotNull Project project, boolean withSubdirectories, @NotNull VirtualFile directory) {
     Set<VirtualFile> result = new LinkedHashSet<>();
     result.add(directory);
     addSourceDirectoriesFromLibraries(project, directory, result);

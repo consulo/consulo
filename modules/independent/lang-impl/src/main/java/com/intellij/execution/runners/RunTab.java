@@ -30,8 +30,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,14 +76,14 @@ public abstract class RunTab implements DataProvider, Disposable {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (LangDataKeys.RUN_PROFILE.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (LangDataKeys.RUN_PROFILE == dataId) {
       return myEnvironment == null ? null : myEnvironment.getRunProfile();
     }
-    else if (LangDataKeys.EXECUTION_ENVIRONMENT.is(dataId)) {
+    else if (LangDataKeys.EXECUTION_ENVIRONMENT == dataId) {
       return myEnvironment;
     }
-    else if (LangDataKeys.RUN_CONTENT_DESCRIPTOR.is(dataId)) {
+    else if (LangDataKeys.RUN_CONTENT_DESCRIPTOR == dataId) {
       return myRunContentDescriptor;
     }
     return null;

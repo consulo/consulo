@@ -119,7 +119,7 @@ public class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multiframe,
 
   @Nullable
   private Project getProject() {
-    return CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext((JComponent) myStatusBar));
+    return DataManager.getInstance().getDataContext((JComponent) myStatusBar).getData(CommonDataKeys.PROJECT);
   }
 
   @Nullable

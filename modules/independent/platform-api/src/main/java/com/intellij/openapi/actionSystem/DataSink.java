@@ -22,6 +22,8 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import com.intellij.openapi.util.Key;
+
 public interface DataSink {
-  <T> void put(DataKey<T> key, T data); 
+  <T> void put(Key<T> key, T data);
 }

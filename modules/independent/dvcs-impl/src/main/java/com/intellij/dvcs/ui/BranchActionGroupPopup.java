@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.ListPopupStep;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.ui.FlatSpeedSearchPopup;
 import com.intellij.ui.ErrorLabel;
 import com.intellij.ui.JBColor;
@@ -52,21 +53,21 @@ import static com.intellij.util.ui.UIUtil.DEFAULT_HGAP;
 import static com.intellij.util.ui.UIUtil.DEFAULT_VGAP;
 
 public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
-  private static final DataKey<ListPopupModel> POPUP_MODEL = DataKey.create("VcsPopupModel");
+  private static final Key<ListPopupModel> POPUP_MODEL = Key.create("VcsPopupModel");
   private MyPopupListElementRenderer myListElementRenderer;
 
   public BranchActionGroupPopup(@NotNull String title, @NotNull Project project,
                                 @NotNull Condition<AnAction> preselectActionCondition, @NotNull ActionGroup actions) {
     super(title, new DefaultActionGroup(actions, createBranchSpeedSearchActionGroup(actions)), SimpleDataContext.getProjectContext(project),
           preselectActionCondition, true);
-    DataManager.registerDataProvider(getList(), dataId -> POPUP_MODEL.is(dataId) ? getListModel() : null);
+    DataManager.registerDataProvider(getList(), dataId -> POPUP_MODEL == dataId ? getListModel() : null);
     installOnHoverIconsSupport(getListElementRenderer());
   }
 
   //for child popups only
   private BranchActionGroupPopup(@Nullable WizardPopup aParent, @NotNull ListPopupStep aStep, @Nullable Object parentValue) {
     super(aParent, aStep, DataContext.EMPTY_CONTEXT, parentValue);
-    DataManager.registerDataProvider(getList(), dataId -> POPUP_MODEL.is(dataId) ? getListModel() : null);
+    DataManager.registerDataProvider(getList(), dataId -> POPUP_MODEL == dataId ? getListModel() : null);
     installOnHoverIconsSupport(getListElementRenderer());
   }
 
@@ -308,7 +309,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
       if (event != null && event.getSource() instanceof JComponent) {
         DataProvider dataProvider = DataManager.getDataProvider((JComponent)event.getSource());
         if (dataProvider != null) {
-          ObjectUtils.assertNotNull(POPUP_MODEL.getData(dataProvider)).refilter();
+          ObjectUtils.assertNotNull(dataProvider.getDataUnchecked(POPUP_MODEL)).refilter();
         }
       }
     }

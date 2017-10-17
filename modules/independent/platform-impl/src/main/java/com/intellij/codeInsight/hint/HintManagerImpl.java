@@ -490,7 +490,7 @@ public class HintManagerImpl extends HintManager implements Disposable {
 
     LogicalPosition pos = editor.getCaretModel().getLogicalPosition();
     final DataContext dataContext = ((EditorEx)editor).getDataContext();
-    final Rectangle dominantArea = PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE.getData(dataContext);
+    final Rectangle dominantArea = dataContext.getData(PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE);
 
     LOG.assertTrue(SwingUtilities.isEventDispatchThread());
     JRootPane rootPane = editor.getComponent().getRootPane();

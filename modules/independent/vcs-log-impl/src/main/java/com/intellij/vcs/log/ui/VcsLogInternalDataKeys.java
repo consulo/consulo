@@ -15,11 +15,11 @@
  */
 package com.intellij.vcs.log.ui;
 
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import com.intellij.vcs.log.data.VcsLogUiProperties;
 import com.intellij.vcs.log.impl.VcsLogManager;
 
-public class VcsLogInternalDataKeys {
-  public static final DataKey<VcsLogManager> LOG_MANAGER = DataKey.create("Vcs.Log.Manager");
-  public static final DataKey<VcsLogUiProperties> LOG_UI_PROPERTIES = DataKey.create("Vcs.Log.Ui.Properties");
+public interface VcsLogInternalDataKeys {
+  Key<VcsLogManager> LOG_MANAGER = Key.create("Vcs.Log.Manager");
+  Key<VcsLogUiProperties> LOG_UI_PROPERTIES = Key.create("Vcs.Log.Ui.Properties");
 }

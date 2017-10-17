@@ -92,11 +92,11 @@ public class UsageFavoriteNodeProvider extends FavoriteNodeProvider {
 
   @Override
   public Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, ViewSettings viewSettings) {
-    final Project project = CommonDataKeys.PROJECT.getData(context);
+    final Project project = context.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return null;
     }
-    final Usage[] usages = UsageView.USAGES_KEY.getData(context);
+    final Usage[] usages = context.getData(UsageView.USAGES_KEY);
     if (usages != null) {
 
       final List<AbstractTreeNode> result = new SmartList<AbstractTreeNode>();

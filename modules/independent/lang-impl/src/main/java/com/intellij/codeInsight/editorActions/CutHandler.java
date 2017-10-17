@@ -46,7 +46,7 @@ public class CutHandler extends EditorWriteActionHandler {
   @Override
   public void executeWriteAction(final Editor editor, Caret caret, DataContext dataContext) {
     assert caret == null : "Invocation of 'cut' operation for specific caret is not supported";
-    Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(editor.getContentComponent()));
+    Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(CommonDataKeys.PROJECT);
     if (project == null) {
       if (myOriginalHandler != null) {
         myOriginalHandler.execute(editor, null, dataContext);

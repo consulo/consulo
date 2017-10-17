@@ -49,7 +49,7 @@ public class IndentSelectionAction extends EditorAction {
     @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (isEnabled(editor, caret, dataContext)) {
         indentSelection(editor, project);
       }

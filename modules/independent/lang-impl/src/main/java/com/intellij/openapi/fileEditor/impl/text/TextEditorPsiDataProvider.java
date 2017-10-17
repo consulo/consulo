@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.fileEditor.impl.text;
 
+import com.intellij.openapi.util.Key;
 import consulo.codeInsight.TargetElementUtil;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.util.EditorHelper;
@@ -45,7 +46,7 @@ import static com.intellij.util.containers.ContainerUtil.addIfNotNull;
 public class TextEditorPsiDataProvider implements EditorDataProvider {
   @Override
   @Nullable
-  public Object getData(@NotNull final String dataId, @NotNull final Editor e, @NotNull final Caret caret) {
+  public Object getData(@NotNull final Key<?> dataId, @NotNull final Editor e, @NotNull final Caret caret) {
     if (!(e instanceof EditorEx)) {
       return null;
     }
@@ -53,7 +54,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
     if (file == null || !file.isValid()) return null;
 
     Project project = e.getProject();
-    if (dataId.equals(injectedId(EDITOR.getName()))) {
+    if (dataId == injectedId(EDITOR)) {
       if (project == null || PsiDocumentManager.getInstance(project).isUncommited(e.getDocument())) {
         return e;
       }
@@ -61,45 +62,45 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
         return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(e, caret, getPsiFile(e, file));
       }
     }
-    if (HOST_EDITOR.is(dataId)) {
+    if (HOST_EDITOR == dataId) {
       return e instanceof EditorWindow ? ((EditorWindow)e).getDelegate() : e;
     }
-    if (CARET.is(dataId)) {
+    if (CARET == dataId) {
       return caret;
     }
-    if (dataId.equals(injectedId(CARET.getName()))) {
-      Editor editor = (Editor)getData(injectedId(EDITOR.getName()), e, caret);
+    if (dataId == injectedId(CARET)) {
+      Editor editor = (Editor)getData(injectedId(EDITOR), e, caret);
       assert editor != null;
       return getInjectedCaret(editor, caret);
     }
-    if (dataId.equals(injectedId(PSI_ELEMENT.getName()))) {
-      Editor editor = (Editor)getData(injectedId(EDITOR.getName()), e, caret);
+    if (dataId == injectedId(PSI_ELEMENT)) {
+      Editor editor = (Editor)getData(injectedId(EDITOR), e, caret);
       assert editor != null;
       Caret injectedCaret = getInjectedCaret(editor, caret);
       return getPsiElementIn(editor, injectedCaret, file);
     }
-    if (PSI_ELEMENT.is(dataId)){
+    if (PSI_ELEMENT == dataId){
       return getPsiElementIn(e, caret, file);
     }
-    if (dataId.equals(injectedId(LANGUAGE.getName()))) {
-      PsiFile psiFile = (PsiFile)getData(injectedId(PSI_FILE.getName()), e, caret);
-      Editor editor = (Editor)getData(injectedId(EDITOR.getName()), e, caret);
+    if (dataId == injectedId(LANGUAGE)) {
+      PsiFile psiFile = (PsiFile)getData(injectedId(PSI_FILE), e, caret);
+      Editor editor = (Editor)getData(injectedId(EDITOR), e, caret);
       if (psiFile == null || editor == null) return null;
       Caret injectedCaret = getInjectedCaret(editor, caret);
       return getLanguageAtCurrentPositionInEditor(injectedCaret, psiFile);
     }
-    if (LANGUAGE.is(dataId)) {
+    if (LANGUAGE == dataId) {
       final PsiFile psiFile = getPsiFile(e, file);
       if (psiFile == null) return null;
       return getLanguageAtCurrentPositionInEditor(caret, psiFile);
     }
-    if (dataId.equals(injectedId(VIRTUAL_FILE.getName()))) {
-      PsiFile psiFile = (PsiFile)getData(injectedId(PSI_FILE.getName()), e, caret);
+    if (dataId == injectedId(VIRTUAL_FILE)) {
+      PsiFile psiFile = (PsiFile)getData(injectedId(PSI_FILE), e, caret);
       if (psiFile == null) return null;
       return psiFile.getVirtualFile();
     }
-    if (dataId.equals(injectedId(PSI_FILE.getName()))) {
-      Editor editor = (Editor)getData(injectedId(EDITOR.getName()), e, caret);
+    if (dataId == injectedId(PSI_FILE)) {
+      Editor editor = (Editor)getData(injectedId(EDITOR), e, caret);
       if (editor == null) {
         return null;
       }
@@ -108,10 +109,10 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
       }
       return PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     }
-    if (PSI_FILE.is(dataId)) {
+    if (PSI_FILE == dataId) {
       return getPsiFile(e, file);
     }
-    if (IDE_VIEW.is(dataId)) {
+    if (IDE_VIEW == dataId) {
       final PsiFile psiFile = project == null ? null : PsiManager.getInstance(project).findFile(file);
       final PsiDirectory psiDirectory = psiFile != null ? psiFile.getParent() : null;
       if (psiDirectory != null && psiDirectory.isPhysical()) {
@@ -138,7 +139,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
         };
       }
     }
-    if (CONTEXT_LANGUAGES.is(dataId)) {
+    if (CONTEXT_LANGUAGES == dataId) {
       return computeLanguages(e, caret);
     }
     return null;
@@ -209,14 +210,14 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
   }
 
   private Language[] computeLanguages(@NotNull Editor editor, @NotNull Caret caret) {
-    LinkedHashSet<Language> set = new LinkedHashSet<Language>(4);
-    Language injectedLanguage = (Language)getData(injectedId(LANGUAGE.getName()), editor, caret);
-    addIfNotNull(injectedLanguage, set);
-    Language language = (Language)getData(LANGUAGE.getName(), editor, caret);
-    addIfNotNull(language, set);
-    PsiFile psiFile = (PsiFile)getData(PSI_FILE.getName(), editor, caret);
+    LinkedHashSet<Language> set = new LinkedHashSet<>(4);
+    Language injectedLanguage = (Language)getData(injectedId(LANGUAGE), editor, caret);
+    addIfNotNull(set, injectedLanguage);
+    Language language = (Language)getData(LANGUAGE, editor, caret);
+    addIfNotNull(set, language);
+    PsiFile psiFile = (PsiFile)getData(PSI_FILE, editor, caret);
     if (psiFile != null) {
-      addIfNotNull(psiFile.getViewProvider().getBaseLanguage(), set);
+      addIfNotNull(set, psiFile.getViewProvider().getBaseLanguage());
     }
     return set.toArray(new Language[set.size()]);
   }

@@ -313,7 +313,7 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
     }
 
     private void requestHideHighlights(final DataContext dataContext) {
-      final Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+      final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
       if (editor == null) return;
       hideHighlights(editor, HIDE_BY_ANY_KEY);
     }

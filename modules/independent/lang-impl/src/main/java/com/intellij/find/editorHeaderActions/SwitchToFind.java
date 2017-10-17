@@ -54,7 +54,7 @@ public class SwitchToFind extends AnAction implements DumbAware {
 
     EditorSearchSession search = e.getRequiredData(EditorSearchSession.SESSION_KEY);
     final FindModel findModel = search.getFindModel();
-    FindUtil.configureFindModel(false, EDITOR.getData(e.getDataContext()), findModel, false);
+    FindUtil.configureFindModel(false, e.getDataContext().getData(EDITOR), findModel, false);
     search.getComponent().getSearchTextComponent().selectAll();
   }
 }

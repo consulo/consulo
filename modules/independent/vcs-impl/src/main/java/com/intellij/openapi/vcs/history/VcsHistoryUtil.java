@@ -79,7 +79,7 @@ public class VcsHistoryUtil {
   }
 
   /**
-   * Invokes {@link com.intellij.openapi.diff.DiffManager#getDiffTool()} to show difference between the given revisions of the given file.
+   * Invokes {@link DiffManager#getDiffTool()} to show difference between the given revisions of the given file.
    * @param project   project under vcs control.
    * @param path  file which revisions are compared.
    * @param revision1 first revision - 'before', to the left.

@@ -16,6 +16,7 @@
 package com.intellij.vcs.log.ui;
 
 import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.vcs.log.impl.VcsLogManager;
 import org.jetbrains.annotations.NonNls;
@@ -35,8 +36,8 @@ public class VcsLogPanel extends JBPanel implements DataProvider {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (VcsLogInternalDataKeys.LOG_MANAGER.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key dataId) {
+    if (VcsLogInternalDataKeys.LOG_MANAGER == dataId) {
       return myManager;
     }
     return null;

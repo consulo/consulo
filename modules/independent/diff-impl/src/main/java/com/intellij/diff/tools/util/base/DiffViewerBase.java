@@ -28,6 +28,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.CalledInBackground;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.Alarm;
@@ -285,11 +286,11 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (DiffDataKeys.NAVIGATABLE.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (DiffDataKeys.NAVIGATABLE == dataId) {
       return getNavigatable();
     }
-    else if (CommonDataKeys.PROJECT.is(dataId)) {
+    else if (CommonDataKeys.PROJECT == dataId) {
       return myProject;
     }
     else {

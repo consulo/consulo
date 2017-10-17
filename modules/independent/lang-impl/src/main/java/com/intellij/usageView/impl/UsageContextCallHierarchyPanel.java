@@ -57,7 +57,7 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
       if (element == null || !element.isValid()) return false;
 
       Project project = element.getProject();
-      DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT.getName(), element,
+      DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element,
                                                                SimpleDataContext.getProjectContext(project));
       HierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(LanguageCallHierarchy.INSTANCE, element, context);
       if (provider == null) return false;
@@ -113,7 +113,7 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
 
   @Nullable
   private static HierarchyBrowser createCallHierarchyPanel(@NotNull PsiElement element) {
-    DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT.getName(), element, SimpleDataContext.getProjectContext(element.getProject()));
+    DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element, SimpleDataContext.getProjectContext(element.getProject()));
     HierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(LanguageCallHierarchy.INSTANCE, element, context);
     if (provider == null) return null;
     PsiElement providerTarget = provider.getTarget(context);

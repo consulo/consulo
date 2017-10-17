@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.fixtures.CodeInsightFixtureTestCase;
@@ -37,10 +38,10 @@ public class MacroManagerTest extends CodeInsightFixtureTestCase {
 
   public DataContext getContext(VirtualFile file) {
     Project project = myFixture.getProject();
-    Map<String, Object> dataId2data = new THashMap<String, Object>();
-    dataId2data.put(CommonDataKeys.PROJECT.getName(), project);
-    dataId2data.put(PlatformDataKeys.VIRTUAL_FILE.getName(), file);
-    dataId2data.put(PlatformDataKeys.PROJECT_FILE_DIRECTORY.getName(), project.getBaseDir());
+    Map<Key, Object> dataId2data = new THashMap<>();
+    dataId2data.put(CommonDataKeys.PROJECT, project);
+    dataId2data.put(PlatformDataKeys.VIRTUAL_FILE, file);
+    dataId2data.put(PlatformDataKeys.PROJECT_FILE_DIRECTORY, project.getBaseDir());
     return SimpleDataContext.getSimpleContext(dataId2data, null);
   }
 

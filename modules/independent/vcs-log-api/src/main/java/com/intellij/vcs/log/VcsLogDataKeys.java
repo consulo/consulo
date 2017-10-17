@@ -15,17 +15,16 @@
  */
 package com.intellij.vcs.log;
 
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 
 import java.util.List;
 
 /**
- * Provides {@link DataKey DataKeys} which can be used by actions to access data available in the VCS log.
+ * Provides {@link Key Key} which can be used by actions to access data available in the VCS log.
  */
-public class VcsLogDataKeys {
-
-  public static final DataKey<VcsLog> VCS_LOG = DataKey.create("Vcs.Log");
-  public static final DataKey<VcsLogUi> VCS_LOG_UI = DataKey.create("Vcs.Log.Ui");
-  public static final DataKey<VcsLogDataProvider> VCS_LOG_DATA_PROVIDER = DataKey.create("Vcs.Log.DataProvider");
-  public static final DataKey<List<VcsRef>> VCS_LOG_BRANCHES = DataKey.create("Vcs.Log.Branches");
+public interface VcsLogDataKeys {
+  Key<VcsLog> VCS_LOG = Key.create("Vcs.Log");
+  Key<VcsLogUi> VCS_LOG_UI = Key.create("Vcs.Log.Ui");
+  Key<VcsLogDataProvider> VCS_LOG_DATA_PROVIDER = Key.create("Vcs.Log.DataProvider");
+  Key<List<VcsRef>> VCS_LOG_BRANCHES = Key.create("Vcs.Log.Branches");
 }

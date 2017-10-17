@@ -16,19 +16,28 @@
 
 package com.intellij.ide.impl.dataRules;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
+import org.jetbrains.annotations.NotNull;
 
-public class VirtualFileRule implements GetDataRule {
+public class VirtualFileRule implements GetDataRule<VirtualFile> {
+  @NotNull
   @Override
-  public Object getData(final DataProvider dataProvider) {
+  public Key<VirtualFile> getKey() {
+    return CommonDataKeys.VIRTUAL_FILE;
+  }
+
+  @Override
+  public VirtualFile getData(@NotNull final DataProvider dataProvider) {
     // Try to detect multiselection.
-    PsiElement[] psiElements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataProvider);
+    PsiElement[] psiElements = dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT_ARRAY);
     if (psiElements != null) {
       for (PsiElement elem : psiElements) {
         VirtualFile virtualFile = PsiUtilBase.getVirtualFile(elem);
@@ -36,16 +45,16 @@ public class VirtualFileRule implements GetDataRule {
       }
     }
 
-    VirtualFile[] virtualFiles = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(dataProvider);
+    VirtualFile[] virtualFiles = dataProvider.getDataUnchecked(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
     if (virtualFiles != null && virtualFiles.length == 1) {
       return virtualFiles[0];
     }
 
-    PsiFile psiFile = LangDataKeys.PSI_FILE.getData(dataProvider);
+    PsiFile psiFile = dataProvider.getDataUnchecked(LangDataKeys.PSI_FILE);
     if (psiFile != null) {
       return psiFile.getVirtualFile();
     }
-    PsiElement elem = LangDataKeys.PSI_ELEMENT.getData(dataProvider);
+    PsiElement elem = dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT);
     if (elem == null) {
       return null;
     }

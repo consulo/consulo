@@ -51,7 +51,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
     if (project == null) {
       return;
     }
-    final Editor hostEditor = CommonDataKeys.EDITOR.getData(e.getDataContext());
+    final Editor hostEditor = e.getDataContext().getData(CommonDataKeys.EDITOR);
     if (hostEditor == null) {
       return;
     }
@@ -83,7 +83,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
       return;
     }
 
-    Editor hostEditor = CommonDataKeys.EDITOR.getData(e.getDataContext());
+    Editor hostEditor = e.getDataContext().getData(CommonDataKeys.EDITOR);
     if (hostEditor == null) {
       presentation.setEnabled(false);
       return;

@@ -627,25 +627,25 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     //panel.add(createSouthPanel(), BorderLayout.SOUTH);
     DataManager.registerDataProvider(panel, new DataProvider() {
       @Override
-      public Object getData(@NonNls String dataId) {
-        if (CommonDataKeys.PROJECT.is(dataId)) {
+      public Object getData(@NotNull @NonNls Key dataId) {
+        if (CommonDataKeys.PROJECT == dataId) {
           return myProject;
         }
-        if (PlatformDataKeys.FILE_EDITOR.is(dataId)) {
+        if (PlatformDataKeys.FILE_EDITOR == dataId) {
           return myFileEditor;
         }
-        if (CommonDataKeys.PSI_ELEMENT.is(dataId)) {
+        if (CommonDataKeys.PSI_ELEMENT == dataId) {
           Object node = ContainerUtil.getFirstItem(myAbstractTreeBuilder.getSelectedElements());
           if (!(node instanceof FilteringTreeStructure.FilteringNode)) return null;
           return getPsi((FilteringTreeStructure.FilteringNode)node);
         }
-        if (LangDataKeys.PSI_ELEMENT_ARRAY.is(dataId)) {
+        if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
           return ContainerUtil.toArray(getPsiElementsFromSelection(), PsiElement.ARRAY_FACTORY);
         }
-        if (LangDataKeys.POSITION_ADJUSTER_POPUP.is(dataId)) {
+        if (LangDataKeys.POSITION_ADJUSTER_POPUP == dataId) {
           return myPopup;
         }
-        if (PlatformDataKeys.TREE_EXPANDER.is(dataId)) {
+        if (PlatformDataKeys.TREE_EXPANDER == dataId) {
           return myTreeExpander;
         }
         return null;

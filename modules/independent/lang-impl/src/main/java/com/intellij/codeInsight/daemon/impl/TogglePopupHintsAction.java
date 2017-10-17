@@ -32,7 +32,7 @@ public class TogglePopupHintsAction extends AnAction{
   private static final Logger LOG=Logger.getInstance("#com.intellij.ide.actions.TogglePopupHintsAction");
 
   private static PsiFile getTargetFile(DataContext dataContext){
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if(project==null){
       return null;
     }

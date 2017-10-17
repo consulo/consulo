@@ -31,8 +31,8 @@ public class ShowReformatFileDialog extends AnAction implements DumbAware {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (project == null || editor == null) {
       presentation.setEnabled(false);
       return;
@@ -53,8 +53,8 @@ public class ShowReformatFileDialog extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (project == null || editor == null) {
       presentation.setEnabled(false);
       return;

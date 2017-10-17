@@ -48,7 +48,7 @@ public class MinimizeCurrentWindowAction extends AnAction implements DumbAware {
     p.setVisible(SystemInfo.isMac);
 
     if (SystemInfo.isMac) {
-      Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+      Project project = e.getData(CommonDataKeys.PROJECT);
       if (project != null) {
         JFrame frame = WindowManager.getInstance().getFrame(project);
         if (frame != null) {

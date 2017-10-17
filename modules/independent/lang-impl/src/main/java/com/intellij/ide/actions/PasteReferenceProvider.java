@@ -42,8 +42,8 @@ import java.awt.datatransfer.Transferable;
 public class PasteReferenceProvider implements PasteProvider {
   @Override
   public void performPaste(@NotNull DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (project == null || editor == null) return;
 
     final String fqn = getCopiedFqn(dataContext);
@@ -56,14 +56,14 @@ public class PasteReferenceProvider implements PasteProvider {
 
   @Override
   public boolean isPastePossible(@NotNull DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
-    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     return project != null && editor != null && getCopiedFqn(dataContext) != null;
   }
 
   @Override
   public boolean isPasteEnabled(@NotNull DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     String fqn = getCopiedFqn(dataContext);
     if (project == null || fqn == null) {
       return false;
@@ -92,7 +92,7 @@ public class PasteReferenceProvider implements PasteProvider {
 
   @Nullable
   private static String getCopiedFqn(final DataContext context) {
-    Producer<Transferable> producer = PasteAction.TRANSFERABLE_PROVIDER.getData(context);
+    Producer<Transferable> producer = context.getData(PasteAction.TRANSFERABLE_PROVIDER);
 
     if (producer != null) {
       Transferable transferable = producer.produce();

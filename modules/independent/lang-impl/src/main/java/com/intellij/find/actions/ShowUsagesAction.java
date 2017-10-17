@@ -47,6 +47,7 @@ import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -1176,14 +1177,14 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
     }
 
     @Override
-    public Object getData(@NonNls String dataId) {
-      if (CommonDataKeys.PSI_ELEMENT.is(dataId)) {
+    public Object getData(@NotNull @NonNls Key<?> dataId) {
+      if (CommonDataKeys.PSI_ELEMENT == dataId) {
         final int[] selected = getSelectedRows();
         if (selected.length == 1) {
           return getPsiElementForHint(getValueAt(selected[0], 0));
         }
       }
-      else if (LangDataKeys.POSITION_ADJUSTER_POPUP.is(dataId)) {
+      else if (LangDataKeys.POSITION_ADJUSTER_POPUP == dataId) {
         return PopupUtil.getPopupContainerFor(this);
       }
       return null;

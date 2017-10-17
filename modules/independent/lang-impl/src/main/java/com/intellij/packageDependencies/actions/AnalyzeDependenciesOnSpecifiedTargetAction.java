@@ -18,20 +18,24 @@ package com.intellij.packageDependencies.actions;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.search.GlobalSearchScope;
+import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author nik
  */
 public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
-  public static final DataKey<GlobalSearchScope> TARGET_SCOPE_KEY = DataKey.create("MODULE_DEPENDENCIES_TARGET_SCOPE");
+  public static final Key<GlobalSearchScope> TARGET_SCOPE_KEY = Key.create("MODULE_DEPENDENCIES_TARGET_SCOPE");
 
   public AnalyzeDependenciesOnSpecifiedTargetAction() {
     super("Analyze Dependencies on Specified Target");
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
     final GlobalSearchScope targetScope = e.getData(TARGET_SCOPE_KEY);
     if (module == null || targetScope == null) return;
@@ -39,8 +43,9 @@ public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
     new AnalyzeDependenciesOnSpecifiedTargetHandler(module.getProject(), new AnalysisScope(module), targetScope).analyze();
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
     final GlobalSearchScope scope = e.getData(TARGET_SCOPE_KEY);
     final Presentation presentation = e.getPresentation();

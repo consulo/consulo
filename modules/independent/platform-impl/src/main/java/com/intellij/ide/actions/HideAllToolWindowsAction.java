@@ -25,7 +25,7 @@ import com.intellij.openapi.wm.impl.ToolWindowLayout;
 
 public class HideAllToolWindowsAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
@@ -69,7 +69,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
 
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
+    Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       presentation.setEnabled(false);
       return;

@@ -42,6 +42,7 @@ import com.intellij.openapi.options.FontSize;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -94,7 +95,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   public static final ColorKey COLOR_KEY = ColorKey.createColorKey("DOCUMENTATION_COLOR", DOCUMENTATION_COLOR);
 
   private static final Highlighter.HighlightPainter LINK_HIGHLIGHTER = new LinkHighlighter();
-  @NonNls private static final String DOCUMENTATION_TOPIC_ID = "reference.toolWindows.Documentation";
+  @NonNls
+  private static final String DOCUMENTATION_TOPIC_ID = "reference.toolWindows.Documentation";
 
   private static final int PREFERRED_WIDTH_EM = 37;
   private static final int PREFERRED_HEIGHT_MIN_EM = 7;
@@ -177,10 +179,12 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   public boolean requestFocusInWindow() {
     // With a screen reader active, set the focus directly to the editor because
     // it makes it easier for users to read/navigate the documentation contents.
-    if (ScreenReader.isActive())
+    if (ScreenReader.isActive()) {
       return myEditorPane.requestFocusInWindow();
-    else
+    }
+    else {
       return myScrollPane.requestFocusInWindow();
+    }
   }
 
 
@@ -219,8 +223,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         View rootView = myEditorPane.getUI().getRootView(myEditorPane);
         rootView.setSize(prefWidth, prefHeightMax);  // Necessary! Without this line, the size won't increase when the content does
 
-        int prefHeight = (int)rootView.getPreferredSpan(View.Y_AXIS) + ins.bottom + ins.top +
-                         myScrollPane.getHorizontalScrollBar().getMaximumSize().height;
+        int prefHeight = (int)rootView.getPreferredSpan(View.Y_AXIS) + ins.bottom + ins.top + myScrollPane.getHorizontalScrollBar().getMaximumSize().height;
         prefHeight = Math.max(prefHeightMin, Math.min(prefHeightMax, prefHeight));
         return new Dimension(prefWidth, prefHeight);
       }
@@ -257,8 +260,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     };
     DataProvider helpDataProvider = new DataProvider() {
       @Override
-      public Object getData(@NonNls String dataId) {
-        return PlatformDataKeys.HELP_ID.is(dataId) ? DOCUMENTATION_TOPIC_ID : null;
+      public Object getData(@NotNull @NonNls Key dataId) {
+        return PlatformDataKeys.HELP_ID == dataId ? DOCUMENTATION_TOPIC_ID : null;
       }
     };
     myEditorPane.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, helpDataProvider);
@@ -398,12 +401,10 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     try {
       String backKey = ScreenReader.isActive() ? "alt LEFT" : "LEFT";
-      CustomShortcutSet backShortcutSet = new CustomShortcutSet(KeyboardShortcut.fromString(backKey),
-                                                                KeymapUtil.parseMouseShortcut("button4"));
+      CustomShortcutSet backShortcutSet = new CustomShortcutSet(KeyboardShortcut.fromString(backKey), KeymapUtil.parseMouseShortcut("button4"));
 
       String forwardKey = ScreenReader.isActive() ? "alt RIGHT" : "RIGHT";
-      CustomShortcutSet forwardShortcutSet = new CustomShortcutSet(KeyboardShortcut.fromString(forwardKey),
-                                                                   KeymapUtil.parseMouseShortcut("button5"));
+      CustomShortcutSet forwardShortcutSet = new CustomShortcutSet(KeyboardShortcut.fromString(forwardKey), KeymapUtil.parseMouseShortcut("button5"));
       back.registerCustomShortcutSet(backShortcutSet, this);
       forward.registerCustomShortcutSet(forwardShortcutSet, this);
       // mouse actions are checked only for exact component over which click was performed,
@@ -471,12 +472,12 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (DocumentationManager.SELECTED_QUICK_DOC_TEXT.getName().equals(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (DocumentationManager.SELECTED_QUICK_DOC_TEXT == dataId) {
       // Javadocs often contain &nbsp; symbols (non-breakable white space). We don't want to copy them as is and replace
       // with raw white spaces. See IDEA-86633 for more details.
       String selectedText = myEditorPane.getSelectedText();
-      return selectedText == null? null : selectedText.replace((char)160, ' ');
+      return selectedText == null ? null : selectedText.replace((char)160, ' ');
     }
 
     return null;
@@ -642,9 +643,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
     myEffectiveExternalUrl = effectiveExternalUrl;
 
-    final SmartPsiElementPointer element = _element != null && _element.isValid()
-                                           ? SmartPointerManager.getInstance(_element.getProject()).createSmartPsiElementPointer(_element)
-                                           : null;
+    final SmartPsiElementPointer element = _element != null && _element.isValid() ? SmartPointerManager.getInstance(_element.getProject()).createSmartPsiElementPointer(_element) : null;
 
     if (element != null) {
       setElement(element);
@@ -677,9 +676,11 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       myEditorPane.scrollRectToVisible(viewRect); // if ref is defined but is not found in document, this provides a default location
       if (ref != null) {
         myEditorPane.scrollToReference(ref);
-      } else if (ScreenReader.isActive()) {
+      }
+      else if (ScreenReader.isActive()) {
         myEditorPane.setCaretPosition(0);
-      }});
+      }
+    });
   }
 
   private void applyFontProps() {
@@ -687,9 +688,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     if (!(document instanceof StyledDocument)) {
       return;
     }
-    String fontName = Registry.is("documentation.component.editor.font") ?
-                      EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName() :
-                      myEditorPane.getFont().getFontName();
+    String fontName = Registry.is("documentation.component.editor.font") ? EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName() : myEditorPane.getFont().getFontName();
 
     // changing font will change the doc's CSS as myEditorPane has JEditorPane.HONOR_DISPLAY_PROPERTIES via UIUtil.getHTMLEditorKit
     myEditorPane.setFont(UIUtil.getFontWithFallback(fontName, Font.PLAIN, JBUI.scale(getQuickDocFontSize().getSize())));
@@ -791,7 +790,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       SmartPsiElementPointer element = myElement;
       if (element != null) {
         PsiElement psiElement = element.getElement();
-        return psiElement instanceof Navigatable ? new Navigatable[] {(Navigatable)psiElement} : null;
+        return psiElement instanceof Navigatable ? new Navigatable[]{(Navigatable)psiElement} : null;
       }
       return null;
     }
@@ -836,8 +835,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   private void registerActions() {
-    myExternalDocAction
-            .registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), myEditorPane);
+    myExternalDocAction.registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), myEditorPane);
 
     // With screen readers, we want the default keyboard behavior inside
     // the document text editor, i.e. the caret moves with cursor keys, etc.

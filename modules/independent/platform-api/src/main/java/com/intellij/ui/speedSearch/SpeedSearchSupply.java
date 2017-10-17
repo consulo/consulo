@@ -15,7 +15,6 @@
  */
 package com.intellij.ui.speedSearch;
 
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import org.jetbrains.annotations.NotNull;
@@ -34,8 +33,8 @@ public abstract class SpeedSearchSupply {
    * Client property key to use in jcomponents for passing the actual search query to renderers
    */
   public static final String SEARCH_QUERY_KEY = "SEARCH_QUERY";
-  private static final Key SPEED_SEARCH_COMPONENT_MARKER = new Key("SPEED_SEARCH_COMPONENT_MARKER");
-  public static final DataKey<String> SPEED_SEARCH_CURRENT_QUERY = DataKey.create("SPEED_SEARCH_CURRENT_QUERY");
+  private static final Key SPEED_SEARCH_COMPONENT_MARKER = Key.create("SPEED_SEARCH_COMPONENT_MARKER");
+  public static final Key<String> SPEED_SEARCH_CURRENT_QUERY = Key.create("SPEED_SEARCH_CURRENT_QUERY");
 
   @Nullable
   public static SpeedSearchSupply getSupply(@NotNull final JComponent component) {

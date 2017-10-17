@@ -36,6 +36,7 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -63,7 +64,7 @@ import javax.swing.*;
 import java.util.List;
 
 public class XDebugSessionTab extends DebuggerSessionTabBase {
-  public static final DataKey<XDebugSessionTab> TAB_KEY = DataKey.create("XDebugSessionTab");
+  public static final Key<XDebugSessionTab> TAB_KEY = Key.create("XDebugSessionTab");
 
   private XWatchesViewImpl myWatchesView;
   private boolean myWatchesInVariables = Registry.is("debugger.watches.in.variables");
@@ -90,7 +91,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     if (contentToReuse != null && SystemProperties.getBooleanProperty("xdebugger.reuse.session.tab", false)) {
       JComponent component = contentToReuse.getComponent();
       if (component != null) {
-        XDebugSessionTab oldTab = TAB_KEY.getData(DataManager.getInstance().getDataContext(component));
+        XDebugSessionTab oldTab = DataManager.getInstance().getDataContext(component).getData(TAB_KEY);
         if (oldTab != null) {
           oldTab.setSession(session, environment, icon);
           oldTab.attachToSession(session);
@@ -166,22 +167,22 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (XWatchesView.DATA_KEY.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (XWatchesView.DATA_KEY == dataId) {
       return myWatchesView;
     }
-    else if (TAB_KEY.is(dataId)) {
+    else if (TAB_KEY == dataId) {
       return this;
     }
-    else if (XDebugSessionData.DATA_KEY.is(dataId)) {
+    else if (XDebugSessionData.DATA_KEY == dataId) {
       return mySessionData;
     }
 
     if (mySession != null) {
-      if (XDebugSession.DATA_KEY.is(dataId)) {
+      if (XDebugSession.DATA_KEY == dataId) {
         return mySession;
       }
-      else if (LangDataKeys.CONSOLE_VIEW.is(dataId)) {
+      else if (LangDataKeys.CONSOLE_VIEW == dataId) {
         return mySession.getConsoleView();
       }
     }
@@ -361,7 +362,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
       JComponent component = tab.getUi().getComponent();
       if (component instanceof DataProvider) {
-        RunnerContentUi ui = RunnerContentUi.KEY.getData(((DataProvider)component));
+        RunnerContentUi ui = ((DataProvider)component).getDataUnchecked(RunnerContentUi.KEY);
         if (ui != null) {
           Content content = ui.findContent(viewId);
 
@@ -429,7 +430,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
   private void restoreContent(String contentId) {
     JComponent component = myUi.getComponent();
     if (component instanceof DataProvider) {
-      RunnerContentUi ui = RunnerContentUi.KEY.getData(((DataProvider)component));
+      RunnerContentUi ui = ((DataProvider)component).getDataUnchecked(RunnerContentUi.KEY);
       if (ui != null) {
         ui.restoreContent(contentId);
       }

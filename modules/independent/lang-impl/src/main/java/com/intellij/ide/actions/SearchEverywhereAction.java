@@ -353,7 +353,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
     return null;
   }
 
@@ -483,7 +483,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   }
 
   private void doNavigate(final int index) {
-    final Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(getField().getTextEditor()));
+    final Project project = DataManager.getInstance().getDataContext(getField().getTextEditor()).getData(CommonDataKeys.PROJECT);
     final Executor executor =
             ourShiftIsPressed.get() ? DefaultRunExecutor.getRunExecutorInstance() : ExecutorRegistry.getInstance().getExecutorById(ToolWindowId.DEBUG);
     assert project != null;
@@ -631,7 +631,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     if (myCalcThread != null && !myCalcThread.isCanceled()) {
       myCalcThread.cancel();
     }
-    final Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(getField().getTextEditor()));
+    final Project project = DataManager.getInstance().getDataContext(getField().getTextEditor()).getData(CommonDataKeys.PROJECT);
 
     assert project != null;
     myRenderer.myProject = project;
@@ -679,7 +679,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     if (project == null) return;
 
     updateComponents();
-    myContextComponent = PlatformDataKeys.CONTEXT_COMPONENT.getData(e.getDataContext());
+    myContextComponent = e.getDataContext().getData(PlatformDataKeys.CONTEXT_COMPONENT);
     Window wnd = myContextComponent != null
                  ? SwingUtilities.windowForComponent(myContextComponent)
                  : KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
@@ -912,15 +912,15 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     DataManager.registerDataProvider(panel, new DataProvider() {
       @Nullable
       @Override
-      public Object getData(@NonNls String dataId) {
+      public Object getData(@NotNull @NonNls Key<?> dataId) {
         final Object value = myList.getSelectedValue();
-        if (CommonDataKeys.PSI_ELEMENT.is(dataId) && value instanceof PsiElement) {
+        if (CommonDataKeys.PSI_ELEMENT == dataId && value instanceof PsiElement) {
           return value;
         }
-        else if (CommonDataKeys.VIRTUAL_FILE.is(dataId) && value instanceof VirtualFile) {
+        else if (CommonDataKeys.VIRTUAL_FILE == dataId && value instanceof VirtualFile) {
           return value;
         }
-        else if (CommonDataKeys.NAVIGATABLE.is(dataId)) {
+        else if (CommonDataKeys.NAVIGATABLE == dataId) {
           if (value instanceof Navigatable) return value;
           if (value instanceof ChooseRunConfigurationPopup.ItemWrapper) {
             final Object config = ((ChooseRunConfigurationPopup.ItemWrapper)value).getValue();
@@ -944,7 +944,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
             }
           }
         }
-        else if (PlatformDataKeys.SEARCH_INPUT_TEXT.is(dataId)) {
+        else if (PlatformDataKeys.SEARCH_INPUT_TEXT == dataId) {
           return myPopupField == null ? null : myPopupField.getText();
         }
         return null;
@@ -1037,8 +1037,8 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
     @Nullable
     @Override
-    public Object getData(@NonNls String dataId) {
-      if (PlatformDataKeys.PREDEFINED_TEXT.is(dataId)) {
+    public Object getData(@NotNull @NonNls Key<?> dataId) {
+      if (PlatformDataKeys.PREDEFINED_TEXT == dataId) {
         return getTextEditor().getText();
       }
       return null;

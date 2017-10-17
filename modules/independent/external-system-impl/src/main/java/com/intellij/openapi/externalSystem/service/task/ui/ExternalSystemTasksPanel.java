@@ -36,6 +36,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemUiUtil;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
@@ -146,23 +147,23 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (ExternalSystemDataKeys.RECENT_TASKS_LIST.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (ExternalSystemDataKeys.RECENT_TASKS_LIST == dataId) {
       return myRecentTasksList;
     }
-    else if (ExternalSystemDataKeys.ALL_TASKS_MODEL.is(dataId)) {
+    else if (ExternalSystemDataKeys.ALL_TASKS_MODEL == dataId) {
       return myAllTasksModel;
     }
-    else if (ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID.is(dataId)) {
+    else if (ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID == dataId) {
       return myExternalSystemId;
     }
-    else if (ExternalSystemDataKeys.NOTIFICATION_GROUP.is(dataId)) {
+    else if (ExternalSystemDataKeys.NOTIFICATION_GROUP == dataId) {
       return myNotificationGroup;
     }
-    else if (ExternalSystemDataKeys.SELECTED_TASK.is(dataId)) {
+    else if (ExternalSystemDataKeys.SELECTED_TASK == dataId) {
       return mySelectedTaskProvider == null ? null : mySelectedTaskProvider.produce();
     }
-    else if (ExternalSystemDataKeys.SELECTED_PROJECT.is(dataId)) {
+    else if (ExternalSystemDataKeys.SELECTED_PROJECT == dataId) {
       if (mySelectedTaskProvider != myAllTasksTree) {
         return null;
       }
@@ -174,7 +175,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
         }
       }
     }
-    else if (Location.DATA_KEY.is(dataId)) {
+    else if (Location.DATA_KEY == dataId) {
       Location location = buildLocation();
       return location == null ? super.getData(dataId) : location;
     }

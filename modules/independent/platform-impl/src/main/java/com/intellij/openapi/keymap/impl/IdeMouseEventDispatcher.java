@@ -266,7 +266,7 @@ public final class IdeMouseEventDispatcher {
 
         if (ActionUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
           actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
-          final Component context = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
+          final Component context = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
 
           if (context != null && !context.isShowing()) continue;
 

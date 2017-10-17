@@ -16,6 +16,8 @@
 package com.intellij.ui.mac;
 
 import com.apple.eawt.event.GestureUtilities;
+import com.apple.eawt.event.PressureEvent;
+import com.apple.eawt.event.PressureListener;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
@@ -24,14 +26,11 @@ import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;
-
-import java.awt.*;
-import java.util.ArrayList;
-import com.apple.eawt.event.PressureEvent;
-import com.apple.eawt.event.PressureListener;
 import com.intellij.openapi.keymap.impl.KeymapManagerImpl;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * @author denis
@@ -60,7 +59,7 @@ public class MacGestureSupportForEditor {
 
               if (presentation.isEnabled()) {
                 actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
-                final Component context = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
+                final Component context = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
 
                 if (context != null && !context.isShowing()) continue;
 

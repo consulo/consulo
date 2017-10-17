@@ -25,7 +25,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
  */
 public abstract class SplitterActionBase extends AnAction implements DumbAware {
   public void update(final AnActionEvent event) {
-    final Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
+    final Project project = event.getData(CommonDataKeys.PROJECT);
     final Presentation presentation = event.getPresentation();
     boolean enabled;
     if (project == null) {

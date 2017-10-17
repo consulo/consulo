@@ -17,6 +17,7 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.ide.impl.dataRules.GetDataRule;
 import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
@@ -25,24 +26,30 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class VcsChangesSelectionRule implements GetDataRule {
+public class VcsChangesSelectionRule implements GetDataRule<ChangesSelection> {
+  @NotNull
+  @Override
+  public Key<ChangesSelection> getKey() {
+    return VcsDataKeys.CHANGES_SELECTION;
+  }
+
   @Nullable
   @Override
-  public Object getData(DataProvider dataProvider) {
+  public ChangesSelection getData(@NotNull DataProvider dataProvider) {
     return getChangesSelection(dataProvider);
   }
 
   @Nullable
   public ChangesSelection getChangesSelection(@NotNull DataProvider dataProvider) {
-    Change currentChange = VcsDataKeys.CURRENT_CHANGE.getData(dataProvider);
+    Change currentChange = dataProvider.getDataUnchecked(VcsDataKeys.CURRENT_CHANGE);
 
-    Change[] selectedChanges = VcsDataKeys.SELECTED_CHANGES.getData(dataProvider);
+    Change[] selectedChanges = dataProvider.getDataUnchecked(VcsDataKeys.SELECTED_CHANGES);
     if (selectedChanges != null) {
       int index = Math.max(ArrayUtil.indexOf(selectedChanges, currentChange), 0);
       return new ChangesSelection(Arrays.asList(selectedChanges), index);
     }
 
-    Change[] changes = VcsDataKeys.CHANGES.getData(dataProvider);
+    Change[] changes = dataProvider.getDataUnchecked(VcsDataKeys.CHANGES);
     if (changes != null) {
       int index = Math.max(ArrayUtil.indexOf(changes, currentChange), 0);
       return new ChangesSelection(Arrays.asList(changes), index);

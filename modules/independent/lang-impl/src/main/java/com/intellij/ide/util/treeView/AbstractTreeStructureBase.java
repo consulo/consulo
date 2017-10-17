@@ -23,6 +23,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
+import com.intellij.openapi.util.Key;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -91,7 +92,7 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
   public abstract List<TreeStructureProvider> getProviders();
 
   @Nullable
-  public Object getDataFromProviders(@NotNull List<AbstractTreeNode> selectedNodes, final String dataId) {
+  public Object getDataFromProviders(@NotNull List<AbstractTreeNode> selectedNodes, final Key dataId) {
     final List<TreeStructureProvider> providers = getProvidersDumbAware();
     if (!providers.isEmpty()) {
       for (TreeStructureProvider treeStructureProvider : providers) {

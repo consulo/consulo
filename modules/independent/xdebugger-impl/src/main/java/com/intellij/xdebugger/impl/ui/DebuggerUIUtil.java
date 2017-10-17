@@ -425,7 +425,7 @@ public class DebuggerUIUtil {
       }
 
       boolean isDetachedTree(XDebuggerTree tree) {
-        return XDebugSessionTab.TAB_KEY.getData(DataManager.getInstance().getDataContext(tree)) == null;
+        return DataManager.getInstance().getDataContext(tree).getData(XDebugSessionTab.TAB_KEY) == null;
       }
     });
   }

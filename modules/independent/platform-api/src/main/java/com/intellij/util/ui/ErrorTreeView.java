@@ -16,7 +16,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 public interface ErrorTreeView extends Disposable {
-  DataKey<Object> CURRENT_EXCEPTION_DATA_KEY = DataKey.create("CURRENT_EXCEPTION_DATA");
+  Key<Object> CURRENT_EXCEPTION_DATA_KEY = Key.create("CURRENT_EXCEPTION_DATA");
 
   /**
    * If file is not null, allows to navigate to this file, line, column

@@ -239,9 +239,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
       if (requestFocus) {
         projectView.changeView(getId(), getSubId());
       }
-      ((BaseProjectTreeBuilder)getTreeBuilder()).selectInWidth(toSelect, requestFocus, node -> node instanceof AbstractModuleNode ||
-                                                                                               node instanceof ModuleGroupNode ||
-                                                                                               node instanceof AbstractProjectNode);
+      ((BaseProjectTreeBuilder)getTreeBuilder())
+              .selectInWidth(toSelect, requestFocus, node -> node instanceof AbstractModuleNode || node instanceof ModuleGroupNode || node instanceof AbstractProjectNode);
     };
     if (requestFocus) {
       windowManager.getToolWindow(ToolWindowId.PROJECT_VIEW).activate(runnable);
@@ -288,8 +287,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   }
 
   @Override
-  public Object getData(String dataId) {
-    if (CommonDataKeys.NAVIGATABLE_ARRAY.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (CommonDataKeys.NAVIGATABLE_ARRAY == dataId) {
       TreePath[] paths = getSelectionPaths();
       if (paths == null) return null;
       final ArrayList<Navigatable> navigatables = new ArrayList<>();

@@ -39,6 +39,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -227,8 +228,8 @@ public class Switcher extends AnAction implements DumbAware {
 
     @Nullable
     @Override
-    public Object getData(@NonNls String dataId) {
-      if (CommonDataKeys.VIRTUAL_FILE_ARRAY.is(dataId)) {
+    public Object getData(@NotNull @NonNls Key<?> dataId) {
+      if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
         final List list = getSelectedList().getSelectedValuesList();
         if (!list.isEmpty()) {
           final List<VirtualFile> vFiles = new ArrayList<>();
@@ -937,9 +938,10 @@ public class Switcher extends AnAction implements DumbAware {
             final DataContext dataContext = new DataContext() {
               @Nullable
               @Override
-              public Object getData(@NonNls String dataId) {
-                if (PlatformDataKeys.PREDEFINED_TEXT.is(dataId)) {
-                  return fileName;
+              @SuppressWarnings("unchecked")
+              public <T> T getData(@NotNull Key<T> dataId) {
+                if (PlatformDataKeys.PREDEFINED_TEXT == dataId) {
+                  return (T)fileName;
                 }
                 return context.getData(dataId);
               }

@@ -98,7 +98,7 @@ public class RenameDialog extends RefactoringDialog {
 
   public static void showRenameDialog(DataContext dataContext, RenameDialog dialog) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
-      final String name = PsiElementRenameHandler.DEFAULT_NAME.getData(dataContext);
+      final String name = dataContext.getData(PsiElementRenameHandler.DEFAULT_NAME);
       //noinspection TestOnlyProblems
       dialog.performRename(name);
       dialog.close(OK_EXIT_CODE);

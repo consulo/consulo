@@ -71,7 +71,7 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
 
   @Override
   public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-    myCurrentEditor = CommonDataKeys.EDITOR.getData(dataContext);
+    myCurrentEditor = dataContext.getData(CommonDataKeys.EDITOR);
     registerDisposeHandler(myCurrentEditor);
     if (myCurrentEditor != myLastEditor) {
       resetLastAction();

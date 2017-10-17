@@ -15,8 +15,8 @@
  */
 package com.intellij.analysis;
 
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 
 public class AnalysisScopeUtil {
-  public static final DataKey<AnalysisScope> KEY = DataKey.create("analysisScope");
+  public static final Key<AnalysisScope> KEY = Key.create("analysisScope");
 }

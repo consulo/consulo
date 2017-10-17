@@ -29,6 +29,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
@@ -317,8 +318,8 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   }
 
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (OptionsEditor.KEY.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (OptionsEditor.KEY == dataId) {
       return myEditor;
     }
     return null;

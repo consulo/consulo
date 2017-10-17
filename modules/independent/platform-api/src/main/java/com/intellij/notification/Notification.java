@@ -24,6 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.ContainerUtil;
@@ -52,7 +53,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class Notification {
   private static final Logger LOG = Logger.getInstance("#com.intellij.notification.Notification");
-  private static final DataKey<Notification> KEY = DataKey.create("Notification");
+  private static final Key<Notification> KEY = Key.create("Notification");
 
   public final String id;
 
@@ -232,19 +233,25 @@ public class Notification {
   }
 
   public static void fire(@NotNull final Notification notification, @NotNull AnAction action, @Nullable DataContext context) {
-    AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.UNKNOWN, dataId -> {
-      if (KEY.is(dataId)) {
-        return notification;
+    AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.UNKNOWN, new DataContext() {
+      @Nullable
+      @Override
+      @SuppressWarnings("unchecked")
+      public <T> T getData(@NotNull Key<T> dataId) {
+        if (KEY == dataId) {
+          return (T)notification;
+        }
+        return context == null ? null : context.getData(dataId);
       }
-      return context == null ? null : context.getData(dataId);
     });
+
     if (ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
       ActionUtil.performActionDumbAware(action, event);
     }
   }
 
   public static void setDataProvider(@NotNull Notification notification, @NotNull JComponent component) {
-    DataManager.registerDataProvider(component, dataId -> KEY.getName().equals(dataId) ? notification : null);
+    DataManager.registerDataProvider(component, dataId -> KEY == dataId ? notification : null);
   }
 
   @NotNull

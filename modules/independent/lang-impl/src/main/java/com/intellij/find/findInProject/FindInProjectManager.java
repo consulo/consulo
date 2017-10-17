@@ -80,7 +80,7 @@ public class FindInProjectManager {
   protected void initModel(@NotNull FindModel findModel, @NotNull DataContext dataContext) {
     FindInProjectUtil.setDirectoryName(findModel, dataContext);
 
-    String text = PlatformDataKeys.PREDEFINED_TEXT.getData(dataContext);
+    String text = dataContext.getData(PlatformDataKeys.PREDEFINED_TEXT);
     if (text != null) {
       FindModel.initStringToFindNoMultiline(findModel, text);
     }

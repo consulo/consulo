@@ -15,14 +15,24 @@
  */
 package com.intellij.ide.impl.dataRules;
 
+import com.intellij.ide.CopyProvider;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.util.Key;
+import org.jetbrains.annotations.NotNull;
 
-public class CopyProviderRule implements GetDataRule {
-  public Object getData(DataProvider dataProvider) {
-    final Editor editor = PlatformDataKeys.EDITOR.getData(dataProvider);
+public class CopyProviderRule implements GetDataRule<CopyProvider> {
+  @NotNull
+  @Override
+  public Key<CopyProvider> getKey() {
+    return PlatformDataKeys.COPY_PROVIDER;
+  }
+
+  @Override
+  public CopyProvider getData(@NotNull DataProvider dataProvider) {
+    final Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
     if (editor instanceof EditorEx) {
       return ((EditorEx) editor).getCopyProvider();
     }

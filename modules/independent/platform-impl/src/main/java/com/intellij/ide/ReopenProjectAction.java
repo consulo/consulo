@@ -60,7 +60,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     final int modifiers = e.getModifiers();
     final boolean forceOpenInNewFrame = BitUtil.isSet(modifiers, InputEvent.CTRL_MASK) || BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK) || e.getPlace() == ActionPlaces.WELCOME_SCREEN;
 
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (!new File(myProjectPath).exists()) {
       if (Messages.showDialog(project, "The path " +
                                        FileUtil.toSystemDependentName(myProjectPath) +

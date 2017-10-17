@@ -21,6 +21,7 @@ import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
@@ -32,7 +33,7 @@ import com.intellij.openapi.vcs.history.ShowDiffWithLocalAction;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -52,13 +53,11 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
     this(project, changeLists, Collections.<Change>emptyList(), null);
   }
 
-  public RepositoryChangesBrowser(final Project project, final List<? extends ChangeList> changeLists, final List<Change> changes,
-                                  final ChangeList initialListSelection) {
+  public RepositoryChangesBrowser(final Project project, final List<? extends ChangeList> changeLists, final List<Change> changes, final ChangeList initialListSelection) {
     this(project, changeLists, changes, initialListSelection, null);
   }
 
-  public RepositoryChangesBrowser(final Project project, final List<? extends ChangeList> changeLists, final List<Change> changes,
-                                  final ChangeList initialListSelection, VirtualFile toSelect) {
+  public RepositoryChangesBrowser(final Project project, final List<? extends ChangeList> changeLists, final List<Change> changes, final ChangeList initialListSelection, VirtualFile toSelect) {
     super(project, changeLists, changes, initialListSelection, false, false, null, MyUseCase.COMMITTED_CHANGES, toSelect);
   }
 
@@ -74,7 +73,7 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
     final RevertSelectedChangesAction revertSelectedChangesAction = new RevertSelectedChangesAction();
     toolBarGroup.add(revertSelectedChangesAction);
 
-    ActionGroup group = (ActionGroup) ActionManager.getInstance().getAction("RepositoryChangesBrowserToolbar");
+    ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction("RepositoryChangesBrowserToolbar");
     final AnAction[] actions = group.getChildren(null);
     for (AnAction anAction : actions) {
       toolBarGroup.add(anAction);
@@ -85,18 +84,20 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
     myUseCase = useCase;
   }
 
-  public Object getData(@NonNls final String dataId) {
-    if (CommittedChangesBrowserUseCase.DATA_KEY.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (CommittedChangesBrowserUseCase.DATA_KEY == dataId) {
       return myUseCase;
     }
 
-    else if (VcsDataKeys.SELECTED_CHANGES.is(dataId)) {
+    else if (VcsDataKeys.SELECTED_CHANGES == dataId) {
       final List<Change> list = myViewer.getSelectedChanges();
-      return list.toArray(new Change [list.size()]);
-    } else if (VcsDataKeys.CHANGE_LEAD_SELECTION.is(dataId)) {
+      return list.toArray(new Change[list.size()]);
+    }
+    else if (VcsDataKeys.CHANGE_LEAD_SELECTION == dataId) {
       final Change highestSelection = myViewer.getHighestLeadSelection();
-      return (highestSelection == null) ? new Change[]{} : new Change[] {highestSelection};
-    } else {
+      return (highestSelection == null) ? new Change[]{} : new Change[]{highestSelection};
+    }
+    else {
       final TypeSafeDataProviderAdapter adapter = new TypeSafeDataProviderAdapter(this);
       return adapter.getData(dataId);
     }
@@ -117,16 +118,16 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
       super.update(event);
       event.getPresentation().setIcon(myEditSourceIcon);
       event.getPresentation().setText("Edit Source");
-      if ((! ModalityState.NON_MODAL.equals(ModalityState.current())) ||
-          CommittedChangesBrowserUseCase.IN_AIR.equals(CommittedChangesBrowserUseCase.DATA_KEY.getData(event.getDataContext()))) {
+      if ((!ModalityState.NON_MODAL.equals(ModalityState.current())) || CommittedChangesBrowserUseCase.IN_AIR.equals(event.getData(CommittedChangesBrowserUseCase.DATA_KEY))) {
         event.getPresentation().setEnabled(false);
-      } else {
+      }
+      else {
         event.getPresentation().setEnabled(true);
       }
     }
 
     protected Navigatable[] getNavigatables(final DataContext dataContext) {
-      Change[] changes = VcsDataKeys.SELECTED_CHANGES.getData(dataContext);
+      Change[] changes = dataContext.getData(VcsDataKeys.SELECTED_CHANGES);
       if (changes != null) {
         Collection<Change> changeCollection = Arrays.asList(changes);
         return ChangesUtil.getNavigatableArray(myProject, ChangesUtil.getFilesFromChanges(changeCollection));

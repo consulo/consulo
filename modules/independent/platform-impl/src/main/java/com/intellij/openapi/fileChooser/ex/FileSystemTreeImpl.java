@@ -22,7 +22,6 @@ import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
@@ -35,6 +34,7 @@ import com.intellij.openapi.fileChooser.impl.FileTreeStructure;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -366,7 +366,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
   }
 
   @Override
-  public <T> T getData(DataKey<T> key) {
+  public <T> T getData(Key<T> key) {
     return myDescriptor.getUserData(key);
   }
 

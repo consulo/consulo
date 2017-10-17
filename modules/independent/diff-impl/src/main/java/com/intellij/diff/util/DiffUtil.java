@@ -42,7 +42,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.lang.Language;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
@@ -100,11 +99,11 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import gnu.trove.Equality;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -1271,7 +1270,7 @@ public class DiffUtil {
   }
 
   @Nullable
-  public static Object getData(@Nullable DataProvider provider, @Nullable DataProvider fallbackProvider, @NonNls String dataId) {
+  public static Object getData(@Nullable DataProvider provider, @Nullable DataProvider fallbackProvider, @NonNls Key<?> dataId) {
     if (provider != null) {
       Object data = provider.getData(dataId);
       if (data != null) return data;
@@ -1283,7 +1282,7 @@ public class DiffUtil {
     return null;
   }
 
-  public static <T> void putDataKey(@NotNull UserDataHolder holder, @NotNull DataKey<T> key, @Nullable T value) {
+  public static <T> void putDataKey(@NotNull UserDataHolder holder, @NotNull Key<T> key, @Nullable T value) {
     DataProvider dataProvider = holder.getUserData(DiffUserDataKeys.DATA_PROVIDER);
     if (!(dataProvider instanceof GenericDataProvider)) {
       dataProvider = new GenericDataProvider(dataProvider);

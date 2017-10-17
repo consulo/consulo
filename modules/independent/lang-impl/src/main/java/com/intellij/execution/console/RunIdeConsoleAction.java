@@ -248,16 +248,16 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     @Override
     public void update(AnActionEvent e) {
       Project project = e.getProject();
-      Editor editor = CommonDataKeys.EDITOR.getData(e.getDataContext());
-      VirtualFile virtualFile = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+      Editor editor = e.getDataContext().getData(CommonDataKeys.EDITOR);
+      VirtualFile virtualFile = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
       e.getPresentation().setEnabledAndVisible(project != null && editor != null && virtualFile != null);
     }
 
     @Override
     public void actionPerformed(AnActionEvent e) {
       Project project = e.getProject();
-      Editor editor = CommonDataKeys.EDITOR.getData(e.getDataContext());
-      VirtualFile virtualFile = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+      Editor editor = e.getDataContext().getData(CommonDataKeys.EDITOR);
+      VirtualFile virtualFile = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
       if (project == null || editor == null || virtualFile == null) return;
       PsiDocumentManager.getInstance(project).commitAllDocuments();
 

@@ -46,6 +46,6 @@ public class ShowTestProxy extends AnAction {
 
   @Nullable
   private static Object getSelectedTestProxy(final AnActionEvent e) {
-    return AbstractTestProxy.DATA_KEY.getData(e.getDataContext());
+    return e.getData(AbstractTestProxy.DATA_KEY);
   }
 }

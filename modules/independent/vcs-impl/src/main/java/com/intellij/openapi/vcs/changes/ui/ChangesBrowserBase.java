@@ -27,6 +27,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileChooser.actions.VirtualFileDeleteProvider;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsBundle;
@@ -77,7 +78,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
 
   private JComponent myDiffBottomComponent;
 
-  public static DataKey<ChangesBrowserBase> DATA_KEY = DataKey.create("com.intellij.openapi.vcs.changes.ui.ChangesBrowser");
+  public static Key<ChangesBrowserBase> DATA_KEY = Key.create("com.intellij.openapi.vcs.changes.ui.ChangesBrowser");
   private AnAction myDiffAction;
   private final VirtualFile myToSelect;
   @NotNull private final DeleteProvider myDeleteProvider = new VirtualFileDeleteProvider();
@@ -199,7 +200,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     return myViewerScrollPane;
   }
 
-  public void calcData(DataKey key, DataSink sink) {
+  public void calcData(Key<?> key, DataSink sink) {
     if (key == VcsDataKeys.CHANGES) {
       List<Change> list = getSelectedChanges();
       if (list.isEmpty()) list = getAllChanges();

@@ -1404,7 +1404,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
                 return;
               }
 
-              Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(context);
+              Component component = context.getData(PlatformDataKeys.CONTEXT_COMPONENT);
               if (component != null && !component.isShowing()) {
                 result.setRejected();
                 return;

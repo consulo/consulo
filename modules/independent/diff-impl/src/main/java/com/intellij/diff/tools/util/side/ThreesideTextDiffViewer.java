@@ -39,6 +39,7 @@ import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
@@ -321,8 +322,8 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (DiffDataKeys.CURRENT_EDITOR.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (DiffDataKeys.CURRENT_EDITOR == dataId) {
       return getCurrentEditor();
     }
     return super.getData(dataId);

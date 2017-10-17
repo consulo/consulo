@@ -34,10 +34,9 @@ import java.util.ArrayList;
 public abstract class CloseEditorsActionBase extends AnAction implements DumbAware {
   protected ArrayList<Pair<EditorComposite, EditorWindow>> getFilesToClose (final AnActionEvent event) {
     final ArrayList<Pair<EditorComposite, EditorWindow>> res = new ArrayList<Pair<EditorComposite, EditorWindow>>();
-    final DataContext dataContext = event.getDataContext();
     final Project project = event.getData(CommonDataKeys.PROJECT);
     final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
-    final EditorWindow editorWindow = EditorWindow.DATA_KEY.getData(dataContext);
+    final EditorWindow editorWindow = event.getData(EditorWindow.DATA_KEY);
     final EditorWindow[] windows;
     if (editorWindow != null){
       windows = new EditorWindow[]{ editorWindow };
@@ -80,8 +79,7 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
 
   public void update(final AnActionEvent event){
     final Presentation presentation = event.getPresentation();
-    final DataContext dataContext = event.getDataContext();
-    final EditorWindow editorWindow = EditorWindow.DATA_KEY.getData(dataContext);
+    final EditorWindow editorWindow = event.getData(EditorWindow.DATA_KEY);
     final boolean inSplitter = editorWindow != null && editorWindow.inSplitter();
     presentation.setText(getPresentationText(inSplitter));
     final Project project = event.getData(CommonDataKeys.PROJECT);

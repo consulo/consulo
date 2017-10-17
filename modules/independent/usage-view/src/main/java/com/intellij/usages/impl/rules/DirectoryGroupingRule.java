@@ -19,6 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -149,7 +150,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public void calcData(final DataKey key, final DataSink sink) {
+    public void calcData(final Key<?> key, final DataSink sink) {
       if (!isValid()) return;
       if (PlatformDataKeys.VIRTUAL_FILE == key) {
         sink.put(PlatformDataKeys.VIRTUAL_FILE, myDir);
@@ -230,7 +231,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public void calcData(final DataKey key, final DataSink sink) {
+    public void calcData(final Key<?> key, final DataSink sink) {
       if (!isValid()) return;
       if (LangDataKeys.PSI_ELEMENT == key) {
         sink.put(LangDataKeys.PSI_ELEMENT, myPackage);

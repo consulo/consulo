@@ -24,6 +24,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.*;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.statistics.StatisticsInfo;
@@ -578,11 +579,11 @@ public class ListPopupImpl extends WizardPopup implements ListPopup {
     }
 
     @Override
-    public Object getData(String dataId) {
-      if (PlatformDataKeys.SELECTED_ITEM.is(dataId)){
+    public Object getData(@NotNull Key<?> dataId) {
+      if (PlatformDataKeys.SELECTED_ITEM == dataId){
         return myList.getSelectedValue();
       }
-      if (PlatformDataKeys.SELECTED_ITEMS.is(dataId)){
+      if (PlatformDataKeys.SELECTED_ITEMS == dataId){
         return myList.getSelectedValues();
       }
       return null;

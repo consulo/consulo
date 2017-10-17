@@ -18,9 +18,9 @@ package com.intellij.usages;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.navigation.NavigationItemFileStatus;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
@@ -123,7 +123,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     return myName.hashCode();
   }
 
-  public void calcData(final DataKey key, final DataSink sink) {
+  public void calcData(final Key<?> key, final DataSink sink) {
     if (!isValid()) return;
     if (CommonDataKeys.PSI_ELEMENT == key) {
       sink.put(CommonDataKeys.PSI_ELEMENT, getElement());

@@ -537,7 +537,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
   private void manageSearchPopup(@Nullable SearchPopup searchPopup) {
     Project project = null;
     if (ApplicationManager.getApplication() != null && !ApplicationManager.getApplication().isDisposed()) {
-      project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(myComponent));
+      project = DataManager.getInstance().getDataContext(myComponent).getData(CommonDataKeys.PROJECT);
     }
     if (project != null && project.isDefault()) {
       project = null;

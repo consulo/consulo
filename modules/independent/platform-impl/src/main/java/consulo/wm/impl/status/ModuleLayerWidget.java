@@ -169,9 +169,9 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
   private DataContext getContext() {
     Editor editor = getEditor();
     DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);
-    return SimpleDataContext.getSimpleContext(PlatformDataKeys.VIRTUAL_FILE_ARRAY.getName(), new VirtualFile[]{getSelectedFile()}, SimpleDataContext
-            .getSimpleContext(CommonDataKeys.PROJECT.getName(), getProject(), SimpleDataContext
-                    .getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT.getName(), editor == null ? null : editor.getComponent(), parent)));
+    return SimpleDataContext.getSimpleContext(PlatformDataKeys.VIRTUAL_FILE_ARRAY, new VirtualFile[]{getSelectedFile()}, SimpleDataContext
+            .getSimpleContext(CommonDataKeys.PROJECT, getProject(), SimpleDataContext
+                    .getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent(), parent)));
   }
 
   @Nullable

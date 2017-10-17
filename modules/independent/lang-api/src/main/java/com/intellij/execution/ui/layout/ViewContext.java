@@ -19,10 +19,10 @@ package com.intellij.execution.ui.layout;
 import com.intellij.execution.ui.RunnerLayoutUi;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.ActiveRunnable;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
@@ -30,9 +30,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface ViewContext extends Disposable {
-
-  DataKey<Content[]> CONTENT_KEY = DataKey.create("runnerContents");
-  DataKey<ViewContext> CONTEXT_KEY = DataKey.create("runnerUiContext");
+  Key<Content[]> CONTENT_KEY = Key.create("runnerContents");
+  Key<ViewContext> CONTEXT_KEY = Key.create("runnerUiContext");
 
   String CELL_TOOLBAR_PLACE = "debuggerCellToolbar";
   String TAB_TOOLBAR_PLACE = "debuggerTabToolbar";

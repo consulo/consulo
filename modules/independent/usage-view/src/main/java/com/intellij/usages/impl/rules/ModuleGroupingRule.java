@@ -16,12 +16,12 @@
 package com.intellij.usages.impl.rules;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.Usage;
@@ -190,7 +190,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public void calcData(final DataKey key, final DataSink sink) {
+    public void calcData(final Key<?> key, final DataSink sink) {
       if (!isValid()) return;
       if (LangDataKeys.MODULE_CONTEXT == key) {
         sink.put(LangDataKeys.MODULE_CONTEXT, myModule);

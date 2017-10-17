@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EventListener;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -79,6 +80,9 @@ public interface Component extends Disposable, UserDataHolder {
 
   @NotNull
   <T> Runnable addUserDataProvider(@NotNull Key<T> key, @NotNull Supplier<T> supplier);
+
+  @NotNull
+  Runnable addUserDataProvider(@NotNull Function<Key<?>, Object> function);
 
   /**
    * @return runner for unregister listener

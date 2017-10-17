@@ -37,6 +37,7 @@ import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.Change;
@@ -86,10 +87,10 @@ public class ShelvedChangesViewManager implements ProjectComponent {
   private boolean myUpdatePending = false;
   private Runnable myPostUpdateRunnable = null;
 
-  public static DataKey<ShelvedChangeList[]> SHELVED_CHANGELIST_KEY = DataKey.create("ShelveChangesManager.ShelvedChangeListData");
-  public static DataKey<ShelvedChangeList[]> SHELVED_RECYCLED_CHANGELIST_KEY = DataKey.create("ShelveChangesManager.ShelvedRecycledChangeListData");
-  public static DataKey<List<ShelvedChange>> SHELVED_CHANGE_KEY = DataKey.create("ShelveChangesManager.ShelvedChange");
-  public static DataKey<List<ShelvedBinaryFile>> SHELVED_BINARY_FILE_KEY = DataKey.create("ShelveChangesManager.ShelvedBinaryFile");
+  public static Key<ShelvedChangeList[]> SHELVED_CHANGELIST_KEY = Key.create("ShelveChangesManager.ShelvedChangeListData");
+  public static Key<ShelvedChangeList[]> SHELVED_RECYCLED_CHANGELIST_KEY = Key.create("ShelveChangesManager.ShelvedRecycledChangeListData");
+  public static Key<List<ShelvedChange>> SHELVED_CHANGE_KEY = Key.create("ShelveChangesManager.ShelvedChange");
+  public static Key<List<ShelvedBinaryFile>> SHELVED_BINARY_FILE_KEY = Key.create("ShelveChangesManager.ShelvedBinaryFile");
   private static final Object ROOT_NODE_VALUE = new Object();
   private DefaultMutableTreeNode myRoot;
   private final Map<Pair<String, String>, String> myMoveRenameInfo;
@@ -284,7 +285,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
   }
 
   private class ShelfTree extends Tree implements TypeSafeDataProvider {
-    public void calcData(DataKey key, DataSink sink) {
+    public void calcData(Key<?> key, DataSink sink) {
       if (key == SHELVED_CHANGELIST_KEY) {
         final Set<ShelvedChangeList> changeLists = getSelectedLists(false);
 
@@ -507,8 +508,8 @@ public class ShelvedChangesViewManager implements ProjectComponent {
     }
 
     private List<ShelvedChangeList> getLists(final DataContext dataContext) {
-      final ShelvedChangeList[] shelved = SHELVED_CHANGELIST_KEY.getData(dataContext);
-      final ShelvedChangeList[] recycled = SHELVED_RECYCLED_CHANGELIST_KEY.getData(dataContext);
+      final ShelvedChangeList[] shelved = dataContext.getData(SHELVED_CHANGELIST_KEY);
+      final ShelvedChangeList[] recycled = dataContext.getData(SHELVED_RECYCLED_CHANGELIST_KEY);
 
       final List<ShelvedChangeList> shelvedChangeLists = (shelved == null && recycled == null) ?
                                                          Collections.<ShelvedChangeList>emptyList() : new ArrayList<ShelvedChangeList>();
@@ -524,12 +525,12 @@ public class ShelvedChangesViewManager implements ProjectComponent {
 
   private class MyChangesDeleteProvider implements DeleteProvider {
     public void deleteElement(@NotNull DataContext dataContext) {
-      final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      final Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
-      final ShelvedChangeList[] shelved = SHELVED_CHANGELIST_KEY.getData(dataContext);
+      final ShelvedChangeList[] shelved = dataContext.getData(SHELVED_CHANGELIST_KEY);
       if (shelved == null || (shelved.length != 1)) return;
-      final List<ShelvedChange> changes = SHELVED_CHANGE_KEY.getData(dataContext);
-      final List<ShelvedBinaryFile> binaryFiles = SHELVED_BINARY_FILE_KEY.getData(dataContext);
+      final List<ShelvedChange> changes = dataContext.getData(SHELVED_CHANGE_KEY);
+      final List<ShelvedBinaryFile> binaryFiles = dataContext.getData(SHELVED_BINARY_FILE_KEY);
 
       final ShelvedChangeList list = shelved[0];
 
@@ -571,11 +572,11 @@ public class ShelvedChangesViewManager implements ProjectComponent {
     }
 
     public boolean canDeleteElement(@NotNull DataContext dataContext) {
-      final ShelvedChangeList[] shelved = SHELVED_CHANGELIST_KEY.getData(dataContext);
+      final ShelvedChangeList[] shelved = dataContext.getData(SHELVED_CHANGELIST_KEY);
       if (shelved == null || (shelved.length != 1)) return false;
-      final List<ShelvedChange> changes = SHELVED_CHANGE_KEY.getData(dataContext);
+      final List<ShelvedChange> changes = dataContext.getData(SHELVED_CHANGE_KEY);
       if (changes != null && (! changes.isEmpty())) return true;
-      final List<ShelvedBinaryFile> binaryFiles = SHELVED_BINARY_FILE_KEY.getData(dataContext);
+      final List<ShelvedBinaryFile> binaryFiles = dataContext.getData(SHELVED_BINARY_FILE_KEY);
       return (binaryFiles != null && (! binaryFiles.isEmpty()));
     }
   }

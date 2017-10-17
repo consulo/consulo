@@ -17,7 +17,6 @@ package com.intellij.usages;
 
 import com.intellij.ide.SelectInEditorManager;
 import com.intellij.injected.editor.VirtualFileWindow;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.application.ApplicationManager;
@@ -53,10 +52,8 @@ import java.util.List;
 /**
  * @author max
  */
-public class UsageInfo2UsageAdapter implements UsageInModule,
-                                               UsageInLibrary, UsageInFile, PsiElementUsage,
-                                               MergeableUsage, Comparable<UsageInfo2UsageAdapter>,
-                                               RenameableUsage, TypeSafeDataProvider, UsagePresentation {
+public class UsageInfo2UsageAdapter
+        implements UsageInModule, UsageInLibrary, UsageInFile, PsiElementUsage, MergeableUsage, Comparable<UsageInfo2UsageAdapter>, RenameableUsage, TypeSafeDataProvider, UsagePresentation {
   public static final NotNullFunction<UsageInfo, Usage> CONVERTER = UsageInfo2UsageAdapter::new;
   private static final Comparator<UsageInfo> BY_NAVIGATION_OFFSET = Comparator.comparingInt(UsageInfo::getNavigationOffset);
 
@@ -73,32 +70,31 @@ public class UsageInfo2UsageAdapter implements UsageInModule,
     myUsageInfo = usageInfo;
     myMergedUsageInfos = usageInfo;
 
-    Point data =
-            ReadAction.compute(() -> {
-              PsiElement element = getElement();
-              PsiFile psiFile = usageInfo.getFile();
-              Document document = psiFile == null ? null : PsiDocumentManager.getInstance(getProject()).getDocument(psiFile);
+    Point data = ReadAction.compute(() -> {
+      PsiElement element = getElement();
+      PsiFile psiFile = usageInfo.getFile();
+      Document document = psiFile == null ? null : PsiDocumentManager.getInstance(getProject()).getDocument(psiFile);
 
-              int offset;
-              int lineNumber;
-              if (document == null) {
-                // element over light virtual file
-                offset = element == null ? 0 : element.getTextOffset();
-                lineNumber = -1;
-              }
-              else {
-                int startOffset = myUsageInfo.getNavigationOffset();
-                if (startOffset == -1) {
-                  offset = element == null ? 0 : element.getTextOffset();
-                  lineNumber = -1;
-                }
-                else {
-                  offset = -1;
-                  lineNumber = getLineNumber(document, startOffset);
-                }
-              }
-              return new Point(offset, lineNumber);
-            });
+      int offset;
+      int lineNumber;
+      if (document == null) {
+        // element over light virtual file
+        offset = element == null ? 0 : element.getTextOffset();
+        lineNumber = -1;
+      }
+      else {
+        int startOffset = myUsageInfo.getNavigationOffset();
+        if (startOffset == -1) {
+          offset = element == null ? 0 : element.getTextOffset();
+          lineNumber = -1;
+        }
+        else {
+          offset = -1;
+          lineNumber = getLineNumber(document, startOffset);
+        }
+      }
+      return new Point(offset, lineNumber);
+    });
     myOffset = data.x;
     myLineNumber = data.y;
     myModificationStamp = getCurrentModificationStamp();
@@ -122,7 +118,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule,
         chunks = new TextChunk[]{new TextChunk(SimpleTextAttributes.ERROR_ATTRIBUTES.toTextAttributes(), UsageViewBundle.message("node.invalid"))};
       }
       else {
-        chunks = new TextChunk[] {new TextChunk(new TextAttributes(), element.getText())};
+        chunks = new TextChunk[]{new TextChunk(new TextAttributes(), element.getText())};
       }
     }
     else {
@@ -236,7 +232,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule,
 
   private OpenFileDescriptor getDescriptor() {
     VirtualFile file = getFile();
-    if(file == null) return null;
+    if (file == null) return null;
     Segment range = getNavigationRange();
     if (range != null && file instanceof VirtualFileWindow && range.getStartOffset() >= 0) {
       // have to use injectedToHost(TextRange) to calculate right offset in case of multiple shreds
@@ -264,11 +260,11 @@ public class UsageInfo2UsageAdapter implements UsageInModule,
     Segment range = getUsageInfo().getNavigationRange();
     if (range == null) {
       ProperTextRange rangeInElement = getUsageInfo().getRangeInElement();
-      range = myOffset < 0 ? new UnfairTextRange(-1,-1) : rangeInElement == null ? TextRange.from(myOffset,1) : rangeInElement.shiftRight(myOffset);
+      range = myOffset < 0 ? new UnfairTextRange(-1, -1) : rangeInElement == null ? TextRange.from(myOffset, 1) : rangeInElement.shiftRight(myOffset);
     }
     if (range.getEndOffset() >= document.getTextLength()) {
       int line = Math.max(0, Math.min(myLineNumber, document.getLineCount() - 1));
-      range = TextRange.from(document.getLineStartOffset(line),1);
+      range = TextRange.from(document.getLineStartOffset(line), 1);
     }
     return range;
   }
@@ -328,6 +324,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule,
   public VirtualFile getFile() {
     return getUsageInfo().getVirtualFile();
   }
+
   private PsiFile getPsiFile() {
     return getUsageInfo().getFile();
   }
@@ -399,7 +396,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule,
   }
 
   @Override
-  public void calcData(final DataKey key, final DataSink sink) {
+  public void calcData(final Key<?> key, final DataSink sink) {
     if (key == UsageView.USAGE_INFO_KEY) {
       sink.put(UsageView.USAGE_INFO_KEY, getUsageInfo());
     }
@@ -416,6 +413,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule,
   }
 
   private long myModificationStamp;
+
   private long getCurrentModificationStamp() {
     final PsiFile containingFile = getPsiFile();
     return containingFile == null ? -1L : containingFile.getViewProvider().getModificationStamp();
@@ -496,16 +494,9 @@ public class UsageInfo2UsageAdapter implements UsageInModule,
           if (document != null) {
             ChunkExtractor extractor = ChunkExtractor.getExtractor(file);
             SmartList<TextChunk> chunks = new SmartList<>();
-            extractor.createTextChunks(
-                    this,
-                    document.getCharsSequence(),
-                    segment.getStartOffset(),
-                    segment.getEndOffset(),
-                    false,
-                    chunks
-            );
+            extractor.createTextChunks(this, document.getCharsSequence(), segment.getStartOffset(), segment.getEndOffset(), false, chunks);
 
-            for(TextChunk chunk:chunks) {
+            for (TextChunk chunk : chunks) {
               UsageType chunkUsageType = chunk.getType();
               if (chunkUsageType != null) {
                 usageType = chunkUsageType;

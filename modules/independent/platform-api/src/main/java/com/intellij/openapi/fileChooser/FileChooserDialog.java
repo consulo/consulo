@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.fileChooser;
 
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface FileChooserDialog {
-  DataKey<Boolean> PREFER_LAST_OVER_TO_SELECT = PathChooserDialog.PREFER_LAST_OVER_EXPLICIT;
+  Key<Boolean> PREFER_LAST_OVER_TO_SELECT = PathChooserDialog.PREFER_LAST_OVER_EXPLICIT;
 
   /**
    * @deprecated Please use {@link #choose(com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile...)} because

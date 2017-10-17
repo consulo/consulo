@@ -80,7 +80,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null){
       presentation.setEnabled(false);
       return;

@@ -640,7 +640,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
       if (myAbstractTreeBuilder == null) return;
       myAutoscrollFeedback = true;
 
-      Navigatable editSourceDescriptor = CommonDataKeys.NAVIGATABLE.getData(DataManager.getInstance().getDataContext(getTree()));
+      Navigatable editSourceDescriptor = DataManager.getInstance().getDataContext(getTree()).getData(CommonDataKeys.NAVIGATABLE);
       if (myFileEditor != null && editSourceDescriptor != null && editSourceDescriptor.canNavigateToSource()) {
         editSourceDescriptor.navigate(false);
       }
@@ -700,8 +700,8 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   }
 
   @Override
-  public Object getData(String dataId) {
-    if (CommonDataKeys.PSI_ELEMENT.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (CommonDataKeys.PSI_ELEMENT == dataId) {
       TreePath path = getSelectedUniquePath();
       if (path == null) return null;
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
@@ -713,32 +713,32 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
       if (!((PsiElement)element).isValid()) return null;
       return element;
     }
-    if (LangDataKeys.PSI_ELEMENT_ARRAY.is(dataId)) {
+    if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
       return convertToPsiElementsArray(getSelectedElements());
     }
-    if (PlatformDataKeys.FILE_EDITOR.is(dataId)) {
+    if (PlatformDataKeys.FILE_EDITOR == dataId) {
       return myFileEditor;
     }
-    if (PlatformDataKeys.CUT_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.CUT_PROVIDER == dataId) {
       return myCopyPasteDelegator.getCutProvider();
     }
-    if (PlatformDataKeys.COPY_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return myCopyPasteDelegator.getCopyProvider();
     }
-    if (PlatformDataKeys.PASTE_PROVIDER.is(dataId)) {
+    if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
       return myCopyPasteDelegator.getPasteProvider();
     }
-    if (CommonDataKeys.NAVIGATABLE.is(dataId)) {
+    if (CommonDataKeys.NAVIGATABLE == dataId) {
       Object[] selectedElements = getSelectedTreeElements();
       if (selectedElements == null || selectedElements.length == 0) return null;
       if (selectedElements[0] instanceof Navigatable) {
         return selectedElements[0];
       }
     }
-    if (PlatformDataKeys.HELP_ID.is(dataId)) {
+    if (PlatformDataKeys.HELP_ID == dataId) {
       return getHelpID();
     }
-    if (CommonDataKeys.PROJECT.is(dataId)) {
+    if (CommonDataKeys.PROJECT == dataId) {
       return myProject;
     }
     return super.getData(dataId);

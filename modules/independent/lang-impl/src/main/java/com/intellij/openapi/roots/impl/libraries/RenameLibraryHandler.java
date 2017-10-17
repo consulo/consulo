@@ -46,7 +46,7 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
 
   @Override
   public boolean isAvailableOnDataContext(DataContext dataContext) {
-    Library library = LangDataKeys.LIBRARY.getData(dataContext);
+    Library library = dataContext.getData(LangDataKeys.LIBRARY);
     return library != null;
   }
 
@@ -62,7 +62,7 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
 
   @Override
   public void invoke(@NotNull final Project project, @NotNull PsiElement[] elements, @NotNull DataContext dataContext) {
-    final Library library = LangDataKeys.LIBRARY.getData(dataContext);
+    final Library library = dataContext.getData(LangDataKeys.LIBRARY);
     LOG.assertTrue(library != null);
     Messages.showInputDialog(project,
                              IdeBundle.message("prompt.enter.new.library.name"),

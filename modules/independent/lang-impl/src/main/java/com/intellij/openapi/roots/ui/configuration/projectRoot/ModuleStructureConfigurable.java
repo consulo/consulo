@@ -48,6 +48,7 @@ import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Couple;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
@@ -553,8 +554,8 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
     @Override
     @Nullable
-    public Object getData(@NonNls String dataId) {
-      if (LangDataKeys.MODULE_CONTEXT_ARRAY.is(dataId)){
+    public Object getData(@NotNull @NonNls Key<?> dataId) {
+      if (LangDataKeys.MODULE_CONTEXT_ARRAY == dataId){
         final TreePath[] paths = myTree.getSelectionPaths();
         if (paths != null) {
           ArrayList<Module> modules = new ArrayList<Module>();
@@ -570,10 +571,10 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
           return !modules.isEmpty() ? modules.toArray(new Module[modules.size()]) : null;
         }
       }
-      if (LangDataKeys.MODULE_CONTEXT.is(dataId)){
+      if (LangDataKeys.MODULE_CONTEXT == dataId){
         return getSelectedModule();
       }
-      if (LangDataKeys.MODIFIABLE_MODULE_MODEL.is(dataId)){
+      if (LangDataKeys.MODIFIABLE_MODULE_MODEL == dataId){
         return myContext.myModulesConfigurator.getModuleModel();
       }
 

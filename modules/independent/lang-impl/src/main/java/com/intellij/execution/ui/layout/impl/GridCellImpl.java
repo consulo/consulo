@@ -24,6 +24,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.DimensionService;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.MutualMap;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.NonOpaquePanel;
@@ -121,14 +122,14 @@ public class GridCellImpl implements GridCell {
     }.setDataProvider(new DataProvider() {
       @Override
       @Nullable
-      public Object getData(@NonNls final String dataId) {
-        if (ViewContext.CONTENT_KEY.is(dataId)) {
+      public Object getData(@NotNull @NonNls final Key dataId) {
+        if (ViewContext.CONTENT_KEY == dataId) {
           TabInfo target = myTabs.getTargetInfo();
           if (target != null) {
             return new Content[]{getContentFor(target)};
           }
         }
-        else if (ViewContext.CONTEXT_KEY.is(dataId)) {
+        else if (ViewContext.CONTEXT_KEY == dataId) {
           return myContext;
         }
 
@@ -318,11 +319,11 @@ public class GridCellImpl implements GridCell {
 
     @Override
     @Nullable
-    public Object getData(@NonNls final String dataId) {
-      if (ViewContext.CONTENT_KEY.is(dataId)) {
+    public Object getData(@NotNull @NonNls final Key dataId) {
+      if (ViewContext.CONTENT_KEY == dataId) {
         return new Content[]{myContent};
       }
-      else if (ViewContext.CONTEXT_KEY.is(dataId)) {
+      else if (ViewContext.CONTEXT_KEY == dataId) {
         return myContext;
       }
       return null;

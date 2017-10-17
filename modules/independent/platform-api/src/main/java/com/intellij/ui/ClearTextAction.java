@@ -34,7 +34,7 @@ public class ClearTextAction extends AnAction implements DumbAware {
   }
 
   public void actionPerformed(AnActionEvent e) {
-    final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(e.getDataContext());
+    final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     if (component instanceof JTextComponent) {
       final JTextComponent textComponent = (JTextComponent)component;
       textComponent.setText("");
@@ -43,7 +43,7 @@ public class ClearTextAction extends AnAction implements DumbAware {
 
 
   public void update(AnActionEvent e) {
-    final Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(e.getDataContext());
+    final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     if (component instanceof JTextComponent) {
       final JTextComponent textComponent = (JTextComponent)component;
       e.getPresentation().setEnabled(textComponent.getText().length() > 0 && ((JTextComponent)component).isEditable());

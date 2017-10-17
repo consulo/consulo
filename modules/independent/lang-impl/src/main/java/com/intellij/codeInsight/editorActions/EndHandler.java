@@ -50,7 +50,7 @@ public class EndHandler extends EditorActionHandler {
       return;
     }
 
-    final Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(editor.getComponent()));
+    final Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
     if (project == null) {
       if (myOriginalHandler != null) {
         myOriginalHandler.execute(editor, dataContext);

@@ -48,15 +48,16 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.BooleanGetter;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredWriteAction;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredWriteAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -262,11 +263,11 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (CommonDataKeys.PROJECT.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (CommonDataKeys.PROJECT == dataId) {
       return myProject;
     }
-    else if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.is(dataId)) {
+    else if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
       return myPrevNextDifferenceIterable;
     }
     return null;

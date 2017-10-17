@@ -16,31 +16,24 @@
 package com.intellij.openapi.externalSystem.model;
 
 import com.intellij.notification.NotificationGroup;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskPojo;
 import com.intellij.openapi.externalSystem.model.project.ExternalProjectPojo;
 import com.intellij.openapi.externalSystem.service.task.ui.ExternalSystemRecentTasksList;
 import com.intellij.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Denis Zhdanov
  * @since 2/7/12 11:19 AM
  */
-public class ExternalSystemDataKeys {
+public interface ExternalSystemDataKeys {
+  Key<ProjectSystemId> EXTERNAL_SYSTEM_ID = Key.create("external.system.id");
+  Key<NotificationGroup> NOTIFICATION_GROUP = Key.create("external.system.notification");
+  Key<ExternalSystemTasksTreeModel> ALL_TASKS_MODEL = Key.create("external.system.all.tasks.model");
+  Key<ExternalTaskPojo> SELECTED_TASK = Key.create("external.system.selected.task");
+  Key<ExternalProjectPojo> SELECTED_PROJECT = Key.create("external.system.selected.project");
 
-  @NotNull public static final DataKey<ProjectSystemId>              EXTERNAL_SYSTEM_ID = DataKey.create("external.system.id");
-  @NotNull public static final DataKey<NotificationGroup>            NOTIFICATION_GROUP = DataKey.create("external.system.notification");
-  @NotNull public static final DataKey<ExternalSystemTasksTreeModel> ALL_TASKS_MODEL    = DataKey.create("external.system.all.tasks.model");
-  @NotNull public static final DataKey<ExternalTaskPojo>             SELECTED_TASK      = DataKey.create("external.system.selected.task");
-  @NotNull public static final DataKey<ExternalProjectPojo>          SELECTED_PROJECT   = DataKey.create("external.system.selected.project");
+  Key<ExternalSystemRecentTasksList> RECENT_TASKS_LIST = Key.create("external.system.recent.tasks.list");
 
-  @NotNull public static final DataKey<ExternalSystemRecentTasksList> RECENT_TASKS_LIST
-    = DataKey.create("external.system.recent.tasks.list");
-
-  @NotNull public static final Key<Boolean> NEWLY_IMPORTED_PROJECT = new Key<Boolean>("external.system.newly.imported");
-
-  private ExternalSystemDataKeys() {
-  }
+  Key<Boolean> NEWLY_IMPORTED_PROJECT = Key.create("external.system.newly.imported");
 }

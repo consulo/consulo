@@ -36,6 +36,7 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
@@ -492,7 +493,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
 
   private class MyDataProvider implements TypeSafeDataProvider {
     @Override
-    public void calcData(DataKey key, DataSink sink) {
+    public void calcData(Key<?> key, DataSink sink) {
       if (ArtifactEditorEx.ARTIFACTS_EDITOR_KEY.equals(key)) {
         sink.put(ArtifactEditorEx.ARTIFACTS_EDITOR_KEY, ArtifactEditorImpl.this);
       }

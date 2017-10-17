@@ -44,8 +44,8 @@ public class ImportUsagesAction extends AnAction {
   }
 
   private boolean isEnabled(DataContext dc) {
-    final Project project = CommonDataKeys.PROJECT.getData(dc);
-    final Usage[] usages = UsageView.USAGES_KEY.getData(dc);
+    final Project project = dc.getData(CommonDataKeys.PROJECT);
+    final Usage[] usages = dc.getData(UsageView.USAGES_KEY);
     return project != null && usages != null && usages.length > 0;
   }
 
@@ -55,7 +55,7 @@ public class ImportUsagesAction extends AnAction {
     final boolean enabled = isEnabled(dc);
     if (!enabled) return;
 
-    final Project project = CommonDataKeys.PROJECT.getData(dc);
+    final Project project = dc.getData(CommonDataKeys.PROJECT);
 
     final Collection<AbstractTreeNode> nodes = new UsageFavoriteNodeProvider().getFavoriteNodes(dc, ViewSettings.DEFAULT);
     final FavoritesManager favoritesManager = FavoritesManager.getInstance(project);

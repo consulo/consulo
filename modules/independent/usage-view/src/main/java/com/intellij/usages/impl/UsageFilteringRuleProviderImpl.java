@@ -110,7 +110,7 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
       myReadWriteState.setShowReadAccess(state);
-      Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+      Project project = e.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
       project.getMessageBus().syncPublisher(RULES_CHANGED).run();
     }
@@ -129,7 +129,7 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
       myReadWriteState.setShowWriteAccess(state);
-      Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+      Project project = e.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
       project.getMessageBus().syncPublisher(RULES_CHANGED).run();
     }

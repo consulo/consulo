@@ -361,7 +361,7 @@ public class ShowFilePathAction extends AnAction {
 
   @Nullable
   private static VirtualFile getFile(final AnActionEvent e) {
-    return CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+    return e.getData(CommonDataKeys.VIRTUAL_FILE);
   }
 
   public static Boolean showDialog(Project project, String message, String title, File file) {

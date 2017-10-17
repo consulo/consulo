@@ -40,7 +40,7 @@ public class IncrementalFindAction extends EditorAction {
 
     @Override
     public void execute(final Editor editor, DataContext dataContext) {
-      final Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(editor.getComponent()));
+      final Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
       if (!editor.isOneLineMode()) {
         EditorSearchSession search = EditorSearchSession.get(editor);
         if (search != null) {
@@ -73,7 +73,7 @@ public class IncrementalFindAction extends EditorAction {
           !ConsoleViewUtil.isReplaceActionEnabledForConsoleViewEditor(editor)) {
         return false;
       }
-      Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(editor.getComponent()));
+      Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
       return project != null && !editor.isOneLineMode();
     }
   }

@@ -46,7 +46,7 @@ public class CodeBlockEndAction extends EditorAction {
 
     @Override
     public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project != null) {
         CodeBlockUtil.moveCaretToCodeBlockEnd(project, editor, false);
       }

@@ -25,6 +25,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.ui.DoubleClickListener;
@@ -71,7 +72,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     }
   };
 
-  private static final DataKey<XDebuggerTree> XDEBUGGER_TREE_KEY = DataKey.create("xdebugger.tree");
+  private static final Key<XDebuggerTree> XDEBUGGER_TREE_KEY = Key.create("xdebugger.tree");
   private final SingleAlarm myAlarm = new SingleAlarm(new Runnable() {
     @Override
     public void run() {
@@ -223,7 +224,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
 
   public boolean isUnderRemoteDebug() {
     DataContext context = DataManager.getInstance().getDataContext(this);
-    ExecutionEnvironment env = LangDataKeys.EXECUTION_ENVIRONMENT.getData(context);
+    ExecutionEnvironment env = context.getData(LangDataKeys.EXECUTION_ENVIRONMENT);
     if (env != null && env.getRunProfile() instanceof RemoteRunProfile) {
       return true;
     }
@@ -292,11 +293,11 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
 
   @Override
   @Nullable
-  public Object getData(@NonNls final String dataId) {
-    if (XDEBUGGER_TREE_KEY.is(dataId)) {
+  public Object getData(@NotNull @NonNls final Key dataId) {
+    if (XDEBUGGER_TREE_KEY == dataId) {
       return this;
     }
-    if (PlatformDataKeys.PREDEFINED_TEXT.is(dataId)) {
+    if (PlatformDataKeys.PREDEFINED_TEXT == dataId) {
       XValueNodeImpl[] selectedNodes = getSelectedNodes(XValueNodeImpl.class, null);
       if (selectedNodes.length == 1 && selectedNodes[0].getFullValueEvaluator() == null) {
         return DebuggerUIUtil.getNodeRawValue(selectedNodes[0]);
@@ -374,7 +375,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
 
   @Nullable
   public static XDebuggerTree getTree(DataContext context) {
-    return XDEBUGGER_TREE_KEY.getData(context);
+    return context.getData(XDEBUGGER_TREE_KEY);
   }
 
   public TransferToEDTQueue<Runnable> getLaterInvocator() {

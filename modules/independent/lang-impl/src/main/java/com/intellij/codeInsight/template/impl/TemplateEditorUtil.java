@@ -55,7 +55,7 @@ public class TemplateEditorUtil {
   }
 
   public static Editor createEditor(boolean isReadOnly, CharSequence text, @Nullable Map<TemplateContextType, Boolean> context) {
-    final Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
+    final Project project = DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
     return createEditor(isReadOnly, createDocument(text, context, project), project);
   }
 

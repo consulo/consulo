@@ -25,6 +25,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import com.intellij.util.Alarm;
@@ -117,8 +118,8 @@ public abstract class UsagesPanel extends JPanel implements Disposable, DataProv
   @Override
   @Nullable
   @NonNls
-  public Object getData(@NonNls String dataId) {
-    if (PlatformDataKeys.HELP_ID.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key dataId) {
+    if (PlatformDataKeys.HELP_ID == dataId) {
       return "ideaInterface.find";
     }
     return null;

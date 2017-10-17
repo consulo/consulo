@@ -53,7 +53,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
     if (dataContext == null) {
       dataContext = DataManager.getInstance().getDataContext();
     }
-    final Editor editor = PlatformDataKeys.EDITOR.getData(dataContext);
+    final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
     for(InlineActionHandler handler: Extensions.getExtensions(InlineActionHandler.EP_NAME)) {
       if (handler.canInlineElement(elements[0])) {
         handler.inlineElement(project, editor, elements [0]);
@@ -68,7 +68,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
   public void invoke(@NotNull final Project project, Editor editor, PsiFile file, DataContext dataContext) {
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
 
-    PsiElement element = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiElement element = dataContext.getData(LangDataKeys.PSI_ELEMENT);
     if (element == null) {
       element = BaseRefactoringAction.getElementAtCaret(editor, file);
     }

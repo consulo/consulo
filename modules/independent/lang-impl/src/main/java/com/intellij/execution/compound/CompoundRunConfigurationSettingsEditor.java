@@ -172,8 +172,7 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
         int index = myList.getSelectedIndex();
         if (index == -1) return;
         RunConfiguration configuration = myModel.get(index);
-        RunConfigurationSelector selector =
-                RunConfigurationSelector.KEY.getData(DataManager.getInstance().getDataContext(button.getContextComponent()));
+        RunConfigurationSelector selector = DataManager.getInstance().getDataContext(button.getContextComponent()).getData(RunConfigurationSelector.KEY);
         if (selector != null) {
           selector.select(configuration);
         }

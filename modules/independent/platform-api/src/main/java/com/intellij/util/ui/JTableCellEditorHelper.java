@@ -66,7 +66,7 @@ public class JTableCellEditorHelper {
     if (component instanceof TextComponent) {
       ((TextComponent)component).selectAll();
     } else {
-      Editor editor = PlatformDataKeys.EDITOR.getData(DataManager.getInstance().getDataContext(component));
+      Editor editor = DataManager.getInstance().getDataContext(component).getData(PlatformDataKeys.EDITOR);
       if (editor != null) {
         editor.getSelectionModel().setSelection(0, editor.getDocument().getTextLength());
       }

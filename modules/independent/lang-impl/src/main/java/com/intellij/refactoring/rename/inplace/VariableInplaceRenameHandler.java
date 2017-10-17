@@ -41,8 +41,8 @@ public class VariableInplaceRenameHandler implements RenameHandler {
   @Override
   public final boolean isAvailableOnDataContext(final DataContext dataContext) {
     final PsiElement element = PsiElementRenameHandler.getElement(dataContext);
-    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
-    final PsiFile file = CommonDataKeys.PSI_FILE.getData(dataContext);
+    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    final PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
     if (editor == null || file == null) return false;
 
     if (ourPreventInlineRenameFlag.get() != null) {
@@ -96,7 +96,7 @@ public class VariableInplaceRenameHandler implements RenameHandler {
     PsiElement element = elements.length == 1 ? elements[0] : null;
     if (element == null) element = PsiElementRenameHandler.getElement(dataContext);
     LOG.assertTrue(element != null);
-    Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (checkAvailable(element, editor, dataContext)) {
       doRename(element, editor, dataContext);
     }

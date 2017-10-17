@@ -52,7 +52,7 @@ public class TextEndAction extends TextComponentEditorAction {
       scrollingModel.scrollToCaret(ScrollType.CENTER);
       scrollingModel.enableAnimation();
 
-      Project project = CommonDataKeys.PROJECT.getData(dataContext);
+      Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project != null) {
         IdeDocumentHistory instance = IdeDocumentHistory.getInstance(project);
         if (instance != null) {

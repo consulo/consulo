@@ -74,7 +74,7 @@ class FakeRerunAction extends AnAction implements DumbAware {
       if (contentDescriptor != null) {
         JComponent component = contentDescriptor.getComponent();
         if (component != null) {
-          environment = LangDataKeys.EXECUTION_ENVIRONMENT.getData(DataManager.getInstance().getDataContext(component));
+          environment = DataManager.getInstance().getDataContext(component).getData(LangDataKeys.EXECUTION_ENVIRONMENT);
         }
       }
     }

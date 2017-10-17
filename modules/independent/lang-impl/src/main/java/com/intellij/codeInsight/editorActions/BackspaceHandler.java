@@ -60,7 +60,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
   }
 
   protected boolean handleBackspace(Editor editor, DataContext dataContext, boolean toWordStart) {
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return false;
 
     PsiFile file = PsiUtilBase.getPsiFileInEditor(editor, project);

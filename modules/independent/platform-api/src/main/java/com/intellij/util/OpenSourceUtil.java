@@ -27,11 +27,11 @@ public class OpenSourceUtil {
   }
 
   public static void openSourcesFrom(DataContext context, boolean requestFocus) {
-    navigate(requestFocus, CommonDataKeys.NAVIGATABLE_ARRAY.getData(context));
+    navigate(requestFocus, context.getData(CommonDataKeys.NAVIGATABLE_ARRAY));
   }
 
   public static void openSourcesFrom(DataProvider context, boolean requestFocus) {
-    navigate(requestFocus, CommonDataKeys.NAVIGATABLE_ARRAY.getData(context));
+    navigate(requestFocus, context.getDataUnchecked(CommonDataKeys.NAVIGATABLE_ARRAY));
   }
 
   /**

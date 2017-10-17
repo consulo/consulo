@@ -15,8 +15,8 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,9 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * @author kir
  */
 public interface SelectInContext {
-  DataKey<SelectInContext> DATA_KEY = DataKey.create("SelectInContext");
-
-  @Deprecated String DATA_CONTEXT_ID = DATA_KEY.getName();
+  Key<SelectInContext> DATA_KEY = Key.create("SelectInContext");
 
   @NotNull
   Project getProject();

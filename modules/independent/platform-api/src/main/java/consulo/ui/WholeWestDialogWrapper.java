@@ -128,7 +128,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     String dimensionKey = getDimensionKey();
 
     if (dimensionKey != null) {
-      final Project projectGuess = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(rightComponent));
+      final Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(CommonDataKeys.PROJECT);
       Dimension size = DimensionService.getInstance().getSize(dimensionKey, projectGuess);
       if (size == null) {
         DimensionService.getInstance().setSize(dimensionKey, JBUI.size(getDefaultSize()));

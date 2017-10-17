@@ -155,7 +155,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
             @RequiredDispatchThread
             @Override
             public void update(AnActionEvent e) {
-              Editor editor = CommonDataKeys.EDITOR.getData(e.getDataContext());
+              Editor editor = e.getDataContext().getData(CommonDataKeys.EDITOR);
               e.getPresentation().setEnabled(
                       editor != null && LookupManager.getActiveLookup(editor) == null &&
                       TemplateManager.getInstance(myProject).getActiveTemplate(editor) == null &&

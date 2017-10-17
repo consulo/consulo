@@ -93,9 +93,9 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
     PsiFile currentFile = psiFile;
 
     if (dataContext != null) {
-      PsiElement dataContextElement = CommonDataKeys.PSI_FILE.getData(dataContext);
+      PsiElement dataContextElement = dataContext.getData(CommonDataKeys.PSI_FILE);
       if (dataContextElement == null) {
-        dataContextElement = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+        dataContextElement = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
       }
 
       if (dataContextElement == null && psiFile != null) {
@@ -105,7 +105,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
       if (dataContextElement != null) {
         Module module = ModuleUtilCore.findModuleForPsiElement(dataContextElement);
         if (module == null) {
-          module = LangDataKeys.MODULE.getData(dataContext);
+          module = dataContext.getData(LangDataKeys.MODULE);
         }
         if (module != null) {
           result.add(module.getModuleScope());
@@ -278,7 +278,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
 
   @Nullable
   private static SearchScope getSelectedFilesScope(final Project project, @Nullable DataContext dataContext) {
-    final VirtualFile[] filesOrDirs = dataContext == null ? null : CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+    final VirtualFile[] filesOrDirs = dataContext == null ? null : dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     if (filesOrDirs != null) {
       final List<VirtualFile> selectedFiles = ContainerUtil.filter(filesOrDirs, file -> !file.isDirectory());
       if (!selectedFiles.isEmpty()) {

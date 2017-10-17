@@ -53,9 +53,9 @@ public class ShowCoveringTestsAction extends AnAction {
 
   public void actionPerformed(final AnActionEvent e) {
     final DataContext context = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(context);
+    final Project project = context.getData(CommonDataKeys.PROJECT);
     LOG.assertTrue(project != null);
-    final Editor editor = CommonDataKeys.EDITOR.getData(context);
+    final Editor editor = context.getData(CommonDataKeys.EDITOR);
     LOG.assertTrue(editor != null);
 
     final CoverageSuitesBundle currentSuite = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
@@ -151,7 +151,7 @@ public class ShowCoveringTestsAction extends AnAction {
     final Presentation presentation = e.getPresentation();
     presentation.setEnabled(false);
     if (myLineData != null && myLineData.getStatus() != LineCoverage.NONE) {
-      final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+      final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
       if (project != null) {
         final File[] files = getTraceFiles(project);
         if (files != null && files.length > 0) {

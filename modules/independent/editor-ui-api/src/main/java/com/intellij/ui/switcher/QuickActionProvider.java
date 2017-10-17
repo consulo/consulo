@@ -16,16 +16,14 @@
 package com.intellij.ui.switcher;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 
 import java.util.List;
 
 public interface QuickActionProvider extends QuickAccessProvider {
-
-  DataKey<QuickActionProvider> KEY = DataKey.create("QuickActionProvider");
+  Key<QuickActionProvider> KEY = Key.create("QuickActionProvider");
 
   String getName();
 
   List<AnAction> getActions(boolean originalProvider);
-
 }

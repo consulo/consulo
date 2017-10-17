@@ -22,12 +22,12 @@ import com.intellij.ide.ui.customization.CustomizationUtil;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationBundle;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
+import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.GridBag;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -118,8 +118,8 @@ public class ArrangementMatchingRulesPanel extends JPanel implements DataProvide
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (ArrangementSectionRulesControl.KEY.is(dataId)) {
+  public Object getData(@NotNull Key dataId) {
+    if (ArrangementSectionRulesControl.KEY == dataId) {
       return myControl;
     }
     return null;

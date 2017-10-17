@@ -75,7 +75,7 @@ public class EnterHandler extends BaseEnterHandler {
 
   @Override
   public void executeWriteAction(final Editor editor, final Caret caret, final DataContext dataContext) {
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project != null && !project.isDefault()) {
       PostprocessReformattingAspect.getInstance(project).disablePostprocessFormattingInside(
               () -> executeWriteActionInner(editor, caret, getExtendedContext(dataContext, project, caret), project));

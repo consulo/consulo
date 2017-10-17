@@ -94,7 +94,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
       return false;
     }
 
-    if (CommonDataKeys.PROJECT.getData(dataContext) == null) {
+    if (dataContext.getData(CommonDataKeys.PROJECT) == null) {
       return false;
     }
 
@@ -103,7 +103,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     LOG.assertTrue(project != null);
     final ExportTestResultsConfiguration config = ExportTestResultsConfiguration.getInstance(project);
 

@@ -29,6 +29,7 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Splitter;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.Change;
@@ -128,11 +129,11 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     return "VCS.ChangeListViewerDialog";
   }
 
-  public Object getData(@NonNls final String dataId) {
-    if (VcsDataKeys.CHANGES.is(dataId)) {
+  public Object getData(@NotNull @NonNls final Key<?> dataId) {
+    if (VcsDataKeys.CHANGES == dataId) {
       return myChanges;
     }
-    else if (VcsDataKeys.VCS_REVISION_NUMBER.is(dataId)) {
+    else if (VcsDataKeys.VCS_REVISION_NUMBER == dataId) {
       if (myChangeList instanceof VcsRevisionNumberAware) {
         return ((VcsRevisionNumberAware)myChangeList).getRevisionNumber();
       }
@@ -159,7 +160,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
       }
 
       @Override
-      public Object getData(@NonNls String dataId) {
+      public Object getData(@NotNull @NonNls Key dataId) {
         Object data = super.getData(dataId);
         if (data != null) {
           return data;

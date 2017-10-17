@@ -21,24 +21,24 @@ import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.merge.MergeTool;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.util.LineRange;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 
 public interface DiffDataKeys {
-  DataKey<Navigatable> NAVIGATABLE = DataKey.create("diff_navigatable");
-  DataKey<Navigatable[]> NAVIGATABLE_ARRAY = DataKey.create("diff_navigatable_array");
+  Key<Navigatable> NAVIGATABLE = Key.create("diff_navigatable");
+  Key<Navigatable[]> NAVIGATABLE_ARRAY = Key.create("diff_navigatable_array");
 
-  DataKey<Editor> CURRENT_EDITOR = DataKey.create("diff_current_editor");
-  DataKey<DiffContent> CURRENT_CONTENT = DataKey.create("diff_current_content");
-  DataKey<LineRange> CURRENT_CHANGE_RANGE = DataKey.create("diff_current_change_range");
+  Key<Editor> CURRENT_EDITOR = Key.create("diff_current_editor");
+  Key<DiffContent> CURRENT_CONTENT = Key.create("diff_current_content");
+  Key<LineRange> CURRENT_CHANGE_RANGE = Key.create("diff_current_change_range");
 
-  DataKey<DiffRequest> DIFF_REQUEST = DataKey.create("diff_request");
-  DataKey<DiffContext> DIFF_CONTEXT = DataKey.create("diff_context");
-  DataKey<FrameDiffTool.DiffViewer> DIFF_VIEWER = DataKey.create("diff_frame_viewer");
-  DataKey<FrameDiffTool.DiffViewer> WRAPPING_DIFF_VIEWER = DataKey.create("main_diff_frame_viewer"); // if DiffViewerWrapper is used
+  Key<DiffRequest> DIFF_REQUEST = Key.create("diff_request");
+  Key<DiffContext> DIFF_CONTEXT = Key.create("diff_context");
+  Key<FrameDiffTool.DiffViewer> DIFF_VIEWER = Key.create("diff_frame_viewer");
+  Key<FrameDiffTool.DiffViewer> WRAPPING_DIFF_VIEWER = Key.create("main_diff_frame_viewer"); // if DiffViewerWrapper is used
 
-  DataKey<MergeTool.MergeViewer> MERGE_VIEWER = DataKey.create("merge_viewer");
+  Key<MergeTool.MergeViewer> MERGE_VIEWER = Key.create("merge_viewer");
 
-  DataKey<PrevNextDifferenceIterable> PREV_NEXT_DIFFERENCE_ITERABLE = DataKey.create("prev_next_difference_iterable");
+  Key<PrevNextDifferenceIterable> PREV_NEXT_DIFFERENCE_ITERABLE = Key.create("prev_next_difference_iterable");
 }

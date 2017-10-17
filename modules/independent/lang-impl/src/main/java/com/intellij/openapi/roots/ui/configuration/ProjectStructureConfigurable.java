@@ -16,7 +16,6 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
@@ -35,6 +34,7 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureC
 import com.intellij.openapi.roots.ui.configuration.projectRoot.*;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.Key;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
@@ -52,7 +52,7 @@ import java.util.List;
 
 public class ProjectStructureConfigurable implements SearchableConfigurable, Configurable.HoldPreferredFocusedComponent, Place.Navigator {
 
-  public static final DataKey<ProjectStructureConfigurable> KEY = DataKey.create("ProjectStructureConfiguration");
+  public static final Key<ProjectStructureConfigurable> KEY = Key.create("ProjectStructureConfiguration");
 
   protected final UIState myUiState = new UIState();
   @NonNls

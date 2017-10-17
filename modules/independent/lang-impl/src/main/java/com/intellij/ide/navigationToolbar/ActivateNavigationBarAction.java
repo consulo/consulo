@@ -33,7 +33,7 @@ import javax.swing.*;
 public class ActivateNavigationBarAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project != null && UISettings.getInstance().SHOW_NAVIGATION_BAR){
       final JFrame frame = WindowManagerEx.getInstance().getFrame(project);
       final IdeRootPane ideRootPane = ((IdeRootPane)frame.getRootPane());
@@ -44,7 +44,7 @@ public class ActivateNavigationBarAction extends AnAction implements DumbAware {
 
   @Override
   public void update(AnActionEvent e) {
-    final Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
     UISettings settings = UISettings.getInstance();
     final boolean enabled = project != null && settings.SHOW_NAVIGATION_BAR && !settings.PRESENTATION_MODE;
     e.getPresentation().setEnabled(enabled);

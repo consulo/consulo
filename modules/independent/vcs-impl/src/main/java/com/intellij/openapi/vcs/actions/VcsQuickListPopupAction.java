@@ -162,7 +162,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
 
     // by current file
-    final VirtualFile file =  dataContext != null ? PlatformDataKeys.VIRTUAL_FILE.getData(dataContext) : null;
+    final VirtualFile file =  dataContext != null ? dataContext.getData(PlatformDataKeys.VIRTUAL_FILE) : null;
     if (file != null) {
       final AbstractVcs vscForFile = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
       if (vscForFile != null) {

@@ -63,12 +63,12 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
   }
 
   private boolean isVisible(final DataContext dc) {
-    final Project project = CommonDataKeys.PROJECT.getData(dc);
-    return (project != null) && (VcsDataKeys.LABEL_BEFORE.getData(dc) != null) && (VcsDataKeys.LABEL_AFTER.getData(dc) != null);
+    final Project project = dc.getData(CommonDataKeys.PROJECT);
+    return (project != null) && (dc.getData(VcsDataKeys.LABEL_BEFORE) != null) && (dc.getData(VcsDataKeys.LABEL_AFTER) != null);
   }
 
   private boolean isEnabled(final DataContext dc) {
-    final Iterable<Pair<VirtualFilePointer, FileStatus>> iterable = VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE.getData(dc);
+    final Iterable<Pair<VirtualFilePointer, FileStatus>> iterable = dc.getData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
     return iterable != null;
   }
 
@@ -76,11 +76,11 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     final DataContext dc = e.getDataContext();
     if ((!isVisible(dc)) || (!isEnabled(dc))) return;
 
-    final Project project = CommonDataKeys.PROJECT.getData(dc);
+    final Project project = dc.getData(CommonDataKeys.PROJECT);
     final Iterable<Pair<VirtualFilePointer, FileStatus>> iterable = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
     final Label before = (Label)e.getRequiredData(VcsDataKeys.LABEL_BEFORE);
     final Label after = (Label)e.getRequiredData(VcsDataKeys.LABEL_AFTER);
-    final String selectedUrl = VcsDataKeys.UPDATE_VIEW_SELECTED_PATH.getData(dc);
+    final String selectedUrl = dc.getData(VcsDataKeys.UPDATE_VIEW_SELECTED_PATH);
 
     MyDiffRequestChain requestChain = new MyDiffRequestChain(project, iterable, before, after, selectedUrl);
     DiffManager.getInstance().showDiff(project, requestChain, DiffDialogHints.FRAME);

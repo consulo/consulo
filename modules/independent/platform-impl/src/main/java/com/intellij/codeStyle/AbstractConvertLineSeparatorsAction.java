@@ -57,10 +57,9 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
   @RequiredDispatchThread
   @Override
   public void update(@NotNull AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
-      final VirtualFile[] virtualFiles = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+      final VirtualFile[] virtualFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
       final Presentation presentation = e.getPresentation();
       if (virtualFiles != null) {
         if (virtualFiles.length == 1) {
@@ -79,13 +78,12 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
   @RequiredDispatchThread
   @Override
   public void actionPerformed(@NotNull AnActionEvent event) {
-    final DataContext dataContext = event.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
 
-    final VirtualFile[] virtualFiles = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+    final VirtualFile[] virtualFiles = event.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     if (virtualFiles == null) {
       return;
     }

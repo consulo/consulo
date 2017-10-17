@@ -36,7 +36,7 @@ public class AddToFavoritesPopupAction extends QuickSwitchSchemeAction {
     group.removeAll();
 
     final List<String> availableFavoritesLists = FavoritesManager.getInstance(project).getAvailableFavoritesListNames();
-    availableFavoritesLists.remove(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY.getData(dataContext));
+    availableFavoritesLists.remove(dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
 
     for (String favoritesList : availableFavoritesLists) {
       group.add(new AddToFavoritesAction(favoritesList));

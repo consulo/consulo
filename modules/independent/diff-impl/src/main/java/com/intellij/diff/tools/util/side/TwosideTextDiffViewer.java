@@ -43,6 +43,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
@@ -349,8 +350,8 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (DiffDataKeys.CURRENT_EDITOR.is(dataId)) {
+  public Object getData(@NotNull @NonNls Key<?> dataId) {
+    if (DiffDataKeys.CURRENT_EDITOR == dataId) {
       return getCurrentEditor();
     }
     return super.getData(dataId);

@@ -80,16 +80,15 @@ public class ConfigurationContext {
   }
 
   private ConfigurationContext(final DataContext dataContext) {
-    myRuntimeConfiguration = RunConfiguration.DATA_KEY.getData(dataContext);
-    myContextComponent = PlatformDataKeys.CONTEXT_COMPONENT.getData(dataContext);
-    myModule = LangDataKeys.MODULE.getData(dataContext);
-    @SuppressWarnings({"unchecked"})
-    final Location<PsiElement> location = (Location<PsiElement>)Location.DATA_KEY.getData(dataContext);
+    myRuntimeConfiguration = dataContext.getData(RunConfiguration.DATA_KEY);
+    myContextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    myModule = dataContext.getData(LangDataKeys.MODULE);
+    @SuppressWarnings({"unchecked"}) final Location<PsiElement> location = (Location<PsiElement>)dataContext.getData(Location.DATA_KEY);
     if (location != null) {
       myLocation = location;
       return;
     }
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       myLocation = null;
       return;
@@ -207,7 +206,7 @@ public class ConfigurationContext {
   @Nullable
   private static PsiElement getSelectedPsiElement(final DataContext dataContext, final Project project) {
     PsiElement element = null;
-    final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor != null){
       final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
       if (psiFile != null) {
@@ -219,11 +218,11 @@ public class ConfigurationContext {
       }
     }
     if (element == null) {
-      final PsiElement[] elements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
+      final PsiElement[] elements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
       element = elements != null && elements.length > 0 ? elements[0] : null;
     }
     if (element == null) {
-      final VirtualFile[] files = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+      final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
       if (files != null && files.length > 0) {
         element = PsiManager.getInstance(project).findFile(files[0]);
       }

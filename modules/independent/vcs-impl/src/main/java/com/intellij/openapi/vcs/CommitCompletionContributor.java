@@ -46,7 +46,7 @@ public class CommitCompletionContributor extends CompletionContributor {
       if (dataContext != null) {
         result.stopHere();
         if (parameters.getInvocationCount() > 0) {
-          ChangeList[] lists = VcsDataKeys.CHANGE_LISTS.getData(dataContext);
+          ChangeList[] lists = dataContext.getData(VcsDataKeys.CHANGE_LISTS);
           if (lists != null) {
             String prefix = TextFieldWithAutoCompletionListProvider.getCompletionPrefix(parameters);
             CompletionResultSet insensitive = result.caseInsensitive().withPrefixMatcher(new CamelHumpMatcher(prefix));

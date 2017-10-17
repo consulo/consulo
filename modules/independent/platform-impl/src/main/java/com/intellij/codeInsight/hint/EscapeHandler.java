@@ -30,7 +30,7 @@ public class EscapeHandler extends EditorActionHandler {
 
   @Override
   public void execute(Editor editor, DataContext dataContext) {
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null || !HintManagerImpl.getInstanceImpl().hideHints(HintManager.HIDE_BY_ESCAPE | HintManager.HIDE_BY_ANY_KEY, true, false)) {
       myOriginalHandler.execute(editor, dataContext);
     }
@@ -38,7 +38,7 @@ public class EscapeHandler extends EditorActionHandler {
 
   @Override
   public boolean isEnabled(Editor editor, DataContext dataContext) {
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
     if (project != null) {
       HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();

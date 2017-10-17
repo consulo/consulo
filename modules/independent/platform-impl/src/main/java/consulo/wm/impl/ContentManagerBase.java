@@ -33,7 +33,6 @@ import com.intellij.ui.content.impl.ContentImpl;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -121,8 +120,8 @@ public class ContentManagerBase implements ContentManager, PropertyChangeListene
 
     @Override
     @Nullable
-    public Object getData(@NonNls String dataId) {
-      if (PlatformDataKeys.CONTENT_MANAGER.is(dataId) || PlatformDataKeys.NONEMPTY_CONTENT_MANAGER.is(dataId) && getContentCount() > 1) {
+    public Object getData(@NotNull Key<?> dataId) {
+      if (PlatformDataKeys.CONTENT_MANAGER == dataId || PlatformDataKeys.NONEMPTY_CONTENT_MANAGER == dataId && getContentCount() > 1) {
         return ContentManagerBase.this;
       }
 

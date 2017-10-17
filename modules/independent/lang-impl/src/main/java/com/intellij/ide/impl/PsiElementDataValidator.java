@@ -16,13 +16,22 @@
 
 package com.intellij.ide.impl;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PsiElementDataValidator extends DataValidator<PsiElement> {
+public class PsiElementDataValidator implements DataValidator<PsiElement> {
+  @NotNull
   @Override
+  public Key<PsiElement> getKey() {
+    return CommonDataKeys.PSI_ELEMENT;
+  }
+
   @Nullable
-  public PsiElement findInvalid(final String dataId, PsiElement psiElement, final Object dataSource) {
+  @Override
+  public PsiElement findInvalid(Key<PsiElement> key, PsiElement psiElement, Object dataSource) {
     return psiElement.isValid() ? null : psiElement;
   }
 }

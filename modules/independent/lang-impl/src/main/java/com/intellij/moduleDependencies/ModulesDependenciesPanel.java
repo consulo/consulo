@@ -35,6 +35,7 @@ import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.ui.Splitter;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.ui.*;
@@ -49,6 +50,7 @@ import com.intellij.util.graph.GraphAlgorithms;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -509,11 +511,11 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
     }
 
     @Override
-    public Object getData(String dataId) {
-      if (CommonDataKeys.PROJECT.is(dataId)){
+    public Object getData(@NotNull Key dataId) {
+      if (CommonDataKeys.PROJECT == dataId){
         return myProject;
       }
-      if (LangDataKeys.MODULE_CONTEXT.is(dataId)){
+      if (LangDataKeys.MODULE_CONTEXT == dataId){
         final TreePath selectionPath = myTree.getLeadSelectionPath();
         if (selectionPath != null && selectionPath.getLastPathComponent() instanceof DefaultMutableTreeNode){
           DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
@@ -522,10 +524,10 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
           }
         }
       }
-      if (PlatformDataKeys.HELP_ID.is(dataId)) {
+      if (PlatformDataKeys.HELP_ID == dataId) {
         return ourHelpID;
       }
-      if (PlatformDataKeys.NAVIGATABLE.is(dataId)) {
+      if (PlatformDataKeys.NAVIGATABLE == dataId) {
         final TreePath selectionPath = myTree.getLeadSelectionPath();
         if (selectionPath != null && selectionPath.getLastPathComponent() instanceof DefaultMutableTreeNode){
           DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();

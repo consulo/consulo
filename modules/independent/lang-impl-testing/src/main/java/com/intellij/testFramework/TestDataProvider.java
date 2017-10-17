@@ -24,7 +24,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -40,20 +40,20 @@ public class TestDataProvider implements DataProvider {
   }
 
   @Override
-  public Object getData(@NonNls String dataId) {
+  public Object getData(@NotNull Key<?> dataId) {
     if (myProject.isDisposed()) {
       throw new RuntimeException("TestDataProvider is already disposed for " + myProject + "\n" +
                                  "If you closed a project in test, please reset IdeaTestApplication.setDataProvider.");
     }
 
-    if (CommonDataKeys.PROJECT.is(dataId)) {
+    if (CommonDataKeys.PROJECT == dataId) {
       return myProject;
     }
-    else if (PlatformDataKeys.EDITOR.is(dataId) || OpenFileDescriptor.NAVIGATE_IN_EDITOR.is(dataId)) {
+    else if (PlatformDataKeys.EDITOR == dataId || OpenFileDescriptor.NAVIGATE_IN_EDITOR == dataId) {
       return FileEditorManager.getInstance(myProject).getSelectedTextEditor();
     }
     else {
-      Editor editor = (Editor)getData(PlatformDataKeys.EDITOR.getName());
+      Editor editor = (Editor)getData(PlatformDataKeys.EDITOR);
       if (editor != null) {
         FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(myProject);
         Object managerData = manager.getData(dataId, editor, editor.getCaretModel().getCurrentCaret());

@@ -18,7 +18,6 @@ package com.intellij.openapi.actionSystem;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.UserDataHolderBase;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +33,7 @@ public class DataContextWrapper implements DataContext, UserDataHolder {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
+  public <T> T getData(@NotNull Key<T> dataId) {
     return myDelegate.getData(dataId);
   }
 

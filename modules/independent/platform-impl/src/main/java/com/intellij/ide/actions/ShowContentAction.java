@@ -63,7 +63,7 @@ public class ShowContentAction extends AnAction implements DumbAware {
   private ToolWindow getWindow(AnActionEvent event) {
     if (myWindow != null) return myWindow;
 
-    Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
+    Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null) return null;
 
     ToolWindowManager manager = ToolWindowManager.getInstance(project);
@@ -71,7 +71,7 @@ public class ShowContentAction extends AnAction implements DumbAware {
     final ToolWindow window = manager.getToolWindow(manager.getActiveToolWindowId());
     if (window == null) return null;
 
-    final Component context = PlatformDataKeys.CONTEXT_COMPONENT.getData(event.getDataContext());
+    final Component context = event.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     if (context == null) return null;
 
     return SwingUtilities.isDescendingFrom(window.getComponent(), context) ? window : null;

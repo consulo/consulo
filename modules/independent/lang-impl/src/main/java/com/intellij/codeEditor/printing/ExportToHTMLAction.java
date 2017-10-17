@@ -34,7 +34,7 @@ public class ExportToHTMLAction extends AnAction {
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
@@ -51,12 +51,12 @@ public class ExportToHTMLAction extends AnAction {
   public void update(@NotNull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    PsiElement psiElement = LangDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiElement psiElement = dataContext.getData(LangDataKeys.PSI_ELEMENT);
     if (psiElement instanceof PsiDirectory) {
       presentation.setEnabled(true);
       return;
     }
-    PsiFile psiFile = LangDataKeys.PSI_FILE.getData(dataContext);
+    PsiFile psiFile = dataContext.getData(LangDataKeys.PSI_FILE);
     presentation.setEnabled(psiFile != null && psiFile.getContainingDirectory() != null);
   }
 }

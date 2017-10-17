@@ -39,6 +39,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.VisibilityWatcher;
@@ -338,8 +339,8 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
   }
 
   @Override
-  public Object getData(String dataId) {
-    if (CommonDataKeys.NAVIGATABLE.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (CommonDataKeys.NAVIGATABLE == dataId) {
       TreePath path = myTree.getSelectionPath();
       if (path == null) {
         return null;
@@ -363,14 +364,14 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
         return null;
       }
     }
-    else if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {
+    else if (CommonDataKeys.VIRTUAL_FILE == dataId) {
       final PsiFile file = getSelectedFile();
       return file != null ? file.getVirtualFile() : null;
     }
-    else if (CommonDataKeys.PSI_ELEMENT.is(dataId)) {
+    else if (CommonDataKeys.PSI_ELEMENT == dataId) {
       return getSelectedElement();
     }
-    else if (CommonDataKeys.VIRTUAL_FILE_ARRAY.is(dataId)) {
+    else if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
       PsiFile file = getSelectedFile();
       if (file != null) {
         return new VirtualFile[]{file.getVirtualFile()};
@@ -379,7 +380,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
         return VirtualFile.EMPTY_ARRAY;
       }
     }
-    else if (PlatformDataKeys.HELP_ID.is(dataId)) {
+    else if (PlatformDataKeys.HELP_ID == dataId) {
       //noinspection HardCodedStringLiteral
       return "find.todoList";
     }

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.ui;
 
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.util.Key;
 
 /**
  * Base interface for user interface objects which can be refreshed and can save/restore
@@ -24,15 +24,13 @@ import com.intellij.openapi.actionSystem.DataKey;
  * @author lesya
  */
 public interface Refreshable {
-  DataKey<Refreshable> PANEL_KEY = DataKey.create("Panel");
-
   /**
    * The data ID which can be used to retrieve the active <code>Refreshable</code>
    * instance from {@link com.intellij.openapi.actionSystem.DataContext}.
    *
-   * @see com.intellij.openapi.actionSystem.DataContext#getData(String)
+   * @see com.intellij.openapi.actionSystem.DataContext#getData(Key)
    */
-  @Deprecated String PANEL = PANEL_KEY.getName();
+  Key<Refreshable> PANEL_KEY = Key.create("Refreshable.Panel");
 
   void refresh();
 

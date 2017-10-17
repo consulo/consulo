@@ -34,6 +34,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -93,7 +94,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
   private MergingUpdateQueue myUiUpdater;
   private boolean myTreeIsUpdating;
 
-  public static DataKey<PathField> PATH_FIELD = DataKey.create("PathField");
+  public static Key<PathField> PATH_FIELD = Key.create("PathField");
 
   public FileChooserDialogImpl(@NotNull final FileChooserDescriptor descriptor, @Nullable Project project) {
     super(project, true);
@@ -571,18 +572,14 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
       super(new BorderLayout(0, 0));
     }
 
-    public Object getData(String dataId) {
-      if (CommonDataKeys.VIRTUAL_FILE_ARRAY.is(dataId)) {
+    public Object getData(@NotNull Key<?> dataId) {
+      if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
         return myFileSystemTree.getSelectedFiles();
       }
-      else if (PATH_FIELD.is(dataId)) {
-        return new PathField() {
-          public void toggleVisible() {
-            toggleShowTextField();
-          }
-        };
+      else if (PATH_FIELD == dataId) {
+        return (PathField)() -> toggleShowTextField();
       }
-      else if (FileSystemTree.DATA_KEY.is(dataId)) {
+      else if (FileSystemTree.DATA_KEY == dataId) {
         return myFileSystemTree;
       }
       return myChooserDescriptor.getUserData(dataId);

@@ -19,20 +19,16 @@ import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.containers.ConcurrentMultiMap;
-import com.intellij.util.containers.MultiMap;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.style.ColorKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EventListener;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -44,7 +40,7 @@ public class UIDataObject extends UserDataHolderBase {
   @Nullable
   private Map<BorderPosition, BorderInfo> myBorders;
 
-  private final AtomicNotNullLazyValue<MultiMap<Key, Supplier>> myUserDataProviders = AtomicNotNullLazyValue.createValue(ConcurrentMultiMap::new);
+  private final AtomicNotNullLazyValue<List<Function<Key<?>, Object>>> myUserDataProviders = AtomicNotNullLazyValue.createValue(ContainerUtil::createLockFreeCopyOnWriteList);
 
   @SuppressWarnings("unchecked")
   public <T extends EventListener> Runnable addListener(Class<T> clazz, T value) {
@@ -59,19 +55,19 @@ public class UIDataObject extends UserDataHolderBase {
   }
 
   @NotNull
-  public <T> Runnable addUserDataProvider(@NotNull Key<T> key, @NotNull Supplier<T> supplier) {
-    myUserDataProviders.getValue().putValue(key, supplier);
-    return () -> myUserDataProviders.getValue().remove(key, supplier);
+  public <T> Runnable addUserDataProvider(@NotNull Function<Key<?>, Object> function) {
+    myUserDataProviders.getValue().add(function);
+    return () -> myUserDataProviders.getValue().remove(function);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public <T> T getUserData(@NotNull Key<T> key) {
-    Collection<Supplier> collection = myUserDataProviders.getValue().get(key);
-    for (Supplier supplier : collection) {
-      Object o = supplier.get();
-      if (o != null) {
-        return (T)o;
+    List<Function<Key<?>, Object>> value = myUserDataProviders.getValue();
+    for (Function<Key<?>, Object> function : value) {
+      Object funcValue = function.apply(key);
+      if (funcValue != null) {
+        return (T)funcValue;
       }
     }
     return super.getUserData(key);

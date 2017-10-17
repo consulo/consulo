@@ -199,7 +199,7 @@ public class FocusTrackback {
     if (dataManager != null) {
       DataContext context = myParentWindow == null ? dataManager.getDataContext() : dataManager.getDataContext(myParentWindow);
       if (context != null) {
-        project = CommonDataKeys.PROJECT.getData(context);
+        project = context.getData(CommonDataKeys.PROJECT);
       }
     }
 

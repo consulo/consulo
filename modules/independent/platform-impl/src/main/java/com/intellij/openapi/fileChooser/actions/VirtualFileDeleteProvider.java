@@ -44,15 +44,15 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
 
   @Override
   public boolean canDeleteElement(@NotNull DataContext dataContext) {
-    final VirtualFile[] files = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+    final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     return files != null && files.length > 0;
   }
 
   @Override
   public void deleteElement(@NotNull DataContext dataContext) {
-    final VirtualFile[] files = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(dataContext);
+    final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     if (files == null || files.length == 0) return;
-    Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
     String message = createConfirmationMessage(files);
     int returnValue = Messages.showOkCancelDialog(message, UIBundle.message("delete.dialog.title"), ApplicationBundle.message("button.delete"),

@@ -42,7 +42,7 @@ public abstract class PrevNextOccurrenceAction extends DumbAwareAction implement
   @Nullable
   @Override
   public final ShortcutSet getShortcut(@NotNull DataContext context) {
-    SearchSession search = SearchSession.KEY.getData(context);
+    SearchSession search = context.getData(SearchSession.KEY);
     boolean singleLine = search != null && !search.getFindModel().isMultiline();
     return Utils.shortcutSetOf(singleLine ? ContainerUtil.concat(getDefaultShortcuts(), getSingleLineShortcuts()) : getDefaultShortcuts());
   }

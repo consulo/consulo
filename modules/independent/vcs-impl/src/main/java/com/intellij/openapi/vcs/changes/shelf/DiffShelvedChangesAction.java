@@ -71,23 +71,27 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
   }
 
   public static boolean isEnabled(final DataContext dc) {
-    final Project project = CommonDataKeys.PROJECT.getData(dc);
+    final Project project = dc.getData(CommonDataKeys.PROJECT);
     if (project == null) return false;
 
-    ShelvedChangeList[] changeLists = ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY.getData(dc);
-    if (changeLists == null) changeLists = ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY.getData(dc);
+    ShelvedChangeList[] changeLists = dc.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
+    if (changeLists == null) {
+      changeLists = dc.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
+    }
     if (changeLists == null || changeLists.length != 1) return false;
 
     return true;
   }
 
   public static void showShelvedChangesDiff(final DataContext dc) {
-    final Project project = CommonDataKeys.PROJECT.getData(dc);
+    final Project project = dc.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) return;
 
-    ShelvedChangeList[] changeLists = ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY.getData(dc);
-    if (changeLists == null) changeLists = ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY.getData(dc);
+    ShelvedChangeList[] changeLists = dc.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
+    if (changeLists == null) {
+      changeLists = dc.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
+    }
     if (changeLists == null || changeLists.length != 1) return;
 
     final List<ShelvedChange> textChanges = changeLists[0].getChanges(project);
@@ -102,8 +106,8 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
 
     // selected changes inside lists
     final Set<Object> selectedChanges = new HashSet<>();
-    selectedChanges.addAll(ContainerUtil.notNullize(ShelvedChangesViewManager.SHELVED_CHANGE_KEY.getData(dc)));
-    selectedChanges.addAll(ContainerUtil.notNullize(ShelvedChangesViewManager.SHELVED_BINARY_FILE_KEY.getData(dc)));
+    selectedChanges.addAll(ContainerUtil.notNullize(dc.getData(ShelvedChangesViewManager.SHELVED_CHANGE_KEY)));
+    selectedChanges.addAll(ContainerUtil.notNullize(dc.getData(ShelvedChangesViewManager.SHELVED_BINARY_FILE_KEY)));
 
     int index = 0;
     for (int i = 0; i < diffRequestProducers.size(); i++) {

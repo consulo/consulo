@@ -48,6 +48,7 @@ import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -498,7 +499,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         injectionHighlighter.dropHighlight();
 
         if (source instanceof DataProvider) {
-          final Object selectedItem = PlatformDataKeys.SELECTED_ITEM.getData((DataProvider)source);
+          final Object selectedItem = ((DataContext)(DataProvider)source).getData(PlatformDataKeys.SELECTED_ITEM);
           if (selectedItem instanceof IntentionActionWithTextCaching) {
             final IntentionAction action = ((IntentionActionWithTextCaching)selectedItem).getAction();
             if (action instanceof SuppressIntentionActionFromFix) {

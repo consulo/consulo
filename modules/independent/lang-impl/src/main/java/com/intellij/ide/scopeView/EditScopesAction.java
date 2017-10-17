@@ -40,7 +40,7 @@ public class EditScopesAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     LOG.assertTrue(project != null);
     final String scopeName = ProjectView.getInstance(project).getCurrentProjectViewPane().getSubId();
     LOG.assertTrue(scopeName != null);
@@ -58,7 +58,7 @@ public class EditScopesAction extends AnAction implements DumbAware {
     super.update(e);
     e.getPresentation().setEnabled(false);
     final DataContext dataContext = e.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       final AbstractProjectViewPane projectViewPane = ProjectView.getInstance(project).getCurrentProjectViewPane();
       if (projectViewPane != null) {

@@ -107,7 +107,7 @@ public class ProjectSettingsPanel {
       public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
           final DataContext dataContext = DataManager.getInstance().getDataContextFromFocus().getResult();
-          final OptionsEditor optionsEditor = OptionsEditor.KEY.getData(dataContext);
+          final OptionsEditor optionsEditor = dataContext.getData(OptionsEditor.KEY);
           if (optionsEditor != null) {
             Configurable configurable = optionsEditor.findConfigurableById(ScopeChooserConfigurable.PROJECT_SCOPES);
             if (configurable != null) {

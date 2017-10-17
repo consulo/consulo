@@ -27,7 +27,7 @@ public class VcsActionGroup extends DefaultActionGroup implements DumbAware {
     super.update(event);
 
     Presentation presentation = event.getPresentation();
-    Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
+    Project project = event.getDataContext().getData(CommonDataKeys.PROJECT);
     if (project == null){
       presentation.setVisible(false);
       presentation.setEnabled(false);

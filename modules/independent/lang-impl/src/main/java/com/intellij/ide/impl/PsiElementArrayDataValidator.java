@@ -16,13 +16,23 @@
 
 package com.intellij.ide.impl;
 
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
+import consulo.ide.impl.DataValidators;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author yole
  */
-public class PsiElementArrayDataValidator extends DataValidator.ArrayValidator<PsiElement> {
+public class PsiElementArrayDataValidator extends DataValidators.ArrayValidator<PsiElement> {
   public PsiElementArrayDataValidator() {
     super(new PsiElementDataValidator());
+  }
+
+  @NotNull
+  @Override
+  public Key<PsiElement[]> getKey() {
+    return LangDataKeys.PSI_ELEMENT_ARRAY;
   }
 }

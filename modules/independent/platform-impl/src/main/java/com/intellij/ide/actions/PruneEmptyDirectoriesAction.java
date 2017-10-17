@@ -35,13 +35,13 @@ import java.io.IOException;
 public class PruneEmptyDirectoriesAction extends AnAction {
   @Override
   public void update(AnActionEvent e) {
-    VirtualFile[] files = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext());
+    VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
     e.getPresentation().setEnabled(files != null && files.length > 0);
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    VirtualFile[] files = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext());
+    VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
     assert files != null;
 
     FileTypeManager ftManager = FileTypeManager.getInstance();

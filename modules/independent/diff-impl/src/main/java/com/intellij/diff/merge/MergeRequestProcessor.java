@@ -39,7 +39,6 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -326,7 +325,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
   @Nullable
   public String getHelpId() {
-    return PlatformDataKeys.HELP_ID.getData(myMainPanel);
+    return (String)myMainPanel.getData(PlatformDataKeys.HELP_ID);
   }
 
   //
@@ -358,7 +357,7 @@ public abstract class MergeRequestProcessor implements Disposable {
         return;
       }
 
-      PrevNextDifferenceIterable iterable = DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.getData(e.getDataContext());
+      PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
       if (iterable != null && iterable.canGoNext()) {
         e.getPresentation().setEnabled(true);
         return;
@@ -369,7 +368,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-      PrevNextDifferenceIterable iterable = DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.getData(e.getDataContext());
+      PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
       if (iterable != null && iterable.canGoNext()) {
         iterable.goNext();
       }
@@ -384,7 +383,7 @@ public abstract class MergeRequestProcessor implements Disposable {
         return;
       }
 
-      PrevNextDifferenceIterable iterable = DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.getData(e.getDataContext());
+      PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
       if (iterable != null && iterable.canGoPrev()) {
         e.getPresentation().setEnabled(true);
         return;
@@ -395,7 +394,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-      PrevNextDifferenceIterable iterable = DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE.getData(e.getDataContext());
+      PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
       if (iterable != null && iterable.canGoPrev()) {
         iterable.goPrev();
       }
@@ -413,7 +412,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     @Nullable
     @Override
-    public Object getData(@NonNls String dataId) {
+    public Object getData(@NotNull Key<?> dataId) {
       Object data;
 
       DataProvider contentProvider = DataManagerImpl.getDataProviderEx(myContentPanel.getTargetComponent());
@@ -422,10 +421,10 @@ public abstract class MergeRequestProcessor implements Disposable {
         if (data != null) return data;
       }
 
-      if (CommonDataKeys.PROJECT.is(dataId)) {
+      if (CommonDataKeys.PROJECT == dataId) {
         return myProject;
       }
-      else if (PlatformDataKeys.HELP_ID.is(dataId)) {
+      else if (PlatformDataKeys.HELP_ID == dataId) {
         if (myRequest.getUserData(DiffUserDataKeys.HELP_ID) != null) {
           return myRequest.getUserData(DiffUserDataKeys.HELP_ID);
         }

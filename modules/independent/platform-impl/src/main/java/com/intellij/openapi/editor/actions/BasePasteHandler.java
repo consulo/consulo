@@ -60,7 +60,7 @@ public class BasePasteHandler extends EditorWriteActionHandler {
   }
 
   protected Transferable getContentsToPaste(Editor editor, DataContext dataContext) {
-    Producer<Transferable> producer = PasteAction.TRANSFERABLE_PROVIDER.getData(dataContext);
+    Producer<Transferable> producer = dataContext.getData(PasteAction.TRANSFERABLE_PROVIDER);
     return EditorModificationUtil.getContentsToPasteToEditor(producer);
   }
 

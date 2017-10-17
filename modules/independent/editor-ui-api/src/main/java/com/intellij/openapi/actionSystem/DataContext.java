@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,25 +25,14 @@ import org.jetbrains.annotations.Nullable;
  *
  * @see AnActionEvent#getDataContext()
  * @see com.intellij.openapi.actionSystem.PlatformDataKeys
- * @see DataKey
+ * @see Key
  * @see com.intellij.ide.DataManager
  * @see DataProvider
  */
 public interface DataContext {
-  /**
-   * Returns the object corresponding to the specified data identifier. Some of the supported
-   * data identifiers are defined in the {@link com.intellij.openapi.actionSystem.PlatformDataKeys} class.
-   *
-   * @param dataId the data identifier for which the value is requested.
-   * @return the value, or null if no value is available in the current context for this identifier.
-   */
-  @Nullable
-  Object getData(@NonNls String dataId);
-
   DataContext EMPTY_CONTEXT = new DataContext() {
-    @Nullable
     @Override
-    public Object getData(@NonNls String dataId) {
+    public <T> T getData(@NotNull Key<T> key) {
       return null;
     }
   };
@@ -55,7 +45,5 @@ public interface DataContext {
    * @return the value, or null if no value is available in the current context for this identifier.
    */
   @Nullable
-  default <T> T getData(@NotNull DataKey<T> key) {
-    return (T)getData(key.getName());
-  }
+  <T> T getData(@NotNull Key<T> key);
 }

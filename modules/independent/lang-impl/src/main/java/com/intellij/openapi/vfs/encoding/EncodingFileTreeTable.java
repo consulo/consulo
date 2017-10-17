@@ -124,7 +124,7 @@ class EncodingFileTreeTable extends AbstractFileTreeTable<Charset> {
         Presentation templatePresentation = changeAction.getTemplatePresentation();
         JComponent comboComponent = changeAction.createCustomComponent(templatePresentation);
 
-        DataContext dataContext = SimpleDataContext.getSimpleContext(PlatformDataKeys.VIRTUAL_FILE.getName(), myVirtualFile,
+        DataContext dataContext = SimpleDataContext.getSimpleContext(PlatformDataKeys.VIRTUAL_FILE, myVirtualFile,
                                                                       SimpleDataContext.getProjectContext(getProject()));
         AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, templatePresentation, ActionManager.getInstance(), 0);
         changeAction.update(event);

@@ -15,7 +15,9 @@
  */
 package com.intellij.openapi.actionSystem;
 
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -37,5 +39,11 @@ public interface DataProvider {
    * @return the value, or null if no value is available in the current context for this identifier.
    */
   @Nullable
-  Object getData(@NonNls String dataId);
+  Object getData(@NotNull Key<?> dataId);
+
+  @Nullable
+  @SuppressWarnings("unchecked")
+  default <T> T getDataUnchecked(@NotNull Key<T> key) {
+    return (T)getData(key);
+  }
 }

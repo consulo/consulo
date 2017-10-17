@@ -29,7 +29,7 @@ import java.net.URLEncoder;
 public class SearchWebAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    CopyProvider provider = PlatformDataKeys.COPY_PROVIDER.getData(dataContext);
+    CopyProvider provider = e.getData(PlatformDataKeys.COPY_PROVIDER);
     if (provider == null) {
       return;
     }
@@ -43,14 +43,14 @@ public class SearchWebAction extends AnAction implements DumbAware {
       return;
     }
     if (StringUtil.isNotEmpty(string)) {
-      BrowserUtil.launchBrowser("http://www.google.com/search?q="+ URLEncoder.encode(string));
+      BrowserUtil.browse("http://www.google.com/search?q="+ URLEncoder.encode(string));
     }
   }
 
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    CopyProvider provider = PlatformDataKeys.COPY_PROVIDER.getData(dataContext);
+    CopyProvider provider = event.getData(PlatformDataKeys.COPY_PROVIDER);
     boolean available = provider != null && provider.isCopyEnabled(dataContext) && provider.isCopyVisible(dataContext);
     presentation.setEnabled(available);
     presentation.setVisible(available);

@@ -54,7 +54,7 @@ abstract class RuleAction extends ToggleAction implements DumbAware {
     setOptionValue(state);
     myState = state;
 
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       project.getMessageBus().syncPublisher(UsageFilteringRuleProvider.RULES_CHANGED).run();
     }

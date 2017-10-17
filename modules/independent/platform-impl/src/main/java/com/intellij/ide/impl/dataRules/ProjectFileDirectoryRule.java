@@ -19,17 +19,26 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Eugene Zhuravlev
  *         Date: Feb 10, 2004
  */
-public class ProjectFileDirectoryRule implements GetDataRule {
-  public Object getData(DataProvider dataProvider) {
-    VirtualFile dir = PlatformDataKeys.PROJECT_FILE_DIRECTORY.getData(dataProvider);
+public class ProjectFileDirectoryRule implements GetDataRule<VirtualFile> {
+  @NotNull
+  @Override
+  public Key<VirtualFile> getKey() {
+    return PlatformDataKeys.PROJECT_FILE_DIRECTORY;
+  }
+
+  @Override
+  public VirtualFile getData(@NotNull DataProvider dataProvider) {
+    VirtualFile dir = dataProvider.getDataUnchecked(PlatformDataKeys.PROJECT_FILE_DIRECTORY);
     if (dir == null) {
-      final Project project = CommonDataKeys.PROJECT.getData(dataProvider);
+      final Project project = dataProvider.getDataUnchecked(CommonDataKeys.PROJECT);
       if (project != null) {
         dir = project.getBaseDir();
       }

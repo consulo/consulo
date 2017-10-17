@@ -16,12 +16,12 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorCopyPasteHelper;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.Producer;
 import consulo.annotations.RequiredWriteAction;
@@ -33,7 +33,7 @@ import java.awt.datatransfer.Transferable;
  * @since May 13, 2002
  */
 public class PasteAction extends EditorAction {
-  public static final DataKey<Producer<Transferable>> TRANSFERABLE_PROVIDER = DataKey.create("PasteTransferableProvider");
+  public static final Key<Producer<Transferable>> TRANSFERABLE_PROVIDER = Key.create("PasteTransferableProvider");
 
   public PasteAction() {
     super(new Handler());

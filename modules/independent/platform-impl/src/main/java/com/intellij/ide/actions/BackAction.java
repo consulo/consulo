@@ -30,7 +30,7 @@ public class BackAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     IdeDocumentHistory.getInstance(project).back();
   }
@@ -39,7 +39,7 @@ public class BackAction extends AnAction implements DumbAware {
   @Override
   public void update(@NotNull AnActionEvent event){
     Presentation presentation = event.getPresentation();
-    Project project = CommonDataKeys.PROJECT.getData(event.getDataContext());
+    Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null || project.isDisposed()) {
       presentation.setEnabled(false);
       return;

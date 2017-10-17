@@ -16,6 +16,7 @@
 package com.intellij.ui.content;
 
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
@@ -267,11 +268,11 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
         super(wrapper);
       }
 
-      public Object getData(String dataId) {
-        if (PlatformDataKeys.CONTENT_MANAGER.is(dataId)) {
+      public Object getData(@NotNull Key<?> dataId) {
+        if (PlatformDataKeys.CONTENT_MANAGER == dataId) {
           return myManager;
         }
-        if (PlatformDataKeys.NONEMPTY_CONTENT_MANAGER.is(dataId) && myManager.getContentCount() > 1) {
+        if (PlatformDataKeys.NONEMPTY_CONTENT_MANAGER == dataId && myManager.getContentCount() > 1) {
           return myManager;
         }
         return null;

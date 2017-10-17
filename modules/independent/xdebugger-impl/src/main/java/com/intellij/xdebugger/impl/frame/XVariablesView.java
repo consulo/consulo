@@ -37,7 +37,6 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectLongHashMap;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -134,8 +133,8 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
 
   @Nullable
   @Override
-  public Object getData(@NonNls String dataId) {
-    if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {
+  public Object getData(@NotNull Key<?> dataId) {
+    if (CommonDataKeys.VIRTUAL_FILE == dataId) {
       return getCurrentFile(getTree());
     }
     return null;
