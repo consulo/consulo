@@ -30,11 +30,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.reference.SoftReference;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakValueHashMap;
 import consulo.ide.impl.DataValidators;
@@ -54,7 +54,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class DataManagerImpl extends DataManager {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.impl.DataManagerImpl");
+  private static final Logger LOG = Logger.getInstance(DataManagerImpl.class);
+
   private final ConcurrentMap<Key, GetDataRule> myDataConstantToRuleMap = new ConcurrentHashMap<>();
 
   private WindowManagerEx myWindowManager;
@@ -78,13 +79,10 @@ public class DataManagerImpl extends DataManager {
 
   @Nullable
   private <T> T getData(@NotNull Key<T> dataId, final consulo.ui.Component focusedComponent) {
-    try (AccessToken ignored = ProhibitAWTEvents.start("getData")) {
-      for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParentComponent()) {
-        final DataProvider dataProvider = getDataProviderEx(c);
-        if (dataProvider == null) continue;
-        T data = getDataFromProvider(dataProvider, dataId, null);
-        if (data != null) return data;
-      }
+    for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParentComponent()) {
+      final DataProvider dataProvider = c::getUserData;
+      T data = getDataFromProvider(dataProvider, dataId, null);
+      if (data != null) return data;
     }
     return null;
   }
@@ -115,7 +113,7 @@ public class DataManagerImpl extends DataManager {
   }
 
   @Nullable
-  public static DataProvider getDataProviderEx(Object component) {
+  public static DataProvider getDataProviderEx(java.awt.Component component) {
     DataProvider dataProvider = null;
     if (component instanceof DataProvider) {
       dataProvider = (DataProvider)component;
@@ -185,12 +183,13 @@ public class DataManagerImpl extends DataManager {
   }
 
   @Override
-  public DataContext getDataContext(Component component) {
+  public DataContext getDataContext(@Nullable Component component) {
     return new MyDataContext(component);
   }
 
+  @NotNull
   @Override
-  public DataContext getDataContext2(consulo.ui.Component component) {
+  public DataContext getDataContext(@Nullable consulo.ui.Component component) {
     return new MyDataContext2(component);
   }
 
@@ -222,6 +221,7 @@ public class DataManagerImpl extends DataManager {
     return getDataContext(getFocusedComponent());
   }
 
+  @NotNull
   @Override
   public AsyncResult<DataContext> getDataContextFromFocus() {
     AsyncResult<DataContext> context = new AsyncResult<>();
@@ -256,11 +256,9 @@ public class DataManagerImpl extends DataManager {
       }
     }
 
-    if (Registry.is("actionSystem.noContextComponentWhileFocusTransfer")) {
-      IdeFocusManager fm = IdeFocusManager.findInstanceByComponent(activeWindow);
-      if (fm.isFocusBeingTransferred()) {
-        return null;
-      }
+    IdeFocusManager fm = IdeFocusManager.findInstanceByComponent(activeWindow);
+    if (fm.isFocusBeingTransferred()) {
+      return null;
     }
 
     // In case we have an active floating toolwindow and some component in another window focused,
@@ -329,10 +327,6 @@ public class DataManagerImpl extends DataManager {
     return editor;
   }
 
-  private static class NullResult {
-    public static final NullResult INSTANCE = new NullResult();
-  }
-
   private static final Set<Key> ourSafeKeys =
           ContainerUtil.newHashSet(CommonDataKeys.PROJECT, CommonDataKeys.EDITOR, PlatformDataKeys.IS_MODAL_CONTEXT, PlatformDataKeys.CONTEXT_COMPONENT, PlatformDataKeys.MODALITY_STATE);
 
@@ -369,9 +363,9 @@ public class DataManagerImpl extends DataManager {
         Object answer = myCachedData.get(dataId);
         if (answer == null) {
           answer = doGetData(dataId);
-          myCachedData.put(dataId, answer == null ? NullResult.INSTANCE : answer);
+          myCachedData.put(dataId, answer == null ? ObjectUtil.NULL : answer);
         }
-        return answer != NullResult.INSTANCE ? (T)answer : null;
+        return answer != ObjectUtil.NULL ? (T)answer : null;
       }
       else {
         return doGetData(dataId);
@@ -444,9 +438,9 @@ public class DataManagerImpl extends DataManager {
         Object answer = myCachedData.get(dataId);
         if (answer == null) {
           answer = doGetData(dataId);
-          myCachedData.put(dataId, answer == null ? NullResult.INSTANCE : answer);
+          myCachedData.put(dataId, answer == null ? ObjectUtil.NULL : answer);
         }
-        return answer != NullResult.INSTANCE ? (T)answer : null;
+        return answer != ObjectUtil.NULL ? (T)answer : null;
       }
       else {
         return doGetData(dataId);
@@ -454,11 +448,28 @@ public class DataManagerImpl extends DataManager {
     }
 
     @Nullable
+    @SuppressWarnings("unchecked")
     private <T> T doGetData(@NotNull Key<T> dataId) {
       consulo.ui.Component component = SoftReference.dereference(myRef);
-
+      if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
+        if (component == null) {
+          return null;
+        }
+        return (T)(Boolean)false; //FIXME [VISTALL] stub
+      }
+      //if (PlatformDataKeys.CONTEXT_COMPONENT == dataId) {
+      //  return (T)component;
+      //}
+      if (PlatformDataKeys.MODALITY_STATE == dataId) {
+        return (T)ModalityState.NON_MODAL; //FIXME [VISTALL] stub
+      }
+      if (CommonDataKeys.EDITOR == dataId || CommonDataKeys.HOST_EDITOR == dataId) {
+        Editor editor = (Editor)((DataManagerImpl)DataManager.getInstance()).getData(dataId, component);
+        return (T)validateEditor(editor);
+      }
       return ((DataManagerImpl)DataManager.getInstance()).getData(dataId, component);
     }
+
 
     @NonNls
     public String toString() {

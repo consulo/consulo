@@ -80,7 +80,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
     collectAllActions(group, quickStart);
 
     for (AnAction action : group) {
-      AnActionEvent e = AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, DataManager.getInstance().getDataContext2(welcomeFrame));
+      AnActionEvent e = AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, DataManager.getInstance().getDataContext(welcomeFrame));
       action.update(e);
 
       Presentation presentation = e.getPresentation();
