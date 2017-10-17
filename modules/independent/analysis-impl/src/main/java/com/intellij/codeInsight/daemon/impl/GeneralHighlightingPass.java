@@ -119,7 +119,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     return super.getDocument();
   }
 
-  private static final Key<AtomicInteger> HIGHLIGHT_VISITOR_INSTANCE_COUNT = new Key<>("HIGHLIGHT_VISITOR_INSTANCE_COUNT");
+  private static final Key<AtomicInteger> HIGHLIGHT_VISITOR_INSTANCE_COUNT = Key.create("HIGHLIGHT_VISITOR_INSTANCE_COUNT");
   @NotNull
   private HighlightVisitor[] cloneHighlightVisitors() {
     int oldCount = incVisitorUsageCount(1);
