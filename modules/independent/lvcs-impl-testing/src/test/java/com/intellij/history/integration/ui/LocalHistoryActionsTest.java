@@ -26,6 +26,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nullable;
 
@@ -124,10 +125,10 @@ public class LocalHistoryActionsTest extends LocalHistoryUITestCase {
     DataContext dc = new DataContext() {
       @Override
       @Nullable
-      public Object getData(String id) {
-        if (PlatformDataKeys.VIRTUAL_FILE_ARRAY.is(id)) return files;
-        if (PlatformDataKeys.EDITOR.is(id)) return editor;
-        if (CommonDataKeys.PROJECT.is(id)) return p;
+      public Object getData(Key id) {
+        if (PlatformDataKeys.VIRTUAL_FILE_ARRAY == id) return files;
+        if (PlatformDataKeys.EDITOR == id) return editor;
+        if (CommonDataKeys.PROJECT == id) return p;
         return null;
       }
     };
