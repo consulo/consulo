@@ -34,7 +34,7 @@ import com.intellij.psi.PsiElement;
  * @author yole
  */
 public interface LangDataKeys extends PlatformDataKeys {
-  Key<Module> MODULE = Key.create("module");
+  Key<Module> MODULE = CommonDataKeys.MODULE;
   /**
    * Returns module if module node is selected (in module view)
    */
