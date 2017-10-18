@@ -22,7 +22,6 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.ui.image.ImageConverter;
-import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,10 +34,16 @@ import java.util.List;
  * @since 12-Oct-17
  */
 public class GwtToolWindowStripeButton extends SimplePanel {
-  private boolean myActive;
-  private boolean myVertical;
+  private boolean mySelected;
+  private Boolean myVerticalValue;
+
+  private Runnable myClickListener;
 
   public GwtToolWindowStripeButton() {
+    doLayout();
+  }
+
+  public void doLayout() {
     HorizontalPanel widget = new HorizontalPanel();
     widget.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
     widget.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -48,48 +53,59 @@ public class GwtToolWindowStripeButton extends SimplePanel {
     sinkEvents(Event.ONCLICK | Event.ONFOCUS);
 
     addDomHandler(event -> {
-      if (myActive) {
-        return;
-      }
-
-      getElement().getStyle().setBackgroundColor("lightGray");
+      setBackgroundColor(true);
     }, MouseOverEvent.getType());
 
     addDomHandler(event -> {
-      if (myActive) {
-        return;
-      }
-
-      getElement().getStyle().setBackgroundColor(null);
+      setBackgroundColor(false);
     }, MouseOutEvent.getType());
 
     addDomHandler(event -> {
-      GwtToolWindowStripe stripe = GwtUIUtil.getParentOf(this, GwtToolWindowStripe.class);
-      if (stripe == null) {
-        return;
+      if (myClickListener != null) {
+        myClickListener.run();
       }
-
-      stripe.showOrHide(this);
     }, ClickEvent.getType());
+
+    if (isVertical()) {
+      setVerticalText();
+    }
+  }
+
+  private void setBackgroundColor(boolean focus) {
+    if (mySelected) {
+      getElement().getStyle().setBackgroundColor("rgba(85,85,85, 0.33333334)");
+      return;
+    }
+
+    if(focus) {
+      getElement().getStyle().setBackgroundColor("rgba(85,85,85, 0.15686275)");
+      return;
+    }
+
+    getElement().getStyle().setBackgroundColor(null);
+  }
+
+  public void setClickListener(@Nullable Runnable clickListener) {
+    myClickListener = clickListener;
   }
 
   public void build(String text, @Nullable MultiImageState imageState) {
     CellPanel cell = (CellPanel)getWidget();
 
-    CellPanel panel = myVertical ? new VerticalPanel() : new HorizontalPanel();
+    CellPanel panel = isVertical() ? new VerticalPanel() : new HorizontalPanel();
 
     List<Character> list = new ArrayList<>(text.length());
     for (char c : text.toCharArray()) {
       list.add(c);
     }
 
-    if (myVertical) {
+    if (isVertical()) {
       Collections.reverse(list);
     }
 
     for (char c : list) {
       HTML child = new HTML(c == ' ' ? "&nbsp;" : String.valueOf(c));
-      if (myVertical) {
+      if (isVertical()) {
         child.getElement().getStyle().setProperty("transform", "rotate(-90deg)");
         child.getElement().getStyle().setProperty("lineHeight", "0.6em");
       }
@@ -101,7 +117,7 @@ public class GwtToolWindowStripeButton extends SimplePanel {
     getElement().getStyle().clearPaddingTop();
     getElement().getStyle().clearPaddingBottom();
 
-    if (myVertical) {
+    if (isVertical()) {
       getElement().getStyle().setPaddingTop(10, Style.Unit.PX);
       getElement().getStyle().setPaddingBottom(10, Style.Unit.PX);
 
@@ -130,20 +146,24 @@ public class GwtToolWindowStripeButton extends SimplePanel {
   }
 
   public void setVerticalText() {
-    myVertical = true;
+    myVerticalValue = Boolean.TRUE;
     VerticalPanel panel = new VerticalPanel();
     panel.setWidth("100%");
     panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
     setWidget(panel);
   }
 
-  public void setActive(boolean value) {
-    myActive = value;
-
-    getElement().getStyle().setBackgroundColor(value ? "lightGray" : null);
+  public boolean isVertical() {
+    return myVerticalValue == Boolean.TRUE;
   }
 
-  public boolean isActive() {
-    return myActive;
+  public void setSelected(boolean value) {
+    mySelected = value;
+
+    setBackgroundColor(false);
+  }
+
+  public boolean isSelected() {
+    return mySelected;
   }
 }

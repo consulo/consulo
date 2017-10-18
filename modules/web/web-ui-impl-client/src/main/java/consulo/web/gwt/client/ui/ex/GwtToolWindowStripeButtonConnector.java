@@ -21,6 +21,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.util.GwtUIUtil;
+import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState;
 
 /**
@@ -30,12 +31,28 @@ import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState
 @Connect(canonicalName = "consulo.ui.ex.WGwtToolWindowStripeButton")
 public class GwtToolWindowStripeButtonConnector extends AbstractComponentConnector {
   @Override
+  protected void init() {
+    super.init();
+
+    getWidget().setClickListener(() -> {
+      getRpcProxy(ToolWindowStripeButtonRpc.class).onClick();
+      getConnection().getServerRpcQueue().flush();
+    });
+  }
+
+  @Override
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
     GwtToolWindowStripeButton widget = getWidget();
+    widget.doLayout();
 
     widget.build(getState().caption, getState().myImageState);
+  }
+
+  @OnStateChange("mySelected")
+  private void onSelected() {
+    getWidget().setSelected(getState().mySelected);
   }
 
   @OnStateChange("mySecondary")
@@ -44,7 +61,7 @@ public class GwtToolWindowStripeButtonConnector extends AbstractComponentConnect
 
     GwtToolWindowStripeInner stripeInner = GwtUIUtil.getParentOf(widget, GwtToolWindowStripeInner.class);
 
-    if(stripeInner == null) {
+    if (stripeInner == null) {
       return;
     }
 

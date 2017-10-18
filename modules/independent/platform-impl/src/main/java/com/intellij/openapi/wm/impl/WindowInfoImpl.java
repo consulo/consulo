@@ -28,6 +28,12 @@ import org.jetbrains.annotations.Nullable;
  * @author Vladimir Kondratyev
  */
 public final class WindowInfoImpl implements Cloneable, WindowInfo {
+  public static float normalizeWeigh(final float weight) {
+    if (weight <= 0) return WindowInfoImpl.DEFAULT_WEIGHT;
+    if (weight >= 1) return 1 - WindowInfoImpl.DEFAULT_WEIGHT;
+    return weight;
+  }
+
   /**
    * XML tag.
    */
@@ -207,11 +213,11 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
    * area the tool window is occupied. The weight has sense if the tool window is docked or
    * sliding.
    */
-  float getWeight() {
+  public float getWeight() {
     return myWeight;
   }
 
-  float getSideWeight() {
+  public float getSideWeight() {
     return mySideWeight;
   }
 

@@ -58,8 +58,22 @@ public class GwtToolWindowStripe extends SimplePanel {
     }
   }
 
+  public void removeAll() {
+    myInternalDecorators.clear();
+    myButtons.clear();
+
+    getWidget().removeAll();
+
+    myToolWindowPanel.doLayout();
+  }
+
+  @Override
+  public GwtToolWindowStripeInner getWidget() {
+    return (GwtToolWindowStripeInner)super.getWidget();
+  }
+
   public void addButton(GwtToolWindowStripeButton button) {
-    GwtToolWindowStripeInner inner = (GwtToolWindowStripeInner)getWidget();
+    GwtToolWindowStripeInner inner = getWidget();
 
     myButtons.add(button);
 
@@ -80,7 +94,7 @@ public class GwtToolWindowStripe extends SimplePanel {
 
   public void showOrHide(GwtToolWindowStripeButton button) {
     GwtInternalDecorator internalDecorator = myInternalDecorators.get(button);
-    if(internalDecorator == null || myToolWindowPanel == null) {
+    if (internalDecorator == null || myToolWindowPanel == null) {
       return;
     }
 

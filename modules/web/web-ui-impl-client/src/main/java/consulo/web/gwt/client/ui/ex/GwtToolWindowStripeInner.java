@@ -43,8 +43,8 @@ class GwtToolWindowStripeInner extends SimplePanel {
     FlowPanel filler = GwtUIUtil.fillAndReturn(new FlowPanel());
     inner.add(filler);
     inner.add(mySecondary);
-    if(vertical) {
-     inner.setCellHeight(filler, "100%");
+    if (vertical) {
+      inner.setCellHeight(filler, "100%");
     }
     else {
       inner.setCellWidth(filler, "100%");
@@ -57,6 +57,15 @@ class GwtToolWindowStripeInner extends SimplePanel {
     }
     else {
       myPrimary.add(widget);
+    }
+  }
+
+  public void removeAll() {
+    if (myPrimary != null) {
+      myPrimary.clear();
+    }
+    if (mySecondary != null) {
+      mySecondary.clear();
     }
   }
 

@@ -46,7 +46,7 @@ public class GwtCheckBoxImplConnector extends AbstractComponentConnector impleme
   public void onValueChange(ValueChangeEvent<Boolean> event) {
     getState().myChecked = event.getValue();
     getRpcProxy(CheckBoxRpc.class).setValue(event.getValue());
-    getConnection().sendPendingVariableChanges();
+    getConnection().getServerRpcQueue().flush();
   }
 
   @Override

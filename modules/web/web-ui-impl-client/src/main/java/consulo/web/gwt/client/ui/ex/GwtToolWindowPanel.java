@@ -116,9 +116,9 @@ public class GwtToolWindowPanel extends VerticalPanel {
   }
 
   public void showOrHide(DockLayoutState.Constraint position, GwtInternalDecorator decorator, GwtToolWindowStripeButton button) {
-    boolean isActive = !button.isActive();
+    boolean isActive = !button.isSelected();
 
-    button.setActive(isActive);
+    button.setSelected(isActive);
 
     if (position == DockLayoutState.Constraint.LEFT || position == DockLayoutState.Constraint.RIGHT) {
       SimplePanel simplePanel;

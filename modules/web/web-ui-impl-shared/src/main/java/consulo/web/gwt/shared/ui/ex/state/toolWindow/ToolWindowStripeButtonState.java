@@ -26,4 +26,6 @@ public class ToolWindowStripeButtonState extends AbstractComponentState {
   public MultiImageState myImageState;
 
   public boolean mySecondary;
+
+  public boolean mySelected;
 }

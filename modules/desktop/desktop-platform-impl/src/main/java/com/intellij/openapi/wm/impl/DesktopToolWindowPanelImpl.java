@@ -764,7 +764,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     public final void run() {
       try {
         final ToolWindowAnchor anchor = myInfo.getAnchor();
-        setComponent(myComponent, anchor, normalizeWeigh(myInfo.getWeight()));
+        setComponent(myComponent, anchor, WindowInfoImpl.normalizeWeigh(myInfo.getWeight()));
         if (!myDirtyMode) {
           myLayeredPane.validate();
           myLayeredPane.repaint();
@@ -832,30 +832,30 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
           if (myInfo.isSplit()) {
             splitter.setFirstComponent(oldComponent);
             splitter.setSecondComponent(myNewComponent);
-            float proportion = getPreferredSplitProportion(oldComponent.getWindowInfo().getId(),
-                                                           normalizeWeigh(oldComponent.getWindowInfo().getSideWeight() / (oldComponent.getWindowInfo().getSideWeight() + myInfo.getSideWeight())));
+            float proportion = getPreferredSplitProportion(oldComponent.getWindowInfo().getId(), WindowInfoImpl
+                    .normalizeWeigh(oldComponent.getWindowInfo().getSideWeight() / (oldComponent.getWindowInfo().getSideWeight() + myInfo.getSideWeight())));
             splitter.setProportion(proportion);
             if (!anchor.isHorizontal() && !anchor.isSplitVertically()) {
-              newWeight = normalizeWeigh(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
+              newWeight = WindowInfoImpl.normalizeWeigh(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
             }
             else {
-              newWeight = normalizeWeigh(oldComponent.getWindowInfo().getWeight());
+              newWeight = WindowInfoImpl.normalizeWeigh(oldComponent.getWindowInfo().getWeight());
             }
           }
           else {
             splitter.setFirstComponent(myNewComponent);
             splitter.setSecondComponent(oldComponent);
-            splitter.setProportion(normalizeWeigh(myInfo.getSideWeight()));
+            splitter.setProportion(WindowInfoImpl.normalizeWeigh(myInfo.getSideWeight()));
             if (!anchor.isHorizontal() && !anchor.isSplitVertically()) {
-              newWeight = normalizeWeigh(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
+              newWeight = WindowInfoImpl.normalizeWeigh(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
             }
             else {
-              newWeight = normalizeWeigh(myInfo.getWeight());
+              newWeight = WindowInfoImpl.normalizeWeigh(myInfo.getWeight());
             }
           }
         }
         else {
-          newWeight = normalizeWeigh(myInfo.getWeight());
+          newWeight = WindowInfoImpl.normalizeWeigh(myInfo.getWeight());
         }
         setComponent(splitter, anchor, newWeight);
 
@@ -1330,11 +1330,5 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
 
   @Override
   public void dispose() {
-  }
-
-  private static float normalizeWeigh(final float weight) {
-    if (weight <= 0) return WindowInfoImpl.DEFAULT_WEIGHT;
-    if (weight >= 1) return 1 - WindowInfoImpl.DEFAULT_WEIGHT;
-    return weight;
   }
 }

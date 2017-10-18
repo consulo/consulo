@@ -23,6 +23,10 @@ import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.util.EventDispatcher;
+import consulo.ui.Component;
+import consulo.ui.DockLayout;
+import consulo.ui.Layouts;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.wm.impl.UnifiedToolWindowImpl;
 import org.jetbrains.annotations.NotNull;
@@ -36,9 +40,20 @@ public class WebToolWindowInternalDecorator implements ToolWindowInternalDecorat
   private final UnifiedToolWindowImpl myToolWindow;
   private final EventDispatcher<InternalDecoratorListener> myDispatcher = EventDispatcher.create(InternalDecoratorListener.class);
 
+  private DockLayout myLayout;
+
+  @RequiredUIAccess
   public WebToolWindowInternalDecorator(Project project, WindowInfoImpl windowInfo, UnifiedToolWindowImpl toolWindow, boolean canWorkInDumbMode) {
     myWindowInfo = windowInfo;
     myToolWindow = toolWindow;
+
+    myLayout = Layouts.dock();
+    myLayout.center(toolWindow.getUIComponent());
+  }
+
+  @NotNull
+  public Component getComponent() {
+    return myLayout;
   }
 
   @NotNull

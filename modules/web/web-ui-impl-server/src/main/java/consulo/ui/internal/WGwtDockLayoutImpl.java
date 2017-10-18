@@ -16,10 +16,8 @@
 package consulo.ui.internal;
 
 import com.vaadin.ui.AbstractComponentContainer;
-import consulo.ui.Component;
-import consulo.ui.DockLayout;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import com.vaadin.ui.HasComponents;
+import consulo.ui.*;
 import consulo.ui.internal.border.WGwtBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import org.jetbrains.annotations.NotNull;
@@ -47,11 +45,22 @@ public class WGwtDockLayoutImpl extends AbstractComponentContainer implements Do
   }
 
   @Override
+  public void remove(@NotNull Component component) {
+    removeComponent((com.vaadin.ui.Component)component);
+  }
+
+  @Override
   protected DockLayoutState getState() {
     return (DockLayoutState)super.getState();
   }
 
   private void add(@NotNull com.vaadin.ui.Component component, DockLayoutState.Constraint constraint) {
+    HasComponents parent = component.getParent();
+    // remove from old parent
+    if (parent instanceof Layout) {
+      ((Layout)parent).remove((Component)component);
+    }
+
     myChildren.add(component);
     addComponent(component);
     getState().myConstraints.add(constraint);
@@ -60,7 +69,9 @@ public class WGwtDockLayoutImpl extends AbstractComponentContainer implements Do
   @Override
   public void removeComponent(com.vaadin.ui.Component c) {
     int i = myChildren.indexOf(c);
-    getState().myConstraints.remove(i);
+    if (i != -1) {
+      getState().myConstraints.remove(i);
+    }
 
     myChildren.remove(c);
     super.removeComponent(c);
@@ -114,8 +125,7 @@ public class WGwtDockLayoutImpl extends AbstractComponentContainer implements Do
 
   @Override
   public void replaceComponent(com.vaadin.ui.Component removeComponent, com.vaadin.ui.Component newComponent) {
-    removeComponent(removeComponent);
-    addComponent(newComponent);
+    throw new UnsupportedOperationException();
   }
 
   @Override

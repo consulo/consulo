@@ -15,12 +15,15 @@
  */
 package consulo.ui.ex;
 
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.internal.image.WGwtImageUrlCache;
+import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
+import consulo.wm.impl.ToolWindowBase;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -32,8 +35,19 @@ import javax.swing.*;
 public class WGwtToolWindowStripeButton extends AbstractComponent implements ToolWindowStripeButton {
   private WebToolWindowInternalDecorator myDecorator;
 
+  private ToolWindowStripeButtonRpc myRpc = () -> {
+    if (isSelected()) {
+      myDecorator.fireHidden();
+    }
+    else {
+      myDecorator.fireActivated();
+    }
+  };
+
   public WGwtToolWindowStripeButton(WebToolWindowInternalDecorator decorator, WGwtToolWindowPanel toolWindowPanel) {
     myDecorator = decorator;
+
+    registerRpc(myRpc);
   }
 
   @Override
@@ -69,7 +83,30 @@ public class WGwtToolWindowStripeButton extends AbstractComponent implements Too
   }
 
   @Override
-  public void apply(@NotNull WindowInfo windowInfo) {
+  public void apply(@NotNull WindowInfo info) {
+    setSelected(info.isVisible() || info.isActive());
+    updateState();
+    markAsDirty();
+  }
+
+  private void updateState() {
+    ToolWindowBase window = (ToolWindowBase)myDecorator.getToolWindow();
+    boolean toShow = window.isAvailable() || window.isPlaceholderMode();
+    if (UISettings.getInstance().ALWAYS_SHOW_WINDOW_BUTTONS) {
+      setVisible(window.isShowStripeButton() || isSelected());
+    }
+    else {
+      setVisible(toShow && (window.isShowStripeButton() || isSelected()));
+    }
+    setEnabled(toShow && !window.isPlaceholderMode());
+  }
+
+  public boolean isSelected() {
+    return getState().mySelected;
+  }
+
+  public void setSelected(boolean selected) {
+    getState().mySelected = selected;
   }
 
   @Override

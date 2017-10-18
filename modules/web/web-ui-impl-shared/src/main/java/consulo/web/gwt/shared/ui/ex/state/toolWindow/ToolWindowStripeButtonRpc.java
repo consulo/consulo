@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.web.gwt.shared.ui.ex.state.toolWindow;
 
-import org.jetbrains.annotations.NotNull;
+import com.vaadin.shared.annotations.Delayed;
+import com.vaadin.shared.communication.ServerRpc;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 19-Oct-17
  */
-public interface Layout extends Component {
-  @RequiredUIAccess
-  default void clear() {
-    throw new AbstractMethodError();
-  }
-
-  default void remove(@NotNull Component component) {
-    throw new AbstractMethodError();
-  }
+public interface ToolWindowStripeButtonRpc extends ServerRpc {
+  @Delayed
+  void onClick();
 }

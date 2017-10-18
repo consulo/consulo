@@ -118,12 +118,40 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     }
   }
 
+  private final class AddDockedComponentCmd extends FinalizableCommand {
+    private final ToolWindowInternalDecorator myDecorator;
+    private final WindowInfoImpl myInfo;
+    private final boolean myDirtyMode;
+
+    public AddDockedComponentCmd(@NotNull ToolWindowInternalDecorator decorator, @NotNull WindowInfoImpl info, final boolean dirtyMode, @NotNull Runnable finishCallBack) {
+      super(finishCallBack);
+      myDecorator = decorator;
+      myInfo = info;
+      myDirtyMode = dirtyMode;
+    }
+
+    @Override
+    public final void run() {
+      try {
+        final ToolWindowAnchor anchor = myInfo.getAnchor();
+
+        setComponent(myDecorator, anchor, WindowInfoImpl.normalizeWeigh(myInfo.getWeight()));
+      }
+      finally {
+        finish();
+      }
+    }
+  }
+
   private WGwtToolWindowStripe myTopStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.TOP);
   private WGwtToolWindowStripe myBottomStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.BOTTOM);
   private WGwtToolWindowStripe myLeftStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.LEFT);
   private WGwtToolWindowStripe myRightStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.RIGHT);
 
   private final Map<String, WGwtToolWindowStripeButton> myId2Button = new HashMap<>();
+  private final HashMap<String, ToolWindowInternalDecorator> myId2Decorator = new HashMap<>();
+  private final HashMap<ToolWindowInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
+
   private final List<Component> myChildren = new ArrayList<>();
 
   public WGwtToolWindowPanel() {
@@ -136,6 +164,10 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
   private void add(Component component) {
     addComponent(component);
     myChildren.add(component);
+  }
+
+  private void setComponent(final ToolWindowInternalDecorator component, @NotNull ToolWindowAnchor anchor, final float weight) {
+
   }
 
   @Nullable
@@ -196,12 +228,49 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
   @NotNull
   @Override
   public FinalizableCommand createAddDecoratorCmd(@NotNull ToolWindowInternalDecorator decorator, @NotNull WindowInfoImpl info, boolean dirtyMode, @NotNull Runnable finishCallBack) {
-    return new FinalizableCommand(finishCallBack) {
-      @Override
-      public void run() {
+    final WindowInfoImpl copiedInfo = info.copy();
+    final String id = copiedInfo.getId();
 
+    myDecorator2Info.put(decorator, copiedInfo);
+    myId2Decorator.put(id, decorator);
+
+    if (info.isDocked()) {
+      WindowInfoImpl sideInfo = getDockedInfoAt(info.getAnchor(), !info.isSplit());
+      if (sideInfo == null) {
+        return new AddDockedComponentCmd(decorator, info, dirtyMode, finishCallBack);
       }
-    };
+      else {
+        //return new AddAndSplitDockedComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode, finishCallBack);
+        return new FinalizableCommand(finishCallBack) {
+          @Override
+          public void run() {
+
+          }
+        };
+      }
+    }
+    else if (info.isSliding()) {
+      return new FinalizableCommand(finishCallBack) {
+        @Override
+        public void run() {
+
+        }
+      };
+      //return new AddSlidingComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode, finishCallBack);
+    }
+    else {
+      throw new IllegalArgumentException("Unknown window type: " + info.getType());
+    }
+  }
+
+  private WindowInfoImpl getDockedInfoAt(@NotNull ToolWindowAnchor anchor, boolean side) {
+    for (WindowInfoImpl info : myDecorator2Info.values()) {
+      if (info.isVisible() && info.isDocked() && info.getAnchor() == anchor && side == info.isSplit()) {
+        return info;
+      }
+    }
+
+    return null;
   }
 
   @NotNull

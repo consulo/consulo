@@ -32,6 +32,8 @@ import java.util.List;
 public class GwtToolWindowStripeConnector extends GwtLayoutConnector {
   @Override
   public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
+    getWidget().removeAll();
+
     List<Widget> widgets = GwtUIUtil.remapWidgets(this);
 
     for (Widget widget : widgets) {
