@@ -39,6 +39,7 @@ class IdeaJHelpContentViewer extends JHelpContentViewer{
    * Replaces the UI with the latest version from the default
    * UIFactory.
    */
+  @Override
   public void updateUI(){
     setUI(new IdeaHelpContentViewUI(this));
     invalidate();

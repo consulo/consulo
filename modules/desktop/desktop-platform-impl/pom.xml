@@ -51,5 +51,11 @@
       <artifactId>consulo-platform-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <!-- external dependencies -->
+    <dependency>
+      <groupId>javax.help</groupId>
+      <artifactId>javahelp</artifactId>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 </project>

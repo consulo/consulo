@@ -64,5 +64,8 @@
 
     <applicationService serviceInterface="com.intellij.ui.content.ContentFactory"
                         serviceImplementation="com.intellij.ui.content.ContentFactoryImpl"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.help.HelpManager"
+                        serviceImplementation="com.intellij.help.impl.DesktopHelpManagerImpl"/>
   </extensions>
 </idea-plugin>

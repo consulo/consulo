@@ -1206,8 +1206,6 @@
 
     <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil"
                         serviceImplementation="com.intellij.ide.actions.ShowSettingsUtilImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.help.HelpManager"
-                        serviceImplementation="com.intellij.help.impl.HelpManagerImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.progress.ProgressManager"
                         serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl"
                         serviceImplementationForCompilerServer="com.intellij.openapi.progress.impl.CoreProgressManager"/>

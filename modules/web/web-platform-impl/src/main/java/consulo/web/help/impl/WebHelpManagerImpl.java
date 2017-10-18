@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.help;
+package consulo.web.help.impl;
 
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.help.HelpManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class HelpManager {
-  @NotNull
-  public static HelpManager getInstance() {
-    return ServiceManager.getService(HelpManager.class);
+/**
+ * @author VISTALL
+ * @since 18-Oct-17
+ */
+public class WebHelpManagerImpl extends HelpManager {
+  @Override
+  public void invokeHelp(@Nullable @NonNls String id) {
+    // TODO [VISTALL] stub
   }
-
-  public abstract void invokeHelp(@Nullable @NonNls String id);
 }

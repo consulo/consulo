@@ -26,7 +26,7 @@
     </MavenSettings>
     <ConfigurationWrapper RunnerId="Debug" />
     <method>
-      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="package -am -pl consulo:consulo-sandbox-web" />
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="-T 1C package -am -pl consulo:consulo-sandbox-web" />
     </method>
   </configuration>
 </component>

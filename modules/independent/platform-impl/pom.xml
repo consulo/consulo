@@ -110,11 +110,6 @@
       <artifactId>swingx</artifactId>
     </dependency>
     <dependency>
-      <groupId>javax.help</groupId>
-      <artifactId>javahelp</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-imaging</artifactId>
       <optional>true</optional>

@@ -44,9 +44,12 @@
                         serviceImplementation="consulo.web.fileChooser.WebFileChooserFactory"/>
 
     <applicationService serviceInterface="consulo.start.WelcomeFrameManager"
-                        serviceImplementation="consulo.web.start.WebWelcomeFrameManager" />
+                        serviceImplementation="consulo.web.start.WebWelcomeFrameManager"/>
 
     <applicationService serviceInterface="com.intellij.ui.content.ContentFactory"
                         serviceImplementation="consulo.web.ui.content.impl.WebContentFactoryImpl"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.help.HelpManager"
+                        serviceImplementation="consulo.web.help.impl.WebHelpManagerImpl"/>
   </extensions>
 </idea-plugin>

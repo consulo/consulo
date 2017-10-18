@@ -15,13 +15,15 @@
  */
 package com.intellij.help.impl;
 
+import com.intellij.ide.BrowserUtil;
 import com.intellij.util.ui.GraphicsUtil;
 
-import javax.help.DefaultHelpModel;
-import javax.help.HelpSet;
-import javax.help.JHelp;
+import javax.help.JHelpContentViewer;
+import javax.help.plaf.basic.BasicContentViewerUI;
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
 import java.awt.*;
-import java.util.Vector;
+import java.net.URL;
 
 /**
  * It a dirty patch! Help system is so ugly that it hangs when it open some "external" links.
@@ -29,31 +31,32 @@ import java.util.Vector;
  *
  * @author Vladimir Kondratyev
  */
-class IdeaJHelp extends JHelp{
+class IdeaHelpContentViewUI extends BasicContentViewerUI {
   /**
-   * PATCHED VERSION OF SUPER CONSTRUCTOR
+   * invoked by reflection
    */
-  public IdeaJHelp(HelpSet hs){
-    super(new DefaultHelpModel(hs));
+  public static ComponentUI createUI(JComponent x) {
+    return new IdeaHelpContentViewUI((JHelpContentViewer)x);
+  }
 
-    navigators=new Vector();
-    navDisplayed=true;
-
-    // HERE -- need to do something about doc title changes....
-
-    this.contentViewer=new IdeaJHelpContentViewer(helpModel);
-
-    setModel(helpModel);
-    if(helpModel!=null){
-      setupNavigators();
-    }
-
-    updateUI();
+  public IdeaHelpContentViewUI(JHelpContentViewer contentViewer) {
+    super(contentViewer);
   }
 
   @Override
-  public void paint(Graphics g) {
+  protected void linkActivated(URL u) {
+    String url = u.toExternalForm();
+    if (url.startsWith("http") || url.startsWith("ftp")) {
+      BrowserUtil.browse(url);
+    }
+    else {
+      super.linkActivated(u);
+    }
+  }
+
+  @Override
+  public void paint(Graphics g, JComponent c) {
     GraphicsUtil.setupAntialiasing(g);
-    super.paint(g);
+    super.paint(g, c);
   }
 }
