@@ -21,6 +21,6 @@ package consulo.ui;
  */
 public class ValueGroups {
   public static ValueGroup<Boolean> boolGroup() {
-    return _UIInternals.get()._ValueGroups_boolGroup();
+    return UIInternal.get()._ValueGroups_boolGroup();
   }
 }

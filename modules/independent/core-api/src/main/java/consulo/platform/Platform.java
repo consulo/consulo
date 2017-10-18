@@ -59,7 +59,7 @@ public interface Platform {
 
   @NotNull
   static Platform current() {
-    return _PlatformInternal.current();
+    return PlatformInternal.current();
   }
 
   @NotNull

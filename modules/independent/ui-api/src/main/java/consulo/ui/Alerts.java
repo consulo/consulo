@@ -24,16 +24,16 @@ import org.jetbrains.annotations.NotNull;
 public class Alerts {
   @NotNull
   public static AlertBuilder info() {
-    return _UIInternals.get()._Alerts_builder();
+    return UIInternal.get()._Alerts_builder();
   }
 
   @NotNull
   public static AlertBuilder error() {
-    return _UIInternals.get()._Alerts_builder();
+    return UIInternal.get()._Alerts_builder();
   }
 
   @NotNull
   public static AlertBuilder warning() {
-    return _UIInternals.get()._Alerts_builder();
+    return UIInternal.get()._Alerts_builder();
   }
 }

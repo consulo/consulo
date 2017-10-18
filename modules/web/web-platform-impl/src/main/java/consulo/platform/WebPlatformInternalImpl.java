@@ -15,38 +15,18 @@
  */
 package consulo.platform;
 
-import com.intellij.util.ReflectionUtil;
+import consulo.annotations.Internal;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 15-Sep-17
  */
-abstract class _PlatformInternal {
-  private static Platform ourPlatform;
-
+@Internal
+public class WebPlatformInternalImpl extends PlatformInternal {
   @NotNull
-  static Platform current() {
-    if (ourPlatform == null) {
-      Platform platform = initialize();
-      ourPlatform = platform;
-      return platform;
-    }
-    return ourPlatform;
+  @Override
+  Platform build() {
+    return new WebPlatformImpl();
   }
-
-  @NotNull
-  static Platform initialize() {
-    try {
-      Class<?> clazz = Class.forName(_PlatformInternal.class.getName() + "Impl");
-      _PlatformInternal o = (_PlatformInternal)ReflectionUtil.newInstance(clazz);
-      return o.build();
-    }
-    catch (Exception e) {
-      throw new Error(e);
-    }
-  }
-
-  @NotNull
-  abstract Platform build();
 }

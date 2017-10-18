@@ -20,6 +20,7 @@ import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
 import consulo.ui.model.ListModel;
 import consulo.ui.style.StyleManager;
+import consulo.util.ServiceLoaderUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
@@ -29,26 +30,12 @@ import java.net.URL;
  * @since 09-Jun-16
  */
 @Internal
-public abstract class _UIInternals {
-  public static _UIInternals get() {
-    return Holder.ourInstance;
-  }
+public abstract class UIInternal {
+  private static UIInternal ourInstance = ServiceLoaderUtil.loadSingleOrError(UIInternal.class);
 
-  private static class Holder {
-    public static _UIInternals ourInstance = get();
-
-    private static _UIInternals get() {
-      _UIInternals bindingInternal;
-
-      try {
-        Class<?> bindingClass = Class.forName(_UIInternals.class.getName() + "Impl");
-        bindingInternal = (_UIInternals)bindingClass.newInstance();
-      }
-      catch (Exception e) {
-        throw new Error("Fail to init ui binding", e);
-      }
-      return bindingInternal;
-    }
+  @NotNull
+  public static UIInternal get() {
+    return ourInstance;
   }
 
   abstract CheckBox _Components_checkBox(@NotNull String text, boolean selected);

@@ -24,6 +24,6 @@ import org.jetbrains.annotations.NotNull;
 public class Windows {
   @NotNull
   public static Window modalWindow(@NotNull String title) {
-    return _UIInternals.get()._Windows_modalWindow(title);
+    return UIInternal.get()._Windows_modalWindow(title);
   }
 }

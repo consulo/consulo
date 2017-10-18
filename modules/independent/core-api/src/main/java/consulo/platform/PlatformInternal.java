@@ -15,16 +15,24 @@
  */
 package consulo.platform;
 
+import consulo.annotations.Internal;
+import consulo.util.ServiceLoaderUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 15-Sep-17
  */
-class _PlatformInternalImpl extends _PlatformInternal {
+@Internal
+public abstract class PlatformInternal {
+  private static final PlatformInternal ourPlatformInternal = ServiceLoaderUtil.loadSingleOrError(PlatformInternal.class);
+  private static final Platform ourCurrentPlatform = ourPlatformInternal.build();
+
   @NotNull
-  @Override
-  Platform build() {
-    return new WebPlatformImpl();
+  static Platform current() {
+    return ourCurrentPlatform;
   }
+
+  @NotNull
+  abstract Platform build();
 }

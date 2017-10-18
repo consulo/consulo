@@ -26,7 +26,7 @@ public interface UIAccess {
    * @return if current thread can access to ui write mode
    */
   static boolean isUIThread() {
-    return _UIInternals.get()._UIAccess_isUIThread();
+    return UIInternal.get()._UIAccess_isUIThread();
   }
 
   /**
@@ -39,7 +39,7 @@ public interface UIAccess {
   static UIAccess get() {
     assertIsUIThread();
 
-    return _UIInternals.get()._UIAccess_get();
+    return UIInternal.get()._UIAccess_get();
   }
 
   @RequiredUIAccess

@@ -18,13 +18,12 @@ package com.intellij.openapi.util;
 import com.intellij.util.Function;
 import consulo.annotations.DeprecationInfo;
 import consulo.util.KeyRegistry;
+import consulo.util.ServiceLoaderUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.ServiceLoader;
 
 /**
  * Provides type-safe access to data.
@@ -34,17 +33,7 @@ import java.util.ServiceLoader;
  */
 @SuppressWarnings({"EqualsWhichDoesntCheckParameterClass"})
 public class Key<T> {
-  @NotNull
-  static KeyRegistry locateRegistry() {
-    ServiceLoader<KeyRegistry> serviceLoader = ServiceLoader.load(KeyRegistry.class, Key.class.getClassLoader());
-    Iterator<KeyRegistry> iterator = serviceLoader.iterator();
-    if (iterator.hasNext()) {
-      return iterator.next();
-    }
-    throw new Error("Unable to find 'consulo.util.KeyRegistry' implementation");
-  }
-
-  private static final KeyRegistry ourRegistry = locateRegistry();
+  private static final KeyRegistry ourRegistry = ServiceLoaderUtil.loadSingleOrError(KeyRegistry.class);
 
   private final String myName; // for debug purposes only
   private final int myIndex;

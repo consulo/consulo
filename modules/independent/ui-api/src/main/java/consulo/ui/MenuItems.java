@@ -24,16 +24,16 @@ import org.jetbrains.annotations.NotNull;
 public class MenuItems {
   @NotNull
   public static MenuItem item(@NotNull String text) {
-    return _UIInternals.get()._MenuItems_item(text);
+    return UIInternal.get()._MenuItems_item(text);
   }
 
   @NotNull
   public static MenuBar menuBar() {
-    return _UIInternals.get()._MenuItems_menuBar();
+    return UIInternal.get()._MenuItems_menuBar();
   }
 
   @NotNull
   public static Menu menu(@NotNull String text) {
-    return _UIInternals.get()._MenuItems_menu(text);
+    return UIInternal.get()._MenuItems_menu(text);
   }
 }

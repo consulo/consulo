@@ -16,7 +16,7 @@
 package consulo.ui.style;
 
 import consulo.annotations.Immutable;
-import consulo.ui._UIInternals;
+import consulo.ui.UIInternal;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
 public interface StyleManager {
   @NotNull
   static StyleManager get() {
-    return _UIInternals.get()._StyleManager_get();
+    return UIInternal.get()._StyleManager_get();
   }
 
   @NotNull

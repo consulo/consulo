@@ -15,14 +15,15 @@
  */
 package consulo.platform;
 
+import consulo.annotations.Internal;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 15-Sep-17
  */
-@SuppressWarnings("unused")
-class _PlatformInternalImpl extends _PlatformInternal {
+@Internal
+public class DesktopPlatformInternalImpl extends PlatformInternal {
   @NotNull
   @Override
   Platform build() {

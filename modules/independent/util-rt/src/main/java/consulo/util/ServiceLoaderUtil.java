@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.image;
+package consulo.util;
 
-import consulo.ui.UIInternal;
 import org.jetbrains.annotations.NotNull;
 
-import java.net.URL;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 
 /**
  * @author VISTALL
- * @since 13-Jun-16
+ * @since 19-Oct-17
  */
-public class Images {
+public class ServiceLoaderUtil {
   @NotNull
-  public static Image fromURL(@NotNull URL url) {
-    return UIInternal.get()._Images_image(url);
-  }
-
-  @NotNull
-  public static FoldedImage fold(@NotNull Image... images) {
-    if(images.length == 0) {
-      throw new IllegalArgumentException("empty array");
+  public static <T> T loadSingleOrError(@NotNull Class<T> clazz) {
+    ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz, clazz.getClassLoader());
+    Iterator<T> iterator = serviceLoader.iterator();
+    if (iterator.hasNext()) {
+      return iterator.next();
     }
-    return UIInternal.get()._Images_foldedImage(images);
+    throw new Error("Unable to find '" + clazz.getName() + "' implementation");
   }
 }

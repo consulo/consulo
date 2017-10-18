@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import com.intellij.openapi.util.IconLoader;
+import consulo.annotations.Internal;
 import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
 import consulo.ui.internal.*;
@@ -32,7 +33,8 @@ import java.net.URL;
  * @author VISTALL
  * @since 09-Jun-16
  */
-class _UIInternalsImpl extends _UIInternals {
+@Internal
+public class DesktopUIInternalImpl extends UIInternal {
   static {
     IconLoader.activate(); // TODO [VISTALL] hack until we not start Consulo app
   }
