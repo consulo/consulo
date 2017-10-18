@@ -115,7 +115,7 @@ public class GwtToolWindowPanel extends VerticalPanel {
     myRootPanel.setWidget(GwtUIUtil.fillAndReturn(new GwtEditorImpl()));
   }
 
-  public void showOrHide(DockLayoutState.Constraint position, GwtInternalDecorator decorator, GwtToolWindowStripeButton button) {
+  /*public void showOrHide(DockLayoutState.Constraint position, GwtInternalDecorator decorator, GwtToolWindowStripeButton button) {
     boolean isActive = !button.isSelected();
 
     button.setSelected(isActive);
@@ -139,7 +139,7 @@ public class GwtToolWindowPanel extends VerticalPanel {
         simplePanel.setWidget(null);
       }
     }
-  }
+  }*/
 
   private static void setAnywhereSize(CellPanel panel, Widget widget, String height, String width, String borderPosition) {
     widget.setHeight(height);

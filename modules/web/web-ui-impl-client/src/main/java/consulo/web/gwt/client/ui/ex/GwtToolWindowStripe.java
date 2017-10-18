@@ -15,21 +15,17 @@
  */
 package consulo.web.gwt.client.ui.ex;
 
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 12-Oct-17
  */
 public class GwtToolWindowStripe extends SimplePanel {
-  private final Map<GwtToolWindowStripeButton, GwtInternalDecorator> myInternalDecorators = new HashMap<>();
   private final List<GwtToolWindowStripeButton> myButtons = new ArrayList<>();
   private DockLayoutState.Constraint myPosition;
 
@@ -40,7 +36,6 @@ public class GwtToolWindowStripe extends SimplePanel {
 
   public void assign(DockLayoutState.Constraint position, GwtToolWindowPanel toolWindowPanel) {
     myToolWindowPanel = toolWindowPanel;
-    myInternalDecorators.clear();
     myButtons.clear();
     myPosition = position;
 
@@ -59,7 +54,6 @@ public class GwtToolWindowStripe extends SimplePanel {
   }
 
   public void removeAll() {
-    myInternalDecorators.clear();
     myButtons.clear();
 
     getWidget().removeAll();
@@ -79,7 +73,6 @@ public class GwtToolWindowStripe extends SimplePanel {
 
     inner.add(button, false);
 
-    myInternalDecorators.put(button, new GwtInternalDecorator(new Label("test")));
 
     if (myPosition == DockLayoutState.Constraint.LEFT || myPosition == DockLayoutState.Constraint.RIGHT) {
       button.setWidth("22px");
@@ -90,15 +83,6 @@ public class GwtToolWindowStripe extends SimplePanel {
     }
 
     myToolWindowPanel.doLayout();
-  }
-
-  public void showOrHide(GwtToolWindowStripeButton button) {
-    GwtInternalDecorator internalDecorator = myInternalDecorators.get(button);
-    if (internalDecorator == null || myToolWindowPanel == null) {
-      return;
-    }
-
-    myToolWindowPanel.showOrHide(myPosition, internalDecorator, button);
   }
 
   public DockLayoutState.Constraint getPosition() {
