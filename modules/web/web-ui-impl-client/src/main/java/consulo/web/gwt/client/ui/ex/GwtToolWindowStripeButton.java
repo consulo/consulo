@@ -35,6 +35,7 @@ import java.util.List;
  */
 public class GwtToolWindowStripeButton extends SimplePanel {
   private boolean mySelected;
+  private boolean myFocus;
   private Boolean myVerticalValue;
 
   private Runnable myClickListener;
@@ -53,11 +54,13 @@ public class GwtToolWindowStripeButton extends SimplePanel {
     sinkEvents(Event.ONCLICK | Event.ONFOCUS);
 
     addDomHandler(event -> {
-      setBackgroundColor(true);
+      myFocus = true;
+      updateBackgroundColor();
     }, MouseOverEvent.getType());
 
     addDomHandler(event -> {
-      setBackgroundColor(false);
+      myFocus = false;
+      updateBackgroundColor();
     }, MouseOutEvent.getType());
 
     addDomHandler(event -> {
@@ -71,13 +74,13 @@ public class GwtToolWindowStripeButton extends SimplePanel {
     }
   }
 
-  private void setBackgroundColor(boolean focus) {
+  private void updateBackgroundColor() {
     if (mySelected) {
       getElement().getStyle().setBackgroundColor("rgba(85,85,85, 0.33333334)");
       return;
     }
 
-    if(focus) {
+    if (myFocus) {
       getElement().getStyle().setBackgroundColor("rgba(85,85,85, 0.15686275)");
       return;
     }
@@ -160,7 +163,7 @@ public class GwtToolWindowStripeButton extends SimplePanel {
   public void setSelected(boolean value) {
     mySelected = value;
 
-    setBackgroundColor(false);
+    updateBackgroundColor();
   }
 
   public boolean isSelected() {
