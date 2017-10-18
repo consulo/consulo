@@ -174,18 +174,34 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
   @NotNull
   @Override
   public FinalizableCommand createRemoveButtonCmd(@NotNull String id, @NotNull Runnable finishCallBack) {
-    return null;
+    return new FinalizableCommand(finishCallBack) {
+      @Override
+      public void run() {
+
+      }
+    };
   }
 
   @NotNull
   @Override
   public FinalizableCommand createRemoveDecoratorCmd(@NotNull String id, boolean dirtyMode, @NotNull Runnable finishCallBack) {
-    return null;
+    return new FinalizableCommand(finishCallBack) {
+      @Override
+      public void run() {
+
+      }
+    };
   }
 
+  @NotNull
   @Override
   public FinalizableCommand createAddDecoratorCmd(@NotNull ToolWindowInternalDecorator decorator, @NotNull WindowInfoImpl info, boolean dirtyMode, @NotNull Runnable finishCallBack) {
-    return null;
+    return new FinalizableCommand(finishCallBack) {
+      @Override
+      public void run() {
+
+      }
+    };
   }
 
   @NotNull

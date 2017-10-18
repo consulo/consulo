@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface ToolWindow extends BusyObject {
-  Key<Boolean> SHOW_CONTENT_ICON = new Key<>("ContentIcon");
+  Key<Boolean> SHOW_CONTENT_ICON = Key.create("ContentIcon");
 
   @NotNull
   String getId();
@@ -192,16 +192,16 @@ public interface ToolWindow extends BusyObject {
   ActionCallback getActivation();
 
   @NotNull
-  default Component getComponentUI() {
+  default Component getUIComponent() {
     throw new AbstractMethodError();
   }
 
   @Nullable
   @RequiredUIAccess
-  Image getIconUI();
+  Image getUIIcon();
 
   @RequiredUIAccess
-  void setIconUI(@Nullable Image image);
+  void setUIIcon(@Nullable Image image);
 
   //TODO [VISTALL] awt & swing dependency
 

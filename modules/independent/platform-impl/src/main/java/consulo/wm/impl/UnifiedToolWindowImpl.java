@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.wm.impl;
+package consulo.wm.impl;
 
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
-import consulo.wm.impl.ToolWindowBase;
-import consulo.wm.impl.ToolWindowManagerBase;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,9 +28,11 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class WebToolWindowImpl extends ToolWindowBase {
+public class UnifiedToolWindowImpl extends ToolWindowBase {
+  private Component myComponent;
 
-  public WebToolWindowImpl(ToolWindowManagerBase toolWindowManager, String id, boolean canCloseContent, @Nullable Object component) {
+  @RequiredUIAccess
+  public UnifiedToolWindowImpl(ToolWindowManagerBase toolWindowManager, String id, boolean canCloseContent, @Nullable Object component) {
     super(toolWindowManager, id, canCloseContent, component);
   }
 
@@ -39,19 +41,25 @@ public class WebToolWindowImpl extends ToolWindowBase {
     return ActionCallback.DONE;
   }
 
+  @RequiredUIAccess
   @Override
   protected void init(boolean canCloseContent, @Nullable Object component) {
     final ContentFactory contentFactory = ContentFactory.getInstance();
-    ContentManager contentManager = myContentManager = contentFactory.createContentManager(new WebToolWindowContentUI(), canCloseContent, myToolWindowManager.getProject());
+    ContentManager contentManager = myContentManager = contentFactory.createContentManager(new UnifiedToolWindowContentUI(this), canCloseContent, myToolWindowManager.getProject());
 
     if (component != null) {
-      final Content content = contentFactory.createUIContent(null, "", false);
+      final Content content = contentFactory.createUIContent((Component)component, "", false);
       contentManager.addContent(content);
       contentManager.setSelectedContent(content, false);
     }
 
-    // myComponent = contentManager.getComponent();
+    myComponent = contentManager.getUIComponent();
+  }
 
+  @NotNull
+  @Override
+  public Component getUIComponent() {
+    return myComponent;
   }
 
   @Override

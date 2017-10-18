@@ -20,4 +20,7 @@ package consulo.ui;
  * @since 09-Jun-16
  */
 public interface Layout extends Component {
+  @RequiredUIAccess
+  default void clear() {
+  }
 }

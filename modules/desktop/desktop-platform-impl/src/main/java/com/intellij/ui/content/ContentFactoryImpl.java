@@ -17,28 +17,20 @@ package com.intellij.ui.content;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.content.impl.ContentImpl;
-import com.intellij.ui.content.impl.ContentManagerImpl;
-import consulo.ui.Component;
+import com.intellij.ui.content.impl.DesktopContentManagerImpl;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ContentFactoryImpl implements ContentFactory {
   @NotNull
   @Override
   public ContentManager createContentManager(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project) {
-    return new ContentManagerImpl(contentUI, canCloseContents, project);
+    return new DesktopContentManagerImpl(contentUI, canCloseContents, project);
   }
 
   @NotNull
   @Override
   public ContentManager createContentManager(boolean canCloseContents, @NotNull Project project) {
     return createContentManager(new TabbedPaneContentUI(), canCloseContents, project);
-  }
-
-  @NotNull
-  @Override
-  public Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
-    return null;
   }
 
   // TODO [VISTALL] AWT & Swing dependency

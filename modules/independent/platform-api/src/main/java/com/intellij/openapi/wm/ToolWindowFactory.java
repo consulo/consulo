@@ -59,4 +59,8 @@ public interface ToolWindowFactory {
   default boolean shouldBeAvailable(@NotNull Project project) {
     return true;
   }
+
+  default boolean isUnified() {
+    return false;
+  }
 }

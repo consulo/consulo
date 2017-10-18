@@ -25,6 +25,7 @@ import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +36,15 @@ import java.util.List;
  */
 public class WGwtDockLayoutImpl extends AbstractComponentContainer implements DockLayout, VaadinWrapper {
   private final List<com.vaadin.ui.Component> myChildren = new LinkedList<>();
+
+  @RequiredUIAccess
+  @Override
+  public void clear() {
+    for (com.vaadin.ui.Component child : new ArrayList<>(myChildren)) {
+      removeComponent(child);
+    }
+    markAsDirty();
+  }
 
   @Override
   protected DockLayoutState getState() {

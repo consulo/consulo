@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.ui.content.impl;
+package consulo.wm.impl;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.content.*;
-import com.intellij.ui.content.impl.ContentImpl;
-import com.intellij.ui.content.impl.ContentManagerImpl;
 import consulo.ui.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,11 +25,11 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 14-Oct-17
  */
-public class WebContentFactoryImpl implements ContentFactory {
+public class UnifiedContentFactoryImpl implements ContentFactory {
   @NotNull
   @Override
-  public ContentManagerImpl createContentManager(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project) {
-    return new ContentManagerImpl(contentUI, canCloseContents, project);
+  public ContentManager createContentManager(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project) {
+    return new UnifiedContentManager(contentUI, canCloseContents, project);
   }
 
   @NotNull
@@ -43,15 +41,6 @@ public class WebContentFactoryImpl implements ContentFactory {
   @NotNull
   @Override
   public Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
-    return null;
+    return new UnifiedContentImpl(component, displayName, isLockable);
   }
-
-  // TODO [VISTALL] AWT & Swing dependency
-  // region AWT & Swing dependency
-  @NotNull
-  @Override
-  public ContentImpl createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
-    return new ContentImpl(component, displayName, isLockable);
-  }
-  // endregion
 }

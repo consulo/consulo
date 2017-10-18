@@ -15,29 +15,23 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.ide.DataManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
-import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.content.*;
-import com.intellij.ui.content.impl.ContentImpl;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
-import com.intellij.util.ui.UIUtil;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.UIAccess;
+import consulo.wm.ContentEx;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -51,23 +45,21 @@ import java.util.Set;
  * <p>
  * Extracted base part of IDEA com.intellij.ui.content.impl.ContentManagerImpl
  */
-public class ContentManagerBase implements ContentManager, PropertyChangeListener, Disposable.Parent {
+public abstract class ContentManagerBase implements ContentManager, PropertyChangeListener, Disposable.Parent {
   private static final Logger LOG = Logger.getInstance(ContentManagerBase.class);
 
-  private ContentUI myUI;
-  private final List<Content> myContents = new ArrayList<>();
+  protected ContentUI myUI;
+  protected final List<Content> myContents = new ArrayList<>();
   private final EventDispatcher<ContentManagerListener> myDispatcher = EventDispatcher.create(ContentManagerListener.class);
   private final List<Content> mySelection = new ArrayList<>();
   private final boolean myCanCloseContents;
-
-  private MyNonOpaquePanel myComponent;
 
   private final Set<Content> myContentWithChangedComponent = new HashSet<>();
 
   private boolean myDisposed;
   private final Project myProject;
 
-  private final List<DataProvider> dataProviders = new SmartList<>();
+  protected final List<DataProvider> myDataProviders = new SmartList<>();
   private List<Content> mySelectionHistory = new ArrayList<>();
 
   /**
@@ -91,54 +83,11 @@ public class ContentManagerBase implements ContentManager, PropertyChangeListene
 
   @NotNull
   @Override
-  public JComponent getComponent() {
-    if (myComponent == null) {
-      myComponent = new MyNonOpaquePanel();
-
-      NonOpaquePanel contentComponent = new NonOpaquePanel();
-      contentComponent.setContent(myUI.getComponent());
-      contentComponent.setFocusCycleRoot(true);
-
-      myComponent.add(contentComponent, BorderLayout.CENTER);
-    }
-    return myComponent;
-  }
-
-  @NotNull
-  @Override
   public ActionCallback getReady(@NotNull Object requestor) {
     Content selected = getSelectedContent();
     if (selected == null) return new ActionCallback.Done();
     BusyObject busyObject = selected.getBusyObject();
     return busyObject != null ? busyObject.getReady(requestor) : new ActionCallback.Done();
-  }
-
-  private class MyNonOpaquePanel extends NonOpaquePanel implements DataProvider {
-    public MyNonOpaquePanel() {
-      super(new BorderLayout());
-    }
-
-    @Override
-    @Nullable
-    public Object getData(@NotNull Key<?> dataId) {
-      if (PlatformDataKeys.CONTENT_MANAGER == dataId || PlatformDataKeys.NONEMPTY_CONTENT_MANAGER == dataId && getContentCount() > 1) {
-        return ContentManagerBase.this;
-      }
-
-      for (DataProvider dataProvider : dataProviders) {
-        Object data = dataProvider.getData(dataId);
-        if (data != null) {
-          return data;
-        }
-      }
-
-      if (myUI instanceof DataProvider) {
-        return ((DataProvider)myUI).getData(dataId);
-      }
-
-      DataProvider provider = DataManager.getDataProvider(this);
-      return provider == null ? null : provider.getData(dataId);
-    }
   }
 
   @Override
@@ -156,15 +105,16 @@ public class ContentManagerBase implements ContentManager, PropertyChangeListene
     doAddContent(content, -1);
   }
 
+  @RequiredUIAccess
   private void doAddContent(@NotNull final Content content, final int index) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     if (myContents.contains(content)) {
       myContents.remove(content);
       myContents.add(index == -1 ? myContents.size() : index, content);
       return;
     }
 
-    ((ContentImpl)content).setManager(this);
+    ((ContentEx)content).setManager(this);
     final int insertIndex = index == -1 ? myContents.size() : index;
     myContents.add(insertIndex, content);
     content.addPropertyChangeListener(this);
@@ -210,7 +160,7 @@ public class ContentManagerBase implements ContentManager, PropertyChangeListene
 
   @NotNull
   private ActionCallback removeContent(@NotNull Content content, boolean trackSelection, boolean dispose) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     int indexToBeRemoved = getIndexOfContent(content);
     if (indexToBeRemoved == -1) return ActionCallback.REJECTED;
 
@@ -249,7 +199,7 @@ public class ContentManagerBase implements ContentManager, PropertyChangeListene
       content.removePropertyChangeListener(this);
 
       fireContentRemoved(content, indexToBeRemoved);
-      ((ContentImpl)content).setManager(null);
+      ((ContentEx)content).setManager(null);
 
 
       if (dispose) {
@@ -323,7 +273,7 @@ public class ContentManagerBase implements ContentManager, PropertyChangeListene
   }
 
   @Override
-  public Content getContent(JComponent component) {
+  public Content getContent(consulo.ui.Component component) {
     Content[] contents = getContents();
     for (Content content : contents) {
       if (Comparing.equal(component, content.getComponent())) {
@@ -332,6 +282,7 @@ public class ContentManagerBase implements ContentManager, PropertyChangeListene
     }
     return null;
   }
+
 
   @Override
   public int getIndexOfContent(Content content) {
@@ -493,7 +444,7 @@ public class ContentManagerBase implements ContentManager, PropertyChangeListene
     boolean enabledFocus = getFocusManager().isFocusTransferEnabled();
     if (focused || requestFocus) {
       if (enabledFocus) {
-        return getFocusManager().requestFocus(myComponent, true).doWhenProcessed(() -> selection.run().notify(result));
+        return requestFocusForComponent().doWhenProcessed(() -> selection.run().notify(result));
       }
       return selection.run().notify(result);
     }
@@ -502,17 +453,10 @@ public class ContentManagerBase implements ContentManager, PropertyChangeListene
     }
   }
 
-  private boolean isSelectionHoldsFocus() {
-    boolean focused = false;
-    final Content[] selection = getSelectedContents();
-    for (Content each : selection) {
-      if (UIUtil.isFocusAncestor(each.getComponent())) {
-        focused = true;
-        break;
-      }
-    }
-    return focused;
-  }
+  @NotNull
+  protected abstract ActionCallback requestFocusForComponent();
+
+  protected abstract boolean isSelectionHoldsFocus();
 
   @NotNull
   @Override
@@ -589,50 +533,13 @@ public class ContentManagerBase implements ContentManager, PropertyChangeListene
     return true;
   }
 
-  @NotNull
-  @Override
-  public ActionCallback requestFocus(final Content content, final boolean forced) {
-    final Content toSelect = content == null ? getSelectedContent() : content;
-    if (toSelect == null) return new ActionCallback.Rejected();
-    assert myContents.contains(toSelect);
-
-
-    return getFocusManager().requestFocus(new FocusCommand(content, toSelect.getPreferredFocusableComponent()) {
-      @NotNull
-      @Override
-      public ActionCallback run() {
-        return doRequestFocus(toSelect);
-      }
-    }, forced);
-  }
-
-  private IdeFocusManager getFocusManager() {
+  protected IdeFocusManager getFocusManager() {
     return IdeFocusManager.getInstance(myProject);
-  }
-
-  private static ActionCallback doRequestFocus(final Content toSelect) {
-    JComponent toFocus = computeWillFocusComponent(toSelect);
-
-    if (toFocus != null) {
-      IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(toFocus);
-    }
-
-    return ActionCallback.DONE;
-  }
-
-  private static JComponent computeWillFocusComponent(Content toSelect) {
-    JComponent toFocus = toSelect.getPreferredFocusableComponent();
-    if (toFocus != null) {
-      toFocus = IdeFocusTraversalPolicy.getPreferredFocusedComponent(toFocus);
-    }
-
-    if (toFocus == null) toFocus = toSelect.getPreferredFocusableComponent();
-    return toFocus;
   }
 
   @Override
   public void addDataProvider(@NotNull final DataProvider provider) {
-    dataProviders.add(provider);
+    myDataProviders.add(provider);
   }
 
   @Override
@@ -656,7 +563,7 @@ public class ContentManagerBase implements ContentManager, PropertyChangeListene
     myContentWithChangedComponent.clear();
     myUI = null;
     myDispatcher.getListeners().clear();
-    dataProviders.clear();
+    myDataProviders.clear();
   }
 
   @Override

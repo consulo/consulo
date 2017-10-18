@@ -20,29 +20,37 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BusyObject;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 
 public interface ContentManager extends Disposable, BusyObject {
   boolean canCloseContents();
 
   void addContent(@NotNull Content content);
+
   void addContent(@NotNull Content content, final int order);
+
   void addContent(@NotNull Content content, Object constraints);
 
   boolean removeContent(@NotNull Content content, final boolean dispose);
+
   @NotNull
   ActionCallback removeContent(@NotNull Content content, final boolean dispose, boolean trackFocus, boolean forcedFocus);
 
   void setSelectedContent(@NotNull Content content);
+
   @NotNull
   ActionCallback setSelectedContentCB(@NotNull Content content);
+
   void setSelectedContent(@NotNull Content content, boolean requestFocus);
+
   @NotNull
   ActionCallback setSelectedContentCB(@NotNull Content content, boolean requestFocus);
+
   void setSelectedContent(@NotNull Content content, boolean requestFocus, boolean forcedFocus);
 
   @NotNull
@@ -59,7 +67,6 @@ public interface ContentManager extends Disposable, BusyObject {
   @NotNull
   Content[] getSelectedContents();
 
-
   void removeAllContents(final boolean dispose);
 
   int getContentCount();
@@ -72,8 +79,6 @@ public interface ContentManager extends Disposable, BusyObject {
 
   @Nullable
   Content getContent(int index);
-
-  Content getContent(JComponent component);
 
   int getIndexOfContent(Content content);
 
@@ -105,7 +110,7 @@ public interface ContentManager extends Disposable, BusyObject {
   @NotNull
   String getNextContentActionName();
 
-  List<AnAction> getAdditionalPopupActions(@NotNull  Content content);
+  List<AnAction> getAdditionalPopupActions(@NotNull Content content);
 
   void removeFromSelection(@NotNull Content content);
 
@@ -125,10 +130,25 @@ public interface ContentManager extends Disposable, BusyObject {
 
   boolean isSingleSelection();
 
-  // TODO [VISTALL] awt & swing dependency 
+  default Content getContent(@NotNull Component component) {
+    throw new AbstractMethodError();
+  }
+
+  @NotNull
+  @RequiredUIAccess
+  default Component getUIComponent() {
+    throw new AbstractMethodError();
+  }
+
+  // TODO [VISTALL] awt & swing dependency
   // region awt & swing dependency
   @NotNull
-  JComponent getComponent();
+  default javax.swing.JComponent getComponent() {
+    throw new AbstractMethodError();
+  }
 
+  default Content getContent(javax.swing.JComponent component) {
+    throw new AbstractMethodError();
+  }
   // endregion
 }

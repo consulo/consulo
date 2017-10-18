@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.switcher;
+package consulo.wm;
 
-import javax.swing.*;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentManager;
+import org.jetbrains.annotations.Nullable;
 
-public interface QuickAccessProvider {
-  default JComponent getComponent() {
-    throw new AbstractMethodError();
-  }
-
-  default boolean isCycleRoot() {
-    return false;
-  }
+/**
+ * @author VISTALL
+ * @since 18-Oct-17
+ */
+public interface ContentEx extends Content {
+  void setManager(@Nullable ContentManager contentManager);
 }

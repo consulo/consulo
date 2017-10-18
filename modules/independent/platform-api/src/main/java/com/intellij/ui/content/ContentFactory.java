@@ -38,14 +38,18 @@ public interface ContentFactory {
    * do not rename due it will be conflicted with deprecated method
    */
   @NotNull
-  Content createUIContent(@Nullable Component component, String displayName, boolean isLockable);
+  default Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
+    throw new AbstractMethodError();
+  }
 
   // TODO [VISTALL] AWT & Swing dependency
   // region AWT & Swing dependency
   @NotNull
   @Deprecated
   @DeprecationInfo("")
-  Content createContent(javax.swing.JComponent component, String displayName, boolean isLockable);
+  default Content createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
+    throw new AbstractMethodError();
+  }
   // endregion
 
   // region Deprecated staff

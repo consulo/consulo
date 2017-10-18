@@ -47,7 +47,7 @@ public class ServersToolWindow {
 
     myToolWindow = ToolWindowManager.getInstance(project).registerToolWindow(ID, false, ToolWindowAnchor.BOTTOM);
 
-    myToolWindow.setIconUI(RemoteServersIcons.ServersToolWindow);
+    myToolWindow.setUIIcon(RemoteServersIcons.ServersToolWindow);
 
     final ContentFactory contentFactory = ContentFactory.getInstance();
     final ServersToolWindowContent serversContent = new ServersToolWindowContent(project);

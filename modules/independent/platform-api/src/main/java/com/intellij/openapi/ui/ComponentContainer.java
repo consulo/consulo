@@ -17,13 +17,33 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.openapi.Disposable;
+import consulo.ui.Component;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 public interface ComponentContainer extends Disposable {
+  @Nullable
+  default Component getUIComponent() {
+    throw new AbstractMethodError();
+  }
 
-  JComponent getComponent();
-  JComponent getPreferredFocusableComponent();
+  @Nullable
+  default Component getUIPreferredFocusableComponent() {
+    throw new AbstractMethodError();
+  }
 
+  //TODO [VISTALL] AWT & Swing dependency
 
+  // region AWT & Swing dependency
+  @Deprecated
+  default JComponent getComponent() {
+    throw new AbstractMethodError();
+  }
+
+  @Deprecated
+  default JComponent getPreferredFocusableComponent() {
+    throw new AbstractMethodError();
+  }
+  // endregion
 }

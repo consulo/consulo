@@ -40,7 +40,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
   public UsageViewManagerImpl(final Project project, final ToolWindowManager toolWindowManager) {
     ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.FIND, true, ToolWindowAnchor.BOTTOM, project, true);
     toolWindow.setToHideOnEmptyContent(true);
-    toolWindow.setIconUI(AllIcons.Toolwindows.ToolWindowFind);
+    toolWindow.setUIIcon(AllIcons.Toolwindows.ToolWindowFind);
     myFindContentManager = toolWindow.getContentManager();
     myFindContentManager.addContentManagerListener(new ContentManagerAdapter() {
       @Override

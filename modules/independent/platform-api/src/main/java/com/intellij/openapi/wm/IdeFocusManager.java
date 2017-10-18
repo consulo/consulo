@@ -189,6 +189,10 @@ public abstract class IdeFocusManager implements FocusRequestor {
    */
   public abstract void toFront(JComponent c);
 
+  public boolean isUnforcedRequestAllowed() {
+    return false;
+  }
+
   public static IdeFocusManager getInstance(@Nullable Project project) {
     if (project == null || project.isDisposed() || !project.isInitialized()) return getGlobalInstance();
 

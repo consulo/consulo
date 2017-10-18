@@ -1050,7 +1050,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         catch (Exception ignored) {
         }
       }
-      toolWindow.setIconUI(icon);
+      toolWindow.setUIIcon(icon);
     }
 
     WindowInfoImpl info = getInfo(bean.id);
@@ -1078,6 +1078,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
   @RequiredUIAccess
   protected abstract void doWhenFirstShown(Object component, Runnable runnable);
+
+  public boolean isUnified() {
+    return false;
+  }
 
   @NotNull
   @RequiredUIAccess

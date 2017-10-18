@@ -40,6 +40,7 @@ import consulo.ui.ex.WGwtToolWindowPanel;
 import consulo.ui.ex.WGwtToolWindowStripeButton;
 import consulo.web.application.WebApplication;
 import consulo.wm.impl.ToolWindowManagerBase;
+import consulo.wm.impl.UnifiedToolWindowImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -138,13 +139,18 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   @NotNull
   @Override
   protected ToolWindowEx createToolWindow(String id, boolean canCloseContent, @Nullable Object component) {
-    return new WebToolWindowImpl(this, id, canCloseContent, component);
+    return new UnifiedToolWindowImpl(this, id, canCloseContent, component);
   }
 
   @NotNull
   @Override
   protected ToolWindowInternalDecorator createInternalDecorator(Project project, @NotNull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
-    return new WebToolWindowInternalDecorator(project, info, (WebToolWindowImpl)toolWindow, dumbAware);
+    return new WebToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl)toolWindow, dumbAware);
+  }
+
+  @Override
+  public boolean isUnified() {
+    return true;
   }
 
   @Override

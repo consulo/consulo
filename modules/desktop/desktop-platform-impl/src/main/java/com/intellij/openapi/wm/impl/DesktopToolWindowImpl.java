@@ -26,6 +26,7 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,6 +54,7 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     super(toolWindowManager, id, canCloseContent, component);
   }
 
+  @RequiredUIAccess
   @Override
   protected void init(boolean canCloseContent, @Nullable Object component) {
     final ContentFactory contentFactory = ContentFactory.getInstance();

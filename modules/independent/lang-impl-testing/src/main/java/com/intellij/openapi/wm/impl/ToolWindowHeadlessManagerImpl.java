@@ -459,13 +459,13 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
     @RequiredUIAccess
     @Nullable
     @Override
-    public Image getIconUI() {
+    public Image getUIIcon() {
       return null;
     }
 
     @RequiredUIAccess
     @Override
-    public void setIconUI(@Nullable Image image) {
+    public void setUIIcon(@Nullable Image image) {
 
     }
 

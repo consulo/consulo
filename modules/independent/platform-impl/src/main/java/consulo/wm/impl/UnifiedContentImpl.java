@@ -1,6 +1,6 @@
-
 /*
  * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.content.impl;
+package consulo.wm.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.Disposable;
@@ -26,19 +26,19 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.content.AlertIcon;
 import com.intellij.ui.content.ContentManager;
+import consulo.ui.Component;
 import consulo.wm.ContentEx;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class ContentImpl extends UserDataHolderBase implements ContentEx {
+public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx {
   private String myDisplayName;
   private String myDescription;
-  private JComponent myComponent;
+  private consulo.ui.Component myComponent;
   private Icon myIcon;
   private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
   private ContentManager myManager = null;
@@ -58,47 +58,43 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   private JComponent myActionsContextComponent;
   private JComponent mySearchComponent;
 
-  private Computable<JComponent> myFocusRequest;
+  private Computable<Component> myFocusRequest;
   private BusyObject myBusyObject;
   private String mySeparator;
   private Icon myPopupIcon;
   private long myExecutionId;
 
-  public ContentImpl(JComponent component, String displayName, boolean isPinnable) {
+  public UnifiedContentImpl(consulo.ui.Component component, String displayName, boolean isPinnable) {
     myComponent = component;
     myDisplayName = displayName;
     myPinnable = isPinnable;
   }
 
+  @Nullable
   @Override
-  public JComponent getComponent() {
+  public consulo.ui.Component getUIComponent() {
     return myComponent;
   }
 
   @Override
-  public void setComponent(JComponent component) {
+  public void setUIComponent(Component component) {
     Component oldComponent = myComponent;
     myComponent = component;
     myChangeSupport.firePropertyChange(PROP_COMPONENT, oldComponent, myComponent);
   }
 
   @Override
-  public JComponent getPreferredFocusableComponent() {
+  public Component getUIPreferredFocusableComponent() {
     return myFocusRequest == null ? myComponent : myFocusRequest.compute();
   }
 
   @Override
-  public void setPreferredFocusableComponent(final JComponent c) {
-    setPreferredFocusedComponent(new Computable<JComponent>() {
-      @Override
-      public JComponent compute() {
-        return c;
-      }
-    });
+  public void setUIPreferredFocusableComponent(final Component c) {
+    setUIPreferredFocusedComponent(() -> c);
   }
 
   @Override
-  public void setPreferredFocusedComponent(final Computable<JComponent> computable) {
+  public void setUIPreferredFocusedComponent(final Computable<Component> computable) {
     myFocusRequest = computable;
   }
 
@@ -196,7 +192,6 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
     myChangeSupport.removePropertyChangeListener(l);
   }
 
-  @Override
   public void setManager(ContentManager manager) {
     myManager = manager;
   }
@@ -284,10 +279,8 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   @NonNls
   public String toString() {
     StringBuilder sb = new StringBuilder("Content name=").append(myDisplayName);
-    if (myIsLocked)
-      sb.append(", pinned");
-    if (myExecutionId != 0)
-      sb.append(", executionId=").append(myExecutionId);
+    if (myIsLocked) sb.append(", pinned");
+    if (myExecutionId != 0) sb.append(", executionId=").append(myExecutionId);
     return sb.toString();
   }
 

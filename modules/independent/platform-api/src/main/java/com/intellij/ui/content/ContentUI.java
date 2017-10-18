@@ -16,9 +16,9 @@
 package com.intellij.ui.content;
 
 import com.intellij.openapi.Disposable;
+import consulo.annotations.DeprecationInfo;
+import consulo.ui.Component;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 public interface ContentUI extends Disposable {
   void setManager(@NotNull ContentManager manager);
@@ -45,8 +45,17 @@ public interface ContentUI extends Disposable {
   @NotNull
   String getNextContentActionName();
 
+  @NotNull
+  default Component getUIComponent() {
+    throw new AbstractMethodError();
+  }
+
   // TODO [VISTALL] AWT & Swing dependency
   // region AWT & Swing dependency
-  JComponent getComponent();
+  @Deprecated
+  @DeprecationInfo("Use #getUIComponent")
+  default javax.swing.JComponent getComponent() {
+    throw new AbstractMethodError();
+  }
   // endregion
 }

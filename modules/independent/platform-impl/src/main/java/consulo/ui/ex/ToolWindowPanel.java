@@ -40,5 +40,6 @@ public interface ToolWindowPanel {
   @NotNull
   FinalizableCommand createRemoveDecoratorCmd(@NotNull String id, final boolean dirtyMode, @NotNull Runnable finishCallBack);
 
+  @NotNull
   FinalizableCommand createAddDecoratorCmd(@NotNull ToolWindowInternalDecorator decorator, @NotNull WindowInfoImpl info, final boolean dirtyMode, @NotNull Runnable finishCallBack);
 }

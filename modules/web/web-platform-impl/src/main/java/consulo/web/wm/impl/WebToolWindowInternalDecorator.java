@@ -24,6 +24,7 @@ import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.util.EventDispatcher;
 import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.wm.impl.UnifiedToolWindowImpl;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,10 +33,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class WebToolWindowInternalDecorator implements ToolWindowInternalDecorator {
   private final WindowInfoImpl myWindowInfo;
-  private final WebToolWindowImpl myToolWindow;
+  private final UnifiedToolWindowImpl myToolWindow;
   private final EventDispatcher<InternalDecoratorListener> myDispatcher = EventDispatcher.create(InternalDecoratorListener.class);
 
-  public WebToolWindowInternalDecorator(Project project, WindowInfoImpl windowInfo, WebToolWindowImpl toolWindow, boolean canWorkInDumbMode) {
+  public WebToolWindowInternalDecorator(Project project, WindowInfoImpl windowInfo, UnifiedToolWindowImpl toolWindow, boolean canWorkInDumbMode) {
     myWindowInfo = windowInfo;
     myToolWindow = toolWindow;
   }

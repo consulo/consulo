@@ -77,6 +77,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   private boolean myUseLastFocused = true;
 
+  @RequiredUIAccess
   protected ToolWindowBase(final ToolWindowManagerBase toolWindowManager, final String id, boolean canCloseContent, @Nullable Object component) {
     myToolWindowManager = toolWindowManager;
     myChangeSupport = new PropertyChangeSupport(this);
@@ -86,6 +87,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
     init(canCloseContent, component);
   }
 
+  @RequiredUIAccess
   protected abstract void init(boolean canCloseContent, @Nullable Object component);
 
   @Override
@@ -438,8 +440,22 @@ public abstract class ToolWindowBase implements ToolWindowEx {
       ToolWindowFactory contentFactory = myContentFactory;
       // clear it first to avoid SOE
       myContentFactory = null;
-      myContentManager.removeAllContents(false);
-      contentFactory.createToolWindowContent(myToolWindowManager.getProject(), this);
+
+      if(!myToolWindowManager.isUnified()) {
+        myContentManager.removeAllContents(false);
+        contentFactory.createToolWindowContent(myToolWindowManager.getProject(), this);
+      }
+      else {
+        if(contentFactory.isUnified()) {
+          myContentManager.removeAllContents(false);
+          contentFactory.createToolWindowContent(myToolWindowManager.getProject(), this);
+        }
+        else {
+          myContentFactory = null;
+          // nothing
+          // FIXME just leave initialize label
+        }
+      }
     }
   }
 
@@ -455,7 +471,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   @RequiredUIAccess
   @Override
-  public void setIconUI(@Nullable Image image) {
+  public void setUIIcon(@Nullable Image image) {
     UIAccess.assertIsUIThread();
     Object oldIcon = myIcon;
 
@@ -466,7 +482,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
   @RequiredUIAccess
   @Nullable
   @Override
-  public Image getIconUI() {
+  public Image getUIIcon() {
     UIAccess.assertIsUIThread();
     if (myIcon instanceof Image) {
       return (Image)myIcon;
