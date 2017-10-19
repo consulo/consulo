@@ -18,11 +18,11 @@ package com.intellij.openapi.wm;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.BalloonLayout;
+import consulo.ui.Rectangle2D;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 
 public interface IdeFrame {
@@ -30,7 +30,8 @@ public interface IdeFrame {
 
   StatusBar getStatusBar();
 
-  Rectangle suggestChildFrameBounds();
+  @Nullable
+  Rectangle2D suggestChildFrameBounds();
 
   @Nullable
   Project getProject();
@@ -41,7 +42,9 @@ public interface IdeFrame {
 
   IdeRootPaneNorthExtension getNorthExtension(String key);
 
-  JComponent getComponent();
+  default JComponent getComponent() {
+    throw new AbstractMethodError();
+  }
 
   @NotNull
   default consulo.ui.Window getWindow() {

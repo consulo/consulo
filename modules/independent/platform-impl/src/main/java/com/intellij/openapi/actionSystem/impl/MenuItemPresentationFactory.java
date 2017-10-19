@@ -33,6 +33,7 @@ public class MenuItemPresentationFactory extends PresentationFactory {
     myForceHide = forceHide;
   }
 
+  @Override
   protected void processPresentation(Presentation presentation) {
     if (!UISettings.getInstance().SHOW_ICONS_IN_MENUS || myForceHide) {
       presentation.setIcon(null);

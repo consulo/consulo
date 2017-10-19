@@ -52,6 +52,8 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.application.impl.FrameTitleUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.Rectangle2D;
 import consulo.wm.impl.status.ModuleLayerWidget;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -527,14 +529,14 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
   }
 
   @Override
-  public Rectangle suggestChildFrameBounds() {
+  public Rectangle2D suggestChildFrameBounds() {
     //todo [kirillk] a dummy implementation
     final Rectangle b = getBounds();
     b.x += 100;
     b.width -= 200;
     b.y += 100;
     b.height -= 200;
-    return b;
+    return TargetAWT.from(b);
   }
 
   @Override

@@ -17,8 +17,8 @@ package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -29,7 +29,7 @@ public class PresentationFactory {
 
   @NotNull
   public final Presentation getPresentation(@NotNull AnAction action){
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     Presentation presentation = myAction2Presentation.get(action);
     if (presentation == null || !action.isDefaultIcon()){
       Presentation templatePresentation = action.getTemplatePresentation();
@@ -50,7 +50,7 @@ public class PresentationFactory {
   }
 
   public void reset() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     myAction2Presentation.clear();
   }
 }

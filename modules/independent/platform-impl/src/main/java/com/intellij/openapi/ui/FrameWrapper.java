@@ -44,6 +44,8 @@ import com.intellij.ui.FrameState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.Rectangle2D;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -337,7 +339,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     if (myDimensionKey != null && !WindowStateService.getInstance().loadStateFor(myProject, myDimensionKey, frame)) {
       final IdeFrame ideFrame = WindowManagerEx.getInstanceEx().getIdeFrame(myProject);
       if (ideFrame != null) {
-        frame.setBounds(ideFrame.suggestChildFrameBounds());
+        frame.setBounds(TargetAWT.to(ideFrame.suggestChildFrameBounds()));
       }
     }
     ((RootPaneContainer)frame).getRootPane().revalidate();
@@ -409,7 +411,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     }
 
     @Override
-    public Rectangle suggestChildFrameBounds() {
+    public Rectangle2D suggestChildFrameBounds() {
       return myParent.suggestChildFrameBounds();
     }
 
@@ -511,7 +513,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     }
 
     @Override
-    public Rectangle suggestChildFrameBounds() {
+    public Rectangle2D suggestChildFrameBounds() {
       return myParent.suggestChildFrameBounds();
     }
 

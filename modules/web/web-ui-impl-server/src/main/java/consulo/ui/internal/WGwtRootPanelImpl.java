@@ -48,7 +48,11 @@ public class WGwtRootPanelImpl extends AbstractComponentContainer implements con
     markAsDirty();
   }
 
-  public void setCenterComponent(@Nullable Component centerComponent) {
+  public void setCenterComponent(@Nullable consulo.ui.Component centerComponent) {
+    setCenterComponent((Component)centerComponent);
+  }
+
+  private void setCenterComponent(@Nullable Component centerComponent) {
     if (myCenterComponent != null) {
       removeComponent(myCenterComponent);
     }

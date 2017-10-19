@@ -42,8 +42,7 @@ import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.*;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.style.ColorKey;
@@ -163,8 +162,8 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
   }
 
   @Override
-  public Rectangle suggestChildFrameBounds() {
-    return getBounds();
+  public Rectangle2D suggestChildFrameBounds() {
+    return TargetAWT.from(getBounds());
   }
 
   @Nullable

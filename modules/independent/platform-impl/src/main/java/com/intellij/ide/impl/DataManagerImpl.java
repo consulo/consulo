@@ -229,6 +229,19 @@ public class DataManagerImpl extends DataManager {
     return context;
   }
 
+  public DataContext getDataContextTest(consulo.ui.Component component) {
+    DataContext dataContext = getDataContext(component);
+    if (myWindowManager == null) {
+      return dataContext;
+    }
+    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Component focusedComponent = myWindowManager.getFocusedComponent(project);
+    if (focusedComponent != null) {
+      dataContext = getDataContext(focusedComponent);
+    }
+    return dataContext;
+  }
+
   public DataContext getDataContextTest(Component component) {
     DataContext dataContext = getDataContext(component);
     if (myWindowManager == null) {

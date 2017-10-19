@@ -19,7 +19,9 @@ import com.intellij.util.ui.JBUI;
 import consulo.ui.RGBColor;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -40,13 +42,19 @@ public class TargetAWT {
     return new Color(color.getRed(), color.getGreed(), color.getBlue());
   }
 
-  @NotNull
-  public static Rectangle to(@NotNull Rectangle2D rectangle2D) {
+  @Contract("null -> null")
+  public static Rectangle to(@Nullable Rectangle2D rectangle2D) {
+    if (rectangle2D == null) {
+      return null;
+    }
     return new Rectangle(rectangle2D.getCoordinate().getX(), rectangle2D.getCoordinate().getY(), rectangle2D.getSize().getWidth(), rectangle2D.getSize().getHeight());
   }
 
-  @NotNull
-  public static Rectangle2D from(@NotNull Rectangle rectangle) {
+  @Contract("null -> null")
+  public static Rectangle2D from(@Nullable Rectangle rectangle) {
+    if (rectangle == null) {
+      return null;
+    }
     return new Rectangle2D(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
   }
 }

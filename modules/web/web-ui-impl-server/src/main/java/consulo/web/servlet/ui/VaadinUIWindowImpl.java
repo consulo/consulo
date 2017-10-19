@@ -134,7 +134,7 @@ class VaadinUIWindowImpl implements Window {
       throw new IllegalArgumentException("Already disposed");
     }
 
-    myRootPanel.setCenterComponent((com.vaadin.ui.Component)content);
+    myRootPanel.setCenterComponent(content);
   }
 
   @RequiredUIAccess

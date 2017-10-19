@@ -26,6 +26,11 @@ import javax.swing.*;
  * @since 14-Jun-16
  */
 public class DesktopMenuBarImpl extends JMenuBar implements MenuBar, SwingWrapper {
+  @Override
+  public void clear() {
+    removeAll();
+  }
+
   @NotNull
   @Override
   public MenuBar add(@NotNull MenuItem menuItem) {

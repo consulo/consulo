@@ -64,7 +64,7 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
   @RequiredUIAccess
   @Override
   public void setContent(@NotNull Component content) {
-    myRootPanel.setCenterComponent((com.vaadin.ui.Component)content);
+    myRootPanel.setCenterComponent(content);
   }
 
   @RequiredUIAccess

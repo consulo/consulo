@@ -35,6 +35,14 @@ import java.util.List;
 public class WGwtMenuBarImpl extends AbstractComponentContainer implements MenuBar, VaadinWrapper {
   private List<Component> myMenuItems = new ArrayList<>();
 
+  @Override
+  public void clear() {
+    for (Component menuItem : myMenuItems) {
+      removeComponent(menuItem);
+    }
+    myMenuItems.clear();
+  }
+
   @RequiredUIAccess
   @NotNull
   @Override

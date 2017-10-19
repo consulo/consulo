@@ -38,11 +38,10 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.awt.TargetAWT;
+import consulo.ui.Rectangle2D;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * User: anna
@@ -103,8 +102,8 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
     myToolWindow.setAvailable(true, null);
     myToolWindow.setToHideOnEmptyContent(false);
 
-    final Rectangle rectangle = WindowManager.getInstance().getIdeFrame(myProject).suggestChildFrameBounds();
-    myToolWindow.setDefaultState(ToolWindowAnchor.RIGHT, ToolWindowType.FLOATING, rectangle == null ? null : TargetAWT.from(rectangle));
+    final Rectangle2D rectangle = WindowManager.getInstance().getIdeFrame(myProject).suggestChildFrameBounds();
+    myToolWindow.setDefaultState(ToolWindowAnchor.RIGHT, ToolWindowType.FLOATING, rectangle == null ? null : rectangle);
 
     final ContentManager contentManager = myToolWindow.getContentManager();
     final ContentFactory contentFactory = ContentFactory.getInstance();

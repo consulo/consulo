@@ -22,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
  * @since 14-Jun-16
  */
 public interface MenuBar extends Component {
+  void clear();
+
   @RequiredUIAccess
   @NotNull
   MenuBar add(@NotNull MenuItem menuItem);

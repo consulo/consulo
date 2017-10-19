@@ -21,13 +21,14 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.ui.BalloonLayout;
 import com.vaadin.shared.ui.window.WindowMode;
-import consulo.ui.*;
+import consulo.ui.Rectangle2D;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Windows;
+import consulo.ui.internal.WGwtRootPanelImpl;
 import consulo.web.application.WebApplication;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 
 /**
@@ -39,9 +40,11 @@ public class WebIdeFrameImpl implements IdeFrameEx {
   private final Project myProject;
 
   private consulo.ui.Window myWindow;
+  private final WebIdeRootView myRootView;
 
   public WebIdeFrameImpl(Project project) {
     myProject = project;
+    myRootView = new WebIdeRootView(project);
   }
 
   @RequiredUIAccess
@@ -51,9 +54,15 @@ public class WebIdeFrameImpl implements IdeFrameEx {
 
     myWindow.setResizable(false);
     myWindow.setClosable(false);
-    myWindow.setContent(Components.label("Hello world"));
+    myWindow.setContent(myRootView.getComponent());
+
+    myRootView.update();
 
     myWindow.show();
+  }
+
+  public WGwtRootPanelImpl getRootPanel() {
+    return (WGwtRootPanelImpl)myRootView.getComponent();
   }
 
   @NotNull
@@ -74,7 +83,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
   }
 
   @Override
-  public Rectangle suggestChildFrameBounds() {
+  public Rectangle2D suggestChildFrameBounds() {
     return null;
   }
 
@@ -96,11 +105,6 @@ public class WebIdeFrameImpl implements IdeFrameEx {
 
   @Override
   public IdeRootPaneNorthExtension getNorthExtension(String key) {
-    return null;
-  }
-
-  @Override
-  public JComponent getComponent() {
     return null;
   }
 
