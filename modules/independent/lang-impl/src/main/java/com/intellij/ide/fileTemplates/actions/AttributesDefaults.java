@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author Roman Chernyatchik
@@ -33,7 +32,7 @@ public class AttributesDefaults {
   private final String myDefaultName;
   private final TextRange myDefaultRange;
   private final Map<String, Pair<String, TextRange>> myNamesToValueAndRangeMap = new HashMap<String, Pair<String, TextRange>>();
-  private Properties myDefaultProperties = null;
+  private Map<String, Object> myDefaultProperties = null;
   private boolean myFixedName;
 
   public AttributesDefaults(@NonNls @Nullable final String defaultName,
@@ -72,12 +71,13 @@ public class AttributesDefaults {
 
   public void addPredefined(@NotNull String key, @NotNull String value) {
     if (myDefaultProperties == null) {
-      myDefaultProperties = new Properties();
+      myDefaultProperties = new HashMap<>();
     }
-    myDefaultProperties.setProperty(key, value);
+    myDefaultProperties.put(key, value);
   }
 
-  public Properties getDefaultProperties() {
+  @Nullable
+  public Map<String, Object> getDefaultProperties() {
     return myDefaultProperties;
   }
 

@@ -37,6 +37,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.DeprecationInfo;
+import gnu.trove.THashMap;
 import gnu.trove.TIntObjectHashMap;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.exception.VelocityException;
@@ -64,6 +66,8 @@ public class FileTemplateUtil {
   private FileTemplateUtil() {
   }
 
+  @Deprecated
+  @DeprecationInfo("Use #calculateAttributes with Map parameter")
   public static String[] calculateAttributes(String templateContent, Properties properties, boolean includeDummies, Project project) throws ParseException {
     Set<String> propertiesNames = new HashSet<>();
     for (Enumeration e = properties.propertyNames(); e.hasMoreElements(); ) {
@@ -72,13 +76,11 @@ public class FileTemplateUtil {
     return calculateAttributes(templateContent, propertiesNames, includeDummies, project);
   }
 
-  public static String[] calculateAttributes(String templateContent, Map<String, Object> properties, boolean includeDummies, Project project)
-          throws ParseException {
+  public static String[] calculateAttributes(String templateContent, Map<String, Object> properties, boolean includeDummies, Project project) throws ParseException {
     return calculateAttributes(templateContent, properties.keySet(), includeDummies, project);
   }
 
-  private static String[] calculateAttributes(String templateContent, Set<String> propertiesNames, boolean includeDummies, Project project)
-          throws ParseException {
+  private static String[] calculateAttributes(String templateContent, Set<String> propertiesNames, boolean includeDummies, Project project) throws ParseException {
     final Set<String> unsetAttributes = new LinkedHashSet<>();
     final Set<String> definedAttributes = new HashSet<>();
     SimpleNode template = VelocityWrapper.parse(new StringReader(templateContent), "MyTemplate");
@@ -213,8 +215,7 @@ public class FileTemplateUtil {
     }
     catch (final VelocityException e) {
       LOG.error("Error evaluating template:\n" + templateContent, e);
-      ApplicationManager.getApplication().invokeLater(
-              () -> Messages.showErrorDialog(IdeBundle.message("error.parsing.file.template", e.getMessage()), IdeBundle.message("title.velocity.error")));
+      ApplicationManager.getApplication().invokeLater(() -> Messages.showErrorDialog(IdeBundle.message("error.parsing.file.template", e.getMessage()), IdeBundle.message("title.velocity.error")));
     }
     final String result = stringWriter.toString();
 
@@ -228,14 +229,26 @@ public class FileTemplateUtil {
     return result;
   }
 
-  public static PsiElement createFromTemplate(@NotNull final FileTemplate template,
-                                              @NonNls @Nullable final String fileName,
-                                              @Nullable Properties props,
-                                              @NotNull final PsiDirectory directory) throws Exception {
+  @Deprecated
+  public static PsiElement createFromTemplate(@NotNull final FileTemplate template, @NonNls @Nullable final String fileName, @Nullable Properties props, @NotNull final PsiDirectory directory)
+          throws Exception {
     Map<String, Object> map;
     if (props != null) {
       map = new HashMap<>();
       putAll(map, props);
+    }
+    else {
+      map = null;
+    }
+    return createFromTemplate(template, fileName, map, directory, null);
+  }
+
+  @NotNull
+  public static PsiElement createFromTemplate(@NotNull final FileTemplate template, @NonNls @Nullable final String fileName, @Nullable Map<String, Object> props, @NotNull final PsiDirectory directory)
+          throws Exception {
+    Map<String, Object> map;
+    if (props != null) {
+      map = new HashMap<>(props);
     }
     else {
       map = null;
@@ -259,6 +272,8 @@ public class FileTemplateUtil {
     return newTemplate;
   }
 
+  @Deprecated
+  @DeprecationInfo("Use #createFromTemplate with Map parameter")
   public static PsiElement createFromTemplate(@NotNull final FileTemplate template,
                                               @NonNls @Nullable String fileName,
                                               @Nullable Properties props,
@@ -277,49 +292,49 @@ public class FileTemplateUtil {
 
   public static PsiElement createFromTemplate(@NotNull final FileTemplate template,
                                               @NonNls @Nullable String fileName,
-                                              @Nullable Map<String, Object> propsMap,
+                                              @Nullable Map<String, Object> originalVariables,
                                               @NotNull final PsiDirectory directory,
                                               @Nullable ClassLoader classLoader) throws Exception {
-    @NotNull final Project project = directory.getProject();
-    if (propsMap == null) {
-      Properties p = FileTemplateManager.getInstance(project).getDefaultProperties();
-      propsMap = new HashMap<>();
-      putAll(propsMap, p);
+    final Project project = directory.getProject();
+
+    Map<String, Object> properties = new THashMap<>();
+    FileTemplateManager.getInstance(project).fillDefaultVariables(properties);
+
+    if(originalVariables != null) {
+      properties.putAll(originalVariables);
     }
+
     FileTemplateManager.getInstance(project).addRecentName(template.getName());
-    Properties p = new Properties();
-    fillDefaultProperties(p, directory);
-    putAll(propsMap, p);
+    fillDefaultProperties(properties, directory);
 
     final CreateFromTemplateHandler handler = findHandler(template);
-    if (fileName != null && propsMap.get(FileTemplate.ATTRIBUTE_NAME) == null) {
-      propsMap.put(FileTemplate.ATTRIBUTE_NAME, fileName);
+    if (fileName != null && properties.get(FileTemplate.ATTRIBUTE_NAME) == null) {
+      properties.put(FileTemplate.ATTRIBUTE_NAME, fileName);
     }
     else if (fileName == null && handler.isNameRequired()) {
-      fileName = (String)propsMap.get(FileTemplate.ATTRIBUTE_NAME);
+      fileName = (String)properties.get(FileTemplate.ATTRIBUTE_NAME);
       if (fileName == null) {
         throw new Exception("File name must be specified");
       }
     }
 
     //Set escaped references to dummy values to remove leading "\" (if not already explicitely set)
-    String[] dummyRefs = calculateAttributes(template.getText(), propsMap, true, project);
+    String[] dummyRefs = calculateAttributes(template.getText(), properties, true, project);
     for (String dummyRef : dummyRefs) {
-      propsMap.put(dummyRef, "");
+      properties.put(dummyRef, "");
     }
 
-    handler.prepareProperties(propsMap);
+    handler.prepareProperties(properties);
 
-    final Map<String, Object> props_ = propsMap;
     final String fileName_ = fileName;
-    String mergedText = ClassLoaderUtil.runWithClassLoader(classLoader != null ? classLoader : FileTemplateUtil.class.getClassLoader(),
-                                                           (ThrowableComputable<String, IOException>)() -> template.getText(props_));
+    String mergedText =
+            ClassLoaderUtil.runWithClassLoader(classLoader != null ? classLoader : FileTemplateUtil.class.getClassLoader(), (ThrowableComputable<String, IOException>)() -> template.getText(properties));
     final String templateText = StringUtil.convertLineSeparators(mergedText);
     final Exception[] commandException = new Exception[1];
     final PsiElement[] result = new PsiElement[1];
     CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> {
       try {
-        result[0] = handler.createFromTemplate(project, directory, fileName_, template, templateText, props_);
+        result[0] = handler.createFromTemplate(project, directory, fileName_, template, templateText, properties);
       }
       catch (Exception ex) {
         commandException[0] = ex;
@@ -340,7 +355,7 @@ public class FileTemplateUtil {
     return ourDefaultCreateFromTemplateHandler;
   }
 
-  public static void fillDefaultProperties(final Properties props, final PsiDirectory directory) {
+  public static void fillDefaultProperties(final Map<String, Object> props, final PsiDirectory directory) {
     final DefaultTemplatePropertiesProvider[] providers = Extensions.getExtensions(DefaultTemplatePropertiesProvider.EP_NAME);
     for (DefaultTemplatePropertiesProvider provider : providers) {
       provider.fillProperties(directory, props);
@@ -366,11 +381,22 @@ public class FileTemplateUtil {
     return FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon();
   }
 
+  @Deprecated
   public static void putAll(final Map<String, Object> props, final Properties p) {
     for (Enumeration<?> e = p.propertyNames(); e.hasMoreElements(); ) {
       String s = (String)e.nextElement();
       props.put(s, p.getProperty(s));
     }
+  }
+
+  @NotNull
+  public static Map<String, Object> convert2Map(final Properties p) {
+    Map<String, Object> map = new HashMap<>();
+    for (Enumeration<?> e = p.propertyNames(); e.hasMoreElements(); ) {
+      String s = (String)e.nextElement();
+      map.put(s, p.getProperty(s));
+    }
+    return map;
   }
 
   public static Pattern getTemplatePattern(@NotNull FileTemplate template, @NotNull Project project, @NotNull TIntObjectHashMap<String> offsetToProperty) {

@@ -165,8 +165,15 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   @Override
   @NotNull
   public Properties getDefaultProperties() {
-    @NonNls Properties props = new Properties();
+    Properties props = new Properties();
+    for (Map.Entry<String, Object> entry : getDefaultVariables().entrySet()) {
+      props.put(entry.getKey(), entry.getValue());
+    }
+    return props;
+  }
 
+  @Override
+  public void fillDefaultVariables(@NotNull Map<String, Object> map) {
     Calendar calendar = Calendar.getInstance();
     Date date = myTestDate == null ? calendar.getTime() : myTestDate;
     SimpleDateFormat sdfMonthNameShort = new SimpleDateFormat("MMM");
@@ -175,27 +182,25 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
     SimpleDateFormat sdfDayNameFull = new SimpleDateFormat("EEEE");
     SimpleDateFormat sdfYearFull = new SimpleDateFormat("yyyy");
 
-    props.setProperty("DATE", DateFormatUtil.formatDate(date));
-    props.setProperty("TIME", DateFormatUtil.formatTime(date));
-    props.setProperty("YEAR", sdfYearFull.format(date));
-    props.setProperty("MONTH", getCalendarValue(calendar, Calendar.MONTH));
-    props.setProperty("MONTH_NAME_SHORT", sdfMonthNameShort.format(date));
-    props.setProperty("MONTH_NAME_FULL", sdfMonthNameFull.format(date));
-    props.setProperty("DAY", getCalendarValue(calendar, Calendar.DAY_OF_MONTH));
-    props.setProperty("DAY_NAME_SHORT", sdfDayNameShort.format(date));
-    props.setProperty("DAY_NAME_FULL", sdfDayNameFull.format(date));
-    props.setProperty("HOUR", getCalendarValue(calendar, Calendar.HOUR_OF_DAY));
-    props.setProperty("MINUTE", getCalendarValue(calendar, Calendar.MINUTE));
-    props.setProperty("SECOND", getCalendarValue(calendar, Calendar.SECOND));
+    map.put("DATE", DateFormatUtil.formatDate(date));
+    map.put("TIME", DateFormatUtil.formatTime(date));
+    map.put("YEAR", sdfYearFull.format(date));
+    map.put("MONTH", getCalendarValue(calendar, Calendar.MONTH));
+    map.put("MONTH_NAME_SHORT", sdfMonthNameShort.format(date));
+    map.put("MONTH_NAME_FULL", sdfMonthNameFull.format(date));
+    map.put("DAY", getCalendarValue(calendar, Calendar.DAY_OF_MONTH));
+    map.put("DAY_NAME_SHORT", sdfDayNameShort.format(date));
+    map.put("DAY_NAME_FULL", sdfDayNameFull.format(date));
+    map.put("HOUR", getCalendarValue(calendar, Calendar.HOUR_OF_DAY));
+    map.put("MINUTE", getCalendarValue(calendar, Calendar.MINUTE));
+    map.put("SECOND", getCalendarValue(calendar, Calendar.SECOND));
 
-    props.setProperty("USER", SystemProperties.getUserName());
-    props.setProperty("PRODUCT_NAME", ApplicationNamesInfo.getInstance().getFullProductName());
+    map.put("USER", SystemProperties.getUserName());
+    map.put("PRODUCT_NAME", ApplicationNamesInfo.getInstance().getFullProductName());
 
-    props.setProperty("DS", "$"); // Dollar sign, strongly needed for PHP, JS, etc. See WI-8979
+    map.put("DS", "$"); // Dollar sign, strongly needed for PHP, JS, etc. See WI-8979
 
-    props.setProperty(PROJECT_NAME_VARIABLE, myProject.getName());
-
-    return props;
+    map.put(PROJECT_NAME_VARIABLE, myProject.getName());
   }
 
   @NotNull

@@ -101,6 +101,12 @@ public abstract class FileTemplateBase implements FileTemplate {
   }
 
   @Override
+  @NotNull
+  public final String[] getUnsetAttributes(@NotNull Map<String, Object> properties, Project project) throws ParseException {
+    return FileTemplateUtil.calculateAttributes(getText(), properties, false, project);
+  }
+
+  @Override
   public FileTemplateBase clone() {
     try {
       return (FileTemplateBase)super.clone();

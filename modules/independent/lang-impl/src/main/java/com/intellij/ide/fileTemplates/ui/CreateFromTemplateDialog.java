@@ -33,6 +33,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import consulo.annotations.DeprecationInfo;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 import java.util.Properties;
 
 public class CreateFromTemplateDialog extends DialogWrapper {
@@ -53,30 +55,39 @@ public class CreateFromTemplateDialog extends DialogWrapper {
   private final JComponent myAttrComponent;
   @NotNull
   private final FileTemplate myTemplate;
-  private final Properties myDefaultProperties;
+  private final Map<String, Object> myDefaultProperties;
 
+  @Deprecated
+  @DeprecationInfo("Use constructor with Map parameter instead of Properties")
   public CreateFromTemplateDialog(@NotNull Project project,
                                   @NotNull PsiDirectory directory,
                                   @NotNull FileTemplate template,
                                   @Nullable final AttributesDefaults attributesDefaults,
                                   @Nullable final Properties defaultProperties) {
-    super(project, true);
+    this(directory, template, attributesDefaults, defaultProperties == null ? null : FileTemplateUtil.convert2Map(defaultProperties));
+  }
+
+  public CreateFromTemplateDialog(@NotNull PsiDirectory directory,
+                                  @NotNull FileTemplate template,
+                                  @Nullable final AttributesDefaults attributesDefaults,
+                                  @Nullable final Map<String, Object> defaultProperties) {
+    super(directory.getProject(), true);
     myDirectory = directory;
-    myProject = project;
+    myProject = directory.getProject();
     myTemplate = template;
     setTitle(IdeBundle.message("title.new.from.template", template.getName()));
 
-    myDefaultProperties = defaultProperties == null ? FileTemplateManager.getInstance(project).getDefaultProperties() : defaultProperties;
+    myDefaultProperties = defaultProperties == null ? FileTemplateManager.getInstance(myProject).getDefaultVariables() : defaultProperties;
     FileTemplateUtil.fillDefaultProperties(myDefaultProperties, directory);
     boolean mustEnterName = FileTemplateUtil.findHandler(template).isNameRequired();
     if (attributesDefaults != null && attributesDefaults.isFixedName()) {
-      myDefaultProperties.setProperty(FileTemplate.ATTRIBUTE_NAME, attributesDefaults.getDefaultFileName());
+      myDefaultProperties.put(FileTemplate.ATTRIBUTE_NAME, attributesDefaults.getDefaultFileName());
       mustEnterName = false;
     }
 
     String[] unsetAttributes = null;
     try {
-      unsetAttributes = myTemplate.getUnsetAttributes(myDefaultProperties, project);
+      unsetAttributes = myTemplate.getUnsetAttributes(myDefaultProperties, myProject);
     }
     catch (ParseException e) {
       showErrorDialog(e);
@@ -133,7 +144,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
         newName = mkDirs.newName;
         directory = mkDirs.directory;
       }
-      myCreatedElement = FileTemplateUtil.createFromTemplate(myTemplate, newName, myAttrPanel.getProperties(myDefaultProperties), directory);
+      myCreatedElement = FileTemplateUtil.createFromTemplate(myTemplate, newName, myAttrPanel.getVariables(myDefaultProperties), directory);
     }
     catch (Exception e) {
       showErrorDialog(e);
@@ -174,8 +185,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
   protected JComponent createCenterPanel() {
     myAttrPanel.ensureFitToScreen(200, 200);
     JPanel centerPanel = new JPanel(new GridBagLayout());
-    centerPanel.add(myAttrComponent,
-                    new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+    centerPanel.add(myAttrComponent, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
     return centerPanel;
   }
 

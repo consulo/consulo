@@ -18,7 +18,10 @@ package com.intellij.ide.fileTemplates;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiDirectory;
+import consulo.annotations.DeprecationInfo;
 
+import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -36,5 +39,19 @@ public interface DefaultTemplatePropertiesProvider {
    * @param directory the directory in which the file is created.
    * @param props the map in which the defined properties should be stored.
    */
-  void fillProperties(PsiDirectory directory, Properties props);
+  @Deprecated
+  @DeprecationInfo("Use #fillProperties(PsiDirectory directory, Map<String, Object> props)")
+  default void fillProperties(PsiDirectory directory, Properties props) {
+
+  }
+
+  default void fillProperties(PsiDirectory directory, Map<String, Object> props) {
+    Properties properties = new Properties();
+    fillProperties(directory, properties);
+
+    for (Enumeration<?> e = properties.propertyNames(); e.hasMoreElements(); ) {
+      String s = (String)e.nextElement();
+      props.put(s, properties.getProperty(s));
+    }
+  }
 }

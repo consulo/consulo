@@ -24,24 +24,24 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.ScrollPaneFactory;
+import consulo.annotations.DeprecationInfo;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Properties;
+import java.util.*;
 
 /*
  * @author: MYakovlev
  */
 
-public class CreateFromTemplatePanel{
+public class CreateFromTemplatePanel {
   private JPanel myMainPanel;
   private JPanel myAttrPanel;
   private JTextField myFilenameField;
   private final String[] myUnsetAttributes;
-  private final ArrayList<Pair<String, JTextField>> myAttributes = new ArrayList<Pair<String,JTextField>>();
+  private final ArrayList<Pair<String, JTextField>> myAttributes = new ArrayList<>();
 
   private int myLastRow = 0;
 
@@ -50,8 +50,7 @@ public class CreateFromTemplatePanel{
   private final boolean myMustEnterName;
   private final AttributesDefaults myAttributesDefaults;
 
-  public CreateFromTemplatePanel(final String[] unsetAttributes, final boolean mustEnterName,
-                                 @Nullable final AttributesDefaults attributesDefaults){
+  public CreateFromTemplatePanel(final String[] unsetAttributes, final boolean mustEnterName, @Nullable final AttributesDefaults attributesDefaults) {
     myMustEnterName = mustEnterName;
     myUnsetAttributes = unsetAttributes;
     myAttributesDefaults = attributesDefaults;
@@ -62,10 +61,10 @@ public class CreateFromTemplatePanel{
   }
 
   public JComponent getComponent() {
-    if (myMainPanel == null){
-      myMainPanel = new JPanel(new GridBagLayout()){
+    if (myMainPanel == null) {
+      myMainPanel = new JPanel(new GridBagLayout()) {
         @Override
-        public Dimension getPreferredSize(){
+        public Dimension getPreferredSize() {
           return getMainPanelPreferredSize(super.getPreferredSize());
         }
       };
@@ -79,7 +78,7 @@ public class CreateFromTemplatePanel{
         attrCount++;
       }
       Insets insets = (attrCount > 1) ? new Insets(2, 2, 2, 2) : new Insets(0, 0, 0, 0);
-      myScrollPanel.add(myAttrPanel,  new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets, 0, 0));
+      myScrollPanel.add(myAttrPanel, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets, 0, 0));
       if (attrCount > 1) {
         myScrollPanel.add(new JPanel(), new GridBagConstraints(0, 1, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
         JScrollPane attrScroll = ScrollPaneFactory.createScrollPane(myScrollPanel);
@@ -93,32 +92,32 @@ public class CreateFromTemplatePanel{
     return myMainPanel;
   }
 
-  public void ensureFitToScreen(int horizontalMargin, int verticalMargin){
+  public void ensureFitToScreen(int horizontalMargin, int verticalMargin) {
     myHorizontalMargin = horizontalMargin;
     myVerticalMargin = verticalMargin;
   }
 
-  private Dimension getMainPanelPreferredSize(Dimension superPreferredSize){
-    if((myHorizontalMargin > 0) && (myVerticalMargin > 0)){
+  private Dimension getMainPanelPreferredSize(Dimension superPreferredSize) {
+    if ((myHorizontalMargin > 0) && (myVerticalMargin > 0)) {
       Dimension screenSize = ScreenUtil.getMainScreenBounds().getSize();
       Dimension preferredSize = superPreferredSize;
       Dimension maxSize = new Dimension(screenSize.width - myHorizontalMargin, screenSize.height - myVerticalMargin);
       int width = Math.min(preferredSize.width, maxSize.width);
       int height = Math.min(preferredSize.height, maxSize.height);
-      if(height < preferredSize.height){
+      if (height < preferredSize.height) {
         width = Math.min(width + 50, maxSize.width); // to disable horizontal scroller
       }
       preferredSize = new Dimension(width, height);
       return preferredSize;
     }
-    else{
+    else {
       return superPreferredSize;
     }
   }
 
   private void updateShown() {
     final Insets insets = new Insets(2, 4, 4, 2);
-    if(myMustEnterName || Arrays.asList(myUnsetAttributes).contains(FileTemplate.ATTRIBUTE_NAME)){
+    if (myMustEnterName || Arrays.asList(myUnsetAttributes).contains(FileTemplate.ATTRIBUTE_NAME)) {
       final JLabel filenameLabel = new JLabel(IdeBundle.message("label.file.name"));
       myAttrPanel.add(filenameLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, insets, 0, 0));
       myFilenameField = new JTextField(20);
@@ -134,11 +133,13 @@ public class CreateFromTemplatePanel{
           // select range from default attributes or select file name without extension
           if (myAttributesDefaults.getDefaultFileNameSelection() != null) {
             selectionRange = myAttributesDefaults.getDefaultFileNameSelection();
-          } else {
+          }
+          else {
             final int dot = fileName.indexOf('.');
             if (dot > 0) {
               selectionRange = new TextRange(0, dot);
-            } else {
+            }
+            else {
               selectionRange = null;
             }
           }
@@ -170,11 +171,9 @@ public class CreateFromTemplatePanel{
           }
         }
       }
-      myAttributes.add(new Pair<String, JTextField>(attribute, field));
-      myAttrPanel.add(label, new GridBagConstraints(0, myLastRow, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-                                                    insets, 0, 0));
-      myAttrPanel.add(field, new GridBagConstraints(1, myLastRow, 1, 1, 1.0, 0.0, GridBagConstraints.WEST,
-                                                    GridBagConstraints.HORIZONTAL, insets, 0, 0));
+      myAttributes.add(Pair.create(attribute, field));
+      myAttrPanel.add(label, new GridBagConstraints(0, myLastRow, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, insets, 0, 0));
+      myAttrPanel.add(field, new GridBagConstraints(1, myLastRow, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, insets, 0, 0));
       myLastRow++;
     }
 
@@ -184,17 +183,29 @@ public class CreateFromTemplatePanel{
   }
 
   @Nullable
-  public String getFileName(){
-    if (myFilenameField!=null) {
+  public String getFileName() {
+    if (myFilenameField != null) {
       String fileName = myFilenameField.getText();
       return fileName == null ? "" : fileName;
-    } else {
+    }
+    else {
       return null;
     }
   }
 
+  @NotNull
+  public Map<String, Object> getVariables(Map<String, Object> predefinedProperties) {
+    Map<String, Object> result = new HashMap<>(predefinedProperties);
+    for (Pair<String, JTextField> pair : myAttributes) {
+      result.put(pair.first, pair.second.getText());
+    }
+    return result;
+  }
+
+  @Deprecated
+  @DeprecationInfo("#getVariables")
   public Properties getProperties(Properties predefinedProperties) {
-    Properties result = (Properties) predefinedProperties.clone();
+    Properties result = (Properties)predefinedProperties.clone();
     for (Pair<String, JTextField> pair : myAttributes) {
       result.setProperty(pair.first, pair.second.getText());
     }

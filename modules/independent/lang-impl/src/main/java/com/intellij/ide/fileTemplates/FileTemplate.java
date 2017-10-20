@@ -18,6 +18,7 @@ package com.intellij.ide.fileTemplates;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.annotations.DeprecationInfo;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.NotNull;
 
@@ -89,5 +90,9 @@ public interface FileTemplate extends Cloneable {
   FileTemplate clone();
 
   @NotNull
+  @Deprecated
+  @DeprecationInfo("getUnsetAttributes")
   String[] getUnsetAttributes(@NotNull Properties properties, Project project) throws ParseException;
+
+  String[] getUnsetAttributes(@NotNull Map<String, Object> properties, Project project) throws ParseException;
 }

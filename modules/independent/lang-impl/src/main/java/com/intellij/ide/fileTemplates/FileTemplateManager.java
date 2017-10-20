@@ -20,10 +20,13 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Key;
+import consulo.annotations.DeprecationInfo;
+import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -91,16 +94,27 @@ public abstract class FileTemplateManager{
    * @return a new Properties object filled with predefined properties.
    */
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use #getDefaultVariables()")
   public abstract Properties getDefaultProperties();
 
-  /** Use {@link #getDefaultProperties()} instead */
   @NotNull
   @Deprecated
+  @DeprecationInfo("Use #getDefaultVariables()")
   public Properties getDefaultProperties(@NotNull Project project) {
     Properties properties = getDefaultProperties();
     properties.setProperty(PROJECT_NAME_VARIABLE, project.getName());
     return properties;
   }
+
+  @NotNull
+  public Map<String, Object> getDefaultVariables() {
+    Map<String, Object> map = new THashMap<>();
+    fillDefaultVariables(map);
+    return map;
+  }
+
+  public abstract void fillDefaultVariables(@NotNull Map<String, Object> map);
 
   /**
    * Creates a new template with specified name, and adds it to the list of default templates.

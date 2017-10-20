@@ -66,8 +66,8 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
       else {
         FileTemplateManager.getInstance(project).addRecentName(selectedTemplate.getName());
         AttributesDefaults defaults = getAttributesDefaults(dataContext);
-        Properties properties = defaults != null ? defaults.getDefaultProperties() : null;
-        CreateFromTemplateDialog dialog = new CreateFromTemplateDialog(project, dir, selectedTemplate, defaults, properties);
+        Map<String, Object> properties = defaults != null ? defaults.getDefaultProperties() : null;
+        CreateFromTemplateDialog dialog = new CreateFromTemplateDialog(dir, selectedTemplate, defaults, properties);
         PsiElement createdElement = dialog.create();
         if (createdElement != null) {
           elementCreated(dialog, createdElement);
