@@ -19,7 +19,10 @@ import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.HighlighterColors;
+import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
@@ -160,23 +163,20 @@ public class ChunkExtractor {
 
       final int lineEndOffset = fragmentToShowEnd;
       Segment segment = usageInfo2UsageAdapter.getUsageInfo().getSegment();
-      int usage_length = segment != null ? segment.getEndOffset() - segment.getStartOffset():0;
+      int usage_length = segment != null ? segment.getEndOffset() - segment.getStartOffset() : 0;
       fragmentToShowEnd = Math.min(lineEndOffset, absoluteStartOffset + usage_length + OFFSET_AFTER_TO_SHOW_WHEN_LONG_LINE);
 
       // if we search something like a word, then expand shown context from one symbol before / after at least for word boundary
       // this should not cause restarts of the lexer as the tokens are usually words
-      if (usage_length > 0 &&
-          StringUtil.isJavaIdentifierStart(chars.charAt(absoluteStartOffset)) &&
-          StringUtil.isJavaIdentifierStart(chars.charAt(absoluteStartOffset + usage_length - 1))) {
-        while(fragmentToShowEnd < lineEndOffset && StringUtil.isJavaIdentifierStart(chars.charAt(fragmentToShowEnd - 1))) ++fragmentToShowEnd;
-        while(fragmentToShowStart > lineStartOffset && StringUtil.isJavaIdentifierStart(chars.charAt(fragmentToShowStart))) --fragmentToShowStart;
+      if (usage_length > 0 && StringUtil.isJavaIdentifierStart(chars.charAt(absoluteStartOffset)) && StringUtil.isJavaIdentifierStart(chars.charAt(absoluteStartOffset + usage_length - 1))) {
+        while (fragmentToShowEnd < lineEndOffset && StringUtil.isJavaIdentifierStart(chars.charAt(fragmentToShowEnd - 1))) ++fragmentToShowEnd;
+        while (fragmentToShowStart > lineStartOffset && StringUtil.isJavaIdentifierStart(chars.charAt(fragmentToShowStart))) --fragmentToShowStart;
         if (fragmentToShowStart != lineStartOffset) ++fragmentToShowStart;
         if (fragmentToShowEnd != lineEndOffset) --fragmentToShowEnd;
       }
     }
     if (myDocument instanceof DocumentWindow) {
-      List<TextRange> editable = InjectedLanguageManager.getInstance(file.getProject())
-              .intersectWithAllEditableFragments(file, new TextRange(fragmentToShowStart, fragmentToShowEnd));
+      List<TextRange> editable = InjectedLanguageManager.getInstance(file.getProject()).intersectWithAllEditableFragments(file, new TextRange(fragmentToShowStart, fragmentToShowEnd));
       for (TextRange range : editable) {
         createTextChunks(usageInfo2UsageAdapter, chars, range.getStartOffset(), range.getEndOffset(), true, result);
       }
@@ -203,13 +203,14 @@ public class ChunkExtractor {
     if (myDocumentStamp != myDocument.getModificationStamp()) {
       highlighter.restart(chars);
       myDocumentStamp = myDocument.getModificationStamp();
-    } else if(lexer.getTokenType() == null || lexer.getTokenStart() > start) {
+    }
+    else if (lexer.getTokenType() == null || lexer.getTokenStart() > start) {
       highlighter.resetPosition(0);  // todo restart from nearest position with initial state
     }
 
     boolean isBeginning = true;
 
-    for(;lexer.getTokenType() != null; lexer.advance()) {
+    for (; lexer.getTokenType() != null; lexer.advance()) {
       int hiStart = lexer.getTokenStart();
       int hiEnd = lexer.getTokenEnd();
 
@@ -217,11 +218,13 @@ public class ChunkExtractor {
 
       hiStart = Math.max(hiStart, start);
       hiEnd = Math.min(hiEnd, end);
-      if (hiStart >= hiEnd) { continue; }
+      if (hiStart >= hiEnd) {
+        continue;
+      }
 
       if (isBeginning) {
         String text = chars.subSequence(hiStart, hiEnd).toString();
-        if(text.trim().isEmpty()) continue;
+        if (text.trim().isEmpty()) continue;
       }
       isBeginning = false;
       IElementType tokenType = lexer.getTokenType();
@@ -254,9 +257,7 @@ public class ChunkExtractor {
         if (rangeIntersect(lastOffset[0], hiEnd, usageStart, usageEnd)) {
           addChunk(chars, lastOffset[0], Math.max(lastOffset[0], usageStart), originalAttrs, false, null, result);
 
-          UsageType usageType = isHighlightedAsString(tokenHighlights)
-                                ? UsageType.LITERAL_USAGE
-                                : isHighlightedAsComment(tokenHighlights) ? UsageType.COMMENT_USAGE : null;
+          UsageType usageType = isHighlightedAsString(tokenHighlights) ? UsageType.LITERAL_USAGE : isHighlightedAsComment(tokenHighlights) ? UsageType.COMMENT_USAGE : null;
           addChunk(chars, Math.max(lastOffset[0], usageStart), Math.min(hiEnd, usageEnd), originalAttrs, selectUsageWithBold, usageType, result);
           lastOffset[0] = usageEnd;
           if (usageEnd > hiEnd) {
@@ -273,13 +274,7 @@ public class ChunkExtractor {
 
   public static boolean isHighlightedAsComment(TextAttributesKey... keys) {
     for (TextAttributesKey key : keys) {
-      if (key == DefaultLanguageHighlighterColors.DOC_COMMENT ||
-          key == SyntaxHighlighterColors.DOC_COMMENT ||
-          key == DefaultLanguageHighlighterColors.LINE_COMMENT ||
-          key == SyntaxHighlighterColors.LINE_COMMENT ||
-          key == DefaultLanguageHighlighterColors.BLOCK_COMMENT ||
-          key == SyntaxHighlighterColors.JAVA_BLOCK_COMMENT
-              ) {
+      if (key == DefaultLanguageHighlighterColors.DOC_COMMENT || key == DefaultLanguageHighlighterColors.LINE_COMMENT || key == DefaultLanguageHighlighterColors.BLOCK_COMMENT) {
         return true;
       }
       if (key == null) continue;
@@ -293,7 +288,7 @@ public class ChunkExtractor {
 
   public static boolean isHighlightedAsString(TextAttributesKey... keys) {
     for (TextAttributesKey key : keys) {
-      if (key == DefaultLanguageHighlighterColors.STRING || key == SyntaxHighlighterColors.STRING) {
+      if (key == DefaultLanguageHighlighterColors.STRING) {
         return true;
       }
       if (key == null) continue;
@@ -305,25 +300,15 @@ public class ChunkExtractor {
     return false;
   }
 
-  private static void addChunk(@NotNull CharSequence chars,
-                               int start,
-                               int end,
-                               @NotNull TextAttributes originalAttrs,
-                               boolean bold,
-                               @Nullable UsageType usageType,
-                               @NotNull List<TextChunk> result) {
+  private static void addChunk(@NotNull CharSequence chars, int start, int end, @NotNull TextAttributes originalAttrs, boolean bold, @Nullable UsageType usageType, @NotNull List<TextChunk> result) {
     if (start >= end) return;
 
-    TextAttributes attrs = bold
-                           ? TextAttributes.merge(originalAttrs, new TextAttributes(null, null, null, null, Font.BOLD))
-                           : originalAttrs;
+    TextAttributes attrs = bold ? TextAttributes.merge(originalAttrs, new TextAttributes(null, null, null, null, Font.BOLD)) : originalAttrs;
     result.add(new TextChunk(attrs, StringFactory.createShared(CharArrayUtil.fromSequence(chars, start, end)), usageType));
   }
 
   private static boolean rangeIntersect(int s1, int e1, int s2, int e2) {
-    return s2 < s1 && s1 < e2 || s2 < e1 && e1 < e2
-           || s1 < s2 && s2 < e1 || s1 < e2 && e2 < e1
-           || s1 == s2 && e1 == e2;
+    return s2 < s1 && s1 < e2 || s2 < e1 && e1 < e2 || s1 < s2 && s2 < e1 || s1 < e2 && e2 < e1 || s1 == s2 && e1 == e2;
   }
 
   @NotNull
