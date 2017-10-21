@@ -134,7 +134,7 @@ public class ModernComboBoxUI extends BasicComboBoxUI implements Border {
 
   @Override
   protected Insets getInsets() {
-    return JBUI.insets(4, 7, 4, 5).asUIResource();
+    return JBUI.insets(3, 7, 3, 5).asUIResource();
   }
 
   @Override

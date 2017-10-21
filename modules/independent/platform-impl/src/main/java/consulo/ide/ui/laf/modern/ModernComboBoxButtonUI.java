@@ -18,12 +18,12 @@ package consulo.ide.ui.laf.modern;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.actionSystem.ex.ComboBoxButton;
-import consulo.actionSystem.ex.ComboBoxButtonUI;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.actionSystem.ex.ComboBoxButtonUI;
 import sun.swing.DefaultLookup;
 
 import javax.swing.*;
@@ -51,7 +51,7 @@ public class ModernComboBoxButtonUI extends ComboBoxButtonUI {
       public Insets getBorderInsets(Component c) {
         final Insets insets = super.getBorderInsets(c);
         //noinspection UseDPIAwareInsets
-        return new Insets(insets.top, insets.left + JBUI.scale(2), insets.bottom, insets.right + JBUI.scale(2) + JBUI.scale(18));
+        return new Insets(insets.top, insets.left + JBUI.scale(4), insets.bottom, insets.right + JBUI.scale(20));
       }
     });
   }
@@ -62,9 +62,9 @@ public class ModernComboBoxButtonUI extends ComboBoxButtonUI {
     ComboBoxAction comboBoxAction = comboBoxButton.getComboBoxAction();
 
     final boolean isEmpty = comboBoxButton.getIcon() == null && StringUtil.isEmpty(comboBoxButton.getText());
-    int width = isEmpty ? JBUI.scale(10 + 18) : super.getPreferredSize(c).width;
+    int width = isEmpty ? JBUI.scale(18) : super.getPreferredSize(c).width;
     if (comboBoxAction.isSmallVariant()) width += JBUI.scale(4);
-    return new Dimension(width, comboBoxAction.isSmallVariant() ? JBUI.scale(19) : super.getPreferredSize(c).height);
+    return new Dimension(width, comboBoxAction.isSmallVariant() ? JBUI.scale(21) : super.getPreferredSize(c).height);
   }
 
   @Override
@@ -93,7 +93,6 @@ public class ModernComboBoxButtonUI extends ComboBoxButtonUI {
       }
     }
     else {
-
       if (comboBoxAction.isSmallVariant()) {
         final Graphics2D g2 = (Graphics2D)g;
         g2.setColor(UIUtil.getControlColor());
@@ -129,7 +128,7 @@ public class ModernComboBoxButtonUI extends ComboBoxButtonUI {
     }
 
     int width = JBUI.scale(18);
-    final int x;
+    int x;
     if (isEmpty) {
       x = (size.width - width) / 2;
     }
@@ -144,8 +143,8 @@ public class ModernComboBoxButtonUI extends ComboBoxButtonUI {
 
     GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
     g.setColor(comboBoxButton.isEnabled() ? comboBoxButton.getForeground() : borderColor);
-    g.drawLine(x + JBUI.scale(3), JBUI.scale(7), x + JBUI.scale(7), JBUI.scale(11));
-    g.drawLine(x + JBUI.scale(7), JBUI.scale(11), x + JBUI.scale(11), JBUI.scale(7));
+    g.drawLine(x + JBUI.scale(3), JBUI.scale(8), x + JBUI.scale(7), JBUI.scale(12));
+    g.drawLine(x + JBUI.scale(7), JBUI.scale(12), x + JBUI.scale(11), JBUI.scale(8));
     config.restore();
     g.setPaintMode();
   }
