@@ -72,8 +72,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
       return;
     }
 
-    Platform.hacky(() -> RecentProjectsManagerBase.getInstanceEx().doOpenProject(myProjectPath, project, forceOpenInNewFrame),
-                   () -> ProjectUtil.openAsync(myProjectPath, null, true, forceOpenInNewFrame, UIAccess.get()));
+    Platform.hacky(() -> ProjectUtil.open(myProjectPath, project, forceOpenInNewFrame), () -> ProjectUtil.openAsync(myProjectPath, null, forceOpenInNewFrame, UIAccess.get()));
   }
 
   @NotNull

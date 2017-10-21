@@ -59,27 +59,23 @@ public class CommandLineProcessor {
   }
 
   @Nullable
-  private static Project doOpenFileOrProject(String name) {
-    final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(name);
-    if (virtualFile == null) {
-      Messages.showErrorDialog("Cannot find file '" + name + "'", "Cannot find file");
+  private static Project doOpenFileOrProject(String path) {
+    File file = new File(path);
+    if (!file.exists()) {
+      Messages.showErrorDialog("Cannot find file '" + path + "'", "Cannot find file");
       return null;
     }
-    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(virtualFile);
-    if (provider instanceof PlatformProjectOpenProcessor && !virtualFile.isDirectory()) {
-      // HACK: PlatformProjectOpenProcessor agrees to open anything
-      provider = null;
+    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(file);
+    if (provider == null) {
+      Messages.showErrorDialog("Unknown project type by path '" + path + "'", "Cannot open project");
+      return null;
     }
-    if (provider != null || new File(name, Project.DIRECTORY_STORE_FOLDER).exists()) {
-      final Project result = ProjectUtil.open(name, null, true);
-      if (result == null) {
-        Messages.showErrorDialog("Cannot open project '" + name + "'", "Cannot open project");
-      }
-      return result;
+
+    final Project result = ProjectUtil.open(path, null, true);
+    if (result == null) {
+      Messages.showErrorDialog("Cannot open project '" + path + "'", "Cannot open project");
     }
-    else {
-      return doOpenFile(virtualFile, -1);
-    }
+    return result;
   }
 
   @Nullable

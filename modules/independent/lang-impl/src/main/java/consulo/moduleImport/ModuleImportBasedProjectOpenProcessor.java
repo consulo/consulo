@@ -61,14 +61,14 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
     return myProvider.getFileSample();
   }
 
-  @Nullable
+  @NotNull
   @Override
   public Icon getIcon() {
     return myProvider.getIcon();
   }
 
   @Override
-  public boolean canOpenProject(VirtualFile file) {
+  public boolean canOpenProject(@NotNull VirtualFile file) {
     return myProvider.canImport(file);
   }
 

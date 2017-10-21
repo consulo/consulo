@@ -61,14 +61,14 @@ public abstract class ProjectOpenProcessorBase<T extends ProjectImportBuilder> e
     return getBuilder().getName();
   }
 
+  @NotNull
   @Override
-  @Nullable
   public Icon getIcon() {
     return getBuilder().getIcon();
   }
 
   @Override
-  public boolean canOpenProject(final VirtualFile file) {
+  public boolean canOpenProject(@NotNull final VirtualFile file) {
     final String[] supported = getSupportedExtensions();
     if (supported != null) {
       if (file.isDirectory()) {

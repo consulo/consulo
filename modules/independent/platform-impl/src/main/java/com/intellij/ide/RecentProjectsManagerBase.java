@@ -392,10 +392,6 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   @Nullable
   protected abstract String getProjectPath(@NotNull Project project);
 
-  @Deprecated
-  @DeprecationInfo("Deprecated method - used until migrated to unified async open action")
-  protected abstract void doOpenProject(@NotNull String projectPath, @Nullable Project projectToClose, boolean forceOpenInNewFrame);
-
   public static boolean isValidProjectPath(String projectPath) {
     final File file = new File(projectPath);
     return file.exists() && (!file.isDirectory() || new File(file, Project.DIRECTORY_STORE_FOLDER).exists());
@@ -525,7 +521,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
         if (isValidProjectPath(openPath)) {
 
           final boolean finalForceNewFrame = forceNewFrame;
-          Platform.hacky(() -> doOpenProject(openPath, null, finalForceNewFrame), () -> ProjectUtil.openAsync(openPath, null, finalForceNewFrame, UIAccess.get()));
+          Platform.hacky(() -> ProjectUtil.open(openPath, null, finalForceNewFrame), () -> ProjectUtil.openAsync(openPath, null, finalForceNewFrame, UIAccess.get()));
           break;
         }
       }

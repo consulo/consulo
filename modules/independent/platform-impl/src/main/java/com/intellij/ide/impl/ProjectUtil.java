@@ -31,6 +31,7 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.platform.PlatformProjectOpenProcessor;
@@ -137,7 +138,7 @@ public class ProjectUtil {
 
     if (virtualFile == null) return null;
 
-    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(virtualFile);
+    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
     if (provider != null) {
       final Project project = provider.doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
 
@@ -215,18 +216,13 @@ public class ProjectUtil {
   //region Async staff
   @NotNull
   public static AsyncResult<Project> openAsync(@NotNull String path, @Nullable Project projectToClose, boolean forceOpenInNewFrame, @NotNull UIAccess uiAccess) {
-    return openAsync(path, projectToClose, false, forceOpenInNewFrame, uiAccess);
-  }
-
-  @NotNull
-  public static AsyncResult<Project> openAsync(@NotNull String path, @Nullable Project projectToClose, boolean useDefaultOpenProcessor, boolean forceOpenInNewFrame, @NotNull UIAccess uiAccess) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
     if (virtualFile == null) return AsyncResult.rejected("file path not find");
 
     AsyncResult<Project> result = new AsyncResult<>();
 
-    ProjectOpenProcessor provider = useDefaultOpenProcessor ? PlatformProjectOpenProcessor.getInstance() : ProjectOpenProcessors.getInstance().findProcessor(virtualFile);
+    ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
     if (provider != null) {
       AppExecutorUtil.getAppExecutorService().execute(() -> {
         result.doWhenDone((project) -> {

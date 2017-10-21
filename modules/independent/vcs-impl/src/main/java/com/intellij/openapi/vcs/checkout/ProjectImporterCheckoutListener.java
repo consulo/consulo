@@ -35,7 +35,7 @@ public class ProjectImporterCheckoutListener implements CheckoutListener {
         if (file.isDirectory()) continue;
         final VirtualFile virtualFile = localFileSystem.findFileByIoFile(file);
         if (virtualFile != null) {
-          final ProjectOpenProcessor openProcessor = ProjectOpenProcessors.getInstance().findProcessor(virtualFile);
+          final ProjectOpenProcessor openProcessor = ProjectOpenProcessors.getInstance().findProcessor(file);
           if (openProcessor != null) {
             int rc = Messages.showYesNoDialog(project, VcsBundle
               .message("checkout.open.project.prompt", ProjectDirCheckoutListener.getProductNameWithArticle(), files[0].getPath()),

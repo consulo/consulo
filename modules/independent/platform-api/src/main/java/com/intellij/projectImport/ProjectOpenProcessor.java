@@ -19,13 +19,12 @@
  */
 package com.intellij.projectImport;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
@@ -35,16 +34,6 @@ import javax.swing.*;
 import java.io.File;
 
 public abstract class ProjectOpenProcessor {
-  @Deprecated
-  @DeprecationInfo("Not Used")
-  public static final ExtensionPointName<ProjectOpenProcessor> EP_NAME = new ExtensionPointName<>("com.intellij.projectOpenProcessor");
-
-  @Nullable
-  @Deprecated
-  public static ProjectOpenProcessor findProcessor(VirtualFile file) {
-    return ProjectOpenProcessors.getInstance().findProcessor(file);
-  }
-
   public abstract String getName();
 
   @NotNull
@@ -61,18 +50,15 @@ public abstract class ProjectOpenProcessor {
     return getIcon();
   }
 
-  public abstract boolean canOpenProject(VirtualFile file);
-
-  @Deprecated
-  @DeprecationInfo("Not used")
-  public boolean lookForProjectsInDirectory() {
-    return true;
+  public boolean canOpenProject(@NotNull File file) {
+    VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
+    return virtualFile != null && canOpenProject(virtualFile);
   }
 
   @Deprecated
-  @DeprecationInfo("Not used")
-  public boolean isProjectFile(VirtualFile file) {
-    return canOpenProject(file);
+  @DeprecationInfo("Use #canOpenProject(File)")
+  public boolean canOpenProject(@NotNull VirtualFile file) {
+    return false;
   }
 
   @Nullable

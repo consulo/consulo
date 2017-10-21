@@ -18,6 +18,7 @@ package com.intellij.ide.actions;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.annotations.RequiredDispatchThread;
@@ -53,7 +54,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
 
   @Nullable
   private static Icon getProcessorIcon(final VirtualFile virtualFile) {
-    final ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(virtualFile);
+    final ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
     if (provider != null) {
       return provider.getIcon(virtualFile);
     }
@@ -67,7 +68,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   }
 
   public static boolean canOpen(final VirtualFile file) {
-    return ProjectOpenProcessors.getInstance().findProcessor(file) != null;
+    return ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(file)) != null;
   }
 
   private static boolean isProjectDirectory(final VirtualFile virtualFile) {

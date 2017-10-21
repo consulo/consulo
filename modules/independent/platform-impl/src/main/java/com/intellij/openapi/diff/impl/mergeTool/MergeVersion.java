@@ -30,6 +30,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.project.ProjectOpenProcessors;
@@ -153,8 +154,8 @@ public interface MergeVersion {
     }
 
     public static boolean isProjectFile(VirtualFile file) {
-      final ProjectOpenProcessor importProvider = ProjectOpenProcessors.getInstance().findProcessor(file);
-      return importProvider != null && importProvider.lookForProjectsInDirectory();
+      final ProjectOpenProcessor importProvider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtil.virtualToIoFile(file));
+      return importProvider != null;
     }
 
     protected void doRestoreOriginalContent(Project project) {

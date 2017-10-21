@@ -64,8 +64,8 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
   }
 
   @Override
-  public boolean canOpenProject(final VirtualFile file) {
-    return file.isDirectory() && file.findChild(Project.DIRECTORY_STORE_FOLDER) != null;
+  public boolean canOpenProject(@NotNull File file) {
+    return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER).exists();
   }
 
   @RequiredDispatchThread
@@ -214,7 +214,11 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
   //region Async staff
   @Override
-  public void doOpenProjectAsync(@NotNull AsyncResult<Project> asyncResult, @NotNull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame, @NotNull UIAccess uiAccess) {
+  public void doOpenProjectAsync(@NotNull AsyncResult<Project> asyncResult,
+                                 @NotNull VirtualFile virtualFile,
+                                 @Nullable Project projectToClose,
+                                 boolean forceOpenInNewFrame,
+                                 @NotNull UIAccess uiAccess) {
     doOpenProjectAsync(asyncResult, virtualFile, projectToClose, forceOpenInNewFrame, -1, uiAccess, null);
   }
 
