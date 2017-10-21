@@ -15,16 +15,19 @@
  */
 package com.intellij.xdebugger.impl.actions;
 
-import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
+import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 
 public class ValueTooltipAutoShowAction extends ToggleAction {
+  @Override
   public boolean isSelected(AnActionEvent e) {
-    return Registry.is("debugger.valueTooltipAutoShow");
+    return XDebuggerSettingsManager.getInstance().getDataViewSettings().isValueTooltipAutoShow();
   }
 
+  @Override
   public void setSelected(AnActionEvent e, boolean state) {
-    Registry.get("debugger.valueTooltipAutoShow").setValue(state);
+    XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setValueTooltipAutoShow(state);
   }
 }

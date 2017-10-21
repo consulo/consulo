@@ -34,6 +34,10 @@ public abstract class XDebuggerSettingsManager {
     boolean isShowLibraryStackFrames();
 
     boolean isShowValuesInline();
+
+    boolean isValueTooltipAutoShow();
+
+    boolean isValueTooltipAutoShowOnSelection();
   }
 
   @NotNull

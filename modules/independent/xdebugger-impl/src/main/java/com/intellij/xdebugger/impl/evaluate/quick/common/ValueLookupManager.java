@@ -29,12 +29,12 @@ import com.intellij.openapi.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.Alarm;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.impl.DebuggerSupport;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import consulo.annotations.RequiredDispatchThread;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -112,13 +112,10 @@ public class ValueLookupManager extends EditorMouseAdapter implements EditorMous
     final Rectangle area = editor.getScrollingModel().getVisibleArea();
     myAlarm.cancelAllRequests();
     if (type == ValueHintType.MOUSE_OVER_HINT) {
-      if (Registry.is("debugger.valueTooltipAutoShow")) {
-        myAlarm.addRequest(new Runnable() {
-          @Override
-          public void run() {
-            if (area.equals(editor.getScrollingModel().getVisibleArea())) {
-              showHint(handler, editor, point, type);
-            }
+      if (XDebuggerSettingsManager.getInstance().getDataViewSettings().isValueTooltipAutoShow()) {
+        myAlarm.addRequest(() -> {
+          if (area.equals(editor.getScrollingModel().getVisibleArea())) {
+            showHint(handler, editor, point, type);
           }
         }, getDelay(handler));
       }

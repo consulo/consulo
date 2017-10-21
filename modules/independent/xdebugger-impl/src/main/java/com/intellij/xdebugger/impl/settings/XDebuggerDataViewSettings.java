@@ -32,8 +32,29 @@ public class XDebuggerDataViewSettings implements XDebuggerSettingsManager.DataV
 
   private boolean showLibraryStackFrames = true;
 
+  private boolean myValueTooltipAutoShow = true;
+  private boolean myValueTooltipAutoShowOnSelection;
+
   @Tag("show-values-inline")
   private boolean showValuesInline = true;
+
+  @Override
+  public boolean isValueTooltipAutoShow() {
+    return myValueTooltipAutoShow;
+  }
+
+  public void setValueTooltipAutoShow(boolean valueTooltipAutoShow) {
+    myValueTooltipAutoShow = valueTooltipAutoShow;
+  }
+
+  @Override
+  public boolean isValueTooltipAutoShowOnSelection() {
+    return myValueTooltipAutoShowOnSelection;
+  }
+
+  public void setValueTooltipAutoShowOnSelection(boolean valueTooltipAutoShowOnSelection) {
+    myValueTooltipAutoShowOnSelection = valueTooltipAutoShowOnSelection;
+  }
 
   @Override
   @Tag("sort-values")

@@ -47,6 +47,7 @@ import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreeRestorer;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreeState;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XStackFrameNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
+import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,7 +87,7 @@ public abstract class XVariablesViewBase extends XDebugView {
       disposeTreeRestorer();
       myTreeRestorer = myTreeState.restoreState(tree);
     }
-    if (position != null && Registry.is("debugger.valueTooltipAutoShowOnSelection")) {
+    if (position != null && XDebuggerSettingsManager.getInstance().getDataViewSettings().isValueTooltipAutoShowOnSelection()) {
       registerInlineEvaluator(stackFrame, position, project);
     }
   }
@@ -181,7 +182,7 @@ public abstract class XVariablesViewBase extends XDebugView {
 
     @Override
     public void selectionChanged(final SelectionEvent e) {
-      if (!Registry.is("debugger.valueTooltipAutoShowOnSelection") || myEditor.getCaretModel().getCaretCount() > 1) {
+      if (!XDebuggerSettingsManager.getInstance().getDataViewSettings().isValueTooltipAutoShowOnSelection() || myEditor.getCaretModel().getCaretCount() > 1) {
         return;
       }
       final String text = myEditor.getDocument().getText(e.getNewRange());

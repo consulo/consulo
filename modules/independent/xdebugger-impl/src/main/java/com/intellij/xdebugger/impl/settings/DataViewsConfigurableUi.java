@@ -27,9 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 public class DataViewsConfigurableUi {
-  public static final String DEBUGGER_VALUE_TOOLTIP_AUTO_SHOW_KEY = "debugger.valueTooltipAutoShow";
-  public static final String DEBUGGER_VALUE_TOOLTIP_AUTO_SHOW_ON_SELECTION_KEY = "debugger.valueTooltipAutoShowOnSelection";
-
   private JCheckBox enableAutoExpressionsCheckBox;
   private JFormattedTextField valueTooltipDelayTextField;
   private JPanel panel;
@@ -60,8 +57,8 @@ public class DataViewsConfigurableUi {
            sortAlphabeticallyCheckBox.isSelected() != settings.isSortValues() ||
            enableAutoExpressionsCheckBox.isSelected() != settings.isAutoExpressions() ||
            myShowValuesInlineCheckBox.isSelected() != settings.isShowValuesInline() ||
-           myShowValueTooltipCheckBox.isSelected() != Registry.is(DEBUGGER_VALUE_TOOLTIP_AUTO_SHOW_KEY) ||
-           myShowValueTooltipOnCheckBox.isSelected() != Registry.is(DEBUGGER_VALUE_TOOLTIP_AUTO_SHOW_ON_SELECTION_KEY);
+           myShowValueTooltipCheckBox.isSelected() != settings.isValueTooltipAutoShow() ||
+           myShowValueTooltipOnCheckBox.isSelected() != settings.isValueTooltipAutoShowOnSelection();
   }
 
   public void reset(@NotNull XDebuggerDataViewSettings settings) {
@@ -69,8 +66,8 @@ public class DataViewsConfigurableUi {
     sortAlphabeticallyCheckBox.setSelected(settings.isSortValues());
     enableAutoExpressionsCheckBox.setSelected(settings.isAutoExpressions());
     myShowValuesInlineCheckBox.setSelected(settings.isShowValuesInline());
-    myShowValueTooltipCheckBox.setSelected(Registry.is(DEBUGGER_VALUE_TOOLTIP_AUTO_SHOW_KEY));
-    myShowValueTooltipOnCheckBox.setSelected(Registry.is(DEBUGGER_VALUE_TOOLTIP_AUTO_SHOW_ON_SELECTION_KEY));
+    myShowValueTooltipCheckBox.setSelected(settings.isValueTooltipAutoShow());
+    myShowValueTooltipOnCheckBox.setSelected(settings.isValueTooltipAutoShowOnSelection());
     myTooltipLabel.setText(XDebuggerBundle.message("settings.tooltip.label", Registry.stringValue("ide.forcedShowTooltip")));
   }
 
@@ -79,8 +76,8 @@ public class DataViewsConfigurableUi {
     settings.setSortValues(sortAlphabeticallyCheckBox.isSelected());
     settings.setAutoExpressions(enableAutoExpressionsCheckBox.isSelected());
     settings.setShowValuesInline(myShowValuesInlineCheckBox.isSelected());
-    Registry.get(DEBUGGER_VALUE_TOOLTIP_AUTO_SHOW_KEY).setValue(myShowValueTooltipCheckBox.isSelected());
-    Registry.get(DEBUGGER_VALUE_TOOLTIP_AUTO_SHOW_ON_SELECTION_KEY).setValue(myShowValueTooltipOnCheckBox.isSelected());
+    settings.setValueTooltipAutoShow((myShowValueTooltipCheckBox.isSelected()));
+    settings.setValueTooltipAutoShowOnSelection(myShowValueTooltipOnCheckBox.isSelected());
   }
 
   private void createUIComponents() {
