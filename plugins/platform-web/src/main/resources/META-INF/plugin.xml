@@ -51,5 +51,8 @@
 
     <applicationService serviceInterface="com.intellij.openapi.help.HelpManager"
                         serviceImplementation="consulo.web.help.impl.WebHelpManagerImpl"/>
+
+    <projectService serviceInterface="com.intellij.ide.projectView.ProjectView"
+                    serviceImplementation="consulo.web.projectView.WebProjectViewImpl"/>
   </extensions>
 </idea-plugin>

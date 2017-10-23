@@ -538,7 +538,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   @Override
-  public void setupToolwindow(@NotNull ToolWindow toolWindow, final boolean loadPaneExtensions) {
+  public void setupToolWindow(@NotNull ToolWindow toolWindow, final boolean loadPaneExtensions) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myActionGroup = new DefaultActionGroup();
 

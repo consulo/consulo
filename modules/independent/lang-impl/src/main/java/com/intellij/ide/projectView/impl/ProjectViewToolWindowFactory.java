@@ -30,6 +30,11 @@ import org.jetbrains.annotations.NotNull;
 public class ProjectViewToolWindowFactory implements ToolWindowFactory, DumbAware {
   @Override
   public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-    ((ProjectViewEx) ProjectView.getInstance(project)).setupToolwindow(toolWindow, true);
+    ((ProjectViewEx) ProjectView.getInstance(project)).setupToolWindow(toolWindow, true);
+  }
+
+  @Override
+  public boolean isUnified() {
+    return true;
   }
 }

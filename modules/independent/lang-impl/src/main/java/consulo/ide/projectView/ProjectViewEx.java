@@ -24,5 +24,5 @@ import org.jetbrains.annotations.NotNull;
  * @since 25-Sep-17
  */
 public interface ProjectViewEx extends ProjectView {
-  void setupToolwindow(@NotNull ToolWindow toolWindow, final boolean loadPaneExtensions);
+  void setupToolWindow(@NotNull ToolWindow toolWindow, final boolean loadPaneExtensions);
 }
