@@ -17,6 +17,10 @@ package consulo.web.projectView;
 
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
+import com.intellij.ide.projectView.impl.ProjectAbstractTreeStructureBase;
+import com.intellij.ide.projectView.impl.ProjectViewPane;
+import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
@@ -25,9 +29,13 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import consulo.ide.projectView.ProjectViewEx;
 import consulo.ui.Components;
+import consulo.ui.Tree;
+import consulo.ui.TreeNode;
+import consulo.web.fileChooser.WrapperTreeModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Inject;
 import java.util.Collection;
 
 /**
@@ -35,9 +43,43 @@ import java.util.Collection;
  * @since 23-Oct-17
  */
 public class WebProjectViewImpl implements ProjectViewEx {
+  private final Project myProject;
+
+  @Inject
+  public WebProjectViewImpl(Project project) {
+    myProject = project;
+  }
+
   @Override
   public void setupToolWindow(@NotNull ToolWindow toolWindow, boolean loadPaneExtensions) {
-    Content content = ContentFactory.getInstance().createUIContent(Components.label("Project View"), "Project", true);
+
+    ProjectViewPane projectViewPane = null;
+    for (AbstractProjectViewPane pane : AbstractProjectViewPane.EP_NAME.getExtensions(myProject)) {
+      if (pane instanceof ProjectViewPane) {
+        projectViewPane = (ProjectViewPane)pane;
+      }
+    }
+    assert projectViewPane != null;
+
+    ProjectAbstractTreeStructureBase structure = projectViewPane.createStructure();
+
+    WrapperTreeModel<AbstractTreeNode> model = new WrapperTreeModel<AbstractTreeNode>(structure) {
+      @Override
+      public boolean onDoubleClick(@NotNull Tree tree, @NotNull TreeNode node) {
+        AbstractTreeNode value = (AbstractTreeNode)node.getValue();
+        /*if (value.expandOnDoubleClick()) {
+          return true;
+        }  */
+
+        value.navigate(true);
+
+        return false;
+      }
+    };
+
+    Tree<AbstractTreeNode> tree = Components.tree((AbstractTreeNode)structure.getRootElement(), model);
+
+    Content content = ContentFactory.getInstance().createUIContent(tree, "Project", true);
 
     toolWindow.getContentManager().addContent(content);
   }

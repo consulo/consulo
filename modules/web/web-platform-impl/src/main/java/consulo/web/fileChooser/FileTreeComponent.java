@@ -28,7 +28,7 @@ import consulo.ui.Tree;
  */
 public class FileTreeComponent {
   public static Tree<FileElement> create(Project project, FileChooserDescriptor descriptor) {
-    WrapperTreeModel wrapperTreeModel = new WrapperTreeModel(new FileTreeStructure(project, descriptor));
+    WrapperTreeModel<FileElement> wrapperTreeModel = new WrapperTreeModel<>(new FileTreeStructure(project, descriptor));
     return Components.tree(wrapperTreeModel.getRootElement(), wrapperTreeModel);
   }
 }

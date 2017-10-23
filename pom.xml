@@ -36,8 +36,9 @@
     <module>modules/web/web-ui-impl-client</module>
     <module>modules/web/web-ui-impl-shared</module>
     <module>modules/web/web-ui-impl-server</module>
-    <module>modules/web/web-platform-impl</module>
     <module>modules/web/web-platform-api</module>
+    <module>modules/web/web-platform-impl</module>
+    <module>modules/web/web-lang-impl</module>
     <module>plugins/platform-web</module>
 
     <module>jre9-stub</module>

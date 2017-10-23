@@ -15,9 +15,10 @@
  */
 package consulo.web.fileChooser;
 
-import com.intellij.openapi.fileChooser.FileElement;
-import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
-import com.intellij.openapi.fileChooser.impl.FileTreeStructure;
+import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.ide.util.treeView.AbstractTreeStructure;
+import com.intellij.ide.util.treeView.NodeDescriptor;
+import com.intellij.openapi.application.ReadAction;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import org.jetbrains.annotations.NotNull;
@@ -29,32 +30,36 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 16-Sep-17
  */
-public class WrapperTreeModel implements TreeModel<FileElement> {
-  private FileTreeStructure myFileTreeStructure;
+public class WrapperTreeModel<T> implements TreeModel<T> {
+  private AbstractTreeStructure myStructure;
 
-  public WrapperTreeModel(FileTreeStructure fileTreeStructure) {
-    myFileTreeStructure = fileTreeStructure;
+  public WrapperTreeModel(AbstractTreeStructure structure) {
+    myStructure = structure;
   }
 
-  public FileElement getRootElement() {
-    return (FileElement)myFileTreeStructure.getRootElement();
+  @Nullable
+  public T getRootElement() {
+    return (T)myStructure.getRootElement();
   }
 
   @Override
-  public void fetchChildren(@NotNull Function<FileElement, TreeNode<FileElement>> nodeFactory, @Nullable FileElement parentValue) {
-    for (Object o : myFileTreeStructure.getChildElements(parentValue)) {
-      FileElement element = (FileElement)o;
-      TreeNode<FileElement> apply = nodeFactory.apply(element);
+  public void fetchChildren(@NotNull Function<T, TreeNode<T>> nodeFactory, @Nullable T parentValue) {
+    for (Object o : ReadAction.compute(() -> myStructure.getChildElements(parentValue))) {
+      T element = (T)o;
+      TreeNode<T> apply = nodeFactory.apply(element);
 
-      apply.setLeaf(!(element.getFile()).isDirectory());
+      if(o instanceof AbstractTreeNode && ((AbstractTreeNode)o).isAlwaysLeaf()) {
+        apply.setLeaf(true);
+      }
+
       apply.setRender((fileElement, itemPresentation) -> {
-        FileNodeDescriptor descriptor = (FileNodeDescriptor)myFileTreeStructure.createDescriptor(element, null);
+        NodeDescriptor descriptor = myStructure.createDescriptor(element, null);
 
         descriptor.update();
 
-        itemPresentation.append(descriptor.getName());
+        itemPresentation.append(descriptor.toString());
         try {
-          itemPresentation.setIcon((consulo.ui.image.Image)descriptor.getIcon());
+          itemPresentation.setIcon(ReadAction.compute(() -> (consulo.ui.image.Image)descriptor.getIcon()));
         }
         catch (Exception e) {
           e.printStackTrace();
