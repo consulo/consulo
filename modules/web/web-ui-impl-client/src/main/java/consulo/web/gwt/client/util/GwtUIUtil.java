@@ -21,8 +21,10 @@ import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.*;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.shared.Connector;
 import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,6 +63,15 @@ public class GwtUIUtil {
     verticalPanel.add(new Label("Loading..."));
 
     return verticalPanel;
+  }
+
+  @Contract("null -> null")
+  public static Widget connector2Widget(@Nullable Connector connector) {
+    if (connector == null) {
+      return null;
+    }
+    ComponentConnector componentConnector = (ComponentConnector)connector;
+    return componentConnector.getWidget();
   }
 
   @NotNull

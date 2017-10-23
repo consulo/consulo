@@ -22,10 +22,12 @@ import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Component;
+import consulo.ui.Components;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.internal.VaadinWrapper;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
+import consulo.web.wm.impl.WebToolWindowInternalDecorator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -143,6 +145,27 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     }
   }
 
+  private final class RemoveDockedComponentCmd extends FinalizableCommand {
+    private final WindowInfoImpl myInfo;
+    private final boolean myDirtyMode;
+
+    public RemoveDockedComponentCmd(@NotNull WindowInfoImpl info, final boolean dirtyMode, @NotNull Runnable finishCallBack) {
+      super(finishCallBack);
+      myInfo = info;
+      myDirtyMode = dirtyMode;
+    }
+
+    @Override
+    public final void run() {
+      try {
+        setComponent(null, myInfo.getAnchor(), 0);
+      }
+      finally {
+        finish();
+      }
+    }
+  }
+
   private WGwtToolWindowStripe myTopStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.TOP);
   private WGwtToolWindowStripe myBottomStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.BOTTOM);
   private WGwtToolWindowStripe myLeftStripe = new WGwtToolWindowStripe(DockLayoutState.Constraint.LEFT);
@@ -151,14 +174,21 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
   private final Map<String, WGwtToolWindowStripeButton> myId2Button = new HashMap<>();
   private final HashMap<String, ToolWindowInternalDecorator> myId2Decorator = new HashMap<>();
   private final HashMap<ToolWindowInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
+  private final HashMap<WGwtToolWindowStripeButton, WindowInfoImpl> myButton2Info = new HashMap<>();
 
   private final List<Component> myChildren = new ArrayList<>();
+
+  private WGwtThreeComponentSplitLayout myHorizontalSplitter = new WGwtThreeComponentSplitLayout();
 
   public WGwtToolWindowPanel() {
     add(myTopStripe);
     add(myBottomStripe);
     add(myLeftStripe);
     add(myRightStripe);
+
+    myHorizontalSplitter.setCenterComponent(Components.label("Test"));
+
+    add(myHorizontalSplitter);
   }
 
   private void add(Component component) {
@@ -166,8 +196,30 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     myChildren.add(component);
   }
 
-  private void setComponent(final ToolWindowInternalDecorator component, @NotNull ToolWindowAnchor anchor, final float weight) {
+  private void setComponent(@Nullable ToolWindowInternalDecorator d, @NotNull ToolWindowAnchor anchor, final float weight) {
+    WebToolWindowInternalDecorator decorator = (WebToolWindowInternalDecorator)d;
 
+    consulo.ui.Component component = decorator == null ? null : decorator.getComponent();
+
+    if (ToolWindowAnchor.TOP == anchor) {
+      //myVerticalSplitter.setFirstComponent(component);
+      //myVerticalSplitter.setFirstSize((int)(myLayeredPane.getHeight() * weight));
+    }
+    else if (ToolWindowAnchor.LEFT == anchor) {
+      myHorizontalSplitter.setLeftComponent(component);
+      //myHorizontalSplitter.setFirstSize((int)(myLayeredPane.getWidth() * weight));
+    }
+    else if (ToolWindowAnchor.BOTTOM == anchor) {
+      //myVerticalSplitter.setLastComponent(component);
+      //myVerticalSplitter.setLastSize((int)(myLayeredPane.getHeight() * weight));
+    }
+    else if (ToolWindowAnchor.RIGHT == anchor) {
+      myHorizontalSplitter.setRightComponent(component);
+      //myHorizontalSplitter.setLastSize((int)(myLayeredPane.getWidth() * weight));
+    }
+    else {
+      //LOG.error("unknown anchor: " + anchor);
+    }
   }
 
   @Nullable
@@ -217,12 +269,48 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
   @NotNull
   @Override
   public FinalizableCommand createRemoveDecoratorCmd(@NotNull String id, boolean dirtyMode, @NotNull Runnable finishCallBack) {
-    return new FinalizableCommand(finishCallBack) {
-      @Override
-      public void run() {
+    final ToolWindowInternalDecorator decorator = getDecoratorById(id);
+    final WindowInfoImpl info = getDecoratorInfoById(id);
 
+    myDecorator2Info.remove(decorator);
+    myId2Decorator.remove(id);
+
+    WindowInfoImpl sideInfo = getDockedInfoAt(info.getAnchor(), !info.isSplit());
+
+    if (info.isDocked()) {
+      if (sideInfo == null) {
+        return new RemoveDockedComponentCmd(info, dirtyMode, finishCallBack);
       }
-    };
+      else {
+        return new FinalizableCommand(finishCallBack) {
+          @Override
+          public void run() {
+
+          }
+        };
+        //return new RemoveSplitAndDockedComponentCmd(info, dirtyMode, finishCallBack);
+      }
+    }
+    else if (info.isSliding()) {
+      return new FinalizableCommand(finishCallBack) {
+        @Override
+        public void run() {
+
+        }
+      };
+      //return new RemoveSlidingComponentCmd(decorator, info, dirtyMode, finishCallBack);
+    }
+    else {
+      throw new IllegalArgumentException("Unknown window type");
+    }
+  }
+
+  private WindowInfoImpl getDecoratorInfoById(final String id) {
+    return myDecorator2Info.get(myId2Decorator.get(id));
+  }
+
+  private ToolWindowInternalDecorator getDecoratorById(final String id) {
+    return myId2Decorator.get(id);
   }
 
   @NotNull

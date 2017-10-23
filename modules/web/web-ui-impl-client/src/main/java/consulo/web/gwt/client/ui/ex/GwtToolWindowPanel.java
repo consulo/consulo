@@ -31,23 +31,20 @@ import java.util.Map;
 public class GwtToolWindowPanel extends VerticalPanel {
   private final Map<DockLayoutState.Constraint, GwtToolWindowStripe> myStripes = new HashMap<>();
 
-  private SplitLayoutPanel myCenterSplitLayout;
-
-  private SimplePanel myLeftPanel = new SimplePanel();
-  private SimplePanel myRightPanel = new SimplePanel();
-
-  private SimplePanel myRootPanel = new SimplePanel();
+  private final SimplePanel myCenterPanel;
 
   public GwtToolWindowPanel() {
     setHorizontalAlignment(DockPanel.ALIGN_CENTER);
 
-    myCenterSplitLayout = new SplitLayoutPanel(2);
+    myCenterPanel = new SimplePanel();
   }
 
   public void build(List<Widget> widgetList) {
     clear();
     myStripes.clear();
+    myCenterPanel.setWidget(null);
 
+    Widget centerWidget = null;
     int i = 0;
     for (Widget panel : widgetList) {
       if (panel instanceof GwtToolWindowStripe) {
@@ -59,7 +56,16 @@ public class GwtToolWindowPanel extends VerticalPanel {
 
         myStripes.put(constraint, (GwtToolWindowStripe)panel);
       }
+      else {
+        centerWidget = panel;
+      }
     }
+
+    if (centerWidget != null) {
+      GwtUIUtil.fill(centerWidget);
+    }
+
+    myCenterPanel.setWidget(centerWidget);
 
     doLayout();
   }
@@ -84,11 +90,9 @@ public class GwtToolWindowPanel extends VerticalPanel {
 
     add(centerBlock);
 
-    myCenterSplitLayout.clear();
+    centerBlock.add(myCenterPanel);
 
-    centerBlock.add(myCenterSplitLayout);
-
-    setAnywhereSize(centerBlock, myCenterSplitLayout, "100%", "100%", null);
+    setAnywhereSize(centerBlock, myCenterPanel, "100%", "100%", null);
 
     GwtToolWindowStripe rightLayout = myStripes.get(DockLayoutState.Constraint.RIGHT);
     if (rightLayout != null && rightLayout.canShow()) {
@@ -101,45 +105,7 @@ public class GwtToolWindowPanel extends VerticalPanel {
       add(bottomLayout);
       setAnywhereSize(this, bottomLayout, "22px", "100%", "Top");
     }
-
-    GwtUIUtil.fill(myRootPanel);
-
-    myCenterSplitLayout.addWest(myLeftPanel, 250);
-    myCenterSplitLayout.addEast(myRightPanel, 250);
-
-    myCenterSplitLayout.setWidgetHidden(myLeftPanel, true);
-    myCenterSplitLayout.setWidgetHidden(myRightPanel, true);
-
-    myCenterSplitLayout.add(myRootPanel);
-
-    myRootPanel.setWidget(GwtUIUtil.fillAndReturn(new GwtEditorImpl()));
   }
-
-  /*public void showOrHide(DockLayoutState.Constraint position, GwtInternalDecorator decorator, GwtToolWindowStripeButton button) {
-    boolean isActive = !button.isSelected();
-
-    button.setSelected(isActive);
-
-    if (position == DockLayoutState.Constraint.LEFT || position == DockLayoutState.Constraint.RIGHT) {
-      SimplePanel simplePanel;
-      if (position == DockLayoutState.Constraint.LEFT) {
-        simplePanel = myLeftPanel;
-      }
-      else {
-        simplePanel = myRightPanel;
-      }
-
-      myCenterSplitLayout.setWidgetHidden(simplePanel, !isActive);
-
-      if (isActive) {
-        simplePanel.setWidget(decorator);
-        myCenterSplitLayout.setWidgetSize(simplePanel, 250);
-      }
-      else {
-        simplePanel.setWidget(null);
-      }
-    }
-  }*/
 
   private static void setAnywhereSize(CellPanel panel, Widget widget, String height, String width, String borderPosition) {
     widget.setHeight(height);
