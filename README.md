@@ -55,7 +55,6 @@ If you want run Consulo from repository
 
 ## Sandbox Projects
 
- * Consulo as Web application [link](https://github.com/consulo/consulo/tree/maven-new/modules/web)
  * Profiler API [link](https://github.com/consulo/profiler-sandbox)
  * Diagram support [link](https://github.com/consulo/consulo/tree/master/modules/independent/graph-api)
 
