@@ -44,8 +44,8 @@ public class WebToolWindowInternalDecorator implements ToolWindowInternalDecorat
     myWindowInfo = windowInfo;
     myToolWindow = toolWindow;
 
-    myLayout = Layouts.dock();
-    myLayout.top(Components.label(toolWindow.getTitle()));
+    myLayout = DockLayout.create();
+    myLayout.top(Label.create(toolWindow.getTitle()));
     myLayout.center(toolWindow.getUIComponent());
   }
 

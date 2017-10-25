@@ -38,7 +38,6 @@ import com.intellij.util.ContentUtilEx;
 import com.intellij.util.ui.update.ComparableObject;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.DockLayout;
-import consulo.ui.Layouts;
 import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.layout.UnifiedComboContentLayout;
 import consulo.wm.impl.layout.UnifiedContentLayout;
@@ -62,7 +61,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
 
   ContentManager myManager;
 
-  private final DockLayout myContent = Layouts.dock();
+  private final DockLayout myContent = DockLayout.create();
   private ToolWindowBase myWindow;
 
   TabbedContentAction.CloseAllAction myCloseAllAction;

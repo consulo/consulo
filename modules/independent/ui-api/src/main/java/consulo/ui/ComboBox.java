@@ -39,15 +39,15 @@ public interface ComboBox<E> extends ValueComponent<E> {
     return UIInternal.get()._Components_comboBox(model);
   }
 
-  static class SimpleBuilder<K> {
+  static class Builder<K> {
     private Map<K, String> myValues = new LinkedHashMap<>();
 
-    public SimpleBuilder<K> add(K key, String value) {
+    public Builder<K> add(K key, String value) {
       myValues.put(key, value);
       return this;
     }
 
-    public SimpleBuilder<K> fillByEnum(Class<? extends K> clazz, Function<K, String> presentation) {
+    public Builder<K> fillByEnum(Class<? extends K> clazz, Function<K, String> presentation) {
       if (!clazz.isEnum()) {
         throw new IllegalArgumentException("Accepted only enum");
       }
@@ -69,8 +69,8 @@ public interface ComboBox<E> extends ValueComponent<E> {
   }
 
   @NotNull
-  static <K> SimpleBuilder<K> builder() {
-    return new SimpleBuilder<>();
+  static <K> Builder<K> builder() {
+    return new Builder<>();
   }
 
   @NotNull

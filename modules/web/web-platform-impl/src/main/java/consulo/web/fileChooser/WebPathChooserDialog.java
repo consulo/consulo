@@ -48,19 +48,19 @@ public class WebPathChooserDialog implements PathChooserDialog {
   public void choose(@Nullable VirtualFile toSelect, @NotNull Consumer<List<VirtualFile>> callback) {
     Window fileTree = Window.createModal("Select file");
     fileTree.setSize(new Size(400, 400));
-    fileTree.setContent(Components.label("TEst"));
+    fileTree.setContent(Label.create("TEst"));
 
-    DockLayout dockLayout = Layouts.dock();
+    DockLayout dockLayout = DockLayout.create();
     Tree<FileElement> component = FileTreeComponent.create(myProject, myDescriptor);
 
     dockLayout.center(component);
 
-    DockLayout bottomLayout = Layouts.dock();
+    DockLayout bottomLayout = DockLayout.create();
     bottomLayout.addBorder(BorderPosition.TOP);
-    HorizontalLayout rightButtons = Layouts.horizontal();
+    HorizontalLayout rightButtons = HorizontalLayout.create();
     bottomLayout.right(rightButtons);
 
-    Button ok = Components.button("OK");
+    Button ok = Button.create("OK");
     ok.addClickListener(() -> {
       fileTree.close();
 
@@ -70,7 +70,7 @@ public class WebPathChooserDialog implements PathChooserDialog {
     });
     ok.setEnabled(false);
     rightButtons.add(ok);
-    consulo.ui.Button cancel = Components.button("Cancel");
+    consulo.ui.Button cancel = Button.create("Cancel");
     cancel.addClickListener(fileTree::close);
 
     component.addSelectListener(node -> {

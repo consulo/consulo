@@ -67,17 +67,17 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
 
     @RequiredUIAccess
     public Panel() {
-      myWholeLayout = Layouts.vertical();
-      myWholeLayout.add(myCbSmartHome = Components.checkBox(ApplicationBundle.message("checkbox.smart.home")));
-      myWholeLayout.add(myCbSmartEnd = Components.checkBox(ApplicationBundle.message("checkbox.smart.end.on.blank.line")));
-      myWholeLayout.add(myCbInsertPairBracket = Components.checkBox(ApplicationBundle.message("checkbox.insert.pair.bracket")));
-      myWholeLayout.add(myCbInsertPairQuote = Components.checkBox(ApplicationBundle.message("checkbox.insert.pair.quote")));
-      myWholeLayout.add(myCbReformatBlockOnTypingRBrace = Components.checkBox(ApplicationBundle.message("checkbox.reformat.on.typing.rbrace")));
-      myWholeLayout.add(myCbCamelWords = Components.checkBox(ApplicationBundle.message("checkbox.use.camelhumps.words")));
-      myWholeLayout.add(myCbSurroundSelectionOnTyping = Components.checkBox(ApplicationBundle.message("checkbox.surround.selection.on.typing.quote.or.brace")));
-      myWholeLayout.add(mySmartIndentPastedLinesCheckBox = Components.checkBox(ApplicationBundle.message("checkbox.indent.on.paste")));
+      myWholeLayout = VerticalLayout.create();
+      myWholeLayout.add(myCbSmartHome = CheckBox.create(ApplicationBundle.message("checkbox.smart.home")));
+      myWholeLayout.add(myCbSmartEnd = CheckBox.create(ApplicationBundle.message("checkbox.smart.end.on.blank.line")));
+      myWholeLayout.add(myCbInsertPairBracket = CheckBox.create(ApplicationBundle.message("checkbox.insert.pair.bracket")));
+      myWholeLayout.add(myCbInsertPairQuote = CheckBox.create(ApplicationBundle.message("checkbox.insert.pair.quote")));
+      myWholeLayout.add(myCbReformatBlockOnTypingRBrace = CheckBox.create(ApplicationBundle.message("checkbox.reformat.on.typing.rbrace")));
+      myWholeLayout.add(myCbCamelWords = CheckBox.create(ApplicationBundle.message("checkbox.use.camelhumps.words")));
+      myWholeLayout.add(myCbSurroundSelectionOnTyping = CheckBox.create(ApplicationBundle.message("checkbox.surround.selection.on.typing.quote.or.brace")));
+      myWholeLayout.add(mySmartIndentPastedLinesCheckBox = CheckBox.create(ApplicationBundle.message("checkbox.indent.on.paste")));
 
-      ComboBox.SimpleBuilder<Integer> reformatOnPasteBuilder = ComboBox.builder();
+      ComboBox.Builder<Integer> reformatOnPasteBuilder = ComboBox.builder();
       reformatOnPasteBuilder.add(CodeInsightSettings.NO_REFORMAT, ApplicationBundle.message("combobox.paste.reformat.none"));
       reformatOnPasteBuilder.add(CodeInsightSettings.INDENT_BLOCK, ApplicationBundle.message("combobox.paste.reformat.indent.block"));
       reformatOnPasteBuilder.add(CodeInsightSettings.INDENT_EACH_LINE, ApplicationBundle.message("combobox.paste.reformat.indent.each.line"));
@@ -85,18 +85,18 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
 
       myWholeLayout.add(LabeledComponents.left(ApplicationBundle.message("combobox.paste.reformat"), myReformatOnPasteCombo = reformatOnPasteBuilder.build()));
 
-      VerticalLayout enterLayout = Layouts.vertical();
-      myWholeLayout.add(Layouts.labeled("Enter").set(enterLayout));
+      VerticalLayout enterLayout = VerticalLayout.create();
+      myWholeLayout.add(LabeledLayout.create("Enter", enterLayout));
 
-      enterLayout.add(myCbSmartIndentOnEnter = Components.checkBox(ApplicationBundle.message("checkbox.smart.indent")));
-      enterLayout.add(myCbInsertPairCurlyBraceOnEnter = Components.checkBox(ApplicationBundle.message("checkbox.insert.pair.curly.brace")));
-      enterLayout.add(myCbInsertJavadocStubOnEnter = Components.checkBox(ApplicationBundle.message("checkbox.javadoc.stub.after.slash.star.star")));
+      enterLayout.add(myCbSmartIndentOnEnter = CheckBox.create(ApplicationBundle.message("checkbox.smart.indent")));
+      enterLayout.add(myCbInsertPairCurlyBraceOnEnter = CheckBox.create(ApplicationBundle.message("checkbox.insert.pair.curly.brace")));
+      enterLayout.add(myCbInsertJavadocStubOnEnter = CheckBox.create(ApplicationBundle.message("checkbox.javadoc.stub.after.slash.star.star")));
       myCbInsertJavadocStubOnEnter.setVisible(hasAnyDocAwareCommenters());
 
-      VerticalLayout backspaceLayout = Layouts.vertical();
-      myWholeLayout.add(Layouts.labeled("Backspace").set(backspaceLayout));
+      VerticalLayout backspaceLayout = VerticalLayout.create();
+      myWholeLayout.add(LabeledLayout.create("Backspace", backspaceLayout));
 
-      ComboBoxes.SimpleBuilder<SmartBackspaceMode> smartIndentBuilder = ComboBoxes.simple();
+      ComboBox.Builder<SmartBackspaceMode> smartIndentBuilder = ComboBox.builder();
       smartIndentBuilder.add(SmartBackspaceMode.OFF, ApplicationBundle.message("combobox.smart.backspace.off"));
       smartIndentBuilder.add(SmartBackspaceMode.INDENT, ApplicationBundle.message("combobox.smart.backspace.simple"));
       smartIndentBuilder.add(SmartBackspaceMode.AUTOINDENT, ApplicationBundle.message("combobox.smart.backspace.smart"));

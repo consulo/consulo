@@ -69,10 +69,10 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
     listSelect.addBorder(BorderPosition.RIGHT);
     listSelect.setSize(new Size(300, -1));
 
-    DockLayout layout = Layouts.dock();
+    DockLayout layout = DockLayout.create();
     layout.left(listSelect);
 
-    VerticalLayout projectActionLayout = Layouts.vertical();
+    VerticalLayout projectActionLayout = VerticalLayout.create();
 
     ActionManager actionManager = ActionManager.getInstance();
     ActionGroup quickStart = (ActionGroup)actionManager.getAction(IdeActions.GROUP_WELCOME_SCREEN_QUICKSTART);

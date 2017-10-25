@@ -22,10 +22,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.Layouts;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.UIAccess;
-import consulo.ui.Window;
+import consulo.ui.*;
 import consulo.ui.ex.internal.WGwtLoadingPanelImpl;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
@@ -85,7 +82,7 @@ public class RootUIBuilder implements UIBuilder {
 
   @RequiredUIAccess
   private void showWelcomeFrame(WebApplication application, Window window) {
-    window.setContent(Layouts.dock());
+    window.setContent(DockLayout.create());
 
     WebSession currentSession = application.getCurrentSession();
     if (currentSession != null) {

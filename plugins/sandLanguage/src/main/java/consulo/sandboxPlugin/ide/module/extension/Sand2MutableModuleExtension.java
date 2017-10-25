@@ -15,15 +15,14 @@
  */
 package consulo.sandboxPlugin.ide.module.extension;
 
+import consulo.annotations.RequiredDispatchThread;
+import consulo.module.extension.MutableModuleExtension;
 import consulo.roots.ModuleRootLayer;
-import consulo.ui.Components;
-import consulo.ui.Layouts;
+import consulo.ui.CheckBox;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.VerticalLayout;
-import consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 
@@ -57,8 +56,8 @@ public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements
   @Nullable
   @Override
   public consulo.ui.Component createConfigurationComponent(@NotNull Runnable updateOnCheck) {
-    final VerticalLayout vertical = Layouts.vertical();
-    vertical.add(Components.checkBox("Omg new UI?"));
+    final VerticalLayout vertical = VerticalLayout.create();
+    vertical.add(CheckBox.create("Omg new UI?"));
     return vertical;
   }
 }
