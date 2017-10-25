@@ -125,7 +125,12 @@ public class ApplicationStarter {
       ApplicationEx app = ApplicationManagerEx.getApplicationEx();
       app.load(PathManager.getOptionsPath());
 
-      ((TransactionGuardImpl) TransactionGuard.getInstance()).performUserActivity(() -> myPostStarter.main(newConfigFolder, myArgs));
+      if (myPostStarter.needStartInTransaction()) {
+        ((TransactionGuardImpl)TransactionGuard.getInstance()).performUserActivity(() -> myPostStarter.main(newConfigFolder, myArgs));
+      }
+      else {
+        myPostStarter.main(newConfigFolder, myArgs);
+      }
 
       myPostStarter = null;
 

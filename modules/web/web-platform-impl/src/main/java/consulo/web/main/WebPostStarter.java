@@ -54,4 +54,9 @@ public class WebPostStarter extends ApplicationPostStarter {
       mySplashRef.set(null);
     }
   }
+
+  @Override
+  public boolean needStartInTransaction() {
+    return false;
+  }
 }

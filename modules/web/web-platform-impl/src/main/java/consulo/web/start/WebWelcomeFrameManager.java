@@ -16,14 +16,17 @@
 package consulo.web.start;
 
 import com.intellij.ide.DataManager;
+import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.*;
+import consulo.ui.app.impl.settings.SettingsDialog;
 import consulo.ui.border.BorderPosition;
 import consulo.web.application.WebApplication;
 import org.jetbrains.annotations.NotNull;
@@ -95,6 +98,14 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
         }));
       }
     }
+
+    projectActionLayout.add(Button.create("Settings", () -> {
+      Configurable[] configurables = ShowSettingsUtilImpl.buildConfigurables(null);
+
+      SettingsDialog settingsDialog = new SettingsDialog(configurables);
+
+      settingsDialog.show();
+    }));
 
     layout.center(projectActionLayout);
 

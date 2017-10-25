@@ -38,4 +38,8 @@ public abstract class ApplicationPostStarter {
 
   public void main(boolean newConfigFolder, @NotNull CommandLineArgs args) {
   }
+
+  public boolean needStartInTransaction() {
+    return true;
+  }
 }

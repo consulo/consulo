@@ -23,6 +23,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.application.ApplicationProperties;
 import consulo.web.servlet.RootUIBuilder;
 import consulo.web.servlet.ui.UIIconServlet;
@@ -30,7 +31,6 @@ import consulo.web.servlet.ui.UIServlet;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.annotation.WebServlet;
-import javax.swing.*;
 import java.io.File;
 
 /**
@@ -60,7 +60,7 @@ public class WebLoader {
     StartupUtil.prepareAndStart(args, (newConfigFolder, commandLineArgs) -> {
       ApplicationStarter app = new ApplicationStarter(commandLineArgs);
 
-      SwingUtilities.invokeLater(() -> {
+      AppExecutorUtil.getAppExecutorService().execute(() -> {
         PluginManager.installExceptionHandler();
         app.run(newConfigFolder);
       });

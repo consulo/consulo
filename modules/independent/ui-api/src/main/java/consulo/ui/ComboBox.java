@@ -61,9 +61,9 @@ public interface ComboBox<E> extends ValueComponent<E> {
     @NotNull
     @SuppressWarnings("unchecked")
     public ComboBox<K> build() {
-      Object[] objects = myValues.keySet().toArray();
-      ComboBox comboBox = ComboBox.create(objects);
-      comboBox.setRender((render, index, item) -> render.append(myValues.get(item)));
+      K[] objects = (K[])myValues.keySet().toArray();
+      ComboBox<K> comboBox = ComboBox.create(objects);
+      comboBox.setRender((render, index, item) -> render.append(item == null ? "" : myValues.get(item)));
       return comboBox;
     }
   }

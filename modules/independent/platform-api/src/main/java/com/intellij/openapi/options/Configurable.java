@@ -55,13 +55,7 @@ import javax.swing.*;
 public interface Configurable extends UnnamedConfigurable {
   public static final Configurable[] EMPTY_ARRAY = new Configurable[0];
 
-  public static ArrayFactory<Configurable> ARRAY_FACTORY = new ArrayFactory<Configurable>() {
-    @NotNull
-    @Override
-    public Configurable[] create(int count) {
-      return count == 0 ? EMPTY_ARRAY : new Configurable[count];
-    }
-  };
+  public static ArrayFactory<Configurable> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Configurable[count];
 
   ExtensionPointName<ConfigurableEP<Configurable>> APPLICATION_CONFIGURABLE = ExtensionPointName.create("com.intellij.applicationConfigurable");
 
