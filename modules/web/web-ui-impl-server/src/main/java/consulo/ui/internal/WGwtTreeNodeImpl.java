@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
@@ -29,25 +30,29 @@ import java.util.function.BiConsumer;
  * @since 09-Sep-17
  */
 public class WGwtTreeNodeImpl<N> implements TreeNode<N> {
-  private N myParent;
+  private final WGwtTreeNodeImpl<N> myParent;
+  private final String myId;
+
   private N myNode;
-  private String myId = UUID.randomUUID().toString();
 
   private List<WGwtTreeNodeImpl<N>> myChildren;
   private BiConsumer<N, ItemPresentation> myRender = (n, itemPresentation) -> itemPresentation.append(String.valueOf(n));
   private boolean myLeaf;
 
-  public WGwtTreeNodeImpl(@Nullable N parent, N node) {
+  public WGwtTreeNodeImpl(@Nullable WGwtTreeNodeImpl<N> parent, @Nullable N node, Map<String, WGwtTreeNodeImpl<N>> nodeMap) {
     myParent = parent;
     myNode = node;
+    myId = parent == null ? "root" : UUID.randomUUID().toString();
+
+    nodeMap.put(getId(), this);
   }
 
   @Nullable
-  public N getParent() {
+  public WGwtTreeNodeImpl<N> getParent() {
     return myParent;
   }
 
-  @NotNull
+  @Nullable
   @Override
   public N getValue() {
     return myNode;

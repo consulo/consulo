@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.fileChooser;
+package consulo.web.ui;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
@@ -30,10 +30,10 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 16-Sep-17
  */
-public class WrapperTreeModel<T> implements TreeModel<T> {
+public class TreeStructureWrappenModel<T> implements TreeModel<T> {
   private AbstractTreeStructure myStructure;
 
-  public WrapperTreeModel(AbstractTreeStructure structure) {
+  public TreeStructureWrappenModel(AbstractTreeStructure structure) {
     myStructure = structure;
   }
 
@@ -43,14 +43,18 @@ public class WrapperTreeModel<T> implements TreeModel<T> {
   }
 
   @Override
+  public boolean isNeedBuildChildrenBeforeOpen(@NotNull TreeNode<T> node) {
+    return myStructure.isToBuildChildrenInBackground(node.getValue());
+  }
+
+  @Override
   public void fetchChildren(@NotNull Function<T, TreeNode<T>> nodeFactory, @Nullable T parentValue) {
     for (Object o : ReadAction.compute(() -> myStructure.getChildElements(parentValue))) {
       T element = (T)o;
       TreeNode<T> apply = nodeFactory.apply(element);
 
-      if(o instanceof AbstractTreeNode && ((AbstractTreeNode)o).isAlwaysLeaf()) {
-        apply.setLeaf(true);
-      }
+      apply.setLeaf(o instanceof AbstractTreeNode && !((AbstractTreeNode)o).isAlwaysShowPlus());
+
 
       apply.setRender((fileElement, itemPresentation) -> {
         NodeDescriptor descriptor = myStructure.createDescriptor(element, null);
@@ -59,7 +63,7 @@ public class WrapperTreeModel<T> implements TreeModel<T> {
 
         itemPresentation.append(descriptor.toString());
         try {
-          itemPresentation.setIcon(ReadAction.compute(() -> (consulo.ui.image.Image)descriptor.getIcon()));
+          ReadAction.run(() -> itemPresentation.setIcon((consulo.ui.image.Image)descriptor.getIcon()));
         }
         catch (Exception e) {
           e.printStackTrace();

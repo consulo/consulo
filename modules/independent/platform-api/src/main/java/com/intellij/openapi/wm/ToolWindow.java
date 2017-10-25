@@ -212,6 +212,7 @@ public interface ToolWindow extends BusyObject {
    */
   @Nullable
   @RequiredUIAccess
+  @Deprecated
   @DeprecationInfo("Use #getIconUI()")
   javax.swing.Icon getIcon();
 
@@ -219,6 +220,7 @@ public interface ToolWindow extends BusyObject {
    * Sets new window icon.
    */
   @RequiredUIAccess
+  @Deprecated
   @DeprecationInfo("Use #setIconUI()")
   void setIcon(@Nullable javax.swing.Icon icon);
 

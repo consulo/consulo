@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
@@ -30,6 +31,6 @@ public interface TreeNode<T> {
 
   boolean isLeaf();
 
-  @NotNull
+  @Nullable("if rootValue is null and treeNode wrap it")
   T getValue();
 }

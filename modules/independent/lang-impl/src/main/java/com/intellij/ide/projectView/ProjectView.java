@@ -17,6 +17,7 @@
 package com.intellij.ide.projectView;
 
 import com.intellij.ide.SelectInTarget;
+import com.intellij.ide.projectView.impl.AbstractProjectViewPSIPane;
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
@@ -34,10 +35,24 @@ public interface ProjectView {
     return ServiceManager.getService(project, ProjectView.class);
   }
 
-  void select(Object element, VirtualFile file, boolean requestFocus);
+  default void select(Object element, VirtualFile file, boolean requestFocus) {
+    final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
+    if (viewPane != null) {
+      viewPane.select(element, file, requestFocus);
+    }
+  }
 
-  ActionCallback selectCB(Object element, VirtualFile file, boolean requestFocus);
+  @NotNull
+  default ActionCallback selectCB(Object element, VirtualFile file, boolean requestFocus){
+    final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
+    if (viewPane != null && viewPane instanceof AbstractProjectViewPSIPane) {
+      return ((AbstractProjectViewPSIPane)viewPane).selectCB(element, file, requestFocus);
+    }
+    select(element, file, requestFocus);
+    return ActionCallback.DONE;
+  }
 
+  @NotNull
   ActionCallback changeViewCB(@NotNull String viewId, String subId);
 
   @Nullable
@@ -103,5 +118,6 @@ public interface ProjectView {
 
   Collection<String> getPaneIds();
 
+  @NotNull
   Collection<SelectInTarget> getSelectInTargets();
 }

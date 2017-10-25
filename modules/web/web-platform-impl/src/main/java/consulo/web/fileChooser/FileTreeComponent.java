@@ -21,6 +21,7 @@ import com.intellij.openapi.fileChooser.impl.FileTreeStructure;
 import com.intellij.openapi.project.Project;
 import consulo.ui.Components;
 import consulo.ui.Tree;
+import consulo.web.ui.TreeStructureWrappenModel;
 
 /**
  * @author VISTALL
@@ -28,7 +29,7 @@ import consulo.ui.Tree;
  */
 public class FileTreeComponent {
   public static Tree<FileElement> create(Project project, FileChooserDescriptor descriptor) {
-    WrapperTreeModel<FileElement> wrapperTreeModel = new WrapperTreeModel<>(new FileTreeStructure(project, descriptor));
-    return Components.tree(wrapperTreeModel.getRootElement(), wrapperTreeModel);
+    TreeStructureWrappenModel<FileElement> treeStructureWrappenModel = new TreeStructureWrappenModel<>(new FileTreeStructure(project, descriptor));
+    return Components.tree(treeStructureWrappenModel.getRootElement(), treeStructureWrappenModel);
   }
 }

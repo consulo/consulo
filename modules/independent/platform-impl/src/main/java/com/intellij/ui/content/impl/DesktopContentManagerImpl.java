@@ -49,6 +49,11 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
     super(contentUI, canCloseContents, project);
   }
 
+  @Override
+  protected void updateUI() {
+    myUI.getComponent().updateUI();
+  }
+
   @NotNull
   @Override
   protected ActionCallback requestFocusForComponent() {

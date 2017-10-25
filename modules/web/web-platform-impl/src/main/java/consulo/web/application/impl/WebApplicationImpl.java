@@ -7,6 +7,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.UIAccess;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,11 @@ public class WebApplicationImpl extends ApplicationImpl implements WebApplicatio
   @Nullable
   public WebStartupProgressImpl getSplash() {
     return (WebStartupProgressImpl)mySplashRef.get();
+  }
+
+  @Override
+  public boolean isDispatchThread() {
+    return super.isDispatchThread() || UIAccess.isUIThread();
   }
 
   @RequiredDispatchThread

@@ -807,25 +807,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   @Override
-  public void select(final Object element, VirtualFile file, boolean requestFocus) {
-    final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
-    if (viewPane != null) {
-      viewPane.select(element, file, requestFocus);
-    }
-  }
-
-  @NotNull
-  @Override
-  public ActionCallback selectCB(Object element, VirtualFile file, boolean requestFocus) {
-    final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
-    if (viewPane != null && viewPane instanceof AbstractProjectViewPSIPane) {
-      return ((AbstractProjectViewPSIPane)viewPane).selectCB(element, file, requestFocus);
-    }
-    select(element, file, requestFocus);
-    return ActionCallback.DONE;
-  }
-
-  @Override
   public void dispose() {
     myConnection.disconnect();
   }

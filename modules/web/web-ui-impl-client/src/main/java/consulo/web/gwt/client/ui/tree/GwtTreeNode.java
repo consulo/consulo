@@ -18,7 +18,6 @@ package consulo.web.gwt.client.ui.tree;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
-import consulo.web.gwt.client.ui.GwtTreeImpl;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
 
 import java.util.Collections;

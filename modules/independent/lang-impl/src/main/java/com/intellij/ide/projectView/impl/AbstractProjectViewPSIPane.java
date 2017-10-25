@@ -249,7 +249,7 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
   }
 
   @NotNull
-  protected BaseProjectTreeBuilder createBuilder(DefaultTreeModel treeModel) {
+  public BaseProjectTreeBuilder createBuilder(DefaultTreeModel treeModel) {
     return new ProjectTreeBuilder(myProject, myTree, treeModel, null, (ProjectAbstractTreeStructureBase)myTreeStructure) {
       @Override
       protected AbstractTreeUpdater createUpdater() {

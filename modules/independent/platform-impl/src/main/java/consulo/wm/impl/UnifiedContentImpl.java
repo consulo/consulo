@@ -192,6 +192,7 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
     myChangeSupport.removePropertyChangeListener(l);
   }
 
+  @Override
   public void setManager(ContentManager manager) {
     myManager = manager;
   }
@@ -286,8 +287,8 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
 
   @Override
   public void dispose() {
-    if (myShouldDisposeContent && myComponent instanceof Disposable) {
-      Disposer.dispose((Disposable)myComponent);
+    if (myShouldDisposeContent && myComponent != null) {
+      Disposer.dispose(myComponent);
     }
 
     myComponent = null;

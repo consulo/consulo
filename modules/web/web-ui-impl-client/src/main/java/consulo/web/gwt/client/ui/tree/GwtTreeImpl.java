@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.client.ui;
+package consulo.web.gwt.client.ui.tree;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.cellview.client.TreeNode;
-import consulo.web.gwt.client.ui.tree.GwtTreeModel;
-import consulo.web.gwt.client.ui.tree.GwtTreeNode;
+import consulo.web.gwt.client.ui.DefaultCellTreeResources;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

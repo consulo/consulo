@@ -28,6 +28,13 @@ public interface TreeModel<N> {
   void fetchChildren(@NotNull Function<N, TreeNode<N>> nodeFactory, @Nullable N parentValue);
 
   /**
+   * If return true - children will be build for current node, and node will be marked as leaf (if not children)
+   */
+  default boolean isNeedBuildChildrenBeforeOpen(@NotNull TreeNode<N> node) {
+    return false;
+  }
+
+  /**
    * @return expand on double click
    */
   default boolean onDoubleClick(@NotNull Tree<N> tree, @NotNull TreeNode<N> node) {

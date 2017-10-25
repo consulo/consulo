@@ -231,10 +231,13 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     finally {
       if (ApplicationManager.getApplication().isDispatchThread()) {
         if (!myDisposed) {
-          myUI.getComponent().updateUI(); //cleanup visibleComponent from Alloy...TabbedPaneUI
+          updateUI();
         }
       }
     }
+  }
+
+  protected void updateUI() {
   }
 
   @Override
@@ -273,10 +276,10 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Override
-  public Content getContent(consulo.ui.Component component) {
+  public Content getContent(@NotNull consulo.ui.Component component) {
     Content[] contents = getContents();
     for (Content content : contents) {
-      if (Comparing.equal(component, content.getComponent())) {
+      if (Comparing.equal(component, content.getUIComponent())) {
         return content;
       }
     }

@@ -48,7 +48,7 @@ class TestProjectViewPSIPane extends AbstractProjectViewPSIPane {
 
   @Override
   @NotNull
-  protected BaseProjectTreeBuilder createBuilder(DefaultTreeModel treeModel) {
+  public BaseProjectTreeBuilder createBuilder(DefaultTreeModel treeModel) {
     return new ProjectTreeBuilder(myProject, myTree, treeModel, AlphaComparator.INSTANCE,
                                   (ProjectAbstractTreeStructureBase)myTreeStructure) {
       @Override

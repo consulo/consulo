@@ -44,6 +44,7 @@ public class WebIdeFocusManagerImpl extends IdeFocusManager {
   @Override
   @NotNull
   public ActionCallback requestFocus(@NotNull final FocusCommand command, final boolean forced) {
+    command.run();
     return ActionCallback.DONE;
   }
 

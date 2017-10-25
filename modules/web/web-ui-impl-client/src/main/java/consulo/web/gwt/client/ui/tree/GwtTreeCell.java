@@ -25,7 +25,6 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import consulo.web.gwt.client.ui.GwtComboBoxImplConnector;
 import consulo.web.gwt.client.ui.GwtHorizontalLayoutImpl;
-import consulo.web.gwt.client.ui.GwtTreeImpl;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
 
 /**
