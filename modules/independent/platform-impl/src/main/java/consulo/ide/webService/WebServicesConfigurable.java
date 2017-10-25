@@ -41,7 +41,7 @@ public class WebServicesConfigurable extends SimpleConfigurableByProperties impl
     CheckBox enableUpdates = Components.checkBox("Enabled updates?");
     propertyBuilder.add(enableUpdates, updateSettings::isEnable, updateSettings::setEnable);
 
-    ComboBox<UpdateChannel> channelComboBox = ComboBoxes.<UpdateChannel>simple().fillByEnum(UpdateChannel.class, Object::toString).build();
+    ComboBox<UpdateChannel> channelComboBox = ComboBox.<UpdateChannel>builder().fillByEnum(UpdateChannel.class, Object::toString).build();
     channelComboBox.setEnabled(updateSettings.isEnable()); // set default state
     propertyBuilder.add(channelComboBox, updateSettings::getChannel, updateSettings::setChannel);
     enableUpdates.addValueListener(event -> channelComboBox.setEnabled(event.getValue()));
