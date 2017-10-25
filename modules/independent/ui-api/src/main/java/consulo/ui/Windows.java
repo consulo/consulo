@@ -22,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 15-Sep-17
  */
+@Deprecated
+@DeprecationInfo("Check children description")
 public class Windows {
   @NotNull
   @Deprecated
