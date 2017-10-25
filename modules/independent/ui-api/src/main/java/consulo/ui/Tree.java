@@ -26,7 +26,7 @@ import java.util.EventListener;
  */
 public interface Tree<E> extends Component {
   @NotNull
-  static <E> Tree<E> tree(@NotNull TreeModel<E> model) {
+  static <E> Tree<E> create(@NotNull TreeModel<E> model) {
     return create(null, model);
   }
 

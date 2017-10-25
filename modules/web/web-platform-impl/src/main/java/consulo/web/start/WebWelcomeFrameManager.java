@@ -63,9 +63,9 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
     welcomeFrame.setResizable(false);
     welcomeFrame.setClosable(false);
     welcomeFrame.setSize(WelcomeFrameManager.getDefaultWindowSize());
-    welcomeFrame.setContent(Components.label("Test"));
+    welcomeFrame.setContent(Label.create("Test"));
 
-    ListBox<String> listSelect = Components.listBox("Test");
+    ListBox<String> listSelect = ListBox.create("Test");
     listSelect.addBorder(BorderPosition.RIGHT);
     listSelect.setSize(new Size(300, -1));
 
@@ -90,7 +90,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
           text = text.substring(0, text.length() - 3);
         }
 
-        projectActionLayout.add(Components.button(text, () -> {
+        projectActionLayout.add(Button.create(text, () -> {
           action.actionPerformed(e);
         }));
       }

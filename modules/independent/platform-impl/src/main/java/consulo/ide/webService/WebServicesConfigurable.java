@@ -38,7 +38,7 @@ public class WebServicesConfigurable extends SimpleConfigurableByProperties impl
     VerticalLayout repoLayout = VerticalLayout.create();
     layout.add(LabeledLayout.create("Repository settings", repoLayout));
 
-    CheckBox enableUpdates = Components.checkBox("Enabled updates?");
+    CheckBox enableUpdates = CheckBox.create("Enabled updates?");
     propertyBuilder.add(enableUpdates, updateSettings::isEnable, updateSettings::setEnable);
 
     ComboBox<UpdateChannel> channelComboBox = ComboBox.<UpdateChannel>builder().fillByEnum(UpdateChannel.class, Object::toString).build();

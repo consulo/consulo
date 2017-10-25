@@ -22,7 +22,7 @@ import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Component;
-import consulo.ui.Components;
+import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Size;
 import consulo.ui.internal.VaadinWrapper;
@@ -186,7 +186,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     add(myLeftStripe);
     add(myRightStripe);
 
-    myHorizontalSplitter.setCenterComponent(Components.label("Test"));
+    myHorizontalSplitter.setCenterComponent(Label.create("Test"));
 
     add(myHorizontalSplitter);
   }

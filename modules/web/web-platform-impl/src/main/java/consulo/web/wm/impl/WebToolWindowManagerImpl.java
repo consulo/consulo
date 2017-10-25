@@ -105,7 +105,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   @NotNull
   @RequiredUIAccess
   protected consulo.ui.Component createInitializingLabel() {
-    Label label = Components.label("Initializing...");
+    Label label = Label.create("Initializing...");
     DockLayout dock = DockLayout.create();
     dock.center(label);
     return label;

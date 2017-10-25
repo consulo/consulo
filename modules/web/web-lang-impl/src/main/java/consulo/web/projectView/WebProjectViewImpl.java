@@ -350,7 +350,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
       }
     };
 
-    Tree<AbstractTreeNode> tree = Components.tree((AbstractTreeNode)structure.getRootElement(), model);
+    Tree<AbstractTreeNode> tree = Tree.create((AbstractTreeNode)structure.getRootElement(), model);
 
     Content content = ContentFactory.getInstance().createUIContent(tree, "Project", true);
 
