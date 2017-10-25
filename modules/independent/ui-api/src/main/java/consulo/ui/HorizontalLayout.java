@@ -23,6 +23,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface HorizontalLayout extends Layout {
   @NotNull
+  static HorizontalLayout create() {
+    return UIInternal.get()._Layouts_horizontal();
+  }
+
+  @NotNull
   @RequiredUIAccess
   default HorizontalLayout add(@NotNull PseudoComponent component) {
     return add(component.getComponent());

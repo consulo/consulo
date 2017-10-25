@@ -23,6 +23,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface DockLayout extends Layout {
   @NotNull
+  static DockLayout create() {
+    return UIInternal.get()._Layouts_dock();
+  }
+
+  @NotNull
   @RequiredUIAccess
   default DockLayout top(@NotNull PseudoComponent component) {
     return top(component.getComponent());

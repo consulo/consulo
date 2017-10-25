@@ -23,6 +23,15 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface TabbedLayout extends Layout {
   @NotNull
+  static TabbedLayout create() {
+    return UIInternal.get()._Layouts_tabbed();
+  }
+
+  /**
+   * Create tab without adding to view
+   * @return new tab
+   */
+  @NotNull
   Tab createTab();
 
   @NotNull

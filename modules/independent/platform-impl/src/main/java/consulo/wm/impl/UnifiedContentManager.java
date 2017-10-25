@@ -23,7 +23,6 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentUI;
 import consulo.ui.Component;
 import consulo.ui.DockLayout;
-import consulo.ui.Layouts;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,7 +61,7 @@ public class UnifiedContentManager extends ContentManagerBase {
   @Override
   public Component getUIComponent() {
     if (myComponent == null) {
-      DockLayout dock = Layouts.dock();
+      DockLayout dock = DockLayout.create();
       dock.addUserDataProvider(dataId -> {
         if (PlatformDataKeys.CONTENT_MANAGER == dataId || PlatformDataKeys.NONEMPTY_CONTENT_MANAGER == dataId && getContentCount() > 1) {
           return this;

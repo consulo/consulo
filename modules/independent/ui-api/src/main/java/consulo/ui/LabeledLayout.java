@@ -23,6 +23,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface LabeledLayout extends Layout {
   @NotNull
+  static LabeledLayout create(@NotNull String label) {
+    return UIInternal.get()._Layouts_labeled(label);
+  }
+
+  @NotNull
   @RequiredUIAccess
   default LabeledLayout set(@NotNull PseudoComponent component) {
     return set(component.getComponent());

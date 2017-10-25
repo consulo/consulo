@@ -22,6 +22,16 @@ import org.jetbrains.annotations.NotNull;
  * @since 13-Jun-16
  */
 public interface SplitLayout extends Layout {
+  @NotNull
+  static SplitLayout createHorizontal() {
+    return UIInternal.get()._Layouts_horizontalSplit();
+  }
+
+  @NotNull
+  static SplitLayout createVertical() {
+    return UIInternal.get()._Layouts_verticalSplit();
+  }
+
   /**
    * @param percent from 0 to 100
    */

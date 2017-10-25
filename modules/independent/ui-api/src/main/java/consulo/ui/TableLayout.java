@@ -15,9 +15,15 @@
  */
 package consulo.ui;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface TableLayout extends Layout {
+  @NotNull
+  static TableLayout create(int rows, int columns) {
+    return UIInternal.get()._Layouts_table(rows, columns);
+  }
 }
