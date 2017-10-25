@@ -23,6 +23,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface RadioButton extends ValueComponent<Boolean> {
   @NotNull
+  static RadioButton create(@NotNull String text) {
+    return create(text, false);
+  }
+
+  @NotNull
+  static RadioButton create(@NotNull String text, boolean selected) {
+    return UIInternal.get()._Components_radioButton(text, selected);
+  }
+
+  @NotNull
   @Override
   Boolean getValue();
 

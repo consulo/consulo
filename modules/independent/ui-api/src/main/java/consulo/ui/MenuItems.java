@@ -15,24 +15,33 @@
  */
 package consulo.ui;
 
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
+@Deprecated
+@DeprecationInfo("Check children description")
 public class MenuItems {
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use MenuItem#create")
   public static MenuItem item(@NotNull String text) {
     return UIInternal.get()._MenuItems_item(text);
   }
 
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use MenuBar#create")
   public static MenuBar menuBar() {
     return UIInternal.get()._MenuItems_menuBar();
   }
 
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use Menu#create")
   public static Menu menu(@NotNull String text) {
     return UIInternal.get()._MenuItems_menu(text);
   }

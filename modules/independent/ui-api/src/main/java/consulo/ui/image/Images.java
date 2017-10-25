@@ -15,6 +15,7 @@
  */
 package consulo.ui.image;
 
+import consulo.annotations.DeprecationInfo;
 import consulo.ui.UIInternal;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,13 +25,19 @@ import java.net.URL;
  * @author VISTALL
  * @since 13-Jun-16
  */
+@Deprecated
+@DeprecationInfo("Check children description")
 public class Images {
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use Image#create")
   public static Image fromURL(@NotNull URL url) {
     return UIInternal.get()._Images_image(url);
   }
 
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use FoldedImage#create")
   public static FoldedImage fold(@NotNull Image... images) {
     if(images.length == 0) {
       throw new IllegalArgumentException("empty array");

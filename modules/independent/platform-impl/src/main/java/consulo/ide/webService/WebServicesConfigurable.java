@@ -33,10 +33,10 @@ public class WebServicesConfigurable extends SimpleConfigurableByProperties impl
   protected Component createLayout(PropertyBuilder propertyBuilder) {
     UpdateSettings updateSettings = UpdateSettings.getInstance();
 
-    VerticalLayout layout = Layouts.vertical();
+    VerticalLayout layout = VerticalLayout.create();
 
-    VerticalLayout repoLayout = Layouts.vertical();
-    layout.add(Layouts.labeled("Repository settings").set(repoLayout));
+    VerticalLayout repoLayout = VerticalLayout.create();
+    layout.add(LabeledLayout.create("Repository settings", repoLayout));
 
     CheckBox enableUpdates = Components.checkBox("Enabled updates?");
     propertyBuilder.add(enableUpdates, updateSettings::isEnable, updateSettings::setEnable);
@@ -46,7 +46,7 @@ public class WebServicesConfigurable extends SimpleConfigurableByProperties impl
     propertyBuilder.add(channelComboBox, updateSettings::getChannel, updateSettings::setChannel);
     enableUpdates.addValueListener(event -> channelComboBox.setEnabled(event.getValue()));
 
-    repoLayout.add(Layouts.horizontal().add(enableUpdates));
+    repoLayout.add(HorizontalLayout.create().add(enableUpdates));
     repoLayout.add(LabeledComponents.left("Channel", channelComboBox));
 
     WebServicesConfiguration webServicesConfiguration = WebServicesConfiguration.getInstance();
@@ -56,9 +56,9 @@ public class WebServicesConfigurable extends SimpleConfigurableByProperties impl
         continue;
       }
 
-      TextBox textBox = Components.textBox();
+      TextBox textBox = TextBox.create();
 
-      layout.add(Layouts.labeled(description).set(LabeledComponents.leftFilled("OAuth Key", textBox)));
+      layout.add(LabeledLayout.create(description, LabeledComponents.leftFilled("OAuth Key", textBox)));
       propertyBuilder.add(textBox, () -> webServicesConfiguration.getOAuthKey(api), text -> webServicesConfiguration.setOAuthKey(api, text));
     }
     return layout;

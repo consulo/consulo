@@ -44,7 +44,7 @@ public class WebIdeRootView {
     myPresentationFactory = new MenuItemPresentationFactory();
 
     myRootPanel.putUserData(CommonDataKeys.PROJECT, myProject);
-    myMenuBar = MenuItems.menuBar();
+    myMenuBar = MenuBar.create();
     myRootPanel.setMenuBar(myMenuBar);
   }
 
@@ -58,7 +58,7 @@ public class WebIdeRootView {
       Presentation presentation = myPresentationFactory.getPresentation(newVisibleAction);
 
       if (presentation.isVisible()) {
-        Menu menu = MenuItems.menu(presentation.getText());
+        Menu menu = Menu.create(presentation.getText());
 
         myMenuBar.add(menu);
       }

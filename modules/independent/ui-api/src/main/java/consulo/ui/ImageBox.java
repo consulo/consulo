@@ -24,5 +24,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ImageBox extends Component {
   @NotNull
+  static ImageBox create(@NotNull Image image) {
+    return UIInternal.get()._Components_imageBox(image);
+  }
+
+  @NotNull
   Image getImage();
 }

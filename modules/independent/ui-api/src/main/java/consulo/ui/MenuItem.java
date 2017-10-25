@@ -23,5 +23,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface MenuItem extends Component {
   @NotNull
+  static MenuItem create(@NotNull String text) {
+    return UIInternal.get()._MenuItems_item(text);
+  }
+
+  @NotNull
   String getText();
 }

@@ -29,8 +29,8 @@ public class LabeledComponents {
       text += ": ";
     }
 
-    HorizontalLayout horizontal = Layouts.horizontal();
-    horizontal.add(Components.label(text));
+    HorizontalLayout horizontal = HorizontalLayout.create();
+    horizontal.add(Label.create(text));
     horizontal.add(component);
     return horizontal;
   }
@@ -41,8 +41,8 @@ public class LabeledComponents {
       text += ": ";
     }
 
-    DockLayout dock = Layouts.dock();
-    dock.left(Components.label(text));
+    DockLayout dock = DockLayout.create();
+    dock.left(Label.create(text));
     dock.center(component);
     return dock;
   }

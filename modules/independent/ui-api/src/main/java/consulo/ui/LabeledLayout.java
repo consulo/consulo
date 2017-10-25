@@ -29,6 +29,12 @@ public interface LabeledLayout extends Layout {
 
   @NotNull
   @RequiredUIAccess
+  static LabeledLayout create(@NotNull String label, @NotNull Component component) {
+    return UIInternal.get()._Layouts_labeled(label).set(component);
+  }
+
+  @NotNull
+  @RequiredUIAccess
   default LabeledLayout set(@NotNull PseudoComponent component) {
     return set(component.getComponent());
   }

@@ -15,6 +15,7 @@
  */
 package consulo.ui.image;
 
+import consulo.ui.UIInternal;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,6 +23,14 @@ import org.jetbrains.annotations.NotNull;
  * @since 11-Sep-17
  */
 public interface FoldedImage extends Image {
+  @NotNull
+  static FoldedImage create(@NotNull Image... images) {
+    if(images.length == 0) {
+      throw new IllegalArgumentException("empty array");
+    }
+    return UIInternal.get()._Images_foldedImage(images);
+  }
+
   @NotNull
   Image[] getImages();
 }

@@ -19,8 +19,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
+import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
-import consulo.ui.image.Images;
 import consulo.ui.migration.ToImageWrapper;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
@@ -319,6 +319,6 @@ public class LayeredIcon extends JBUI.AuxScalableJBIcon implements ToImageWrappe
 
       images[i] = icon instanceof ToImageWrapper ? ((ToImageWrapper)icon).toImage() : (Image)icon;
     }
-    return Images.fold(images);
+    return FoldedImage.create(images);
   }
 }

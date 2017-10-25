@@ -15,9 +15,21 @@
  */
 package consulo.ui;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @since 19-Nov-16.
  */
 public interface TextBox extends ValueComponent<String> {
+  @NotNull
+  static TextBox create() {
+    return create(null);
+  }
+
+  @NotNull
+  static TextBox create(@Nullable String text) {
+    return UIInternal.get()._Components_textBox(text);
+  }
 }

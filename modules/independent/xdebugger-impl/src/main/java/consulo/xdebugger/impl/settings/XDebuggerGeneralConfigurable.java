@@ -34,20 +34,20 @@ public class XDebuggerGeneralConfigurable extends SimpleConfigurableByProperties
   protected Component createLayout(PropertyBuilder propertyBuilder) {
     XDebuggerGeneralSettings settings = XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings();
 
-    VerticalLayout layout = Layouts.vertical();
-    CheckBox focusAppOnBreakpointCheckbox = Components.checkBox(XDebuggerBundle.message("setting.focus.app.on.breakpoint.label"));
+    VerticalLayout layout = VerticalLayout.create();
+    CheckBox focusAppOnBreakpointCheckbox = CheckBox.create(XDebuggerBundle.message("setting.focus.app.on.breakpoint.label"));
     layout.add(focusAppOnBreakpointCheckbox);
     propertyBuilder.add(focusAppOnBreakpointCheckbox, settings::isMayBringFrameToFrontOnBreakpoint, settings::setMayBringFrameToFrontOnBreakpoint);
 
-    CheckBox showDebugWindowOnBreakpointCheckbox = Components.checkBox(XDebuggerBundle.message("settings.show.window.label"));
+    CheckBox showDebugWindowOnBreakpointCheckbox = CheckBox.create(XDebuggerBundle.message("settings.show.window.label"));
     layout.add(showDebugWindowOnBreakpointCheckbox);
     propertyBuilder.add(showDebugWindowOnBreakpointCheckbox, settings::isShowDebuggerOnBreakpoint, settings::setShowDebuggerOnBreakpoint);
 
-    CheckBox hideWindowCheckBox = Components.checkBox(XDebuggerBundle.message("setting.hide.window.label"));
+    CheckBox hideWindowCheckBox = CheckBox.create(XDebuggerBundle.message("setting.hide.window.label"));
     layout.add(hideWindowCheckBox);
     propertyBuilder.add(hideWindowCheckBox, settings::isHideDebuggerOnProcessTermination, settings::setHideDebuggerOnProcessTermination);
 
-    CheckBox scrollToCenterCheckbox = Components.checkBox(XDebuggerBundle.message("settings.scroll.to.center"));
+    CheckBox scrollToCenterCheckbox = CheckBox.create(XDebuggerBundle.message("settings.scroll.to.center"));
     layout.add(scrollToCenterCheckbox);
     propertyBuilder.add(scrollToCenterCheckbox, settings::isScrollToCenter, settings::setScrollToCenter);
     return layout;

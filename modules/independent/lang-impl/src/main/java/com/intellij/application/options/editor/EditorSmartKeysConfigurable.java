@@ -77,7 +77,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
       myWholeLayout.add(myCbSurroundSelectionOnTyping = Components.checkBox(ApplicationBundle.message("checkbox.surround.selection.on.typing.quote.or.brace")));
       myWholeLayout.add(mySmartIndentPastedLinesCheckBox = Components.checkBox(ApplicationBundle.message("checkbox.indent.on.paste")));
 
-      ComboBoxes.SimpleBuilder<Integer> reformatOnPasteBuilder = ComboBoxes.simple();
+      ComboBox.SimpleBuilder<Integer> reformatOnPasteBuilder = ComboBox.builder();
       reformatOnPasteBuilder.add(CodeInsightSettings.NO_REFORMAT, ApplicationBundle.message("combobox.paste.reformat.none"));
       reformatOnPasteBuilder.add(CodeInsightSettings.INDENT_BLOCK, ApplicationBundle.message("combobox.paste.reformat.indent.block"));
       reformatOnPasteBuilder.add(CodeInsightSettings.INDENT_EACH_LINE, ApplicationBundle.message("combobox.paste.reformat.indent.each.line"));

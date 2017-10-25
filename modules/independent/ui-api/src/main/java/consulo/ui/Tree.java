@@ -25,6 +25,16 @@ import java.util.EventListener;
  * @since 12-Sep-17
  */
 public interface Tree<E> extends Component {
+  @NotNull
+  static <E> Tree<E> tree(@NotNull TreeModel<E> model) {
+    return create(null, model);
+  }
+
+  @NotNull
+  static <E> Tree<E> create(@Nullable E rootValue, @NotNull TreeModel<E> model) {
+    return UIInternal.get()._Components_tree(rootValue, model);
+  }
+
   interface SelectListener<K> extends EventListener {
     @RequiredUIAccess
     void onSelected(TreeNode<K> node);

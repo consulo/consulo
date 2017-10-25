@@ -23,6 +23,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface CheckBox extends ValueComponent<Boolean> {
   @NotNull
+  static CheckBox create(@NotNull String text) {
+    return create(text, false);
+  }
+
+  @NotNull
+  static CheckBox create(@NotNull String text, boolean selected) {
+    return UIInternal.get()._Components_checkBox(text, selected);
+  }
+
+  @NotNull
   @Override
   Boolean getValue();
 

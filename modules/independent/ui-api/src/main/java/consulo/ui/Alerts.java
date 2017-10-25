@@ -15,24 +15,33 @@
  */
 package consulo.ui;
 
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 01-Oct-17
  */
+@Deprecated
+@DeprecationInfo("Create children description")
 public class Alerts {
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use AlertBuilder#createInfo")
   public static AlertBuilder info() {
     return UIInternal.get()._Alerts_builder();
   }
 
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use AlertBuilder#createError")
   public static AlertBuilder error() {
     return UIInternal.get()._Alerts_builder();
   }
 
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use AlertBuilder#createWarning")
   public static AlertBuilder warning() {
     return UIInternal.get()._Alerts_builder();
   }

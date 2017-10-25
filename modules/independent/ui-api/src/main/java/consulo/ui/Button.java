@@ -24,6 +24,18 @@ import java.util.EventListener;
  * @since 13-Sep-17
  */
 public interface Button extends Component {
+  @NotNull
+  static Button create(@NotNull String text) {
+    return UIInternal.get()._Components_button(text);
+  }
+
+  @NotNull
+  static Button create(@NotNull String text, @NotNull @RequiredUIAccess Button.ClickHandler clickHandler) {
+    Button button = UIInternal.get()._Components_button(text);
+    button.addListener(ClickHandler.class, clickHandler);
+    return button;
+  }
+
   interface ClickHandler extends EventListener {
     @RequiredUIAccess
     void onClick();

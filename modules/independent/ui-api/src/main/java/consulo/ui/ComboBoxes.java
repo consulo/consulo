@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
@@ -25,6 +26,8 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 05-Nov-16
  */
+@Deprecated
+@DeprecationInfo("Check children description")
 public class ComboBoxes {
   public static class SimpleBuilder<K> {
     private Map<K, String> myValues = new LinkedHashMap<>();
@@ -49,12 +52,13 @@ public class ComboBoxes {
     @SuppressWarnings("unchecked")
     public ComboBox<K> build() {
       Object[] objects = myValues.keySet().toArray();
-      ComboBox comboBox = Components.comboBox(objects);
+      ComboBox comboBox = ComboBox.create(objects);
       comboBox.setRender((render, index, item) -> render.append(myValues.get(item)));
       return comboBox;
     }
   }
 
+  @DeprecationInfo("Use CheckBox#builder()")
   public static <K> SimpleBuilder<K> simple() {
     return new SimpleBuilder<>();
   }

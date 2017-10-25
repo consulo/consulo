@@ -23,6 +23,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Label extends Component {
   @NotNull
+  static Label create(@NotNull String text) {
+    return UIInternal.get()._Components_label(text);
+  }
+
+  @NotNull
   String getText();
 
   @RequiredUIAccess

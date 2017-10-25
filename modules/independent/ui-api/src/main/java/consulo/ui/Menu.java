@@ -22,6 +22,11 @@ import org.jetbrains.annotations.NotNull;
  * @since 14-Jun-16
  */
 public interface Menu extends MenuItem {
+  @NotNull
+  static Menu create(@NotNull String text) {
+    return UIInternal.get()._MenuItems_menu(text);
+  }
+
   @RequiredUIAccess
   @NotNull
   Menu add(@NotNull MenuItem menuItem);

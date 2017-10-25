@@ -22,6 +22,12 @@ import org.jetbrains.annotations.NotNull;
  * @since 14-Jun-16
  */
 public interface MenuBar extends Component {
+  @NotNull
+  static MenuBar create() {
+    return UIInternal.get()._MenuItems_menuBar();
+  }
+
+
   void clear();
 
   @RequiredUIAccess

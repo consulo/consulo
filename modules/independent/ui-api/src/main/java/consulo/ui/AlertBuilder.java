@@ -23,6 +23,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface AlertBuilder {
   @NotNull
+  static AlertBuilder createInfo() {
+    return UIInternal.get()._Alerts_builder();
+  }
+
+  @NotNull
+  static AlertBuilder createError() {
+    return UIInternal.get()._Alerts_builder();
+  }
+
+  @NotNull
+  static AlertBuilder createWarning() {
+    return UIInternal.get()._Alerts_builder();
+  }
+
+  @NotNull
   default AlertBuilder ok() {
     return ok(() -> {
     });

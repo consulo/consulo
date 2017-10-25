@@ -185,7 +185,7 @@ public class BundleComboBox implements PseudoComponent {
                         @Nullable Condition<SdkTypeId> creationFilter,
                         @Nullable final String nullItemName,
                         @Nullable final Icon nullIcon) {
-    myOriginalComboBox = Components.comboBox();
+    myOriginalComboBox = ComboBox.create();
     myFilter = filter;
     myCreationFilter = creationFilter;
 

@@ -15,11 +15,21 @@
  */
 package consulo.ui.image;
 
+import consulo.ui.UIInternal;
+import org.jetbrains.annotations.NotNull;
+
+import java.net.URL;
+
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
 public interface Image {
+  @NotNull
+  static Image create(@NotNull URL url) {
+    return UIInternal.get()._Images_image(url);
+  }
+
   int getHeight();
 
   int getWidth();
