@@ -97,6 +97,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
+  WrappedLayout _Layouts_wrapped() {
+    return new DesktopWrappedLayoutImpl();
+  }
+
+  @Override
   VerticalLayout _Layouts_vertical() {
     return new DesktopVerticalLayoutImpl();
   }

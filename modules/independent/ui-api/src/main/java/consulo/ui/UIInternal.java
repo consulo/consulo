@@ -42,6 +42,8 @@ public abstract class UIInternal {
 
   abstract DockLayout _Layouts_dock();
 
+  abstract WrappedLayout _Layouts_wrapped();
+
   abstract VerticalLayout _Layouts_vertical();
 
   abstract SplitLayout _Layouts_horizontalSplit();
