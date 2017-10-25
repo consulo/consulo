@@ -23,6 +23,11 @@ import org.jetbrains.annotations.Nullable;
  * @since 14-Jun-16
  */
 public interface Window extends Component {
+  @NotNull
+  static Window createModal(@NotNull String title) {
+    return UIInternal.get()._Windows_modalWindow(title);
+  }
+
   @RequiredUIAccess
   void setTitle(@NotNull String title);
 

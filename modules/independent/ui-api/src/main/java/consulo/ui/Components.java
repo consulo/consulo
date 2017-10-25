@@ -113,6 +113,7 @@ public class Components {
     Button button = UIInternal.get()._Components_button(text);
     if (clickHandler != null) {
       button.addListener(Button.ClickHandler.class, clickHandler);
-    } return button;
+    }
+    return button;
   }
 }

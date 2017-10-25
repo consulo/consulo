@@ -59,7 +59,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
   @NotNull
   @Override
   public Window openFrame() {
-    Window welcomeFrame = Windows.modalWindow(FrameTitleUtil.buildTitle());
+    Window welcomeFrame = Window.createModal(FrameTitleUtil.buildTitle());
     welcomeFrame.setResizable(false);
     welcomeFrame.setClosable(false);
     welcomeFrame.setSize(WelcomeFrameManager.getDefaultWindowSize());

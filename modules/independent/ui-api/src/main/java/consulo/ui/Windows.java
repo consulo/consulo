@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Windows {
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use Window#createModal")
   public static Window modalWindow(@NotNull String title) {
     return UIInternal.get()._Windows_modalWindow(title);
   }

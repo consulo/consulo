@@ -23,7 +23,7 @@ import com.intellij.ui.BalloonLayout;
 import com.vaadin.shared.ui.window.WindowMode;
 import consulo.ui.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Windows;
+import consulo.ui.Window;
 import consulo.ui.internal.WGwtRootPanelImpl;
 import consulo.web.application.WebApplication;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +49,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
 
   @RequiredUIAccess
   public void show() {
-    myWindow = Windows.modalWindow(myProject.getName());
+    myWindow = Window.createModal(myProject.getName());
     ((com.vaadin.ui.Window)myWindow).setWindowMode(WindowMode.MAXIMIZED);
 
     myWindow.setResizable(false);

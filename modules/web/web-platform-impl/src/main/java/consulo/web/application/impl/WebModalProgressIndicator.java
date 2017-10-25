@@ -19,7 +19,6 @@ import com.intellij.openapi.progress.EmptyProgressIndicator;
 import consulo.ui.Components;
 import consulo.ui.Label;
 import consulo.ui.Window;
-import consulo.ui.Windows;
 import consulo.web.application.WebApplication;
 
 /**
@@ -36,7 +35,7 @@ public class WebModalProgressIndicator extends EmptyProgressIndicator {
     super.start();
 
     WebApplication.invokeOnCurrentSession(() -> {
-      myWindow = Windows.modalWindow("Consulo");
+      myWindow = Window.createModal("Consulo");
       myWindow.setClosable(false);
       myWindow.setResizable(false);
       myWindow.setContent(myLabel = Components.label("Loading"));

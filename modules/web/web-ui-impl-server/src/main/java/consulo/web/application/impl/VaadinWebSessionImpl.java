@@ -41,7 +41,7 @@ public class VaadinWebSessionImpl implements WebSession {
   @Override
   public void close() {
     myAccess.give(() -> {
-      Window window = Windows.modalWindow("Consulo");
+      Window window = Window.createModal("Consulo");
       window.setContent(Components.label("Session Closed"));
       window.setResizable(false);
       window.setClosable(false);
