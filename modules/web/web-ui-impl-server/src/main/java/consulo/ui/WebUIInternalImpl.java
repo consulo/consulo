@@ -50,6 +50,11 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
+  WrappedLayout _Layouts_wrapped() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   VerticalLayout _Layouts_vertical() {
     return new WGwtVerticalLayoutImpl();
   }
