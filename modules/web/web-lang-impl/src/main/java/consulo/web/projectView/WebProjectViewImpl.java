@@ -90,8 +90,15 @@ public class WebProjectViewImpl implements ProjectViewEx {
 
       if (CommonDataKeys.PSI_ELEMENT == dataId) {
         if (currentProjectViewPane == null) return null;
-        final PsiElement[] elements = currentProjectViewPane.getSelectedPSIElements();
-        return elements.length == 1 ? elements[0] : null;
+
+        TreeNode<AbstractTreeNode> selectedNode = myTree.getSelectedNode();
+        if(selectedNode != null) {
+          AbstractTreeNode value = selectedNode.getValue();
+          if(value instanceof AbstractPsiBasedNode) {
+           return ((AbstractPsiBasedNode)value).getPsiElement();
+          }
+        }
+        return null;
       }
       if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
         if (currentProjectViewPane == null) {
@@ -289,6 +296,8 @@ public class WebProjectViewImpl implements ProjectViewEx {
 
   private AbstractProjectViewPane myCurrentPane;
 
+  private Tree<AbstractTreeNode> myTree;
+
   @Inject
   public WebProjectViewImpl(Project project) {
     myProject = project;
@@ -344,9 +353,11 @@ public class WebProjectViewImpl implements ProjectViewEx {
     TreeStructureWrappenModel<AbstractTreeNode> model = new TreeStructureWrappenModel<AbstractTreeNode>(structure) {
       @Override
       public boolean onDoubleClick(@NotNull Tree tree, @NotNull TreeNode node) {
-        AbstractTreeNode value = (AbstractTreeNode)node.getValue();
         if (node.isLeaf()) {
+          AbstractTreeNode value = (AbstractTreeNode)node.getValue();
+
           value.navigate(true);
+
           return false;
         }
 
@@ -354,9 +365,9 @@ public class WebProjectViewImpl implements ProjectViewEx {
       }
     };
 
-    Tree<AbstractTreeNode> tree = Tree.create((AbstractTreeNode)structure.getRootElement(), model);
+    myTree = Tree.create((AbstractTreeNode)structure.getRootElement(), model);
 
-    WrappedLayout wrappedLayout = WrappedLayout.create(tree);
+    WrappedLayout wrappedLayout = WrappedLayout.create(myTree);
     wrappedLayout.addUserDataProvider(new MyDataProvider());
 
     Content content = ContentFactory.getInstance().createUIContent(wrappedLayout, "Project", true);

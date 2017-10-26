@@ -38,6 +38,11 @@
 
   <project-components>
     <component>
+      <interface-class>com.intellij.openapi.fileEditor.FileEditorManager</interface-class>
+      <implementation-class>com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl</implementation-class>
+      <headless-implementation-class>com.intellij.openapi.fileEditor.impl.TestEditorManagerImpl</headless-implementation-class>
+    </component>
+    <component>
       <interface-class>com.intellij.openapi.wm.ToolWindowManager</interface-class>
       <implementation-class>com.intellij.openapi.wm.impl.DesktopToolWindowManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.openapi.wm.impl.ToolWindowHeadlessManagerImpl</headless-implementation-class>

@@ -52,21 +52,27 @@ import java.util.Collections;
 /**
  * Class for node descriptors based on PsiElements. Subclasses should define
  * method that extract PsiElement from Value.
+ *
  * @param <Value> Value of node descriptor
  */
 public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value> implements ValidateableNode, StatePreservingNavigatable {
   private static final Logger LOG = Logger.getInstance(AbstractPsiBasedNode.class.getName());
 
-  protected AbstractPsiBasedNode(final Project project,
-                                 final Value value,
-                                 final ViewSettings viewSettings) {
+  protected AbstractPsiBasedNode(final Project project, final Value value, final ViewSettings viewSettings) {
     super(project, value, viewSettings);
   }
 
   @Nullable
+  public PsiElement getPsiElement() {
+    return extractPsiFromValue();
+  }
+
+  @Nullable
   protected abstract PsiElement extractPsiFromValue();
+
   @Nullable
   protected abstract Collection<AbstractTreeNode> getChildrenImpl();
+
   protected abstract void updateImpl(final PresentationData data);
 
   @Override
@@ -195,7 +201,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
   @Nullable
   public NavigationItem getNavigationItem() {
     final PsiElement psiElement = extractPsiFromValue();
-    return (psiElement instanceof NavigationItem) ? (NavigationItem) psiElement : null;
+    return (psiElement instanceof NavigationItem) ? (NavigationItem)psiElement : null;
   }
 
   @Override

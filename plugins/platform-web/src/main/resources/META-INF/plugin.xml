@@ -30,6 +30,10 @@
 
   <project-components>
     <component>
+      <interface-class>com.intellij.openapi.fileEditor.FileEditorManager</interface-class>
+      <implementation-class>com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl</implementation-class>
+    </component>
+    <component>
       <interface-class>com.intellij.openapi.wm.ToolWindowManager</interface-class>
       <implementation-class>consulo.web.wm.impl.WebToolWindowManagerImpl</implementation-class>
     </component>
