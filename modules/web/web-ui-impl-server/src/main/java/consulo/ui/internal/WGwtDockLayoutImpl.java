@@ -21,7 +21,6 @@ import consulo.ui.*;
 import consulo.ui.internal.border.WGwtBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -149,12 +148,6 @@ public class WGwtDockLayoutImpl extends AbstractComponentContainer implements Do
   @Override
   public Iterator<com.vaadin.ui.Component> iterator() {
     return myChildren.values().iterator();
-  }
-
-  @Nullable
-  @Override
-  public Component getParentComponent() {
-    return (Component)getParent();
   }
 
   @RequiredUIAccess
