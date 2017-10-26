@@ -20,7 +20,12 @@ import com.vaadin.shared.Connector;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.HasComponents;
 import consulo.ui.Component;
+import consulo.ui.Layout;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
+import consulo.ui.internal.VaadinWrapper;
 import consulo.web.gwt.shared.ui.ex.state.ThreeComponentSplitLayoutState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,7 +36,7 @@ import java.util.List;
  * @author VISTALL
  * @since 19-Oct-17
  */
-public class WGwtThreeComponentSplitLayout extends AbstractComponent implements HasComponents {
+public class WGwtThreeComponentSplitLayout extends AbstractComponent implements HasComponents, Layout, VaadinWrapper {
   public void setLeftComponent(@Nullable Component component) {
     com.vaadin.ui.Component vaadin = (com.vaadin.ui.Component)component;
 
@@ -92,5 +97,10 @@ public class WGwtThreeComponentSplitLayout extends AbstractComponent implements 
     ContainerUtil.addIfNotNull(components, (com.vaadin.ui.Component)state.myCenterComponent);
 
     return components.iterator();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
   }
 }
