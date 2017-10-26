@@ -15,8 +15,10 @@
  */
 package com.intellij.openapi.fileEditor;
 
-import com.intellij.ide.*;
-import com.intellij.ide.FileEditorProvider;
+import com.intellij.ide.DataManager;
+import com.intellij.ide.SelectInContext;
+import com.intellij.ide.SelectInManager;
+import com.intellij.ide.SelectInTarget;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileTypes.FileType;
@@ -173,12 +175,6 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
       @Override
       @Nullable
       public Object getSelectorInFile() {
-        return null;
-      }
-
-      @Override
-      @Nullable
-      public FileEditorProvider getFileEditorProvider() {
         return null;
       }
     };

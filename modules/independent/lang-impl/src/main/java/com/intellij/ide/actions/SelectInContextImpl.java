@@ -16,7 +16,6 @@
 
 package com.intellij.ide.actions;
 
-import com.intellij.ide.FileEditorProvider;
 import com.intellij.ide.SelectInContext;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Document;
@@ -36,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
+import java.util.function.Supplier;
 
 public abstract class SelectInContextImpl implements SelectInContext {
   protected final PsiFile myPsiFile;
@@ -174,13 +174,8 @@ public abstract class SelectInContextImpl implements SelectInContext {
     }
 
     @Override
-    public FileEditorProvider getFileEditorProvider() {
-      return new FileEditorProvider() {
-        @Override
-        public FileEditor openFileEditor() {
-          return myEditor;
-        }
-      };
+    public Supplier<FileEditor> getFileEditorProvider() {
+      return () -> myEditor;
     }
 
     @Override
@@ -204,13 +199,8 @@ public abstract class SelectInContextImpl implements SelectInContext {
     }
 
     @Override
-    public FileEditorProvider getFileEditorProvider() {
-      return new FileEditorProvider() {
-        @Override
-        public FileEditor openFileEditor() {
-          return FileEditorManager.getInstance(getProject()).openFile(getVirtualFile(), false)[0];
-        }
-      };
+    public Supplier<FileEditor> getFileEditorProvider() {
+      return () -> FileEditorManager.getInstance(getProject()).openFile(getVirtualFile(), false)[0];
     }
 
     @Nullable
@@ -231,16 +221,13 @@ public abstract class SelectInContextImpl implements SelectInContext {
     }
 
     @Override
-    public FileEditorProvider getFileEditorProvider() {
-      return new FileEditorProvider() {
-        @Override
-        public FileEditor openFileEditor() {
-          final VirtualFile file = myElementToSelect.getContainingFile().getVirtualFile();
-          if (file == null) {
-            return null;
-          }
-          return ArrayUtil.getFirstElement(FileEditorManager.getInstance(getProject()).openFile(file, false));
+    public Supplier<FileEditor> getFileEditorProvider() {
+      return () -> {
+        final VirtualFile file = myElementToSelect.getContainingFile().getVirtualFile();
+        if (file == null) {
+          return null;
         }
+        return ArrayUtil.getFirstElement(FileEditorManager.getInstance(getProject()).openFile(file, false));
       };
     }
 
@@ -275,12 +262,6 @@ public abstract class SelectInContextImpl implements SelectInContext {
     @Nullable
     public Object getSelectorInFile() {
       return myVirtualFile;
-    }
-
-    @Override
-    @Nullable
-    public FileEditorProvider getFileEditorProvider() {
-      return null;
     }
   }
 }

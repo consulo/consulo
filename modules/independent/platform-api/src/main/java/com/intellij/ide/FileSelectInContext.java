@@ -47,9 +47,4 @@ public class FileSelectInContext implements SelectInContext {
   public Object getSelectorInFile() {
     return null;
   }
-
-  @Override
-  public FileEditorProvider getFileEditorProvider() {
-    return null;
-  }
 }

@@ -15,11 +15,14 @@
  */
 package com.intellij.ide;
 
+import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 /**
  * @author kir
@@ -37,5 +40,7 @@ public interface SelectInContext {
   Object getSelectorInFile();
 
   @Nullable
-  FileEditorProvider getFileEditorProvider();
+  default Supplier<FileEditor> getFileEditorProvider() {
+    return null;
+  }
 }

@@ -107,6 +107,7 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.function.Supplier;
 
 @State(name = "ProjectView", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<Element>, Disposable, QuickActionProvider, BusyObject {
@@ -524,11 +525,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
         @Override
         public Object getSelectorInFile() {
-          return null;
-        }
-
-        @Override
-        public FileEditorProvider getFileEditorProvider() {
           return null;
         }
       })) {
@@ -1885,13 +1881,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
       @Override
       @NotNull
-      public FileEditorProvider getFileEditorProvider() {
-        return new FileEditorProvider() {
-          @Override
-          public FileEditor openFileEditor() {
-            return myFileEditorManager.openFile(myPsiFile.getContainingFile().getVirtualFile(), false)[0];
-          }
-        };
+      public Supplier<FileEditor> getFileEditorProvider() {
+        return () -> myFileEditorManager.openFile(myPsiFile.getContainingFile().getVirtualFile(), false)[0];
       }
 
       @NotNull
