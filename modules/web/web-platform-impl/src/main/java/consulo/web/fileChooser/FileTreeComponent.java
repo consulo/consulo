@@ -19,8 +19,13 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.impl.FileTreeStructure;
 import com.intellij.openapi.project.Project;
+import consulo.fileChooser.impl.UnifiedFileComparator;
 import consulo.ui.Tree;
+import consulo.ui.TreeNode;
 import consulo.web.ui.TreeStructureWrappenModel;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Comparator;
 
 /**
  * @author VISTALL
@@ -28,7 +33,13 @@ import consulo.web.ui.TreeStructureWrappenModel;
  */
 public class FileTreeComponent {
   public static Tree<FileElement> create(Project project, FileChooserDescriptor descriptor) {
-    TreeStructureWrappenModel<FileElement> treeStructureWrappenModel = new TreeStructureWrappenModel<>(new FileTreeStructure(project, descriptor));
+    TreeStructureWrappenModel<FileElement> treeStructureWrappenModel = new TreeStructureWrappenModel<FileElement>(new FileTreeStructure(project, descriptor)) {
+      @Nullable
+      @Override
+      public Comparator<TreeNode<FileElement>> getNodeComparator() {
+        return UnifiedFileComparator.getInstance();
+      }
+    };
     return Tree.create(treeStructureWrappenModel.getRootElement(), treeStructureWrappenModel);
   }
 }

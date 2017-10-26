@@ -18,6 +18,7 @@ package consulo.ui;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.function.Function;
 
 /**
@@ -39,5 +40,10 @@ public interface TreeModel<N> {
    */
   default boolean onDoubleClick(@NotNull Tree<N> tree, @NotNull TreeNode<N> node) {
     return true;
+  }
+
+  @Nullable
+  default Comparator<TreeNode<N>> getNodeComparator() {
+    return null;
   }
 }

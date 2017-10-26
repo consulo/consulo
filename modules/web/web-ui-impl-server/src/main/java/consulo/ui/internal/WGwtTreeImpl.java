@@ -24,10 +24,7 @@ import consulo.web.gwt.shared.ui.state.tree.TreeState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -159,6 +156,11 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
     }, parent.getValue());
 
     parent.setChildren(list);
+
+    Comparator<TreeNode<NODE>> nodeComparator = myModel.getNodeComparator();
+    if(nodeComparator != null) {
+      list.sort(nodeComparator);
+    }
 
     if (list.isEmpty()) {
       parent.setLeaf(true);
