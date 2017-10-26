@@ -18,11 +18,12 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 13-Sep-17
- *
+ * <p>
  * idea from https://stackoverflow.com/a/16403608/3129079
  */
 public abstract class GwtSplitLayoutImpl extends SplitLayoutPanel {
@@ -51,17 +52,25 @@ public abstract class GwtSplitLayoutImpl extends SplitLayoutPanel {
     add(mySecondWidget);
   }
 
-  public void setFirstWidget(Widget widget) {
-    widget.setSize("100%", "100%");
+  public void setFirstWidget(@Nullable Widget widget) {
+    if (widget != null) {
+      widget.setSize("100%", "100%");
+    }
     myFirstWidget.clear();
-    myFirstWidget.add(widget);
-    setWidgetToggleDisplayAllowed(myFirstWidget, true);
+    if (widget != null) {
+      myFirstWidget.add(widget);
+    }
+    setWidgetToggleDisplayAllowed(myFirstWidget, widget != null);
   }
 
-  public void setSecondWidget(Widget widget) {
-    widget.setSize("100%", "100%");
+  public void setSecondWidget(@Nullable Widget widget) {
+    if (widget != null) {
+      widget.setSize("100%", "100%");
+    }
     mySecondWidget.clear();
-    mySecondWidget.add(widget);
+    if (widget != null) {
+      mySecondWidget.add(widget);
+    }
   }
 
   public void setSplitPosition(String percent) {
