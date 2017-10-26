@@ -13,18 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.projectView;
+package consulo.web.gwt.client.ui;
 
-import com.intellij.ide.projectView.ProjectView;
-import com.intellij.openapi.wm.ToolWindow;
-import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
+import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.util.GwtUIUtil;
 
 /**
  * @author VISTALL
- * @since 25-Sep-17
+ * @since 26-Oct-17
  */
-public interface ProjectViewEx extends ProjectView {
-  @RequiredUIAccess
-  void setupToolWindow(@NotNull ToolWindow toolWindow, final boolean loadPaneExtensions);
+@Connect(canonicalName = "consulo.ui.internal.WGwtWrappedLayoutImpl")
+public class GwtWrappedLayoutConnector extends GwtLayoutConnector {
+  @Override
+  public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
+    getWidget().build(GwtUIUtil.remapWidgets(this));
+  }
+
+  @Override
+  public GwtWrappedLayout getWidget() {
+    return (GwtWrappedLayout)super.getWidget();
+  }
 }

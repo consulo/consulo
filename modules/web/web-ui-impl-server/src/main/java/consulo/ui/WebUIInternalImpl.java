@@ -51,7 +51,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   WrappedLayout _Layouts_wrapped() {
-    throw new UnsupportedOperationException();
+    return new WGwtWrappedLayoutImpl();
   }
 
   @Override

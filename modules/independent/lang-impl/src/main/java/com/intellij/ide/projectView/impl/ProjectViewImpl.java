@@ -90,6 +90,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.projectView.ProjectViewEx;
 import consulo.psi.PsiPackageSupportProviders;
+import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowContentUI;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
@@ -537,6 +538,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     myAutoScrollToSourceHandler.onMouseClicked(newPane.myTree);
   }
 
+  @RequiredUIAccess
   @Override
   public void setupToolWindow(@NotNull ToolWindow toolWindow, final boolean loadPaneExtensions) {
     ApplicationManager.getApplication().assertIsDispatchThread();

@@ -13,18 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.projectView;
+package consulo.web.gwt.client.ui;
 
-import com.intellij.ide.projectView.ProjectView;
-import com.intellij.openapi.wm.ToolWindow;
-import consulo.ui.RequiredUIAccess;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
+import consulo.web.gwt.client.util.GwtUIUtil;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 25-Sep-17
+ * @since 26-Oct-17
  */
-public interface ProjectViewEx extends ProjectView {
-  @RequiredUIAccess
-  void setupToolWindow(@NotNull ToolWindow toolWindow, final boolean loadPaneExtensions);
+public class GwtWrappedLayout extends SimplePanel {
+  public void build(@NotNull List<Widget> widgets) {
+    if(widgets.isEmpty()) {
+      setWidget(null);
+    }
+    else {
+      Widget widget = widgets.get(0);
+      GwtUIUtil.fill(widget);
+      setWidget(widget);
+    }
+  }
 }

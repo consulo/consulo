@@ -41,7 +41,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import consulo.ide.projectView.ProjectViewEx;
-import consulo.ui.*;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Tree;
+import consulo.ui.TreeNode;
+import consulo.ui.WrappedLayout;
 import consulo.web.ui.TreeStructureWrappenModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -316,6 +319,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
     return ActionCallback.DONE;
   }
 
+  @RequiredUIAccess
   @Override
   public void setupToolWindow(@NotNull ToolWindow toolWindow, boolean loadPaneExtensions) {
 
@@ -352,7 +356,10 @@ public class WebProjectViewImpl implements ProjectViewEx {
 
     Tree<AbstractTreeNode> tree = Tree.create((AbstractTreeNode)structure.getRootElement(), model);
 
-    Content content = ContentFactory.getInstance().createUIContent(tree, "Project", true);
+    WrappedLayout wrappedLayout = WrappedLayout.create(tree);
+    wrappedLayout.addUserDataProvider(new MyDataProvider());
+
+    Content content = ContentFactory.getInstance().createUIContent(wrappedLayout, "Project", true);
 
     toolWindow.getContentManager().addContent(content);
   }
