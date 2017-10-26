@@ -28,6 +28,7 @@ import com.intellij.ide.plugins.PluginsTableRenderer;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -216,6 +217,9 @@ public class PluginListDialog extends DialogWrapper {
 
             installed.add(pluginDescriptor);
           }
+        }
+        catch (ProcessCanceledException e) {
+          throw e;
         }
         catch (Exception e) {
           LOGGER.error(e);
