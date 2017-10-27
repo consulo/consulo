@@ -15,19 +15,16 @@
  */
 package consulo.sandboxPlugin.ide.fileEditor;
 
-import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
-import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.util.UserDataHolderBase;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.components.JBLabel;
+import consulo.ui.Component;
+import consulo.ui.Label;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.beans.PropertyChangeListener;
 
 /**
@@ -37,14 +34,8 @@ import java.beans.PropertyChangeListener;
 public class SandFileEditor extends UserDataHolderBase implements FileEditor {
   @NotNull
   @Override
-  public JComponent getComponent() {
-    return new JBLabel("Hello World");
-  }
-
-  @Nullable
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return null;
+  public Component getUIComponent() {
+    return Label.create("Hello World");
   }
 
   @NotNull
@@ -96,25 +87,7 @@ public class SandFileEditor extends UserDataHolderBase implements FileEditor {
 
   @Nullable
   @Override
-  public BackgroundEditorHighlighter getBackgroundHighlighter() {
-    return null;
-  }
-
-  @Nullable
-  @Override
   public FileEditorLocation getCurrentLocation() {
-    return null;
-  }
-
-  @Nullable
-  @Override
-  public StructureViewBuilder getStructureViewBuilder() {
-    return null;
-  }
-
-  @Nullable
-  @Override
-  public VirtualFile getVirtualFile() {
     return null;
   }
 

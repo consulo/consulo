@@ -19,6 +19,7 @@ import com.intellij.util.ui.JBUI;
 import consulo.ui.RGBColor;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size;
+import consulo.ui.migration.ToSwingWrapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,6 +49,14 @@ public class TargetAWT {
       return null;
     }
     return new Rectangle(rectangle2D.getCoordinate().getX(), rectangle2D.getCoordinate().getY(), rectangle2D.getSize().getWidth(), rectangle2D.getSize().getHeight());
+  }
+
+  @NotNull
+  public static Component to(@NotNull consulo.ui.Component component) {
+    if (component instanceof ToSwingWrapper) {
+      return ((ToSwingWrapper)component).toAWT();
+    }
+    throw new IllegalArgumentException(component + " is not ToSwingWrapper");
   }
 
   @Contract("null -> null")

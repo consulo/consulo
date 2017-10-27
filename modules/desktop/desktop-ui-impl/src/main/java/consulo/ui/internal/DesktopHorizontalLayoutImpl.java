@@ -15,10 +15,10 @@
  */
 package consulo.ui.internal;
 
+import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.HorizontalLayout;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.migration.ToSwingWrappers;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -36,7 +36,7 @@ public class DesktopHorizontalLayoutImpl extends JPanel implements HorizontalLay
   @NotNull
   @Override
   public HorizontalLayout add(@NotNull Component component) {
-    add(ToSwingWrappers.toAWT(component));
+    add(TargetAWT.to(component));
     return this;
   }
 }

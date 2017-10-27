@@ -18,9 +18,9 @@ package com.intellij.xdebugger.breakpoints.ui;
 import com.intellij.openapi.Disposable;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import consulo.annotations.DeprecationInfo;
+import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.migration.ToSwingWrappers;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -34,7 +34,7 @@ public abstract class XBreakpointCustomPropertiesPanel<B extends XBreakpoint<?>>
   @Deprecated
   @DeprecationInfo("Please implement interface via new UI API")
   public JComponent getComponent() {
-    return (JComponent)ToSwingWrappers.toAWT(getUIComponent());
+    return (JComponent)TargetAWT.to(getUIComponent());
   }
 
   @NotNull

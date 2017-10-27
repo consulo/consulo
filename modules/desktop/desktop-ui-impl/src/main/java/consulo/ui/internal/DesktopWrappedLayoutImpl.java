@@ -16,10 +16,10 @@
 package consulo.ui.internal;
 
 import com.intellij.ui.components.panels.Wrapper2;
+import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.WrappedLayout;
-import consulo.ui.migration.ToSwingWrappers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +34,7 @@ public class DesktopWrappedLayoutImpl extends Wrapper2 implements WrappedLayout,
   @NotNull
   @Override
   public WrappedLayout set(@Nullable Component component) {
-    setContent(component == null ? null : (JComponent)ToSwingWrappers.toAWT(component));
+    setContent(component == null ? null : (JComponent)TargetAWT.to(component));
     return this;
   }
 }

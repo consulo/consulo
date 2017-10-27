@@ -20,41 +20,43 @@ import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.awt.TargetAWT;
+import consulo.ui.Component;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.beans.PropertyChangeListener;
 
 /**
  * @author Anton Katilin
  * @author Vladimir Kondratyev
- *
  * @see com.intellij.openapi.fileEditor.TextEditor
  */
 public interface FileEditor extends UserDataHolder, Disposable {
   /**
    * @see #isModified()
    */
-  @NonNls String PROP_MODIFIED = "modified";
+  @NonNls
+  String PROP_MODIFIED = "modified";
   /**
    * @see #isValid()
    */
-  @NonNls String PROP_VALID = "valid";
+  @NonNls
+  String PROP_VALID = "valid";
 
-  /**
-   * @return component which represents editor in the UI.
-   * The method should never return <code>null</code>.
-   */
-  @NotNull
-  JComponent getComponent();
+  @Nullable
+  default Component getUIComponent() {
+    return null;
+  }
 
   /**
    * Returns component to be focused when editor is opened.
    */
   @Nullable
-  JComponent getPreferredFocusedComponent();
+  default Component getUIPreferredFocusedComponent() {
+    throw new AbstractMethodError();
+  }
 
   /**
    * @return editor's name, a string that identifies editor among
@@ -62,7 +64,8 @@ public interface FileEditor extends UserDataHolder, Disposable {
    * and "Text". So "GUI Designer" can be a name of one editor and "Text"
    * can be a name of other editor. The method should never return <code>null</code>.
    */
-  @NonNls @NotNull
+  @NonNls
+  @NotNull
   String getName();
 
   /**
@@ -73,6 +76,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
 
   /**
    * Applies given state to the editor.
+   *
    * @param state cannot be null
    */
   void setState(@NotNull FileEditorState state);
@@ -119,18 +123,52 @@ public interface FileEditor extends UserDataHolder, Disposable {
    * Return <code>null</code> if no background highlighting activity necessary for this file editor.
    */
   @Nullable
-  BackgroundEditorHighlighter getBackgroundHighlighter();
+  default BackgroundEditorHighlighter getBackgroundHighlighter() {
+    return null;
+  }
 
   /**
    * The method is optional. Currently is used only by find usages subsystem
+   *
    * @return the location of user focus. Typically it's a caret or any other form of selection start.
    */
   @Nullable
   FileEditorLocation getCurrentLocation();
 
   @Nullable
-  StructureViewBuilder getStructureViewBuilder();
+  default StructureViewBuilder getStructureViewBuilder() {
+    return null;
+  }
 
   @Nullable
-  VirtualFile getVirtualFile();
+  default VirtualFile getVirtualFile() {
+    return null;
+  }
+
+  // TODO [VISTALL] AWT & Swing dependency
+
+  // region AWT & Swing dependency
+
+  /**
+   * @return component which represents editor in the UI.
+   * The method should never return <code>null</code>.
+   */
+  @NotNull
+  default javax.swing.JComponent getComponent() {
+    Component uiComponent = getUIComponent();
+    if(uiComponent != null) {
+      return (javax.swing.JComponent)TargetAWT.to(uiComponent);
+    }
+    throw new AbstractMethodError();
+  }
+
+  /**
+   * Returns component to be focused when editor is opened.
+   */
+  @Nullable
+  default javax.swing.JComponent getPreferredFocusedComponent() {
+    throw new AbstractMethodError();
+  }
+
+  // endregion
 }

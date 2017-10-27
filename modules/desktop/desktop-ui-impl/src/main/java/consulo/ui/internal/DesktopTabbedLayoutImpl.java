@@ -15,11 +15,11 @@
  */
 package consulo.ui.internal;
 
+import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
-import consulo.ui.migration.ToSwingWrappers;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -46,7 +46,7 @@ public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout
   @NotNull
   @Override
   public Tab addTab(@NotNull String tabName, @NotNull Component component) {
-    addTab(tabName, ToSwingWrappers.toAWT(component));
+    addTab(tabName, TargetAWT.to(component));
     return new DesktopTabImpl();
   }
 }
