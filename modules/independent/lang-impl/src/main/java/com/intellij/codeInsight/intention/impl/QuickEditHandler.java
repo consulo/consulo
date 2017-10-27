@@ -39,7 +39,6 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.fileEditor.impl.EditorWithProviderComposite;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileTypes.FileType;
@@ -68,10 +67,10 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
-import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,7 +93,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
   private final LightVirtualFile myNewVirtualFile;
 
   private final long myOrigCreationStamp;
-  private EditorWindow mySplittedWindow;
+  private consulo.fileEditor.impl.EditorWindow mySplittedWindow;
   private boolean myCommittingToOriginal;
 
   private final PsiFile myInjectedFile;
@@ -248,7 +247,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
       final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(myProject);
       final FileEditor[] editors = fileEditorManager.getEditors(myNewVirtualFile);
       if (editors.length == 0) {
-        final EditorWindow curWindow = fileEditorManager.getCurrentWindow();
+        final consulo.fileEditor.impl.EditorWindow curWindow = fileEditorManager.getCurrentWindow();
         mySplittedWindow = curWindow.split(SwingConstants.HORIZONTAL, false, myNewVirtualFile, true);
       }
       Editor editor = fileEditorManager.openTextEditor(new OpenFileDescriptor(myProject, myNewVirtualFile, injectedOffset), true);
@@ -329,7 +328,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     }
     FileEditorManager.getInstance(myProject).closeFile(myNewVirtualFile);
     if (unsplit) {
-      for (EditorWindow editorWindow : mySplittedWindow.findSiblings()) {
+      for (consulo.fileEditor.impl.EditorWindow editorWindow : mySplittedWindow.findSiblings()) {
         editorWindow.unsplit(true);
       }
     }

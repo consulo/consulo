@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.util.ui.UIUtil;
+import consulo.fileEditor.impl.EditorWindow;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;

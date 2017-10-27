@@ -16,14 +16,14 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.impl.EditorComposite;
-import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.fileEditor.impl.EditorWindow;
 
 public class CloseAllUnmodifiedEditorsAction extends CloseEditorsActionBase {
-
+  @Override
   protected boolean isFileToClose(final EditorComposite editor, final EditorWindow window) {
     return !window.getManager().isChanged (editor);
   }
@@ -33,6 +33,7 @@ public class CloseAllUnmodifiedEditorsAction extends CloseEditorsActionBase {
     return super.isActionEnabled(project, event) && ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length > 0;
   }
 
+  @Override
   protected String getPresentationText(final boolean inSplitter) {
     if (inSplitter) {
       return IdeBundle.message("action.close.all.unmodified.editors.in.tab.group");

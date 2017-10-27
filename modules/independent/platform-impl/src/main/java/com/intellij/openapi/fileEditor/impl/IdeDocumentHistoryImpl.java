@@ -22,7 +22,6 @@ import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.CommandMerger;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
@@ -35,6 +34,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.xmlb.annotations.Transient;
+import consulo.fileEditor.impl.EditorWindow;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -527,7 +527,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
       myNavigationState = navigationState;
       myFile = file;
       myEditorTypeId = editorTypeId;
-      myWindow = new WeakReference<EditorWindow>(window);
+      myWindow = new WeakReference<>(window);
     }
 
     public EditorWindow getWindow() {

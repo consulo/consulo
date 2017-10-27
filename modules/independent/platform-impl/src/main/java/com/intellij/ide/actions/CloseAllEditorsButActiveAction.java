@@ -17,19 +17,23 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.fileEditor.impl.EditorWindow;
+import org.jetbrains.annotations.NotNull;
 
 public class CloseAllEditorsButActiveAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredDispatchThread
+  @Override
+  public void actionPerformed(@NotNull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
-    FileEditorManagerEx fileEditorManager=FileEditorManagerEx.getInstanceEx(project);
+    FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
     VirtualFile selectedFile;
     final EditorWindow window = e.getData(EditorWindow.DATA_KEY);
-    if (window != null){
+    if (window != null) {
       window.closeAllExcept(e.getData(PlatformDataKeys.VIRTUAL_FILE));
       return;
     }
@@ -42,7 +46,9 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
     }
   }
 
-  public void update(AnActionEvent event){
+  @RequiredDispatchThread
+  @Override
+  public void update(@NotNull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null) {
@@ -52,10 +58,11 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
     FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
     VirtualFile selectedFile;
     final EditorWindow window = event.getData(EditorWindow.DATA_KEY);
-    if (window != null){
+    if (window != null) {
       presentation.setEnabled(window.getFiles().length > 1);
       return;
-    } else {
+    }
+    else {
       if (fileEditorManager.getSelectedFiles().length == 0) {
         presentation.setEnabled(false);
         return;

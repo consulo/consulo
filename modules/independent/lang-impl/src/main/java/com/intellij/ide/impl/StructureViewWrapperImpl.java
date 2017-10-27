@@ -30,7 +30,6 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
-import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -53,6 +52,7 @@ import com.intellij.util.BitUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.fileEditor.impl.EditorWindow;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -166,7 +166,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
       setFile(null);
     } else if (myFirstRun) {
       final FileEditorManagerImpl editorManager = (FileEditorManagerImpl)FileEditorManager.getInstance(myProject);
-      final List<Pair<VirtualFile,EditorWindow>> history = editorManager.getSelectionHistory();
+      final List<Pair<VirtualFile, EditorWindow>> history = editorManager.getSelectionHistory();
       if (! history.isEmpty()) {
         setFile(history.get(0).getFirst());
       }

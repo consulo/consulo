@@ -20,6 +20,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.fileEditor.impl.EditorWindow;
 
 /**
  * User: anna
@@ -28,16 +29,15 @@ import com.intellij.openapi.vfs.VirtualFile;
 public class MoveEditorToOppositeTabGroupAction extends AnAction implements DumbAware {
 
   public void actionPerformed(final AnActionEvent event) {
-    final DataContext dataContext = event.getDataContext();
     final VirtualFile vFile = event.getData(PlatformDataKeys.VIRTUAL_FILE);
     final Project project = event.getData(CommonDataKeys.PROJECT);
-    if (vFile == null || project == null){
+    if (vFile == null || project == null) {
       return;
     }
     final EditorWindow window = event.getData(EditorWindow.DATA_KEY);
     if (window != null) {
       final EditorWindow[] siblings = window.findSiblings();
-      if (siblings != null && siblings.length == 1) {
+      if (siblings.length == 1) {
         final EditorWithProviderComposite editorComposite = window.getSelectedEditor();
         final HistoryEntry entry = editorComposite.currentStateAsHistoryEntry();
         ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project)).openFileImpl3(siblings[0], vFile, true, entry, true);
@@ -48,7 +48,6 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
 
   public void update(AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
-    final DataContext dataContext = e.getDataContext();
     final VirtualFile vFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
     final EditorWindow window = e.getData(EditorWindow.DATA_KEY);
     if (ActionPlaces.isPopupPlace(e.getPlace())) {
@@ -61,8 +60,8 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
 
   private static boolean isEnabled(VirtualFile vFile, EditorWindow window) {
     if (vFile != null && window != null) {
-      final EditorWindow[] siblings = window.findSiblings ();
-      if (siblings != null && siblings.length == 1) {
+      final EditorWindow[] siblings = window.findSiblings();
+      if (siblings.length == 1) {
         return true;
       }
     }

@@ -29,6 +29,7 @@ import com.intellij.ui.docking.DockableContent;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
+import consulo.fileEditor.impl.EditorWindow;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -111,13 +112,13 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
       } else {
         EditorWindow wnd = mySplitters.getCurrentWindow();
         if (wnd != null) {
-          EditorTabbedContainer tabs = wnd.getTabbedPane();
+          EditorTabbedContainer tabs = ((DesktopEditorWindow)wnd).getTabbedPane();
           if (tabs != null) {
             return tabs.getTabs();
           }
         } else {
-          EditorWindow[] windows = mySplitters.getWindows();
-          for (EditorWindow each : windows) {
+          DesktopEditorWindow[] windows = mySplitters.getWindows();
+          for (DesktopEditorWindow each : windows) {
             if (each.getTabbedPane() != null && each.getTabbedPane().getTabs() != null) {
               return each.getTabbedPane().getTabs();
             }
@@ -150,7 +151,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
 
     if (myCurrentOver != null) {
       int index = ((JBTabsImpl)myCurrentOver).getDropInfoIndex();
-      file.putUserData(EditorWindow.INITIAL_INDEX_KEY, index);
+      file.putUserData(DesktopEditorWindow.INITIAL_INDEX_KEY, index);
     }
 
     ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(myProject)).openFileImpl2(window, file, true);

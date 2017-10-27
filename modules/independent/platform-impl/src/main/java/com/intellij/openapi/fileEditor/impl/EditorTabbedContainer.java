@@ -55,11 +55,11 @@ import com.intellij.ui.tabs.*;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.BitUtil;
-import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.fileEditor.impl.EditorWindow;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -80,7 +80,7 @@ import java.util.Map;
  * @author Vladimir Kondratyev
  */
 public final class EditorTabbedContainer implements Disposable, CloseAction.CloseTarget {
-  private final EditorWindow myWindow;
+  private final DesktopEditorWindow myWindow;
   private final Project myProject;
   private final JBEditorTabs myTabs;
 
@@ -89,7 +89,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
 
   private final TabInfo.DragOutDelegate myDragOutDelegate = new MyDragOutDelegate();
 
-  EditorTabbedContainer(final EditorWindow window, Project project) {
+  EditorTabbedContainer(final DesktopEditorWindow window, Project project) {
     myWindow = window;
     myProject = project;
     final ActionManager actionManager = ActionManager.getInstance();
@@ -178,7 +178,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
 
   @NotNull
   public static DockableEditor createDockableEditor(Project project, Image image, VirtualFile file, Presentation presentation, EditorWindow window) {
-    return new DockableEditor(project, image, file, presentation, window.getSize(), window.isFilePinned(file));
+    return new DockableEditor(project, image, file, presentation, ((DesktopEditorWindow)window).getSize(), window.isFilePinned(file));
   }
 
   private void updateTabBorder() {
@@ -430,7 +430,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     @Override
     public void actionPerformed(final AnActionEvent e) {
       final FileEditorManagerEx mgr = FileEditorManagerEx.getInstanceEx(myProject);
-      EditorWindow window;
+      consulo.fileEditor.impl.EditorWindow window;
       final VirtualFile file = (VirtualFile)myTabInfo.getObject();
       if (ActionPlaces.EDITOR_TAB.equals(e.getPlace())) {
         window = myWindow;
@@ -462,7 +462,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
         final VirtualFile selectedFile = myWindow.getSelectedFile();
         return selectedFile != null && selectedFile.isValid() ? selectedFile : null;
       }
-      if (EditorWindow.DATA_KEY == dataId) {
+      if (DesktopEditorWindow.DATA_KEY == dataId) {
         return myWindow;
       }
       if (PlatformDataKeys.HELP_ID == dataId) {
@@ -476,7 +476,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
         }
       }
 
-      if (EditorWindow.DATA_KEY == dataId) {
+      if (DesktopEditorWindow.DATA_KEY == dataId) {
         return myWindow;
       }
 
@@ -493,7 +493,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     final FileEditorManagerEx mgr = FileEditorManagerEx.getInstanceEx(myProject);
 
     AsyncResult<EditorWindow> window = mgr.getActiveWindow();
-    window.doWhenDone((Consumer<EditorWindow>)wnd -> {
+    window.doWhenDone(wnd -> {
       if (wnd != null) {
         if (wnd.findFileComposite(file) != null) {
           mgr.closeFile(file, wnd);

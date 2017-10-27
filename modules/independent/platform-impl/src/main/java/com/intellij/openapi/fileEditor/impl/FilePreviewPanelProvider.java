@@ -28,6 +28,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.docking.DockManager;
+import consulo.fileEditor.impl.EditorWindow;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -126,8 +127,8 @@ public class FilePreviewPanelProvider extends PreviewPanelProvider<VirtualFile, 
     }
 
     @Override
-    protected EditorWindow createEditorWindow() {
-      return new EditorWindow(this) {
+    protected DesktopEditorWindow createEditorWindow() {
+      return new DesktopEditorWindow(this) {
         @Override
         protected void onBeforeSetEditor(VirtualFile file) {
           for (EditorWithProviderComposite composite : getEditorsComposites()) {

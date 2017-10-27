@@ -23,12 +23,12 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.EditorComposite;
-import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.fileEditor.impl.EditorsSplitters;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.fileEditor.impl.EditorWindow;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +54,6 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
    * @return preferred focused component inside myEditor tabbed container.
    * This method does similar things like {@link FileEditor#getPreferredFocusedComponent()}
    * but it also tracks (and remember) focus movement inside tabbed container.
-   *
    * @see EditorComposite#getPreferredFocusedComponent()
    */
   @Nullable
@@ -69,7 +68,6 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   public abstract void updateFilePresentation(@NotNull VirtualFile file);
 
   /**
-   *
    * @return current window in splitters
    */
   public abstract EditorWindow getCurrentWindow();
@@ -111,17 +109,18 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   public abstract void changeSplitterOrientation();
 
   public abstract void flipTabs();
+
   public abstract boolean tabsMode();
 
   public abstract boolean isInSplitter();
 
-  public abstract boolean hasOpenedFile ();
+  public abstract boolean hasOpenedFile();
 
   @Nullable
   public abstract VirtualFile getCurrentFile();
 
   @Nullable
-  public abstract Pair <FileEditor, FileEditorProvider> getSelectedEditorWithProvider(@NotNull VirtualFile file);
+  public abstract Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider(@NotNull VirtualFile file);
 
   /**
    * Closes all files IN ACTIVE SPLITTER (window).
@@ -137,7 +136,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   @Override
   @NotNull
   public FileEditor[] openFile(@NotNull final VirtualFile file, final boolean focusEditor) {
-    return openFileWithProviders(file, focusEditor, false).getFirst ();
+    return openFileWithProviders(file, focusEditor, false).getFirst();
   }
 
   @NotNull
@@ -147,14 +146,10 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   }
 
   @NotNull
-  public abstract Pair<FileEditor[],FileEditorProvider[]> openFileWithProviders(@NotNull VirtualFile file,
-                                                                                boolean focusEditor,
-                                                                                boolean searchForSplitter);
+  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@NotNull VirtualFile file, boolean focusEditor, boolean searchForSplitter);
 
   @NotNull
-  public abstract Pair<FileEditor[],FileEditorProvider[]> openFileWithProviders(@NotNull VirtualFile file,
-                                                                                boolean focusEditor,
-                                                                                @NotNull EditorWindow window);
+  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@NotNull VirtualFile file, boolean focusEditor, @NotNull EditorWindow window);
 
   public abstract boolean isChanged(@NotNull EditorComposite editor);
 
@@ -178,12 +173,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   public void registerExtraEditorDataProvider(@NotNull final EditorDataProvider provider, Disposable parentDisposable) {
     myDataProviders.add(provider);
     if (parentDisposable != null) {
-      Disposer.register(parentDisposable, new Disposable() {
-        @Override
-        public void dispose() {
-          myDataProviders.remove(provider);
-        }
-      });
+      Disposer.register(parentDisposable, () -> myDataProviders.remove(provider));
     }
   }
 
@@ -201,8 +191,6 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
 
   public abstract EditorsSplitters getSplittersFor(Component c);
 
-
   @NotNull
   public abstract ActionCallback notifyPublisher(@NotNull Runnable runnable);
-
 }

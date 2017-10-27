@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
+import consulo.fileEditor.impl.EditorWindow;
+
 /**
  * @author Konstantin Bulenkov
  */

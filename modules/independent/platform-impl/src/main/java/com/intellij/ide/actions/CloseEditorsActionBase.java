@@ -20,35 +20,39 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.EditorComposite;
-import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.FileStatusManager;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.fileEditor.impl.EditorWindow;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author yole
  */
 public abstract class CloseEditorsActionBase extends AnAction implements DumbAware {
-  protected ArrayList<Pair<EditorComposite, EditorWindow>> getFilesToClose (final AnActionEvent event) {
-    final ArrayList<Pair<EditorComposite, EditorWindow>> res = new ArrayList<Pair<EditorComposite, EditorWindow>>();
+  @NotNull
+  protected List<Pair<EditorComposite, EditorWindow>> getFilesToClose(final AnActionEvent event) {
+    final ArrayList<Pair<EditorComposite, EditorWindow>> res = new ArrayList<>();
     final Project project = event.getData(CommonDataKeys.PROJECT);
     final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
     final EditorWindow editorWindow = event.getData(EditorWindow.DATA_KEY);
     final EditorWindow[] windows;
-    if (editorWindow != null){
-      windows = new EditorWindow[]{ editorWindow };
+    if (editorWindow != null) {
+      windows = new EditorWindow[]{editorWindow};
     }
     else {
-      windows = editorManager.getWindows ();
+      windows = editorManager.getWindows();
     }
     final FileStatusManager fileStatusManager = FileStatusManager.getInstance(project);
     if (fileStatusManager != null) {
-      for (int i = 0; i != windows.length; ++ i) {
-        final EditorWindow window = windows [i];
-        final EditorComposite [] editors = window.getEditors ();
+      for (int i = 0; i != windows.length; ++i) {
+        final EditorWindow window = windows[i];
+        final EditorComposite[] editors = window.getEditors();
         for (final EditorComposite editor : editors) {
           if (isFileToClose(editor, window)) {
             res.add(Pair.create(editor, window));
@@ -61,23 +65,23 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
 
   protected abstract boolean isFileToClose(EditorComposite editor, EditorWindow window);
 
+  @RequiredDispatchThread
+  @Override
   public void actionPerformed(final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     final CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    commandProcessor.executeCommand(
-      project, new Runnable(){
-        public void run() {
-          final ArrayList<Pair<EditorComposite, EditorWindow>> filesToClose = getFilesToClose (e);
-          for (int i = 0; i != filesToClose.size (); ++ i) {
-            final Pair<EditorComposite, EditorWindow> we = filesToClose.get(i);
-            we.getSecond ().closeFile (we.getFirst ().getFile ());
-          }
-        }
-      }, IdeBundle.message("command.close.all.unmodified.editors"), null
-    );
+    commandProcessor.executeCommand(project, () -> {
+      List<Pair<EditorComposite, EditorWindow>> filesToClose = getFilesToClose(e);
+      for (int i = 0; i != filesToClose.size(); ++i) {
+        final Pair<EditorComposite, EditorWindow> we = filesToClose.get(i);
+        we.getSecond().closeFile(we.getFirst().getFile());
+      }
+    }, IdeBundle.message("command.close.all.unmodified.editors"), null);
   }
 
-  public void update(final AnActionEvent event){
+  @RequiredDispatchThread
+  @Override
+  public void update(final AnActionEvent event) {
     final Presentation presentation = event.getPresentation();
     final EditorWindow editorWindow = event.getData(EditorWindow.DATA_KEY);
     final boolean inSplitter = editorWindow != null && editorWindow.inSplitter();

@@ -18,21 +18,22 @@ package com.intellij.ide.actions;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.ArrayUtil;
+import consulo.fileEditor.impl.EditorWindow;
+import org.jetbrains.annotations.NotNull;
 
 abstract class TabNavigationActionBase extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.TabNavigationActionBase");
 
   private final int myDir;
 
-  TabNavigationActionBase (final int dir) {
-    LOG.assertTrue (dir == 1 || dir == -1);
+  TabNavigationActionBase(final int dir) {
+    LOG.assertTrue(dir == 1 || dir == -1);
     myDir = dir;
   }
 
@@ -55,9 +56,9 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     doNavigate(contentManager);
   }
 
-  public void update(AnActionEvent event){
+  @Override
+  public void update(@NotNull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
     Project project = event.getData(CommonDataKeys.PROJECT);
     presentation.setEnabled(false);
     if (project == null) {
@@ -67,8 +68,8 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     if (windowManager.isEditorComponentActive()) {
       final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
       EditorWindow currentWindow = event.getData(EditorWindow.DATA_KEY);
-      if (currentWindow == null){
-        editorManager.getCurrentWindow ();
+      if (currentWindow == null) {
+        editorManager.getCurrentWindow();
       }
       if (currentWindow != null) {
         final VirtualFile[] files = currentWindow.getFiles();
@@ -96,11 +97,11 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
   }
 
   public static void navigateImpl(final DataContext dataContext, Project project, VirtualFile selectedFile, final int dir) {
-    LOG.assertTrue (dir == 1 || dir == -1);
+    LOG.assertTrue(dir == 1 || dir == -1);
     final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
     EditorWindow currentWindow = dataContext.getData(EditorWindow.DATA_KEY);
-    if (currentWindow == null){
-      currentWindow = editorManager.getCurrentWindow ();
+    if (currentWindow == null) {
+      currentWindow = editorManager.getCurrentWindow();
     }
     final VirtualFile[] files = currentWindow.getFiles();
     int index = ArrayUtil.find(files, selectedFile);

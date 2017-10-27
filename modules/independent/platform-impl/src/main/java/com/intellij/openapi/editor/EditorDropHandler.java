@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
-import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.project.Project;
+import consulo.fileEditor.impl.EditorWindow;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -26,7 +26,9 @@ import java.awt.datatransfer.Transferable;
  */
 public interface EditorDropHandler {
   boolean canHandleDrop(DataFlavor[] transferFlavors);
+
   void handleDrop(Transferable t, final Project project, EditorWindow editorWindow);
+
   default void handleDrop(Transferable t, final Project project, EditorWindow editorWindow, @SuppressWarnings("unused") int dropAction) {
     handleDrop(t, project, editorWindow);
   }
