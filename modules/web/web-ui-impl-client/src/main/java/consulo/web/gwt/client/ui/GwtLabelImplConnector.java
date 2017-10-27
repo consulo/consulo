@@ -15,10 +15,12 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.shared.ui.state.LabelState;
 
 /**
  * @author VISTALL
@@ -44,10 +46,26 @@ public class GwtLabelImplConnector extends AbstractComponentConnector {
   }
 
   @Override
+  public LabelState getState() {
+    return (LabelState)super.getState();
+  }
+
+  @Override
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
-    final String text = getState().caption;
-    getWidget().setText(text);
+    getWidget().setText(getState().caption);
+
+    switch (getState().myHorizontalAlignment) {
+      case LEFT:
+        getWidget().setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        break;
+      case CENTER:
+        getWidget().setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+        break;
+      case RIGHT:
+        getWidget().setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+        break;
+    }
   }
 }

@@ -46,7 +46,7 @@ public class StructureViewSelectInTarget implements SelectInTarget {
 
   @Override
   public void selectIn(final SelectInContext context, final boolean requestFocus) {
-    final FileEditor fileEditor = context.getFileEditorProvider().openFileEditor();
+    final FileEditor fileEditor = context.getFileEditorProvider().get();
 
     ToolWindowManager windowManager=ToolWindowManager.getInstance(context.getProject());
     final Runnable runnable = new Runnable() {

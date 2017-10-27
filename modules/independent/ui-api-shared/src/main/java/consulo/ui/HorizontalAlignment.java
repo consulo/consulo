@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.border;
+package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 27-Oct-17
  */
-public interface Border {
+public enum HorizontalAlignment {
+  LEFT,
+  CENTER,
+  RIGHT
 }

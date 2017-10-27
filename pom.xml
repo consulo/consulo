@@ -93,6 +93,7 @@
     <module>modules/independent/vcs-log-impl</module>
     <module>modules/independent/vcs-impl</module>
     <module>modules/independent/ui-api</module>
+    <module>modules/independent/ui-api-shared</module>
     <module>modules/independent/ui-impl</module>
     <module>modules/independent/vcs-impl-testing</module>
     <module>modules/independent/usage-view</module>

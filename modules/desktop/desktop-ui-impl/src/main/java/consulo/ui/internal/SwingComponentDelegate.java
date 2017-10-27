@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,45 +25,67 @@ import consulo.ui.migration.ToSwingWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 19-Nov-16.
+ * @since 27-Oct-17
  */
-public interface SwingWrapper extends SomeUIWrapper, ToSwingWrapper {
-  @Nullable
+public class SwingComponentDelegate<T extends JComponent> implements Component, ToSwingWrapper, SomeUIWrapper {
+  protected T myComponent;
+
+  public SwingComponentDelegate(T component) {
+    myComponent = component;
+  }
+
+  @NotNull
   @Override
-  default Component getParentComponent() {
-    Container container = (Container)this;
-    return (Component)container.getParent();
+  public java.awt.Component toAWT() {
+    return myComponent;
+  }
+
+  @Override
+  public boolean isVisible() {
+    return myComponent.isVisible();
   }
 
   @RequiredUIAccess
   @Override
-  default void setSize(@NotNull Size size) {
-    Container container = (Container)this;
-    container.setPreferredSize(TargetAWT.to(size));
+  public void setVisible(boolean value) {
+    myComponent.setVisible(value);
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return myComponent.isEnabled();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setEnabled(boolean value) {
+    myComponent.setEnabled(value);
+  }
+
+  @Nullable
+  @Override
+  public Component getParentComponent() {
+    return (Component)myComponent.getParent();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setSize(@NotNull Size size) {
+    myComponent.setPreferredSize(TargetAWT.to(size));
   }
 
   @NotNull
   @Override
-  default java.awt.Component toAWT() {
-    return (java.awt.Component)this;
-  }
-
-  @NotNull
-  @Override
-  default UIDataObject dataObject() {
+  public UIDataObject dataObject() {
     javax.swing.JComponent component = (javax.swing.JComponent)toAWT();
     UIDataObject dataObject = (UIDataObject)component.getClientProperty(UIDataObject.class);
     if (dataObject == null) {
       component.putClientProperty(UIDataObject.class, dataObject = new UIDataObject());
     }
     return dataObject;
-  }
-
-  @Override
-  default void dispose() {
   }
 }

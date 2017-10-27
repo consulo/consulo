@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.web.gwt.shared.ui.state;
 
-import org.jetbrains.annotations.NotNull;
+import com.vaadin.shared.AbstractComponentState;
+import consulo.ui.HorizontalAlignment;
 
 /**
  * @author VISTALL
- * @since 11-Jun-16
+ * @since 27-Oct-17
  */
-public interface Label extends Component {
-  @NotNull
-  static Label create(@NotNull String text) {
-    Label label = UIInternal.get()._Components_label(text);
-    label.setHorizontalAlignment(HorizontalAlignment.LEFT);
-    return label;
-  }
-
-  @NotNull
-  String getText();
-
-  @RequiredUIAccess
-  void setText(@NotNull String text);
-
-  void setHorizontalAlignment(@NotNull HorizontalAlignment horizontalAlignment);
-
-  @NotNull
-  HorizontalAlignment getHorizontalAlignment();
+public class LabelState extends AbstractComponentState {
+  public HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
 }

@@ -17,6 +17,8 @@ package consulo.ui.internal;
 
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.Size;
 import consulo.ui.impl.SomeUIWrapper;
 import consulo.ui.impl.UIDataObject;
 import org.jetbrains.annotations.NotNull;
@@ -44,5 +46,10 @@ public interface VaadinWrapper extends SomeUIWrapper {
       component.setData(data = new UIDataObject());
     }
     return data;
+  }
+
+  @RequiredUIAccess
+  @Override
+  default void setSize(@NotNull Size size) {
   }
 }

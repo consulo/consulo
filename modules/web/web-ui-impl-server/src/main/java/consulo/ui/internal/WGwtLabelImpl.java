@@ -15,19 +15,21 @@
  */
 package consulo.ui.internal;
 
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.ui.AbstractComponent;
-import consulo.ui.Component;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.web.gwt.shared.ui.state.LabelState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
 public class WGwtLabelImpl extends AbstractComponent implements Label, VaadinWrapper {
+  private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
+
   public WGwtLabelImpl(String text) {
     getState().caption = text;
   }
@@ -45,15 +47,21 @@ public class WGwtLabelImpl extends AbstractComponent implements Label, VaadinWra
     markAsDirty();
   }
 
-  @Nullable
   @Override
-  public Component getParentComponent() {
-    return null;
+  public void setHorizontalAlignment(@NotNull HorizontalAlignment horizontalAlignment) {
+    myHorizontalAlignment = horizontalAlignment;
+    getState().myHorizontalAlignment = horizontalAlignment;
+    markAsDirty();
   }
 
-  @RequiredUIAccess
+  @NotNull
   @Override
-  public void setSize(@NotNull Size size) {
+  public HorizontalAlignment getHorizontalAlignment() {
+    return myHorizontalAlignment;
+  }
 
+  @Override
+  protected LabelState getState() {
+    return (LabelState)super.getState();
   }
 }

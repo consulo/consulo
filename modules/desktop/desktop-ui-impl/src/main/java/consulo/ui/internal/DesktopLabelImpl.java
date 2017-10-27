@@ -15,7 +15,10 @@
  */
 package consulo.ui.internal;
 
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.Label;
+import consulo.ui.RequiredUIAccess;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -23,8 +26,46 @@ import javax.swing.*;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class DesktopLabelImpl extends JLabel implements Label, SwingWrapper {
+public class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements Label, SwingWrapper {
+  private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
+
   public DesktopLabelImpl(String text) {
-    super(text);
+    super(new JLabel(text));
+
+    setHorizontalAlignment(HorizontalAlignment.LEFT);
+  }
+
+  @NotNull
+  @Override
+  public String getText() {
+    return myComponent.getText();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setText(@NotNull String text) {
+    myComponent.setText(text);
+  }
+
+  @Override
+  public void setHorizontalAlignment(@NotNull HorizontalAlignment horizontalAlignment) {
+    myHorizontalAlignment = horizontalAlignment;
+    switch (horizontalAlignment) {
+      case LEFT:
+        myComponent.setHorizontalAlignment(SwingConstants.LEFT);
+        break;
+      case CENTER:
+        myComponent.setHorizontalAlignment(SwingConstants.CENTER);
+        break;
+      case RIGHT:
+        myComponent.setHorizontalAlignment(SwingConstants.RIGHT);
+        break;
+    }
+  }
+
+  @NotNull
+  @Override
+  public HorizontalAlignment getHorizontalAlignment() {
+    return myHorizontalAlignment;
   }
 }
