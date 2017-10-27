@@ -15,14 +15,8 @@
  */
 package consulo.web.gwt.client.util;
 
-import com.google.gwt.core.shared.GWT;
 import consulo.annotations.DeprecationInfo;
-import consulo.web.gwt.client.service.FetchService;
-import consulo.web.gwt.client.GwtTransportService;
 import consulo.web.gwt.client.GwtTransportServiceAsync;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author VISTALL
@@ -31,20 +25,11 @@ import java.util.Map;
 @Deprecated
 @DeprecationInfo("This is part of research 'consulo as web app'. Code was written in hacky style. Must be dropped, or replaced by Consulo UI API")
 public class GwtUtil {
-  private static final GwtTransportServiceAsync ourAsyncService = GWT.create(GwtTransportService.class);
+  private static final GwtTransportServiceAsync ourAsyncService = null;
 
-  private static final Map<String, FetchService> ourServices = new HashMap<String, FetchService>();
 
   public static GwtTransportServiceAsync rpc() {
     return ourAsyncService;
   }
 
-  public static void put(String key, FetchService fetchService) {
-    ourServices.put(key, fetchService);
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T> T get(String key) {
-    return (T)ourServices.get(key);
-  }
 }

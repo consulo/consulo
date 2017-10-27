@@ -23,7 +23,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
-import consulo.web.gwt.client.service.EditorColorSchemeService;
 import consulo.web.gwt.client.ui.EditorSegmentBuilder;
 import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
 import consulo.web.gwt.client.util.GwtStyleUtil;
@@ -224,7 +223,7 @@ public class GwtEditorImpl extends SimplePanel {
 
   private HighlightState myHighlightState = HighlightState.UNKNOWN;
 
-  private EditorColorSchemeService.Listener myListener = new EditorColorSchemeService.Listener() {
+  /*private EditorColorSchemeService.Listener myListener = new EditorColorSchemeService.Listener() {
     @Override
     public void schemeChanged(GwtEditorColorScheme scheme) {
       myScheme = scheme;
@@ -238,7 +237,7 @@ public class GwtEditorImpl extends SimplePanel {
         }
       });
     }
-  };
+  };*/
 
   public GwtEditorImpl() {
     sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS | Event.ONKEYUP);
@@ -419,8 +418,7 @@ public class GwtEditorImpl extends SimplePanel {
   }
 
   public void dispose() {
-    final EditorColorSchemeService schemeService = GwtUtil.get(EditorColorSchemeService.KEY);
-    schemeService.removeListener(myListener);
+
   }
 
   private boolean insideGutter(Element element) {
