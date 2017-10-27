@@ -38,7 +38,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.ui.Rectangle2D;
+import consulo.ui.shared.Rectangle2D;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

@@ -22,7 +22,7 @@ import com.vaadin.ui.HasComponents;
 import consulo.ui.Component;
 import consulo.ui.Layout;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.shared.Size;
 import consulo.ui.internal.VaadinWrapper;
 import consulo.web.gwt.shared.ui.ex.state.ThreeComponentSplitLayoutState;
 import org.jetbrains.annotations.NotNull;

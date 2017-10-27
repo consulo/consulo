@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.shared.HorizontalAlignment;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -15,9 +15,8 @@
  */
 package consulo.ui.internal;
 
-import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.ui.AbstractComponent;
-import consulo.ui.HorizontalAlignment;
+import consulo.ui.shared.HorizontalAlignment;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
 import consulo.web.gwt.shared.ui.state.LabelState;

@@ -53,7 +53,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
-import consulo.ui.Rectangle2D;
+import consulo.ui.shared.Rectangle2D;
 import consulo.wm.impl.status.ModuleLayerWidget;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

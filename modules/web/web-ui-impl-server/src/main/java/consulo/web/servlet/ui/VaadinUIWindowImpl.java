@@ -22,6 +22,7 @@ import consulo.ui.*;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.internal.WGwtRootPanelImpl;
+import consulo.ui.shared.Size;
 import consulo.ui.style.ColorKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -20,7 +20,7 @@ import com.intellij.util.containers.hash.LinkedHashMap;
 import com.vaadin.ui.AbstractComponentContainer;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.shared.Size;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
 import consulo.ui.internal.image.WGwtImageUrlCache;

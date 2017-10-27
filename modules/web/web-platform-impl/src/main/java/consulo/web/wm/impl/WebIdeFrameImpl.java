@@ -21,7 +21,7 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.ui.BalloonLayout;
 import com.vaadin.shared.ui.window.WindowMode;
-import consulo.ui.Rectangle2D;
+import consulo.ui.shared.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.ui.internal.WGwtRootPanelImpl;

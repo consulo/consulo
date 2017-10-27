@@ -17,7 +17,7 @@ package consulo.start;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.shared.Size;
 import consulo.ui.Window;
 import org.jetbrains.annotations.NotNull;
 

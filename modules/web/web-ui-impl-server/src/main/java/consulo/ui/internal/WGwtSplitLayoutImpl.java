@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import com.vaadin.ui.AbstractComponentContainer;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.shared.Size;
 import consulo.ui.SplitLayout;
 import consulo.web.gwt.shared.ui.state.layout.SplitLayoutState;
 import org.jetbrains.annotations.NotNull;

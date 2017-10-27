@@ -18,7 +18,7 @@ package com.intellij.openapi.wm;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.BalloonLayout;
-import consulo.ui.Rectangle2D;
+import consulo.ui.shared.Rectangle2D;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

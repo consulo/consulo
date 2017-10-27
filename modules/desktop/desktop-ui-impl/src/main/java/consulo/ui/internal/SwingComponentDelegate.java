@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.shared.Size;
 import consulo.ui.impl.SomeUIWrapper;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.migration.ToSwingWrapper;

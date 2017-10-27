@@ -44,7 +44,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
-import consulo.ui.Rectangle2D;
+import consulo.ui.shared.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.*;

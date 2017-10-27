@@ -58,10 +58,10 @@ public class GwtLabelImplConnector extends AbstractComponentConnector {
 
     switch (getState().myHorizontalAlignment) {
       case LEFT:
-        getWidget().setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        getWidget().setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
         break;
       case CENTER:
-        getWidget().setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+        getWidget().setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
         break;
       case RIGHT:
         getWidget().setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);

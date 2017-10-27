@@ -16,9 +16,9 @@
 package consulo.awt;
 
 import com.intellij.util.ui.JBUI;
-import consulo.ui.RGBColor;
-import consulo.ui.Rectangle2D;
-import consulo.ui.Size;
+import consulo.ui.shared.RGBColor;
+import consulo.ui.shared.Rectangle2D;
+import consulo.ui.shared.Size;
 import consulo.ui.migration.ToSwingWrapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

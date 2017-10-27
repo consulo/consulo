@@ -17,6 +17,7 @@ package consulo.ui.app;
 
 import com.intellij.openapi.util.Disposer;
 import consulo.ui.*;
+import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

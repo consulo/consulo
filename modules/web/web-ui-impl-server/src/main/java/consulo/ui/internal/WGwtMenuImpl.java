@@ -20,7 +20,7 @@ import com.vaadin.ui.Component;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

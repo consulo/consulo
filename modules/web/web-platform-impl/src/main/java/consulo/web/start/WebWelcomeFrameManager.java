@@ -28,6 +28,7 @@ import consulo.start.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.app.impl.settings.SettingsDialog;
 import consulo.ui.border.BorderPosition;
+import consulo.ui.shared.Size;
 import consulo.web.application.WebApplication;
 import org.jetbrains.annotations.NotNull;
 

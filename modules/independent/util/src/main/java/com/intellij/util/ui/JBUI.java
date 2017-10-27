@@ -24,7 +24,6 @@ import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.keyFMap.KeyFMap;
 import com.intellij.util.ui.components.BorderLayoutPanel;
-import consulo.ui.Size;
 import consulo.util.ui.components.VerticalLayoutPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

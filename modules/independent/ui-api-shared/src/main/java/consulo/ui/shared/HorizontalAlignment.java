@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.shared;
 
 /**
  * @author VISTALL
- * @since 25-Sep-17
+ * @since 27-Oct-17
  */
-public enum StaticPosition {
-  TOP,
-  BOTTOM,
+public enum HorizontalAlignment {
   LEFT,
-  RIGHT,
-  CENTER
+  CENTER,
+  RIGHT
 }

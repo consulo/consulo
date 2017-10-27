@@ -20,6 +20,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.shared.Size;
 import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
 import org.jetbrains.annotations.NotNull;

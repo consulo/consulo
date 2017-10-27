@@ -19,7 +19,7 @@ import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.shared.Size;
 import consulo.ui.image.Image;
 import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
 import org.jetbrains.annotations.NotNull;

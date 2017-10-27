@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.wm;
 
-import consulo.ui.Rectangle2D;
+import consulo.ui.shared.Rectangle2D;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

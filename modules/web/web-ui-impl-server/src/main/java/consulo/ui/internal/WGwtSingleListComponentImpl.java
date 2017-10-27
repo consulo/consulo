@@ -20,7 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.ListItemRender;
 import consulo.ui.ListItemRenders;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.shared.Size;
 import consulo.ui.ValueComponent;
 import consulo.ui.internal.border.WGwtBorderBuilder;
 import consulo.ui.model.ListModel;

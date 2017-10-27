@@ -18,6 +18,7 @@ package consulo.ui.app.impl.settings;
 import com.intellij.openapi.options.Configurable;
 import consulo.ui.*;
 import consulo.ui.app.WindowWrapper;
+import consulo.ui.shared.Size;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

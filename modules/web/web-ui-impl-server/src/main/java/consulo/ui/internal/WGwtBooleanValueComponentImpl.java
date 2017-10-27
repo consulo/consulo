@@ -19,7 +19,7 @@ import com.intellij.util.SmartList;
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.shared.Size;
 import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
 import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxRpc;

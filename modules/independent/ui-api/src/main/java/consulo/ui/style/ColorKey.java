@@ -15,8 +15,8 @@
  */
 package consulo.ui.style;
 
-import consulo.ui.ColorValue;
-import consulo.ui.RGBColor;
+import consulo.ui.shared.ColorValue;
+import consulo.ui.shared.RGBColor;
 import org.jetbrains.annotations.NotNull;
 
 /**

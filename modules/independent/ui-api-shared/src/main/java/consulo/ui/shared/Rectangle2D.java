@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.shared;
 
+import com.google.common.annotations.GwtIncompatible;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -72,6 +73,7 @@ public class Rectangle2D implements Serializable, Cloneable {
   }
 
   @Override
+  @GwtIncompatible
   public Rectangle2D clone() {
     return new Rectangle2D(myCoordinate, mySize);
   }

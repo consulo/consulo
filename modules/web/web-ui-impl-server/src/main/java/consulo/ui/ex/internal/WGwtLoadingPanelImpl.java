@@ -18,7 +18,7 @@ package consulo.ui.ex.internal;
 import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.shared.Size;
 import consulo.ui.internal.VaadinWrapper;
 import org.jetbrains.annotations.NotNull;
 

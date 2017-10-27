@@ -22,7 +22,7 @@ import consulo.ui.ListBox;
 import consulo.ui.ListItemRender;
 import consulo.ui.ListItemRenders;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.shared.Size;
 import consulo.ui.ValueComponent;
 import consulo.ui.migration.ToSwingWrapper;
 import consulo.ui.model.ListModel;

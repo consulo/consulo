@@ -16,7 +16,7 @@
 package consulo.web.gwt.shared.ui.state;
 
 import com.vaadin.shared.AbstractComponentState;
-import consulo.ui.HorizontalAlignment;
+import consulo.ui.shared.HorizontalAlignment;
 
 /**
  * @author VISTALL

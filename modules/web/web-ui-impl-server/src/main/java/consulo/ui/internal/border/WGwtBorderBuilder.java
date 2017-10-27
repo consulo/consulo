@@ -15,8 +15,8 @@
  */
 package consulo.ui.internal.border;
 
-import consulo.ui.ColorValue;
-import consulo.ui.RGBColor;
+import consulo.ui.shared.ColorValue;
+import consulo.ui.shared.RGBColor;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.internal.VaadinWrapper;
 import consulo.ui.style.Style;

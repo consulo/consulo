@@ -16,7 +16,7 @@
 package consulo.ui.ex;
 
 import com.intellij.openapi.Disposable;
-import consulo.ui.Rectangle2D;
+import consulo.ui.shared.Rectangle2D;
 import org.jetbrains.annotations.NotNull;
 
 /**

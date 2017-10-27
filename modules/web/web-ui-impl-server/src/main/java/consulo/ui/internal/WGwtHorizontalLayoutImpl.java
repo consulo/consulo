@@ -19,7 +19,7 @@ import com.vaadin.ui.AbstractComponentContainer;
 import consulo.ui.Component;
 import consulo.ui.HorizontalLayout;
 import consulo.ui.RequiredUIAccess;
-import consulo.ui.Size;
+import consulo.ui.shared.Size;
 import consulo.ui.internal.border.WGwtBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.BaseLayoutState;
 import org.jetbrains.annotations.NotNull;
