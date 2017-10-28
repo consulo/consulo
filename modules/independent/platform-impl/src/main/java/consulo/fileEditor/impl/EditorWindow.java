@@ -33,7 +33,7 @@ public interface EditorWindow {
   @NotNull
   FileEditorManagerEx getManager();
 
-  void closeAllExcept(final VirtualFile selectedFile);
+  void closeAllExcept(VirtualFile selectedFile);
 
   @Nullable
   EditorWindow split(final int orientation, boolean forceSplit, @Nullable VirtualFile virtualFile, boolean focusNew);

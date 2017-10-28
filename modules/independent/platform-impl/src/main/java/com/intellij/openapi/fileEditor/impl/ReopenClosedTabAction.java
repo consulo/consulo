@@ -15,11 +15,13 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.fileEditor.impl.EditorWindow;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -32,8 +34,9 @@ public class ReopenClosedTabAction extends AnAction {
     super("Reopen Closed Tab");
   }
 
+  @RequiredDispatchThread
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@NotNull AnActionEvent e) {
     final EditorWindow window = getEditorWindow(e);
     if (window != null) {
       window.restoreClosedTab();
@@ -44,7 +47,7 @@ public class ReopenClosedTabAction extends AnAction {
   private static EditorWindow getEditorWindow(AnActionEvent e) {
     final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     if (component != null) {
-      final EditorsSplitters splitters = UIUtil.getParentOfType(EditorsSplitters.class, component);
+      EditorsSplitters splitters = DataManager.getInstance().getDataContext(component).getData(EditorsSplitters.KEY);
       if (splitters != null) {
         return splitters.getCurrentWindow();
       }
@@ -52,8 +55,9 @@ public class ReopenClosedTabAction extends AnAction {
     return null;
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     final EditorWindow window = getEditorWindow(e);
     e.getPresentation().setEnabled(window != null && window.hasClosedTabs());
   }

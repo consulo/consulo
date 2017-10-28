@@ -136,7 +136,6 @@ public class FileEditorManagerImpl extends FileEditorManagerEx implements Persis
 
 
   public FileEditorManagerImpl(@NotNull Project project, DockManager dockManager) {
-/*    ApplicationManager.getApplication().assertIsDispatchThread(); */
     myProject = project;
     myDockManager = dockManager;
     myListenerList = new MessageListenerList<>(myProject.getMessageBus(), FileEditorManagerListener.FILE_EDITOR_MANAGER);
