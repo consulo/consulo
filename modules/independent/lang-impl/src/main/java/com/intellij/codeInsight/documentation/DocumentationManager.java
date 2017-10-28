@@ -41,7 +41,6 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.preview.PreviewManager;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
@@ -407,9 +406,6 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
     myPreviouslyFocused = WindowManagerEx.getInstanceEx().getFocusedComponent(project);
 
     JBPopup _oldHint = getDocInfoHint();
-    if (PreviewManager.SERVICE.preview(myProject, DocumentationPreviewPanelProvider.ID, Couple.of(element, originalElement), requestFocus) != null) {
-      return;
-    }
 
     if (myToolWindow == null && PropertiesComponent.getInstance().isTrueValue(SHOW_DOCUMENTATION_IN_TOOL_WINDOW)) {
       createToolWindow(element, originalElement);

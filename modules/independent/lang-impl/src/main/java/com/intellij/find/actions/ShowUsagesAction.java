@@ -20,7 +20,6 @@ import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.find.FindManager;
 import com.intellij.find.FindSettings;
-import com.intellij.find.UsagesPreviewPanelProvider;
 import com.intellij.find.findUsages.*;
 import com.intellij.find.impl.FindManagerImpl;
 import com.intellij.icons.AllIcons;
@@ -36,7 +35,6 @@ import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.preview.PreviewManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
@@ -48,7 +46,6 @@ import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -282,14 +279,9 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
     final AtomicInteger outOfScopeUsages = new AtomicInteger();
     setTableModel(table, usageView, data, outOfScopeUsages, options.searchScope);
 
+    Runnable itemChosenCallback = prepareTable(table, editor, popupPosition, handler, maxUsages, options, false);
 
-    boolean isPreviewMode =
-            Boolean.TRUE == PreviewManager.SERVICE.preview(handler.getProject(), UsagesPreviewPanelProvider.ID, Pair.create(usageView, table), false);
-    Runnable itemChosenCallback = prepareTable(table, editor, popupPosition, handler, maxUsages, options, isPreviewMode);
-
-    @Nullable final JBPopup popup = isPreviewMode
-                                    ? null
-                                    : createUsagePopup(usages, visibleNodes, handler, editor, popupPosition, maxUsages, usageView, options, table,
+    @Nullable final JBPopup popup = createUsagePopup(usages, visibleNodes, handler, editor, popupPosition, maxUsages, usageView, options, table,
                                                        itemChosenCallback, presentation, processIcon);
     if (popup != null) {
       Disposer.register(popup, usageView);
