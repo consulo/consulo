@@ -207,11 +207,6 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
     return "<b>Consulo</b> project";
   }
 
-  @Override
-  public String getName() {
-    return "text editor";
-  }
-
   //region Async staff
   @Override
   public void doOpenProjectAsync(@NotNull AsyncResult<Project> asyncResult,
@@ -266,8 +261,6 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
     ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
     AtomicBoolean runConfigurators = new AtomicBoolean(true);
-
-    final VirtualFile finalBaseDir = baseDir;
 
     Consumer<Project> afterProjectAction = project -> {
       openProjectToolWindow(project);

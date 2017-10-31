@@ -50,11 +50,6 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
     myProvider = provider;
   }
 
-  @Override
-  public String getName() {
-    return myProvider.getName();
-  }
-
   @NotNull
   @Override
   public String getFileSample() {
@@ -68,7 +63,7 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
   }
 
   @Override
-  public boolean canOpenProject(@NotNull VirtualFile file) {
+  public boolean canOpenProject(@NotNull File file) {
     return myProvider.canImport(file);
   }
 

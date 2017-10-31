@@ -21,7 +21,6 @@ package com.intellij.projectImport;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
@@ -34,12 +33,10 @@ import javax.swing.*;
 import java.io.File;
 
 public abstract class ProjectOpenProcessor {
-  public abstract String getName();
-
   @NotNull
   @Language("HTML")
   public String getFileSample() {
-    return getName();
+    return "";
   }
 
   @NotNull
@@ -50,16 +47,7 @@ public abstract class ProjectOpenProcessor {
     return getIcon();
   }
 
-  public boolean canOpenProject(@NotNull File file) {
-    VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
-    return virtualFile != null && canOpenProject(virtualFile);
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #canOpenProject(File)")
-  public boolean canOpenProject(@NotNull VirtualFile file) {
-    return false;
-  }
+  public abstract boolean canOpenProject(@NotNull File file);
 
   @Nullable
   @RequiredDispatchThread
