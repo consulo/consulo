@@ -33,7 +33,7 @@ import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.EditorsSplitters;
+import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.Project;
@@ -67,10 +67,11 @@ import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.awt.TargetAWT;
-import consulo.ui.shared.Rectangle2D;
+import consulo.fileEditor.impl.EditorSplitters;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.shared.Rectangle2D;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import consulo.wm.impl.ToolWindowManagerBase;
 import gnu.trove.THashSet;
@@ -488,7 +489,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     myEditorComponentFocusWatcher.install(editorComponent);
 
     appendSetEditorComponentCmd(editorComponent, commandsList);
-    if (myEditorWasActive && editorComponent instanceof EditorsSplitters) {
+    if (myEditorWasActive && editorComponent instanceof DesktopEditorsSplitters) {
       activateEditorComponentImpl(commandsList, true);
     }
   }
@@ -838,7 +839,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     Component owner = getFocusManager().getFocusOwner();
-    EditorsSplitters splitters = UIUtil.getParentOfType(EditorsSplitters.class, owner);
+    DesktopEditorsSplitters splitters = UIUtil.getParentOfType(DesktopEditorsSplitters.class, owner);
     return splitters != null;
   }
 
@@ -860,7 +861,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   private ActionCallback appendRequestFocusInEditorComponentCmd(List<FinalizableCommand> commandList, boolean forced) {
     if (myProject.isDisposed()) return new ActionCallback.Done();
-    EditorsSplitters splitters = getSplittersToFocus();
+    EditorSplitters splitters = getSplittersToFocus();
     CommandProcessorBase commandProcessor = myCommandProcessor;
     RequestFocusInEditorComponentCmd command = new RequestFocusInEditorComponentCmd(splitters, getFocusManager(), commandProcessor, forced);
     commandList.add(command);
@@ -892,7 +893,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
   }
 
-  private EditorsSplitters getSplittersToFocus() {
+  private EditorSplitters getSplittersToFocus() {
     Window activeWindow = myWindowManager.getMostRecentFocusedWindow();
 
     if (activeWindow instanceof DesktopFloatingDecorator) {
@@ -904,7 +905,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     FileEditorManagerEx fem = FileEditorManagerEx.getInstanceEx(myProject);
-    EditorsSplitters splitters = activeWindow != null ? fem.getSplittersFor(activeWindow) : null;
+    EditorSplitters splitters = activeWindow != null ? fem.getSplittersFor(activeWindow) : null;
     return splitters != null ? splitters : fem.getSplitters();
   }
 

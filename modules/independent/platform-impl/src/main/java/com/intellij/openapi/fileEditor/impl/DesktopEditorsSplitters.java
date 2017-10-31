@@ -19,6 +19,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ReadAction;
@@ -55,6 +56,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.fileEditor.impl.EditorSplitters;
 import consulo.fileEditor.impl.EditorWindow;
 import gnu.trove.THashSet;
 import org.jdom.Element;
@@ -71,10 +73,10 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class EditorsSplitters extends IdePanePanel implements UISettingsListener, Disposable, DataProvider {
+public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsListener, Disposable, DataProvider, EditorSplitters {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.EditorsSplitters");
 
-  public static final Key<EditorsSplitters> KEY = Key.create("EditorsSplitters");
+  public static final Key<DesktopEditorsSplitters> KEY = Key.create("EditorsSplitters");
 
   private static final String PINNED = "pinned";
   private static final String CURRENT_IN_TAB = "current-in-tab";
@@ -91,7 +93,7 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
   private final Alarm myIconUpdaterAlarm = new Alarm();
   private final UIBuilder myUIBuilder = new UIBuilder();
 
-  EditorsSplitters(final FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
+  DesktopEditorsSplitters(final FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
     super(new BorderLayout());
     myManager = manager;
     myFocusWatcher = new MyFocusWatcher();
@@ -109,6 +111,12 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
       repaint();
     };
     KeymapManager.getInstance().addKeymapManagerListener(keymapListener, this);
+  }
+
+  @NotNull
+  @Override
+  public JComponent getComponent() {
+    return this;
   }
 
   @Nullable
@@ -306,6 +314,7 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
     mySplittersElement = element;
   }
 
+  @Override
   @NotNull
   public VirtualFile[] getOpenFiles() {
     final Set<VirtualFile> files = new ArrayListSet<>();
@@ -323,6 +332,7 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
     return VfsUtilCore.toVirtualFileArray(files);
   }
 
+  @Override
   @NotNull
   public VirtualFile[] getSelectedFiles() {
     final Set<VirtualFile> files = new ArrayListSet<>();
@@ -346,6 +356,7 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
     return virtualFiles;
   }
 
+  @Override
   @NotNull
   public FileEditor[] getSelectedEditors() {
     Set<DesktopEditorWindow> windows = new THashSet<>(myWindows);
@@ -363,6 +374,7 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
     return editors.toArray(new FileEditor[editors.size()]);
   }
 
+  @Override
   public void updateFileIcon(@NotNull final VirtualFile file) {
     updateFileIconLater(file);
   }
@@ -388,7 +400,7 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
     }, 200, ModalityState.stateForComponent(this));
   }
 
-  void updateFileColor(@NotNull final VirtualFile file) {
+  public void updateFileColor(@NotNull final VirtualFile file) {
     final Collection<DesktopEditorWindow> windows = findWindows(file);
     for (DesktopEditorWindow window : windows) {
       final int index = window.findEditorIndex(window.findFileComposite(file));
@@ -418,7 +430,7 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
     }
   }
 
-  void updateFileName(@Nullable final VirtualFile updatedFile) {
+  public void updateFileName(@Nullable final VirtualFile updatedFile) {
     final DesktopEditorWindow[] windows = getWindows();
     for (int i = 0; i != windows.length; ++i) {
       for (VirtualFile file : windows[i].getFiles()) {
@@ -454,6 +466,17 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
     return myInsideChange > 0;
   }
 
+  @Override
+  public AccessToken increaseChange() {
+    myInsideChange ++;
+    return new AccessToken() {
+      @Override
+      public void finish() {
+        myInsideChange --;
+      }
+    };
+  }
+
   private void setCurrentWindow(@Nullable final EditorWindow currentWindow) {
     if (currentWindow != null && !myWindows.contains(currentWindow)) {
       throw new IllegalArgumentException(currentWindow + " is not a member of this container");
@@ -461,7 +484,7 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
     myCurrentWindow = (DesktopEditorWindow)currentWindow;
   }
 
-  void updateFileBackgroundColor(@NotNull VirtualFile file) {
+  public void updateFileBackgroundColor(@NotNull VirtualFile file) {
     final DesktopEditorWindow[] windows = getWindows();
     for (int i = 0; i != windows.length; ++i) {
       windows[i].updateFileBackgroundColor(file);
@@ -532,7 +555,7 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
     return null;
   }
 
-  void closeFile(VirtualFile file, boolean moveFocus) {
+ public void closeFile(VirtualFile file, boolean moveFocus) {
     final List<DesktopEditorWindow> windows = findWindows(file);
     if (!windows.isEmpty()) {
       final VirtualFile nextFile = findNextFile(file);
@@ -576,7 +599,7 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
           return IdeFocusTraversalPolicy.getPreferredFocusedComponent(selectedEditor.getComponent(), this);
         }
       }
-      return IdeFocusTraversalPolicy.getPreferredFocusedComponent(EditorsSplitters.this, this);
+      return IdeFocusTraversalPolicy.getPreferredFocusedComponent(DesktopEditorsSplitters.this, this);
     }
   }
 
@@ -585,6 +608,8 @@ public class EditorsSplitters extends IdePanePanel implements UISettingsListener
     return getComponentCount() > 0 ? (JPanel)getComponent(0) : null;
   }
 
+  @Override
+  @Nullable
   public EditorWindow getCurrentWindow() {
     return myCurrentWindow;
   }

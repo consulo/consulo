@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
+import consulo.fileEditor.impl.EditorSplitters;
+
 public interface FileEditorManagerChange {
-  void run(EditorsSplitters splitters);
+  void run(EditorSplitters splitters);
 }

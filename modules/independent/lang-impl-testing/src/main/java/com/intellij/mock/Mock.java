@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.EditorComposite;
-import com.intellij.openapi.fileEditor.impl.EditorsSplitters;
+import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -171,13 +171,13 @@ public class Mock {
     }
 
     @Override
-    public EditorsSplitters getSplittersFor(Component c) {
+    public DesktopEditorsSplitters getSplittersFor(Component c) {
       return null;
     }
 
     @NotNull
     @Override
-    public EditorsSplitters getSplitters() {
+    public DesktopEditorsSplitters getSplitters() {
       throw new RuntimeException("not implemented");
     }
 

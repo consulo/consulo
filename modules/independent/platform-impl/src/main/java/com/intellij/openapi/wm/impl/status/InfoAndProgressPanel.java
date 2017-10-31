@@ -25,7 +25,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.EditorsSplitters;
+import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.progress.impl.ProgressSuspender;
@@ -467,10 +467,10 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   private static Component getAnchor(@NotNull JRootPane pane) {
     Component tabWrapper = UIUtil.findComponentOfType(pane, TabbedPaneWrapper.TabWrapper.class);
     if (tabWrapper != null) return tabWrapper;
-    Component splitters = UIUtil.findComponentOfType(pane, EditorsSplitters.class);
+    Component splitters = UIUtil.findComponentOfType(pane, DesktopEditorsSplitters.class);
     if (splitters != null) return splitters;
     FileEditorManagerEx ex = FileEditorManagerEx.getInstanceEx(ProjectUtil.guessCurrentProject(pane));
-    return ex == null ? pane : ex.getSplitters();
+    return ex == null ? pane : ex.getSplitters().getComponent();
   }
 
   private static boolean isBottomSideToolWindowsVisible(@NotNull JRootPane parent) {

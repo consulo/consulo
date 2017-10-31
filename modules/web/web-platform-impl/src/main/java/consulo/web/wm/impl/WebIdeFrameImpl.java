@@ -16,19 +16,21 @@
 package consulo.web.wm.impl;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.ui.BalloonLayout;
 import com.vaadin.shared.ui.window.WindowMode;
-import consulo.ui.shared.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
 import consulo.ui.internal.WGwtRootPanelImpl;
+import consulo.ui.shared.Rectangle2D;
 import consulo.web.application.WebApplication;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.io.File;
 
 /**
@@ -53,7 +55,12 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     ((com.vaadin.ui.Window)myWindow).setWindowMode(WindowMode.MAXIMIZED);
 
     myWindow.setResizable(false);
-    myWindow.setClosable(false);
+    ((com.vaadin.ui.Window)myWindow).addCloseListener(closeEvent -> {
+      myWindow.close();
+
+      SwingUtilities.invokeLater(() -> ProjectManager.getInstance().closeProject(myProject));
+    });
+
     myWindow.setContent(myRootView.getComponent());
 
     myRootView.update();

@@ -16,6 +16,8 @@
 package consulo.web.start;
 
 import com.intellij.ide.DataManager;
+import com.intellij.ide.RecentProjectsManager;
+import com.intellij.ide.ReopenProjectAction;
 import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
@@ -28,12 +30,15 @@ import consulo.start.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.app.impl.settings.SettingsDialog;
 import consulo.ui.border.BorderPosition;
+import consulo.ui.model.ImmutableListModel;
+import consulo.ui.model.ListModel;
 import consulo.ui.shared.Size;
 import consulo.web.application.WebApplication;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -67,9 +72,23 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
     welcomeFrame.setResizable(false);
     welcomeFrame.setClosable(false);
     welcomeFrame.setSize(WelcomeFrameManager.getDefaultWindowSize());
-    welcomeFrame.setContent(Label.create("Test"));
+    welcomeFrame.setContent(Label.create("Loading..."));
 
-    ListBox<String> listSelect = ListBox.create("Test");
+    AnAction[] recentProjectsActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
+
+    ListModel<AnAction> model = new ImmutableListModel<>(Arrays.asList(recentProjectsActions));
+
+    ListBox<AnAction> listSelect = ListBox.create(model);
+    listSelect.setRender((render, index, item) -> {
+      render.append(((ReopenProjectAction)item).getProjectName());
+    });
+    listSelect.addValueListener(event -> {
+      ReopenProjectAction value = (ReopenProjectAction)event.getValue();
+
+      AnActionEvent e = AnActionEvent.createFromAnAction(value, null, ActionPlaces.WELCOME_SCREEN, DataManager.getInstance().getDataContext(welcomeFrame));
+
+      value.actionPerformed(e);
+    });
     listSelect.addBorder(BorderPosition.RIGHT);
     listSelect.setSize(new Size(300, -1));
 

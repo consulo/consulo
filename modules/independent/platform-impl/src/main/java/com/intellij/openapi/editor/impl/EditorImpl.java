@@ -58,7 +58,7 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import com.intellij.openapi.fileEditor.impl.EditorsSplitters;
+import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -4443,7 +4443,7 @@ public final class EditorImpl extends UserDataHolderBase implements EditorEx, Hi
     @NotNull
     @Override
     public Insets getBorderInsets(Component c) {
-      Container splitters = SwingUtilities.getAncestorOfClass(EditorsSplitters.class, c);
+      Container splitters = SwingUtilities.getAncestorOfClass(DesktopEditorsSplitters.class, c);
       boolean thereIsSomethingAbove =
               !SystemInfo.isMac || UISettings.getInstance().getShowMainToolbar() || UISettings.getInstance().getShowNavigationBar() || toolWindowIsNotEmpty();
       //noinspection ConstantConditions

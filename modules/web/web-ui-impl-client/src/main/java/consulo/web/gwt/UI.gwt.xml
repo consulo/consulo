@@ -29,4 +29,8 @@
     <inherits name="consulo.ui.UI" />
 
     <inherits name="consulo.ui.UI" />
+
+    <inherits name="consulo.ui.UI" />
+
+    <inherits name="consulo.ui.UI" />
 </module>

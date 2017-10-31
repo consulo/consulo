@@ -77,7 +77,8 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
   @Nullable
   @Override
   public StatusBar getStatusBar(Project project) {
-    return getIdeFrame(project).getStatusBar();
+    IdeFrameEx ideFrame = getIdeFrame(project);
+    return ideFrame == null ? null : ideFrame.getStatusBar();
   }
 
   @Override

@@ -23,11 +23,11 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.EditorComposite;
-import com.intellij.openapi.fileEditor.impl.EditorsSplitters;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.fileEditor.impl.EditorSplitters;
 import consulo.fileEditor.impl.EditorWindow;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -131,7 +131,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   public abstract void closeAllFiles();
 
   @NotNull
-  public abstract EditorsSplitters getSplitters();
+  public abstract EditorSplitters getSplitters();
 
   @Override
   @NotNull
@@ -180,8 +180,8 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   public void refreshIcons() {
     if (this instanceof FileEditorManagerImpl) {
       final FileEditorManagerImpl mgr = (FileEditorManagerImpl)this;
-      Set<EditorsSplitters> splitters = mgr.getAllSplitters();
-      for (EditorsSplitters each : splitters) {
+      Set<EditorSplitters> splitters = mgr.getAllSplitters();
+      for (EditorSplitters each : splitters) {
         for (VirtualFile file : mgr.getOpenFiles()) {
           each.updateFileIcon(file);
         }
@@ -189,7 +189,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
     }
   }
 
-  public abstract EditorsSplitters getSplittersFor(Component c);
+  public abstract EditorSplitters getSplittersFor(Component c);
 
   @NotNull
   public abstract ActionCallback notifyPublisher(@NotNull Runnable runnable);

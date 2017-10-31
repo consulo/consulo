@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.fileEditor.impl.EditorSplitters;
 import consulo.fileEditor.impl.EditorWindow;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +48,7 @@ public class ReopenClosedTabAction extends AnAction {
   private static EditorWindow getEditorWindow(AnActionEvent e) {
     final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     if (component != null) {
-      EditorsSplitters splitters = DataManager.getInstance().getDataContext(component).getData(EditorsSplitters.KEY);
+      EditorSplitters splitters = DataManager.getInstance().getDataContext(component).getData(EditorSplitters.KEY);
       if (splitters != null) {
         return splitters.getCurrentWindow();
       }

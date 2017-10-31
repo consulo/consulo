@@ -69,13 +69,7 @@ import java.util.List;
 public abstract class AnAction implements PossiblyDumbAware {
   public static final AnAction[] EMPTY_ARRAY = new AnAction[0];
 
-  public static ArrayFactory<AnAction> ARRAY_FACTORY = new ArrayFactory<AnAction>() {
-    @NotNull
-    @Override
-    public AnAction[] create(int count) {
-      return count == 0 ? EMPTY_ARRAY : new AnAction[count];
-    }
-  };
+  public static ArrayFactory<AnAction> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new AnAction[count];
 
   public static final Key<List<AnAction>> ACTIONS_KEY = Key.create("AnAction.shortcutSet");
 

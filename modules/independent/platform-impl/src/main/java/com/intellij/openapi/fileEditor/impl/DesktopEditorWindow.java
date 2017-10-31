@@ -73,7 +73,7 @@ public class DesktopEditorWindow implements EditorWindow {
 
   protected JPanel myPanel;
   private EditorTabbedContainer myTabbedPane;
-  private final EditorsSplitters myOwner;
+  private final DesktopEditorsSplitters myOwner;
   private static final Icon MODIFIED_ICON = !UISettings.getInstance().HIDE_TABS_IF_NEED ? new Icon() {
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
@@ -116,7 +116,7 @@ public class DesktopEditorWindow implements EditorWindow {
   private final AtomicBoolean myTabsHidingInProgress = new AtomicBoolean(false);
   private final Stack<Pair<String, Integer>> myHiddenTabs = new Stack<>();
 
-  protected DesktopEditorWindow(final EditorsSplitters owner) {
+  protected DesktopEditorWindow(final DesktopEditorsSplitters owner) {
     myOwner = owner;
     myPanel = new JPanel(new BorderLayout());
     myPanel.setOpaque(false);
@@ -271,7 +271,7 @@ public class DesktopEditorWindow implements EditorWindow {
         if (disposeIfNeeded && getTabCount() == 0) {
           removeFromSplitter();
           if (UISettings.getInstance().getEditorTabPlacement() == UISettings.TABS_NONE) {
-            final EditorsSplitters owner = getOwner();
+            final DesktopEditorsSplitters owner = getOwner();
             if (owner != null) {
               final ThreeComponentsSplitter splitter = UIUtil.getParentOfType(ThreeComponentsSplitter.class, owner);
               if (splitter != null) {
@@ -300,7 +300,7 @@ public class DesktopEditorWindow implements EditorWindow {
           }
         });
 
-        splitters.afterFileClosed(file);
+        ((DesktopEditorsSplitters)splitters).afterFileClosed(file);
       }
     }, myOwner);
   }
@@ -326,7 +326,7 @@ public class DesktopEditorWindow implements EditorWindow {
         parentSplitter.setSecondComponent(otherComponent);
       }
     }
-    else if (parent instanceof EditorsSplitters) {
+    else if (parent instanceof DesktopEditorsSplitters) {
       parent.removeAll();
       parent.add(otherComponent, BorderLayout.CENTER);
       parent.revalidate();
@@ -487,7 +487,7 @@ public class DesktopEditorWindow implements EditorWindow {
   }
 
   @Override
-  public EditorsSplitters getOwner() {
+  public DesktopEditorsSplitters getOwner() {
     return myOwner;
   }
 

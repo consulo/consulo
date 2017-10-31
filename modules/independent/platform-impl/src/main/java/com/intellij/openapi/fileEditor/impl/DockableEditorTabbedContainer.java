@@ -40,7 +40,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 public class DockableEditorTabbedContainer implements DockContainer.Persistent {
 
-  private final EditorsSplitters mySplitters;
+  private final DesktopEditorsSplitters mySplitters;
   private final Project myProject;
 
   private final CopyOnWriteArraySet<Listener> myListeners = new CopyOnWriteArraySet<Listener>();
@@ -57,7 +57,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
     this(project, null, true);
   }
 
-  DockableEditorTabbedContainer(Project project, @Nullable EditorsSplitters splitters, boolean disposeWhenEmpty) {
+  DockableEditorTabbedContainer(Project project, @Nullable DesktopEditorsSplitters splitters, boolean disposeWhenEmpty) {
     myProject = project;
     mySplitters = splitters;
     myDisposeWhenEmpty = disposeWhenEmpty;
@@ -200,7 +200,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
     return mySplitters;
   }
 
-  public EditorsSplitters getSplitters() {
+  public DesktopEditorsSplitters getSplitters() {
     return mySplitters;
   }
 

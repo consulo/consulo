@@ -17,7 +17,7 @@ package consulo.fileEditor.impl;
 
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.EditorWithProviderComposite;
-import com.intellij.openapi.fileEditor.impl.EditorsSplitters;
+import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +57,7 @@ public interface EditorWindow {
   @Nullable
   EditorWithProviderComposite getSelectedEditor();
 
-  EditorsSplitters getOwner();
+  DesktopEditorsSplitters getOwner();
 
   VirtualFile getSelectedFile();
 

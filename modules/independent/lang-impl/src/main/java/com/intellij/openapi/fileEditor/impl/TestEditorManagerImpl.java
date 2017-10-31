@@ -157,7 +157,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public EditorsSplitters getSplittersFor(Component c) {
+  public DesktopEditorsSplitters getSplittersFor(Component c) {
     return null;
   }
 
@@ -524,7 +524,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
 
   @NotNull
   @Override
-  public EditorsSplitters getSplitters() {
+  public DesktopEditorsSplitters getSplitters() {
     throw new IncorrectOperationException();
   }
 
