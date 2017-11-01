@@ -20,8 +20,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.impl.CommandProcessorBase;
+import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,7 +33,7 @@ public class DesktopCommandProcessorImpl extends CommandProcessorBase {
   @Override
   protected ActionCallback invokeLater(@NotNull Runnable command, @NotNull Condition<?> expire) {
     Application application = ApplicationManager.getApplication();
-    ModalityState modalityState = Registry.is("ide.perProjectModality") ? ModalityState.current() : ModalityState.NON_MODAL;
+    ModalityState modalityState = ModalityPerProjectEAPDescriptor.is() ? ModalityState.current() : ModalityState.NON_MODAL;
     return application.getInvokator().invokeLater(command, modalityState, expire);
   }
 }

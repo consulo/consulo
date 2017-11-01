@@ -57,6 +57,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.OwnerOptional;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -199,7 +200,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
 
     if (!isHeadless()) {
       Dialog.ModalityType modalityType = DialogWrapper.IdeModalityType.IDE.toAwtModality();
-      if (Registry.is("ide.perProjectModality")) {
+      if (ModalityPerProjectEAPDescriptor.is()) {
         modalityType = ideModalityType.toAwtModality();
       }
       myDialog.setModalityType(modalityType);
@@ -442,7 +443,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
 
     if (changeModalityState) {
       commandProcessor.enterModal();
-      if (Registry.is("ide.perProjectModality")) {
+      if (ModalityPerProjectEAPDescriptor.is()) {
         LaterInvocator.enterModal(project, myDialog.getWindow());
       } else {
         LaterInvocator.enterModal(myDialog);
@@ -459,7 +460,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     finally {
       if (changeModalityState) {
         commandProcessor.leaveModal();
-        if (Registry.is("ide.perProjectModality")) {
+        if (ModalityPerProjectEAPDescriptor.is()) {
           LaterInvocator.leaveModal(project, myDialog.getWindow());
         } else {
           LaterInvocator.leaveModal(myDialog);

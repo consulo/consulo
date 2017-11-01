@@ -29,12 +29,12 @@ import com.intellij.openapi.options.newEditor.OptionsEditorDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,7 +68,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
   }
 
   private static void _showSettingsDialog(@NotNull final Project project, @NotNull Configurable[] configurables, @Nullable Configurable toSelect) {
-    if (Registry.is("ide.perProjectModality")) {
+    if (ModalityPerProjectEAPDescriptor.is()) {
       new OptionsEditorDialog(project, configurables, toSelect, true).show();
     }
     else {
@@ -107,7 +107,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
 
     OptionsEditorDialog dialog;
-    if (Registry.is("ide.perProjectModality")) {
+    if (ModalityPerProjectEAPDescriptor.is()) {
       dialog = new OptionsEditorDialog(actualProject, configurables, nameToSelect, true);
     }
     else {
@@ -124,7 +124,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     final Configurable configurable2Select = findConfigurable2Select(id2Select, configurables);
 
     final OptionsEditorDialog dialog;
-    if (Registry.is("ide.perProjectModality")) {
+    if (ModalityPerProjectEAPDescriptor.is()) {
       dialog = new OptionsEditorDialog(actualProject, configurables, configurable2Select, true);
     }
     else {

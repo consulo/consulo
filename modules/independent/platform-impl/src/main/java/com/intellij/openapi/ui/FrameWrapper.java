@@ -29,7 +29,6 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
@@ -45,6 +44,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import consulo.ui.shared.Rectangle2D;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -156,7 +156,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       }
     };
     frame.addWindowListener(focusListener);
-    if (Registry.is("ide.perProjectModality")) {
+    if (ModalityPerProjectEAPDescriptor.is()) {
       frame.setAlwaysOnTop(true);
     }
     Disposer.register(this, new Disposable() {
