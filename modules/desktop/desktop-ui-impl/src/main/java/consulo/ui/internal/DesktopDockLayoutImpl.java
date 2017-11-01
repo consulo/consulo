@@ -15,6 +15,7 @@
  */
 package consulo.ui.internal;
 
+import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.DockLayout;
 import consulo.ui.RequiredUIAccess;
@@ -36,7 +37,7 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout, SwingWr
   @NotNull
   @Override
   public DockLayout top(@NotNull Component component) {
-    add((java.awt.Component)component, BorderLayout.NORTH);
+    add(TargetAWT.to(component), BorderLayout.NORTH);
     return this;
   }
 
@@ -44,7 +45,7 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout, SwingWr
   @NotNull
   @Override
   public DockLayout bottom(@NotNull Component component) {
-    add((java.awt.Component)component, BorderLayout.SOUTH);
+    add(TargetAWT.to(component), BorderLayout.SOUTH);
     return this;
   }
 
@@ -52,7 +53,7 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout, SwingWr
   @NotNull
   @Override
   public DockLayout center(@NotNull Component component) {
-    add((java.awt.Component)component, BorderLayout.CENTER);
+    add(TargetAWT.to(component), BorderLayout.CENTER);
     return this;
   }
 
@@ -60,7 +61,7 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout, SwingWr
   @NotNull
   @Override
   public DockLayout left(@NotNull Component component) {
-    add((java.awt.Component)component, BorderLayout.WEST);
+    add(TargetAWT.to(component), BorderLayout.WEST);
     return this;
   }
 
@@ -68,7 +69,7 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout, SwingWr
   @NotNull
   @Override
   public DockLayout right(@NotNull Component component) {
-    add((java.awt.Component)component, BorderLayout.EAST);
+    add(TargetAWT.to(component), BorderLayout.EAST);
     return this;
   }
 }

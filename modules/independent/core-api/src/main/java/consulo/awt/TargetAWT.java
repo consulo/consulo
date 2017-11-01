@@ -56,6 +56,9 @@ public class TargetAWT {
     if (component instanceof ToSwingWrapper) {
       return ((ToSwingWrapper)component).toAWT();
     }
+    else if(component instanceof Component) {
+      return (Component)component;
+    }
     throw new IllegalArgumentException(component + " is not ToSwingWrapper");
   }
 
