@@ -76,7 +76,7 @@ public abstract class StubTreeLoader {
     IndexingStampInfo indexingStampInfo = getIndexingStampInfo(file);
     boolean upToDate = indexingStampInfo != null && indexingStampInfo.isUpToDate(document, file, psiFile);
 
-    String msg = _message + "\nPlease report the problem to JetBrains with the files attached\n";
+    String msg = _message + "\nPlease report the problem to 'consulo.io' with the files attached\n";
     if (upToDate) {
       msg += "INDEXED VERSION IS THE CURRENT ONE";
     }
