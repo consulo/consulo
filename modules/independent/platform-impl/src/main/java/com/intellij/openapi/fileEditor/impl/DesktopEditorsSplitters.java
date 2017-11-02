@@ -142,7 +142,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     repaint(); // revalidate doesn't repaint correctly after "Close All"
   }
 
-  void startListeningFocus() {
+  @Override
+  public void startListeningFocus() {
     myFocusWatcher.install(this);
   }
 
@@ -156,6 +157,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     stopListeningFocus();
   }
 
+  @Override
   @Nullable
   public VirtualFile getCurrentFile() {
     if (myCurrentWindow != null) {
@@ -179,6 +181,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
   }
 
+  @Override
   public void writeExternal(@NotNull Element element) {
     if (getComponentCount() == 0) {
       return;
@@ -255,6 +258,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     return fileElement;
   }
 
+  @Override
   public void openFiles() {
     if (mySplittersElement != null) {
       final JPanel comp = myUIBuilder.process(mySplittersElement, getTopPanel());
@@ -310,6 +314,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     return value == null ? 0 : value;
   }
 
+  @Override
   public void readExternal(final Element element) {
     mySplittersElement = element;
   }
@@ -400,6 +405,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }, 200, ModalityState.stateForComponent(this));
   }
 
+  @Override
   public void updateFileColor(@NotNull final VirtualFile file) {
     final Collection<DesktopEditorWindow> windows = findWindows(file);
     for (DesktopEditorWindow window : windows) {
@@ -430,6 +436,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
   }
 
+  @Override
   public void updateFileName(@Nullable final VirtualFile updatedFile) {
     final DesktopEditorWindow[] windows = getWindows();
     for (int i = 0; i != windows.length; ++i) {
@@ -462,7 +469,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     return frame;
   }
 
-  boolean isInsideChange() {
+  @Override
+  public boolean isInsideChange() {
     return myInsideChange > 0;
   }
 
@@ -484,6 +492,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     myCurrentWindow = (DesktopEditorWindow)currentWindow;
   }
 
+  @Override
   public void updateFileBackgroundColor(@NotNull VirtualFile file) {
     final DesktopEditorWindow[] windows = getWindows();
     for (int i = 0; i != windows.length; ++i) {
@@ -491,7 +500,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
   }
 
-  int getSplitCount() {
+  @Override
+  public int getSplitCount() {
     if (getComponentCount() > 0) {
       JPanel panel = (JPanel)getComponent(0);
       return getSplitCount(panel);
@@ -555,6 +565,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     return null;
   }
 
+ @Override
  public void closeFile(VirtualFile file, boolean moveFocus) {
     final List<DesktopEditorWindow> windows = findWindows(file);
     if (!windows.isEmpty()) {
@@ -614,6 +625,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     return myCurrentWindow;
   }
 
+  @Override
   public EditorWindow getOrCreateCurrentWindow(final VirtualFile file) {
     final List<DesktopEditorWindow> windows = findWindows(file);
     if (getCurrentWindow() == null) {
@@ -653,7 +665,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
    * @param window       a window to be set as current
    * @param requestFocus whether to request focus to the editor currently selected in this window
    */
-  void setCurrentWindow(@Nullable final EditorWindow window, final boolean requestFocus) {
+  @Override
+  public void setCurrentWindow(@Nullable final EditorWindow window, final boolean requestFocus) {
     final EditorWithProviderComposite newEditor = window == null ? null : window.getSelectedEditor();
 
     Runnable fireRunnable = () -> getManager().fireSelectionChanged(newEditor);
@@ -694,6 +707,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   //---------------------------------------------------------
 
+  @Override
   public EditorWithProviderComposite[] getEditorsComposites() {
     List<EditorWithProviderComposite> res = new ArrayList<>();
 
@@ -706,6 +720,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   //---------------------------------------------------------
 
+  @Override
   @NotNull
   public List<EditorWithProviderComposite> findEditorComposites(@NotNull VirtualFile file) {
     List<EditorWithProviderComposite> res = new ArrayList<>();
@@ -729,13 +744,15 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     return res;
   }
 
+  @Override
   @NotNull
   public DesktopEditorWindow[] getWindows() {
     return myWindows.toArray(new DesktopEditorWindow[myWindows.size()]);
   }
 
+  @Override
   @NotNull
-  DesktopEditorWindow[] getOrderedWindows() {
+  public DesktopEditorWindow[] getOrderedWindows() {
     final List<DesktopEditorWindow> res = new ArrayList<>();
 
     // Collector for windows in tree ordering:

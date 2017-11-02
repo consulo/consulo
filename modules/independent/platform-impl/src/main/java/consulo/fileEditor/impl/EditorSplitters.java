@@ -23,6 +23,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +35,20 @@ import java.util.List;
  */
 public interface EditorSplitters {
   Key<DesktopEditorsSplitters> KEY = Key.create("EditorsSplitters");
+
+  void readExternal(Element element);
+
+  void writeExternal(Element element);
+
+  void openFiles();
+
+  int getSplitCount();
+
+  void startListeningFocus();
+
+  EditorWindow getOrCreateCurrentWindow(VirtualFile file);
+
+  void setCurrentWindow(EditorWindow window, boolean requestFocus);
 
   @Nullable
   EditorWindow getCurrentWindow();
@@ -50,6 +65,8 @@ public interface EditorSplitters {
 
   AccessToken increaseChange();
 
+  boolean isInsideChange();
+
   void closeFile(VirtualFile file, boolean moveFocus);
 
   @NotNull
@@ -64,6 +81,8 @@ public interface EditorSplitters {
   EditorWithProviderComposite[] getEditorsComposites();
 
   EditorWindow[] getWindows();
+
+  EditorWindow[] getOrderedWindows();
 
   @Nullable
   VirtualFile getCurrentFile();
