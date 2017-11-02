@@ -17,6 +17,7 @@ package consulo.web.gwt.client.ui.border;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import consulo.ui.shared.border.BorderPosition;
 import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.shared.ui.state.border.BorderListState;
 
@@ -25,13 +26,11 @@ import consulo.web.gwt.shared.ui.state.border.BorderListState;
  * @since 15-Sep-17
  */
 public class GwtBorderSetter {
-  private static byte[] ourBorders = new byte[]{BorderListState.BorderState.TOP, BorderListState.BorderState.BOTTOM, BorderListState.BorderState.LEFT, BorderListState.BorderState.RIGHT};
-
   public static void set(Widget widget, BorderListState borderListState) {
     Element element = widget.getElement();
 
     // reset
-    for (byte border : ourBorders) {
+    for (BorderPosition border : BorderPosition.values()) {
       String prefix = prefix(border);
       element.getStyle().setProperty("border" + prefix + "Color", null);
       element.getStyle().setProperty("border" + prefix + "Style", null);
@@ -43,7 +42,7 @@ public class GwtBorderSetter {
 
       String style = null;
       switch (border.myStyle) {
-        case BorderListState.BorderState.LINE:
+        case LINE:
           style = "solid";
           break;
       }
@@ -54,19 +53,19 @@ public class GwtBorderSetter {
     }
   }
 
-  private static String prefix(int position) {
+  private static String prefix(BorderPosition position) {
     String prefix = null;
     switch (position) {
-      case BorderListState.BorderState.TOP:
+      case TOP:
         prefix = "Top";
         break;
-      case BorderListState.BorderState.BOTTOM:
+      case BOTTOM:
         prefix = "Bottom";
         break;
-      case BorderListState.BorderState.LEFT:
+      case LEFT:
         prefix = "Left";
         break;
-      case BorderListState.BorderState.RIGHT:
+      case RIGHT:
         prefix = "Right";
         break;
     }

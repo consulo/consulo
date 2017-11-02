@@ -13,23 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.gwt.shared.ui.state;
+package consulo.ui.shared.border;
 
 /**
  * @author VISTALL
  * @since 15-Sep-17
  */
-public class RGBColorShared {
-  public int myRed;
-  public int myGreen;
-  public int myBlue;
-
-  public RGBColorShared() {
-  }
-
-  public RGBColorShared(int red, int green, int blue) {
-    myRed = red;
-    myGreen = green;
-    myBlue = blue;
-  }
+public enum BorderPosition {
+  TOP,
+  BOTTOM,
+  LEFT,
+  RIGHT
 }

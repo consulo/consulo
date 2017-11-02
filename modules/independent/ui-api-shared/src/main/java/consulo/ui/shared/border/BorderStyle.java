@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.border;
+package consulo.ui.shared.border;
 
 /**
  * @author VISTALL

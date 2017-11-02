@@ -16,8 +16,8 @@
 package consulo.web.gwt.client.util;
 
 import consulo.annotations.DeprecationInfo;
+import consulo.ui.shared.RGBColor;
 import consulo.web.gwt.shared.transport.GwtColor;
-import consulo.web.gwt.shared.ui.state.RGBColorShared;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,7 +32,7 @@ public class GwtStyleUtil {
   }
 
   @NotNull
-  public static String toString(RGBColorShared color) {
-    return "rgb(" + color.myRed + ", " + color.myGreen + ", " + color.myBlue + ")";
+  public static String toString(RGBColor color) {
+    return "rgb(" + color.getRed() + ", " + color.getGreed() + ", " + color.getBlue() + ")";
   }
 }

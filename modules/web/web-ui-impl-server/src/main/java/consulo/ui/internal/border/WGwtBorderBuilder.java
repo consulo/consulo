@@ -15,13 +15,11 @@
  */
 package consulo.ui.internal.border;
 
-import consulo.ui.shared.ColorValue;
-import consulo.ui.shared.RGBColor;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.internal.VaadinWrapper;
+import consulo.ui.shared.ColorValue;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
-import consulo.web.gwt.shared.ui.state.RGBColorShared;
 import consulo.web.gwt.shared.ui.state.border.BorderListState;
 
 /**
@@ -36,14 +34,12 @@ public class WGwtBorderBuilder {
 
     for (BorderInfo info : wrapper.dataObject().getBorders()) {
       BorderListState.BorderState borderState = new BorderListState.BorderState();
-      borderState.myPosition = (byte)info.getBorderPosition().ordinal();
-      borderState.myStyle = (byte)info.getBorderStyle().ordinal();
+      borderState.myPosition = info.getBorderPosition();
+      borderState.myStyle = info.getBorderStyle();
 
       ColorValue colorValue = currentStyle.getColor(info.getColorKey());
 
-      RGBColor color = colorValue.toRGB();
-
-      borderState.myColor = new RGBColorShared(color.getRed(), color.getGreed(), color.getBlue());
+      borderState.myColor = colorValue.toRGB();
       borderState.myWidth = info.getWidth();
 
       borderListState.myBorders.add(borderState);

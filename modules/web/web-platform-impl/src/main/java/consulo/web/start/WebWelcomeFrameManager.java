@@ -29,7 +29,7 @@ import consulo.application.impl.FrameTitleUtil;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.app.impl.settings.SettingsDialog;
-import consulo.ui.border.BorderPosition;
+import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.model.ImmutableListModel;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.Size;
