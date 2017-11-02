@@ -46,6 +46,8 @@ public interface EditorSplitters {
 
   void startListeningFocus();
 
+  void clear();
+
   EditorWindow getOrCreateCurrentWindow(VirtualFile file);
 
   void setCurrentWindow(EditorWindow window, boolean requestFocus);

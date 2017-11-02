@@ -132,6 +132,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     return myManager;
   }
 
+  @Override
   public void clear() {
     for (DesktopEditorWindow window : myWindows) {
       window.dispose();
