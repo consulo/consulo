@@ -1,21 +1,8 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.tree;
 
 import com.intellij.openapi.diagnostic.LogUtil;
+import com.intellij.psi.TokenType;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,17 +18,19 @@ public class TokenSet {
   public static final TokenSet EMPTY = new TokenSet(Short.MAX_VALUE, (short)0) {
     @Override public boolean contains(IElementType t) { return false; }
   };
+  public static final TokenSet ANY = new TokenSet(Short.MAX_VALUE, (short)0) {
+    @Override public boolean contains(IElementType t) { return true; }
+  };
+  public static final TokenSet WHITE_SPACE = doCreate(TokenType.WHITE_SPACE);
 
   private final short myShift;
   private final short myMax;
-  private final short myTop;
   private final long[] myWords;
   private volatile IElementType[] myTypes;
 
   private TokenSet(short shift, short max) {
     myShift = shift;
     myMax = max;
-    myTop = IElementType.getAllocatedTypesCount();
     final int size = (max >> 6) + 1 - shift;
     myWords = size > 0 ? new long[size] : ArrayUtil.EMPTY_LONG_ARRAY;
   }
@@ -77,7 +66,7 @@ public class TokenSet {
         types = IElementType.EMPTY_ARRAY;
       }
       else {
-        List<IElementType> list = new ArrayList<IElementType>();
+        List<IElementType> list = new ArrayList<>();
         for (short i = (short)Math.max(1, myShift << 6); i <= myMax; i++) {
           if (!get(i)) continue;
           IElementType type = IElementType.find(i);
@@ -107,7 +96,14 @@ public class TokenSet {
   @NotNull
   public static TokenSet create(@NotNull IElementType... types) {
     if (types.length == 0) return EMPTY;
+    if (types.length == 1 && types[0] == TokenType.WHITE_SPACE) {
+      return WHITE_SPACE;
+    }
+    return doCreate(types);
+  }
 
+  @NotNull
+  private static TokenSet doCreate(@NotNull IElementType... types) {
     short min = Short.MAX_VALUE;
     short max = 0;
     for (IElementType type : types) {
@@ -171,7 +167,7 @@ public class TokenSet {
     for (int i = 0; i < newSet.myWords.length; i++) {
       final int ai = newSet.myShift - a.myShift + i;
       final int bi = newSet.myShift - b.myShift + i;
-      newSet.myWords[i] = (0 <= ai && ai < a.myWords.length ? a.myWords[ai] : 0l) & (0 <= bi && bi < b.myWords.length ? b.myWords[bi] : 0l);
+      newSet.myWords[i] = (0 <= ai && ai < a.myWords.length ? a.myWords[ai] : 0L) & (0 <= bi && bi < b.myWords.length ? b.myWords[bi] : 0L);
     }
     return newSet;
   }
@@ -189,7 +185,7 @@ public class TokenSet {
     for (int i = 0; i < newSet.myWords.length; i++) {
       final int ai = newSet.myShift - a.myShift + i;
       final int bi = newSet.myShift - b.myShift + i;
-      newSet.myWords[i] = (0 <= ai && ai < a.myWords.length ? a.myWords[ai] : 0l) & ~(0 <= bi && bi < b.myWords.length ? b.myWords[bi] : 0l);
+      newSet.myWords[i] = (0 <= ai && ai < a.myWords.length ? a.myWords[ai] : 0L) & ~(0 <= bi && bi < b.myWords.length ? b.myWords[bi] : 0L);
     }
     return newSet;
   }
