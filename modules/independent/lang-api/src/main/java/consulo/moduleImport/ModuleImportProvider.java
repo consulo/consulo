@@ -24,10 +24,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
-import consulo.annotations.DeprecationInfo;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,16 +60,7 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
   @Nullable
   abstract Icon getIcon();
 
-  @Deprecated
-  @DeprecationInfo("Use #canImport(File) ")
-  default boolean canImport(@NotNull VirtualFile fileOrDirectory) {
-    return false;
-  }
-
-  default boolean canImport(@NotNull File fileOrDirectory) {
-    VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(fileOrDirectory);
-    return virtualFile != null && canImport(virtualFile);
-  }
+  boolean canImport(@NotNull File fileOrDirectory) ;
 
   default List<Module> commit(@NotNull C context, @NotNull Project project) {
     return commit(context, project, null, DefaultModulesProvider.createForProject(project), null);

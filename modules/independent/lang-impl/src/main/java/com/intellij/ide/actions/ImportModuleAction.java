@@ -34,6 +34,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredDispatchThread;
@@ -46,6 +47,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -114,7 +116,7 @@ public class ImportModuleAction extends AnAction {
       @Override
       public Icon getIcon(VirtualFile file) {
         for (ModuleImportProvider importProvider : ModuleImportProviders.getExtensions(true)) {
-          if (importProvider.canImport(file)) {
+          if (importProvider.canImport(VfsUtilCore.virtualToIoFile(file))) {
             return importProvider.getIcon();
           }
         }
@@ -163,7 +165,8 @@ public class ImportModuleAction extends AnAction {
                                                    @Nullable Component dialogParent,
                                                    final VirtualFile file,
                                                    List<ModuleImportProvider> providers) {
-    List<ModuleImportProvider> available = ContainerUtil.filter(providers, provider -> provider.canImport(file));
+    File ioFile = VfsUtilCore.virtualToIoFile(file);
+    List<ModuleImportProvider> available = ContainerUtil.filter(providers, provider -> provider.canImport(ioFile));
     if (available.isEmpty()) {
       Messages.showErrorDialog(project, "Cannot import anything from '" + FileUtil.toSystemDependentName(file.getPath()) + "'", "Cannot Import");
       return null;

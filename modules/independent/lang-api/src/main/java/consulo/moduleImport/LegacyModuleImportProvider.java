@@ -21,6 +21,7 @@ import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
@@ -30,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,8 +65,8 @@ public class LegacyModuleImportProvider implements ModuleImportProvider<ModuleIm
   }
 
   @Override
-  public boolean canImport(@NotNull VirtualFile fileOrDirectory) {
-    return myProvider.canImport(fileOrDirectory, null);
+  public boolean canImport(@NotNull File fileOrDirectory) {
+    return myProvider.canImport(LocalFileSystem.getInstance().findFileByIoFile(fileOrDirectory), null);
   }
 
   @NotNull
