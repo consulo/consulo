@@ -349,8 +349,7 @@ public class FontOptions extends JPanel implements OptionsPanel{
   public boolean updateDescription(boolean modified) {
     EditorColorsScheme scheme = myOptions.getSelectedScheme();
 
-    if (modified && (ColorAndFontOptions.isReadOnly(scheme) || ColorSettingsUtil.isSharedScheme(scheme))) {
-      showReadOnlyMessage(this, ColorSettingsUtil.isSharedScheme(scheme));
+    if (modified && (ColorAndFontOptions.isReadOnly(scheme))) {
       return false;
     }
 

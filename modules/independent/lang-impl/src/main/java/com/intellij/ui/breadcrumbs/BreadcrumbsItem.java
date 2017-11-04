@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vcs;
+package com.intellij.ui.breadcrumbs;
 
-import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * @author mike
+ * @author spleaner
  */
-public interface FileStatusListener {
-  /**
-   * Indicates that some file statuses were change. On this event client should recalculate all statuses
-   * it's depenedend on.
-   */
-  default void fileStatusesChanged() {
+public abstract class BreadcrumbsItem {
+
+  public abstract String getDisplayText();
+
+  public String getTooltip() {
+    return "";
   }
 
-  default void fileStatusChanged(@NotNull VirtualFile virtualFile) {
+  @Nullable
+  public CrumbPresentation getPresentation() {
+    return null;
   }
 }

@@ -19,7 +19,6 @@ package com.intellij.application.options.colors;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.OptionsBundle;
@@ -70,11 +69,6 @@ public class ColorSettingsUtil {
       if (settingsPage instanceof InspectionColorSettingsPage) return false;
     }
     return true;
-  }
-
-  @Deprecated
-  static boolean isSharedScheme(EditorColorsScheme selected) {
-    return false;
   }
 
   private static void addInspectionSeverityAttributes(List<AttributesDescriptor> descriptors) {

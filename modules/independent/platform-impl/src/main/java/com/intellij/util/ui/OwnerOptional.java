@@ -21,6 +21,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,7 @@ import java.awt.*;
 public class OwnerOptional {
 
   @NotNull
-  private static Window findOwnerByComponent(Component component) {
+  private static Window findOwnerByComponent(@Nullable Component component) {
     if (component == null) component = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
     return (component instanceof Window) ? (Window) component : SwingUtilities.getWindowAncestor(component);
   }

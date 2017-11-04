@@ -16,6 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LayeredIcon;
@@ -104,8 +105,7 @@ public class IconUtil {
     else {
       final int w = icon.getIconWidth();
       final int h = icon.getIconHeight();
-      final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()
-              .createCompatibleImage(w, h, Transparency.TRANSLUCENT);
+      final BufferedImage image = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(w, h, Transparency.TRANSLUCENT);
       final Graphics2D g = image.createGraphics();
       icon.paintIcon(null, g, 0, 0);
       g.dispose();
@@ -250,7 +250,8 @@ public class IconUtil {
           transform.preConcatenate(g2d.getTransform());
           g2d.setTransform(transform);
           source.paintIcon(c, g2d, x, y);
-        } finally {
+        }
+        finally {
           g2d.dispose();
         }
       }
@@ -265,6 +266,35 @@ public class IconUtil {
         return (int)(source.getIconHeight() * scale);
       }
     };
+  }
+
+  /**
+   * Returns a scaled icon instance, in scale of the provided font size.
+   * <p>
+   * The method delegates to {@link ScalableIcon#scale(float)} when applicable,
+   * otherwise defaults to {@link #scale(Icon, double)}
+   * <p>
+   * Refer to {@link #scale(Icon, Component, float)} for more details.
+   *
+   * @param icon     the icon to scale
+   * @param ancestor the component (or its ancestor) painting the icon, or null when not available
+   * @param fontSize the reference font size
+   * @return the scaled icon
+   */
+  @NotNull
+  public static Icon scaleByFont(@NotNull Icon icon, @Nullable Component ancestor, float fontSize) {
+    float scale = JBUI.getFontScale(fontSize);
+    /*if (icon instanceof ScalableIcon) {
+      if (icon instanceof ScaleContextAware) {
+        ScaleContextAware ctxIcon = (ScaleContextAware)icon;
+        ctxIcon.updateScaleContext(ancestor != null ? ScaleContext.create(ancestor) : null);
+        // take into account the user scale of the icon
+        double usrScale = ctxIcon.getScaleContext().getScale(USR_SCALE);
+        scale /= usrScale;
+      }
+      return ((ScalableIcon)icon).scale(scale);
+    }*/
+    return scale(icon, scale);
   }
 
   @NotNull
@@ -308,7 +338,7 @@ public class IconUtil {
 
       @Override
       public int getIconHeight() {
-        return getImage() instanceof JBHiDPIScaledImage ? super.getIconHeight() / 2: super.getIconHeight();
+        return getImage() instanceof JBHiDPIScaledImage ? super.getIconHeight() / 2 : super.getIconHeight();
       }
     };
   }
@@ -328,7 +358,8 @@ public class IconUtil {
           GraphicsUtil.setupAntialiasing(g);
           g.setFont(font);
           UIUtil.drawStringWithHighlighting(g, text, x + JBUI.scale(2), y + height - JBUI.scale(1), JBColor.foreground(), JBColor.background());
-        } finally {
+        }
+        finally {
           g.dispose();
         }
       }

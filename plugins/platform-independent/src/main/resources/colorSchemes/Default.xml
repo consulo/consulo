@@ -62,23 +62,23 @@
   <attributes>
     <option name="DEBUGGER_INLINED_VALUES">
       <value>
-        <option name="FOREGROUND" value="868686" />
-        <option name="FONT_TYPE" value="2" />
-        <option name="EFFECT_TYPE" value="0" />
+        <option name="FOREGROUND" value="868686"/>
+        <option name="FONT_TYPE" value="2"/>
+        <option name="EFFECT_TYPE" value="0"/>
       </value>
     </option>
     <option name="DEBUGGER_INLINED_VALUES_EXECUTION_LINE">
       <value>
-        <option name="FOREGROUND" value="ff56" />
-        <option name="FONT_TYPE" value="2" />
-        <option name="EFFECT_TYPE" value="0" />
+        <option name="FOREGROUND" value="ff56"/>
+        <option name="FONT_TYPE" value="2"/>
+        <option name="EFFECT_TYPE" value="0"/>
       </value>
     </option>
     <option name="DEBUGGER_INLINED_VALUES_MODIFIED">
       <value>
-        <option name="FOREGROUND" value="ca8021" />
-        <option name="FONT_TYPE" value="2" />
-        <option name="EFFECT_TYPE" value="0" />
+        <option name="FOREGROUND" value="ca8021"/>
+        <option name="FONT_TYPE" value="2"/>
+        <option name="EFFECT_TYPE" value="0"/>
       </value>
     </option>
     <option name="NOT_TOP_FRAME_ATTRIBUTES">
@@ -955,12 +955,12 @@
     </option>
     <option name="DO_NOT_SHOW">
       <value>
-        <option name="ERROR_STRIPE_COLOR" value="71B262" />
+        <option name="ERROR_STRIPE_COLOR" value="71B262"/>
       </value>
     </option>
     <option name="BOOKMARKS_ATTRIBUTES">
       <value>
-        <option name="ERROR_STRIPE_COLOR" value="0" />
+        <option name="ERROR_STRIPE_COLOR" value="0"/>
       </value>
     </option>
     <option name="CONSOLE_BLACK_OUTPUT">
@@ -1126,27 +1126,27 @@
 
     <option name="RAINBOW_COLOR0">
       <value>
-        <option name="FOREGROUND" value="9b3b6a" />
+        <option name="FOREGROUND" value="9b3b6a"/>
       </value>
     </option>
     <option name="RAINBOW_COLOR1">
       <value>
-        <option name="FOREGROUND" value="114d77" />
+        <option name="FOREGROUND" value="114d77"/>
       </value>
     </option>
     <option name="RAINBOW_COLOR2">
       <value>
-        <option name="FOREGROUND" value="bc8650" />
+        <option name="FOREGROUND" value="bc8650"/>
       </value>
     </option>
     <option name="RAINBOW_COLOR3">
       <value>
-        <option name="FOREGROUND" value="005910" />
+        <option name="FOREGROUND" value="005910"/>
       </value>
     </option>
     <option name="RAINBOW_COLOR4">
       <value>
-        <option name="FOREGROUND" value="bc5150" />
+        <option name="FOREGROUND" value="bc5150"/>
       </value>
     </option>
     <option name="INLINE_PARAMETER_HINT">
@@ -1161,6 +1161,28 @@
         <option name="BACKGROUND"/>
         <option name="EFFECT_COLOR" value="808080"/>
         <option name="EFFECT_TYPE" value="0"/>
+      </value>
+    </option>
+    <option name="BREADCRUMBS_DEFAULT">
+      <value>
+        <option name="FOREGROUND" value="585858"/>
+      </value>
+    </option>
+    <option name="BREADCRUMBS_HOVERED">
+      <value>
+        <option name="FOREGROUND" value="585858"/>
+        <option name="BACKGROUND" value="e0e0e0"/>
+      </value>
+    </option>
+    <option name="BREADCRUMBS_CURRENT">
+      <value>
+        <option name="FOREGROUND" value="585858"/>
+        <option name="BACKGROUND" value="d6d6d6"/>
+      </value>
+    </option>
+    <option name="BREADCRUMBS_INACTIVE">
+      <value>
+        <option name="FOREGROUND" value="585858"/>
       </value>
     </option>
   </attributes>

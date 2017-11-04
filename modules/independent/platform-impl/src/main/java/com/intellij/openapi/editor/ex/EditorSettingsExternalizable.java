@@ -29,6 +29,8 @@ import org.jetbrains.annotations.Nullable;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @State(
@@ -59,6 +61,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     public boolean ARE_GUTTER_ICONS_SHOWN = true;
     public boolean IS_FOLDING_OUTLINE_SHOWN = true;
     public boolean SHOW_BREADCRUMBS = true;
+    public boolean SHOW_BREADCRUMBS_ABOVE = false;
 
     public boolean SMART_HOME = true;
 
@@ -97,6 +100,21 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     public int MIN_PARAMS_TO_SHOW = 2;
 
     public boolean KEEP_TRAILING_SPACE_ON_CARET_LINE = true;
+
+    private final Map<String, Boolean> mapLanguageBreadcrumbs = new HashMap<>();
+
+    @SuppressWarnings("unused")
+    public Map<String, Boolean> getLanguageBreadcrumbsMap() {
+      return mapLanguageBreadcrumbs;
+    }
+
+    @SuppressWarnings("unused")
+    public void setLanguageBreadcrumbsMap(Map<String, Boolean> map) {
+      if (this.mapLanguageBreadcrumbs != map) {
+        this.mapLanguageBreadcrumbs.clear();
+        this.mapLanguageBreadcrumbs.putAll(map);
+      }
+    }
   }
 
   private static final String COMPOSITE_PROPERTY_SEPARATOR = ":";
@@ -242,14 +260,6 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
 
   public void setFoldingOutlineShown(boolean val) {
     myOptions.IS_FOLDING_OUTLINE_SHOWN = val;
-  }
-
-  public boolean isBreadcrumbsShown() {
-    return myOptions.SHOW_BREADCRUMBS;
-  }
-
-  public void setBreadcrumbsShown(boolean breadcrumbsShown) {
-    myOptions.SHOW_BREADCRUMBS = breadcrumbsShown;
   }
 
   public boolean isBlockCursor() {
@@ -571,5 +581,58 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
 
   public void setKeepTrailingSpacesOnCaretLine(boolean keep) {
     myOptions.KEEP_TRAILING_SPACE_ON_CARET_LINE = keep;
+  }
+
+  /**
+   * @return {@code true} if breadcrumbs should be shown above the editor, {@code false} otherwise
+   */
+  public boolean isBreadcrumbsAbove() {
+    return myOptions.SHOW_BREADCRUMBS_ABOVE;
+  }
+
+  /**
+   * @param value {@code true} if breadcrumbs should be shown above the editor, {@code false} otherwise
+   * @return {@code true} if an option was modified, {@code false} otherwise
+   */
+  public boolean setBreadcrumbsAbove(boolean value) {
+    if (myOptions.SHOW_BREADCRUMBS_ABOVE == value) return false;
+    myOptions.SHOW_BREADCRUMBS_ABOVE = value;
+    return true;
+  }
+
+  /**
+   * @return {@code true} if breadcrumbs should be shown, {@code false} otherwise
+   */
+  public boolean isBreadcrumbsShown() {
+    return myOptions.SHOW_BREADCRUMBS;
+  }
+
+  /**
+   * @param value {@code true} if breadcrumbs should be shown, {@code false} otherwise
+   * @return {@code true} if an option was modified, {@code false} otherwise
+   */
+  public boolean setBreadcrumbsShown(boolean value) {
+    if (myOptions.SHOW_BREADCRUMBS == value) return false;
+    myOptions.SHOW_BREADCRUMBS = value;
+    return true;
+  }
+
+  /**
+   * @param languageID the language identifier to configure
+   * @return {@code true} if breadcrumbs should be shown for the specified language, {@code false} otherwise
+   */
+  public boolean isBreadcrumbsShownFor(String languageID) {
+    Boolean visible = myOptions.mapLanguageBreadcrumbs.get(languageID);
+    return visible == null || visible;
+  }
+
+  /**
+   * @param languageID the language identifier to configure
+   * @param value      {@code true} if breadcrumbs should be shown for the specified language, {@code false} otherwise
+   * @return {@code true} if an option was modified, {@code false} otherwise
+   */
+  public boolean setBreadcrumbsShownFor(String languageID, boolean value) {
+    Boolean visible = myOptions.mapLanguageBreadcrumbs.put(languageID, value);
+    return (visible == null || visible) != value;
   }
 }

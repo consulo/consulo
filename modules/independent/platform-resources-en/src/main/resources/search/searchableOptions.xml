@@ -3351,6 +3351,18 @@
     <option name="warning" hit="Weak Warning" />
     <option name="weak" hit="Weak Warning" />
     <option name="whitespaces" hit="Whitespaces" />
+    <option name="breadcrumbs" hit="Editor//Breadcrumbs//Current" />
+    <option name="current" hit="Editor//Breadcrumbs//Current" />
+    <option name="editor" hit="Editor//Breadcrumbs//Current" />
+    <option name="breadcrumbs" hit="Editor//Breadcrumbs//Default" />
+    <option name="default" hit="Editor//Breadcrumbs//Default" />
+    <option name="editor" hit="Editor//Breadcrumbs//Default" />
+    <option name="breadcrumbs" hit="Editor//Breadcrumbs//Hovered" />
+    <option name="editor" hit="Editor//Breadcrumbs//Hovered" />
+    <option name="hovered" hit="Editor//Breadcrumbs//Hovered" />
+    <option name="breadcrumbs" hit="Editor//Breadcrumbs//Inactive" />
+    <option name="editor" hit="Editor//Breadcrumbs//Inactive" />
+    <option name="inactive" hit="Editor//Breadcrumbs//Inactive" />
   </configurable>
   <configurable id="reference.settingsdialog.IDE.editor.colors.Diff" configurable_name="Diff">
     <option name="" hit="" />

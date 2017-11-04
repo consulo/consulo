@@ -1810,5 +1810,27 @@
         <option name="EFFECT_TYPE" value="0"/>
       </value>
     </option>
+    <option name="BREADCRUMBS_DEFAULT">
+      <value>
+        <option name="FOREGROUND" value="bbbbbb"/>
+      </value>
+    </option>
+    <option name="BREADCRUMBS_HOVERED">
+      <value>
+        <option name="FOREGROUND" value="bbbbbb"/>
+        <option name="BACKGROUND" value="3a3c3e"/>
+      </value>
+    </option>
+    <option name="BREADCRUMBS_CURRENT">
+      <value>
+        <option name="FOREGROUND" value="bbbbbb"/>
+        <option name="BACKGROUND" value="44474a"/>
+      </value>
+    </option>
+    <option name="BREADCRUMBS_INACTIVE">
+      <value>
+        <option name="FOREGROUND" value="bbbbbb"/>
+      </value>
+    </option>
   </attributes>
 </scheme>

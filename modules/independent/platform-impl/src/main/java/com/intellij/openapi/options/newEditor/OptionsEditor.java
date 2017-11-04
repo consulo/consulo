@@ -98,8 +98,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   //private final Splitter myMainSplitter;
   //[back/forward] JComponent myToolbarComponent;
 
-  private final DetailsComponent myOwnDetails =
-          new DetailsComponent(false, false).setEmptyContentText("Select configuration element in the tree to edit its settings");
+  private final DetailsComponent myOwnDetails = new DetailsComponent(false, false).setEmptyContentText("Select configuration element in the tree to edit its settings");
   private final ContentWrapper myContentWrapper = new ContentWrapper();
 
 
@@ -259,10 +258,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     return myLoadingDecorator.getComponent();
   }
 
-  /**
-   * @see #select(com.intellij.openapi.options.Configurable)
-   */
-  @Deprecated
+  @NotNull
   public ActionCallback select(Class<? extends Configurable> configurableClass) {
     final Configurable configurable = findConfigurable(configurableClass);
     if (configurable == null) {
@@ -271,10 +267,6 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     return select(configurable);
   }
 
-  /**
-   * @see #findConfigurableById(String)
-   */
-  @Deprecated
   @Nullable
   public <T extends Configurable> T findConfigurable(Class<T> configurableClass) {
     return myTree.findConfigurable(configurableClass);
@@ -300,8 +292,9 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   }
 
   public ActionCallback select(Configurable configurable, final String text) {
-    myFilter.refilterFor(text, false, true);
-    return myTree.select(configurable);
+    ActionCallback callback = new ActionCallback();
+    myFilter.refilterFor(text, false, true).doWhenDone(() -> myTree.select(configurable).notify(callback));
+    return callback;
   }
 
   private float readProportion(final float defaultValue, final String propertyName) {
@@ -1084,9 +1077,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
   private boolean isPopupOverEditor(Component c) {
     final Window wnd = SwingUtilities.getWindowAncestor(c);
-    return (wnd instanceof JWindow || wnd instanceof JDialog && ((JDialog)wnd).getModalityType() == Dialog.ModalityType.MODELESS) &&
-           myWindow != null &&
-           wnd.getParent() == myWindow;
+    return (wnd instanceof JWindow || wnd instanceof JDialog && ((JDialog)wnd).getModalityType() == Dialog.ModalityType.MODELESS) && myWindow != null && wnd.getParent() == myWindow;
   }
 
   private static class MySearchField extends SearchTextField {
@@ -1302,9 +1293,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       if (myComponent != null) {
         final Object clientProperty = myComponent.getClientProperty(NOT_A_NEW_COMPONENT);
         if (clientProperty != null && ApplicationManager.getApplication().isInternal()) {
-          LOG.warn(String.format(
-                  "Settings component for '%s' MUST be recreated, please dispose it in disposeUIResources() and create a new instance in createComponent()!",
-                  configurable.getClass().getCanonicalName()));
+          LOG.warn(String.format("Settings component for '%s' MUST be recreated, please dispose it in disposeUIResources() and create a new instance in createComponent()!",
+                                 configurable.getClass().getCanonicalName()));
         }
         else {
           myComponent.putClientProperty(NOT_A_NEW_COMPONENT, Boolean.TRUE);

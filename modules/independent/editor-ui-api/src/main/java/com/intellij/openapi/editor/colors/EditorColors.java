@@ -25,7 +25,6 @@ public interface EditorColors {
   ColorKey RIGHT_MARGIN_COLOR = ColorKey.createColorKey("RIGHT_MARGIN_COLOR");
   ColorKey LINE_NUMBERS_COLOR = ColorKey.createColorKey("LINE_NUMBERS_COLOR");
   ColorKey ANNOTATIONS_COLOR = ColorKey.createColorKey("ANNOTATIONS_COLOR");
-  ColorKey ANNOTATIONS_MERGED_COLOR = ColorKey.createColorKey("ANNOTATIONS_MERGED_COLOR");
   ColorKey READONLY_BACKGROUND_COLOR = ColorKey.createColorKey("READONLY_BACKGROUND");
   ColorKey READONLY_FRAGMENT_BACKGROUND_COLOR = ColorKey.createColorKey("READONLY_FRAGMENT_BACKGROUND");
   ColorKey WHITESPACES_COLOR = ColorKey.createColorKey("WHITESPACES");
@@ -62,6 +61,11 @@ public interface EditorColors {
   ColorKey DELETED_LINES_COLOR = ColorKey.createColorKey("DELETED_LINES_COLOR");
   ColorKey WHITESPACES_MODIFIED_LINES_COLOR = ColorKey.createColorKey("WHITESPACES_MODIFIED_LINES_COLOR");
   ColorKey BORDER_LINES_COLOR = ColorKey.createColorKey("BORDER_LINES_COLOR");
+
+  TextAttributesKey BREADCRUMBS_DEFAULT  = TextAttributesKey.createTextAttributesKey("BREADCRUMBS_DEFAULT");
+  TextAttributesKey BREADCRUMBS_HOVERED  = TextAttributesKey.createTextAttributesKey("BREADCRUMBS_HOVERED");
+  TextAttributesKey BREADCRUMBS_CURRENT  = TextAttributesKey.createTextAttributesKey("BREADCRUMBS_CURRENT");
+  TextAttributesKey BREADCRUMBS_INACTIVE = TextAttributesKey.createTextAttributesKey("BREADCRUMBS_INACTIVE");
 
   TextAttributesKey INJECTED_LANGUAGE_FRAGMENT = TextAttributesKey.createTextAttributesKey("INJECTED_LANGUAGE_FRAGMENT");
 }

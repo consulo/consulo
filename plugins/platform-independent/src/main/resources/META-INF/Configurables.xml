@@ -44,6 +44,11 @@
                              displayName="Editor"
                              instance="consulo.options.ConfigurableAdapter"/>
 
+
+    <applicationConfigurable parentId="editor" id="editor.breadcrumbs"
+                             key="configurable.breadcrumbs" bundle="messages.ApplicationBundle"
+                             instance="com.intellij.ui.breadcrumbs.BreadcrumbsConfigurable"/>
+
     <applicationConfigurable displayName="Code Intentions" parentId="editor"
                              instance="com.intellij.codeInsight.intention.impl.config.IntentionSettingsConfigurable" id="editor.code.intentions"/>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vcs;
+package com.intellij.ui.breadcrumbs;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.lang.Language;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author mike
- */
-public interface FileStatusListener {
-  /**
-   * Indicates that some file statuses were change. On this event client should recalculate all statuses
-   * it's depenedend on.
-   */
-  default void fileStatusesChanged() {
-  }
+public class BreadcrumbsUtil {
 
-  default void fileStatusChanged(@NotNull VirtualFile virtualFile) {
+  public static BreadcrumbsProvider getInfoProvider(@NotNull Language language) {
+    BreadcrumbsProvider[] providers = BreadcrumbsProvider.EP_NAME.getExtensions();
+    while (language != null) {
+      for (BreadcrumbsProvider provider : providers) {
+        Language supported = provider.getLanguage();
+        if (language.is(supported)) {
+          return provider;
+        }
+      }
+      language = language.getBaseLanguage();
+    }
+    return null;
   }
 }

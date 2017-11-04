@@ -39,13 +39,7 @@ import java.util.List;
 public class ConfigurableWrapper implements SearchableConfigurable {
 
   private static final ConfigurableWrapper[] EMPTY_ARRAY = new ConfigurableWrapper[0];
-  private static final NullableFunction<ConfigurableEP<Configurable>, Configurable> CONFIGURABLE_FUNCTION =
-          new NullableFunction<ConfigurableEP<Configurable>, Configurable>() {
-            @Override
-            public Configurable fun(ConfigurableEP<Configurable> ep) {
-              return wrapConfigurable(ep);
-            }
-          };
+  private static final NullableFunction<ConfigurableEP<Configurable>, Configurable> CONFIGURABLE_FUNCTION = ConfigurableWrapper::wrapConfigurable;
   private static final Logger LOG = Logger.getInstance(ConfigurableWrapper.class);
 
   @Nullable

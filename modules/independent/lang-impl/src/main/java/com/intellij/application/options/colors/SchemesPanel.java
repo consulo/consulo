@@ -57,9 +57,6 @@ public class SchemesPanel extends JPanel implements SkipSelfSearchComponent {
           if (ColorAndFontOptions.isReadOnly(selected)) {
             myDeleteButton.setEnabled(false);
           }
-          else if (ColorSettingsUtil.isSharedScheme(selected)) {
-            myDeleteButton.setEnabled(true);
-          }
           else {
             myDeleteButton.setEnabled(true);
           }
@@ -135,8 +132,8 @@ public class SchemesPanel extends JPanel implements SkipSelfSearchComponent {
   public boolean updateDescription(boolean modified) {
     EditorColorsScheme scheme = myOptions.getSelectedScheme();
 
-    if (modified && (ColorAndFontOptions.isReadOnly(scheme) || ColorSettingsUtil.isSharedScheme(scheme))) {
-      FontOptions.showReadOnlyMessage(this, ColorSettingsUtil.isSharedScheme(scheme));
+    if (modified && (ColorAndFontOptions.isReadOnly(scheme))) {
+      FontOptions.showReadOnlyMessage(this, false);
       return false;
     }
 

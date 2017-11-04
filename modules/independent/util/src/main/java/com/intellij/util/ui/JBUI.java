@@ -50,24 +50,24 @@ public class JBUI {
 
   /**
    * The IDE supports two different HiDPI modes:
-   * <p>
+   * <p/>
    * 1) IDE-managed HiDPI mode.
-   * <p>
+   * <p/>
    * Supported for backward compatibility until complete transition to the JRE-managed HiDPI mode happens.
    * In this mode there's a single coordinate space and the whole UI is scaled by the IDE guided by the
    * user scale factor ({@link #USR}).
-   * <p>
+   * <p/>
    * 2) JRE-managed HiDPI mode.
-   * <p>
+   * <p/>
    * In this mode the JRE scales graphics prior to drawing it on the device. So, there're two coordinate
    * spaces: the user space and the device space. The system scale factor ({@link #SYS}) defines the
    * transform b/w the spaces. The UI size metrics (windows, controls, fonts height) are in the user
    * coordinate space. Though, the raster images should be aware of the device scale in order to meet
    * HiDPI. (For instance, JRE on a Mac Retina monitor device works in the JRE-managed HiDPI mode,
    * transforming graphics to the double-scaled device coordinate space)
-   * <p>
+   * <p/>
    * The IDE operates the scale factors of the following types:
-   * <p>
+   * <p/>
    * 1) The user scale factor: {@link #USR}
    * 2) The system (monitor device) scale factor: {@link #SYS}
    * 3) The pixel scale factor: {@link #PIX}
@@ -88,13 +88,13 @@ public class JBUI {
     /**
      * The user scale factor is set and managed by the IDE. Currently it's derived from the UI font size,
      * specified in the IDE Settings.
-     * <p>
+     * <p/>
      * The user scale value depends on which HiDPI mode is enabled. In the IDE-managed HiDPI mode the
      * user scale "includes" the default system scale and simply equals it with the default UI font size.
      * In the JRE-managed HiDPI mode the user scale is independent of the system scale and equals 1.0
      * with the default UI font size. In case the default UI font size changes, the user scale changes
      * proportionally in both the HiDPI modes.
-     * <p>
+     * <p/>
      * In the IDE-managed HiDPI mode the user scale completely defines the UI scale. In the JRE-managed
      * HiDPI mode the user scale can be considered a supplementary scale taking effect in cases like
      * the IDE Presentation Mode and when the default UI scale is changed by the user.
@@ -110,7 +110,7 @@ public class JBUI {
      * (multi-monitor configuration) there can be multiple system scale factors, appropriately. However,
      * there's always a single default system scale factor corresponding to the default device. And it's
      * the only system scale available in the IDE-managed HiDPI mode.
-     * <p>
+     * <p/>
      * In the JRE-managed HiDPI mode, the system scale defines the scale of the transform b/w the user
      * and the device coordinate spaces performed by the JRE.
      *
@@ -123,7 +123,7 @@ public class JBUI {
     /**
      * The pixel scale factor "combines" both the user and the system scale factors and defines the
      * effective scale of the whole UI.
-     * <p>
+     * <p/>
      * For instance, on Mac Retina monitor (JRE-managed HiDPI) in the Presentation mode (which, say,
      * doubles the UI scale) the pixel scale would equal 4.0. The value is the product of the user
      * scale 2.0 and the system scale 2.0. In the IDE-managed HiDPI mode, the pixel scale always equals
@@ -385,6 +385,13 @@ public class JBUI {
     if (userScaleFactor == 1.25f) return (int)(fontSize * 1.34f);
     if (userScaleFactor == 1.75f) return (int)(fontSize * 1.67f);
     return (int)scale(fontSize);
+  }
+
+  /**
+   * @return the scale factor of {@code fontSize} relative to the standard font size (currently 12pt)
+   */
+  public static float getFontScale(float fontSize) {
+    return fontSize / UIUtil.DEF_SYSTEM_FONT_SIZE;
   }
 
   public static JBDimension size(int width, int height) {

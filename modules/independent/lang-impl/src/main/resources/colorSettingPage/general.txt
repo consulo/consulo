@@ -1,0 +1,31 @@
+Consulo is a full-featured IDE
+with a high level of usability and outstanding
+advanced code editing and refactoring support.
+
+abcdefghijklmnopqrstuvwxyz 0123456789 (){}[]
+ABCDEFGHIJKLMNOPQRSTUVWXYZ +-*/= .,;:!? #&$%@|^
+
+
+<todo>//TODO: Visit Consulo Web resources:</todo>
+Consulo Home Page: <hyperlink_f>https://consulo.io</hyperlink_f>
+Consulo Developer Community: <hyperlink>https://discuss.consulo.io/</hyperlink>
+
+Search:
+  <search_result_wr>result</search_result_wr> = "<search_text>text</search_text>, <search_text>text</search_text>, <search_text>text</search_text>";
+  <identifier_write>i</identifier_write> = <search_result>result</search_result>
+  return <identifier>i;</identifier>
+
+<folded_text>Folded text</folded_text>
+<deleted_text>Deleted text</deleted_text>
+Template <template_var>VARIABLE</template_var>
+Injected language: <injected_lang>\.(gif|jpg|png)$</injected_lang>
+
+Code Inspections:
+  <error>Error</error>
+  <warning>Warning</warning>
+  <weak_warning>Weak warning</weak_warning>
+  <deprecated>Deprecated symbol</deprecated>
+  <unused>Unused symbol</unused>
+  <wrong_ref>Unknown symbol</wrong_ref>
+  <server_error>Problem from server</server_error>
+  <server_duplicate>Duplicate from server</server_duplicate>

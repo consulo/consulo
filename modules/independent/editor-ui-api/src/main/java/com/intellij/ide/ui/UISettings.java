@@ -451,6 +451,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     PIN_FIND_IN_PATH_POPUP = value;
   }
 
+  public boolean getUseSmallLabelsOnTabs() {
+    return USE_SMALL_LABELS_ON_TABS;
+  }
+
   /**
    * @see #setupComponentAntialiasing(JComponent)
    */

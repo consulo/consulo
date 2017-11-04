@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2011 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vcs;
+package com.intellij.ui.breadcrumbs;
 
-import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import java.awt.*;
 
 /**
- * @author mike
+ * @author Eugene.Kudelevsky
  */
-public interface FileStatusListener {
-  /**
-   * Indicates that some file statuses were change. On this event client should recalculate all statuses
-   * it's depenedend on.
-   */
-  default void fileStatusesChanged() {
-  }
-
-  default void fileStatusChanged(@NotNull VirtualFile virtualFile) {
-  }
+public abstract class CrumbPresentation {
+  public abstract Color getBackgroundColor(boolean selected, boolean hovered, boolean light);
 }

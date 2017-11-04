@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.options.colors.pages;
 
-import com.intellij.application.options.colors.FontEditorPreview;
 import com.intellij.application.options.colors.InspectionColorSettingsPage;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
@@ -33,42 +32,42 @@ import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.Weighted;
+import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSettingsPage, Weighted {
-  private static final String ADDITIONAL_DEMO_TEXT =
-          "\n" +
-          "<todo>//TODO: Visit JB Web resources:</todo>\n"+
-          "JetBrains Home Page: <hyperlink_f>http://www.jetbrains.com</hyperlink_f>\n" +
-          "JetBrains Developer Community: <hyperlink>https://www.jetbrains.com/devnet</hyperlink>\n" +
-          "\n" +
-          "Search:\n" +
-          "  <search_result_wr>result</search_result_wr> = \"<search_text>text</search_text>, <search_text>text</search_text>, <search_text>text</search_text>\";\n" +
-          "  <identifier_write>i</identifier_write> = <search_result>result</search_result>\n" +
-          "  return <identifier>i;</identifier>\n" +
-          "\n" +
-          "<folded_text>Folded text</folded_text>\n" +
-          "<deleted_text>Deleted text</deleted_text>\n" +
-          "Template <template_var>VARIABLE</template_var>\n" +
-          "Injected language: <injected_lang>\\.(gif|jpg|png)$</injected_lang>\n" +
-          "\n" +
-          "Code Inspections:\n" +
-          "  <error>Error</error>\n" +
-          "  <warning>Warning</warning>\n" +
-          "  <weak_warning>Weak warning</weak_warning>\n" +
-          "  <deprecated>Deprecated symbol</deprecated>\n" +
-          "  <unused>Unused symbol</unused>\n"+
-          "  <wrong_ref>Unknown symbol</wrong_ref>\n" +
-          "  <server_error>Problem from server</server_error>\n" +
-          "  <server_duplicate>Duplicate from server</server_duplicate>\n" +
-          getCustomSeveritiesDemoText();
+  private static final String ADDITIONAL_DEMO_TEXT = "\n" +
+                                                     "<todo>//TODO: Visit Consulo Web resources:</todo>\n" +
+                                                     "Consulo Home Page: <hyperlink_f>https://consulo.io</hyperlink_f>\n" +
+                                                     "Consulo Developer Community: <hyperlink>https://discuss.consulo.io/</hyperlink>\n" +
+                                                     "\n" +
+                                                     "Search:\n" +
+                                                     "  <search_result_wr>result</search_result_wr> = \"<search_text>text</search_text>, <search_text>text</search_text>, <search_text>text</search_text>\";\n" +
+                                                     "  <identifier_write>i</identifier_write> = <search_result>result</search_result>\n" +
+                                                     "  return <identifier>i;</identifier>\n" +
+                                                     "\n" +
+                                                     "<folded_text>Folded text</folded_text>\n" +
+                                                     "<deleted_text>Deleted text</deleted_text>\n" +
+                                                     "Template <template_var>VARIABLE</template_var>\n" +
+                                                     "Injected language: <injected_lang>\\.(gif|jpg|png)$</injected_lang>\n" +
+                                                     "\n" +
+                                                     "Code Inspections:\n" +
+                                                     "  <error>Error</error>\n" +
+                                                     "  <warning>Warning</warning>\n" +
+                                                     "  <weak_warning>Weak warning</weak_warning>\n" +
+                                                     "  <deprecated>Deprecated symbol</deprecated>\n" +
+                                                     "  <unused>Unused symbol</unused>\n" +
+                                                     "  <wrong_ref>Unknown symbol</wrong_ref>\n" +
+                                                     "  <server_error>Problem from server</server_error>\n" +
+                                                     "  <server_duplicate>Duplicate from server</server_duplicate>\n" +
+                                                     getCustomSeveritiesDemoText();
 
-  private static final AttributesDescriptor[] ATT_DESCRIPTORS = {
-          new AttributesDescriptor(OptionsBundle.message("options.general.attribute.descriptor.default.text"), HighlighterColors.TEXT),
+  private static final AttributesDescriptor[] ATT_DESCRIPTORS = {new AttributesDescriptor(OptionsBundle.message("options.general.attribute.descriptor.default.text"), HighlighterColors.TEXT),
 
           new AttributesDescriptor(OptionsBundle.message("options.general.attribute.descriptor.folded.text"), EditorColors.FOLDED_TEXT_ATTRIBUTES),
           new AttributesDescriptor(OptionsBundle.message("options.general.attribute.descriptor.deleted.text"), EditorColors.DELETED_TEXT_ATTRIBUTES),
@@ -93,43 +92,45 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
           new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.bookmarks"), CodeInsightColors.BOOKMARKS_ATTRIBUTES),
 
           new AttributesDescriptor(OptionsBundle.message("options.java.color.descriptor.full.coverage"), CodeInsightColors.LINE_FULL_COVERAGE),
-          new AttributesDescriptor(OptionsBundle.message("options.java.color.descriptor.partial.coverage"),
-                                   CodeInsightColors.LINE_PARTIAL_COVERAGE),
-          new AttributesDescriptor(OptionsBundle.message("options.java.color.descriptor.none.coverage"), CodeInsightColors.LINE_NONE_COVERAGE)
-  };
+          new AttributesDescriptor(OptionsBundle.message("options.java.color.descriptor.partial.coverage"), CodeInsightColors.LINE_PARTIAL_COVERAGE),
+          new AttributesDescriptor(OptionsBundle.message("options.java.color.descriptor.none.coverage"), CodeInsightColors.LINE_NONE_COVERAGE),
 
-  private static final ColorDescriptor[] COLOR_DESCRIPTORS = {
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.background.in.readonly.files"), EditorColors.READONLY_BACKGROUND_COLOR, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.deneral.color.descriptor.readonly.fragment.background"), EditorColors.READONLY_FRAGMENT_BACKGROUND_COLOR, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.gutter.background"), EditorColors.GUTTER_BACKGROUND, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.notification.background"), EditorColors.NOTIFICATION_BACKGROUND, ColorDescriptor.Kind.BACKGROUND),
+          new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.breadcrumbs.default"), EditorColors.BREADCRUMBS_DEFAULT),
+          new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.breadcrumbs.hovered"), EditorColors.BREADCRUMBS_HOVERED),
+          new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.breadcrumbs.current"), EditorColors.BREADCRUMBS_CURRENT),
+          new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.breadcrumbs.inactive"), EditorColors.BREADCRUMBS_INACTIVE)};
 
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.selection.background"), EditorColors.SELECTION_BACKGROUND_COLOR, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.selection.foreground"), EditorColors.SELECTION_FOREGROUND_COLOR, ColorDescriptor.Kind.FOREGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.caret"), EditorColors.CARET_COLOR, ColorDescriptor.Kind.FOREGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.caret.row"), EditorColors.CARET_ROW_COLOR, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.right.margin"), EditorColors.RIGHT_MARGIN_COLOR, ColorDescriptor.Kind.FOREGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.whitespaces"), EditorColors.WHITESPACES_COLOR, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.indent.guide"), EditorColors.INDENT_GUIDE_COLOR, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.indent.guide.selected"), EditorColors.SELECTED_INDENT_GUIDE_COLOR, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.line.number"), EditorColors.LINE_NUMBERS_COLOR, ColorDescriptor.Kind.FOREGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.vcs.annotations"), EditorColors.ANNOTATIONS_COLOR, ColorDescriptor.Kind.FOREGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.vcs.annotations.merged"), EditorColors.ANNOTATIONS_MERGED_COLOR, ColorDescriptor.Kind.FOREGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.tearline"), EditorColors.TEARLINE_COLOR, ColorDescriptor.Kind.FOREGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.tearline.selected"), EditorColors.SELECTED_TEARLINE_COLOR, ColorDescriptor.Kind.FOREGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.added.lines"), EditorColors.ADDED_LINES_COLOR, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.modified.lines"), EditorColors.MODIFIED_LINES_COLOR, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.deleted.lines"), EditorColors.DELETED_LINES_COLOR, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.whitespaces.modified.lines"), EditorColors.WHITESPACES_MODIFIED_LINES_COLOR, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.border.lines"), EditorColors.BORDER_LINES_COLOR, ColorDescriptor.Kind.BACKGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.java.color.descriptor.method.separator.color"), CodeInsightColors.METHOD_SEPARATORS_COLOR, ColorDescriptor.Kind.FOREGROUND),
-          new ColorDescriptor(OptionsBundle.message("options.general.color.soft.wrap.sign"), EditorColors.SOFT_WRAP_SIGN_COLOR, ColorDescriptor.Kind.FOREGROUND),
-  };
+  private static final ColorDescriptor[] COLOR_DESCRIPTORS =
+          {new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.background.in.readonly.files"), EditorColors.READONLY_BACKGROUND_COLOR, ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.readonly.fragment.background"), EditorColors.READONLY_FRAGMENT_BACKGROUND_COLOR,
+                                      ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.gutter.background"), EditorColors.GUTTER_BACKGROUND, ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.notification.background"), EditorColors.NOTIFICATION_BACKGROUND, ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.selection.background"), EditorColors.SELECTION_BACKGROUND_COLOR, ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.selection.foreground"), EditorColors.SELECTION_FOREGROUND_COLOR, ColorDescriptor.Kind.FOREGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.caret"), EditorColors.CARET_COLOR, ColorDescriptor.Kind.FOREGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.caret.row"), EditorColors.CARET_ROW_COLOR, ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.right.margin"), EditorColors.RIGHT_MARGIN_COLOR, ColorDescriptor.Kind.FOREGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.whitespaces"), EditorColors.WHITESPACES_COLOR, ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.indent.guide"), EditorColors.INDENT_GUIDE_COLOR, ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.indent.guide.selected"), EditorColors.SELECTED_INDENT_GUIDE_COLOR, ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.line.number"), EditorColors.LINE_NUMBERS_COLOR, ColorDescriptor.Kind.FOREGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.vcs.annotations"), EditorColors.ANNOTATIONS_COLOR, ColorDescriptor.Kind.FOREGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.tearline"), EditorColors.TEARLINE_COLOR, ColorDescriptor.Kind.FOREGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.tearline.selected"), EditorColors.SELECTED_TEARLINE_COLOR, ColorDescriptor.Kind.FOREGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.added.lines"), EditorColors.ADDED_LINES_COLOR, ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.modified.lines"), EditorColors.MODIFIED_LINES_COLOR, ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.deleted.lines"), EditorColors.DELETED_LINES_COLOR, ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.whitespaces.modified.lines"), EditorColors.WHITESPACES_MODIFIED_LINES_COLOR,
+                                      ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.border.lines"), EditorColors.BORDER_LINES_COLOR, ColorDescriptor.Kind.BACKGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.java.color.descriptor.method.separator.color"), CodeInsightColors.METHOD_SEPARATORS_COLOR, ColorDescriptor.Kind.FOREGROUND),
+                  new ColorDescriptor(OptionsBundle.message("options.general.color.soft.wrap.sign"), EditorColors.SOFT_WRAP_SIGN_COLOR, ColorDescriptor.Kind.FOREGROUND),};
 
   private static final Map<String, TextAttributesKey> ADDITIONAL_HIGHLIGHT_DESCRIPTORS = new HashMap<String, TextAttributesKey>();
   public static final String DISPLAY_NAME = OptionsBundle.message("options.general.display.name");
 
-  static{
+  static {
     ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("folded_text", EditorColors.FOLDED_TEXT_ATTRIBUTES);
     ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("deleted_text", EditorColors.DELETED_TEXT_ATTRIBUTES);
     ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("search_result", EditorColors.SEARCH_RESULT_ATTRIBUTES);
@@ -155,8 +156,7 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
     ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("server_duplicate", CodeInsightColors.DUPLICATE_FROM_SERVER);
     for (SeveritiesProvider provider : Extensions.getExtensions(SeveritiesProvider.EP_NAME)) {
       for (HighlightInfoType highlightInfoType : provider.getSeveritiesHighlightInfoTypes()) {
-        ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put(getHighlightDescTagName(highlightInfoType),
-                                             highlightInfoType.getAttributesKey());
+        ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put(getHighlightDescTagName(highlightInfoType), highlightInfoType.getAttributesKey());
       }
     }
   }
@@ -193,7 +193,12 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
   @Override
   @NotNull
   public String getDemoText() {
-    return FontEditorPreview.getIDEDemoText() + ADDITIONAL_DEMO_TEXT;
+    try {
+      return FileUtil.loadTextAndClose(getClass().getResourceAsStream("/colorSettingPage/general.txt"), true) + getCustomSeveritiesDemoText();
+    }
+    catch (IOException e) {
+      return "demo text not found";
+    }
   }
 
   @Override

@@ -20,6 +20,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
@@ -253,8 +254,9 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   @Nullable
   public <T extends Configurable> T findConfigurable(Class<T> configurableClass) {
     for (Configurable configurable : myConfigurable2Node.keySet()) {
-      if (configurableClass.isInstance(configurable)) {
-        return configurableClass.cast(configurable);
+      T cast = ConfigurableWrapper.cast(configurable, configurableClass);
+      if(cast != null) {
+        return cast;
       }
     }
     return null;
