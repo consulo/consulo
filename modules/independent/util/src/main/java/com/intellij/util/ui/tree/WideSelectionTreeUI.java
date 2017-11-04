@@ -18,7 +18,7 @@ package com.intellij.util.ui.tree;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
+import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
@@ -43,18 +43,22 @@ import java.awt.event.MouseListener;
 public class WideSelectionTreeUI extends BasicTreeUI {
   public static final String TREE_TABLE_TREE_KEY = "TreeTableTree";
 
-  @NonNls public static final String SOURCE_LIST_CLIENT_PROPERTY = "mac.ui.source.list";
-  @NonNls public static final String STRIPED_CLIENT_PROPERTY = "mac.ui.striped";
+  @NonNls
+  public static final String SOURCE_LIST_CLIENT_PROPERTY = "mac.ui.source.list";
+  @NonNls
+  public static final String STRIPED_CLIENT_PROPERTY = "mac.ui.striped";
 
   private static final Border LIST_BACKGROUND_PAINTER = UIManager.getBorder("List.sourceListBackgroundPainter");
   private static final Border LIST_SELECTION_BACKGROUND_PAINTER = UIManager.getBorder("List.sourceListSelectionBackgroundPainter");
   private static final Border LIST_FOCUSED_SELECTION_BACKGROUND_PAINTER = UIManager.getBorder("List.sourceListFocusedSelectionBackgroundPainter");
 
-  @NotNull private final Condition<Integer> myWideSelectionCondition;
+  private static final int IDE_UI_TREE_INDENT = SystemProperties.getIntProperty("ide.ui.tree.indent", -1);
+
+  @NotNull
+  private final Condition<Integer> myWideSelectionCondition;
   private boolean myWideSelection;
   private boolean myOldRepaintAllRowValue;
   private boolean myForceDontPaintLines = false;
-  private boolean mySkinny = false;
 
   @SuppressWarnings("unchecked")
   public WideSelectionTreeUI() {
@@ -83,7 +87,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
   }
 
   protected int getCustomIndent() {
-    return JBUI.scale(Registry.intValue("ide.ui.tree.indent", -1));
+    return JBUI.scale(IDE_UI_TREE_INDENT);
   }
 
   @Override

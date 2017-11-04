@@ -19,7 +19,6 @@ import com.intellij.execution.CommandLineUtil;
 import com.intellij.execution.TaskExecutor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.AppExecutorUtil;
@@ -96,7 +95,7 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
 
   /** @deprecated use {@link #readerOptions()} (to be removed in IDEA 18) */
   protected boolean useNonBlockingRead() {
-    return !Registry.is("output.reader.blocking.mode", false);
+    return true;
   }
 
   /**
