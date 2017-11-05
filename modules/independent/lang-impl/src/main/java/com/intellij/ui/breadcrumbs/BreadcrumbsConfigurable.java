@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.OptionalConfigurable;
 import com.intellij.openapi.options.colors.pages.GeneralColorsPage;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.panels.HorizontalLayout;
@@ -41,7 +42,7 @@ import static javax.swing.SwingConstants.LEFT;
 /**
  * @author Sergey.Malenkov
  */
-public final class BreadcrumbsConfigurable implements Configurable {
+public final class BreadcrumbsConfigurable implements Configurable, OptionalConfigurable {
   private final TreeMap<String, JCheckBox> map = new TreeMap<>();
   private JComponent component;
   private JCheckBox show;
@@ -173,5 +174,10 @@ public final class BreadcrumbsConfigurable implements Configurable {
     if (placement != null) placement.setEnabled(enabled);
     if (languages != null) languages.setEnabled(enabled);
     for (JCheckBox box : map.values()) box.setEnabled(enabled);
+  }
+
+  @Override
+  public boolean needDisplay() {
+    return BreadcrumbsProvider.EP_NAME.getExtensions().length > 0;
   }
 }
