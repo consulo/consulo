@@ -40,9 +40,9 @@ public class ConfigurableExtensionPointUtil {
 
 
   public static List<Configurable> buildConfigurablesList(List<ConfigurableEP<Configurable>> extensions, @Nullable Condition<Configurable> filter) {
-    final List<Configurable> result = new ArrayList<Configurable>();
+    final List<Configurable> result = new ArrayList<>();
 
-    final Map<String, ConfigurableWrapper> idToConfigurable = new HashMap<String, ConfigurableWrapper>();
+    final Map<String, ConfigurableWrapper> idToConfigurable = new HashMap<>();
     for (ConfigurableEP<Configurable> ep : extensions) {
       final Configurable configurable = ConfigurableWrapper.wrapConfigurable(ep);
       if (isSuppressed(configurable, filter)) continue;
@@ -52,7 +52,7 @@ public class ConfigurableExtensionPointUtil {
       }
       else {
 //        dumpConfigurable(configurablesExtensionPoint, ep, configurable);
-        ContainerUtil.addIfNotNull(configurable, result);
+        ContainerUtil.addIfNotNull(result, configurable);
       }
     }
     //modify configurables (append children)
@@ -83,9 +83,11 @@ public class ConfigurableExtensionPointUtil {
   }
 
   private static boolean isSuppressed(Configurable each, Condition<Configurable> filter) {
-    return each instanceof Configurable.Assistant
-        || each instanceof OptionalConfigurable && !((OptionalConfigurable) each).needDisplay()
-        || filter != null && !filter.value(each);
+    OptionalConfigurable configurable = ConfigurableWrapper.cast(each, OptionalConfigurable.class);
+    if(configurable != null && !configurable.needDisplay()) {
+      return true;
+    }
+    return filter != null && !filter.value(each);
   }
 
   /*
