@@ -369,7 +369,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
     private ActionCallback updateIfCurrent(final Configurable configurable) {
       if (getContext().getCurrentConfigurable() == configurable && configurable != null) {
-        updateDetails();
+        updateContent();
         return new ActionCallback.Done();
       }
       else {
@@ -747,7 +747,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
             return;
           }
 
-          updateDetails();
+          updateContent();
 
           myOwnDetails.setContent(myContentWrapper);
           myOwnDetails.setBannerMinHeight(mySearchWrapper.getHeight());
@@ -927,7 +927,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     }
   }
 
-  private void updateDetails() {
+  private void updateContent() {
     final Configurable current = getContext().getCurrentConfigurable();
 
     assert current != null;
