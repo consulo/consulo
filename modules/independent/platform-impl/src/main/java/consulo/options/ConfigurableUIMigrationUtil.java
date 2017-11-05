@@ -30,19 +30,28 @@ public class ConfigurableUIMigrationUtil {
 
   @RequiredDispatchThread
   public static JComponent createComponent(@NotNull UnnamedConfigurable configurable) {
+    JComponent component = configurable.createComponent();
+    if (component != null) {
+      return component;
+    }
+
     consulo.ui.Component uiComponent = configurable.createUIComponent();
     if (uiComponent != null) {
       return (JComponent)uiComponent;
     }
-    return configurable.createComponent();
+    return null;
   }
 
   @RequiredDispatchThread
   public static JComponent getPreferredFocusedComponent(@NotNull Configurable.HoldPreferredFocusedComponent component) {
+    JComponent preferredFocusedComponent = component.getPreferredFocusedComponent();
+    if(preferredFocusedComponent != null) {
+      return preferredFocusedComponent;
+    }
     consulo.ui.Component uiComponent = component.getPreferredFocusedUIComponent();
     if (uiComponent != null) {
       return (JComponent)uiComponent;
     }
-    return component.getPreferredFocusedComponent();
+    return null;
   }
 }

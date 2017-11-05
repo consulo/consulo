@@ -55,6 +55,11 @@ public interface Platform {
       runnable.run();
     }
   }
+
+  @Deprecated
+  static boolean isUnifiedVariant() {
+    return ourUnifiedVariantAnyway;
+  }
   //endregion
 
   @NotNull

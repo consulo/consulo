@@ -25,6 +25,8 @@ import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.ui.Component;
+import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -156,6 +158,14 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
   public JComponent createComponent() {
     compute();
     return myRootConfigurable != null ? ConfigurableUIMigrationUtil.createComponent(myRootConfigurable) : null;
+  }
+
+  @RequiredUIAccess
+  @Nullable
+  @Override
+  public Component createUIComponent() {
+    compute();
+    return myRootConfigurable != null ? myRootConfigurable.createUIComponent() : null;
   }
 
   @RequiredDispatchThread

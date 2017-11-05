@@ -23,18 +23,4 @@
   <source path="shared"/>
 
   <super-source path="override" />
-
-    <inherits name="consulo.ui.UI" />
-
-    <inherits name="consulo.ui.UI" />
-
-    <inherits name="consulo.ui.UI" />
-
-    <inherits name="consulo.ui.UI" />
-
-    <inherits name="consulo.ui.UI" />
-
-    <inherits name="consulo.ui.UI" />
-
-    <inherits name="consulo.ui.UI" />
 </module>
