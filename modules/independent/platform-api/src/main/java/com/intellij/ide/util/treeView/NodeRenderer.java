@@ -26,6 +26,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,8 +36,9 @@ import java.awt.*;
 import java.util.List;
 
 public class NodeRenderer extends ColoredTreeCellRenderer {
+  @RequiredDispatchThread
   @Override
-  public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+  public void customizeCellRenderer(@NotNull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     Color color = null;
     NodeDescriptor descriptor = null;
     if (value instanceof DefaultMutableTreeNode) {
@@ -48,7 +50,6 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
         setIcon(descriptor.getIcon());
       }
     }
-
 
     if (descriptor instanceof PresentableNodeDescriptor) {
       final PresentableNodeDescriptor node = (PresentableNodeDescriptor)descriptor;

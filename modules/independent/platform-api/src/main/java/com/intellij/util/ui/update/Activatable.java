@@ -21,9 +21,13 @@ package com.intellij.util.ui.update;
  */
 public interface Activatable {
 
-  void showNotify();
-  void hideNotify();
+  default void showNotify() {
+  }
 
+  default void hideNotify() {
+  }
+
+  @Deprecated
   class Adapter implements Activatable {
     public void hideNotify() {
     }

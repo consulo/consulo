@@ -30,11 +30,11 @@ import java.awt.*;
  */
 public class EditorUIUtil {
 
-  /* This method has to be used for setting up antialiasing and rendering hints in
- * editors only.
- */
+  /**
+   * This method has to be used for setting up antialiasing and rendering hints in
+   * editors only.
+   */
   public static void setupAntialiasing(final Graphics g) {
-
     Graphics2D g2d = (Graphics2D)g;
 
     int lcdContrastValue = UIUtil.getLcdContrastValue();

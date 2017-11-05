@@ -132,5 +132,10 @@
       <artifactId>netty-all</artifactId>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>com.miglayout</groupId>
+      <artifactId>miglayout</artifactId>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 </project>

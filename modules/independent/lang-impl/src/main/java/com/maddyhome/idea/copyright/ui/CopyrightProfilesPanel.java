@@ -24,6 +24,7 @@ import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
@@ -54,7 +55,7 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CopyrightProfilesPanel extends MasterDetailsComponent implements SearchableConfigurable {
+public class CopyrightProfilesPanel extends MasterDetailsComponent implements SearchableConfigurable, Configurable.NoScroll {
 
   private final Project myProject;
   private final CopyrightManager myManager;

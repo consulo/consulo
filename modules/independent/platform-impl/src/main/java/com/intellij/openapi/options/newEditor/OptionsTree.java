@@ -26,7 +26,6 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
@@ -52,7 +51,7 @@ import java.awt.event.KeyListener;
 import java.util.*;
 import java.util.List;
 
-public class OptionsTree extends JPanel implements Disposable, OptionsEditorColleague {
+class OptionsTree extends JPanel implements Disposable, OptionsEditorColleague {
   Project myProject;
   final SimpleTree myTree;
   Configurable[] myConfigurables;
@@ -60,7 +59,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   Root myRoot;
   OptionsEditorContext myContext;
 
-  private Map<Configurable, EditorNode> myConfigurable2Node = new HashMap<>();
+  private Map<Configurable, ConfigurableNode> myConfigurable2Node = new HashMap<>();
 
   MergingUpdateQueue mySelection;
 
@@ -104,10 +103,10 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
       }
     });
 
-    final JScrollPane scrolls = ScrollPaneFactory.createScrollPane(myTree, true);
-    scrolls.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree, true);
+    scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-    add(scrolls, BorderLayout.CENTER);
+    add(scrollPane, BorderLayout.CENTER);
 
     mySelection = new MergingUpdateQueue("OptionsTree", 150, false, this, this, this).setRestartTimerOnAdd(true);
     myTree.getSelectionModel().addTreeSelectionListener(e -> {
@@ -159,7 +158,6 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   }
 
   protected void onTreeKeyEvent(KeyEvent e) {
-
   }
 
   ActionCallback select(@Nullable Configurable configurable) {
@@ -195,8 +193,8 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
           myBuilder.getReady(this).doWhenDone(() -> {
             if (configurable != myQueuedConfigurable) return;
 
-            final EditorNode editorNode = myConfigurable2Node.get(configurable);
-            FilteringTreeStructure.FilteringNode editorUiNode = myBuilder.getVisibleNodeFor(editorNode);
+            final ConfigurableNode configurableNode = myConfigurable2Node.get(configurable);
+            FilteringTreeStructure.FilteringNode editorUiNode = myBuilder.getVisibleNodeFor(configurableNode);
             if (editorUiNode == null) return;
 
             if (!myBuilder.getSelectedElements().contains(editorUiNode)) {
@@ -230,14 +228,14 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   public List<Configurable> getPathToRoot(final Configurable configurable) {
     final ArrayList<Configurable> path = new ArrayList<>();
 
-    EditorNode eachNode = myConfigurable2Node.get(configurable);
+    ConfigurableNode eachNode = myConfigurable2Node.get(configurable);
     if (eachNode == null) return path;
 
     while (true) {
       path.add(eachNode.getConfigurable());
       final SimpleNode parent = eachNode.getParent();
-      if (parent instanceof EditorNode) {
-        eachNode = (EditorNode)parent;
+      if (parent instanceof ConfigurableNode) {
+        eachNode = (ConfigurableNode)parent;
       }
       else {
         break;
@@ -289,7 +287,6 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   }
 
   abstract static class Base extends CachingSimpleNode {
-
     protected Base(final SimpleNode aParent) {
       super(aParent);
     }
@@ -322,14 +319,14 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
     }
 
     @NotNull
-    private List<EditorNode> map(final Configurable[] configurables) {
-      List<EditorNode> result = new ArrayList<>();
+    private List<ConfigurableNode> map(final Configurable[] configurables) {
+      List<ConfigurableNode> result = new ArrayList<>();
       for (Configurable eachKid : configurables) {
         if (isInvisibleNode(eachKid)) {
           result.addAll(OptionsTree.this.buildChildren(eachKid, this));
         }
         else {
-          result.add(new EditorNode(this, eachKid));
+          result.add(new ConfigurableNode(this, eachKid));
         }
       }
       return sort(result);
@@ -340,8 +337,8 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
     return child instanceof SearchableConfigurable.Parent && !((SearchableConfigurable.Parent)child).isVisible();
   }
 
-  private static List<EditorNode> sort(List<EditorNode> c) {
-    List<EditorNode> cc = new ArrayList<>(c);
+  private static List<ConfigurableNode> sort(List<ConfigurableNode> c) {
+    List<ConfigurableNode> cc = new ArrayList<>(c);
     Collections.sort(cc, (o1, o2) -> {
       double weight1 = getWeight(o1);
       double weight2 = getWeight(o2);
@@ -354,7 +351,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
     return cc;
   }
 
-  private static double getWeight(EditorNode node) {
+  private static double getWeight(ConfigurableNode node) {
     Configurable configurable = node.getConfigurable();
     if (configurable instanceof Weighted) {
       return ((Weighted)configurable).getWeight();
@@ -367,15 +364,15 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
     return name != null ? name : "{ Unnamed Page:" + c.getClass().getSimpleName() + " }";
   }
 
-  private List<EditorNode> buildChildren(final Configurable configurable, SimpleNode parent) {
+  private List<ConfigurableNode> buildChildren(final Configurable configurable, SimpleNode parent) {
     if (configurable instanceof Configurable.Composite) {
       final Configurable[] kids = ((Configurable.Composite)configurable).getConfigurables();
-      final List<EditorNode> result = new ArrayList<>(kids.length);
+      final List<ConfigurableNode> result = new ArrayList<>(kids.length);
       for (Configurable child : kids) {
         if (isInvisibleNode(child)) {
           result.addAll(buildChildren(child, parent));
         }
-        result.add(new EditorNode(parent, child));
+        result.add(new ConfigurableNode(parent, child));
         myContext.registerKid(configurable, child);
       }
       return sort(result);
@@ -385,12 +382,12 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
     }
   }
 
-  private static final EditorNode[] EMPTY_EN_ARRAY = new EditorNode[0];
+  private static final ConfigurableNode[] EMPTY_EN_ARRAY = new ConfigurableNode[0];
 
-  class EditorNode extends Base {
+  class ConfigurableNode extends Base {
     Configurable myConfigurable;
 
-    EditorNode(SimpleNode parent, Configurable configurable) {
+    ConfigurableNode(SimpleNode parent, Configurable configurable) {
       super(parent);
       myConfigurable = configurable;
       myConfigurable2Node.put(configurable, this);
@@ -401,23 +398,24 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
       super.update(presentation);
 
       String displayName = getConfigurableDisplayName(myConfigurable);
-      if (getParent() instanceof Root) {
+      presentation.setPresentableText(displayName);
+      /*if (getParent() instanceof Root) {
         presentation.addText(displayName, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
       }
       else {
         presentation.addText(displayName, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-      }
+      } */
     }
 
     @Override
-    protected EditorNode[] buildChildren() {
-      List<EditorNode> list = OptionsTree.this.buildChildren(myConfigurable, this);
-      return list.isEmpty() ? EMPTY_EN_ARRAY : list.toArray(new EditorNode[list.size()]);
+    protected ConfigurableNode[] buildChildren() {
+      List<ConfigurableNode> list = OptionsTree.this.buildChildren(myConfigurable, this);
+      return list.isEmpty() ? EMPTY_EN_ARRAY : list.toArray(new ConfigurableNode[list.size()]);
     }
 
     @Override
     public boolean isAlwaysLeaf() {
-      return !(myConfigurable instanceof Configurable.Composite);
+      return !(myConfigurable instanceof Configurable.Composite) || ((Configurable.Composite)myConfigurable).getConfigurables().length == 0;
     }
 
     @Override
@@ -478,7 +476,6 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
   }
 
   private class MyBuilder extends FilteringTreeBuilder {
-
     List<Object> myToExpandOnResetFilter;
     boolean myRefilteringNow;
     boolean myWasHoldingFilter;
@@ -506,7 +503,7 @@ public class OptionsTree extends JPanel implements Disposable, OptionsEditorColl
 
     @Override
     protected boolean isSelectable(final Object nodeObject) {
-      return nodeObject instanceof EditorNode;
+      return nodeObject instanceof ConfigurableNode;
     }
 
     @Override

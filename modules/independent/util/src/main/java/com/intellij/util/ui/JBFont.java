@@ -49,7 +49,17 @@ public class JBFont extends Font {
 
   }
 
+  public JBFont asBold() {
+    return deriveFont(BOLD, getSize());
+  }
 
+  public JBFont asItalic() {
+    return deriveFont(ITALIC, getSize());
+  }
+
+  public JBFont asPlain() {
+    return deriveFont(PLAIN, getSize());
+  }
 
   @Override
   public JBFont deriveFont(int style, float size) {

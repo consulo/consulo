@@ -214,12 +214,10 @@ public class UIUtil {
     JComponent c = (JComponent)comp;
 
     if (isUnderAquaBasedLookAndFeel()) {
-      c.putClientProperty("JComponent.sizeVariant",
-                          componentStyle == ComponentStyle.REGULAR ? "regular" : componentStyle == ComponentStyle.SMALL ? "small" : "mini");
+      c.putClientProperty("JComponent.sizeVariant", componentStyle == ComponentStyle.REGULAR ? "regular" : componentStyle == ComponentStyle.SMALL ? "small" : "mini");
     }
     else {
-      c.setFont(getFont(componentStyle == ComponentStyle.REGULAR ? FontSize.NORMAL : componentStyle == ComponentStyle.SMALL ? FontSize.SMALL : FontSize.MINI,
-                        c.getFont()));
+      c.setFont(getFont(componentStyle == ComponentStyle.REGULAR ? FontSize.NORMAL : componentStyle == ComponentStyle.SMALL ? FontSize.SMALL : FontSize.MINI, c.getFont()));
     }
     Container p = c.getParent();
     if (p != null) {
@@ -916,8 +914,7 @@ public class UIUtil {
   public static Color getLabelFontColor(FontColor fontColor) {
     Color defColor = getLabelForeground();
     if (fontColor == FontColor.BRIGHTER) {
-      return new JBColor(new Color(Math.min(defColor.getRed() + 50, 255), Math.min(defColor.getGreen() + 50, 255), Math.min(defColor.getBlue() + 50, 255)),
-                         defColor.darker());
+      return new JBColor(new Color(Math.min(defColor.getRed() + 50, 255), Math.min(defColor.getGreen() + 50, 255), Math.min(defColor.getBlue() + 50, 255)), defColor.darker());
     }
     return defColor;
   }
@@ -1373,9 +1370,7 @@ public class UIUtil {
     int width = Math.max(selectedIcon.getIconWidth(), notSelectedIcon.getIconWidth());
     int height = Math.max(selectedIcon.getIconWidth(), notSelectedIcon.getIconWidth());
 
-    return new CenteredIcon(
-            expanded ? (white ? getTreeSelectedExpandedIcon() : getTreeExpandedIcon()) : (white ? getTreeSelectedCollapsedIcon() : getTreeCollapsedIcon()),
-            width, height, false);
+    return new CenteredIcon(expanded ? (white ? getTreeSelectedExpandedIcon() : getTreeExpandedIcon()) : (white ? getTreeSelectedCollapsedIcon() : getTreeCollapsedIcon()), width, height, false);
   }
 
   public static Icon getTreeCollapsedIcon() {
@@ -1391,15 +1386,11 @@ public class UIUtil {
   }
 
   public static Icon getTreeSelectedCollapsedIcon() {
-    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF()
-           ? AllIcons.Mac.Tree_white_right_arrow
-           : getTreeCollapsedIcon();
+    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIcons.Mac.Tree_white_right_arrow : getTreeCollapsedIcon();
   }
 
   public static Icon getTreeSelectedExpandedIcon() {
-    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF()
-           ? AllIcons.Mac.Tree_white_down_arrow
-           : getTreeExpandedIcon();
+    return isUnderAquaBasedLookAndFeel() || isUnderNimbusLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIcons.Mac.Tree_white_down_arrow : getTreeExpandedIcon();
   }
 
   public static Border getTableHeaderCellBorder() {
@@ -1522,23 +1513,19 @@ public class UIUtil {
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static boolean isMurrineBasedTheme() {
     final String gtkTheme = getGtkThemeName();
-    return "Ambiance".equalsIgnoreCase(gtkTheme) ||
-           "Radiance".equalsIgnoreCase(gtkTheme) ||
-           "Dust".equalsIgnoreCase(gtkTheme) ||
-           "Dust Sand".equalsIgnoreCase(gtkTheme);
+    return "Ambiance".equalsIgnoreCase(gtkTheme) || "Radiance".equalsIgnoreCase(gtkTheme) || "Dust".equalsIgnoreCase(gtkTheme) || "Dust Sand".equalsIgnoreCase(gtkTheme);
   }
 
   public static Color shade(final Color c, final double factor, final double alphaFactor) {
     assert factor >= 0 : factor;
-    return new Color(Math.min((int)Math.round(c.getRed() * factor), 255), Math.min((int)Math.round(c.getGreen() * factor), 255),
-                     Math.min((int)Math.round(c.getBlue() * factor), 255), Math.min((int)Math.round(c.getAlpha() * alphaFactor), 255));
+    return new Color(Math.min((int)Math.round(c.getRed() * factor), 255), Math.min((int)Math.round(c.getGreen() * factor), 255), Math.min((int)Math.round(c.getBlue() * factor), 255),
+                     Math.min((int)Math.round(c.getAlpha() * alphaFactor), 255));
   }
 
   public static Color mix(final Color c1, final Color c2, final double factor) {
     assert 0 <= factor && factor <= 1.0 : factor;
     final double backFactor = 1.0 - factor;
-    return new Color(Math.min((int)Math.round(c1.getRed() * backFactor + c2.getRed() * factor), 255),
-                     Math.min((int)Math.round(c1.getGreen() * backFactor + c2.getGreen() * factor), 255),
+    return new Color(Math.min((int)Math.round(c1.getRed() * backFactor + c2.getRed() * factor), 255), Math.min((int)Math.round(c1.getGreen() * backFactor + c2.getGreen() * factor), 255),
                      Math.min((int)Math.round(c1.getBlue() * backFactor + c2.getBlue() * factor), 255));
   }
 
@@ -1696,13 +1683,7 @@ public class UIUtil {
    * @param fgColor Foreground color (optional)
    * @param opaque  If opaque the image will be dr
    */
-  public static void drawBoldDottedLine(final Graphics2D g,
-                                        final int startX,
-                                        final int endX,
-                                        final int lineY,
-                                        final Color bgColor,
-                                        final Color fgColor,
-                                        final boolean opaque) {
+  public static void drawBoldDottedLine(final Graphics2D g, final int startX, final int endX, final int lineY, final Color bgColor, final Color fgColor, final boolean opaque) {
     if ((SystemInfo.isMac && !isRetina()) || SystemInfo.isLinux) {
       drawAppleDottedLine(g, startX, endX, lineY, bgColor, fgColor, opaque);
     }
@@ -1754,13 +1735,7 @@ public class UIUtil {
     g.drawLine(x, y + 1, x, y + h - 1);
   }
 
-  private static void drawBoringDottedLine(final Graphics2D g,
-                                           final int startX,
-                                           final int endX,
-                                           final int lineY,
-                                           final Color bgColor,
-                                           final Color fgColor,
-                                           final boolean opaque) {
+  private static void drawBoringDottedLine(final Graphics2D g, final int startX, final int endX, final int lineY, final Color bgColor, final Color fgColor, final boolean opaque) {
     final Color oldColor = g.getColor();
 
     // Fill 2 lines with background color
@@ -1835,13 +1810,7 @@ public class UIUtil {
     }
   }
 
-  private static void drawAppleDottedLine(final Graphics2D g,
-                                          final int startX,
-                                          final int endX,
-                                          final int lineY,
-                                          final Color bgColor,
-                                          final Color fgColor,
-                                          final boolean opaque) {
+  private static void drawAppleDottedLine(final Graphics2D g, final int startX, final int endX, final int lineY, final Color bgColor, final Color fgColor, final boolean opaque) {
     final Color oldColor = g.getColor();
 
     // Fill 3 lines with background color
@@ -2128,6 +2097,35 @@ public class UIUtil {
     }
     g.setColor(foreground);
     g.drawString(s, x, y);
+  }
+
+  /**
+   * Draws a centered string in the passed rectangle.
+   * @param g the {@link Graphics} instance to draw to
+   * @param rect the {@link Rectangle} to use as bounding box
+   * @param str the string to draw
+   * @param horzCentered if true, the string will be centered horizontally
+   * @param vertCentered if true, the string will be centered vertically
+   */
+  public static void drawCenteredString(Graphics2D g, Rectangle rect, String str, boolean horzCentered, boolean vertCentered) {
+    FontMetrics fm = g.getFontMetrics(g.getFont());
+    int textWidth = fm.stringWidth(str) - 1;
+    int x = horzCentered ? Math.max(rect.x, rect.x + (rect.width - textWidth) / 2) : rect.x;
+    int y = vertCentered ? Math.max(rect.y, rect.y + rect.height / 2 + fm.getAscent() * 2 / 5) : rect.y;
+    Shape oldClip = g.getClip();
+    g.clip(rect);
+    g.drawString(str, x, y);
+    g.setClip(oldClip);
+  }
+
+  /**
+   * Draws a centered string in the passed rectangle.
+   * @param g the {@link Graphics} instance to draw to
+   * @param rect the {@link Rectangle} to use as bounding box
+   * @param str the string to draw
+   */
+  public static void drawCenteredString(Graphics2D g, Rectangle rect, String str) {
+    drawCenteredString(g, rect, str, true, true);
   }
 
   public static boolean isFocusAncestor(@NotNull final JComponent component) {
@@ -2500,13 +2498,7 @@ public class UIUtil {
     Font font = getLabelFont();
     @NonNls String family = font != null ? font.getFamily() : "Tahoma";
     int size = font != null ? font.getSize() : 11;
-    return "<html><style>body { font-family: " +
-           family +
-           "; font-size: " +
-           size +
-           ";} ul li {list-style-type:circle;}</style>" +
-           addPadding(html, hPadding) +
-           "</html>";
+    return "<html><style>body { font-family: " + family + "; font-size: " + size + ";} ul li {list-style-type:circle;}</style>" + addPadding(html, hPadding) + "</html>";
   }
 
   public static String addPadding(final String html, int hPadding) {
@@ -3556,19 +3548,14 @@ public class UIUtil {
     textComponent.getDocument().addUndoableEditListener(undoManager);
     textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK), "undoKeystroke");
     textComponent.getActionMap().put("undoKeystroke", UNDO_ACTION);
-    textComponent.getInputMap()
-            .put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, (SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK),
-                 "redoKeystroke");
+    textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, (SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK), "redoKeystroke");
     textComponent.getActionMap().put("redoKeystroke", REDO_ACTION);
   }
 
   /**
    * KeyEvents for specified keystrokes would be redispatched to target component
    */
-  public static void redirectKeystrokes(@NotNull Disposable disposable,
-                                        @NotNull final JComponent source,
-                                        @NotNull final JComponent target,
-                                        @NotNull final KeyStroke... keyStrokes) {
+  public static void redirectKeystrokes(@NotNull Disposable disposable, @NotNull final JComponent source, @NotNull final JComponent target, @NotNull final KeyStroke... keyStrokes) {
     final KeyAdapter keyAdapter = new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {

@@ -23,6 +23,7 @@ import com.intellij.openapi.options.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
@@ -131,6 +132,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return configurable instanceof Configurable ? ((Configurable)configurable).getHelpTopic() : null;
   }
 
+  @RequiredDispatchThread
   @Nullable
   @Override
   public JComponent createComponent() {
@@ -144,21 +146,25 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return getConfigurable().createUIComponent();
   }
 
+  @RequiredDispatchThread
   @Override
   public boolean isModified() {
     return getConfigurable().isModified();
   }
 
+  @RequiredDispatchThread
   @Override
   public void apply() throws ConfigurationException {
     getConfigurable().apply();
   }
 
+  @RequiredDispatchThread
   @Override
   public void reset() {
     getConfigurable().reset();
   }
 
+  @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
     getConfigurable().disposeUIResources();
@@ -169,7 +175,6 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   public String getId() {
     return myEp.id == null ? myEp.instanceClass : myEp.id;
   }
-
 
   public String getParentId() {
     return myEp.parentId;
@@ -192,7 +197,6 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   }
 
   private static class CompositeWrapper extends ConfigurableWrapper implements Configurable.Composite {
-
     private Configurable[] myKids;
 
     public CompositeWrapper(ConfigurableEP ep, Configurable... kids) {

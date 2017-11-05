@@ -25,19 +25,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.function.Function;
 
-public class OptionsEditorContext {
-
+class OptionsEditorContext {
   ElementFilter.Active myFilter;
 
-  CopyOnWriteArraySet<OptionsEditorColleague> myColleagues = new CopyOnWriteArraySet<OptionsEditorColleague>();
+  CopyOnWriteArraySet<OptionsEditorColleague> myColleagues = new CopyOnWriteArraySet<>();
 
   Configurable myCurrentConfigurable;
-  Set<Configurable> myModified = new CopyOnWriteArraySet<Configurable>();
-  Map<Configurable, ConfigurationException> myErrors = new HashMap<Configurable, ConfigurationException>();
+  Set<Configurable> myModified = new CopyOnWriteArraySet<>();
+  Map<Configurable, ConfigurationException> myErrors = new HashMap<>();
   private boolean myHoldingFilter;
-  private final Map<Configurable,  Configurable> myConfigurableToParentMap = new HashMap<Configurable, Configurable>();
-  private final MultiValuesMap<Configurable, Configurable> myParentToChildrenMap = new MultiValuesMap<Configurable, Configurable>();
+  private final Map<Configurable,  Configurable> myConfigurableToParentMap = new HashMap<>();
+  private final MultiValuesMap<Configurable, Configurable> myParentToChildrenMap = new MultiValuesMap<>();
 
 
   public OptionsEditorContext(ElementFilter.Active filter) {
@@ -50,12 +50,7 @@ public class OptionsEditorContext {
     final Configurable old = myCurrentConfigurable;
     myCurrentConfigurable = configurable;
 
-    return notify(new ColleagueAction() {
-      public ActionCallback process(final OptionsEditorColleague colleague) {
-        return colleague.onSelected(configurable, old);
-      }
-    }, requestor);
-
+    return notify(colleague -> colleague.onSelected(configurable, old), requestor);
   }
 
   ActionCallback fireModifiedAdded(@NotNull final Configurable configurable, @Nullable OptionsEditorColleague requestor) {
@@ -63,12 +58,7 @@ public class OptionsEditorContext {
 
     myModified.add(configurable);
 
-    return notify(new ColleagueAction() {
-      public ActionCallback process(final OptionsEditorColleague colleague) {
-        return colleague.onModifiedAdded(configurable);
-      }
-    }, requestor);
-
+    return notify(colleague -> colleague.onModifiedAdded(configurable), requestor);
   }
 
   ActionCallback fireModifiedRemoved(@NotNull final Configurable configurable, @Nullable OptionsEditorColleague requestor) {
@@ -76,31 +66,22 @@ public class OptionsEditorContext {
 
     myModified.remove(configurable);
 
-    return notify(new ColleagueAction() {
-      public ActionCallback process(final OptionsEditorColleague colleague) {
-        return colleague.onModifiedRemoved(configurable);
-      }
-    }, requestor);
+    return notify(colleague -> colleague.onModifiedRemoved(configurable), requestor);
   }
 
   ActionCallback fireErrorsChanged(final Map<Configurable, ConfigurationException> errors, OptionsEditorColleague requestor) {
     if (myErrors.equals(errors)) return new ActionCallback.Rejected();
 
-    myErrors = errors != null ? errors : new HashMap<Configurable, ConfigurationException>();
+    myErrors = errors != null ? errors : new HashMap<>();
 
-    return notify(new ColleagueAction() {
-      public ActionCallback process(final OptionsEditorColleague colleague) {
-        return colleague.onErrorsChanged();
-      }
-    }, requestor);
+    return notify(OptionsEditorColleague::onErrorsChanged, requestor);
   }
 
-  ActionCallback notify(ColleagueAction action, OptionsEditorColleague requestor) {
+  ActionCallback notify(Function<OptionsEditorColleague, ActionCallback> action, OptionsEditorColleague requestor) {
     final ActionCallback.Chunk chunk = new ActionCallback.Chunk();
-    for (Iterator<OptionsEditorColleague> iterator = myColleagues.iterator(); iterator.hasNext();) {
-      OptionsEditorColleague each = iterator.next();
+    for (OptionsEditorColleague each : myColleagues) {
       if (each != requestor) {
-        chunk.add(action.process(each));
+        chunk.add(action.apply(each));
       }
     }
 
@@ -113,7 +94,7 @@ public class OptionsEditorContext {
     }
 
     if (myErrors.containsKey(configurable)) {
-      final HashMap<Configurable, ConfigurationException> newErrors = new HashMap<Configurable, ConfigurationException>();
+      final HashMap<Configurable, ConfigurationException> newErrors = new HashMap<>();
       newErrors.remove(configurable);
       fireErrorsChanged(newErrors, null);
     }
@@ -145,11 +126,6 @@ public class OptionsEditorContext {
     return result == null ? Collections.<Configurable>emptySet() : result;
   }
 
-  interface ColleagueAction {
-    ActionCallback process(OptionsEditorColleague colleague);
-  }
-
-
   @NotNull
   ElementFilter<Configurable> getFilter() {
     return myFilter;
@@ -170,6 +146,4 @@ public class OptionsEditorContext {
   public void addColleague(final OptionsEditorColleague colleague) {
     myColleagues.add(colleague);
   }
-
-
 }

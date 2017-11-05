@@ -77,8 +77,10 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
   @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
-    Disposer.dispose(myComponent);
-    myComponent = null;
+    if(myComponent != null) {
+      Disposer.dispose(myComponent);
+      myComponent = null;
+    }
   }
 
   @Override

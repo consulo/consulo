@@ -65,12 +65,6 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     return languageByID == null ? myExtensionPoint.getKey() : languageByID.getDisplayName();
   }
 
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return null;
-  }
-
   @RequiredDispatchThread
   @Nullable
   @Override
@@ -150,7 +144,9 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
   @RequiredDispatchThread
   @Override
   public void disposeUIResources() {
-    Disposer.dispose(myPostfixDescriptionPanel);
+    if(myPostfixDescriptionPanel != null) {
+      Disposer.dispose(myPostfixDescriptionPanel);
+    }
   }
 
   public void focusTemplate(PostfixTemplate template) {

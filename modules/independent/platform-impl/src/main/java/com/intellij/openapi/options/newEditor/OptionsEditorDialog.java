@@ -147,7 +147,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
     myEditor = new OptionsEditor(myProject, myConfigurables, myPreselected, rootPanel);
-    myEditor.getContext().addColleague(new OptionsEditorColleague.Adapter() {
+    myEditor.getContext().addColleague(new OptionsEditorColleague() {
       @Override
       public ActionCallback onModifiedAdded(final Configurable configurable) {
         updateStatus();
@@ -167,7 +167,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
       }
     });
     Disposer.register(myDisposable, myEditor);
-    return Couple.<JComponent>of(myEditor.getLeftSide(), myEditor.getRightSide());
+    return Couple.of(myEditor.getLeftSide(), myEditor.getRightSide());
   }
 
   public boolean updateStatus() {
@@ -225,7 +225,6 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
 
     super.doOKAction();
   }
-
 
   private void saveCurrentConfigurable() {
     final Configurable current = myEditor.getContext().getCurrentConfigurable();
@@ -312,6 +311,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
     }
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myEditor.getPreferredFocusedComponent();
@@ -337,5 +337,4 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
       myEditor.repaint();
     }
   }
-
 }

@@ -279,7 +279,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   /* This method must not be used for set up antialiasing for editor components
    */
   public static void setupAntialiasing(final Graphics g) {
-
     Graphics2D g2d = (Graphics2D)g;
     g2d.setRenderingHint(RenderingHints.KEY_TEXT_LCD_CONTRAST, UIUtil.getLcdContrastValue());
 
@@ -453,6 +452,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public boolean getUseSmallLabelsOnTabs() {
     return USE_SMALL_LABELS_ON_TABS;
+  }
+
+  public AntialiasingType getIdeAAType() {
+    return IDE_AA_TYPE;
   }
 
   /**
