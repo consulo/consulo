@@ -177,7 +177,7 @@ public class HttpFileEditor implements TextEditor {
 
   @Nullable
   @Override
-  public VirtualFile getVirtualFile() {
+  public VirtualFile getFile() {
     return null;
   }
 

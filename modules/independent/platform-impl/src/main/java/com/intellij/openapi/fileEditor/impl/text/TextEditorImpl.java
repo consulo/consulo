@@ -181,7 +181,7 @@ public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
 
   @Nullable
   @Override
-  public VirtualFile getVirtualFile() {
+  public VirtualFile getFile() {
     return FileDocumentManager.getInstance().getFile(myComponent.getEditor().getDocument());
   }
 

@@ -78,7 +78,7 @@ public class Mock {
 
     @Nullable
     @Override
-    public VirtualFile getVirtualFile() {
+    public VirtualFile getFile() {
       return null;
     }
 

@@ -174,7 +174,7 @@ public class DvcsUtil {
         result = FileDocumentManager.getInstance().getFile(document);
       }
       else {
-        result = fileEditor.getVirtualFile();
+        result = fileEditor.getFile();
       }
     }
 

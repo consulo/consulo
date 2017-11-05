@@ -138,7 +138,7 @@ public class LargeFileEditorProvider implements FileEditorProvider, DumbAware {
 
     @Nullable
     @Override
-    public VirtualFile getVirtualFile() {
+    public VirtualFile getFile() {
       return myFile;
     }
 

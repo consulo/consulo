@@ -141,7 +141,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
   }
 
   @Nullable
-  default VirtualFile getVirtualFile() {
+  default VirtualFile getFile() {
     return null;
   }
 

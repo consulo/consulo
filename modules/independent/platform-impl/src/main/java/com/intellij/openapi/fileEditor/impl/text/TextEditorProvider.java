@@ -357,8 +357,8 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
 
     @Nullable
     @Override
-    public VirtualFile getVirtualFile() {
-      return null;
+    public VirtualFile getFile() {
+      return FileDocumentManager.getInstance().getFile(myEditor.getDocument());
     }
 
     @Override
