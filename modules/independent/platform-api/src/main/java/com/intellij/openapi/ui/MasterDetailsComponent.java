@@ -57,7 +57,7 @@ import java.util.List;
  * @author anna
  * @since 29-May-2006
  */
-public abstract class MasterDetailsComponent implements Configurable, DetailsComponent.Facade, MasterDetails {
+public abstract class MasterDetailsComponent implements Configurable, MasterDetails {
   protected static final Logger LOG = Logger.getInstance("#com.intellij.openapi.ui.MasterDetailsComponent");
 
   protected NamedConfigurable myCurrentConfigurable;
@@ -247,11 +247,6 @@ public abstract class MasterDetailsComponent implements Configurable, DetailsCom
 
   protected boolean updateMultiSelection(final List<NamedConfigurable> selectedConfigurables) {
     return false;
-  }
-
-  @Override
-  public DetailsComponent getDetailsComponent() {
-    return myDetails;
   }
 
   public Splitter getSplitter() {

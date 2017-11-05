@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.roots.ui.configuration;
 
+import com.intellij.ui.ScrollPaneFactory;
 import consulo.compiler.CompilerConfiguration;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.BrowseFilesListener;
@@ -58,7 +59,7 @@ import java.io.IOException;
  * @author Eugene Zhuravlev
  *         Date: Dec 15, 2003
  */
-public class ProjectConfigurable extends ProjectStructureElementConfigurable<Project> implements DetailsComponent.Facade, WholeWestConfigurable {
+public class ProjectConfigurable extends ProjectStructureElementConfigurable<Project> implements WholeWestConfigurable {
 
   private final Project myProject;
 
@@ -96,11 +97,6 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   @Override
   public ProjectStructureElement getProjectStructureElement() {
     return mySettingsElement;
-  }
-
-  @Override
-  public DetailsComponent getDetailsComponent() {
-    return myDetailsComponent;
   }
 
   @Override
@@ -151,7 +147,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     });
 
     myPanel.add(myProjectCompilerOutput);
-    myPanel.add(myErrorsComponent);
+    myPanel.add(ScrollPaneFactory.createScrollPane(myErrorsComponent, true));
   }
 
   @RequiredDispatchThread
@@ -249,7 +245,6 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   public String getHelpTopic() {
     return "reference.settingsdialog.project.structure.general";
   }
-
 
   @RequiredDispatchThread
   @Override

@@ -205,11 +205,6 @@ public class DetailsComponent {
     revalidateDetailsMode();
   }
 
-
-  public interface Facade {
-    DetailsComponent getDetailsComponent();
-  }
-
   private class MyWrapper extends Wrapper implements NullableComponent {
     public MyWrapper(final JComponent c) {
       super(c == null || NullableComponent.Check.isNull(c) ? myEmptyContentLabel : c);
@@ -220,6 +215,4 @@ public class DetailsComponent {
       return getTargetComponent() == myEmptyContentLabel;
     }
   }
-
-
 }
