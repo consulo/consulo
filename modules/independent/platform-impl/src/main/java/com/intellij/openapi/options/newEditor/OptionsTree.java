@@ -26,6 +26,7 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
@@ -398,13 +399,12 @@ class OptionsTree extends JPanel implements Disposable, OptionsEditorColleague {
       super.update(presentation);
 
       String displayName = getConfigurableDisplayName(myConfigurable);
-      presentation.setPresentableText(displayName);
-      /*if (getParent() instanceof Root) {
+      if (getParent() instanceof Root) {
         presentation.addText(displayName, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
       }
       else {
         presentation.addText(displayName, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-      } */
+      }
     }
 
     @Override
