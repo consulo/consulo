@@ -26,7 +26,6 @@ import com.intellij.openapi.vcs.history.VcsHistoryProvider;
 import com.intellij.openapi.vcs.history.VcsHistorySession;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.util.Consumer;
 
 import java.io.File;
@@ -61,8 +60,8 @@ public interface VcsDataKeys {
   Key<Change[]> SELECTED_CHANGES = Key.create("ChangeListView.SelectedChange");
   Key<Boolean> HAVE_SELECTED_CHANGES = Key.create("ChangeListView.HaveSelectedChanges");
   Key<Change[]> CHANGE_LEAD_SELECTION = Key.create("ChangeListView.ChangeLeadSelection");
-  Key<String> UPDATE_VIEW_SELECTED_PATH = Key.create("AbstractCommonUpdateAction.UpdateViewSelectedPath");
-  Key<Iterable<Pair<VirtualFilePointer, FileStatus>>> UPDATE_VIEW_FILES_ITERABLE = Key.create("AbstractCommonUpdateAction.UpdatedFilesIterable");
+  Key<FilePath> UPDATE_VIEW_SELECTED_PATH = Key.create("AbstractCommonUpdateAction.UpdateViewSelectedPath");
+  Key<Iterable<Pair<FilePath, FileStatus>>> UPDATE_VIEW_FILES_ITERABLE = Key.create("AbstractCommonUpdateAction.UpdatedFilesIterable");
   Key<Object> LABEL_BEFORE = Key.create("LABEL_BEFORE");
   Key<Object> LABEL_AFTER = Key.create("LABEL_AFTER");
   Key<String> PRESET_COMMIT_MESSAGE = Key.create("PRESET_COMMIT_MESSAGE");

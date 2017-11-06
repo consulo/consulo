@@ -41,9 +41,8 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.util.Consumer;
-import com.intellij.vcsUtil.VcsUtil;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,8 +51,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
+  @RequiredDispatchThread
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     final DataContext dc = e.getDataContext();
 
     final Presentation presentation = e.getPresentation();
@@ -68,19 +68,21 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
   }
 
   private boolean isEnabled(final DataContext dc) {
-    final Iterable<Pair<VirtualFilePointer, FileStatus>> iterable = dc.getData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
+    final Iterable<Pair<FilePath, FileStatus>> iterable = dc.getData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
     return iterable != null;
   }
 
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredDispatchThread
+  @Override
+  public void actionPerformed(@NotNull AnActionEvent e) {
     final DataContext dc = e.getDataContext();
     if ((!isVisible(dc)) || (!isEnabled(dc))) return;
 
     final Project project = dc.getData(CommonDataKeys.PROJECT);
-    final Iterable<Pair<VirtualFilePointer, FileStatus>> iterable = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
+    final Iterable<Pair<FilePath, FileStatus>> iterable = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
     final Label before = (Label)e.getRequiredData(VcsDataKeys.LABEL_BEFORE);
     final Label after = (Label)e.getRequiredData(VcsDataKeys.LABEL_AFTER);
-    final String selectedUrl = dc.getData(VcsDataKeys.UPDATE_VIEW_SELECTED_PATH);
+    final FilePath selectedUrl = dc.getData(VcsDataKeys.UPDATE_VIEW_SELECTED_PATH);
 
     MyDiffRequestChain requestChain = new MyDiffRequestChain(project, iterable, before, after, selectedUrl);
     DiffManager.getInstance().showDiff(project, requestChain, DiffDialogHints.FRAME);
@@ -95,17 +97,17 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     private int myIndex;
 
     public MyDiffRequestChain(@Nullable Project project,
-                              @NotNull Iterable<Pair<VirtualFilePointer, FileStatus>> iterable,
+                              @NotNull Iterable<Pair<FilePath, FileStatus>> iterable,
                               @NotNull Label before,
                               @NotNull Label after,
-                              @Nullable String selectedUrl) {
+                              @Nullable FilePath filePath) {
       myProject = project;
       myBefore = before;
       myAfter = after;
 
       int selected = -1;
-      for (Pair<VirtualFilePointer, FileStatus> pair : iterable) {
-        if (selected == -1 && pair.first.getUrl().equals(selectedUrl)) selected = myRequests.size();
+      for (Pair<FilePath, FileStatus> pair : iterable) {
+        if (selected == -1 && pair.first.equals(filePath)) selected = myRequests.size();
         myRequests.add(new MyDiffRequestProducer(pair.first, pair.second));
       }
       if (selected != -1) myIndex = selected;
@@ -146,21 +148,18 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     }
 
     private class MyDiffRequestProducer implements DiffRequestProducer {
-      @NotNull private final VirtualFilePointer myFilePointer;
       @NotNull private final FileStatus myFileStatus;
       @NotNull private final FilePath myFilePath;
 
-      public MyDiffRequestProducer(@NotNull VirtualFilePointer filePointer, @NotNull FileStatus fileStatus) {
-        myFilePointer = filePointer;
+      public MyDiffRequestProducer(@NotNull FilePath filePath, @NotNull FileStatus fileStatus) {
+        myFilePath = filePath;
         myFileStatus = fileStatus;
-
-        myFilePath = VcsUtil.getFilePath(myFilePointer.getPresentableUrl(), false);
       }
 
       @NotNull
       @Override
       public String getName() {
-        return myFilePointer.getUrl();
+        return getFilePath().getPath();
       }
 
       @NotNull
@@ -187,7 +186,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
             content1 = contentFactory.createEmpty();
           }
           else {
-            byte[] bytes1 = loadContent(myFilePointer, myBefore);
+            byte[] bytes1 = loadContent(myFilePath, myBefore);
             content1 = contentFactory.createFromBytes(myProject, bytes1, myFilePath);
           }
 
@@ -195,7 +194,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
             content2 = contentFactory.createEmpty();
           }
           else {
-            byte[] bytes2 = loadContent(myFilePointer, myAfter);
+            byte[] bytes2 = loadContent(myFilePath, myAfter);
             content2 = contentFactory.createFromBytes(myProject, bytes2, myFilePath);
           }
 
@@ -209,7 +208,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     }
 
     @NotNull
-    private static byte[] loadContent(@NotNull VirtualFilePointer filePointer, @NotNull Label label) throws DiffRequestProducerException {
+    private static byte[] loadContent(@NotNull FilePath filePointer, @NotNull Label label) throws DiffRequestProducerException {
       String path = filePointer.getPresentableUrl();
       ByteContent byteContent = label.getByteContent(FileUtil.toSystemIndependentName(path));
 
