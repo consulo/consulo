@@ -21,6 +21,7 @@ import com.intellij.openapi.util.Factory;
 import com.intellij.ui.UserActivityWatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.DeprecationInfo;
+import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +50,7 @@ public abstract class SettingsEditor<Settings> implements Disposable {
   protected JComponent createEditor() {
     Component uiComponent = createUIComponent();
     if(uiComponent != null) {
-      return (JComponent)uiComponent;
+      return (JComponent)TargetAWT.to(uiComponent);
     }
 
     throw new AbstractMethodError("please implement 'createEditor()' or 'createUIComponent()'");

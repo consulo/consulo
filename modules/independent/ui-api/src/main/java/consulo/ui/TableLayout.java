@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.shared.StaticPosition;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,8 +23,52 @@ import org.jetbrains.annotations.NotNull;
  * @since 14-Jun-16
  */
 public interface TableLayout extends Layout {
-  @NotNull
-  static TableLayout create(int rows, int columns) {
-    return UIInternal.get()._Layouts_table(rows, columns);
+  static class TableCell {
+    private int myRow;
+    private int myColumn;
+
+    private boolean myFill;
+
+    private TableCell(int row, int column) {
+      myRow = row;
+      myColumn = column;
+    }
+
+    public boolean isFill() {
+      return myFill;
+    }
+
+    public int getRow() {
+      return myRow;
+    }
+
+    public int getColumn() {
+      return myColumn;
+    }
+
+    @NotNull
+    public TableCell fill() {
+      myFill = true;
+      return this;
+    }
   }
+
+  static TableLayout create(@NotNull StaticPosition fillOption) {
+    return UIInternal.get()._Layouts_table(fillOption);
+  }
+
+  @NotNull
+  static TableCell cell(int row, int column) {
+    return new TableCell(row, column);
+  }
+
+  @NotNull
+  @RequiredUIAccess
+  default TableLayout add(@NotNull PseudoComponent pseudoComponent, @NotNull TableCell tableCell) {
+    return add(pseudoComponent.getComponent(), tableCell);
+  }
+
+  @NotNull
+  @RequiredUIAccess
+  TableLayout add(@NotNull Component component, @NotNull TableCell tableCell);
 }

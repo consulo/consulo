@@ -24,6 +24,7 @@ import consulo.ui.internal.*;
 import consulo.ui.internal.image.WGwtFoldedImageImpl;
 import consulo.ui.internal.image.WGwtImageImpl;
 import consulo.ui.model.ListModel;
+import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -80,7 +81,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  TableLayout _Layouts_table(int rows, int columns) {
+  TableLayout _Layouts_table(StaticPosition fillOption) {
     throw new UnsupportedOperationException();
   }
 

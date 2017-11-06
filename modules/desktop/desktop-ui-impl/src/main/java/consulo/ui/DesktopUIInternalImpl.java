@@ -23,6 +23,7 @@ import consulo.ui.internal.*;
 import consulo.ui.internal.icon.DesktopFoldedImageImpl;
 import consulo.ui.internal.icon.DesktopImageImpl;
 import consulo.ui.model.ListModel;
+import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -129,8 +130,8 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  TableLayout _Layouts_table(int rows, int columns) {
-    throw new UnsupportedOperationException();
+  TableLayout _Layouts_table(StaticPosition fillOption) {
+    return new DesktopTableLayoutImpl(fillOption);
   }
 
   @Override

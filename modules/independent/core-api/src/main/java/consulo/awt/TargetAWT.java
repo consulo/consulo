@@ -16,16 +16,15 @@
 package consulo.awt;
 
 import com.intellij.util.ui.JBUI;
+import consulo.ui.Component;
+import consulo.ui.migration.ToSwingWrapper;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.shared.Size;
-import consulo.ui.migration.ToSwingWrapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.awt.*;
 
 /**
  * @author VISTALL
@@ -35,41 +34,41 @@ import java.awt.*;
  */
 public class TargetAWT {
   @NotNull
-  public static Dimension to(@NotNull Size size) {
+  public static java.awt.Dimension to(@NotNull Size size) {
     return JBUI.size(size.getWidth(), size.getHeight());
   }
 
   @NotNull
-  public static Color to(@NotNull RGBColor color) {
-    return new Color(color.getRed(), color.getGreed(), color.getBlue());
+  public static java.awt.Color to(@NotNull RGBColor color) {
+    return new java.awt.Color(color.getRed(), color.getGreed(), color.getBlue());
   }
 
   @NotNull
-  public static Color to(@NotNull ColorValue colorValue) {
+  public static java.awt.Color to(@NotNull ColorValue colorValue) {
     return to(colorValue.toRGB());
   }
 
   @Contract("null -> null")
-  public static Rectangle to(@Nullable Rectangle2D rectangle2D) {
+  public static java.awt.Rectangle to(@Nullable Rectangle2D rectangle2D) {
     if (rectangle2D == null) {
       return null;
     }
-    return new Rectangle(rectangle2D.getCoordinate().getX(), rectangle2D.getCoordinate().getY(), rectangle2D.getSize().getWidth(), rectangle2D.getSize().getHeight());
+    return new java.awt.Rectangle(rectangle2D.getCoordinate().getX(), rectangle2D.getCoordinate().getY(), rectangle2D.getSize().getWidth(), rectangle2D.getSize().getHeight());
   }
 
   @NotNull
-  public static Component to(@NotNull consulo.ui.Component component) {
+  public static java.awt.Component to(@NotNull Component component) {
     if (component instanceof ToSwingWrapper) {
       return ((ToSwingWrapper)component).toAWT();
     }
-    else if(component instanceof Component) {
-      return (Component)component;
+    else if(component instanceof java.awt.Component) {
+      return (java.awt.Component)component;
     }
     throw new IllegalArgumentException(component + " is not ToSwingWrapper");
   }
 
   @Contract("null -> null")
-  public static Rectangle2D from(@Nullable Rectangle rectangle) {
+  public static Rectangle2D from(@Nullable java.awt.Rectangle rectangle) {
     if (rectangle == null) {
       return null;
     }
@@ -77,7 +76,7 @@ public class TargetAWT {
   }
 
   @Contract("null -> null")
-  public static RGBColor from(@Nullable Color color) {
+  public static RGBColor from(@Nullable java.awt.Color color) {
     if (color == null) {
       return null;
     }

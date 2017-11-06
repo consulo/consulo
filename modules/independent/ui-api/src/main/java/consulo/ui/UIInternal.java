@@ -19,6 +19,7 @@ import consulo.annotations.Internal;
 import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
 import consulo.ui.model.ListModel;
+import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 import consulo.util.ServiceLoaderUtil;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +55,7 @@ public abstract class UIInternal {
 
   abstract LabeledLayout _Layouts_labeled(String label);
 
-  abstract TableLayout _Layouts_table(int rows, int columns);
+  abstract TableLayout _Layouts_table(StaticPosition fillOption);
 
   abstract HorizontalLayout _Layouts_horizontal();
 
