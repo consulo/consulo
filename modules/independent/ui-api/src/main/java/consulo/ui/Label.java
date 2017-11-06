@@ -37,16 +37,19 @@ public interface Label extends Component {
   String getText();
 
   @RequiredUIAccess
-  void setText(@NotNull String text);
+  @NotNull
+  Label setText(@NotNull String text);
 
-  void setHorizontalAlignment(@NotNull HorizontalAlignment horizontalAlignment);
+  @NotNull
+  Label setHorizontalAlignment(@NotNull HorizontalAlignment horizontalAlignment);
 
   @NotNull
   HorizontalAlignment getHorizontalAlignment();
 
-  default void setForeground(@NotNull ColorValue colorValue) {
-    setForeground(() -> colorValue);
+  default Label setForeground(@NotNull ColorValue colorValue) {
+    return setForeground(() -> colorValue);
   }
 
-  void setForeground(@NotNull Supplier<ColorValue> colorValueSupplier);
+  @NotNull
+  Label setForeground(@NotNull Supplier<ColorValue> colorValueSupplier);
 }

@@ -65,14 +65,17 @@ public class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements 
     return myComponent.getText();
   }
 
+  @NotNull
   @RequiredUIAccess
   @Override
-  public void setText(@NotNull String text) {
+  public Label setText(@NotNull String text) {
     myComponent.setText(text);
+    return this;
   }
 
+  @NotNull
   @Override
-  public void setHorizontalAlignment(@NotNull HorizontalAlignment horizontalAlignment) {
+  public Label setHorizontalAlignment(@NotNull HorizontalAlignment horizontalAlignment) {
     myHorizontalAlignment = horizontalAlignment;
     switch (horizontalAlignment) {
       case LEFT:
@@ -85,6 +88,7 @@ public class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements 
         myComponent.setHorizontalAlignment(SwingConstants.RIGHT);
         break;
     }
+    return this;
   }
 
   @NotNull
@@ -93,8 +97,12 @@ public class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements 
     return myHorizontalAlignment;
   }
 
+  @NotNull
   @Override
-  public void setForeground(@NotNull Supplier<ColorValue> colorValueSupplier) {
+  public Label setForeground(@NotNull Supplier<ColorValue> colorValueSupplier) {
     myForegroundSupplier = colorValueSupplier;
+
+    myComponent.setForeground(TargetAWT.to(myForegroundSupplier.get()));
+    return this;
   }
 }

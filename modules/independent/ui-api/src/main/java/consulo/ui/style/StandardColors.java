@@ -26,7 +26,10 @@ import org.jetbrains.annotations.NotNull;
 public enum StandardColors implements ColorKey {
   RED(new RGBColor(255, 0, 0)),
   GREEN(new RGBColor(0, 255, 0)),
-  BLUE(new RGBColor(0, 0, 255));
+  BLUE(new RGBColor(0, 0, 255)),
+
+  GRAY(new RGBColor(128, 128, 128)),
+  LIGHT_GRAY(new RGBColor(192, 192, 192));
 
   private final ColorValue myStaticValue;
 

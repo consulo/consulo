@@ -55,6 +55,12 @@ public class DesktopStyleManagerImpl extends StyleManagerImpl {
         else if (colorKey == StandardColors.GREEN) {
           return TargetAWT.from(JBColor.GREEN);
         }
+        else if (colorKey == StandardColors.GRAY) {
+          return TargetAWT.from(JBColor.GRAY);
+        }
+        else if (colorKey == StandardColors.LIGHT_GRAY) {
+          return TargetAWT.from(JBColor.LIGHT_GRAY);
+        }
         throw new UnsupportedOperationException(colorKey.toString());
       }
     });
