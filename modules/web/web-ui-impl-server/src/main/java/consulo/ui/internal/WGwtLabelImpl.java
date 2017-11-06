@@ -16,11 +16,14 @@
 package consulo.ui.internal;
 
 import com.vaadin.ui.AbstractComponent;
+import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
 import consulo.web.gwt.shared.ui.state.LabelState;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -57,6 +60,11 @@ public class WGwtLabelImpl extends AbstractComponent implements Label, VaadinWra
   @Override
   public HorizontalAlignment getHorizontalAlignment() {
     return myHorizontalAlignment;
+  }
+
+  @Override
+  public void setForeground(@NotNull Supplier<ColorValue> colorValueSupplier) {
+
   }
 
   @Override

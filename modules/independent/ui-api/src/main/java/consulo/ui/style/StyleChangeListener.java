@@ -15,11 +15,14 @@
  */
 package consulo.ui.style;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.EventListener;
+
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 05-Nov-17
  */
-public enum ComponentColors implements ColorKey {
-  BORDER,
-  TEXT
+public interface StyleChangeListener extends EventListener {
+  void styleChanged(@NotNull Style newStyle);
 }

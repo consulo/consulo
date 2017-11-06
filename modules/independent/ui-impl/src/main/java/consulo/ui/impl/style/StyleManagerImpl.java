@@ -13,30 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.internal;
+package consulo.ui.impl.style;
 
+import com.intellij.util.EventDispatcher;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleChangeListener;
 import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 05-Nov-17
  */
-public class WGwtStyleManagerImpl implements StyleManager {
-  public static final WGwtStyleManagerImpl ourInstance = new WGwtStyleManagerImpl();
+public abstract class StyleManagerImpl implements StyleManager {
+  private volatile StyleImpl myCurrentStyle;
 
-  private Style myCurrentStyle = new WGwtStyleImpl("Default");
-
-  @NotNull
-  @Override
-  public List<Style> getStyles() {
-    return Arrays.asList(myCurrentStyle);
-  }
+  private EventDispatcher<StyleChangeListener> myEventDispatcher = EventDispatcher.create(StyleChangeListener.class);
 
   @NotNull
   @Override
@@ -46,12 +38,13 @@ public class WGwtStyleManagerImpl implements StyleManager {
 
   @Override
   public void setCurrentStyle(@NotNull Style style) {
-    throw new UnsupportedOperationException();
+    myCurrentStyle = (StyleImpl)style;
   }
 
   @NotNull
   @Override
   public Runnable addChangeListener(@NotNull StyleChangeListener listener) {
-    return null;
+    myEventDispatcher.addListener(listener);
+    return () -> myEventDispatcher.removeListener(listener);
   }
 }

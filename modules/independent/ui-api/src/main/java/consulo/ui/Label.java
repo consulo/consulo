@@ -15,8 +15,11 @@
  */
 package consulo.ui;
 
+import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -40,4 +43,10 @@ public interface Label extends Component {
 
   @NotNull
   HorizontalAlignment getHorizontalAlignment();
+
+  default void setForeground(@NotNull ColorValue colorValue) {
+    setForeground(() -> colorValue);
+  }
+
+  void setForeground(@NotNull Supplier<ColorValue> colorValueSupplier);
 }

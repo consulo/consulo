@@ -34,10 +34,6 @@ import javax.swing.*;
 public class SwingComponentDelegate<T extends JComponent> implements Component, ToSwingWrapper, SomeUIWrapper {
   protected T myComponent;
 
-  public SwingComponentDelegate(T component) {
-    myComponent = component;
-  }
-
   @NotNull
   @Override
   public java.awt.Component toAWT() {

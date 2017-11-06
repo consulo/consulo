@@ -13,13 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.style;
+package consulo.ui.impl.style;
+
+import consulo.ui.shared.ColorValue;
+import consulo.ui.style.ColorKey;
+import consulo.ui.style.Style;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 05-Nov-17
  */
-public enum ComponentColors implements ColorKey {
-  BORDER,
-  TEXT
+public class StyleImpl implements Style {
+  @NotNull
+  @Override
+  public String getName() {
+    return null;
+  }
+
+  @NotNull
+  @Override
+  public ColorValue getColor(@NotNull ColorKey colorKey) {
+    return null;
+  }
 }

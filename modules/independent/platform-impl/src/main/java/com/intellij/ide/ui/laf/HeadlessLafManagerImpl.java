@@ -29,42 +29,53 @@ import javax.swing.*;
  * Date: 17-May-2006
  */
 public class HeadlessLafManagerImpl extends LafManager implements ApplicationComponent {
+  @Override
   public UIManager.LookAndFeelInfo[] getInstalledLookAndFeels() {
     return new UIManager.LookAndFeelInfo[0];
   }
 
+  @Override
   public UIManager.LookAndFeelInfo getCurrentLookAndFeel() {
     return null;
   }
 
+  @Override
   public boolean checkLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo) {
     return true;
   }
 
+  @Override
   public void setCurrentLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo) {
   }
 
+  @Override
   public void updateUI() {
   }
 
+  @Override
   public void repaintUI() {
   }
 
+  @Override
   public void addLafManagerListener(LafManagerListener l) {
   }
 
+  @Override
   public void removeLafManagerListener(LafManagerListener l) {
   }
 
+  @Override
   @NonNls
   @NotNull
   public String getComponentName() {
     return "HeadlessLafManagerImpl";
   }
 
+  @Override
   public void initComponent() {
   }
 
+  @Override
   public void disposeComponent() {
   }
 }

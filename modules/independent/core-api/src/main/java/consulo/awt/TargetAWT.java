@@ -16,6 +16,7 @@
 package consulo.awt;
 
 import com.intellij.util.ui.JBUI;
+import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.shared.Size;
@@ -41,6 +42,11 @@ public class TargetAWT {
   @NotNull
   public static Color to(@NotNull RGBColor color) {
     return new Color(color.getRed(), color.getGreed(), color.getBlue());
+  }
+
+  @NotNull
+  public static Color to(@NotNull ColorValue colorValue) {
+    return to(colorValue.toRGB());
   }
 
   @Contract("null -> null")

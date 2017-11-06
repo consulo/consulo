@@ -39,4 +39,7 @@ public interface StyleManager {
   Style getCurrentStyle();
 
   void setCurrentStyle(@NotNull Style style);
+
+  @NotNull
+  Runnable addChangeListener(@NotNull StyleChangeListener listener);
 }

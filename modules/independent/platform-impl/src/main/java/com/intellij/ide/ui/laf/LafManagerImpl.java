@@ -24,10 +24,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.laf.darcula.DarculaLookAndFeelInfo;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ide.ui.laf.intellij.IntelliJLookAndFeelInfo;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
@@ -102,8 +98,7 @@ import java.util.Map;
  * @author Eugene Belyaev
  * @author Vladimir Kondratyev
  */
-@State(name = "LafManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/options.xml", deprecated = true),
-        @Storage(file = StoragePathMacros.APP_CONFIG + "/laf.xml", roamingType = RoamingType.PER_PLATFORM)})
+@State(name = "LafManager", storages = @Storage(value = "laf.xml", roamingType = RoamingType.PER_PLATFORM))
 public final class LafManagerImpl extends LafManager implements ApplicationComponent, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.ui.LafManager");
 
@@ -135,7 +130,6 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   private final UIManager.LookAndFeelInfo[] myLaFs;
   private UIManager.LookAndFeelInfo myCurrentLaf;
   private final HashMap<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults = new HashMap<>();
-  private String myLastWarning = null;
   private PropertyChangeListener myThemeChangeListener = null;
 
 
@@ -420,30 +414,6 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   }
 
   private boolean checkLookAndFeel(final UIManager.LookAndFeelInfo lafInfo, final boolean confirm) {
-    String message = null;
-
-    if (lafInfo.getName().contains("GTK") && SystemInfo.isXWindow && !SystemInfo.isJavaVersionAtLeast("1.6.0_12")) {
-      message = IdeBundle.message("warning.problem.laf.1");
-    }
-
-    if (message != null) {
-      if (confirm) {
-        final String[] options = {IdeBundle.message("confirm.set.look.and.feel"), CommonBundle.getCancelButtonText()};
-        final int result = Messages.showOkCancelDialog(message, CommonBundle.getWarningTitle(), options[0], options[1], Messages.getWarningIcon());
-        if (result == 0) {
-          myLastWarning = message;
-          return true;
-        }
-        return false;
-      }
-
-      if (!message.equals(myLastWarning)) {
-        Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "L&F Manager", message, NotificationType.WARNING,
-                                                  NotificationListener.URL_OPENING_LISTENER));
-        myLastWarning = message;
-      }
-    }
-
     return true;
   }
 

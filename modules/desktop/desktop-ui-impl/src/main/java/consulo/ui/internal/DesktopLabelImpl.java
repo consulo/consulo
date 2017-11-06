@@ -15,12 +15,16 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.shared.HorizontalAlignment;
+import consulo.awt.TargetAWT;
 import consulo.ui.Label;
 import consulo.ui.RequiredUIAccess;
+import consulo.ui.shared.ColorValue;
+import consulo.ui.shared.HorizontalAlignment;
+import consulo.ui.style.ComponentColors;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -28,11 +32,25 @@ import javax.swing.*;
  */
 public class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements Label, SwingWrapper {
   private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
+  private Supplier<ColorValue> myForegroundSupplier;
 
   public DesktopLabelImpl(String text) {
-    super(new JLabel(text));
+    myComponent = new JLabel(text) {
+      @Override
+      public void updateUI() {
+        super.updateUI();
+
+        DesktopLabelImpl.this.updateUI();
+      }
+    };
 
     setHorizontalAlignment(HorizontalAlignment.LEFT);
+
+    myForegroundSupplier = () -> ComponentColors.TEXT;
+  }
+
+  private void updateUI() {
+    myComponent.setForeground(TargetAWT.to(myForegroundSupplier.get()));
   }
 
   @NotNull
@@ -67,5 +85,10 @@ public class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements 
   @Override
   public HorizontalAlignment getHorizontalAlignment() {
     return myHorizontalAlignment;
+  }
+
+  @Override
+  public void setForeground(@NotNull Supplier<ColorValue> colorValueSupplier) {
+    myForegroundSupplier = colorValueSupplier;
   }
 }
