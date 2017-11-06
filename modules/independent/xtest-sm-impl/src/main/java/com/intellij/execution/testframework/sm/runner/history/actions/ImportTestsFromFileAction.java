@@ -19,7 +19,6 @@ import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +32,7 @@ public class ImportTestsFromFileAction extends AbstractImportTestsAction {
   @Nullable
   @Override
   public VirtualFile getFile(@NotNull Project project) {
-    final FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileDescriptor(InternalStdFileTypes.XML);
+    final FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));
     xmlDescriptor.setTitle("Choose a File with Tests Result");
     return FileChooser.chooseFile(xmlDescriptor, project, null);
   }

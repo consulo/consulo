@@ -44,7 +44,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAware;
@@ -89,7 +88,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
       @Override
       public Icon getIcon(VirtualFile file) {
         if (file.isDirectory()) {
-          if (file.findChild(InspectionApplication.DESCRIPTIONS + "." + InternalStdFileTypes.XML.getDefaultExtension()) != null) {
+          if (file.findChild(InspectionApplication.DESCRIPTIONS + ".xml") != null) {
             return AllIcons.Nodes.InspectionResults;
           }
         }

@@ -41,7 +41,6 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -324,7 +323,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
           @RequiredDispatchThread
           @Override
           public boolean isFileSelectable(VirtualFile file) {
-            return file.getFileType().equals(InternalStdFileTypes.XML);
+            return "xml".equals(file.getExtension());
           }
         };
         descriptor.setDescription("Choose profile file");
