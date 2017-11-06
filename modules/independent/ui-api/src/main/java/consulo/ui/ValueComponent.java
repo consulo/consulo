@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EventListener;
 
@@ -51,6 +52,7 @@ public interface ValueComponent<V> extends Component {
 
   void removeValueListener(@NotNull ValueComponent.ValueListener<V> valueListener);
 
+  @Nullable
   V getValue();
 
   @RequiredUIAccess

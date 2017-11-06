@@ -72,7 +72,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   @NotNull
   @Override
   public StyleManager _StyleManager_get() {
-    throw new UnsupportedOperationException();
+    return new DesktopStyleManagerImpl();
   }
 
   @NotNull

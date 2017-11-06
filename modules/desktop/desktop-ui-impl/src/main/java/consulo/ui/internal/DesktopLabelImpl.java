@@ -47,9 +47,15 @@ public class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements 
     setHorizontalAlignment(HorizontalAlignment.LEFT);
 
     myForegroundSupplier = () -> ComponentColors.TEXT;
+
+    updateUI();
   }
 
   private void updateUI() {
+    // not initialized
+    if (myComponent == null) {
+      return;
+    }
     myComponent.setForeground(TargetAWT.to(myForegroundSupplier.get()));
   }
 

@@ -75,4 +75,12 @@ public class TargetAWT {
     }
     return new Rectangle2D(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
   }
+
+  @Contract("null -> null")
+  public static RGBColor from(@Nullable Color color) {
+    if (color == null) {
+      return null;
+    }
+    return new RGBColor(color.getRed(), color.getGreen(), color.getBlue());
+  }
 }

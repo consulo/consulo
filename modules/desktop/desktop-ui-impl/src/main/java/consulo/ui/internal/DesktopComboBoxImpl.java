@@ -24,6 +24,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.model.ListModel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -81,7 +82,7 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
   }
 
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nullable
   @Override
   public E getValue() {
     return (E)getSelectedItem();
