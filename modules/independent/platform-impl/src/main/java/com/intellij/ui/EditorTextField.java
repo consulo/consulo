@@ -448,8 +448,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     editor.setBackgroundColor(getBackgroundColor(isEnabled(), colorsScheme));
   }
 
-
-
   public void setOneLineMode(boolean oneLineMode) {
     myOneLineMode = oneLineMode;
   }

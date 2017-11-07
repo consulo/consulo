@@ -21,6 +21,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.PanelWithAnchor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +32,7 @@ import java.awt.*;
 public class LabeledComponent<Comp extends JComponent> extends JPanel implements PanelWithAnchor {
   private final JBLabel myLabel = new JBLabel();
   private Comp myComponent;
-  private String myLabelConstraints = BorderLayout.NORTH;
+  private String myLabelConstraints = BorderLayout.WEST;
   private JComponent myAnchor;
 
   public LabeledComponent() {
@@ -48,6 +49,8 @@ public class LabeledComponent<Comp extends JComponent> extends JPanel implements
   }
 
   @NotNull
+  @Deprecated
+  @DeprecationInfo("Use #create() - default position is left already")
   public static <Comp extends JComponent> LabeledComponent<Comp> left(@NotNull Comp component, @NotNull String text) {
     LabeledComponent<Comp> labeledComponent = create(component, text);
     labeledComponent.setLabelLocation(BorderLayout.WEST);
