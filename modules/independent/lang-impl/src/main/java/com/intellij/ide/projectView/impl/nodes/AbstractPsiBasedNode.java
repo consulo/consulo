@@ -32,6 +32,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -172,7 +173,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
 
   @Iconable.IconFlags
   protected int getIconableFlags() {
-    int flags = Iconable.ICON_FLAG_VISIBILITY;
+    int flags = 0;
     if (isMarkReadOnly()) {
       flags |= Iconable.ICON_FLAG_READ_STATUS;
     }
