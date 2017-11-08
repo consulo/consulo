@@ -19,7 +19,11 @@ import com.intellij.openapi.application.ApplicationBundle;
 import org.jetbrains.annotations.Nullable;
 
 public interface CodeStyleSettingsCustomizable {
-  enum OptionAnchor {NONE, BEFORE, AFTER}
+  enum OptionAnchor {
+    NONE,
+    BEFORE,
+    AFTER
+  }
 
   enum SpacingOption {
     INSERT_FIRST_SPACE_IN_LINE,
@@ -195,7 +199,9 @@ public interface CodeStyleSettingsCustomizable {
     ENUM_CONSTANTS_WRAP
   }
 
-
+  enum CommenterOption {
+    LINE_COMMENT_ADD_SPACE
+  }
 
   String SPACES_AROUND_OPERATORS = ApplicationBundle.message("group.spaces.around.operators");
   String SPACES_BEFORE_PARENTHESES = ApplicationBundle.message("group.spaces.before.parentheses");
@@ -236,75 +242,47 @@ public interface CodeStyleSettingsCustomizable {
   String WRAPPING_MODIFIER_LIST = ApplicationBundle.message("wrapping.modifier.list");
   String WRAPPING_ASSERT_STATEMENT = ApplicationBundle.message("wrapping.assert.statement");
 
-  String[] WRAP_OPTIONS = {
-          ApplicationBundle.message("wrapping.do.not.wrap"),
-          ApplicationBundle.message("wrapping.wrap.if.long"),
-          ApplicationBundle.message("wrapping.chop.down.if.long"),
-          ApplicationBundle.message("wrapping.wrap.always")
-  };
-  String[] WRAP_OPTIONS_FOR_SINGLETON = {
-          ApplicationBundle.message("wrapping.do.not.wrap"),
-          ApplicationBundle.message("wrapping.wrap.if.long"),
-          ApplicationBundle.message("wrapping.wrap.always")
-  };
-  int[] WRAP_VALUES = {CommonCodeStyleSettings.DO_NOT_WRAP,
-          CommonCodeStyleSettings.WRAP_AS_NEEDED,
-          CommonCodeStyleSettings.WRAP_AS_NEEDED |
-          CommonCodeStyleSettings.WRAP_ON_EVERY_ITEM,
+  String[] WRAP_OPTIONS = {ApplicationBundle.message("wrapping.do.not.wrap"), ApplicationBundle.message("wrapping.wrap.if.long"), ApplicationBundle.message("wrapping.chop.down.if.long"),
+          ApplicationBundle.message("wrapping.wrap.always")};
+  String[] WRAP_OPTIONS_FOR_SINGLETON = {ApplicationBundle.message("wrapping.do.not.wrap"), ApplicationBundle.message("wrapping.wrap.if.long"), ApplicationBundle.message("wrapping.wrap.always")};
+  int[] WRAP_VALUES = {CommonCodeStyleSettings.DO_NOT_WRAP, CommonCodeStyleSettings.WRAP_AS_NEEDED, CommonCodeStyleSettings.WRAP_AS_NEEDED | CommonCodeStyleSettings.WRAP_ON_EVERY_ITEM,
           CommonCodeStyleSettings.WRAP_ALWAYS};
 
-  int[] WRAP_VALUES_FOR_SINGLETON = {CommonCodeStyleSettings.DO_NOT_WRAP,
-          CommonCodeStyleSettings.WRAP_AS_NEEDED,
-          CommonCodeStyleSettings.WRAP_ALWAYS};
-  String[] BRACE_OPTIONS = {
-          ApplicationBundle.message("wrapping.force.braces.do.not.force"),
-          ApplicationBundle.message("wrapping.force.braces.when.multiline"),
-          ApplicationBundle.message("wrapping.force.braces.always")
-  };
-  int[] BRACE_VALUES = {
-          CommonCodeStyleSettings.DO_NOT_FORCE,
-          CommonCodeStyleSettings.FORCE_BRACES_IF_MULTILINE,
-          CommonCodeStyleSettings.FORCE_BRACES_ALWAYS
-  };
-  String[] BRACE_PLACEMENT_OPTIONS = {
-          ApplicationBundle.message("wrapping.brace.placement.end.of.line"),
-          ApplicationBundle.message("wrapping.brace.placement.next.line.if.wrapped"),
-          ApplicationBundle.message("wrapping.brace.placement.next.line"),
-          ApplicationBundle.message("wrapping.brace.placement.next.line.shifted"),
-          ApplicationBundle.message("wrapping.brace.placement.next.line.each.shifted")
-  };
-  int[] BRACE_PLACEMENT_VALUES = {
-          CommonCodeStyleSettings.END_OF_LINE,
-          CommonCodeStyleSettings.NEXT_LINE_IF_WRAPPED,
-          CommonCodeStyleSettings.NEXT_LINE,
-          CommonCodeStyleSettings.NEXT_LINE_SHIFTED,
-          CommonCodeStyleSettings.NEXT_LINE_SHIFTED2
-  };
+  int[] WRAP_VALUES_FOR_SINGLETON = {CommonCodeStyleSettings.DO_NOT_WRAP, CommonCodeStyleSettings.WRAP_AS_NEEDED, CommonCodeStyleSettings.WRAP_ALWAYS};
+  String[] BRACE_OPTIONS = {ApplicationBundle.message("wrapping.force.braces.do.not.force"), ApplicationBundle.message("wrapping.force.braces.when.multiline"),
+          ApplicationBundle.message("wrapping.force.braces.always")};
+  int[] BRACE_VALUES = {CommonCodeStyleSettings.DO_NOT_FORCE, CommonCodeStyleSettings.FORCE_BRACES_IF_MULTILINE, CommonCodeStyleSettings.FORCE_BRACES_ALWAYS};
+  String[] BRACE_PLACEMENT_OPTIONS = {ApplicationBundle.message("wrapping.brace.placement.end.of.line"), ApplicationBundle.message("wrapping.brace.placement.next.line.if.wrapped"),
+          ApplicationBundle.message("wrapping.brace.placement.next.line"), ApplicationBundle.message("wrapping.brace.placement.next.line.shifted"),
+          ApplicationBundle.message("wrapping.brace.placement.next.line.each.shifted")};
+  int[] BRACE_PLACEMENT_VALUES = {CommonCodeStyleSettings.END_OF_LINE, CommonCodeStyleSettings.NEXT_LINE_IF_WRAPPED, CommonCodeStyleSettings.NEXT_LINE, CommonCodeStyleSettings.NEXT_LINE_SHIFTED,
+          CommonCodeStyleSettings.NEXT_LINE_SHIFTED2};
 
   void showAllStandardOptions();
 
   void showStandardOptions(String... optionNames);
 
-  void showCustomOption(Class<? extends CustomCodeStyleSettings> settingsClass,
-                        String fieldName,
-                        String title,
-                        @Nullable String groupName,
-                        Object... options);
+  default void showCustomOption(Class<? extends CustomCodeStyleSettings> settingsClass, String fieldName, String title, @Nullable String groupName, Object... options) {
+  }
 
-  void showCustomOption(Class<? extends CustomCodeStyleSettings> settingsClass,
-                        String fieldName,
-                        String title,
-                        @Nullable String groupName,
-                        @Nullable OptionAnchor anchor,
-                        @Nullable String anchorFieldName,
-                        Object... options);
+  default void showCustomOption(Class<? extends CustomCodeStyleSettings> settingsClass,
+                                String fieldName,
+                                String title,
+                                @Nullable String groupName,
+                                @Nullable OptionAnchor anchor,
+                                @Nullable String anchorFieldName,
+                                Object... options) {
+  }
 
-  void renameStandardOption(String fieldName, String newTitle);
+  default void renameStandardOption(String fieldName, String newTitle) {
+  }
 
   /**
    * Moves a standard option to another group.
+   *
    * @param fieldName The field name of the option to move (as defined in <code>CommonCodeStyleSettings</code> class).
    * @param newGroup  The new group name (the group may be one of existing ones). A custom group name can be used if supported by consumer.
    */
-  void moveStandardOption(String fieldName, String newGroup);
+  default void moveStandardOption(String fieldName, String newGroup) {
+  }
 }

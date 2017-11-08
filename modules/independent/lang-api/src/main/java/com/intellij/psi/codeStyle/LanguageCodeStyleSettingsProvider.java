@@ -36,11 +36,15 @@ import java.util.Set;
  * Base class and extension point for code style settings shared between multiple languages
  */
 public abstract class LanguageCodeStyleSettingsProvider {
-  public static final ExtensionPointName<LanguageCodeStyleSettingsProvider> EP_NAME =
-          ExtensionPointName.create("com.intellij.langCodeStyleSettingsProvider");
+  public static final ExtensionPointName<LanguageCodeStyleSettingsProvider> EP_NAME = ExtensionPointName.create("com.intellij.langCodeStyleSettingsProvider");
 
   public enum SettingsType {
-    BLANK_LINES_SETTINGS, SPACING_SETTINGS, WRAPPING_AND_BRACES_SETTINGS, INDENT_SETTINGS, LANGUAGE_SPECIFIC
+    BLANK_LINES_SETTINGS,
+    SPACING_SETTINGS,
+    WRAPPING_AND_BRACES_SETTINGS,
+    INDENT_SETTINGS,
+    COMMENTER_SETTINGS,
+    LANGUAGE_SPECIFIC
   }
 
   @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
@@ -106,7 +110,7 @@ public abstract class LanguageCodeStyleSettingsProvider {
    * settings which differ from the original.
    *
    * @return Created instance of <code>CommonCodeStyleSettings</code> or null if associated language doesn't
-   *         use its own language-specific common settings (the settings are shared with other languages).
+   * use its own language-specific common settings (the settings are shared with other languages).
    */
   @Nullable
   public CommonCodeStyleSettings getDefaultCommonSettings() {
@@ -172,7 +176,7 @@ public abstract class LanguageCodeStyleSettingsProvider {
    *
    * @param lang The language whose display name must be return.
    * @return Alternative UI name defined by provider.getLanguageName() method or (if the method returns null)
-   *         language's own display name.
+   * language's own display name.
    */
   @Nullable
   public static String getLanguageName(Language lang) {
@@ -241,6 +245,11 @@ public abstract class LanguageCodeStyleSettingsProvider {
             myCollectedFields.add(wrappingOrBraceOption.name());
           }
           break;
+        case COMMENTER_SETTINGS:
+          for (CommenterOption commenterOption : CommenterOption.values()) {
+            myCollectedFields.add(commenterOption.name());
+          }
+          break;
         default:
           // ignore
       }
@@ -252,11 +261,7 @@ public abstract class LanguageCodeStyleSettingsProvider {
     }
 
     @Override
-    public void showCustomOption(Class<? extends CustomCodeStyleSettings> settingsClass,
-                                 String fieldName,
-                                 String title,
-                                 @Nullable String groupName,
-                                 Object... options) {
+    public void showCustomOption(Class<? extends CustomCodeStyleSettings> settingsClass, String fieldName, String title, @Nullable String groupName, Object... options) {
       myCollectedFields.add(fieldName);
     }
 
