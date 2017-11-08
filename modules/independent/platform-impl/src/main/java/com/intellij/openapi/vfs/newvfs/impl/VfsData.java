@@ -42,6 +42,7 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import static com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry.ALL_FLAGS_MASK;
+import static com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry.EMPTY_ARRAY;
 import static com.intellij.util.ObjectUtils.assertNotNull;
 
 /**
@@ -275,6 +276,9 @@ public class VfsData {
 
     VirtualFileSystemEntry[] getFileChildren(int fileId, VirtualDirectoryImpl parent) {
       assert fileId > 0;
+      if(myChildrenIds.length == 0) {
+        return EMPTY_ARRAY;
+      }
       VirtualFileSystemEntry[] children = new VirtualFileSystemEntry[myChildrenIds.length];
       for (int i = 0; i < myChildrenIds.length; i++) {
         children[i] = assertNotNull(getFileById(myChildrenIds[i], parent));
