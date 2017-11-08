@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package com.intellij.codeInsight.generation;
 
-import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInsight.CommentUtil;
 import com.intellij.codeInsight.actions.MultiCaretCodeInsightActionHandler;
 import com.intellij.featureStatistics.FeatureUsageTracker;
@@ -31,7 +30,6 @@ import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
@@ -58,16 +56,15 @@ import java.util.List;
 import java.util.Map;
 
 public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHandler {
-  private Project                                         myProject;
-  private CodeStyleManager                                myCodeStyleManager;
+  private Project myProject;
+  private CodeStyleManager myCodeStyleManager;
 
-  private final List<Block> myBlocks = new ArrayList<Block>();
+  private final List<Block> myBlocks = new ArrayList<>();
 
   @Override
   // first pass - adjacent carets are grouped into blocks
   public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull Caret caret, @NotNull PsiFile file) {
     myProject = project;
-    if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
     file = file.getViewProvider().getPsi(file.getViewProvider().getBaseLanguage());
 
     PsiElement context = InjectedLanguageManager.getInstance(file.getProject()).getInjectionHost(file);
@@ -82,10 +79,6 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
     }
 
     Document document = editor.getDocument();
-    if (!FileDocumentManager.getInstance().requestWriting(document, project)) {
-      return;
-    }
-
     boolean hasSelection = caret.hasSelection();
     int startOffset = caret.getSelectionStart();
     int endOffset = caret.getSelectionEnd();
@@ -99,18 +92,20 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
     if (document.getTextLength() == 0) return;
 
     while (true) {
-      int lastLineEnd = document.getLineEndOffset(document.getLineNumber(endOffset));
+      int firstLineStart = DocumentUtil.getLineStartOffset(startOffset, document);
+      FoldRegion collapsedAt = editor.getFoldingModel().getCollapsedRegionAtOffset(firstLineStart - 1);
+      if (collapsedAt == null) break;
+      int regionStartOffset = collapsedAt.getStartOffset();
+      if (regionStartOffset >= startOffset) break;
+      startOffset = regionStartOffset;
+    }
+    while (true) {
+      int lastLineEnd = DocumentUtil.getLineEndOffset(endOffset, document);
       FoldRegion collapsedAt = editor.getFoldingModel().getCollapsedRegionAtOffset(lastLineEnd);
-      if (collapsedAt != null) {
-        final int regionEndOffset = collapsedAt.getEndOffset();
-        if (regionEndOffset <= endOffset) {
-          break;
-        }
-        endOffset = regionEndOffset;
-      }
-      else {
-        break;
-      }
+      if (collapsedAt == null) break;
+      int regionEndOffset = collapsedAt.getEndOffset();
+      if (regionEndOffset <= endOffset) break;
+      endOffset = regionEndOffset;
     }
 
     int startLine = document.getLineNumber(startOffset);
@@ -135,16 +130,11 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
     currentBlock.carets.add(caret);
     currentBlock.endLine = endLine;
 
-    boolean wholeLinesSelected = !hasSelection ||
-                                 startOffset == document.getLineStartOffset(document.getLineNumber(startOffset)) &&
-                                 endOffset == document.getLineEndOffset(document.getLineNumber(endOffset - 1)) + 1;
-    boolean startingNewLineComment = !hasSelection
-                                     && isLineEmpty(document, document.getLineNumber(startOffset))
-                                     && !Comparing.equal(IdeActions.ACTION_COMMENT_LINE,
-                                                         ActionManagerEx.getInstanceEx().getPrevPreformedActionId());
-    currentBlock.caretUpdate = startingNewLineComment ? CaretUpdate.PUT_AT_COMMENT_START :
-                               !hasSelection ? CaretUpdate.SHIFT_DOWN :
-                               wholeLinesSelected ? CaretUpdate.RESTORE_SELECTION : null;
+    boolean wholeLinesSelected =
+            !hasSelection || startOffset == document.getLineStartOffset(document.getLineNumber(startOffset)) && endOffset == document.getLineEndOffset(document.getLineNumber(endOffset - 1)) + 1;
+    boolean startingNewLineComment =
+            !hasSelection && isLineEmpty(document, document.getLineNumber(startOffset)) && !Comparing.equal(IdeActions.ACTION_COMMENT_LINE, ActionManagerEx.getInstanceEx().getPrevPreformedActionId());
+    currentBlock.caretUpdate = startingNewLineComment ? CaretUpdate.PUT_AT_COMMENT_START : !hasSelection ? CaretUpdate.SHIFT_DOWN : wholeLinesSelected ? CaretUpdate.RESTORE_SELECTION : null;
   }
 
   @Override
@@ -161,13 +151,10 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
       int endLine = block.endLine;
       Document document = block.editor.getDocument();
       PsiFile psiFile = block.psiFile;
-
-      CommonCodeStyleSettings languageSettings = codeStyleSettings.getCommonSettings(psiFile.getLanguage());
-
       block.startOffsets = new int[endLine - startLine + 1];
       block.endOffsets = new int[endLine - startLine + 1];
       block.commenters = new Commenter[endLine - startLine + 1];
-      block.commenterStateMap = new THashMap<SelfManagingCommenter, CommenterDataHolder>();
+      block.commenterStateMap = new THashMap<>();
       CharSequence chars = document.getCharsSequence();
 
       boolean singleline = startLine == endLine;
@@ -177,13 +164,14 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
       int endOffset = CharArrayUtil.shiftBackward(chars, document.getLineEndOffset(endLine), " \t\n");
 
       block.blockSuitableCommenter = getBlockSuitableCommenter(psiFile, offset, endOffset);
+      Language lineStartLanguage = getLineStartLanguage(block.editor, psiFile, startLine);
+      CommonCodeStyleSettings languageSettings = codeStyleSettings.getCommonSettings(lineStartLanguage);
       block.commentWithIndent = !languageSettings.LINE_COMMENT_AT_FIRST_COLUMN;
       block.addSpace = languageSettings.LINE_COMMENT_ADD_SPACE;
 
       for (int line = startLine; line <= endLine; line++) {
         Commenter commenter = block.blockSuitableCommenter != null ? block.blockSuitableCommenter : findCommenter(block.editor, psiFile, line);
-        if (commenter == null || commenter.getLineCommentPrefix() == null
-                                 && (commenter.getBlockCommentPrefix() == null || commenter.getBlockCommentSuffix() == null)) {
+        if (commenter == null || commenter.getLineCommentPrefix() == null && (commenter.getBlockCommentPrefix() == null || commenter.getBlockCommentSuffix() == null)) {
           block.skip = true;
           break;
         }
@@ -245,9 +233,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
             if (commenter != null) {
               String prefix;
               if (commenter instanceof SelfManagingCommenter) {
-                prefix = ((SelfManagingCommenter)commenter).getCommentPrefix(block.startLine,
-                                                                             document,
-                                                                             block.commenterStateMap.get((SelfManagingCommenter)commenter));
+                prefix = ((SelfManagingCommenter)commenter).getCommentPrefix(block.startLine, document, block.commenterStateMap.get((SelfManagingCommenter)commenter));
                 if (prefix == null) prefix = ""; // TODO
               }
               else {
@@ -267,8 +253,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
             // Don't tweak caret position if we're already located on the last document line.
             LogicalPosition position = caret.getLogicalPosition();
             if (position.line < document.getLineCount() - 1) {
-              int verticalShift = 1 + block.editor.getSoftWrapModel().getSoftWrapsForLine(position.line).size()
-                                  - EditorUtil.getSoftWrapCountAfterLineStart(block.editor, position);
+              int verticalShift = 1 + block.editor.getSoftWrapModel().getSoftWrapsForLine(position.line).size() - EditorUtil.getSoftWrapCountAfterLineStart(block.editor, position);
               caret.moveCaretRelatively(0, verticalShift, false, true);
             }
             break;
@@ -283,16 +268,19 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
     final Language languageSuitableForCompleteFragment;
     if (offset >= endOffset) {  // we are on empty line
       PsiElement element = file.findElementAt(offset);
-      if (element != null) languageSuitableForCompleteFragment = element.getParent().getLanguage();
-      else languageSuitableForCompleteFragment = null;
+      if (element != null) {
+        languageSuitableForCompleteFragment = element.getParent().getLanguage();
+      }
+      else {
+        languageSuitableForCompleteFragment = null;
+      }
     }
     else {
       languageSuitableForCompleteFragment = PsiUtilBase.reallyEvaluateLanguageInRange(offset, endOffset, file);
     }
 
 
-    Commenter blockSuitableCommenter =
-            languageSuitableForCompleteFragment == null ? LanguageCommenters.INSTANCE.forLanguage(file.getLanguage()) : null;
+    Commenter blockSuitableCommenter = languageSuitableForCompleteFragment == null ? LanguageCommenters.INSTANCE.forLanguage(file.getLanguage()) : null;
     if (blockSuitableCommenter == null && file.getFileType() instanceof CustomSyntaxTableFileType) {
       blockSuitableCommenter = new Commenter() {
         final SyntaxTable mySyntaxTable = ((CustomSyntaxTableFileType)file.getFileType()).getSyntaxTable();
@@ -371,8 +359,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
           lineEndForBlockCommenting = CharArrayUtil.shiftBackward(chars, lineEndForBlockCommenting, " \t");
         }
         commented = lineStart == lineEndForBlockCommenting && block.startLine != block.endLine ||
-                    CharArrayUtil.regionMatches(chars, lineStart, prefix)
-                    && CharArrayUtil.regionMatches(chars, lineEndForBlockCommenting - suffix.length(), suffix);
+                    CharArrayUtil.regionMatches(chars, lineStart, prefix) && CharArrayUtil.regionMatches(chars, lineEndForBlockCommenting - suffix.length(), suffix);
       }
     }
 
@@ -385,21 +372,30 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
   }
 
   @Nullable
-  private static Commenter findCommenter(Editor editor, PsiFile file, final int line) {
+  private static Commenter findCommenter(@NotNull Editor editor, @NotNull PsiFile file, final int line) {
     final FileType fileType = file.getFileType();
     if (fileType instanceof AbstractFileType) {
       return ((AbstractFileType)fileType).getCommenter();
     }
+    final Language lineStartLanguage = getLineStartLanguage(editor, file, line);
+    final Language lineEndLanguage = getLineEndLanguage(file, editor, line);
+    return CommentByBlockCommentHandler.getCommenter(file, editor, lineStartLanguage, lineEndLanguage);
+  }
 
+  @NotNull
+  private static Language getLineStartLanguage(@NotNull Editor editor, @NotNull PsiFile file, int line) {
     Document document = editor.getDocument();
     int lineStartOffset = document.getLineStartOffset(line);
+    lineStartOffset = Math.max(0, CharArrayUtil.shiftForward(document.getCharsSequence(), lineStartOffset, " \t"));
+    return PsiUtilCore.getLanguageAtOffset(file, lineStartOffset);
+  }
+
+  @NotNull
+  private static Language getLineEndLanguage(@NotNull PsiFile file, @NotNull Editor editor, int line) {
+    Document document = editor.getDocument();
     int lineEndOffset = document.getLineEndOffset(line) - 1;
-    final CharSequence charSequence = document.getCharsSequence();
-    lineStartOffset = Math.max(0, CharArrayUtil.shiftForward(charSequence, lineStartOffset, " \t"));
-    lineEndOffset = Math.max(0, CharArrayUtil.shiftBackward(charSequence, lineEndOffset < 0 ? 0 : lineEndOffset, " \t"));
-    final Language lineStartLanguage = PsiUtilCore.getLanguageAtOffset(file, lineStartOffset);
-    final Language lineEndLanguage = PsiUtilCore.getLanguageAtOffset(file, lineEndOffset);
-    return CommentByBlockCommentHandler.getCommenter(file, editor, lineStartLanguage, lineEndLanguage);
+    lineEndOffset = Math.max(0, CharArrayUtil.shiftBackward(document.getCharsSequence(), lineEndOffset < 0 ? 0 : lineEndOffset, " \t"));
+    return PsiUtilCore.getLanguageAtOffset(file, lineEndOffset);
   }
 
   private Indent computeMinIndent(Editor editor, PsiFile psiFile, int line1, int line2, FileType fileType) {
@@ -434,8 +430,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
 
   public void doDefaultCommenting(final Block block) {
     final Document document = block.editor.getDocument();
-    DocumentUtil.executeInBulk(
-            document, block.endLine - block.startLine >= Registry.intValue("comment.by.line.bulk.lines.trigger"), () -> {
+    DocumentUtil.executeInBulk(document, block.endLine - block.startLine >= Registry.intValue("comment.by.line.bulk.lines.trigger"), () -> {
       for (int line = block.endLine; line >= block.startLine; line--) {
         int offset = document.getLineStartOffset(line);
         commentLine(block, line, offset);
@@ -449,8 +444,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
     final FileType fileType = block.psiFile.getFileType();
     final Indent minIndent = computeMinIndent(block.editor, block.psiFile, block.startLine, block.endLine, fileType);
 
-    DocumentUtil.executeInBulk(
-            document, block.endLine - block.startLine > Registry.intValue("comment.by.line.bulk.lines.trigger"), () -> {
+    DocumentUtil.executeInBulk(document, block.endLine - block.startLine > Registry.intValue("comment.by.line.bulk.lines.trigger"), () -> {
       for (int line = block.endLine; line >= block.startLine; line--) {
         int lineStart = document.getLineStartOffset(line);
         int offset = lineStart;
@@ -499,6 +493,10 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
     if (commenter == null) return;
 
     final int startOffset = block.startOffsets[line - block.startLine];
+    final int endOffset = block.endOffsets[line - block.startLine];
+    if (startOffset == endOffset) {
+      return;
+    }
 
     if (commenter instanceof SelfManagingCommenter) {
       final SelfManagingCommenter selfManagingCommenter = (SelfManagingCommenter)commenter;
@@ -506,10 +504,6 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
       return;
     }
 
-    final int endOffset = block.endOffsets[line - block.startLine];
-    if (startOffset == endOffset) {
-      return;
-    }
     RangeMarker marker = endOffset > startOffset ? block.editor.getDocument().createRangeMarker(startOffset, endOffset) : null;
     try {
       if (doUncommentLine(line, document, commenter, startOffset, endOffset, removeSpace)) return;
@@ -549,8 +543,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
       }
 
       boolean matchesTrimmed = false;
-      boolean commented = CharArrayUtil.regionMatches(chars, startOffset, prefix) ||
-                          (matchesTrimmed = prefix.endsWith(" ") && CharArrayUtil.regionMatches(chars, startOffset, prefix.trim()));
+      boolean commented = CharArrayUtil.regionMatches(chars, startOffset, prefix) || (matchesTrimmed = prefix.endsWith(" ") && CharArrayUtil.regionMatches(chars, startOffset, prefix.trim()));
       assert commented;
 
       int charsToDelete = matchesTrimmed ? prefix.trim().length() : prefix.length();
@@ -620,12 +613,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
     }
   }
 
-  private static boolean doCommentLine(Block block,
-                                       int line,
-                                       int offset,
-                                       int endOffset,
-                                       Commenter commenter,
-                                       Document document) {
+  private static boolean doCommentLine(Block block, int line, int offset, int endOffset, Commenter commenter, Document document) {
     String prefix = commenter.getLineCommentPrefix();
     int shiftedStartOffset = CharArrayUtil.shiftForward(document.getCharsSequence(), offset, " \t");
     if (prefix != null) {
@@ -640,9 +628,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
         }
       }
       else {
-        if (block.addSpace &&
-            shiftedStartOffset < document.getTextLength() &&
-            document.getCharsSequence().charAt(shiftedStartOffset) != '\n') {
+        if (block.addSpace && shiftedStartOffset < document.getTextLength() && document.getCharsSequence().charAt(shiftedStartOffset) != '\n') {
           prefix += ' ';
         }
         document.insertString(offset, prefix);
@@ -663,8 +649,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
       else {
         endOffset = CharArrayUtil.shiftBackward(chars, endOffset, " \t");
       }
-      if (endOffset < offset ||
-          offset == textLength - 1 && line != document.getLineCount() - 1) {
+      if (endOffset < offset || offset == textLength - 1 && line != document.getLineCount() - 1) {
         return true;
       }
       final String text = chars.subSequence(offset, endOffset).toString();
@@ -730,7 +715,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
   private static class Block {
     private Editor editor;
     private PsiFile psiFile;
-    private List<Caret> carets = new ArrayList<Caret>();
+    private List<Caret> carets = new ArrayList<>();
     private int startLine;
     private int endLine;
     private int[] startOffsets;
@@ -745,6 +730,8 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
   }
 
   private enum CaretUpdate {
-    PUT_AT_COMMENT_START, SHIFT_DOWN, RESTORE_SELECTION
+    PUT_AT_COMMENT_START,
+    SHIFT_DOWN,
+    RESTORE_SELECTION
   }
 }

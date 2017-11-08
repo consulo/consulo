@@ -71,7 +71,7 @@ import java.util.List;
  */
 public class EditorTextField extends NonOpaquePanel implements DocumentListener, TextComponent, DataProvider,
                                                                DocumentBasedComponent, FocusListener {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ui.EditorTextField");
+  private static final Logger LOG = Logger.getInstance(EditorTextField.class);
   public static final Key<Boolean> SUPPLEMENTARY_KEY = Key.create("Supplementary");
 
   private Document myDocument;
@@ -120,12 +120,12 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
   }
 
   public EditorTextField(Document document, Project project, FileType fileType, boolean isViewer, boolean oneLineMode) {
+    super(new BorderLayout());
     myOneLineMode = oneLineMode;
     myIsViewer = isViewer;
     setDocument(document);
     myProject = project;
     myFileType = fileType;
-    setLayout(new BorderLayout());
     enableEvents(AWTEvent.KEY_EVENT_MASK);
     // todo[dsl,max]
     setFocusable(true);

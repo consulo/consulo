@@ -49,8 +49,7 @@ public class CommentByLineCommentAction extends MultiCaretCodeInsightAction impl
       return ((AbstractFileType)fileType).getCommenter() != null;
     }
 
-    if (LanguageCommenters.INSTANCE.forLanguage(file.getLanguage()) != null ||
-        LanguageCommenters.INSTANCE.forLanguage(file.getViewProvider().getBaseLanguage()) != null) return true;
+    if (LanguageCommenters.INSTANCE.forLanguage(file.getLanguage()) != null || LanguageCommenters.INSTANCE.forLanguage(file.getViewProvider().getBaseLanguage()) != null) return true;
     PsiElement host = InjectedLanguageManager.getInstance(project).getInjectionHost(file);
     return host != null && LanguageCommenters.INSTANCE.forLanguage(host.getLanguage()) != null;
   }
