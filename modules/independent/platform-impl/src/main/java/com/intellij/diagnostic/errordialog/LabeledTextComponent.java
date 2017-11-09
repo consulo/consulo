@@ -33,6 +33,10 @@ public class LabeledTextComponent {
     myComponent.getComponent().setBorder(IdeBorderFactory.createBorder());
   }
 
+  public void setLabelPosition(String position) {
+    myComponent.setLabelLocation(position);
+  }
+
   public void setTitle(String title) {
     myComponent.setText(title);
   }

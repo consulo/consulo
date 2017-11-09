@@ -31,6 +31,7 @@ public class DetailsTabForm {
 
   public DetailsTabForm(@Nullable Action analyzeAction, boolean internalMode) {
     myCommentsArea.setTitle(DiagnosticBundle.message("error.dialog.comment.prompt"));
+    myCommentsArea.setLabelPosition(BorderLayout.NORTH);
     myDetailsPane.setBackground(UIUtil.getTextFieldBackground());
     myDetailsPane.setPreferredSize(new Dimension(IdeErrorsDialog.COMPONENTS_WIDTH, internalMode ? 500 : 205));
     myDetailsHolder.setBorder(IdeBorderFactory.createBorder());
