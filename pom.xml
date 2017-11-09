@@ -80,6 +80,7 @@
     <module>modules/independent/lvcs-api</module>
     <module>modules/independent/lvcs-impl</module>
     <module>modules/independent/lvcs-impl-testing</module>
+    <module>modules/independent/localize-api</module>
     <module>modules/independent/slf4j-bind</module>
     <module>modules/independent/remote-servers-api</module>
     <module>modules/independent/remote-servers-agent-rt</module>
