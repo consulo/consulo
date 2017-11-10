@@ -45,7 +45,6 @@ import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.platform.Platform;
 import consulo.ui.UIAccess;
-import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -92,7 +91,6 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   private final Object myStateLock = new Object();
   private State myState = new State();
 
-  private final Map<String, String> myNameCache = Collections.synchronizedMap(new THashMap<String, String>());
   private Set<String> myDuplicatesCache = null;
   private boolean isDuplicatesCacheUpdating = false;
 
@@ -431,12 +429,6 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   @NotNull
   public String getProjectName(@NotNull String path) {
     return ProjectStoreImpl.readProjectName(new File(path));
-  }
-
-  @Override
-  public void clearNameCache() {
-    myNameCache.clear();
-    myDuplicatesCache = null;
   }
 
   @Override

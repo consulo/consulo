@@ -34,8 +34,6 @@ public abstract class RecentProjectsManager {
 
   public abstract void setLastProjectCreationLocation(@Nullable String lastProjectLocation);
 
-  public abstract void clearNameCache();
-
   public abstract void updateProjectModuleExtensions(@NotNull Project project);
 
   public abstract void updateLastProjectPath();
