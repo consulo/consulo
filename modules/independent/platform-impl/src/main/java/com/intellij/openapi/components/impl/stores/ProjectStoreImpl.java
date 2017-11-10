@@ -25,22 +25,21 @@ import com.intellij.openapi.components.StateStorage.SaveSession;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectImpl;
-import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.ReadonlyStatusHandler;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,27 +134,23 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @NotNull
   @Override
   public String getProjectName() {
-    final VirtualFile baseDir = getProjectBaseDir();
-    assert baseDir != null : "project file=" + getProjectFilePath();
+    final String path = getProjectBasePath();
+    assert path != null;
+    return readProjectName(new File(path));
+  }
 
-    final VirtualFile ideaDir = baseDir.findChild(Project.DIRECTORY_STORE_FOLDER);
-    if (ideaDir != null && ideaDir.isValid()) {
-      final VirtualFile nameFile = ideaDir.findChild(ProjectImpl.NAME_FILE);
-      if (nameFile != null && nameFile.isValid()) {
+  public static String readProjectName(@NotNull File file) {
+    if (file.isDirectory()) {
+      final File nameFile = new File(new File(file, Project.DIRECTORY_STORE_FOLDER), ProjectImpl.NAME_FILE);
+      if (nameFile.exists()) {
         try {
-          try (BufferedReader in = new BufferedReader(new InputStreamReader(nameFile.getInputStream(), CharsetToolkit.UTF8_CHARSET))) {
-            final String name = in.readLine();
-            if (name != null && name.length() > 0) {
-              return name.trim();
-            }
-          }
+          return FileUtil.loadFile(nameFile, true);
         }
         catch (IOException ignored) {
         }
       }
     }
-
-    return baseDir.getName().replace(":", "");
+    return file.getName();
   }
 
   @Override
@@ -170,11 +165,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
       }
     }
     return myPresentableUrl;
-  }
-
-  @Override
-  public void loadProject() throws IOException, JDOMException, InvalidDataException, StateStorageException {
-    myProject.init();
   }
 
   @Override

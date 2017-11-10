@@ -15,15 +15,10 @@
  */
 package com.intellij.openapi.project.impl;
 
-import com.intellij.ide.RecentProjectsManagerBase;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.startup.StartupManagerEx;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.notification.NotificationsManager;
+import com.intellij.notification.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.application.ex.ApplicationEx;
@@ -33,12 +28,7 @@ import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.PlatformComponentManagerImpl;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import com.intellij.openapi.components.impl.stores.DefaultProjectStoreImpl;
-import com.intellij.openapi.components.impl.stores.IComponentStore;
-import com.intellij.openapi.components.impl.stores.IProjectStore;
-import com.intellij.openapi.components.impl.stores.ProjectStoreImpl;
-import com.intellij.openapi.components.impl.stores.StoreUtil;
-import com.intellij.openapi.components.impl.stores.UnknownMacroNotification;
+import com.intellij.openapi.components.impl.stores.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
@@ -64,25 +54,15 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.picocontainer.ComponentAdapter;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoContainer;
-import org.picocontainer.PicoInitializationException;
-import org.picocontainer.PicoIntrospectionException;
-import org.picocontainer.PicoVisitor;
+import org.picocontainer.*;
 import org.picocontainer.defaults.CachingComponentAdapter;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
@@ -100,7 +80,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static final String TEMPLATE_PROJECT_NAME = "Default (Template) Project";
 
   private String myName;
-  private String myOldName;
 
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
   public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
@@ -124,15 +103,11 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     myManager = manager;
 
     myName = isDefault() ? TEMPLATE_PROJECT_NAME : projectName == null ? getStateStore().getProjectName() : projectName;
-    if (!isDefault() && projectName != null) {
-      myOldName = "";  // new project
-    }
   }
 
   @Override
   public void setProjectName(@NotNull String projectName) {
     if (!projectName.equals(myName)) {
-      myOldName = myName;
       myName = projectName;
       StartupManager.getInstance(this).runWhenProjectIsInitialized(new DumbAwareRunnable() {
         @Override
@@ -311,20 +286,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     myManager.addProjectManagerListener(this, myProjectManagerListener);
   }
 
-  public boolean isToSaveProjectName() {
-    if (!isDefault()) {
-      final IProjectStore stateStore = getStateStore();
-      if (!isDefault()) {
-        final VirtualFile baseDir = stateStore.getProjectBaseDir();
-        if (baseDir != null && baseDir.isValid()) {
-          return myOldName != null && !myOldName.equals(getName());
-        }
-      }
-    }
-
-    return false;
-  }
-
   @Override
   public void save() {
     if (ApplicationManagerEx.getApplicationEx().isDoNotSave()) {
@@ -339,23 +300,22 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
 
     try {
-      if (isToSaveProjectName()) {
-        try {
-          VirtualFile baseDir = getStateStore().getProjectBaseDir();
-          if (baseDir != null && baseDir.isValid()) {
-            VirtualFile ideaDir = baseDir.findChild(DIRECTORY_STORE_FOLDER);
-            if (ideaDir != null && ideaDir.isValid() && ideaDir.isDirectory()) {
-              File nameFile = new File(ideaDir.getPath(), NAME_FILE);
-
+      if(!isDefault()) {
+        String projectBasePath = getStateStore().getProjectBasePath();
+        if (projectBasePath != null) {
+          File projectDir = new File(projectBasePath);
+          File nameFile = new File(projectDir, DIRECTORY_STORE_FOLDER + "/" + NAME_FILE);
+          if (!projectDir.getName().equals(getName())) {
+            try {
               FileUtil.writeToFile(nameFile, getName());
-              myOldName = null;
-
-              RecentProjectsManagerBase.getInstance().clearNameCache();
+            }
+            catch (IOException e) {
+              LOG.error("Unable to store project name", e);
             }
           }
-        }
-        catch (Throwable e) {
-          LOG.error("Unable to store project name");
+          else {
+            FileUtil.delete(nameFile);
+          }
         }
       }
 
@@ -423,12 +383,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     return Extensions.getArea(this).getExtensionPoint(extensionPointName).getExtensions();
   }
 
-  public String getDefaultName() {
-    if (isDefault()) return TEMPLATE_PROJECT_NAME;
-
-    return getStateStore().getProjectName();
-  }
-
   private class MyProjectManagerListener extends ProjectManagerAdapter {
     @Override
     public void projectOpened(Project project) {
@@ -486,8 +440,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
               substitutor.invalidateUnknownMacros(macros2invalidate);
             }
 
-            final UnknownMacroNotification[] notifications =
-                    NotificationsManager.getNotificationsManager().getNotificationsOfType(UnknownMacroNotification.class, this);
+            final UnknownMacroNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(UnknownMacroNotification.class, this);
             for (final UnknownMacroNotification notification : notifications) {
               if (macros2invalidate.containsAll(notification.getMacros())) notification.expire();
             }
@@ -495,8 +448,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
             ApplicationManager.getApplication().runWriteAction(() -> stateStore.reinitComponents(components, true));
           }
           else {
-            if (Messages.showYesNoDialog(this, "Component could not be reloaded. Reload project?", "Configuration Changed", Messages.getQuestionIcon()) ==
-                Messages.YES) {
+            if (Messages.showYesNoDialog(this, "Component could not be reloaded. Reload project?", "Configuration Changed", Messages.getQuestionIcon()) == Messages.YES) {
               ProjectManagerEx.getInstanceEx().reloadProject(this);
             }
           }
@@ -516,8 +468,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   public static void dropUnableToSaveProjectNotification(@NotNull final Project project, final VirtualFile[] readOnlyFiles) {
-    final UnableToSaveProjectNotification[] notifications =
-            NotificationsManager.getNotificationsManager().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
+    final UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
     if (notifications.length == 0) {
       Notifications.Bus.notify(new UnableToSaveProjectNotification(project, readOnlyFiles), project);
     }
@@ -555,8 +506,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     private static String buildMessage() {
-      final StringBuilder sb =
-              new StringBuilder("<p>Unable to save project files. Please ensure project files are writable and you have permissions to modify them.");
+      final StringBuilder sb = new StringBuilder("<p>Unable to save project files. Please ensure project files are writable and you have permissions to modify them.");
       return sb.append(" <a href=\"\">Try to save project again</a>.</p>").toString();
     }
 

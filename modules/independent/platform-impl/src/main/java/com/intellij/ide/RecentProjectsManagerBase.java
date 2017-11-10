@@ -20,29 +20,25 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.impl.stores.ProjectStoreImpl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
-import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.SystemDock;
-import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
@@ -54,7 +50,7 @@ import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.File;
 import java.util.*;
 
 /**
@@ -63,8 +59,6 @@ import java.util.*;
  */
 public abstract class RecentProjectsManagerBase extends RecentProjectsManager implements PersistentStateComponent<RecentProjectsManagerBase.State> {
   private static final int MAX_PROJECTS_IN_MAIN_MENU = 6;
-  private final Alarm myNamesResolver = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, ApplicationManager.getApplication());
-  private final Set<String> myNamesToResolve = new HashSet<>(MAX_PROJECTS_IN_MAIN_MENU);
 
   public static RecentProjectsManagerBase getInstanceEx() {
     return (RecentProjectsManagerBase)RecentProjectsManager.getInstance();
@@ -436,24 +430,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
 
   @NotNull
   public String getProjectName(@NotNull String path) {
-    String cached = myNameCache.get(path);
-    if (cached != null) {
-      return cached;
-    }
-    myNamesResolver.cancelAllRequests();
-    synchronized (myNamesToResolve) {
-      myNamesToResolve.add(path);
-    }
-    myNamesResolver.addRequest(() -> {
-      final Set<String> paths = Collections.synchronizedSet(myNamesToResolve);
-      synchronized (myNamesToResolve) {
-        myNamesToResolve.clear();
-      }
-      for (String p : paths) {
-        myNameCache.put(p, readProjectName(p));
-      }
-    }, 50);
-    return new File(path).getName();
+    return ProjectStoreImpl.readProjectName(new File(path));
   }
 
   @Override
@@ -471,33 +448,6 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
 
     synchronized (myStateLock) {
       myState.additionalInfo.put(projectPath, RecentProjectMetaInfo.create(project));
-    }
-  }
-
-  private static String readProjectName(@NotNull String path) {
-    final File file = new File(path);
-    if (file.isDirectory()) {
-      final File nameFile = new File(new File(path, Project.DIRECTORY_STORE_FOLDER), ProjectImpl.NAME_FILE);
-      if (nameFile.exists()) {
-        try {
-          final BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(nameFile), CharsetToolkit.UTF8_CHARSET));
-          try {
-            String name = in.readLine();
-            if (!StringUtil.isEmpty(name)) {
-              return name.trim();
-            }
-          }
-          finally {
-            in.close();
-          }
-        }
-        catch (IOException ignored) {
-        }
-      }
-      return file.getName();
-    }
-    else {
-      return FileUtilRt.getNameWithoutExtension(file.getName());
     }
   }
 
