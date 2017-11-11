@@ -1658,7 +1658,6 @@ public class CompileDriver {
       throw new ExitException(ExitStatus.ERRORS);
     }
     finally {
-      CompilerUtil.refreshIOFiles(filesToRefresh);
       if (!generatedFiles.isEmpty()) {
         List<VirtualFile> vFiles = DumbService.getInstance(myProject).runReadActionInSmartMode(() -> {
           final ArrayList<VirtualFile> vFiles1 = new ArrayList<>(generatedFiles.size());
