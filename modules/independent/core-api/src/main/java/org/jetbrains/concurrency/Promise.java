@@ -23,6 +23,8 @@ import com.intellij.util.ThreeState;
 import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
+@DeprecationInfo("Watch AsyncResult")
 public abstract class Promise<T> {
   @Deprecated
   @DeprecationInfo("Use Promises.resolvedPromise()")

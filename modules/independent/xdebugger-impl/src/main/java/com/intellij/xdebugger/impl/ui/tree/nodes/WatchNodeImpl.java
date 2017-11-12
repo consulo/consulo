@@ -17,6 +17,7 @@ package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ThreeState;
 import com.intellij.xdebugger.Obsolescent;
 import com.intellij.xdebugger.XExpression;
@@ -27,10 +28,8 @@ import com.intellij.xdebugger.frame.presentation.XErrorValuePresentation;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
-import consulo.concurrency.Promises;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.Promise;
 
 /**
  * @author nik
@@ -147,8 +146,8 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
 
     @Override
     @NotNull
-    public Promise<XExpression> calculateEvaluationExpression() {
-      return Promises.resolve(myExpression);
+    public AsyncResult<XExpression> calculateEvaluationExpression() {
+      return AsyncResult.done(myExpression);
     }
 
     @Override

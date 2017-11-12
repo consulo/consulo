@@ -15,15 +15,14 @@
  */
 package com.intellij.xdebugger.frame;
 
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ThreeState;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XInstanceEvaluator;
-import consulo.concurrency.Promises;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.Promise;
 
 /**
  * Represents a value in debugger tree.
@@ -53,11 +52,11 @@ public abstract class XValue extends XValueContainer {
    * Asynchronously calculates expression which evaluates to the current value
    */
   @NotNull
-  public Promise<XExpression> calculateEvaluationExpression() {
+  public AsyncResult<XExpression> calculateEvaluationExpression() {
     String expression = getEvaluationExpression();
     XExpression res =
             expression != null ? XDebuggerUtil.getInstance().createExpression(expression, null, null, EvaluationMode.EXPRESSION) : null;
-    return Promises.resolve(res);
+    return AsyncResult.done(res);
   }
 
   /**

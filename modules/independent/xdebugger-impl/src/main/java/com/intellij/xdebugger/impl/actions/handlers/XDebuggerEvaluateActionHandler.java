@@ -73,7 +73,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
     if (text == null) {
       XValue value = XDebuggerTreeActionBase.getSelectedValue(dataContext);
       if (value != null) {
-        value.calculateEvaluationExpression().done(new Consumer<XExpression>() {
+        value.calculateEvaluationExpression().doWhenDone(new Consumer<XExpression>() {
           @Override
           public void consume(final XExpression expression) {
             if (expression != null) {

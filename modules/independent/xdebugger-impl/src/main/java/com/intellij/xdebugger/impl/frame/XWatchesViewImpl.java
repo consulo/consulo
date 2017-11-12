@@ -47,7 +47,6 @@ import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.actions.XWatchTransferable;
 import com.intellij.xdebugger.impl.ui.tree.nodes.*;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -375,7 +374,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     if (object instanceof XValueNodeImpl[]) {
       final XValueNodeImpl[] nodes = (XValueNodeImpl[])object;
       for (XValueNodeImpl node : nodes) {
-        node.getValueContainer().calculateEvaluationExpression().done(expression -> {
+        node.getValueContainer().calculateEvaluationExpression().doWhenDone(expression -> {
           if (expression != null) {
             //noinspection ConstantConditions
             addWatchExpression(expression, -1, false);

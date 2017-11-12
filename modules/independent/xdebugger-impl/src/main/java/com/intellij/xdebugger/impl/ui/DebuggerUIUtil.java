@@ -58,11 +58,13 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.Promise;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DebuggerUIUtil {
@@ -356,10 +358,9 @@ public class DebuggerUIUtil {
    * Checks if value has evaluation expression ready, or calculation is pending
    */
   public static boolean hasEvaluationExpression(@NotNull XValue value) {
-    Promise<XExpression> promise = value.calculateEvaluationExpression();
-    if (promise.getState() == Promise.State.PENDING) return true;
-    if (promise instanceof Getter) {
-      return ((Getter)promise).get() != null;
+    AsyncResult<XExpression> promise = value.calculateEvaluationExpression();
+    if (promise.isDone()) {
+      return promise.getResult() != null;
     }
     return true;
   }

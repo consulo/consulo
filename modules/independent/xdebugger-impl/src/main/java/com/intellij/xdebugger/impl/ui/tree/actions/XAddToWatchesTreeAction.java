@@ -41,7 +41,7 @@ public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
   protected void perform(final XValueNodeImpl node, @NotNull final String nodeName, final AnActionEvent e) {
     final XWatchesView watchesView = getWatchesView(e);
     if (watchesView != null) {
-      node.getValueContainer().calculateEvaluationExpression().done(expression -> {
+      node.getValueContainer().calculateEvaluationExpression().doWhenDone(expression -> {
         if (expression != null) {
           watchesView.addWatchExpression(expression, -1, true);
         }

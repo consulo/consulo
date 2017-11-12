@@ -873,7 +873,7 @@ public class XDebugSessionImpl implements XDebugSession {
     }
     finally {
       //noinspection unchecked
-      myDebugProcess.stopAsync().done(aVoid -> {
+      myDebugProcess.stopAsync().doWhenDone(value -> {
         if (!myProject.isDisposed()) {
           myProject.getMessageBus().syncPublisher(XDebuggerManager.TOPIC).processStopped(myDebugProcess);
         }
