@@ -78,8 +78,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
 
   private RunContentManagerImpl myContentManager;
   private final Alarm awaitingTerminationAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
-  private final List<Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor>> myRunningConfigurations =
-          ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor>> myRunningConfigurations = ContainerUtil.createLockFreeCopyOnWriteList();
 
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
   @NotNull
@@ -155,10 +154,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Override
-  public void compileAndRun(@NotNull final Runnable startRunnable,
-                            @NotNull final ExecutionEnvironment environment,
-                            @Nullable final RunProfileState state,
-                            @Nullable final Runnable onCancelRunnable) {
+  public void compileAndRun(@NotNull final Runnable startRunnable, @NotNull final ExecutionEnvironment environment, @Nullable final RunProfileState state, @Nullable final Runnable onCancelRunnable) {
     long id = environment.getExecutionId();
     if (id == 0) {
       id = environment.assignNewExecutionId();
@@ -239,9 +235,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
       Consumer<Throwable> errorHandler = e -> {
         if (!(e instanceof ProcessCanceledException)) {
           ExecutionException error = e instanceof ExecutionException ? (ExecutionException)e : new ExecutionException(e);
-          ExecutionUtil
-                  .handleExecutionError(project, ExecutionManager.getInstance(project).getContentManager().getToolWindowIdByEnvironment(environment), profile,
-                                        error);
+          ExecutionUtil.handleExecutionError(project, ExecutionManager.getInstance(project).getContentManager().getToolWindowIdByEnvironment(environment), profile, error);
         }
         LOG.info(e);
         project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
@@ -249,10 +243,9 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
 
       try {
 
-        starter.executeAsync(state, environment).done(descriptor -> AppUIUtil.invokeOnEdt(() -> {
+        starter.executeAsync(state, environment).doWhenDone(descriptor -> AppUIUtil.invokeOnEdt(() -> {
           if (descriptor != null) {
-            final Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity =
-                    Trinity.create(descriptor, environment.getRunnerAndConfigurationSettings(), executor);
+            final Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity = Trinity.create(descriptor, environment.getRunnerAndConfigurationSettings(), executor);
             myRunningConfigurations.add(trinity);
             Disposer.register(descriptor, () -> myRunningConfigurations.remove(trinity));
             getContentManager().showRunContent(executor, descriptor, environment.getContentToReuse());
@@ -280,8 +273,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
                 if (terminated) {
                   //noinspection ConstantConditions
                   Integer exitCode = processHandler.getExitCode();
-                  listener.processTerminated(
-                          new ProcessEvent(processHandler, processHandler.isStartNotified() ? ObjectUtil.notNull(processHandler.getExitCode(), -1) : -1));
+                  listener.processTerminated(new ProcessEvent(processHandler, processHandler.isStartNotified() ? ObjectUtil.notNull(processHandler.getExitCode(), -1) : -1));
                 }
               }
             }
@@ -290,7 +282,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
           else {
             project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
           }
-        }, o -> project.isDisposed())).rejected(errorHandler);
+        }, o -> project.isDisposed())).doWhenRejectedWithThrowable(errorHandler);
       }
       catch (ExecutionException e) {
         errorHandler.consume(e);
@@ -328,9 +320,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @NotNull
-  private static ExecutionEnvironmentBuilder createEnvironmentBuilder(@NotNull Project project,
-                                                                      @NotNull Executor executor,
-                                                                      @Nullable RunnerAndConfigurationSettings configuration) {
+  private static ExecutionEnvironmentBuilder createEnvironmentBuilder(@NotNull Project project, @NotNull Executor executor, @Nullable RunnerAndConfigurationSettings configuration) {
     ExecutionEnvironmentBuilder builder = new ExecutionEnvironmentBuilder(project, executor);
 
     ProgramRunner runner = RunnerRegistry.getInstance().getRunner(executor.getId(), configuration != null ? configuration.getConfiguration() : null);
@@ -465,14 +455,11 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
       }
     };
     return Messages.showOkCancelDialog(project, ExecutionBundle.message("rerun.singleton.confirmation.message", configName, instancesCount),
-                                       ExecutionBundle.message("process.is.running.dialog.title", configName),
-                                       ExecutionBundle.message("rerun.confirmation.button.text"), CommonBundle.message("button.cancel"),
-                                       Messages.getQuestionIcon(), option) == Messages.OK;
+                                       ExecutionBundle.message("process.is.running.dialog.title", configName), ExecutionBundle.message("rerun.confirmation.button.text"),
+                                       CommonBundle.message("button.cancel"), Messages.getQuestionIcon(), option) == Messages.OK;
   }
 
-  private static boolean userApprovesStopForIncompatibleConfigurations(Project project,
-                                                                       String configName,
-                                                                       List<RunContentDescriptor> runningIncompatibleDescriptors) {
+  private static boolean userApprovesStopForIncompatibleConfigurations(Project project, String configName, List<RunContentDescriptor> runningIncompatibleDescriptors) {
     RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(project);
     final RunManagerConfig config = runManager.getConfig();
     if (!config.isRestartRequiresConfirmation()) return true;
@@ -515,11 +502,9 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     }
 
     //noinspection DialogTitleCapitalization
-    return Messages.showOkCancelDialog(project, ExecutionBundle
-                                               .message("stop.incompatible.confirmation.message", configName, names.toString(), runningIncompatibleDescriptors.size()),
+    return Messages.showOkCancelDialog(project, ExecutionBundle.message("stop.incompatible.confirmation.message", configName, names.toString(), runningIncompatibleDescriptors.size()),
                                        ExecutionBundle.message("incompatible.configuration.is.running.dialog.title", runningIncompatibleDescriptors.size()),
-                                       ExecutionBundle.message("stop.incompatible.confirmation.button.text"), CommonBundle.message("button.cancel"),
-                                       Messages.getQuestionIcon(), option) == Messages.OK;
+                                       ExecutionBundle.message("stop.incompatible.confirmation.button.text"), CommonBundle.message("button.cancel"), Messages.getQuestionIcon(), option) == Messages.OK;
   }
 
   @NotNull
