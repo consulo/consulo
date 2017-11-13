@@ -19,6 +19,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class RejectedPromise<T> extends Promise<T> {
   private final Throwable error;
 

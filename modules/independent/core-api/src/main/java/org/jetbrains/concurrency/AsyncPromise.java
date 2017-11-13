@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
   private static final Logger LOG = Logger.getInstance(AsyncPromise.class);
 

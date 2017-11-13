@@ -19,6 +19,7 @@ import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Deprecated
 public class CountDownConsumer<T> implements Consumer<T> {
   private volatile int countDown;
   private final AsyncPromise<T> promise;

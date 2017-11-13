@@ -16,7 +16,6 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.util.NamedRunnable;
-import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -37,17 +36,6 @@ abstract class TreeRunnable extends NamedRunnable {
     }
     finally {
       debug("finished");
-    }
-  }
-
-  abstract static class TreeConsumer<T> extends TreeRunnable implements Consumer<T> {
-    TreeConsumer(@NotNull String name) {
-      super(name);
-    }
-
-    @Override
-    public final void consume(T t) {
-      run();
     }
   }
 }

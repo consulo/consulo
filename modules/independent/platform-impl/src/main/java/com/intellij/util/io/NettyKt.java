@@ -16,6 +16,7 @@
 package com.intellij.util.io;
 
 import com.google.common.net.InetAddresses;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableNotNullFunction;
 import com.intellij.openapi.util.text.StringUtil;
@@ -41,8 +42,6 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.resolver.HostsFileEntriesResolver;
 import io.netty.resolver.ResolvedAddressTypes;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.Promise;
 import org.jetbrains.ide.PooledThreadExecutor;
 import org.jetbrains.io.NettyUtil;
 
@@ -198,7 +197,7 @@ public class NettyKt {
 
   public static Channel connect(Bootstrap bootstrap,
                                 InetSocketAddress remoteAddress,
-                                AsyncPromise<?> promise,
+                                AsyncResult<?> promise,
                                 int maxAttemptCount,
                                 Condition<Void> stopCondition) {
     try {
@@ -206,7 +205,7 @@ public class NettyKt {
     }
     catch (Throwable e) {
       if (promise != null) {
-        promise.setError(e);
+        promise.rejectWithThrowable(e);
       }
       return null;
     }
@@ -214,12 +213,12 @@ public class NettyKt {
 
   private static Channel doConnect(Bootstrap bootstrap,
                                    InetSocketAddress remoteAddress,
-                                   AsyncPromise<?> promise,
+                                   AsyncResult<?> asyncResult,
                                    int maxAttemptCount,
                                    @Nullable Condition<Void> stopCondition) throws Throwable {
     int attemptCount = 0;
     if (bootstrap.config().group() instanceof NioEventLoopGroup) {
-      return connectNio(bootstrap, remoteAddress, promise, maxAttemptCount, stopCondition, attemptCount);
+      return connectNio(bootstrap, remoteAddress, asyncResult, maxAttemptCount, stopCondition, attemptCount);
     }
 
     bootstrap.validate();
@@ -231,23 +230,23 @@ public class NettyKt {
         return channel;
       }
       catch (IOException e) {
-        if (stopCondition != null && stopCondition.value(null) || promise != null && promise.getState() != Promise.State.PENDING) {
+        if (stopCondition != null && stopCondition.value(null) || asyncResult != null && !asyncResult.isProcessed()) {
           return null;
         }
         else if (maxAttemptCount == -1) {
-          if (sleep(promise, 300)) {
+          if (sleep(asyncResult, 300)) {
             return null;
           }
           attemptCount++;
         }
         else if (++attemptCount < maxAttemptCount) {
-          if (sleep(promise, attemptCount * NettyUtil.MIN_START_TIME)) {
+          if (sleep(asyncResult, attemptCount * NettyUtil.MIN_START_TIME)) {
             return null;
           }
         }
         else {
-          if (promise != null) {
-            promise.setError(e);
+          if (asyncResult != null) {
+            asyncResult.rejectWithThrowable(e);
           }
           return null;
         }
@@ -257,7 +256,7 @@ public class NettyKt {
 
   private static Channel connectNio(Bootstrap bootstrap,
                                     InetSocketAddress remoteAddress,
-                                    AsyncPromise<?> promise,
+                                    AsyncResult<?> promise,
                                     int maxAttemptCount,
                                     @Nullable Condition<Void> stopCondition,
                                     int _attemptCount) {
@@ -270,7 +269,7 @@ public class NettyKt {
         }
         return future.channel();
       }
-      else if (stopCondition != null && stopCondition.value(null) || promise != null && promise.getState() == Promise.State.REJECTED) {
+      else if (stopCondition != null && stopCondition.value(null) || promise != null && promise.isRejected()) {
         return null;
       }
       else if (maxAttemptCount == -1) {
@@ -288,10 +287,10 @@ public class NettyKt {
         Throwable cause = future.cause();
         if (promise != null) {
           if (cause == null) {
-            promise.setError("Cannot connect: unknown error");
+            promise.reject("Cannot connect: unknown error");
           }
           else {
-            promise.setError(cause);
+            promise.rejectWithThrowable(cause);
           }
         }
         return null;
@@ -300,14 +299,14 @@ public class NettyKt {
   }
 
 
-  public static boolean sleep(AsyncPromise<?> promise, int time) {
+  public static boolean sleep(AsyncResult<?> promise, int time) {
     try {
       //noinspection BusyWait
       Thread.sleep(time);
     }
     catch (InterruptedException ignored) {
       if (promise != null) {
-        promise.setError("Interrupted");
+        promise.reject("Interrupted");
       }
       return true;
     }

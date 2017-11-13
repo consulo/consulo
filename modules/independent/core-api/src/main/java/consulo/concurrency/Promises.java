@@ -23,6 +23,7 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.Consumer;
 import com.intellij.util.ThreeState;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.concurrency.*;
@@ -35,6 +36,8 @@ import java.util.Collection;
  * <p>
  * from kotlin intellij-community\platform\projectModel-api\src\org\jetbrains\concurrency\promise.kt
  */
+@Deprecated
+@DeprecationInfo("Use AsyncResult")
 public class Promises {
   private static final NotNullLazyValue<Promise> REJECTED = NotNullLazyValue.createValue(() -> Promise.REJECTED);
   private static final NotNullLazyValue<Promise> DONE = NotNullLazyValue.createValue(() -> Promise.DONE);

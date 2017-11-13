@@ -15,6 +15,7 @@
  */
 package org.jetbrains.concurrency;
 
+@Deprecated
 public interface Obsolescent {
   /**
    * @return <code>true</code> if result of computation won't be used so computation may be interrupted

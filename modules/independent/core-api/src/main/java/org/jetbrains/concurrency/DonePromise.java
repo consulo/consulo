@@ -21,6 +21,7 @@ import com.intellij.util.Function;
 import consulo.concurrency.Promises;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class DonePromise<T> extends Promise<T> implements Getter<T> {
   private final T result;
 

@@ -20,10 +20,10 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.RunProfileStarter;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RunnerSettings;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.Promise;
 
 /**
  * @deprecated Use AsyncProgramRunner
@@ -33,7 +33,7 @@ public abstract class AsyncGenericProgramRunner<Settings extends RunnerSettings>
   @Override
   protected final void execute(@NotNull ExecutionEnvironment environment, @Nullable Callback callback, @NotNull RunProfileState state)
           throws ExecutionException {
-    prepare(environment, state).done(result -> UIUtil.invokeLaterIfNeeded(() -> {
+    prepare(environment, state).doWhenDone(result -> UIUtil.invokeLaterIfNeeded(() -> {
       if (!environment.getProject().isDisposed()) {
         AsyncProgramRunner.startRunProfile(environment, state, callback, result);
       }
@@ -53,5 +53,5 @@ public abstract class AsyncGenericProgramRunner<Settings extends RunnerSettings>
    * @return RunProfileStarter async result
    */
   @NotNull
-  protected abstract Promise<RunProfileStarter> prepare(@NotNull ExecutionEnvironment environment, @NotNull RunProfileState state) throws ExecutionException;
+  protected abstract AsyncResult<RunProfileStarter> prepare(@NotNull ExecutionEnvironment environment, @NotNull RunProfileState state) throws ExecutionException;
 }

@@ -18,10 +18,9 @@ package com.intellij.execution;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
-import consulo.concurrency.Promises;
+import com.intellij.openapi.util.AsyncResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.Promise;
 
 /**
  * Internal use only. Please use {@link com.intellij.execution.runners.GenericProgramRunner} or {@link com.intellij.execution.runners.AsyncProgramRunner}.
@@ -38,9 +37,9 @@ public abstract class RunProfileStarter {
 
   /**
    * You should NOT throw exceptions in this method.
-   * Instead return {@link Promises#rejectedPromise(Throwable)} or call {@link org.jetbrains.concurrency.AsyncPromise#setError(Throwable)}
+   * Instead return {@link AsyncResult#done(Object)} (Throwable)} or call {@link AsyncResult#rejectWithThrowable(Throwable)} 
    */
-  public Promise<RunContentDescriptor> executeAsync(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
-    return Promises.resolve(execute(state, environment));
+  public AsyncResult<RunContentDescriptor> executeAsync(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+    return AsyncResult.done(execute(state, environment));
   }
 }

@@ -78,7 +78,6 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
     return findDisposable(myParent, PlatformDataKeys.UI_DISPOSABLE);
   }
 
-
   private static AsyncResult<Disposable> findDisposable(Disposable defaultValue, final Key<? extends Disposable> key) {
     if (defaultValue == null) {
       if (ApplicationManager.getApplication() != null) {
@@ -97,8 +96,7 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
       }
     }
     else {
-      return new AsyncResult.Done<Disposable>(defaultValue);
+      return AsyncResult.done(defaultValue);
     }
   }
-
 }

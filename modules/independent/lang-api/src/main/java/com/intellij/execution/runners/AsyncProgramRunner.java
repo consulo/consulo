@@ -21,11 +21,10 @@ import com.intellij.execution.RunProfileStarter;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
-import consulo.concurrency.Promises;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.Promise;
 
 /**
  * @author VISTALL
@@ -40,7 +39,7 @@ public abstract class AsyncProgramRunner<Settings extends RunnerSettings> extend
   }
 
   @NotNull
-  protected abstract Promise<RunContentDescriptor> execute(@NotNull ExecutionEnvironment environment, @NotNull RunProfileState state) throws ExecutionException;
+  protected abstract AsyncResult<RunContentDescriptor> execute(@NotNull ExecutionEnvironment environment, @NotNull RunProfileState state) throws ExecutionException;
 
 
   protected static void startRunProfile(ExecutionEnvironment environment,
@@ -48,27 +47,27 @@ public abstract class AsyncProgramRunner<Settings extends RunnerSettings> extend
                                         ProgramRunner.Callback callback,
                                         @Nullable RunProfileStarter starter) {
 
-    ThrowableComputable<Promise<RunContentDescriptor>, ExecutionException> func = () -> {
-      Promise<RunContentDescriptor> promise = starter == null ? Promises.<RunContentDescriptor>resolvedPromise() : starter.executeAsync(state, environment);
-      return promise.then(it -> BaseProgramRunner.postProcess(environment, it, callback));
+    ThrowableComputable<AsyncResult<RunContentDescriptor>, ExecutionException> func = () -> {
+      AsyncResult<RunContentDescriptor> promise = starter == null ? AsyncResult.done(null) : starter.executeAsync(state, environment);
+      return promise.doWhenDone(it -> BaseProgramRunner.postProcess(environment, it, callback));
     };
 
     ExecutionManager.getInstance(environment.getProject()).startRunProfile(runProfileStarter(func), state, environment);
   }
 
-  private static RunProfileStarter runProfileStarter(ThrowableComputable<Promise<RunContentDescriptor>, ExecutionException> starter) {
+  private static RunProfileStarter runProfileStarter(ThrowableComputable<AsyncResult<RunContentDescriptor>, ExecutionException> starter) {
     return new RunProfileStarterImpl(starter);
   }
 
   private static class RunProfileStarterImpl extends RunProfileStarter {
-    private final ThrowableComputable<Promise<RunContentDescriptor>, ExecutionException> starter;
+    private final ThrowableComputable<AsyncResult<RunContentDescriptor>, ExecutionException> starter;
 
-    private RunProfileStarterImpl(ThrowableComputable<Promise<RunContentDescriptor>, ExecutionException> starter) {
+    private RunProfileStarterImpl(ThrowableComputable<AsyncResult<RunContentDescriptor>, ExecutionException> starter) {
       this.starter = starter;
     }
 
     @Override
-    public Promise<RunContentDescriptor> executeAsync(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+    public AsyncResult<RunContentDescriptor> executeAsync(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
       return starter.compute();
     }
   }

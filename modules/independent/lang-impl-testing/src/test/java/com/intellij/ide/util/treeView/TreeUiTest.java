@@ -2118,10 +2118,10 @@ public class TreeUiTest extends AbstractTreeBuilderTest {
       @Override
       public AsyncResult<Object> revalidate(NodeElement element) {
         if (element == actionSystem) {
-          return new AsyncResult.Done<Object>(newActionSystem);
+          return AsyncResult.done(newActionSystem);
         }
         else if (element == fabrique) {
-          return new AsyncResult.Done<Object>(newFabrique);
+          return AsyncResult.done(newFabrique);
         }
         return null;
       }

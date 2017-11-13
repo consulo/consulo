@@ -19,17 +19,69 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.PairConsumer;
+import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AsyncResult<T> extends ActionCallback {
   private static final Logger LOG = Logger.getInstance(AsyncResult.class);
 
   private static final AsyncResult REJECTED = new Rejected();
-  private static final AsyncResult DONE_LIST = new Done<Object>(Collections.EMPTY_LIST);
+
+  @NotNull
+  public static <R> AsyncResult<R> rejected() {
+    //noinspection unchecked
+    return REJECTED;
+  }
+
+  @NotNull
+  public static <R> AsyncResult<R> rejected(@NotNull String errorMessage) {
+    AsyncResult<R> result = new AsyncResult<>();
+    result.reject(errorMessage);
+    return result;
+  }
+
+  @NotNull
+  public static <R> AsyncResult<R> done(@Nullable R result) {
+    return new AsyncResult<R>().setDone(result);
+  }
+
+  public static AsyncResult<?> merge(@NotNull Collection<AsyncResult<?>> list) {
+    if (list.isEmpty()) {
+      return done(null);
+    }
+
+    AsyncResult<Object> result = new AsyncResult<>();
+
+    AtomicInteger count = new AtomicInteger(list.size());
+    AtomicBoolean rejectResult = new AtomicBoolean();
+
+    Runnable finishAction = () -> {
+      int i = count.decrementAndGet();
+      if (i == 0) {
+        if (rejectResult.get()) {
+          result.setRejected();
+        }
+        else {
+          result.setDone();
+        }
+      }
+    };
+
+    for (AsyncResult<?> asyncResult : list) {
+      asyncResult.doWhenDone(finishAction::run);
+
+      asyncResult.doWhenRejected(o -> {
+        rejectResult.set(true);
+        finishAction.run();
+      });
+    }
+    return result;
+  }
 
   protected T myResult;
 
@@ -62,8 +114,7 @@ public class AsyncResult<T> extends ActionCallback {
   }
 
   @NotNull
-  public <SubResult, SubAsyncResult extends AsyncResult<SubResult>> SubAsyncResult subResult(@NotNull SubAsyncResult subResult,
-                                                                                             @NotNull Function<T, SubResult> doneHandler) {
+  public <SubResult, SubAsyncResult extends AsyncResult<SubResult>> SubAsyncResult subResult(@NotNull SubAsyncResult subResult, @NotNull Function<T, SubResult> doneHandler) {
     doWhenDone(new SubResultDoneCallback<>(subResult, doneHandler)).notifyWhenRejected(subResult);
     return subResult;
   }
@@ -115,12 +166,16 @@ public class AsyncResult<T> extends ActionCallback {
     return this;
   }
 
+  @Deprecated
+  @DeprecationInfo("Use #done() method")
   public static class Done<T> extends AsyncResult<T> {
     public Done(T value) {
       setDone(value);
     }
   }
 
+  @Deprecated
+  @DeprecationInfo("Use #rejected() method")
   public static class Rejected<T> extends AsyncResult<T> {
     public Rejected() {
       setRejected();
@@ -129,30 +184,6 @@ public class AsyncResult<T> extends ActionCallback {
     public Rejected(T value) {
       setRejected(value);
     }
-  }
-
-  @NotNull
-  public static <R> AsyncResult<R> rejected() {
-    //noinspection unchecked
-    return REJECTED;
-  }
-
-  @NotNull
-  public static <R> AsyncResult<R> rejected(@NotNull String errorMessage) {
-    AsyncResult<R> result = new AsyncResult<>();
-    result.reject(errorMessage);
-    return result;
-  }
-
-  @NotNull
-  public static <R> AsyncResult<R> done(@Nullable R result) {
-    return new AsyncResult<R>().setDone(result);
-  }
-
-  @NotNull
-  public static <R extends List> AsyncResult<R> doneList() {
-    //noinspection unchecked
-    return DONE_LIST;
   }
 
   // we don't use inner class, avoid memory leak, we don't want to hold this result while dependent is computing
