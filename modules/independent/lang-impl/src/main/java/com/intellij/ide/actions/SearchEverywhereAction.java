@@ -152,10 +152,9 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   private volatile GotoSymbolModel2 mySymbolsModel;
   private Component myFocusComponent;
   private JBPopup myPopup;
-  private Map<String, String> myConfigurables = new HashMap<String, String>();
+  private Map<String, String> myConfigurables = new HashMap<>();
 
   private Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, ApplicationManager.getApplication());
-  private Alarm myUpdateAlarm = new Alarm(ApplicationManager.getApplication());
   private JBList myList;
   private JCheckBox myNonProjectCheckBox;
   private AnActionEvent myActionEvent;
@@ -200,19 +199,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
   @Override
   public JComponent createCustomComponent(Presentation presentation) {
-    JPanel panel = new JPanel(new BorderLayout()) {
-      @Override
-      protected void paintComponent(Graphics g) {
-        if (myBalloon != null && !myBalloon.isDisposed() && myActionEvent != null && myActionEvent.getInputEvent() instanceof MouseEvent) {
-          final Gradient gradient = getGradientColors();
-          ((Graphics2D)g).setPaint(new GradientPaint(0, 0, gradient.getStartColor(), 0, getHeight(), gradient.getEndColor()));
-          g.fillRect(0, 0, getWidth(), getHeight());
-        }
-        else {
-          super.paintComponent(g);
-        }
-      }
-    };
+    JPanel panel = new JPanel(new BorderLayout());
     panel.setOpaque(false);
 
     final JLabel label = new JBLabel(AllIcons.Actions.FindPlain) {
@@ -232,7 +219,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
         myFocusOwner = IdeFocusManager.findInstance().getFocusOwner();
         label.setToolTipText(null);
         IdeTooltipManager.getInstance().hideCurrentNow(false);
-        label.setIcon(AllIcons.Actions.FindWhite);
+        label.setIcon(AllIcons.Actions.Find);
         actionPerformed(null, e);
       }
 
@@ -258,20 +245,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     return new Gradient(new JBColor(new Color(101, 147, 242), new Color(64, 80, 94)), new JBColor(new Color(46, 111, 205), new Color(53, 65, 87)));
   }
 
-  public SearchEverywhereAction() {
-    updateComponents();
-    //noinspection SSBasedInspection
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        onFocusLost();
-      }
-    });
-
-  }
-
   private void updateComponents() {
-    myRenderer = new MyListRenderer();
     myList = new JBList() {
       @Override
       public Dimension getPreferredSize() {
@@ -294,6 +268,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
         }
       }
     };
+    myRenderer = new MyListRenderer(myList);
     myList.setCellRenderer(myRenderer);
     myList.addMouseListener(new MouseAdapter() {
       @Override
@@ -778,23 +753,14 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     Component parent = UIUtil.findUltimateParent(window);
     registerDataProvider(panel, project);
     final RelativePoint showPoint;
-    if (me != null) {
-      final Component label = me.getComponent();
-      final Component button = label.getParent();
-      assert button != null;
-      showPoint = new RelativePoint(button, new Point(button.getWidth() - panel.getPreferredSize().width, button.getHeight()));
-    }
-    else {
-      if (parent != null) {
-        int height = UISettings.getInstance().SHOW_MAIN_TOOLBAR ? 135 : 115;
-        if (parent instanceof IdeFrameImpl && ((IdeFrameImpl)parent).isInFullScreen()) {
-          height -= 20;
-        }
-        showPoint = new RelativePoint(parent, new Point((parent.getSize().width - panel.getPreferredSize().width) / 2, height));
+    if (parent != null) {
+      int height = UISettings.getInstance().getShowMainToolbar() ? 135 : 115;
+      if (parent instanceof IdeFrameImpl && ((IdeFrameImpl)parent).isInFullScreen()) {
+        height -= 20;
       }
-      else {
-        showPoint = JBPopupFactory.getInstance().guessBestPopupLocation(e.getDataContext());
-      }
+      showPoint = new RelativePoint(parent, new Point((parent.getSize().width - panel.getPreferredSize().width) / 2, height));
+    } else {
+      showPoint = JBPopupFactory.getInstance().guessBestPopupLocation(e.getDataContext());
     }
     myList.setFont(UIUtil.getListFont());
     myBalloon.show(showPoint);
@@ -880,7 +846,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
     final PropertiesComponent storage = PropertiesComponent.getInstance(project);
     final String[] values = storage.getValues(SE_HISTORY_KEY);
-    List<HistoryItem> history = new ArrayList<HistoryItem>();
+    List<HistoryItem> history = new ArrayList<>();
     if (values != null) {
       for (String s : values) {
         final String[] split = s.split("\t");
@@ -1070,6 +1036,10 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     private Project myProject;
     private JPanel myMainPanel = new JPanel(new BorderLayout());
     private JLabel myTitle = new JLabel();
+
+    MyListRenderer(@NotNull JBList list) {
+      assert list == SearchEverywhereAction.this.myList;
+    }
 
     @Override
     public void clear() {
@@ -1315,8 +1285,8 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     private final ProgressIndicator myProgressIndicator = new ProgressIndicatorBase();
     private final ActionCallback myDone = new ActionCallback();
     private final SearchListModel myListModel;
-    private final ArrayList<VirtualFile> myAlreadyAddedFiles = new ArrayList<VirtualFile>();
-    private final ArrayList<AnAction> myAlreadyAddedActions = new ArrayList<AnAction>();
+    private final ArrayList<VirtualFile> myAlreadyAddedFiles = new ArrayList<>();
+    private final ArrayList<AnAction> myAlreadyAddedActions = new ArrayList<>();
 
 
     public CalcThread(Project project, String pattern, boolean reuseModel) {
@@ -1456,7 +1426,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
       if (!Registry.is("search.everywhere.toolwindows")) {
         return;
       }
-      final List<ActivateToolWindowAction> actions = new ArrayList<ActivateToolWindowAction>();
+      final List<ActivateToolWindowAction> actions = new ArrayList<>();
       for (ActivateToolWindowAction action : ToolWindowsGroup.getToolWindowActions(project, true)) {
         String text = action.getTemplatePresentation().getText();
         if (text != null && StringUtil.startsWithIgnoreCase(text, pattern)) {
@@ -1567,7 +1537,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
     private synchronized void buildStructure(final String pattern) {
       if (!Registry.is("search.everywhere.structure") || myStructureModel == null) return;
-      final List<StructureViewTreeElement> elements = new ArrayList<StructureViewTreeElement>();
+      final List<StructureViewTreeElement> elements = new ArrayList<>();
       final MinusculeMatcher matcher = new MinusculeMatcher("*" + pattern, NameUtil.MatchingCaseSensitivity.NONE);
       fillStructure(myStructureModel.getRoot(), elements, matcher);
       if (elements.size() > 0) {
@@ -1803,7 +1773,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
     private synchronized void buildRecentFiles(String pattern) {
       final MinusculeMatcher matcher = new MinusculeMatcher("*" + pattern, NameUtil.MatchingCaseSensitivity.NONE);
-      final ArrayList<VirtualFile> files = new ArrayList<VirtualFile>();
+      final ArrayList<VirtualFile> files = new ArrayList<>();
       final List<VirtualFile> selected = Arrays.asList(FileEditorManager.getInstance(project).getSelectedFiles());
       for (VirtualFile file : ArrayUtil.reverseArray(EditorHistoryManager.getInstance(project).getFiles())) {
         if (StringUtil.isEmptyOrSpaces(pattern) || matcher.matches(file.getName())) {
@@ -1835,7 +1805,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     }
 
     private synchronized void buildTopHit(String pattern) {
-      final List<Object> elements = new ArrayList<Object>();
+      final List<Object> elements = new ArrayList<>();
       final HistoryItem history = myHistoryItem;
       if (history != null) {
         final HistoryType type = parseHistoryType(history.type);
@@ -1915,7 +1885,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
       };
 
       if (pattern.equals("#")) {
-        final HashSet<String> ids = new HashSet<String>();
+        final HashSet<String> ids = new HashSet<>();
         for (SearchTopHitProvider provider : SearchTopHitProvider.EP_NAME.getExtensions()) {
           check();
           if (provider instanceof OptionsTopHitProvider) {
@@ -1953,7 +1923,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
                 final AnAction action = (AnAction)element;
                 final AnActionEvent e = new AnActionEvent(myActionEvent.getInputEvent(), myActionEvent.getDataContext(), myActionEvent.getPlace(),
                                                           action.getTemplatePresentation(), myActionEvent.getActionManager(), myActionEvent.getModifiers());
-                ActionUtil.performDumbAwareUpdate(action, e, false);
+                ActionUtil.performDumbAwareUpdate(false, action, e, false);
                 final Presentation presentation = e.getPresentation();
                 if (!presentation.isEnabled() || !presentation.isVisible() || StringUtil.isEmpty(presentation.getText())) {
                   elements.remove(element);
