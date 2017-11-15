@@ -18,7 +18,6 @@ package com.intellij.ide.util.treeView;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.UiActivity;
 import com.intellij.ide.UiActivityMonitor;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -30,7 +29,10 @@ import com.intellij.openapi.util.registry.RegistryValue;
 import com.intellij.ui.LoadingNode;
 import com.intellij.ui.treeStructure.AlwaysExpandedTree;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.*;
+import com.intellij.util.Alarm;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.SmartList;
+import com.intellij.util.TimeoutUtil;
 import com.intellij.util.concurrency.LockToken;
 import com.intellij.util.concurrency.QueueProcessor;
 import com.intellij.util.containers.ContainerUtil;
@@ -40,12 +42,10 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.concurrency.Promises;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.Promise;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -2648,10 +2648,8 @@ public class AbstractTreeUi {
           execute(new TreeRunnable("AbstractTreeUi.queueBackgroundUpdate") {
             @Override
             public void perform() {
-              AsyncResult<Boolean> promise = update(eachChildDescriptor, true);
-              LOG.assertTrue(promise instanceof Getter);
-              //noinspection unchecked
-              loaded.putDescriptor(each, eachChildDescriptor, ((Getter<Boolean>)promise).get());
+              AsyncResult<Boolean> result = update(eachChildDescriptor, true);
+              loaded.putDescriptor(each, eachChildDescriptor, result.getResult());
             }
           });
         }
