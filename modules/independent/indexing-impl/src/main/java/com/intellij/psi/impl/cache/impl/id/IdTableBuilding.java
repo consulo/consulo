@@ -45,30 +45,10 @@ public class IdTableBuilding {
     void run(CharSequence chars, @Nullable char[] charsArray, int start, int end);
   }
 
-  public static class PlainTextIndexer extends FileTypeIdIndexer {
-    @Override
-    @NotNull
-    public Map<IdIndexEntry, Integer> map(final FileContent inputData) {
-      final IdDataConsumer consumer = new IdDataConsumer();
-      final CharSequence chars = inputData.getContentAsText();
-      scanWords(new ScanWordProcessor() {
-        @Override
-        public void run(final CharSequence chars11, @Nullable char[] charsArray, final int start, final int end) {
-          if (charsArray != null) {
-            consumer.addOccurrence(charsArray, start, end, (int)UsageSearchContext.IN_PLAIN_TEXT);
-          } else {
-            consumer.addOccurrence(chars11, start, end, (int)UsageSearchContext.IN_PLAIN_TEXT);
-          }
-        }
-      }, chars, 0, chars.length());
-      return consumer.getResult();
-    }
-  }
-
-  private static final HashMap<FileType, FileTypeIdIndexer> ourIdIndexers = new HashMap<FileType, FileTypeIdIndexer>();
+  private static final HashMap<FileType, IdIndexer> ourIdIndexers = new HashMap<>();
 
   @Deprecated
-  public static void registerIdIndexer(FileType fileType, FileTypeIdIndexer indexer) {
+  public static void registerIdIndexer(FileType fileType, IdIndexer indexer) {
     ourIdIndexers.put(fileType, indexer);
   }
 
@@ -76,16 +56,15 @@ public class IdTableBuilding {
     return ourIdIndexers.containsKey(fileType) || IdIndexers.INSTANCE.forFileType(fileType) != null;
   }
 
-
   @Nullable
-  public static FileTypeIdIndexer getFileTypeIndexer(FileType fileType) {
-    final FileTypeIdIndexer idIndexer = ourIdIndexers.get(fileType);
+  public static IdIndexer getFileTypeIndexer(FileType fileType) {
+    final IdIndexer idIndexer = ourIdIndexers.get(fileType);
 
     if (idIndexer != null) {
       return idIndexer;
     }
 
-    final FileTypeIdIndexer extIndexer = IdIndexers.INSTANCE.forFileType(fileType);
+    final IdIndexer extIndexer = IdIndexers.INSTANCE.forFileType(fileType);
     if (extIndexer != null) {
       return extIndexer;
     }
@@ -121,7 +100,7 @@ public class IdTableBuilding {
 
   }
 
-  private static class WordsScannerFileTypeIdIndexerAdapter extends FileTypeIdIndexer {
+  private static class WordsScannerFileTypeIdIndexerAdapter implements IdIndexer {
     private final WordsScanner myScanner;
 
     public WordsScannerFileTypeIdIndexerAdapter(@NotNull final WordsScanner scanner) {

@@ -15,6 +15,9 @@
  */
 package com.intellij.psi.impl.cache.impl.id;
 
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ThreadLocalCachedIntArray;
 import com.intellij.util.indexing.CustomInputsIndexFileBasedIndexExtension;
 import com.intellij.util.io.DataExternalizer;
@@ -30,6 +33,26 @@ import java.util.Collection;
 
 public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIndexExtension<IdIndexEntry> {
   private static final ThreadLocalCachedIntArray spareBufferLocal = new ThreadLocalCachedIntArray();
+  private final FileTypeRegistry myFileTypeManager;
+
+  public IdIndexImpl(FileTypeRegistry manager) {
+    myFileTypeManager = manager;
+  }
+
+  @Override
+  public int getVersion() {
+    FileType[] types = myFileTypeManager.getRegisteredFileTypes();
+    Arrays.sort(types, (o1, o2) -> Comparing.compare(o1.getName(), o2.getName()));
+
+    int version = super.getVersion();
+    for(FileType fileType:types) {
+      if (!isIndexable(fileType)) continue;
+      IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(fileType);
+      if (indexer == null) continue;
+      version = version * 31 + (indexer.getVersion() ^ indexer.getClass().getName().hashCode());
+    }
+    return version;
+  }
 
   @NotNull
   @Override
@@ -55,7 +78,7 @@ public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIn
       @Override
       public Collection<IdIndexEntry> read(@NotNull DataInput in) throws IOException {
         int length = DataInputOutputUtil.readINT(in);
-        ArrayList<IdIndexEntry> entries = new ArrayList<IdIndexEntry>(length);
+        ArrayList<IdIndexEntry> entries = new ArrayList<>(length);
         int prev = 0;
         while(length-- > 0) {
           final int l = (int)(DataInputOutputUtil.readLONG(in) + prev);

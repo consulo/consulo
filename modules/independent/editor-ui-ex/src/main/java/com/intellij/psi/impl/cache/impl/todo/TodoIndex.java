@@ -20,45 +20,42 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import com.intellij.psi.search.IndexPatternProvider;
 import com.intellij.psi.tree.TokenSet;
-import consulo.lang.util.LanguageVersionUtil;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.IntInlineKeyDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.messages.MessageBus;
+import consulo.lang.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
  *         Date: Jan 20, 2008
  */
 public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> {
-  @NonNls public static final ID<TodoIndexEntry, Integer> NAME = ID.create("TodoIndex");
+  @NonNls
+  public static final ID<TodoIndexEntry, Integer> NAME = ID.create("TodoIndex");
 
-  public TodoIndex(MessageBus messageBus) {
-    messageBus.connect().subscribe(IndexPatternProvider.INDEX_PATTERNS_CHANGED, new PropertyChangeListener() {
-      @Override
-      public void propertyChange(PropertyChangeEvent evt) {
-        FileBasedIndex.getInstance().requestRebuild(NAME);
-      }
-    });
+  private final FileTypeRegistry myFileTypeManager;
+
+  public TodoIndex(MessageBus messageBus, FileTypeRegistry manager) {
+    myFileTypeManager = manager;
+    messageBus.connect().subscribe(IndexPatternProvider.INDEX_PATTERNS_CHANGED, evt -> FileBasedIndex.getInstance().requestRebuild(NAME));
   }
 
   private final KeyDescriptor<TodoIndexEntry> myKeyDescriptor = new KeyDescriptor<TodoIndexEntry>() {
@@ -93,44 +90,46 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
     }
   };
 
-  private final DataIndexer<TodoIndexEntry, Integer, FileContent> myIndexer = new DataIndexer<TodoIndexEntry, Integer, FileContent>() {
-    @Override
-    @NotNull
-    public Map<TodoIndexEntry,Integer> map(@NotNull final FileContent inputData) {
-      final VirtualFile file = inputData.getFile();
-      final DataIndexer<TodoIndexEntry, Integer, FileContent> indexer = PlatformIdTableBuilding
-              .getTodoIndexer(inputData.getFileType(), inputData.getProject(), file);
-      if (indexer != null) {
-        return indexer.map(inputData);
-      }
-      return Collections.emptyMap();
+  private final DataIndexer<TodoIndexEntry, Integer, FileContent> myIndexer = inputData -> {
+    final VirtualFile file = inputData.getFile();
+    final DataIndexer<TodoIndexEntry, Integer, FileContent> indexer = PlatformIdTableBuilding.getTodoIndexer(inputData.getFileType(), inputData.getProject(), file);
+    if (indexer != null) {
+      return indexer.map(inputData);
     }
+    return Collections.emptyMap();
   };
 
-  private final FileBasedIndex.InputFilter myInputFilter = new FileBasedIndex.InputFilter() {
-    @Override
-    public boolean acceptInput(@Nullable Project project, @NotNull final VirtualFile file) {
-      if (!file.isInLocalFileSystem()) {
-        return false; // do not index TODOs in library sources
-      }
-
-      final FileType fileType = file.getFileType();
-
-      if (fileType instanceof LanguageFileType) {
-        final Language lang = ((LanguageFileType)fileType).getLanguage();
-        final ParserDefinition parserDef = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
-        final TokenSet commentTokens = parserDef != null ? parserDef.getCommentTokens(LanguageVersionUtil.findLanguageVersion(lang, project, file)) : null;
-        return commentTokens != null;
-      }
-
-      return PlatformIdTableBuilding.isTodoIndexerRegistered(fileType) ||
-             fileType instanceof CustomSyntaxTableFileType;
+  private final FileBasedIndex.InputFilter myInputFilter = (project, file) -> {
+    if (!file.isInLocalFileSystem()) {
+      return false; // do not index TODOs in library sources
     }
+
+    final FileType fileType = file.getFileType();
+
+    if (fileType instanceof LanguageFileType) {
+      final Language lang = ((LanguageFileType)fileType).getLanguage();
+      final ParserDefinition parserDef = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
+      final TokenSet commentTokens = parserDef != null ? parserDef.getCommentTokens(LanguageVersionUtil.findLanguageVersion(lang, project, file)) : null;
+      return commentTokens != null;
+    }
+
+    return PlatformIdTableBuilding.isTodoIndexerRegistered(fileType) || fileType instanceof CustomSyntaxTableFileType;
   };
 
   @Override
   public int getVersion() {
-    return 7;
+    int version = 10;
+    FileType[] types = myFileTypeManager.getRegisteredFileTypes();
+    Arrays.sort(types, (o1, o2) -> Comparing.compare(o1.getId(), o2.getId()));
+
+    for (FileType fileType : types) {
+      DataIndexer<TodoIndexEntry, Integer, FileContent> indexer = TodoIndexers.INSTANCE.forFileType(fileType);
+      if (indexer == null) continue;
+
+      int versionFromIndexer = indexer instanceof VersionedTodoIndexer ? (((VersionedTodoIndexer)indexer).getVersion()) : 0xFF;
+      version = version * 31 + (versionFromIndexer ^ indexer.getClass().getName().hashCode());
+    }
+    return version;
   }
 
   @Override

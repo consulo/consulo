@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.psi.impl.cache.impl.todo;
 
-package com.intellij.psi.impl.cache.impl.id;
+import com.intellij.util.indexing.DataIndexer;
+import com.intellij.util.indexing.FileContent;
 
-/**
- * @deprecated left for compatibility, use IdIndexer interface instead. To be removed in IntelliJ 2018.3
- *
- * @author Eugene Zhuravlev
- *         Date: Jan 16, 2008
- */
-@Deprecated
-public abstract class FileTypeIdIndexer implements IdIndexer {
+public interface VersionedTodoIndexer extends DataIndexer<TodoIndexEntry, Integer, FileContent> {
+  default int getVersion() {
+    return 1;
+  }
 }
