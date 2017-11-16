@@ -17,7 +17,6 @@
 package com.intellij.util.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.LayeredIcon;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -26,14 +25,33 @@ import javax.swing.*;
 import java.awt.*;
 
 public class AsyncProcessIcon extends AnimatedIcon {
-  public static final int COUNT = 12;
   public static final int CYCLE_LENGTH = 800;
 
-  private static final Icon[] SMALL_ICONS = findIcons("/process/step_", "/process/step_mask.png");
+  private static final Icon[] ICONS = {
+          AllIcons.Process.FS.Step_1,
+          AllIcons.Process.FS.Step_2,
+          AllIcons.Process.FS.Step_3,
+          AllIcons.Process.FS.Step_4,
+          AllIcons.Process.FS.Step_5,
+          AllIcons.Process.FS.Step_6,
+          AllIcons.Process.FS.Step_7,
+          AllIcons.Process.FS.Step_8,
+          AllIcons.Process.FS.Step_9,
+          AllIcons.Process.FS.Step_10,
+          AllIcons.Process.FS.Step_11,
+          AllIcons.Process.FS.Step_12,
+          AllIcons.Process.FS.Step_13,
+          AllIcons.Process.FS.Step_14,
+          AllIcons.Process.FS.Step_15,
+          AllIcons.Process.FS.Step_16,
+          AllIcons.Process.FS.Step_17,
+          AllIcons.Process.FS.Step_18
+  };
+
   private boolean myUseMask;
 
   public AsyncProcessIcon(@NonNls String name) {
-    this(name, SMALL_ICONS, AllIcons.Process.Step_passive);
+    this(name, ICONS, AllIcons.Process.FS.Step_passive);
   }
 
   public AsyncProcessIcon(@NonNls String name, Icon[] icons, Icon passive) {
@@ -58,27 +76,13 @@ public class AsyncProcessIcon extends AnimatedIcon {
     }
   }
 
-  private static Icon[] findIcons(String prefix, String maskIconPath) {
-    Icon maskIcon = maskIconPath != null ? IconLoader.getIcon(maskIconPath) : null;
-    Icon[] icons = new Icon[COUNT];
-    for (int i = 0; i <= COUNT - 1; i++) {
-      Icon eachIcon = IconLoader.getIcon(prefix + (i + 1) + ".png");
-      if (maskIcon != null) {
-        icons[i] = new ProcessIcon(maskIcon, eachIcon);
-      } else {
-        icons[i] = eachIcon;
-      }
-    }
-    return icons;
-  }
-
   public void updateLocation(final JComponent container) {
     final Rectangle newBounds = calculateBounds(container);
     if (!newBounds.equals(getBounds())) {
       setBounds(newBounds);
       // painting problems with scrollpane
       // repaint shouldn't be called from paint method
-      SwingUtilities.invokeLater(() -> container.repaint());
+      SwingUtilities.invokeLater(container::repaint);
     }
   }
 
