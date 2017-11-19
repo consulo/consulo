@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.Consumer;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.io.URLUtil;
 import gnu.trove.THashMap;
@@ -83,7 +83,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
 
   private static class TreeNode {
     private WatchRequestImpl watchRequest;
-    private final Map<String, TreeNode> nodes = new THashMap<String, TreeNode>(1, FileUtil.PATH_HASHING_STRATEGY);
+    private final Map<String, TreeNode> nodes = new THashMap<>(1, FileUtil.PATH_HASHING_STRATEGY);
   }
 
   public LocalFileSystemImpl(@NotNull Application app, @NotNull ManagingFS managingFS) {
@@ -294,8 +294,8 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
   public Set<WatchRequest> replaceWatchedRoots(@NotNull Collection<WatchRequest> watchRequests,
                                                @Nullable Collection<String> recursiveRoots,
                                                @Nullable Collection<String> flatRoots) {
-    recursiveRoots = ObjectUtils.notNull(recursiveRoots, Collections.emptyList());
-    flatRoots = ObjectUtils.notNull(flatRoots, Collections.emptyList());
+    recursiveRoots = ObjectUtil.notNull(recursiveRoots, Collections.emptyList());
+    flatRoots = ObjectUtil.notNull(flatRoots, Collections.emptyList());
 
     Set<WatchRequest> result = new HashSet<>();
     synchronized (myLock) {
@@ -341,12 +341,12 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
 
   @Nullable
   private static WatchRequestImpl watch(String rootPath, boolean recursively) {
-    int index = rootPath.indexOf(URLUtil.JAR_SEPARATOR);
+    int index = rootPath.indexOf(URLUtil.ARCHIVE_SEPARATOR);
     if (index >= 0) rootPath = rootPath.substring(0, index);
 
     File rootFile = new File(FileUtil.toSystemDependentName(rootPath));
     if (!rootFile.isAbsolute()) {
-      LOG.warn("Invalid path: " + rootPath);
+      LOG.warn(new IllegalArgumentException("Invalid path: " + rootPath));
       return null;
     }
 
