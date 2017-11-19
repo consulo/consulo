@@ -68,7 +68,7 @@ public abstract class Logger {
   }
 
   public static Logger getInstance(Class cl) {
-    return getInstance("#" + cl.getName());
+    return getInstance(cl.getName());
   }
 
   public boolean isTraceEnabled() {
