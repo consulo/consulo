@@ -36,6 +36,7 @@ import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
 import com.intellij.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.ListCellRendererWrapper;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -188,6 +189,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     }
 
 
+    @RequiredDispatchThread
     @Override
     protected void doOKAction() {
       final Object o = ((ErrorsConfigurable)getConfigurable()).getSelectedObject();

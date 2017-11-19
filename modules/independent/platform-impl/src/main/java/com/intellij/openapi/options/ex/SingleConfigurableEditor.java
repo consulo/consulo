@@ -53,11 +53,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
   private boolean myChangesWereApplied;
 
   @RequiredDispatchThread
-  public SingleConfigurableEditor(@Nullable Project project,
-                                  Configurable configurable,
-                                  @NonNls String dimensionKey,
-                                  final boolean showApplyButton,
-                                  final IdeModalityType ideModalityType) {
+  public SingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, final boolean showApplyButton, final IdeModalityType ideModalityType) {
     this(project, configurable, null, dimensionKey, showApplyButton, ideModalityType);
   }
 
@@ -80,11 +76,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
   }
 
   @RequiredDispatchThread
-  public SingleConfigurableEditor(Component parent,
-                                  Configurable configurable,
-                                  String dimensionServiceKey,
-                                  final boolean showApplyButton,
-                                  final IdeModalityType ideModalityType) {
+  public SingleConfigurableEditor(Component parent, Configurable configurable, String dimensionServiceKey, final boolean showApplyButton, final IdeModalityType ideModalityType) {
     this(parent, configurable, null, dimensionServiceKey, showApplyButton, ideModalityType);
 
   }
@@ -166,7 +158,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
   @Override
   @NotNull
   protected Action[] createActions() {
-    List<Action> actions = new ArrayList<Action>();
+    List<Action> actions = new ArrayList<>();
     actions.add(getOKAction());
     actions.add(getCancelAction());
     if (myShowApplyButton) {
@@ -184,6 +176,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
   }
 
   @Override
+  @RequiredDispatchThread
   public void doCancelAction() {
     if (myChangesWereApplied) {
       ApplicationManager.getApplication().saveAll();
@@ -192,6 +185,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
   }
 
   @Override
+  @RequiredDispatchThread
   protected void doOKAction() {
     try {
       if (myConfigurable.isModified()) myConfigurable.apply();
@@ -237,12 +231,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
       };
 
       // invokeLater necessary to make sure dialog is already shown so we calculate modality state correctly.
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          addUpdateRequest(updateRequest);
-        }
-      });
+      SwingUtilities.invokeLater(() -> addUpdateRequest(updateRequest));
     }
 
     private void addUpdateRequest(final Runnable updateRequest) {
@@ -250,6 +239,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     }
 
     @Override
+    @RequiredDispatchThread
     public void actionPerformed(ActionEvent event) {
       if (myPerformAction) return;
       try {
@@ -275,11 +265,13 @@ public class SingleConfigurableEditor extends DialogWrapper {
   }
 
   @Override
+  @RequiredDispatchThread
   protected JComponent createCenterPanel() {
-    myCenterPanel = myConfigurable.createComponent();
+    myCenterPanel = ConfigurableUIMigrationUtil.createComponent(myConfigurable);
     return myCenterPanel;
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (myConfigurable instanceof Configurable.HoldPreferredFocusedComponent) {
@@ -290,6 +282,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
   }
 
   @Override
+  @RequiredDispatchThread
   public void dispose() {
     super.dispose();
     myConfigurable.disposeUIResources();

@@ -25,6 +25,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -42,6 +43,7 @@ public class EditScopesDialog extends SingleConfigurableEditor {
     myCheckShared = checkShared;
   }
 
+  @RequiredDispatchThread
   @Override
   protected void doOKAction() {
     final Object selectedObject = ((ScopeChooserConfigurable)getConfigurable()).getSelectedObject();
