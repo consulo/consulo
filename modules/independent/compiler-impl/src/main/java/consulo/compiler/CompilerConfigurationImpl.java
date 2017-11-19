@@ -29,6 +29,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.io.URLUtil;
+import consulo.annotations.RequiredReadAction;
 import consulo.compiler.impl.ModuleCompilerPathsManagerImpl;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
@@ -89,6 +90,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
   }
 
   @NotNull
+  @RequiredReadAction
   private Set<String> getRootsToWatch() {
     final Set<String> rootsToWatch = new HashSet<>();
     ModuleManager moduleManager = ModuleManager.getInstance(myProject);
@@ -128,9 +130,10 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     myOutputDirPointer = compilerOutputUrl == null ? null : VirtualFilePointerManager.getInstance().create(compilerOutputUrl, myProject, null);
 
     myCompilerOutputWatchRequest =
-            compilerOutputUrl == null ? null : LocalFileSystem.getInstance().replaceWatchedRoot(myCompilerOutputWatchRequest, compilerOutputUrl, true);
+            compilerOutputUrl == null ? null : LocalFileSystem.getInstance().replaceWatchedRoot(myCompilerOutputWatchRequest, ProjectRootManagerImpl.extractLocalPath(compilerOutputUrl), true);
   }
 
+  @RequiredReadAction
   public void getState(Element stateElement) {
     if (myOutputDirPointer != null) {
       stateElement.setAttribute(URL, myOutputDirPointer.getUrl());
@@ -145,6 +148,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     }
   }
 
+  @RequiredReadAction
   public void loadState(Element element) {
     String url = element.getAttributeValue(URL);
     if (url != null) {
