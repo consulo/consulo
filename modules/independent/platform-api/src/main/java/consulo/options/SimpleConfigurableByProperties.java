@@ -36,7 +36,7 @@ import java.util.function.Supplier;
  */
 public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<SimpleConfigurableByProperties.LayoutWrapper> {
   protected static class LayoutWrapper implements NotNullComputable<Component> {
-    private Component myComponent;
+    private final Component myComponent;
 
     public LayoutWrapper(Component component) {
       myComponent = component;
