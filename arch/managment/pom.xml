@@ -445,7 +445,7 @@
       </activation>
       <properties>
         <build.number>${env.BUILD_NUMBER}</build.number>
-        <dev.mode>true</dev.mode>
+        <dev.mode>false</dev.mode>
       </properties>
     </profile>
     <profile>
