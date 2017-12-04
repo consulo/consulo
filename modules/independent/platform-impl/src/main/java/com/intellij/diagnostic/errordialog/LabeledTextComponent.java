@@ -26,6 +26,7 @@ public class LabeledTextComponent {
   public LabeledTextComponent() {
     myTextPane = new JTextPane();
 
+    myComponent.setLabelLocation(BorderLayout.NORTH);
     myComponent.getLabel().setMinimumSize(new Dimension(0, -1));
     myComponent.getComponent().setLayout(new BorderLayout());
     myTextPane.setBackground(UIUtil.getTextFieldBackground());
