@@ -15,6 +15,8 @@
  */
 package consulo.application;
 
+import com.intellij.openapi.util.NotNullFactory;
+import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 04.04.2016
  */
-public interface ApplicationProperties {
+public class ApplicationProperties {
   /**
    * @type boolean
    */
@@ -31,28 +33,38 @@ public interface ApplicationProperties {
   @NonNls
   @Deprecated
   @DeprecationInfo("Use CONSULO_IN_SANDBOX")
-  String IDEA_IS_INTERNAL = "idea.is.internal";
+  public static final String IDEA_IS_INTERNAL = "idea.is.internal";
+
+  public static boolean isInternal() {
+    return Boolean.getBoolean(IDEA_IS_INTERNAL);
+  }
 
   /**
    * @type boolean
    */
   @NotNull
   @NonNls
-  String CONSULO_IN_SANDBOX = "consulo.in.sandbox";
+  public static final String CONSULO_IN_SANDBOX = "consulo.in.sandbox";
+
+  private static final NotNullLazyValue<Boolean> ourInSandboxValue = NotNullLazyValue.createValue(new NotNullFactory<Boolean>() {
+    @NotNull
+    @Override
+    public Boolean create() {
+      return Boolean.getBoolean(CONSULO_IN_SANDBOX);
+    }
+  });
+
+  public static boolean isInSandbox() {
+    return ourInSandboxValue.getValue();
+  }
 
   /**
    * @type boolean
    */
   @NotNull
   @NonNls
-  String CONSULO_IN_UNIT_TEST = "consulo.is.unit.test";
-
-  /**
-   * @type boolean
-   */
-  @NotNull
-  @NonNls
-  String CONSULO_AS_WEB_APP = "consulo.as.web.app";
+  @Deprecated
+  public static final String CONSULO_IN_UNIT_TEST = "consulo.is.unit.test";
 
   /**
    * Disable using external platform directory for platform updates
@@ -61,7 +73,7 @@ public interface ApplicationProperties {
    */
   @NotNull
   @NonNls
-  String CONSULO_NO_EXTERNAL_PLATFORM = "consulo.no.external.platform";
+  public static final String CONSULO_NO_EXTERNAL_PLATFORM = "consulo.no.external.platform";
 
   /**
    * Path to boot application home
@@ -70,25 +82,25 @@ public interface ApplicationProperties {
    */
   @NotNull
   @NonNls
-  String CONSULO_APP_HOME_PATH = "consulo.app.home.path";
+  public static final String CONSULO_APP_HOME_PATH = "consulo.app.home.path";
 
   @NotNull
   @NonNls
   @Deprecated
   @DeprecationInfo("Old idea plugins path. See #CONSULO_PLUGINS_PATHS")
-  String IDEA_PLUGINS_PATH = "idea.plugins.path";
+  public static final String IDEA_PLUGINS_PATH = "idea.plugins.path";
 
   /**
    * @type
    */
   @NotNull
   @NonNls
-  String CONSULO_INSTALL_PLUGINS_PATH = "consulo.install.plugins.path";
+  public static final String CONSULO_INSTALL_PLUGINS_PATH = "consulo.install.plugins.path";
 
   /**
    * @type String[]
    */
   @NotNull
   @NonNls
-  String CONSULO_PLUGINS_PATHS = "consulo.plugins.paths";
+  public static final String CONSULO_PLUGINS_PATHS = "consulo.plugins.paths";
 }

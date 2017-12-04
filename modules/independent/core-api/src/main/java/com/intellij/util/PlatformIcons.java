@@ -17,7 +17,6 @@ package com.intellij.util;
 
 import com.intellij.icons.AllIcons;
 import consulo.annotations.DeprecationInfo;
-import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -70,7 +69,7 @@ public interface PlatformIcons {
   Icon ERROR_INTRODUCTION_ICON = AllIcons.Nodes.ErrorIntroduction;
   Icon WARNING_INTRODUCTION_ICON = AllIcons.Nodes.WarningIntroduction;
   Icon EXCLUDED_FROM_COMPILE_ICON = AllIcons.Nodes.ExcludedFromCompile;
-  Icon PROJECT_ICON = SandboxUtil.getAppIcon();
+  Icon PROJECT_ICON = AllIcons.Icon16;
   Icon UI_FORM_ICON = AllIcons.FileTypes.UiForm;
 
   Icon SMALL_VCS_CONFIGURABLE = AllIcons.General.SmallConfigurableVcs;

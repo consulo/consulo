@@ -20,6 +20,7 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -27,7 +28,6 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.util.SandboxUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 
@@ -79,7 +79,7 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
 
   @Override
   public void update(PresentationData presentation) {
-    presentation.setIcon(SandboxUtil.getAppIcon());
+    presentation.setIcon(Application.get().getIcon());
     presentation.setPresentableText(getProject().getName());
   }
 

@@ -23,7 +23,7 @@ import com.intellij.internal.statistic.configurable.SendPeriod;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.util.SandboxUtil;
+import consulo.application.ApplicationProperties;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -59,7 +59,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
   private static final String PERIOD_ATTR = "period";
 
   public UsageStatisticsPersistenceComponent() {
-    if (SandboxUtil.isInsideSandbox() || ApplicationManager.getApplication().isInternal()) {
+    if (ApplicationProperties.isInSandbox() || ApplicationManager.getApplication().isInternal()) {
       myAllowed = false;
     }
   }

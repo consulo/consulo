@@ -50,7 +50,7 @@ import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.util.SandboxUtil;
+import consulo.application.ApplicationProperties;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -113,7 +113,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   public IdeErrorsDialog(MessagePool messagePool, @Nullable LogMessage defaultMessage) {
     super(JOptionPane.getRootFrame(), false);
     myMessagePool = messagePool;
-    myInternalMode = SandboxUtil.isInsideSandbox();
+    myInternalMode = ApplicationProperties.isInSandbox();
     setTitle(DiagnosticBundle.message("error.list.title"));
     init();
     rebuildHeaders();

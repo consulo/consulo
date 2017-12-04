@@ -40,6 +40,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ex.ApplicationEx2;
+import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.picocontainer.MutablePicoContainer;
@@ -476,6 +477,12 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   @Override
   public boolean isActive() {
     return true;
+  }
+
+  @NotNull
+  @Override
+  public SwingImageRef getIcon() {
+    return null;
   }
 
   @NotNull

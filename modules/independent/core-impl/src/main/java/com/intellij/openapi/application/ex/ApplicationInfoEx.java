@@ -27,7 +27,7 @@ package com.intellij.openapi.application.ex;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.util.IconLoader;
 import consulo.annotations.DeprecationInfo;
-import consulo.util.SandboxUtil;
+import consulo.application.ApplicationProperties;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +57,7 @@ public abstract class ApplicationInfoEx extends ApplicationInfo {
   }
 
   private static String getUrl(String prefix) {
-    return (SandboxUtil.isInsideSandbox() ? prefix + "-sandbox" : prefix) + ".png";
+    return (ApplicationProperties.isInSandbox() ? prefix + "-sandbox" : prefix) + ".png";
   }
 
   public abstract String getFullApplicationName();

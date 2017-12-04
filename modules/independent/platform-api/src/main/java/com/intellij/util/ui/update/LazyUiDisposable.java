@@ -40,7 +40,7 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
   private final T myChild;
 
   public LazyUiDisposable(@Nullable Disposable parent, @NotNull JComponent ui, @NotNull T child) {
-    if (Boolean.getBoolean(ApplicationProperties.IDEA_IS_INTERNAL)) {
+    if (ApplicationProperties.isInSandbox()) {
       myAllocation = new Exception();
     }
 
@@ -50,6 +50,7 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
     new UiNotifyConnector.Once(ui, this);
   }
 
+  @Override
   public final void showNotify() {
     if (myWasEverShown) return;
 
@@ -68,6 +69,7 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
     }
   }
 
+  @Override
   public final void hideNotify() {
   }
 
@@ -81,7 +83,7 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
   private static AsyncResult<Disposable> findDisposable(Disposable defaultValue, final Key<? extends Disposable> key) {
     if (defaultValue == null) {
       if (ApplicationManager.getApplication() != null) {
-        final AsyncResult<Disposable> result = new AsyncResult<Disposable>();
+        final AsyncResult<Disposable> result = new AsyncResult<>();
         DataManager.getInstance().getDataContextFromFocus().doWhenDone(context -> {
           Disposable disposable = context.getData(key);
           if (disposable == null) {

@@ -27,26 +27,20 @@ import com.intellij.openapi.application.impl.ApplicationImpl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
+import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.DesktopSplash;
 import consulo.annotations.Internal;
+import consulo.application.ApplicationProperties;
 import consulo.ide.customize.FirstStartCustomizeUtil;
 import consulo.start.CommandLineArgs;
-import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Used via reflection
- *
- * @see com.intellij.idea.ApplicationStarter#getStarterClass(boolean, boolean)
- */
-@SuppressWarnings("unused")
 @Internal
 public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationPostStarter.class);
@@ -56,7 +50,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
+  public void createApplication(boolean isHeadlessMode, CommandLineArgs args) {
     if (!args.isNoSplash()) {
       final SplashScreen splashScreen = getSplashScreen();
       if (splashScreen == null) {
@@ -66,7 +60,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
       }
     }
 
-    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, mySplashRef);
+    new ApplicationImpl(isHeadlessMode, mySplashRef);
   }
 
   @Nullable
@@ -107,7 +101,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
       }
     }, ModalityState.NON_MODAL);
 
-    if (newConfigFolder && !SandboxUtil.isInsideSandbox()) {
+    if (newConfigFolder && !ApplicationProperties.isInSandbox()) {
       FirstStartCustomizeUtil.show(true);
     }
 

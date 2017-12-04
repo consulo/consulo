@@ -22,7 +22,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.ArrayUtil;
 import com.pty4j.PtyProcess;
-import consulo.util.SandboxUtil;
+import consulo.application.ApplicationProperties;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -89,7 +89,7 @@ public class PtyCommandLine extends GeneralCommandLine {
   }
 
   private static File getPtyLogFile() {
-    return SandboxUtil.isInsideSandbox() ? new File(PathManager.getLogPath(), "pty.log") : null;
+    return ApplicationProperties.isInSandbox() ? new File(PathManager.getLogPath(), "pty.log") : null;
   }
 
   @NotNull

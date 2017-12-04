@@ -25,18 +25,8 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.components.ExtensionAreas;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.AreaInstance;
-import com.intellij.openapi.extensions.AreaListener;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.extensions.ExtensionsArea;
-import com.intellij.openapi.extensions.LogProvider;
-import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.util.BuildNumber;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.extensions.*;
+import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
@@ -44,16 +34,11 @@ import com.intellij.util.Function;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.graph.CachingSemiGraph;
-import com.intellij.util.graph.DFSTBuilder;
-import com.intellij.util.graph.Graph;
-import com.intellij.util.graph.GraphGenerator;
-import com.intellij.util.graph.InboundSemiGraph;
+import com.intellij.util.graph.*;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.xmlb.XmlSerializationException;
 import consulo.application.ApplicationProperties;
 import consulo.platform.Platform;
-import consulo.util.SandboxUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntProcedure;
@@ -62,13 +47,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -929,7 +908,7 @@ public class PluginManagerCore {
     final DFSTBuilder<PluginId> builder = new DFSTBuilder<>(graph);
     if (!builder.isAcyclic()) {
       final String cyclePresentation;
-      if (SandboxUtil.isInsideSandbox()) {
+      if (ApplicationProperties.isInSandbox()) {
         final List<String> cycles = new ArrayList<>();
         builder.getSCCs().forEach(new TIntProcedure() {
           int myTNumber = 0;

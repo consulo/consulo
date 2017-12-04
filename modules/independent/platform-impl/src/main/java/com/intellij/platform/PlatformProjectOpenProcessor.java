@@ -17,6 +17,7 @@ package com.intellij.platform;
 
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.impl.ProjectUtil;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ReadAction;
@@ -44,7 +45,6 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
-import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -198,7 +198,7 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
   @Override
   @NotNull
   public Icon getIcon() {
-    return SandboxUtil.getAppIcon();
+    return Application.get().getIcon();
   }
 
   @NotNull

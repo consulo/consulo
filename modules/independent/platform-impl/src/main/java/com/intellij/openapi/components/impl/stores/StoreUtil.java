@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
-import consulo.util.SandboxUtil;
+import consulo.application.ApplicationProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,7 +64,7 @@ public final class StoreUtil {
                          NotificationType.ERROR).notify(project);
       }
       else {
-        if(!SandboxUtil.isInsideSandbox()) {
+        if(!ApplicationProperties.isInSandbox()) {
           PluginManagerCore.disablePlugin(pluginId.getIdString());
         }
 

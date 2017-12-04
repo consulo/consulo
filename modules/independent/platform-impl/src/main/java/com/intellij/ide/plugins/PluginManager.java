@@ -36,7 +36,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.util.SandboxUtil;
+import consulo.application.ApplicationProperties;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -236,7 +236,7 @@ public class PluginManager extends PluginManagerCore {
     if (pluginId != null && !isSystemPlugin(pluginId)) {
       getLogger().warn(t);
 
-      if(!SandboxUtil.isInsideSandbox()) {
+      if(!ApplicationProperties.isInSandbox()) {
         disablePlugin(pluginId.getIdString());
       }
 

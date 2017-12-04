@@ -35,10 +35,8 @@ import java.util.concurrent.TimeUnit;
  * Used via reflection
  *
  * @author VISTALL
- * @see com.intellij.idea.ApplicationStarter#getStarterClass(boolean, boolean)
  * @since 15-May-16
  */
-@SuppressWarnings("unused")
 @Internal
 public class WebPostStarter extends ApplicationPostStarter {
   public WebPostStarter(ApplicationStarter applicationStarter) {
@@ -46,10 +44,10 @@ public class WebPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
+  public void createApplication(boolean isHeadlessMode, CommandLineArgs args) {
     mySplashRef.set(new WebStartupProgressImpl());
 
-    new WebApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, Ref.create());
+    new WebApplicationImpl(isHeadlessMode, Ref.create());
   }
 
   @Override

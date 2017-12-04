@@ -33,15 +33,8 @@ import org.junit.runner.JUnitCore;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * @author VISTALL
- * @since 04.04.2016
- *
- * Used via reflection
- * @see com.intellij.idea.ApplicationStarter#getStarterClass(boolean, boolean)
- */
-@SuppressWarnings("unused")
 @Internal
+@Deprecated
 public class UnitTestPostStarter extends ApplicationPostStarter {
   private static final Logger LOGGER = Logger.getInstance(UnitTestPostStarter.class);
 
@@ -50,8 +43,8 @@ public class UnitTestPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args) {
-    new ApplicationImpl(internal, isUnitTestMode, isHeadlessMode, isCommandline, mySplashRef);
+  public void createApplication(boolean isHeadlessMode, CommandLineArgs args) {
+    new ApplicationImpl(isHeadlessMode, mySplashRef);
   }
 
   @Override

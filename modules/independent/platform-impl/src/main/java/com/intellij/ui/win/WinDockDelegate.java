@@ -22,7 +22,7 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.SystemDock;
-import consulo.util.SandboxUtil;
+import consulo.application.ApplicationProperties;
 
 import java.io.File;
 import java.util.Locale;
@@ -38,7 +38,7 @@ public class WinDockDelegate implements SystemDock.Delegate {
 
   @Override
   public void updateRecentProjectsMenu() {
-    if (SandboxUtil.isInsideSandbox()) {
+    if (ApplicationProperties.isInSandbox()) {
       return;
     }
 

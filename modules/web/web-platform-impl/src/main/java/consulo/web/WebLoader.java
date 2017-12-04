@@ -25,6 +25,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.application.ApplicationProperties;
+import consulo.web.main.WebPostStarter;
 import consulo.web.servlet.RootUIBuilder;
 import consulo.web.servlet.ui.UIIconServlet;
 import consulo.web.servlet.ui.UIServlet;
@@ -53,12 +54,11 @@ public class WebLoader {
     System.setProperty(PathManager.PROPERTY_CONFIG_PATH, home.getPath() + "/.config/sandbox/config");
     System.setProperty(PathManager.PROPERTY_SYSTEM_PATH, home.getPath() + "/.config/sandbox/system");
     System.setProperty(ApplicationProperties.CONSULO_PLUGINS_PATHS, new File(home, "plugins").getPath());
-    System.setProperty(ApplicationProperties.CONSULO_AS_WEB_APP, Boolean.TRUE.toString());
 
     Main.setFlags(new String[0]);
 
     StartupUtil.prepareAndStart(args, (newConfigFolder, commandLineArgs) -> {
-      ApplicationStarter app = new ApplicationStarter(commandLineArgs);
+      ApplicationStarter app = new ApplicationStarter(WebPostStarter.class, commandLineArgs);
 
       AppExecutorUtil.getAppExecutorService().execute(() -> {
         PluginManager.installExceptionHandler();

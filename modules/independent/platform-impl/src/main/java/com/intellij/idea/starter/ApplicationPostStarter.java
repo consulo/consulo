@@ -31,7 +31,7 @@ public abstract class ApplicationPostStarter {
     myApplicationStarter = applicationStarter;
   }
 
-  public abstract void createApplication(boolean internal, boolean isUnitTestMode, boolean isHeadlessMode, boolean isCommandline, CommandLineArgs args);
+  public abstract void createApplication(boolean isHeadlessMode, CommandLineArgs args);
 
   public void premain(@NotNull CommandLineArgs args) {
   }

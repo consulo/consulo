@@ -144,7 +144,7 @@ public abstract class AppIcon {
       Application app = ApplicationManager.getApplication();
 
       if (app != null && myAppListener == null) {
-        myAppListener = new ApplicationActivationListener.Adapter() {
+        myAppListener = new ApplicationActivationListener() {
           @Override
           public void applicationActivated(IdeFrame ideFrame) {
             hideProgress(ideFrame.getProject(), myCurrentProcessId);

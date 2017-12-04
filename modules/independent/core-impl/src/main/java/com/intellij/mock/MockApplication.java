@@ -21,6 +21,7 @@ import com.intellij.openapi.application.impl.ModalityStateEx;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
+import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
@@ -65,6 +66,12 @@ public class MockApplication extends MockComponentManager implements Application
   @Override
   public boolean isActive() {
     return true;
+  }
+
+  @NotNull
+  @Override
+  public SwingImageRef getIcon() {
+    throw new IllegalArgumentException();
   }
 
   @RequiredReadAction

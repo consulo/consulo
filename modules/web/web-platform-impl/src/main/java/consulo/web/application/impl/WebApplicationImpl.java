@@ -22,8 +22,8 @@ import javax.swing.*;
 public class WebApplicationImpl extends ApplicationImpl implements WebApplication {
   private WebSession myCurrentSession;
 
-  public WebApplicationImpl(boolean isInternal, boolean isUnitTestMode, boolean isHeadless, boolean isCommandLine, @NotNull Ref<? extends StartupProgress> splash) {
-    super(isInternal, isUnitTestMode, isHeadless, isCommandLine, splash);
+  public WebApplicationImpl(boolean isHeadless, @NotNull Ref<? extends StartupProgress> splash) {
+    super(isHeadless, splash);
   }
 
   @Nullable

@@ -18,8 +18,8 @@ package com.intellij.ui;
 import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.JBUI;
+import consulo.application.ApplicationProperties;
 import consulo.spash.AnimatedLogoLabel;
-import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -48,7 +48,7 @@ public class DesktopSplash extends JDialog implements StartupProgress {
     setFocusableWindowState(false);
 
     myLabel = new AnimatedLogoLabel(14, true, unstableScaling);
-    myLabel.setForeground(SandboxUtil.isInsideSandbox() ? Color.WHITE : Color.BLACK);
+    myLabel.setForeground(ApplicationProperties.isInSandbox() ? Color.WHITE : Color.BLACK);
 
     Container contentPane = getContentPane();
     contentPane.setBackground(Color.LIGHT_GRAY);

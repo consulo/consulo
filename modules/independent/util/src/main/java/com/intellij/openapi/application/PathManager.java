@@ -27,7 +27,6 @@ import com.sun.jna.platform.FileUtils;
 import consulo.annotations.DeprecationInfo;
 import consulo.application.ApplicationProperties;
 import consulo.application.DefaultPaths;
-import consulo.util.SandboxUtil;
 import gnu.trove.THashSet;
 import org.apache.log4j.Appender;
 import org.apache.oro.text.regex.PatternMatcher;
@@ -109,7 +108,7 @@ public class PathManager {
     File defaultPath = new File(getAppHomeDirectory(), PLATFORM_FOLDER);
 
     // force platform inside distribution directory
-    if (Boolean.getBoolean(ApplicationProperties.CONSULO_NO_EXTERNAL_PLATFORM) || SandboxUtil.isInsideSandbox()) {
+    if (Boolean.getBoolean(ApplicationProperties.CONSULO_NO_EXTERNAL_PLATFORM) || ApplicationProperties.isInSandbox()) {
       return defaultPath;
     }
     return DefaultPaths.getInstance().getExternalPlatformDirectory(defaultPath);
@@ -163,7 +162,7 @@ public class PathManager {
       ourConfigPath = DefaultPaths.getInstance().getRoamingSettingsDir();
     }
 
-    if (SandboxUtil.isInsideSandbox()) {
+    if (ApplicationProperties.isInSandbox()) {
       //noinspection UseOfSystemOutOrSystemErr
       System.out.println("Config Path: " + ourConfigPath);
     }
@@ -218,7 +217,7 @@ public class PathManager {
       ourInstallPluginsPath = pluginsPaths[0];
     }
 
-    if (SandboxUtil.isInsideSandbox()) {
+    if (ApplicationProperties.isInSandbox()) {
       //noinspection UseOfSystemOutOrSystemErr
       System.out.println("Install Plugins Path: " + ourInstallPluginsPath);
     }
@@ -258,7 +257,7 @@ public class PathManager {
       ourPluginsPaths = new String[]{DefaultPaths.getInstance().getRoamingPluginsDir()};
     }
 
-    if (SandboxUtil.isInsideSandbox()) {
+    if (ApplicationProperties.isInSandbox()) {
       //noinspection UseOfSystemOutOrSystemErr
       System.out.println("Plugins Paths: " + Arrays.asList(ourPluginsPaths));
     }
@@ -290,7 +289,7 @@ public class PathManager {
       ourSystemPath = DefaultPaths.getInstance().getLocalSettingsDir();
     }
 
-    if (SandboxUtil.isInsideSandbox()) {
+    if (ApplicationProperties.isInSandbox()) {
       //noinspection UseOfSystemOutOrSystemErr
       System.out.println("System Path: " + ourSystemPath);
     }

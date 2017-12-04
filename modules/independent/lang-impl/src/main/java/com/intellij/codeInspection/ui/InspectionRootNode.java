@@ -17,8 +17,8 @@
 package com.intellij.codeInspection.ui;
 
 import com.intellij.codeInspection.InspectionsBundle;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
-import consulo.util.SandboxUtil;
 
 import javax.swing.*;
 
@@ -44,6 +44,6 @@ public class InspectionRootNode extends InspectionTreeNode {
 
   @Override
   public Icon getIcon(boolean expanded) {
-    return SandboxUtil.getAppIcon();
+    return Application.get().getIcon();
   }
 }

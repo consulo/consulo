@@ -57,8 +57,8 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.application.ApplicationProperties;
 import consulo.options.ConfigurableUIMigrationUtil;
-import consulo.util.SandboxUtil;
 import consulo.util.ui.tree.TreeDecorationUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
@@ -201,7 +201,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
       if (myComponent != null) {
         final Object clientProperty = myComponent.getClientProperty(NOT_A_NEW_COMPONENT);
-        if (clientProperty != null && SandboxUtil.isInsideSandbox()) {
+        if (clientProperty != null && ApplicationProperties.isInSandbox()) {
           LOG.warn(String.format("Settings component for '%s' MUST be recreated, please dispose it in disposeUIResources() and create a new instance in createComponent()!",
                                  configurable.getClass().getCanonicalName()));
         }

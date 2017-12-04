@@ -29,7 +29,6 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.X11UiUtil;
 import com.intellij.util.ReflectionUtil;
-import consulo.application.ApplicationProperties;
 import consulo.start.CommandLineArgs;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,25 +50,24 @@ public class ApplicationStarter {
   }
 
   private final CommandLineArgs myArgs;
+  private final Class<? extends ApplicationPostStarter> myPostStarterClass;
   private boolean myPerformProjectLoad = true;
   private ApplicationPostStarter myPostStarter;
 
-  public ApplicationStarter(CommandLineArgs args) {
+  public ApplicationStarter(@NotNull Class<? extends ApplicationPostStarter> postStarterClass, @NotNull CommandLineArgs args) {
+    myPostStarterClass = postStarterClass;
     LOG.assertTrue(ourInstance == null);
     //noinspection AssignmentToStaticFieldFromInstanceMethod
     ourInstance = this;
 
     myArgs = args;
-    boolean isInternal = Boolean.getBoolean(ApplicationProperties.IDEA_IS_INTERNAL);
-    boolean isUnitTest = Boolean.getBoolean(ApplicationProperties.CONSULO_IN_UNIT_TEST);
-    boolean asWebApp = Boolean.getBoolean(ApplicationProperties.CONSULO_AS_WEB_APP);
 
     boolean headless = Main.isHeadless();
 
     patchSystem(headless);
 
-    myPostStarter = createPostStarter(isUnitTest, asWebApp);
-    myPostStarter.createApplication(isInternal, isUnitTest, headless, isUnitTest, args);
+    myPostStarter = createPostStarter();
+    myPostStarter.createApplication(headless, args);
     myPostStarter.premain(args);
   }
 
@@ -98,26 +96,15 @@ public class ApplicationStarter {
   }
 
   @NotNull
-  private ApplicationPostStarter createPostStarter(boolean isUnitTest, boolean asWebApp) {
-    Class<?> starterClass = ReflectionUtil.forName(getStarterClass(isUnitTest, asWebApp));
-
+  private ApplicationPostStarter createPostStarter() {
     try {
-      Constructor constructor = starterClass.getConstructor(ApplicationStarter.class);
+      Constructor<? extends ApplicationPostStarter> constructor = myPostStarterClass.getConstructor(ApplicationStarter.class);
       constructor.setAccessible(true);
-      return (ApplicationPostStarter)ReflectionUtil.createInstance(constructor, this);
+      return ReflectionUtil.createInstance(constructor, this);
     }
     catch (NoSuchMethodException e) {
       throw new Error(e);
     }
-  }
-
-  @NotNull
-  private static String getStarterClass(boolean isUnitTest, boolean asWebApp) {
-    if (isUnitTest) {
-      return "consulo.start.UnitTestPostStarter";
-    }
-
-    return asWebApp ? "consulo.web.main.WebPostStarter" : "com.intellij.idea.starter.DesktopApplicationPostStarter";
   }
 
   public void run(boolean newConfigFolder) {

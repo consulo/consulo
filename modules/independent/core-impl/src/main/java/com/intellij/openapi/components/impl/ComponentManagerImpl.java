@@ -37,7 +37,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import com.intellij.util.pico.DefaultPicoContainer;
-import consulo.util.SandboxUtil;
+import consulo.application.ApplicationProperties;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -258,7 +258,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @NotNull
   protected synchronized Object[] getComponents() {
     Class[] componentClasses = myComponentsRegistry.getComponentInterfaces();
-    List<Object> components = new ArrayList<Object>(componentClasses.length);
+    List<Object> components = new ArrayList<>(componentClasses.length);
     for (Class<?> interfaceClass : componentClasses) {
       ProgressIndicator indicator = getProgressIndicator();
       if (indicator != null) {
@@ -407,17 +407,17 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   protected boolean logSlowComponents() {
-    return LOG.isDebugEnabled() || SandboxUtil.isInsideSandbox();
+    return LOG.isDebugEnabled() || ApplicationProperties.isInSandbox();
   }
 
   protected class ComponentsRegistry {
-    private final Map<Class, Object> myInterfaceToLockMap = new THashMap<Class, Object>();
-    private final Map<Class, Class> myInterfaceToClassMap = new THashMap<Class, Class>();
-    private final List<Class> myComponentInterfaces = new ArrayList<Class>(); // keeps order of component's registration
-    private final Map<String, BaseComponent> myNameToComponent = new THashMap<String, BaseComponent>();
-    private final List<ComponentConfig> myComponentConfigs = new ArrayList<ComponentConfig>();
-    private final List<Object> myImplementations = new ArrayList<Object>();
-    private final Map<Class, ComponentConfig> myComponentClassToConfig = new THashMap<Class, ComponentConfig>();
+    private final Map<Class, Object> myInterfaceToLockMap = new THashMap<>();
+    private final Map<Class, Class> myInterfaceToClassMap = new THashMap<>();
+    private final List<Class> myComponentInterfaces = new ArrayList<>(); // keeps order of component's registration
+    private final Map<String, BaseComponent> myNameToComponent = new THashMap<>();
+    private final List<ComponentConfig> myComponentConfigs = new ArrayList<>();
+    private final List<Object> myImplementations = new ArrayList<>();
+    private final Map<Class, ComponentConfig> myComponentClassToConfig = new THashMap<>();
     private boolean myClassesLoaded = false;
 
     private void loadClasses() {
@@ -512,7 +512,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
     @SuppressWarnings({"unchecked"})
     public <T> T[] getComponentsByType(final Class<T> baseClass) {
-      List<T> array = new ArrayList<T>();
+      List<T> array = new ArrayList<>();
 
       //noinspection ForLoopReplaceableByForEach
       for (int i = 0; i < myComponentInterfaces.size(); i++) {

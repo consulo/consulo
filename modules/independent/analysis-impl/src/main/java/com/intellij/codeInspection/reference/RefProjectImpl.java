@@ -24,7 +24,7 @@
  */
 package com.intellij.codeInspection.reference;
 
-import consulo.util.SandboxUtil;
+import com.intellij.openapi.application.Application;
 
 import javax.swing.*;
 
@@ -40,6 +40,6 @@ public class RefProjectImpl extends RefEntityImpl implements RefProject {
 
   @Override
   public Icon getIcon(final boolean expanded) {
-    return SandboxUtil.getAppIcon();
+    return Application.get().getIcon();
   }
 }

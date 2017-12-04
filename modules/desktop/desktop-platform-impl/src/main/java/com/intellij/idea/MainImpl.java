@@ -16,19 +16,21 @@
 package com.intellij.idea;
 
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.idea.starter.DesktopApplicationPostStarter;
 
 import javax.swing.*;
 
-@SuppressWarnings({"UnusedDeclaration"})
+@SuppressWarnings("UnusedDeclaration")
 public class MainImpl {
-  private MainImpl() { }
+  private MainImpl() {
+  }
 
   /**
    * Called from PluginManager via reflection.
    */
   protected static void start(String[] args) {
     StartupUtil.prepareAndStart(args, (newConfigFolder, commandLineArgs) -> {
-      ApplicationStarter app = new ApplicationStarter(commandLineArgs);
+      ApplicationStarter app = new ApplicationStarter(DesktopApplicationPostStarter.class, commandLineArgs);
 
       SwingUtilities.invokeLater(() -> {
         PluginManager.installExceptionHandler();

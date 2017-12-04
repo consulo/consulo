@@ -25,7 +25,7 @@ import com.sun.jna.Pointer;
 import com.sun.jna.WString;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.StdCallLibrary;
-import consulo.util.SandboxUtil;
+import consulo.application.ApplicationProperties;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -54,7 +54,7 @@ public class Restarter {
   }
 
   public static boolean isSupported() {
-    return (getRestartCode() != 0 || SystemInfo.isWindows || SystemInfo.isMac) && !SandboxUtil.isInsideSandbox();
+    return (getRestartCode() != 0 || SystemInfo.isWindows || SystemInfo.isMac) && !ApplicationProperties.isInSandbox();
   }
 
   public static int scheduleRestart(@NotNull String... beforeRestart) throws IOException {

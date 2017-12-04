@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.actions;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.project.Project;
@@ -23,7 +24,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.project.ProjectOpenProcessors;
-import consulo.util.SandboxUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -43,7 +43,7 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   @Override
   public Icon getIcon(final VirtualFile file) {
     if (isProjectDirectory(file)) {
-      return dressIcon(file, SandboxUtil.getAppIcon());
+      return dressIcon(file, Application.get().getIcon());
     }
     final Icon icon = getProcessorIcon(file);
     if (icon != null) {

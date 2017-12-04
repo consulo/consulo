@@ -16,8 +16,7 @@
 package consulo.util;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.util.SystemProperties;
+import consulo.annotations.DeprecationInfo;
 import consulo.application.ApplicationProperties;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,21 +26,18 @@ import javax.swing.*;
  * @author VISTALL
  * @since 15.09.14
  */
+@Deprecated
+@DeprecationInfo("Check method descriptors")
 public class SandboxUtil {
-  private static final NotNullLazyValue<Boolean> ourSandboxLazyValue = new NotNullLazyValue<Boolean>() {
-    @NotNull
-    @Override
-    protected Boolean compute() {
-      return SystemProperties.getBooleanProperty(ApplicationProperties.CONSULO_IN_SANDBOX, false);
-    }
-  };
-
   @NotNull
+  @DeprecationInfo("Use Application.get().getIcon()")
   public static Icon getAppIcon() {
-    return isInsideSandbox() ? AllIcons.Icon16_Sandbox : AllIcons.Icon16;
+    return ApplicationProperties.isInSandbox() ? AllIcons.Icon16_Sandbox : AllIcons.Icon16;
   }
 
+  @Deprecated
+  @DeprecationInfo("Use ApplicationProperties#isInSandbox()")
   public static boolean isInsideSandbox() {
-    return ourSandboxLazyValue.getValue();
+    return ApplicationProperties.isInSandbox();
   }
 }

@@ -21,6 +21,7 @@ import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.LogEventException;
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.diagnostic.ThreadDumper;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
@@ -70,8 +71,10 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
 import consulo.start.CommandLineArgs;
+import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -174,7 +177,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
   }
 
-  public ApplicationImpl(boolean isInternal, boolean isUnitTestMode, boolean isHeadless, boolean isCommandLine, @NotNull Ref<? extends StartupProgress> splashRef) {
+  public ApplicationImpl(boolean isHeadless, @NotNull Ref<? extends StartupProgress> splashRef) {
     super(null);
 
     ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
@@ -183,16 +186,19 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
     AWTExceptionHandler.register(); // do not crash AWT on exceptions
 
+    myIsInternal = ApplicationProperties.isInternal();
+
     String debugDisposer = System.getProperty("idea.disposer.debug");
-    Disposer.setDebugMode((isInternal || isUnitTestMode || "on".equals(debugDisposer)) && !"off".equals(debugDisposer));
+    Disposer.setDebugMode((myIsInternal || "on".equals(debugDisposer)) && !"off".equals(debugDisposer));
 
     myStartTime = System.currentTimeMillis();
     mySplashRef = splashRef;
 
-    myIsInternal = isInternal;
+    boolean isUnitTestMode = false;
+
     myTestModeFlag = isUnitTestMode;
     myHeadlessMode = isHeadless;
-    myCommandLineMode = isCommandLine;
+    myCommandLineMode = isUnitTestMode;
 
     myDoNotSave = isUnitTestMode || isHeadless;
     gatherStatistics = LOG.isDebugEnabled() || isUnitTestMode() || isInternal();
@@ -1419,6 +1425,12 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   @TestOnly
   public void setDisposeInProgress(boolean disposeInProgress) {
     myDisposeInProgress = disposeInProgress;
+  }
+
+  @NotNull
+  @Override
+  public SwingImageRef getIcon() {
+    return ApplicationProperties.isInSandbox() ? AllIcons.Icon16_Sandbox : AllIcons.Icon16;
   }
 
   @NonNls

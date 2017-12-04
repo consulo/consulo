@@ -25,6 +25,7 @@ import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
+import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -44,6 +45,15 @@ import java.util.concurrent.Future;
  * If there are read actions running at this moment <code>runWriteAction</code> is blocked until they are completed.
  */
 public interface Application extends ComponentManager {
+  @NotNull
+  public static Application get() {
+    Application application = ApplicationManager.getApplication();
+    if (application == null) {
+      throw new IllegalArgumentException("Application is not initialized");
+    }
+    return application;
+  }
+
   /**
    * Runs the specified read action. Can be called from any thread. The action is executed immediately
    * if no write action is currently running, or blocked until the currently running write action completes.
@@ -417,6 +427,13 @@ public interface Application extends ComponentManager {
   boolean isActive();
 
   /**
+   * @return Application icon. In sandbox icon maybe different
+   */
+  @NotNull
+  SwingImageRef getIcon();
+
+  // region Deprecated stuff
+  /**
    * Returns lock used for read operations, should be closed in finally block
    */
   @NotNull
@@ -442,4 +459,5 @@ public interface Application extends ComponentManager {
   default boolean isEAP() {
     return false;
   }
+  // endregion
 }
