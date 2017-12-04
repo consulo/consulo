@@ -429,11 +429,6 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public boolean isUnitTestMode() {
-    return false;
-  }
-
-  @Override
   public boolean isHeadlessEnvironment() {
     return true;
   }

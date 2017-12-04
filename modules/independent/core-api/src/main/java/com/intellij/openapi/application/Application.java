@@ -33,9 +33,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 /**
- * Provides access to core application-wide functionality and methods for working with the IDEA
+ * Provides access to core application-wide functionality and methods for working with the IDE
  * thread model. The thread model defines two main types of actions which can access the PSI and other
- * IDEA data structures: read actions (which do not modify the data) and write actions (which modify
+ * IDE data structures: read actions (which do not modify the data) and write actions (which modify
  * some data).<p>
  * You can call methods requiring read access from the Swing event-dispatch thread without using
  * {@link #runReadAction} method. If you need to invoke such methods from another thread you have to use
@@ -246,7 +246,7 @@ public interface Application extends ComponentManager {
 
   /**
    * Causes {@code runnable.run()} to be executed asynchronously on the
-   * AWT event dispatching thread, when IDEA is in the specified modality
+   * AWT event dispatching thread, when IDE is in the specified modality
    * state.
    *
    * @param runnable the runnable to execute.
@@ -263,7 +263,7 @@ public interface Application extends ComponentManager {
 
   /**
    * Causes {@code runnable.run()} to be executed asynchronously on the
-   * AWT event dispatching thread, when IDEA is in the specified modality
+   * AWT event dispatching thread, when IDE is in the specified modality
    * state - unless the expiration condition is fulfilled.
    * This will happen after all pending AWT events have been processed.
    *
@@ -275,7 +275,7 @@ public interface Application extends ComponentManager {
 
   /**
    * <p>Causes {@code runnable.run()} to be executed synchronously on the
-   * AWT event dispatching thread, when IDEA is in the specified modality
+   * AWT event dispatching thread, when IDE is in the specified modality
    * state. This call blocks until all pending AWT events have been processed and (then)
    * {@code runnable.run()} returns.</p>
    * <p>
@@ -331,49 +331,51 @@ public interface Application extends ComponentManager {
   ModalityState getAnyModalityState();
 
   /**
-   * Returns the time of IDEA start, in milliseconds since midnight, January 1, 1970 UTC.
+   * Returns the time of IDE start, in milliseconds since midnight, January 1, 1970 UTC.
    *
-   * @return the IDEA start time.
+   * @return the IDE start time.
    */
   long getStartTime();
 
   /**
-   * Returns the time in milliseconds during which IDEA received no input events.
+   * Returns the time in milliseconds during which IDE received no input events.
    *
-   * @return the idle time of IDEA.
+   * @return the idle time of IDE.
    */
   @RequiredDispatchThread
   long getIdleTime();
 
-  /**
-   * Checks if IDEA is currently running unit tests. No UI should be shown when unit
-   * tests are being executed.
-   *
-   * @return true if IDEA is running unit tests, false otherwise
-   */
-  boolean isUnitTestMode();
 
   /**
-   * Checks if IDEA is running as a command line applet or in unit test mode.
-   * No UI should be shown when IDEA is running in this mode.
+   * Checks if IDE is running as a command line applet or in unit test mode.
+   * No UI should be shown when IDE is running in this mode.
    *
-   * @return true if IDEA is running in UI-less mode, false otherwise
+   * @return true if IDE is running in UI-less mode, false otherwise
    */
   boolean isHeadlessEnvironment();
 
   /**
-   * Checks if IDEA is running as a compiler server
-   * No UI should be shown when IDEA is running in this mode.
+   * Checks if IDE is currently running tests.
    *
-   * @return true if IDEA is running in compiler server, false otherwise
+   * @return true if IDE is running unit tests, false otherwise
+   */
+  default boolean isTestingMode() {
+    return false;
+  }
+
+  /**
+   * Checks if IDE is running as a compiler server
+   * No UI should be shown when IDE is running in this mode.
+   *
+   * @return true if IDE is running in compiler server, false otherwise
    */
   boolean isCompilerServerMode();
 
   /**
-   * Checks if IDEA is running as a command line applet or in unit test mode.
+   * Checks if IDE is running as a command line applet or in unit test mode.
    * UI can be shown (e.g. diff frame)
    *
-   * @return true if IDEA is running in command line  mode, false otherwise
+   * @return true if IDE is running in command line  mode, false otherwise
    */
   boolean isCommandLine();
 
@@ -404,15 +406,15 @@ public interface Application extends ComponentManager {
   boolean isDisposeInProgress();
 
   /**
-   * Checks if IDEA is capable of restarting itself on the current platform and with the current execution mode.
+   * Checks if IDE is capable of restarting itself on the current platform and with the current execution mode.
    *
-   * @return true if IDEA can restart itself, false otherwise.
+   * @return true if IDE can restart itself, false otherwise.
    * @since 8.1
    */
   boolean isRestartCapable();
 
   /**
-   * Exits and restarts IDEA. If the current platform is not restart capable, only exits.
+   * Exits and restarts IDE. If the current platform is not restart capable, only exits.
    *
    * @since 8.1
    */
@@ -457,6 +459,18 @@ public interface Application extends ComponentManager {
   @Deprecated
   @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")
   default boolean isEAP() {
+    return false;
+  }
+
+  /**
+   * Checks if IDE is currently running unit tests. No UI should be shown when unit
+   * tests are being executed.
+   *
+   * @return true if IDE is running unit tests, false otherwise
+   */
+  @Deprecated
+  @DeprecationInfo("Old IDEA UnitTesting mode was dropped. This method became useless. If you want check if you inside test mode - use #isTestingMode()")
+  default boolean isUnitTestMode() {
     return false;
   }
   // endregion

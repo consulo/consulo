@@ -100,11 +100,6 @@ public class MockApplication extends MockComponentManager implements Application
   }
 
   @Override
-  public boolean isUnitTestMode() {
-    return true;
-  }
-
-  @Override
   public boolean isHeadlessEnvironment() {
     return true;
   }
