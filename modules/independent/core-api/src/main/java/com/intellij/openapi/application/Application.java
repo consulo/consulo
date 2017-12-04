@@ -345,7 +345,6 @@ public interface Application extends ComponentManager {
   @RequiredDispatchThread
   long getIdleTime();
 
-
   /**
    * Checks if IDE is running as a command line applet or in unit test mode.
    * No UI should be shown when IDE is running in this mode.
