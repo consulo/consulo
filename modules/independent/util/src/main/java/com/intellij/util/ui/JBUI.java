@@ -381,6 +381,11 @@ public class JBUI {
     return Math.round(userScaleFactor * i);
   }
 
+  @NotNull
+  public static Font scale(@NotNull Font font) {
+    return font.deriveFont((float)scaleFontSize(font.getSize()));
+  }
+
   public static int scaleFontSize(float fontSize) {
     if (userScaleFactor == 1.25f) return (int)(fontSize * 1.34f);
     if (userScaleFactor == 1.75f) return (int)(fontSize * 1.67f);
