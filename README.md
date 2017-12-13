@@ -1,4 +1,4 @@
-## About [![Build Status](https://img.shields.io/jenkins/s/https/ci.consulo.io/job/consulo.svg?style=flat-square)](https://ci.consulo.io/job/consulo/) [![Test Status](https://img.shields.io/jenkins/t/https/ci.consulo.io/job/consulo.svg?style=flat-square)](https://ci.consulo.io/job/consulo/)
+## About
 
 Consulo - multi-language ide. Project was started in 2013 year by forking [IDEA Community Edition](https://github.com/JetBrains/intellij-community).
 
@@ -9,6 +9,13 @@ Main goal - create **open** IDE where you don't need select IDE for different la
 If you can't describe issue, you can use our [forum](https://discuss.consulo.io/), or you can read [contributing guide](https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md)  and report issue at GitHub
 
 ## Building & Running
+
+### Build Status
+
+| JVM           | [consulo.io](https://ci.consulo.io) | [consulo.io](https://ci.consulo.io) tests |Travis CI|
+| ------------- |:-------------:|--------------:|-----------------:|
+| Java 8        | [![Build Status](https://ci.consulo.io/job/commit-check/job/consulo+java8/badge/icon)](https://ci.consulo.io/job/commit-check/job/consulo+java8/) | [![Test Status](https://img.shields.io/jenkins/t/https/ci.consulo.io/job/commit-check/job/consulo+java8.svg)](https://ci.consulo.io/commit-check/job/consulo+java8)| [![Build Status](https://travis-matrix-badges.herokuapp.com/repos/consulo/consulo/branches/master/1)](https://travis-ci.org/consulo/consulo) |
+| Java 9        | [![Build Status](https://ci.consulo.io/job/commit-check/job/consulo+java9/badge/icon)](https://ci.consulo.io/job/commit-check/job/consulo+java9/) | [![Test Status](https://img.shields.io/jenkins/t/https/ci.consulo.io/job/commit-check/job/consulo+java9.svg)](https://ci.consulo.io/commit-check/job/consulo+java9)| [![Build Status](https://travis-matrix-badges.herokuapp.com/repos/consulo/consulo/branches/master/2)](https://travis-ci.org/consulo/consulo) |
 
 First of all, you need those tools:
 
