@@ -17,11 +17,13 @@ package com.intellij.dvcs.test;
 
 import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessOutput;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +36,7 @@ import java.util.List;
  * @author Kirill Likhodedov
  */
 public class Executor {
+  protected static final Logger LOG = Logger.getInstance(Executor.class);
 
   private static String ourCurrentDir;
 
@@ -42,6 +45,11 @@ public class Executor {
     log("cd " + shortenPath(absolutePath));
   }
 
+  public static void debug(@NotNull String msg) {
+    if (!StringUtil.isEmptyOrSpaces(msg)) {
+      LOG.info(msg);
+    }
+  }
   private static void cdRel(String relativePath) {
     cdAbs(ourCurrentDir + "/" + relativePath);
   }
@@ -94,12 +102,12 @@ public class Executor {
     }
   }
 
-  public static String mkdir(String dirName) {
+  public static File mkdir(String dirName) {
     File file = child(dirName);
     boolean dirMade = file.mkdir();
     assert dirMade;
     log("mkdir " + dirName);
-    return file.getPath();
+    return file;
   }
 
   public static String cat(String fileName) {
@@ -120,6 +128,22 @@ public class Executor {
     catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static void overwrite(@NotNull String fileName, @NotNull String content) throws IOException {
+    overwrite(child(fileName), content);
+  }
+
+  public static void overwrite(@NotNull File file, @NotNull String content) throws IOException {
+    FileUtil.writeToFile(file, content.getBytes(), false);
+  }
+
+  public static void append(@NotNull File file, @NotNull String content) throws IOException {
+    FileUtil.writeToFile(file, content.getBytes(), true);
+  }
+
+  public static void append(@NotNull String fileName, @NotNull String content) throws IOException {
+    append(child(fileName), content);
   }
 
   protected static String run(List<String> params) {
@@ -150,7 +174,7 @@ public class Executor {
     return stdout;
   }
 
-  protected static List<String> splitCommandInParameters(String command) {
+  public static List<String> splitCommandInParameters(String command) {
     List<String> split = new ArrayList<String>();
 
     boolean insideParam = false;

@@ -57,7 +57,9 @@ public abstract class AbstractVcsTestCase {
   protected IdeaProjectTestFixture myProjectFixture;
   protected boolean myInitChangeListManager = true;
 
-  protected abstract String getPluginName();
+  protected String getPluginName() {
+    throw new UnsupportedOperationException();
+  }
 
   protected TestClientRunner createClientRunner() {
     return createClientRunner(null);
