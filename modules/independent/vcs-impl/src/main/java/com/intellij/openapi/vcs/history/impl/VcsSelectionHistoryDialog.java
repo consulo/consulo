@@ -30,6 +30,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
@@ -560,11 +561,11 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     }
 
     public void start(@NotNull Disposable disposable) {
-      BackgroundTaskUtil.executeOnPooledThread((indicator) -> {
+      BackgroundTaskUtil.executeOnPooledThread(disposable, () -> {
         try {
           // first block is loaded in constructor
           for (int index = 1; index < myRevisions.size(); index++) {
-            indicator.checkCanceled();
+            ProgressManager.checkCanceled();
 
             Block block = myBlocks.get(index - 1);
             VcsFileRevision revision = myRevisions.get(index);
@@ -595,7 +596,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
           }
           notifyUpdate();
         }
-      }, disposable);
+      });
     }
 
     @CalledInBackground
