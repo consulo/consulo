@@ -44,13 +44,8 @@ public class LoggerFactory implements Logger.Factory {
 
   @Override
   public synchronized Logger getLoggerInstance(String name) {
-    try {
-      if (!myInitialized) {
-        init();
-      }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
+    if (!myInitialized) {
+      init();
     }
 
     return new IdeaLogger(org.apache.log4j.Logger.getLogger(name));
