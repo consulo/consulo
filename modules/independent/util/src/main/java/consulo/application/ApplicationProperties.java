@@ -91,6 +91,7 @@ public class ApplicationProperties {
   public static final String IDEA_PLUGINS_PATH = "idea.plugins.path";
 
   /**
+   * Path for plugin install directory. Not included in plugin path list
    * @type
    */
   @NotNull
@@ -98,9 +99,16 @@ public class ApplicationProperties {
   public static final String CONSULO_INSTALL_PLUGINS_PATH = "consulo.install.plugins.path";
 
   /**
+   * List of plugin directories for loading. If size more that one - CONSULO_INSTALL_PLUGINS_PATH must be installed
    * @type String[]
    */
   @NotNull
   @NonNls
   public static final String CONSULO_PLUGINS_PATHS = "consulo.plugins.paths";
+
+  /**
+   * Redirect log to console. Used when running from maven
+   * @type boolean
+   */
+  public static final String CONSULO_MAVEN_CONSOLE_LOG = "consulo.maven.console.log";
 }

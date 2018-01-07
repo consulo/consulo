@@ -19,7 +19,8 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import org.apache.log4j.LogManager;
+import consulo.application.ApplicationProperties;
+import org.apache.log4j.*;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import java.io.File;
@@ -59,8 +60,8 @@ public class LoggerFactory implements Logger.Factory {
     try {
       System.setProperty("log4j.defaultInitOverride", "true");
 
-      File logXmlFile = FileUtil.findFirstThatExist(PathManager.getHomePath() + "/bin/log.xml");
-      if (logXmlFile == null) {
+      File logXmlFile = new File(PathManager.getHomePath(), "bin/log.xml");
+      if (!logXmlFile.exists()) {
         throw new RuntimeException("log.xml file does not exist! Path: [ $home/bin/log.xml]");
       }
 
@@ -76,6 +77,14 @@ public class LoggerFactory implements Logger.Factory {
 
       new DOMConfigurator().doConfigure(new StringReader(text), LogManager.getLoggerRepository());
 
+      if(Boolean.getBoolean(ApplicationProperties.CONSULO_MAVEN_CONSOLE_LOG)) {
+        org.apache.log4j.Logger rootLogger = org.apache.log4j.Logger.getRootLogger();
+
+        ConsoleAppender consoleAppender = new ConsoleAppender(new PatternLayout("[%7r] %6p - %30.30c - %m \n"), ConsoleAppender.SYSTEM_OUT);
+        consoleAppender.setThreshold(Level.INFO);
+        rootLogger.addAppender(consoleAppender);
+      }
+ 
       myInitialized = true;
     }
     catch (Exception e) {

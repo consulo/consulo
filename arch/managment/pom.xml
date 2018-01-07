@@ -32,7 +32,7 @@
     <jna.version>4.4.0</jna.version>
     <jdom.version>2.1</jdom.version>
     <trove4j.version>2.0</trove4j.version>
-    <log4j.version>1.2.4</log4j.version>
+    <log4j.version>1.2.17</log4j.version>
     <picocontainer.version>1.2</picocontainer.version>
     <guava.version>23.0</guava.version>
     <!--please exclude common logging library from dependency-->
