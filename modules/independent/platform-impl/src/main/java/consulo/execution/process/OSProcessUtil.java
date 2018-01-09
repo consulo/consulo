@@ -16,8 +16,12 @@
 package consulo.execution.process;
 
 import com.intellij.execution.process.ProcessInfo;
+import com.intellij.execution.process.UnixProcessManager;
+import com.intellij.execution.process.WinProcessManager;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.jezhumble.javasysmon.JavaSysMon;
+import com.pty4j.windows.WinPtyProcess;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -27,6 +31,24 @@ import java.util.List;
  * @since 31-Jan-17
  */
 public class OSProcessUtil {
+  public static int getProcessID(@NotNull Process process) {
+    if (SystemInfo.isWindows) {
+      try {
+        if (process instanceof WinPtyProcess) {
+          return ((WinPtyProcess)process).getChildProcessId();
+        }
+        return WinProcessManager.getProcessId(process);
+      }
+      catch (Throwable e) {
+        throw new IllegalStateException("Cannot get PID from instance of " + process.getClass() + ", OS: " + SystemInfo.OS_NAME, e);
+      }
+    }
+    else if (SystemInfo.isUnix) {
+      return UnixProcessManager.getProcessId(process);
+    }
+    throw new IllegalStateException("Unknown OS: " + SystemInfo.OS_NAME);
+  }
+
   @NotNull
   public static ProcessInfo[] getProcessList() {
     JavaSysMon javaSysMon = new JavaSysMon();

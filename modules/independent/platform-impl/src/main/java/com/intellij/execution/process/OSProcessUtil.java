@@ -17,13 +17,15 @@ package com.intellij.execution.process;
 
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author VISTALL
- * @since 31-Jan-17
- */
 @Deprecated
 public class OSProcessUtil {
+  @Deprecated
+  public static int getProcessID(@NotNull Process process) {
+    return consulo.execution.process.OSProcessUtil.getProcessID(process);
+  }
+
   @NotNull
+  @Deprecated
   public static ProcessInfo[] getProcessList() {
     return consulo.execution.process.OSProcessUtil.getProcessList();
   }
