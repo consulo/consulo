@@ -30,7 +30,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,11 +47,6 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
     myInSourceOnly = inSourceOnly;
   }
 
-  @Nullable
-  protected Class<? extends ModuleExtension> getModuleExtensionClass() {
-    return null;
-  }
-
   @Override
   @Nullable
   protected T createFile(String name, String templateName, PsiDirectory dir) {
@@ -63,6 +57,7 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
   protected abstract PsiElement getNavigationElement(@NotNull T createdElement);
 
   @Override
+  @SuppressWarnings("unchecked")
   protected boolean isAvailable(final DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     final IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
@@ -75,7 +70,7 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
       return false;
     }
 
-    final Class<? extends ModuleExtension> moduleExtensionClass = getModuleExtensionClass();
+    final Class moduleExtensionClass = getModuleExtensionClass();
     if (moduleExtensionClass != null && ModuleUtilCore.getExtension(module, moduleExtensionClass) == null) {
       return false;
     }

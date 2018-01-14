@@ -51,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class PsiVFSListener extends VirtualFileAdapter {
+public class PsiVFSListener implements VirtualFileListener {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.file.impl.PsiVFSListener");
 
   private final FileTypeManager myFileTypeManager;

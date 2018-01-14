@@ -15,87 +15,63 @@
  */
 package consulo.roots;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
-import com.intellij.openapi.vfs.VirtualFileEvent;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.impl.BulkVirtualFileListenerAdapter;
+import com.intellij.openapi.vfs.newvfs.BulkFileListener;
+import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import com.intellij.util.containers.SmartHashSet;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author VISTALL
  * @since 06.04.2015
  */
-public class ContentEntryFileListener extends AbstractProjectComponent {
-  public static final Logger LOGGER = Logger.getInstance(ContentEntryFileListener.class);
+public class ContentEntryFileListener implements ApplicationComponent, Disposable {
+  public static class Listener implements VirtualFileListener {
+    private final Project myProject;
 
-  public interface PossibleModuleForFileResolver {
-    ExtensionPointName<PossibleModuleForFileResolver> EP_NAME = ExtensionPointName.create("com.intellij.possibleModuleForFileResolver");
-
-    @Nullable
-    @RequiredReadAction
-    Module resolve(@NotNull Project project, @NotNull VirtualFile virtualFile);
-  }
-
-  public class Listener extends VirtualFileAdapter {
-    @Override
-    @RequiredReadAction
-    public void fileCreated(@NotNull VirtualFileEvent event) {
-      Module resolvedModule = null;
-      for (PossibleModuleForFileResolver possibleModuleForFileResolver : PossibleModuleForFileResolver.EP_NAME.getExtensions()) {
-        Module temp = possibleModuleForFileResolver.resolve(myProject, event.getFile());
-        if (temp != null) {
-          resolvedModule = temp;
-          break;
-        }
-      }
-
-      if (resolvedModule == null) {
-        return;
-      }
-
-      ContentEntryFileListener.LOGGER.assertTrue(resolvedModule.getModuleDirUrl() == null, "We cant add file as content entry is module created as dir based");
-
-      ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(resolvedModule);
-      final ModifiableRootModel modifiableModel = moduleRootManager.getModifiableModel();
-
-      for (ModuleRootLayer moduleRootLayer : modifiableModel.getLayers().values()) {
-        ModifiableModuleRootLayer modifiableModuleRootLayer = (ModifiableModuleRootLayer)moduleRootLayer;
-
-        modifiableModuleRootLayer.addContentEntry(event.getFile());
-      }
-      commitViaDumbService(modifiableModel);
+    public Listener(Project project) {
+      myProject = project;
     }
 
     @Override
+    @RequiredReadAction
     public void beforeFileDeletion(@NotNull VirtualFileEvent event) {
       VirtualFile fileToDelete = event.getFile();
 
       Module moduleForFile = ModuleUtilCore.findModuleForFile(fileToDelete, myProject);
+
       // if module have dir url - dont need check
       if (moduleForFile == null || moduleForFile.getModuleDirUrl() != null) {
         return;
       }
-      ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForFile);
-      final ModifiableRootModel modifiableModel = moduleRootManager.getModifiableModel();
 
-      boolean processed = false;
-      for (ModuleRootLayer moduleRootLayer : modifiableModel.getLayers().values()) {
-        ModifiableModuleRootLayer modifiableModuleRootLayer = (ModifiableModuleRootLayer)moduleRootLayer;
+      ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(moduleForFile);
+
+      Set<String> containsLayers = new SmartHashSet<>();
+      for (Map.Entry<String, ModuleRootLayer> entry : moduleRootManager.getLayers().entrySet()) {
+        String key = entry.getKey();
+        ModuleRootLayer value = entry.getValue();
 
         ContentEntry toRemove = null;
-        for (ContentEntry contentEntry : modifiableModuleRootLayer.getContentEntries()) {
+        for (ContentEntry contentEntry : value.getContentEntries()) {
           VirtualFile contentEntryFile = contentEntry.getFile();
           if (fileToDelete.equals(contentEntryFile)) {
             toRemove = contentEntry;
@@ -104,43 +80,42 @@ public class ContentEntryFileListener extends AbstractProjectComponent {
         }
 
         if (toRemove != null) {
-          processed = true;
-          modifiableModuleRootLayer.removeContentEntry(toRemove);
+          containsLayers.add(key);
         }
       }
 
-      if (processed) {
-        commitViaDumbService(modifiableModel);
-      }
-      else {
-        modifiableModel.dispose();
-      }
-    }
+      if(!containsLayers.isEmpty()) {
+        ModifiableRootModel modifiableModel = moduleRootManager.getModifiableModel();
 
-    private void commitViaDumbService(final ModifiableRootModel model) {
-      //noinspection RequiredXAction
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          model.commit();
+        for (Map.Entry<String, ModuleRootLayer> entry : modifiableModel.getLayers().entrySet()) {
+          if(containsLayers.contains(entry.getKey())) {
+            ModifiableModuleRootLayer value = (ModifiableModuleRootLayer)entry.getValue();
+
+            for (ContentEntry contentEntry : value.getContentEntries()) {
+              if(fileToDelete.equals(contentEntry.getFile()))  {
+                value.removeContentEntry(contentEntry);
+              }
+            }
+          }
         }
-      });
+
+        SwingUtilities.invokeLater(() -> WriteAction.run(modifiableModel::commit));
+      }
     }
   }
 
-  private Listener myListener = new Listener();
-
-  public ContentEntryFileListener(Project project) {
-    super(project);
+  public ContentEntryFileListener(Application application, ProjectManager projectManager) {
+    application.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+      @Override
+      public void before(@NotNull List<? extends VFileEvent> events) {
+        for (Project project : projectManager.getOpenProjects()) {
+          new BulkVirtualFileListenerAdapter(new Listener(project), LocalFileSystem.getInstance()).before(events);
+        }
+      }
+    });
   }
 
   @Override
-  public void initComponent() {
-    VirtualFileManager.getInstance().addVirtualFileListener(myListener);
-  }
-
-  @Override
-  public void disposeComponent() {
-    VirtualFileManager.getInstance().removeVirtualFileListener(myListener);
+  public void dispose() {
   }
 }

@@ -100,7 +100,7 @@
     <extensionPoint name="contentFolderTypeProvider" interface="consulo.roots.ContentFolderTypeProvider"/>
     <extensionPoint name="contentFolderPropertyProvider" interface="consulo.roots.ContentFolderPropertyProvider"/>
     <extensionPoint name="contentFolderSupportPatcher" interface="consulo.roots.ContentFolderSupportPatcher"/>
-    <extensionPoint name="possibleModuleForFileResolver" interface="consulo.roots.ContentEntryFileListener$PossibleModuleForFileResolver"/>
+    <extensionPoint name="createFromTemplateActionModuleResolver" interface="com.intellij.ide.actions.CreateFromTemplateAction$ModuleResolver"/>
     <extensionPoint name="applicationService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
     <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor"/>
     <extensionPoint name="generatedSourcesFilter" interface="com.intellij.openapi.roots.GeneratedSourcesFilter"/>
