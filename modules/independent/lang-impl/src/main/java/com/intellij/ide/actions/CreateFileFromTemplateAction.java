@@ -73,7 +73,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
     PsiElement element;
     Project project = dir.getProject();
     try {
-      element = FileTemplateUtil.createFromTemplate(template, name, FileTemplateManager.getInstance(dir.getProject()).getDefaultProperties(), dir);
+      element = FileTemplateUtil.createFromTemplate(template, name, Collections.emptyMap(), dir);
       final PsiFile psiFile = element.getContainingFile();
 
       final VirtualFile virtualFile = psiFile.getVirtualFile();

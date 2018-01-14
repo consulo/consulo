@@ -35,6 +35,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,12 +73,12 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
       }
     }
     else {
-      Messages.showInputDialog(project, IdeBundle.message("prompt.enter.new.file.name"),
-                               IdeBundle.message("title.new.file"), null, null, validator);
+      Messages.showInputDialog(project, IdeBundle.message("prompt.enter.new.file.name"), IdeBundle.message("title.new.file"), null, null, validator);
       return validator.getCreatedElements();
     }
   }
 
+  @RequiredDispatchThread
   @Override
   @NotNull
   protected PsiElement[] create(String newName, PsiDirectory directory) throws Exception {
@@ -93,6 +95,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     public final String newName;
     public final PsiDirectory directory;
 
+    @RequiredReadAction
     public MkDirs(@NotNull String newName, @NotNull PsiDirectory directory) {
       if (SystemInfo.isWindows) {
         newName = newName.replace('\\', '/');
@@ -114,7 +117,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
             if (parentDirectory == null) throw new IncorrectOperationException("Not a valid directory");
             directory = parentDirectory;
           }
-          else if (!".".equals(dir)){
+          else if (!".".equals(dir)) {
             directory = findOrCreateSubdirectory(directory, dir);
           }
           firstToken = false;
@@ -156,10 +159,11 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
   protected class MyValidator extends MyInputValidator implements InputValidatorEx {
     private String myErrorText;
 
-    public MyValidator(Project project, PsiDirectory directory){
+    public MyValidator(Project project, PsiDirectory directory) {
       super(project, directory);
     }
 
+    @RequiredDispatchThread
     @Override
     public boolean checkInput(String inputString) {
       final StringTokenizer tokenizer = new StringTokenizer(inputString, "\\/");
@@ -187,7 +191,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
               return false;
             }
           }
-          else if (!".".equals(token)){
+          else if (!".".equals(token)) {
             final VirtualFile child = vFile.findChild(token);
             if (child != null) {
               if (!child.isDirectory()) {
@@ -223,6 +227,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
       return super.create(newName);
     }
 
+    @RequiredDispatchThread
     @Override
     public boolean canClose(final String inputString) {
       if (inputString.length() == 0) {

@@ -334,6 +334,7 @@ public abstract class DialogWrapper {
    * @return <code>null</code> if everything is OK or validation descriptor
    */
   @Nullable
+  @RequiredDispatchThread
   protected ValidationInfo doValidate() {
     return null;
   }

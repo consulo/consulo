@@ -16,6 +16,7 @@
 
 package com.intellij.ide.actions;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.lang.LangBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -24,7 +25,7 @@ import com.intellij.openapi.ui.InputValidatorEx;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.PlatformIcons;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,11 +51,12 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
 
     myKindLabel.setLabelFor(myKindCombo);
     myKindCombo.registerUpDownHint(myNameField);
-    myUpDownHint.setIcon(PlatformIcons.UP_DOWN_ARROWS);
+    myUpDownHint.setIcon(AllIcons.Ide.UpDown);
     setTemplateKindComponentsVisible(false);
     init();
   }
 
+  @RequiredDispatchThread
   @Nullable
   @Override
   protected ValidationInfo doValidate() {
@@ -111,6 +113,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     super.doOKAction();
   }
 
+  @RequiredDispatchThread
   @Override
   public JComponent getPreferredFocusedComponent() {
     return getNameField();
@@ -175,11 +178,6 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
         }
 
         @Override
-        public boolean startInWriteAction() {
-          return creator.startInWriteAction();
-        }
-
-        @Override
         protected String getActionName(String newName) {
           return creator.getActionName(newName, myDialog.getKindCombo().getSelectedName());
         }
@@ -210,13 +208,10 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
   }
 
   public interface FileCreator<T> {
-
     @Nullable
     T createFile(@NotNull String name, @NotNull String templateName);
 
     @NotNull
     String getActionName(@NotNull String name, @NotNull String templateName);
-
-    boolean startInWriteAction();
   }
 }

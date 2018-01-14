@@ -19,7 +19,6 @@ package com.intellij.ide.actions;
 import com.intellij.ide.IdeView;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.application.WriteActionAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.util.text.StringUtil;
@@ -36,7 +35,7 @@ import javax.swing.*;
  *
  * @since 5.1
  */
-public abstract class CreateElementActionBase extends CreateInDirectoryActionBase implements WriteActionAware {
+public abstract class CreateElementActionBase extends CreateInDirectoryActionBase {
 
   protected CreateElementActionBase() {
   }
@@ -55,6 +54,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
    * @return created elements. Never null.
    */
   @NotNull
+  @RequiredDispatchThread
   protected abstract PsiElement[] create(String newName, PsiDirectory directory) throws Exception;
 
   protected abstract String getErrorTitle();
@@ -102,6 +102,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
       return myDirectory;
     }
 
+    @RequiredDispatchThread
     @Override
     public boolean checkInput(final String inputString) {
       return true;
@@ -113,15 +114,11 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
     }
 
     @Override
-    public boolean startInWriteAction() {
-      return CreateElementActionBase.this.startInWriteAction();
-    }
-
-    @Override
     public String getActionName(String newName) {
       return CreateElementActionBase.this.getActionName(myDirectory, newName);
     }
 
+    @RequiredDispatchThread
     @Override
     public boolean canClose(final String inputString) {
       myCreatedElements = tryCreate(inputString);

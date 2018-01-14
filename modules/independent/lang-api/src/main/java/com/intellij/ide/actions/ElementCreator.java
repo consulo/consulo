@@ -20,8 +20,6 @@ import com.intellij.CommonBundle;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.application.WriteActionAware;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.diagnostic.Logger;
@@ -41,8 +39,9 @@ import java.util.List;
 /**
  * @author peter
  */
-public abstract class ElementCreator implements WriteActionAware {
-  private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.ElementCreator");
+public abstract class ElementCreator {
+  private static final Logger LOG = Logger.getInstance(ElementCreator.class);
+
   private final Project myProject;
   private final String myErrorTitle;
 
@@ -81,12 +80,7 @@ public abstract class ElementCreator implements WriteActionAware {
     CommandProcessor.getInstance().executeCommand(myProject, () -> {
       LocalHistoryAction action = LocalHistory.getInstance().startAction(commandName);
       try {
-        if (startInWriteAction()) {
-          WriteAction.run(invokeCreate);
-        }
-        else {
-          invokeCreate.run();
-        }
+        invokeCreate.run();
       }
       catch (Exception ex) {
         exception[0] = ex;

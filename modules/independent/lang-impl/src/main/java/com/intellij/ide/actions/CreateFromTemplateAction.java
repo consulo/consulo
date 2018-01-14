@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.WriteActionAware;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -30,6 +29,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
+import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,23 +39,22 @@ import java.util.Map;
 /**
  * @author Eugene.Kudelevsky
  */
-public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnAction implements WriteActionAware {
-  protected static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.CreateFromTemplateAction");
+public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnAction {
+  protected static final Logger LOG = Logger.getInstance(CreateFromTemplateAction.class);
 
   public CreateFromTemplateAction(String text, String description, Icon icon) {
     super(text, description, icon);
   }
 
+  @RequiredDispatchThread
   @Override
-  public final void actionPerformed(final AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-
-    final IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
+  public final void actionPerformed(@NotNull AnActionEvent e) {
+    final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
     if (view == null) {
       return;
     }
 
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
 
     final PsiDirectory dir = view.getOrChooseDirectory();
     if (dir == null || project == null) return;
@@ -64,33 +63,26 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     buildDialog(project, dir, builder);
 
     final Ref<String> selectedTemplateName = Ref.create(null);
-    final T createdElement =
-            builder.show(getErrorTitle(), getDefaultTemplateName(dir), new CreateFileFromTemplateDialog.FileCreator<T>() {
+    final T createdElement = builder.show(getErrorTitle(), getDefaultTemplateName(dir), new CreateFileFromTemplateDialog.FileCreator<T>() {
+      @Override
+      public T createFile(@NotNull String name, @NotNull String templateName) {
+        selectedTemplateName.set(templateName);
+        return CreateFromTemplateAction.this.createFile(name, templateName, dir);
+      }
 
-              @Override
-              public T createFile(@NotNull String name, @NotNull String templateName) {
-                selectedTemplateName.set(templateName);
-                return CreateFromTemplateAction.this.createFile(name, templateName, dir);
-              }
-
-              @Override
-              public boolean startInWriteAction() {
-                return CreateFromTemplateAction.this.startInWriteAction();
-              }
-
-              @Override
-              @NotNull
-              public String getActionName(@NotNull String name, @NotNull String templateName) {
-                return CreateFromTemplateAction.this.getActionName(dir, name, templateName);
-              }
-            });
+      @Override
+      @NotNull
+      public String getActionName(@NotNull String name, @NotNull String templateName) {
+        return CreateFromTemplateAction.this.getActionName(dir, name, templateName);
+      }
+    });
     if (createdElement != null) {
       view.selectElement(createdElement);
       postProcess(createdElement, selectedTemplateName.get(), builder.getCustomProperties());
     }
   }
 
-  protected void postProcess(T createdElement, String templateName, Map<String,String> customProperties) {
+  protected void postProcess(T createdElement, String templateName, Map<String, String> customProperties) {
   }
 
   @Nullable
@@ -109,8 +101,9 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     return null;
   }
 
+  @RequiredDispatchThread
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@NotNull AnActionEvent e) {
     if (!e.getPresentation().isVisible()) {
       return;
     }

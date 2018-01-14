@@ -292,7 +292,7 @@ public class FileTemplateUtil {
 
   public static PsiElement createFromTemplate(@NotNull final FileTemplate template,
                                               @NonNls @Nullable String fileName,
-                                              @Nullable Map<String, Object> originalVariables,
+                                              @Nullable Map<String, Object> additionalProperties,
                                               @NotNull final PsiDirectory directory,
                                               @Nullable ClassLoader classLoader) throws Exception {
     final Project project = directory.getProject();
@@ -300,8 +300,8 @@ public class FileTemplateUtil {
     Map<String, Object> properties = new THashMap<>();
     FileTemplateManager.getInstance(project).fillDefaultVariables(properties);
 
-    if(originalVariables != null) {
-      properties.putAll(originalVariables);
+    if(additionalProperties != null) {
+      properties.putAll(additionalProperties);
     }
 
     FileTemplateManager.getInstance(project).addRecentName(template.getName());
