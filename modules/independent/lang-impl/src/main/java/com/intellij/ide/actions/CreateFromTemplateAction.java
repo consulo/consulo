@@ -30,6 +30,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,12 +77,14 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
         return CreateFromTemplateAction.this.getActionName(dir, name, templateName);
       }
     });
+
     if (createdElement != null) {
       view.selectElement(createdElement);
       postProcess(createdElement, selectedTemplateName.get(), builder.getCustomProperties());
     }
   }
 
+  @RequiredDispatchThread
   protected void postProcess(T createdElement, String templateName, Map<String, String> customProperties) {
   }
 
@@ -94,6 +97,11 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
   protected String getDefaultTemplateName(@NotNull PsiDirectory dir) {
     String property = getDefaultTemplateProperty();
     return property == null ? null : PropertiesComponent.getInstance(dir.getProject()).getValue(property);
+  }
+
+  @Nullable
+  protected Class<? extends ModuleExtension> getModuleExtensionClass() {
+    return null;
   }
 
   @Nullable

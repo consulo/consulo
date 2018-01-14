@@ -20,13 +20,20 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ide.fileTemplates.actions.CreateFromTemplateActionBase;
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.extensions.CompositeExtensionPointName;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +46,12 @@ import java.util.Map;
  * @author Dmitry Avdeev
  */
 public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAction<PsiFile> {
+  public static interface ModuleResolver {
+    public static final CompositeExtensionPointName<ModuleResolver> EP_NAME = CompositeExtensionPointName.applicationPoint("com.intellij.createFromTemplateActionModuleResolver", ModuleResolver.class);
+
+    @Nullable
+    Module resolveModule(@NotNull PsiDirectory directory, @NotNull FileType fileType);
+  }
 
   public CreateFileFromTemplateAction(String text, String description, Icon icon) {
     super(text, description, icon);
@@ -49,11 +62,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
   }
 
   @Nullable
-  public static PsiFile createFileFromTemplate(@Nullable String name,
-                                               @NotNull FileTemplate template,
-                                               @NotNull PsiDirectory dir,
-                                               @Nullable String defaultTemplateProperty,
-                                               boolean openFile) {
+  public static PsiFile createFileFromTemplate(@Nullable String name, @NotNull FileTemplate template, @NotNull PsiDirectory dir, @Nullable String defaultTemplateProperty, boolean openFile) {
     return createFileFromTemplate(name, template, dir, defaultTemplateProperty, openFile, Collections.emptyMap());
   }
 
@@ -103,6 +112,31 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
     }
 
     return null;
+  }
+
+  @Nullable
+  protected FileType getFileTypeForModuleResolve() {
+    return null;
+  }
+
+  @RequiredDispatchThread
+  @Override
+  protected void postProcess(PsiFile createdElement, String templateName, Map<String, String> customProperties) {
+    super.postProcess(createdElement, templateName, customProperties);
+
+    FileType templateFileType = getFileTypeForModuleResolve();
+    if(templateFileType != null) {
+      PsiDirectory parent = createdElement.getParent();
+      assert parent != null;
+      Module module = ModuleResolver.EP_NAME.composite().resolveModule(parent, templateFileType);
+      if(module != null) {
+        ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
+
+        rootModel.addContentEntry(createdElement.getVirtualFile());
+
+        WriteAction.run(rootModel::commit);
+      }
+    }
   }
 
   @Override
