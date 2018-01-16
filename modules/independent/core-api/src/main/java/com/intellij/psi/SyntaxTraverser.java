@@ -7,6 +7,7 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.openapi.util.*;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteredTraverserBase;
@@ -46,8 +47,13 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
   }
 
   @NotNull
+  public static <T> SyntaxTraverser<T> syntaxTraverser(@NotNull Api<T> api) {
+    return new SyntaxTraverser<>(api, null);
+  }
+
+  @NotNull
   public static SyntaxTraverser<PsiElement> psiTraverser() {
-    return new SyntaxTraverser<PsiElement>(psiApi(), null);
+    return new SyntaxTraverser<>(psiApi(), null);
   }
 
   @NotNull
@@ -57,12 +63,12 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
   @NotNull
   public static SyntaxTraverser<PsiElement> revPsiTraverser() {
-    return new SyntaxTraverser<PsiElement>(psiApiReversed(), null);
+    return new SyntaxTraverser<>(psiApiReversed(), null);
   }
 
   @NotNull
   public static SyntaxTraverser<ASTNode> astTraverser() {
-    return new SyntaxTraverser<ASTNode>(astApi(), null);
+    return new SyntaxTraverser<>(astApi(), null);
   }
 
   @NotNull
@@ -73,7 +79,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
   @NotNull
   public static SyntaxTraverser<LighterASTNode> lightTraverser(@NotNull PsiBuilder builder) {
     LighterASTApi api = new LighterASTApi(builder);
-    return new SyntaxTraverser<LighterASTNode>(api, Meta.<LighterASTNode>empty().withRoots(JBIterable.of(api.getStructure().getRoot())));
+    return new SyntaxTraverser<>(api, Meta.<LighterASTNode>empty().withRoots(JBIterable.of(api.getStructure().getRoot())));
   }
 
   public final Api<T> api;
@@ -86,7 +92,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
   @NotNull
   @Override
   protected SyntaxTraverser<T> newInstance(Meta<T> meta) {
-    return new SyntaxTraverser<T>(api, meta);
+    return new SyntaxTraverser<>(api, meta);
   }
 
   @Override
@@ -111,28 +117,33 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
   @NotNull
   public SyntaxTraverser<T> expandTypes(@NotNull Condition<? super IElementType> c) {
-    return super.expand(compose(api.TO_TYPE(), c));
+    return super.expand(compose(api.TO_TYPE, c));
   }
 
   @NotNull
   public SyntaxTraverser<T> filterTypes(@NotNull Condition<? super IElementType> c) {
-    return super.filter(compose(api.TO_TYPE(), c));
+    return super.filter(compose(api.TO_TYPE, c));
   }
 
   @NotNull
   public SyntaxTraverser<T> forceDisregardTypes(@NotNull Condition<? super IElementType> c) {
-    return super.forceDisregard(compose(api.TO_TYPE(), c));
+    return super.forceDisregard(compose(api.TO_TYPE, c));
   }
 
   @Nullable
   public T getRawDeepestLast() {
-    for (T result = getRoot(), last; result != null; result = last) {
+    for (T result = JBIterable.from(getRoots()).last(), last; result != null; result = last) {
       JBIterable<T> children = children(result);
       if (children.isEmpty()) return result;
       //noinspection AssignmentToForLoopParameter
       last = children.last();
     }
     return null;
+  }
+
+  @NotNull
+  public final SyntaxTraverser<T> onRange(@NotNull final TextRange range) {
+    return onRange(e -> api.rangeOf(e).intersects(range));
   }
 
   public abstract static class Api<T> implements Function<T, Iterable<? extends T>> {
@@ -158,61 +169,48 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
     @NotNull
     public JBIterable<T> parents(@Nullable final T element) {
-      return JBIterable.generate(element, new Function<T, T>() {
-        @Override
-        public T fun(T t) {
-          return parent(t);
-        }
-      });
+      return JBIterable.generate(element, t -> parent(t));
     }
 
-    @NotNull
-    public Function<T, IElementType> TO_TYPE() {
-      return new Function<T, IElementType>() {
-        @Override
-        public IElementType fun(T t) {
-          return typeOf(t);
-        }
+    public final Function<T, IElementType> TO_TYPE = new Function<T, IElementType>() {
+      @Override
+      public IElementType fun(T t) {
+        return typeOf(t);
+      }
 
-        @Override
-        public String toString() {
-          return "TO_TYPE";
-        }
-      };
-    }
+      @Override
+      public String toString() {
+        return "TO_TYPE";
+      }
+    };
 
-    @NotNull
-    public Function<T, CharSequence> TO_TEXT() {
-      return new Function<T, CharSequence>() {
-        @Override
-        public CharSequence fun(T t) {
-          return textOf(t);
-        }
+    public final Function<T, CharSequence> TO_TEXT = new Function<T, CharSequence>() {
+      @Override
+      public CharSequence fun(T t) {
+        return textOf(t);
+      }
 
-        @Override
-        public String toString() {
-          return "TO_TEXT";
-        }
-      };
-    }
+      @Override
+      public String toString() {
+        return "TO_TEXT";
+      }
+    };
 
-    @NotNull
-    public Function<T, TextRange> TO_RANGE() {
-      return new Function<T, TextRange>() {
-        @Override
-        public TextRange fun(T t) {
-          return rangeOf(t);
-        }
+    public final Function<T, TextRange> TO_RANGE = new Function<T, TextRange>() {
+      @Override
+      public TextRange fun(T t) {
+        return rangeOf(t);
+      }
 
-        @Override
-        public String toString() {
-          return "TO_RANGE";
-        }
-      };
-    }
+      @Override
+      public String toString() {
+        return "TO_RANGE";
+      }
+    };
   }
 
   public abstract static class ApiEx<T> extends Api<T> {
+
     @Nullable
     public abstract T first(@NotNull T node);
 
@@ -227,16 +225,28 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
     @NotNull
     @Override
-    public JBIterable<? extends T> children(@NotNull final T node) {
-      final T first = first(node);
+    public JBIterable<? extends T> children(@NotNull T node) {
+      T first = first(node);
       if (first == null) return JBIterable.empty();
-      return JBIterable.generate(first, new Function<T, T>() {
-        @Override
-        public T fun(T t) {
-          return next(t);
-        }
-      });
+      return siblings(first);
     }
+
+    @NotNull
+    public JBIterable<? extends T> siblings(@NotNull T node) {
+      return JBIterable.generate(node, TO_NEXT);
+    }
+
+    private final Function<T, T> TO_NEXT = new Function<T, T>() {
+      @Override
+      public T fun(T t) {
+        return next(t);
+      }
+
+      @Override
+      public String toString() {
+        return "TO_NEXT";
+      }
+    };
   }
 
   private static class PsiApi extends ApiEx<PsiElement> {
@@ -295,7 +305,8 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
     @NotNull
     @Override
     public IElementType typeOf(@NotNull PsiElement node) {
-      return node.getNode().getElementType();
+      IElementType type = PsiUtilCore.getElementType(node);
+      return type != null ? type : IElementType.find((short)0);
     }
 
     @NotNull
@@ -389,19 +400,15 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
         public Iterator<T> iterator() {
           FlyweightCapableTreeStructure<T> structure = getStructure();
           Ref<T[]> ref = Ref.create();
-          int count = structure.getChildren(structure.prepareForGetChildren(node), ref);
+          int count = structure.getChildren(node, ref);
           if (count == 0) return ContainerUtil.emptyIterator();
           T[] array = ref.get();
           LinkedList<T> list = ContainerUtil.newLinkedList();
           for (int i = 0; i < count; i++) {
             T child = array[i];
             IElementType childType = typeOf(child);
-            // skip TokenType.* types, errors cannot be properly handled (no parents)
-            if (childType == TokenType.ERROR_ELEMENT) {
-              // todo remember error
-              continue;
-            }
-            else if (childType == TokenType.WHITE_SPACE || childType == TokenType.BAD_CHARACTER) {
+            // tokens and errors getParent() == null
+            if (childType == TokenType.WHITE_SPACE || childType == TokenType.BAD_CHARACTER) {
               continue;
             }
             array[i] = null; // do not dispose meaningful TokenNodes

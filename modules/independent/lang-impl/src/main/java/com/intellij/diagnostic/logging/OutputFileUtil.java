@@ -15,6 +15,7 @@
  */
 package com.intellij.diagnostic.logging;
 
+import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.HyperlinkInfo;
@@ -34,6 +35,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -49,6 +51,22 @@ public class OutputFileUtil {
   private static final String CONSOLE_OUTPUT_FILE_MESSAGE = "Console output is saving to: ";
 
   private OutputFileUtil() {
+  }
+
+  public static File getOutputFile(@NotNull final RunConfigurationBase configuration) {
+    String outputFilePath = configuration.getOutputFilePath();
+    if (outputFilePath != null) {
+      final String filePath = FileUtil.toSystemDependentName(outputFilePath);
+      File file = new File(filePath);
+      if (configuration instanceof CommonProgramRunConfigurationParameters && !FileUtil.isAbsolute(filePath)) {
+        String directory = ((CommonProgramRunConfigurationParameters)configuration).getWorkingDirectory();
+        if (directory != null) {
+          file = new File(new File(directory), filePath);
+        }
+      }
+      return file;
+    }
+    return null;
   }
 
   public static void attachDumpListener(final RunConfigurationBase base, final ProcessHandler startedProcess, ExecutionConsole console) {

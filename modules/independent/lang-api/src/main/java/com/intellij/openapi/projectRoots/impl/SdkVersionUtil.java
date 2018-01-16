@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.Future;
 
+@Deprecated
 public class SdkVersionUtil {
   private static final NotNullFunction<Runnable, Future<?>> ACTION_RUNNER = new NotNullFunction<Runnable, Future<?>>() {
     @Override

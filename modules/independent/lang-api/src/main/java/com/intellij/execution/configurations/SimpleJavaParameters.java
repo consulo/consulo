@@ -31,7 +31,7 @@ import java.nio.charset.Charset;
 /**
  * @author Gregory.Shrago
  */
-//TODO [VISTALL] move to java-platform
+@Deprecated
 public class SimpleJavaParameters extends SimpleProgramParameters {
   private Sdk myJdk;
   private String myMainClass;
@@ -40,7 +40,7 @@ public class SimpleJavaParameters extends SimpleProgramParameters {
   private Charset myCharset = CharsetToolkit.getDefaultSystemCharset();
   private boolean myUseDynamicClasspath;
   private boolean myUseDynamicVMOptions;
-  
+
   public String getMainClass() {
     return myMainClass;
   }

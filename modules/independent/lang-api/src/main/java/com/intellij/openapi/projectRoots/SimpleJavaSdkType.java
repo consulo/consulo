@@ -29,6 +29,7 @@ import java.io.File;
 /**
  * @author Gregory.Shrago
  */
+@Deprecated
 public class SimpleJavaSdkType extends SdkType implements JavaSdkType {
   // do not use javaw.exe for Windows because of issues with encoding
   @NonNls private static final String VM_EXE_NAME = "java";

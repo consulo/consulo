@@ -23,6 +23,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.util.io.BaseOutputReader;
+import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +43,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   private Set<File> myFilesToDelete = null;
 
   public OSProcessHandler(@NotNull GeneralCommandLine commandLine) throws ExecutionException {
-    this(commandLine.createProcess(), commandLine.getCommandLineString(), commandLine.getCharset());
+    this(startProcess(commandLine), commandLine.getCommandLineString(), commandLine.getCharset());
     myHasErrorStream = !commandLine.isRedirectErrorStream();
     myFilesToDelete = commandLine.getUserData(DELETE_FILES_ON_TERMINATION);
   }
@@ -60,6 +61,29 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   public OSProcessHandler(@NotNull Process process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
     super(process, commandLine, charset);
     setHasPty(isPtyProcess(process));
+  }
+
+  private static Process startProcess(GeneralCommandLine commandLine) throws ExecutionException {
+    try {
+      return commandLine.createProcess();
+    }
+    catch (ExecutionException | RuntimeException | Error e) {
+      deleteTempFiles(commandLine.getUserData(DELETE_FILES_ON_TERMINATION));
+      throw e;
+    }
+  }
+
+  private static void deleteTempFiles(Set<File> tempFiles) {
+    if (tempFiles != null) {
+      try {
+        for (File file : tempFiles) {
+          FileUtil.delete(file);
+        }
+      }
+      catch (Throwable t) {
+        LOG.error("failed to delete temp. files", t);
+      }
+    }
   }
 
   private static boolean isPtyProcess(Process process) {
@@ -84,11 +108,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   @Override
   protected void onOSProcessTerminated(int exitCode) {
     super.onOSProcessTerminated(exitCode);
-    if (myFilesToDelete != null) {
-      for (File file : myFilesToDelete) {
-        FileUtil.delete(file);
-      }
-    }
+    deleteTempFiles(myFilesToDelete);
   }
 
   @Override
@@ -166,5 +186,17 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   @Override
   protected BaseOutputReader.Options readerOptions() {
     return myHasPty ? BaseOutputReader.Options.BLOCKING : super.readerOptions();  // blocking read in case of PTY-based process
+  }
+
+  /**
+   * Registers a file to delete after the given command line finishes.
+   * In order to have an effect, the command line has to be executed with {@link #OSProcessHandler(GeneralCommandLine)}.
+   */
+  public static void deleteFileOnTermination(@NotNull GeneralCommandLine commandLine, @NotNull File fileToDelete) {
+    Set<File> set = commandLine.getUserData(DELETE_FILES_ON_TERMINATION);
+    if (set == null) {
+      commandLine.putUserData(DELETE_FILES_ON_TERMINATION, set = new THashSet<>());
+    }
+    set.add(fileToDelete);
   }
 }
