@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -30,10 +29,11 @@ import java.util.Set;
  *
  * @author mike
  */
-public class ImportSettingsFilenameFilter implements FilenameFilter, Serializable {
-  private final Set<String> myRelativeNamesToExtract;
+public class ImportSettingsFilenameFilter implements FilenameFilter {
   @NonNls
   static final String SETTINGS_JAR_MARKER = "Consulo Global Settings";
+
+  private final Set<String> myRelativeNamesToExtract;
 
   public ImportSettingsFilenameFilter(Set<String> relativeNamesToExtract) {
     myRelativeNamesToExtract = relativeNamesToExtract;
@@ -50,5 +50,17 @@ public class ImportSettingsFilenameFilter implements FilenameFilter, Serializabl
       if (relativePath.startsWith(allowedRelPath)) return true;
     }
     return false;
+  }
+
+  public Set<String> getRelativeNamesToExtract() {
+    return myRelativeNamesToExtract;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("ImportSettingsFilenameFilter{");
+    sb.append("myRelativeNamesToExtract=").append(myRelativeNamesToExtract);
+    sb.append('}');
+    return sb.toString();
   }
 }

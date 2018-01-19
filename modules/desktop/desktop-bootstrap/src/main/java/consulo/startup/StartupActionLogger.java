@@ -92,7 +92,7 @@ public class StartupActionLogger extends Logger implements Closeable {
   public void close() throws IOException {
     String systemPath = PathManager.getPluginTempPath();
 
-    File file = new File(systemPath, "action.log");
+    File file = new File(systemPath, "start.log");
 
     FileWriter logFile = new FileWriter(file, false);
 
