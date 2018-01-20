@@ -192,6 +192,11 @@ public class StartupActionScriptManager {
   }
 
   private static List<ActionCommand> loadStartActions(Logger logger) throws IOException {
+    List<ActionCommand> actionCommands = loadObsoleteActionScriptFile(logger);
+    if (!actionCommands.isEmpty()) {
+      return actionCommands;
+    }
+
     File file = new File(getStartXmlFilePath());
 
     if (file.exists()) {
@@ -214,7 +219,7 @@ public class StartupActionScriptManager {
             String descriptionValue = element.getAttributeValue("description");
             String filter = element.getAttributeValue("filter");
             FilenameFilter filenameFilter = null;
-            if("import".equals(filter)) {
+            if ("import".equals(filter)) {
               Set<String> names = new HashSet<String>();
               for (Element child : element.getChildren()) {
                 names.add(child.getTextTrim());
@@ -235,6 +240,39 @@ public class StartupActionScriptManager {
     }
     else {
       logger.warn("No " + ourStartXmlFileName + " file");
+      return Collections.emptyList();
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private static List<ActionCommand> loadObsoleteActionScriptFile(Logger logger) {
+    File file = new File(PathManager.getPluginTempPath(), "action.script");
+    if (file.exists()) {
+      ObjectInputStream stream = null;
+      try {
+        stream = new ObjectInputStream(new FileInputStream(file));
+        return (ArrayList<ActionCommand>)stream.readObject();
+      }
+      catch (Exception e) {
+        return Collections.emptyList();
+      }
+      finally {
+        try {
+          if (stream != null) {
+            stream.close();
+          }
+        }
+        catch (IOException ignored) {
+        }
+
+        try {
+          file.delete();
+        }
+        catch (Exception ignored) {
+        }
+      }
+    }
+    else {
       return Collections.emptyList();
     }
   }
