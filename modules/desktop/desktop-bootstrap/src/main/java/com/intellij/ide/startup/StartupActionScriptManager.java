@@ -40,9 +40,11 @@ public class StartupActionScriptManager {
     void execute(Logger logger) throws IOException;
   }
 
-  public static class UnzipCommand implements ActionCommand {
+  public static class UnzipCommand implements ActionCommand, Serializable {
     @NonNls
     private static final String action = "unzip";
+
+    private static final long serialVersionUID = 2;
 
     private File mySource;
     private FilenameFilter myFilenameFilter;
@@ -100,9 +102,11 @@ public class StartupActionScriptManager {
 
   }
 
-  public static class DeleteCommand implements ActionCommand {
+  public static class DeleteCommand implements ActionCommand, Serializable {
     @NonNls
     private static final String action = "delete";
+
+    private static final long serialVersionUID = 3;
 
     private final File mySource;
 
