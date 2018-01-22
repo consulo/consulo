@@ -17,7 +17,6 @@ package consulo.ide.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -40,15 +39,8 @@ public class PsiFileIconDescriptorUpdater implements IconDescriptorUpdater {
   public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
     if (element instanceof PsiFile) {
       if (iconDescriptor.getMainIcon() == null) {
-        VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
-        if (virtualFile != null) {
-          iconDescriptor.setMainIcon(NativeFileIconUtil.INSTANCE.getIcon(virtualFile));
-        }
-
-        if (iconDescriptor.getMainIcon() == null) {
-          FileType fileType = ((PsiFile)element).getFileType();
-          iconDescriptor.setMainIcon(fileType.getIcon());
-        }
+        FileType fileType = ((PsiFile)element).getFileType();
+        iconDescriptor.setMainIcon(fileType.getIcon());
       }
 
       VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();

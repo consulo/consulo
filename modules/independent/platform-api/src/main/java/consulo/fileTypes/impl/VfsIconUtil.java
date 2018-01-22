@@ -17,7 +17,6 @@ package consulo.fileTypes.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
-import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.Key;
@@ -33,7 +32,6 @@ import com.intellij.util.NullableFunction;
 import consulo.annotations.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdaters;
-import consulo.platform.Platform;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,8 +54,7 @@ public class VfsIconUtil {
 
       boolean processedDescriptors = false;
       // disable on webservice native icon
-      final Icon nativeIcon = Platform.current().isWebService() ? null : NativeFileIconUtil.INSTANCE.getIcon(file);
-      IconDescriptor iconDescriptor = new IconDescriptor(nativeIcon == null ? VirtualFilePresentation.getIcon(file) : nativeIcon);
+      IconDescriptor iconDescriptor = new IconDescriptor(VirtualFilePresentation.getIcon(file));
 
       if (project != null) {
         PsiManager manager = PsiManager.getInstance(project);

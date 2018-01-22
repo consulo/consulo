@@ -35,7 +35,8 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
-import com.intellij.openapi.fileTypes.impl.NativeFileIconUtil;
+import com.intellij.openapi.fileTypes.INativeFileType;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
@@ -84,9 +85,7 @@ public final class NavigationUtil {
   }
 
   @NotNull
-  public static JBPopup getPsiElementPopup(@NotNull PsiElement[] elements,
-                                           @NotNull final PsiElementListCellRenderer<PsiElement> renderer,
-                                           final String title) {
+  public static JBPopup getPsiElementPopup(@NotNull PsiElement[] elements, @NotNull final PsiElementListCellRenderer<PsiElement> renderer, final String title) {
     return getPsiElementPopup(elements, renderer, title, new PsiElementProcessor<PsiElement>() {
       @Override
       public boolean execute(@NotNull final PsiElement element) {
@@ -173,7 +172,7 @@ public final class NavigationUtil {
     if (element instanceof PsiFile) {
       VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
       if (virtualFile != null) {
-        openAsNative = NativeFileIconUtil.isNativeFileType(virtualFile);
+        openAsNative = virtualFile.getFileType() instanceof INativeFileType || virtualFile.getFileType() == UnknownFileType.INSTANCE;
       }
     }
 
@@ -239,17 +238,16 @@ public final class NavigationUtil {
     if (attributes.getForegroundColor() == null && attributes.getEffectColor() == null) return attributes;
     MarkupModel model = DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
     if (model != null) {
-      if (!((MarkupModelEx)model).processRangeHighlightersOverlappingWith(range.getStartOffset(), range.getEndOffset(),
-                                                                          highlighter -> {
-                                                                            if (highlighter.isValid() && highlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE) {
-                                                                              TextAttributes textAttributes = highlighter.getTextAttributes();
-                                                                              if (textAttributes != null) {
-                                                                                Color color = textAttributes.getBackgroundColor();
-                                                                                return !(color != null && color.getBlue() > 128 && color.getRed() < 128 && color.getGreen() < 128);
-                                                                              }
-                                                                            }
-                                                                            return true;
-                                                                          })) {
+      if (!((MarkupModelEx)model).processRangeHighlightersOverlappingWith(range.getStartOffset(), range.getEndOffset(), highlighter -> {
+        if (highlighter.isValid() && highlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE) {
+          TextAttributes textAttributes = highlighter.getTextAttributes();
+          if (textAttributes != null) {
+            Color color = textAttributes.getBackgroundColor();
+            return !(color != null && color.getBlue() > 128 && color.getRed() < 128 && color.getGreen() < 128);
+          }
+        }
+        return true;
+      })) {
         TextAttributes clone = attributes.clone();
         clone.setForegroundColor(Color.orange);
         clone.setEffectColor(Color.orange);
@@ -266,6 +264,7 @@ public final class NavigationUtil {
 
   /**
    * Returns navigation popup that shows list of related items from {@code items} list
+   *
    * @param items
    * @param title
    * @param showContainingModules Whether the popup should show additional information that aligned at the right side of the dialog.<br>
@@ -293,12 +292,14 @@ public final class NavigationUtil {
         ((GotoRelatedItem)element).navigate();
       }
       return true;
-    }
-    );
+    });
   }
 
-  private static JBPopup getPsiElementPopup(final Object[] elements, final Map<PsiElement, GotoRelatedItem> itemsMap,
-                                            final String title, final boolean showContainingModules, final Processor<Object> processor) {
+  private static JBPopup getPsiElementPopup(final Object[] elements,
+                                            final Map<PsiElement, GotoRelatedItem> itemsMap,
+                                            final String title,
+                                            final boolean showContainingModules,
+                                            final Processor<Object> processor) {
 
     final Ref<Boolean> hasMnemonic = Ref.create(false);
     final DefaultPsiElementCellRenderer renderer = new DefaultPsiElementCellRenderer() {
@@ -326,9 +327,7 @@ public final class NavigationUtil {
           return customContainerName;
         }
         PsiFile file = element.getContainingFile();
-        return file != null && !getElementText(element).equals(file.getName())
-               ? "(" + file.getName() + ")"
-               : null;
+        return file != null && !getElementText(element).equals(file.getName()) ? "(" + file.getName() + ")" : null;
       }
 
       @Override
@@ -337,12 +336,7 @@ public final class NavigationUtil {
       }
 
       @Override
-      protected boolean customizeNonPsiElementLeftRenderer(ColoredListCellRenderer renderer,
-                                                           JList list,
-                                                           Object value,
-                                                           int index,
-                                                           boolean selected,
-                                                           boolean hasFocus) {
+      protected boolean customizeNonPsiElementLeftRenderer(ColoredListCellRenderer renderer, JList list, Object value, int index, boolean selected, boolean hasFocus) {
         final GotoRelatedItem item = (GotoRelatedItem)value;
         Color color = list.getForeground();
         final SimpleTextAttributes nameAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);
@@ -404,6 +398,7 @@ public final class NavigationUtil {
     };
     popup.getList().setCellRenderer(new PopupListElementRenderer(popup) {
       Map<Object, String> separators = new HashMap<>();
+
       {
         final ListModel model = popup.getList().getModel();
         String current = null;
@@ -424,6 +419,7 @@ public final class NavigationUtil {
           separators.remove(model.getElementAt(0));
         }
       }
+
       @Override
       public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         final Component component = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -436,7 +432,7 @@ public final class NavigationUtil {
             @Override
             protected void paintComponent(Graphics g) {
               g.setColor(new JBColor(Color.WHITE, UIUtil.getSeparatorColor()));
-              g.fillRect(0,0,getWidth(), getHeight());
+              g.fillRect(0, 0, getWidth(), getHeight());
               super.paintComponent(g);
             }
           };
@@ -462,10 +458,7 @@ public final class NavigationUtil {
     return popup;
   }
 
-  private static Action createNumberAction(final int mnemonic,
-                                           final ListPopupImpl listPopup,
-                                           final Map<PsiElement, GotoRelatedItem> itemsMap,
-                                           final Processor<Object> processor) {
+  private static Action createNumberAction(final int mnemonic, final ListPopupImpl listPopup, final Map<PsiElement, GotoRelatedItem> itemsMap, final Processor<Object> processor) {
     return new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
