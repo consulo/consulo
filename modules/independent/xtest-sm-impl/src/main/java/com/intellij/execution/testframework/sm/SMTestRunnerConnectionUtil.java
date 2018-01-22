@@ -33,6 +33,7 @@ import com.intellij.execution.testframework.sm.runner.ui.SMTestRunnerResultsForm
 import com.intellij.execution.testframework.sm.runner.ui.statistics.StatisticsPanel;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.ui.ConsoleView;
+import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
@@ -54,21 +55,64 @@ import java.util.List;
 public class SMTestRunnerConnectionUtil {
   private static final String TEST_RUNNER_DEBUG_MODE_PROPERTY = "idea.smrunner.debug";
 
-  private SMTestRunnerConnectionUtil() { }
+  @SuppressWarnings("deprecation")
+  public static class CompositeTestLocationProvider implements SMTestLocator {
+    private final TestLocationProvider myPrimaryLocator;
+    private final TestLocationProvider[] myLocators;
+
+    public CompositeTestLocationProvider(@Nullable TestLocationProvider primaryLocator) {
+      myPrimaryLocator = primaryLocator;
+      myLocators = Extensions.getExtensions(TestLocationProvider.EP_NAME);
+    }
+
+    @NotNull
+    @Override
+    public List<Location> getLocation(@NotNull String protocol, @NotNull String path, @NotNull Project project, @NotNull GlobalSearchScope scope) {
+      boolean isDumbMode = DumbService.isDumb(project);
+
+      if (myPrimaryLocator != null && (!isDumbMode || myPrimaryLocator instanceof DumbAware)) {
+        List<Location> locations = myPrimaryLocator.getLocation(protocol, path, project);
+        if (!locations.isEmpty()) {
+          return locations;
+        }
+      }
+
+      if (URLUtil.FILE_PROTOCOL.equals(protocol)) {
+        List<Location> locations = FileUrlProvider.INSTANCE.getLocation(protocol, path, project, scope);
+        if (!locations.isEmpty()) {
+          return locations;
+        }
+      }
+
+      for (TestLocationProvider provider : myLocators) {
+        if (!isDumbMode || provider instanceof DumbAware) {
+          List<Location> locations = provider.getLocation(protocol, path, project);
+          if (!locations.isEmpty()) {
+            return locations;
+          }
+        }
+      }
+
+      return Collections.emptyList();
+    }
+  }
+
+  private SMTestRunnerConnectionUtil() {
+  }
 
   /**
    * Creates Test Runner console component with test tree, console, statistics tabs
    * and attaches it to given Process handler.
-   * <p/>
+   * <p>
    * You can use this method in run configuration's CommandLineState. You should
    * just override "execute" method of your custom command line state and return
    * test runner's console.
-   * <p/>
+   * <p>
    * E.g: <pre>{@code
    * public class MyCommandLineState extends CommandLineState {
-   *
+   * <p>
    *   // ...
-   *
+   * <p>
    *   @Override
    *   public ExecutionResult execute(@NotNull Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
    *     ProcessHandler processHandler = startProcess();
@@ -80,7 +124,7 @@ public class SMTestRunnerConnectionUtil {
    *   }
    * }
    * }</pre>
-   * <p/>
+   * <p>
    * NB: For debug purposes please enable "debug mode". In this mode test runner will also validate
    * consistency of test events communication protocol and throw assertion errors. To enable debug mode
    * please set system property idea.smrunner.debug=true
@@ -94,17 +138,15 @@ public class SMTestRunnerConnectionUtil {
    *                            be caught and shown in error message box
    */
   @NotNull
-  public static BaseTestsOutputConsoleView createAndAttachConsole(@NotNull String testFrameworkName,
-                                                                  @NotNull ProcessHandler processHandler,
-                                                                  @NotNull TestConsoleProperties consoleProperties) throws ExecutionException {
+  public static BaseTestsOutputConsoleView createAndAttachConsole(@NotNull String testFrameworkName, @NotNull ProcessHandler processHandler, @NotNull TestConsoleProperties consoleProperties)
+          throws ExecutionException {
     BaseTestsOutputConsoleView console = createConsole(testFrameworkName, consoleProperties);
     console.attachToProcess(processHandler);
     return console;
   }
 
   @NotNull
-  public static BaseTestsOutputConsoleView createConsole(@NotNull String testFrameworkName,
-                                                         @NotNull TestConsoleProperties consoleProperties) {
+  public static BaseTestsOutputConsoleView createConsole(@NotNull String testFrameworkName, @NotNull TestConsoleProperties consoleProperties) {
     String splitterPropertyName = getSplitterPropertyName(testFrameworkName);
     SMTRunnerConsoleView consoleView = new SMTRunnerConsoleView(consoleProperties, splitterPropertyName);
     initConsoleView(consoleView, testFrameworkName);
@@ -144,14 +186,7 @@ public class SMTestRunnerConnectionUtil {
         }
 
         SMTestRunnerResultsForm resultsForm = consoleView.getResultsViewer();
-        attachEventsProcessors(properties,
-                               resultsForm,
-                               resultsForm.getStatisticsPane(),
-                               processHandler,
-                               testFrameworkName,
-                               testLocator,
-                               idBasedTestTree,
-                               printerProvider);
+        attachEventsProcessors(properties, resultsForm, resultsForm.getStatisticsPane(), processHandler, testFrameworkName, testLocator, idBasedTestTree, printerProvider);
       }
     });
     consoleView.setHelpId("reference.runToolWindow.testResultsTab");
@@ -222,7 +257,7 @@ public class SMTestRunnerConnectionUtil {
     processHandler.addProcessListener(new ProcessAdapter() {
       @Override
       public void processTerminated(final ProcessEvent event) {
-        outputConsumer.flushBufferBeforeTerminating();
+        outputConsumer.flushBufferOnProcessTermination(event.getExitCode());
         eventsProcessor.onFinishTesting();
 
         Disposer.dispose(eventsProcessor);
@@ -266,7 +301,9 @@ public class SMTestRunnerConnectionUtil {
     }
   }
 
-  /** @deprecated use {@link #createAndAttachConsole(String, ProcessHandler, TestConsoleProperties)} (to be removed in IDEA 16) */
+  /**
+   * @deprecated use {@link #createAndAttachConsole(String, ProcessHandler, TestConsoleProperties)} (to be removed in IDEA 16)
+   */
   @SuppressWarnings({"unused", "deprecation"})
   public static BaseTestsOutputConsoleView createAndAttachConsole(@NotNull String testFrameworkName,
                                                                   @NotNull ProcessHandler processHandler,
@@ -277,15 +314,17 @@ public class SMTestRunnerConnectionUtil {
     return console;
   }
 
-  /** @deprecated use {@link SMTestRunnerConnectionUtil#createConsole(String, TestConsoleProperties)} instead (to be removed in IDEA 16) */
+  /**
+   * @deprecated use {@link SMTestRunnerConnectionUtil#createConsole(String, TestConsoleProperties)} instead (to be removed in IDEA 16)
+   */
   @SuppressWarnings({"unused", "deprecation"})
-  public static BaseTestsOutputConsoleView createConsole(@NotNull String testFrameworkName,
-                                                         @NotNull TestConsoleProperties consoleProperties,
-                                                         ExecutionEnvironment environment) {
+  public static BaseTestsOutputConsoleView createConsole(@NotNull String testFrameworkName, @NotNull TestConsoleProperties consoleProperties, ExecutionEnvironment environment) {
     return createConsoleWithCustomLocator(testFrameworkName, consoleProperties, environment, null);
   }
 
-  /** @deprecated use {@link #createConsole(String, TestConsoleProperties)} (to be removed in IDEA 16) */
+  /**
+   * @deprecated use {@link #createConsole(String, TestConsoleProperties)} (to be removed in IDEA 16)
+   */
   @SuppressWarnings({"unused", "deprecation"})
   public static BaseTestsOutputConsoleView createConsoleWithCustomLocator(@NotNull String testFrameworkName,
                                                                           @NotNull TestConsoleProperties consoleProperties,
@@ -294,7 +333,9 @@ public class SMTestRunnerConnectionUtil {
     return createConsoleWithCustomLocator(testFrameworkName, consoleProperties, environment, locator, false, null);
   }
 
-  /** @deprecated use {@link #createConsole(String, TestConsoleProperties)} (to be removed in IDEA 16) */
+  /**
+   * @deprecated use {@link #createConsole(String, TestConsoleProperties)} (to be removed in IDEA 16)
+   */
   @SuppressWarnings({"unused", "deprecation"})
   public static SMTRunnerConsoleView createConsoleWithCustomLocator(@NotNull String testFrameworkName,
                                                                     @NotNull TestConsoleProperties consoleProperties,
@@ -308,7 +349,9 @@ public class SMTestRunnerConnectionUtil {
     return consoleView;
   }
 
-  /** @deprecated use {@link #initConsoleView(SMTRunnerConsoleView, String)} (to be removed in IDEA 16) */
+  /**
+   * @deprecated use {@link #initConsoleView(SMTRunnerConsoleView, String)} (to be removed in IDEA 16)
+   */
   @SuppressWarnings({"unused", "deprecation"})
   public static void initConsoleView(@NotNull final SMTRunnerConsoleView consoleView,
                                      @NotNull final String testFrameworkName,
@@ -328,21 +371,16 @@ public class SMTestRunnerConnectionUtil {
         }
 
         SMTestRunnerResultsForm resultsForm = consoleView.getResultsViewer();
-        attachEventsProcessors(properties,
-                               resultsForm,
-                               resultsForm.getStatisticsPane(),
-                               processHandler,
-                               testFrameworkName,
-                               testLocator,
-                               idBasedTreeConstruction,
-                               printerProvider);
+        attachEventsProcessors(properties, resultsForm, resultsForm.getStatisticsPane(), processHandler, testFrameworkName, testLocator, idBasedTreeConstruction, printerProvider);
       }
     });
     consoleView.setHelpId("reference.runToolWindow.testResultsTab");
     consoleView.initUI();
   }
 
-  /** @deprecated use {@link #createAndAttachConsole(String, ProcessHandler, TestConsoleProperties)} (to be removed in IDEA 16) */
+  /**
+   * @deprecated use {@link #createAndAttachConsole(String, ProcessHandler, TestConsoleProperties)} (to be removed in IDEA 16)
+   */
   @SuppressWarnings({"unused", "deprecation"})
   public static ConsoleView createAndAttachConsole(@NotNull String testFrameworkName,
                                                    @NotNull ProcessHandler processHandler,
@@ -353,12 +391,12 @@ public class SMTestRunnerConnectionUtil {
     return createAndAttachConsole(testFrameworkName, processHandler, consoleProperties, commandLineState.getEnvironment());
   }
 
-  /** @deprecated use {@link #createConsole(String, TestConsoleProperties)} (to be removed in IDEA 16) */
+  /**
+   * @deprecated use {@link #createConsole(String, TestConsoleProperties)} (to be removed in IDEA 16)
+   */
   @SuppressWarnings({"unused", "deprecation"})
-  public static ConsoleView createConsole(@NotNull String testFrameworkName,
-                                          @NotNull CommandLineState commandLineState,
-                                          @NotNull ModuleRunConfiguration config,
-                                          @NotNull Executor executor) throws ExecutionException {
+  public static ConsoleView createConsole(@NotNull String testFrameworkName, @NotNull CommandLineState commandLineState, @NotNull ModuleRunConfiguration config, @NotNull Executor executor)
+          throws ExecutionException {
     TestConsoleProperties consoleProperties = new SMTRunnerConsoleProperties(config, testFrameworkName, executor);
     return createConsole(testFrameworkName, consoleProperties, commandLineState.getEnvironment());
   }

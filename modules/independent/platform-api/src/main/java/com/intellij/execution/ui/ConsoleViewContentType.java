@@ -16,14 +16,15 @@
 package com.intellij.execution.ui;
 
 import com.intellij.execution.process.ProcessOutputTypes;
+import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NonNls;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -95,4 +96,7 @@ public class ConsoleViewContentType {
     }
   }
 
+  public static synchronized Collection<ConsoleViewContentType> getRegisteredTypes() {
+    return ourRegisteredTypes.values();
+  }
 }

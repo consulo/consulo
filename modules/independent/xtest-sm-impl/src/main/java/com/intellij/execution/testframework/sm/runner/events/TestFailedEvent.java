@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,15 @@
  */
 package com.intellij.execution.testframework.sm.runner.events;
 
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import jetbrains.buildServer.messages.serviceMessages.TestFailed;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 public class TestFailedEvent extends TreeNodeEvent {
 
@@ -27,27 +32,60 @@ public class TestFailedEvent extends TreeNodeEvent {
   private final boolean myTestError;
   private final String myComparisonFailureActualText;
   private final String myComparisonFailureExpectedText;
-  private final String myFilePath;
+  private final String myExpectedFilePath;
   private final String myActualFilePath;
   private final long myDurationMillis;
+  private boolean myExpectedFileTemp;
+  private boolean myActualFileTemp;
 
   public TestFailedEvent(@NotNull TestFailed testFailed, boolean testError) {
     this(testFailed, testError, null);
   }
-  public TestFailedEvent(@NotNull TestFailed testFailed, boolean testError, String filePath) {
-    this(testFailed, testError, filePath, null);
+  public TestFailedEvent(@NotNull TestFailed testFailed, boolean testError, @Nullable String expectedFilePath) {
+    this(testFailed, testError, expectedFilePath, null);
   }
-  public TestFailedEvent(@NotNull TestFailed testFailed, boolean testError, String filePath, String actualFilePath) {
+  public TestFailedEvent(@NotNull TestFailed testFailed,
+                         boolean testError,
+                         @Nullable String expectedFilePath,
+                         @Nullable String actualFilePath) {
     super(testFailed.getTestName(), TreeNodeEvent.getNodeId(testFailed));
     if (testFailed.getFailureMessage() == null) throw new NullPointerException();
     myLocalizedFailureMessage = testFailed.getFailureMessage();
     myStacktrace = testFailed.getStacktrace();
     myTestError = testError;
-    myComparisonFailureActualText = testFailed.getActual();
-    myComparisonFailureExpectedText = testFailed.getExpected();
-    myFilePath = filePath;
+
+    myExpectedFilePath = expectedFilePath;
+    String expected = testFailed.getExpected();
+    if (expected == null && expectedFilePath != null) {
+      try {
+        expected = FileUtil.loadFile(new File(expectedFilePath));
+      }
+      catch (IOException ignore) {}
+    }
+    myComparisonFailureExpectedText = expected;
+
     myActualFilePath = actualFilePath;
-    myDurationMillis = parseDuration(testFailed.getAttributes().get("duration"));
+    String actual = testFailed.getActual();
+    if (actual == null && actualFilePath != null) {
+      try {
+        actual = FileUtil.loadFile(new File(actualFilePath));
+      }
+      catch (IOException ignore) {}
+    }
+    myComparisonFailureActualText = actual;
+
+    Map<String, String> attributes = testFailed.getAttributes();
+    myDurationMillis = parseDuration(attributes.get("duration"));
+    myActualFileTemp = Boolean.parseBoolean(attributes.get("actualIsTempFile"));
+    myExpectedFileTemp = Boolean.parseBoolean(attributes.get("expectedIsTempFile"));
+  }
+
+  public boolean isExpectedFileTemp() {
+    return myExpectedFileTemp;
+  }
+
+  public boolean isActualFileTemp() {
+    return myActualFileTemp;
   }
 
   private static long parseDuration(@Nullable String durationStr) {
@@ -68,34 +106,49 @@ public class TestFailedEvent extends TreeNodeEvent {
                          @Nullable String comparisonFailureActualText,
                          @Nullable String comparisonFailureExpectedText) {
     this(testName,
-         -1,
+         null,
          localizedFailureMessage,
          stackTrace,
          testError,
          comparisonFailureActualText,
          comparisonFailureExpectedText,
          null,
+         null,
+         false,
+         false,
          -1);
   }
 
   public TestFailedEvent(@Nullable String testName,
-                         int id,
+                         @Nullable String id,
                          @NotNull String localizedFailureMessage,
                          @Nullable String stackTrace,
                          boolean testError,
                          @Nullable String comparisonFailureActualText,
                          @Nullable String comparisonFailureExpectedText,
-                         @Nullable String expectedTextFilePath,
+                         @Nullable String expectedFilePath,
+                         @Nullable String actualFilePath,
+                         boolean expectedFileTemp,
+                         boolean actualFileTemp,
                          long durationMillis) {
     super(testName, id);
     myLocalizedFailureMessage = localizedFailureMessage;
     myStacktrace = stackTrace;
     myTestError = testError;
+    myExpectedFilePath = expectedFilePath;
+    if (comparisonFailureExpectedText == null && expectedFilePath != null) {
+      try {
+        comparisonFailureExpectedText = FileUtil.loadFile(new File(expectedFilePath));
+      }
+      catch (IOException ignore) {}
+    }
     myComparisonFailureActualText = comparisonFailureActualText;
+
+    myActualFilePath = actualFilePath;
     myComparisonFailureExpectedText = comparisonFailureExpectedText;
-    myFilePath = expectedTextFilePath;
-    myActualFilePath = null;
     myDurationMillis = durationMillis;
+    myExpectedFileTemp = expectedFileTemp;
+    myActualFileTemp = actualFileTemp;
   }
 
   @NotNull
@@ -131,10 +184,19 @@ public class TestFailedEvent extends TreeNodeEvent {
     append(buf, "comparisonFailureExpectedText", myComparisonFailureExpectedText);
   }
 
+  /**
+   * @deprecated use {@link #getExpectedFilePath()} instead
+   */
   public String getFilePath() {
-    return myFilePath;
+    return myExpectedFilePath;
   }
 
+  @Nullable
+  public String getExpectedFilePath() {
+    return myExpectedFilePath;
+  }
+
+  @Nullable
   public String getActualFilePath() {
     return myActualFilePath;
   }

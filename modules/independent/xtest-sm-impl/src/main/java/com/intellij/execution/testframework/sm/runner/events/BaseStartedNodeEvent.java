@@ -22,37 +22,46 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
 
-  private final int myParentId;
+  private final String myParentId;
   private final String myLocationUrl;
+  private final String myMetainfo;
   private final String myNodeType;
   private final String myNodeArgs;
   private final boolean myRunning;
 
   protected BaseStartedNodeEvent(@Nullable String name,
-                                 int id,
-                                 int parentId,
+                                 @Nullable String id,
+                                 @Nullable String parentId,
                                  @Nullable final String locationUrl,
+                                 @Nullable final String metainfo,
                                  @Nullable String nodeType,
                                  @Nullable String nodeArgs,
                                  boolean running) {
     super(name, id);
     myParentId = parentId;
     myLocationUrl = locationUrl;
+    myMetainfo =  metainfo;
     myNodeType = nodeType;
     myNodeArgs = nodeArgs;
     myRunning = running;
   }
 
   /**
-   * @return parent node id (non-negative integer), or -1 if undefined
+   * @return parent node id, or null if undefined
    */
-  public int getParentId() {
+  @Nullable
+  public String getParentId() {
     return myParentId;
   }
 
   @Nullable
   public String getLocationUrl() {
     return myLocationUrl;
+  }
+
+  @Nullable
+  public String getMetainfo() {
+    return myMetainfo;
   }
 
   @Nullable
@@ -73,16 +82,23 @@ public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
   protected void appendToStringInfo(@NotNull StringBuilder buf) {
     append(buf, "parentId", myParentId);
     append(buf, "locationUrl", myLocationUrl);
+    append(buf, "metainfo", myMetainfo);
     append(buf, "running", myRunning);
   }
 
-  public static int getParentNodeId(@NotNull MessageWithAttributes message) {
-    return TreeNodeEvent.getIntAttribute(message, "parentNodeId");
+  @Nullable
+  public static String getParentNodeId(@NotNull MessageWithAttributes message) {
+    return TreeNodeEvent.getNodeId(message, "parentNodeId");
   }
 
   @Nullable
   public static String getNodeType(@NotNull MessageWithAttributes message) {
     return message.getAttributes().get("nodeType");
+  }
+
+  @Nullable
+  public static String getMetainfo(@NotNull MessageWithAttributes message) {
+    return message.getAttributes().get("metainfo");
   }
 
   @Nullable

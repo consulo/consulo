@@ -21,19 +21,32 @@ import org.jetbrains.annotations.Nullable;
 
 public class TestSuiteStartedEvent extends BaseStartedNodeEvent {
 
-  public TestSuiteStartedEvent(@NotNull TestSuiteStarted suiteStarted,
-                               @Nullable String locationUrl) {
-    super(suiteStarted.getSuiteName(),
-          TreeNodeEvent.getNodeId(suiteStarted),
-          getParentNodeId(suiteStarted),
-          locationUrl,
-          BaseStartedNodeEvent.getNodeType(suiteStarted),
-          BaseStartedNodeEvent.getNodeArgs(suiteStarted),
-          BaseStartedNodeEvent.isRunning(suiteStarted));
+  public TestSuiteStartedEvent(@Nullable String name,
+                               @Nullable String id,
+                               @Nullable String parentId,
+                               @Nullable String locationUrl,
+                               @Nullable String metainfo,
+                               @Nullable String nodeType,
+                               @Nullable String nodeArgs,
+                               boolean running) {
+    super(name, id, parentId, locationUrl, metainfo, nodeType, nodeArgs, running);
+  }
+
+  public TestSuiteStartedEvent(@NotNull TestSuiteStarted suiteStarted, @Nullable String locationUrl) {
+    this(suiteStarted, locationUrl, BaseStartedNodeEvent.getMetainfo(suiteStarted));
+  }
+
+  public TestSuiteStartedEvent(@NotNull TestSuiteStarted suiteStarted, @Nullable String locationUrl, @Nullable String metainfo) {
+    super(suiteStarted.getSuiteName(), TreeNodeEvent.getNodeId(suiteStarted), getParentNodeId(suiteStarted), locationUrl, metainfo, BaseStartedNodeEvent.getNodeType(suiteStarted),
+          BaseStartedNodeEvent.getNodeArgs(suiteStarted), BaseStartedNodeEvent.isRunning(suiteStarted));
   }
 
   public TestSuiteStartedEvent(@NotNull String name, @Nullable String locationUrl) {
-    super(name, -1, -1, locationUrl, null, null, true);
+    this(name, locationUrl, null);
+  }
+
+  public TestSuiteStartedEvent(@NotNull String name, @Nullable String locationUrl, @Nullable String metainfo) {
+    super(name, null, null, locationUrl, metainfo, null, null, true);
   }
 
 }

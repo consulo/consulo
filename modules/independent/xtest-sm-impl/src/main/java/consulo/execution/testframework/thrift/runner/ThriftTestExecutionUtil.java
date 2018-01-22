@@ -21,7 +21,6 @@ import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.testframework.TestConsoleProperties;
-import com.intellij.execution.testframework.sm.CompositeTestLocationProvider;
 import com.intellij.execution.testframework.sm.SMTestRunnerConnectionUtil;
 import com.intellij.execution.testframework.sm.runner.*;
 import com.intellij.execution.testframework.sm.runner.ui.AttachToProcessListener;
@@ -110,7 +109,7 @@ public class ThriftTestExecutionUtil {
 
     final TServer open = open(factory.getPort(), factory.createHandler(eventsProcessor));
     if (locator != null) {
-      eventsProcessor.setLocator(new CompositeTestLocationProvider(locator));
+      eventsProcessor.setLocator(new SMTestRunnerConnectionUtil.CompositeTestLocationProvider(locator));
     }
     if (printerProvider != null) {
       eventsProcessor.setPrinterProvider(printerProvider);
@@ -134,7 +133,7 @@ public class ThriftTestExecutionUtil {
     processHandler.addProcessListener(new ProcessAdapter() {
       @Override
       public void processTerminated(final ProcessEvent event) {
-        outputConsumer.flushBufferBeforeTerminating();
+        outputConsumer.flushBufferOnProcessTermination(event.getExitCode());
         try {
           open.stop();
         }

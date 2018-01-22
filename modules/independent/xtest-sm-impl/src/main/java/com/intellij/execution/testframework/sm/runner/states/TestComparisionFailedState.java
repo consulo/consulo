@@ -18,12 +18,14 @@ package com.intellij.execution.testframework.sm.runner.states;
 import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.execution.testframework.CompositePrintable;
 import com.intellij.execution.testframework.Printer;
-import com.intellij.execution.testframework.sm.runner.ui.TestsPresentationUtil;
 import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import com.intellij.execution.ui.ConsoleViewContentType;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
 
 /**
  * @author Roman.Chernyatchik
@@ -32,6 +34,8 @@ public class TestComparisionFailedState extends TestFailedState {
   private final String myErrorMsgPresentation;
   private final String myStacktracePresentation;
   private DiffHyperlink myHyperlink;
+  private boolean myToDeleteExpectedFile;
+  private boolean myToDeleteActualFile;
 
 
   public TestComparisionFailedState(@Nullable final String localizedMessage,
@@ -68,19 +72,36 @@ public class TestComparisionFailedState extends TestFailedState {
     printer.mark();
 
     // Error msg
-    TestsPresentationUtil.printWithAnsiColoring(printer, myErrorMsgPresentation, ProcessOutputTypes.STDERR);
+    printer.printWithAnsiColoring(myErrorMsgPresentation, ProcessOutputTypes.STDERR);
 
     // Diff link
     myHyperlink.printOn(printer);
 
     // Stacktrace
     printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
-    TestsPresentationUtil.printWithAnsiColoring(printer, myStacktracePresentation, ProcessOutputTypes.STDERR);
+    printer.printWithAnsiColoring(myStacktracePresentation, ProcessOutputTypes.STDERR);
     printer.print(CompositePrintable.NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
   }
 
   @Nullable
   public DiffHyperlink getHyperlink() {
     return myHyperlink;
+  }
+
+  public void setToDeleteExpectedFile(boolean expectedTemp) {
+    myToDeleteExpectedFile = expectedTemp;
+  }
+
+  public void setToDeleteActualFile(boolean actualTemp) {
+    myToDeleteActualFile = actualTemp;
+  }
+
+  public void dispose() {
+    if (myToDeleteActualFile) {
+      FileUtil.delete(new File(myHyperlink.getActualFilePath()));
+    }
+    if (myToDeleteExpectedFile) {
+      FileUtil.delete(new File(myHyperlink.getFilePath()));
+    }
   }
 }

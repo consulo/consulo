@@ -15,27 +15,28 @@
  */
 package com.intellij.execution.testframework.sm.runner.states;
 
+import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.execution.testframework.CompositePrintable;
 import com.intellij.execution.testframework.Printer;
 import com.intellij.execution.ui.ConsoleViewContentType;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtilRt;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Roman Chernyatchik
  */
-public class TestFailedState extends AbstractState {
+public class TestFailedState extends AbstractState implements Disposable {
   private final List<String> myPresentationText;
 
-  public TestFailedState(@Nullable final String localizedMessage,
-                         @Nullable final String stackTrace)
-  {
-    myPresentationText = ContainerUtilRt.newArrayList(buildErrorPresentationText(localizedMessage, stackTrace));
+  public TestFailedState(@Nullable final String localizedMessage, @Nullable final String stackTrace) {
+    myPresentationText = ContainerUtil.createLockFreeCopyOnWriteList(Collections.singleton(buildErrorPresentationText(localizedMessage, stackTrace)));
   }
 
   public void addError(@Nullable String localizedMessage, @Nullable String stackTrace, Printer printer) {
@@ -48,25 +49,22 @@ public class TestFailedState extends AbstractState {
     }
   }
 
+  @Override
+  public void dispose() {
+  }
+
   @Nullable
-  public static String buildErrorPresentationText(@Nullable final String localizedMessage,
-                                                  @Nullable final String stackTrace)
-  {
+  public static String buildErrorPresentationText(@Nullable final String localizedMessage, @Nullable final String stackTrace) {
     final String text = (StringUtil.isEmptyOrSpaces(localizedMessage) ? "" : localizedMessage + CompositePrintable.NEW_LINE) +
                         (StringUtil.isEmptyOrSpaces(stackTrace) ? "" : stackTrace + CompositePrintable.NEW_LINE);
     return StringUtil.isEmptyOrSpaces(text) ? null : text;
   }
 
-  public static void printError(@NotNull final Printer printer,
-                                @NotNull final List<String> errorPresentationText)
-  {
+  public static void printError(@NotNull final Printer printer, @NotNull final List<String> errorPresentationText) {
     printError(printer, errorPresentationText, true);
   }
 
-  private static void printError(@NotNull final Printer printer,
-                                @NotNull final List<String> errorPresentationText,
-                                final boolean setMark)
-  {
+  private static void printError(@NotNull final Printer printer, @NotNull final List<String> errorPresentationText, final boolean setMark) {
     boolean addMark = setMark;
     for (final String errorText : errorPresentationText) {
       if (errorText != null) {
@@ -75,7 +73,7 @@ public class TestFailedState extends AbstractState {
           printer.mark();
           addMark = false;
         }
-        printer.print(errorText, ConsoleViewContentType.ERROR_OUTPUT);
+        printer.printWithAnsiColoring(errorText, ProcessOutputTypes.STDERR);
       }
     }
   }

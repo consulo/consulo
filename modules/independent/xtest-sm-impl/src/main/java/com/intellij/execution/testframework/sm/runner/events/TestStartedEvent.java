@@ -25,19 +25,27 @@ public class TestStartedEvent extends BaseStartedNodeEvent {
 
   public TestStartedEvent(@NotNull TestStarted testStarted,
                           @Nullable String locationUrl) {
+    this(testStarted, locationUrl, BaseStartedNodeEvent.getMetainfo(testStarted));
+  }
+
+  public TestStartedEvent(@NotNull TestStarted testStarted,
+                          @Nullable String locationUrl,
+                          @Nullable String metainfo) {
     super(testStarted.getTestName(),
           TreeNodeEvent.getNodeId(testStarted),
           getParentNodeId(testStarted),
           locationUrl,
+          metainfo,
           BaseStartedNodeEvent.getNodeType(testStarted),
           BaseStartedNodeEvent.getNodeArgs(testStarted),
           BaseStartedNodeEvent.isRunning(testStarted));
   }
 
   public TestStartedEvent(@Nullable String name,
-                          int id,
-                          int parentId,
-                          @Nullable final String locationUrl,
+                          @Nullable String id,
+                          @Nullable String parentId,
+                          @Nullable String locationUrl,
+                          @Nullable String metainfo,
                           @Nullable String nodeType,
                           @Nullable String nodeArgs,
                           boolean running) {
@@ -45,13 +53,21 @@ public class TestStartedEvent extends BaseStartedNodeEvent {
           id,
           parentId,
           locationUrl,
+          metainfo,
           nodeType,
           nodeArgs,
           running);
   }
 
-  public TestStartedEvent(@NotNull String name, @Nullable String locationUrl) {
-    super(name, -1, -1, locationUrl, null, null, true);
+  public TestStartedEvent(@NotNull String name,
+                          @Nullable String locationUrl) {
+    this(name, locationUrl, null);
+  }
+
+  public TestStartedEvent(@NotNull String name,
+                          @Nullable String locationUrl,
+                          @Nullable String metainfo) {
+    super(name, null, null, locationUrl, metainfo,null, null, true);
   }
 
   public void setConfig(boolean config) {

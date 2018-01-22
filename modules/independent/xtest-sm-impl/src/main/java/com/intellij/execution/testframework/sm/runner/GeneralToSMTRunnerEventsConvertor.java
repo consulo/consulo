@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -36,172 +36,88 @@ import java.util.*;
  */
 public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcessor {
 
-  private final Map<String, SMTestProxy> myRunningTestsFullNameToProxy = new HashMap<String, SMTestProxy>();
+  private final Map<String, SMTestProxy> myRunningTestsFullNameToProxy = new HashMap<>();
   private final TestSuiteStack mySuitesStack;
-  private final Set<SMTestProxy> myCurrentChildren = new LinkedHashSet<SMTestProxy>();
+  private final Set<SMTestProxy> myCurrentChildren = new LinkedHashSet<>();
   private boolean myGetChildren = true;
-  private final SMTestProxy.SMRootTestProxy myTestsRootNode;
+
 
   private boolean myIsTestingFinished;
-  private SMTestLocator myLocator = null;
-  private boolean myTreeBuildBeforeStart = false;
+
 
   public GeneralToSMTRunnerEventsConvertor(Project project, @NotNull SMTestProxy.SMRootTestProxy testsRootNode,
                                            @NotNull String testFrameworkName) {
-    super(project, testFrameworkName);
-    myTestsRootNode = testsRootNode;
+    super(project, testFrameworkName, testsRootNode);
     mySuitesStack = new TestSuiteStack(testFrameworkName);
   }
 
   @Override
-  public void setLocator(@NotNull SMTestLocator locator) {
-    myLocator = locator;
+  protected SMTestProxy createProxy(String testName, String locationHint, String id, String parentNodeId) {
+    SMTestProxy proxy = super.createProxy(testName, locationHint, id, parentNodeId);
+    SMTestProxy currentSuite = getCurrentSuite();
+    currentSuite.addChild(proxy);
+    return proxy;
+  }
+
+  @Override
+  protected SMTestProxy createSuite(String suiteName, String locationHint, String id, String parentNodeId) {
+    SMTestProxy newSuite = super.createSuite(suiteName, locationHint, id, parentNodeId);
+    final SMTestProxy parentSuite = getCurrentSuite();
+
+    parentSuite.addChild(newSuite);
+
+    mySuitesStack.pushSuite(newSuite);
+
+    return newSuite;
+  }
+
+  @Override
+  public void onSuiteTreeEnded(String suiteName) {
+    myBuildTreeRunnables.add(() -> mySuitesStack.popSuite(suiteName));
+    super.onSuiteTreeEnded(suiteName);
   }
 
   @Override
   public void onStartTesting() {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        mySuitesStack.pushSuite(myTestsRootNode);
-        myTestsRootNode.setStarted();
+    addToInvokeLater(() -> {
+      mySuitesStack.pushSuite(myTestsRootProxy);
+      myTestsRootProxy.setStarted();
 
-        //fire
-        fireOnTestingStarted(myTestsRootNode);
-      }
+      //fire
+      fireOnTestingStarted(myTestsRootProxy);
     });
   }
 
   @Override
   public void onTestsReporterAttached() {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        fireOnTestsReporterAttached(myTestsRootNode);
-      }
-    });
+    addToInvokeLater(() -> fireOnTestsReporterAttached(myTestsRootProxy));
   }
 
   @Override
   public void onFinishTesting() {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (myIsTestingFinished) {
-          // has been already invoked!
-          return;
-        }
-        myIsTestingFinished = true;
-
-        // We don't know whether process was destroyed by user
-        // or it finished after all tests have been run
-        // Lets assume, if at finish all suites except root suite are passed
-        // then all is ok otherwise process was terminated by user
-        if (!isTreeComplete(myRunningTestsFullNameToProxy.keySet(), myTestsRootNode)) {
-          myTestsRootNode.setTerminated();
-          myRunningTestsFullNameToProxy.clear();
-        }
-        mySuitesStack.clear();
-        myTestsRootNode.setFinished();
-
-
-        //fire events
-        fireOnTestingFinished(myTestsRootNode);
+    addToInvokeLater(() -> {
+      if (myIsTestingFinished) {
+        // has been already invoked!
+        return;
       }
-    });
-    stopEventProcessing();
-  }
+      myIsTestingFinished = true;
 
-  @Override
-  public void onRootPresentationAdded(final String rootName, final String comment, final String rootLocation) {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        myTestsRootNode.setPresentation(rootName);
-        myTestsRootNode.setComment(comment);
-        myTestsRootNode.setRootLocationUrl(rootLocation);
-        if (myLocator != null) {
-          myTestsRootNode.setLocator(myLocator);
-        }
+      // We don't know whether process was destroyed by user
+      // or it finished after all tests have been run
+      // Lets assume, if at finish all suites except root suite are passed
+      // then all is ok otherwise process was terminated by user
+      if (!isTreeComplete(myRunningTestsFullNameToProxy.keySet(), myTestsRootProxy)) {
+        myTestsRootProxy.setTerminated();
+        myRunningTestsFullNameToProxy.clear();
       }
+      mySuitesStack.clear();
+      myTestsRootProxy.setFinished();
+
+
+      //fire events
+      fireOnTestingFinished(myTestsRootProxy);
     });
-  }
-
-  private final List<Runnable> myBuildTreeRunnables = new ArrayList<Runnable>();
-
-  @Override
-  public void onSuiteTreeNodeAdded(final String testName, final String locationHint) {
-    myTreeBuildBeforeStart = true;
-    myBuildTreeRunnables.add(new Runnable() {
-      @Override
-      public void run() {
-        final SMTestProxy testProxy = new SMTestProxy(testName, false, locationHint);
-        if (myLocator != null) {
-          testProxy.setLocator(myLocator);
-        }
-        getCurrentSuite().addChild(testProxy);
-        myEventPublisher.onSuiteTreeNodeAdded(testProxy);
-        for (SMTRunnerEventsListener adapter : myListenerAdapters) {
-          adapter.onSuiteTreeNodeAdded(testProxy);
-        }
-      }
-    });
-  }
-
-  @Override
-  public void onSuiteTreeStarted(final String suiteName, final String locationHint) {
-    myTreeBuildBeforeStart = true;
-    myBuildTreeRunnables.add(new Runnable() {
-      @Override
-      public void run() {
-        final SMTestProxy parentSuite = getCurrentSuite();
-        final SMTestProxy newSuite = new SMTestProxy(suiteName, true, locationHint);
-        if (myLocator != null) {
-          newSuite.setLocator(myLocator);
-        }
-        parentSuite.addChild(newSuite);
-
-        mySuitesStack.pushSuite(newSuite);
-
-        myEventPublisher.onSuiteTreeStarted(newSuite);
-        for (SMTRunnerEventsListener adapter : myListenerAdapters) {
-          adapter.onSuiteTreeStarted(newSuite);
-        }
-      }
-    });
-  }
-
-  @Override
-  public void onSuiteTreeEnded(final String suiteName) {
-    myBuildTreeRunnables.add(new Runnable() {
-      @Override
-      public void run() {
-        mySuitesStack.popSuite(suiteName);
-      }
-    });
-
-    if (myBuildTreeRunnables.size() > 100) {
-      final ArrayList<Runnable> runnables = new ArrayList<Runnable>(myBuildTreeRunnables);
-      myBuildTreeRunnables.clear();
-      processTreeBuildEvents(runnables);
-    }
-  }
-
-  @Override
-  public void onBuildTreeEnded() {
-    processTreeBuildEvents(myBuildTreeRunnables);
-  }
-
-  private void processTreeBuildEvents(final List<Runnable> runnables) {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        for (Runnable runnable : runnables) {
-          runnable.run();
-        }
-        runnables.clear();
-      }
-    });
+    super.onFinishTesting();
   }
 
   @Override
@@ -210,97 +126,115 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
 
   @Override
   public void onTestStarted(@NotNull final TestStartedEvent testStartedEvent) {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final String testName = testStartedEvent.getName();
-        final String locationUrl = testStartedEvent.getLocationUrl();
-        final boolean isConfig = testStartedEvent.isConfig();
-        final String fullName = getFullTestName(testName);
+    addToInvokeLater(() -> {
+      final String testName = testStartedEvent.getName();
+      final String locationUrl = testStartedEvent.getLocationUrl();
+      final boolean isConfig = testStartedEvent.isConfig();
+      final String fullName = getFullTestName(testName);
 
-        if (myRunningTestsFullNameToProxy.containsKey(fullName)) {
-          //Duplicated event
-          logProblem("Test [" + fullName + "] has been already started");
-          if (SMTestRunnerConnectionUtil.isInDebugMode()) {
-            return;
-          }
+      if (myRunningTestsFullNameToProxy.containsKey(fullName)) {
+        //Duplicated event
+        logProblem("Test [" + fullName + "] has been already started");
+        if (SMTestRunnerConnectionUtil.isInDebugMode()) {
+          return;
         }
-
-        SMTestProxy parentSuite = getCurrentSuite();
-        SMTestProxy testProxy = findChildByName(parentSuite, fullName);
-        if (testProxy == null) {
-          // creates test
-          testProxy = new SMTestProxy(testName, false, locationUrl);
-          testProxy.setConfig(isConfig);
-
-          if (myLocator != null) {
-            testProxy.setLocator(myLocator);
-          }
-
-          parentSuite.addChild(testProxy);
-
-          if (myTreeBuildBeforeStart && myGetChildren) {
-            for (SMTestProxy proxy : parentSuite.getChildren()) {
-              if (!proxy.isFinal()) {
-                myCurrentChildren.add(proxy);
-              }
-            }
-            myGetChildren = false;
-          }
-        }
-
-        // adds to running tests map
-        myRunningTestsFullNameToProxy.put(fullName, testProxy);
-
-        //Progress started
-        testProxy.setStarted();
-
-        //fire events
-        fireOnTestStarted(testProxy);
       }
+
+      SMTestProxy parentSuite = getCurrentSuite();
+      SMTestProxy testProxy = locationUrl != null ? findChildByLocation(parentSuite, locationUrl, false)
+                                                  : findChildByName(parentSuite, fullName, false);
+      if (testProxy == null) {
+        // creates test
+        testProxy = new SMTestProxy(testName, false, locationUrl, testStartedEvent.getMetainfo(), false);
+        testProxy.setConfig(isConfig);
+        if (myTreeBuildBeforeStart) testProxy.setTreeBuildBeforeStart();
+
+        if (myLocator != null) {
+          testProxy.setLocator(myLocator);
+        }
+
+        parentSuite.addChild(testProxy);
+
+        if (myTreeBuildBeforeStart && myGetChildren) {
+          for (SMTestProxy proxy : parentSuite.getChildren()) {
+            if (!proxy.isFinal()) {
+              myCurrentChildren.add(proxy);
+            }
+          }
+          myGetChildren = false;
+        }
+      }
+
+      // adds to running tests map
+      myRunningTestsFullNameToProxy.put(fullName, testProxy);
+
+      //Progress started
+      testProxy.setStarted();
+
+      //fire events
+      fireOnTestStarted(testProxy);
     });
   }
 
   @Override
   public void onSuiteStarted(@NotNull final TestSuiteStartedEvent suiteStartedEvent) {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final String suiteName = suiteStartedEvent.getName();
-        final String locationUrl = suiteStartedEvent.getLocationUrl();
+    addToInvokeLater(() -> {
+      final String suiteName = suiteStartedEvent.getName();
+      final String locationUrl = suiteStartedEvent.getLocationUrl();
 
-        SMTestProxy parentSuite = getCurrentSuite();
-        SMTestProxy newSuite = findChildByName(parentSuite, suiteName);
-        if (newSuite == null) {
-          //new suite
-          newSuite = new SMTestProxy(suiteName, true, locationUrl);
-
-          if (myLocator != null) {
-            newSuite.setLocator(myLocator);
-          }
-
-          parentSuite.addChild(newSuite);
+      SMTestProxy parentSuite = getCurrentSuite();
+      SMTestProxy newSuite = locationUrl != null ? findChildByLocation(parentSuite, locationUrl, true)
+                                                 : findChildByName(parentSuite, suiteName, true);
+      if (newSuite == null) {
+        //new suite
+        newSuite = new SMTestProxy(suiteName, true, locationUrl, suiteStartedEvent.getMetainfo(), parentSuite.isPreservePresentableName());
+        if (myTreeBuildBeforeStart) {
+          newSuite.setTreeBuildBeforeStart();
         }
 
-        myGetChildren = true;
-        mySuitesStack.pushSuite(newSuite);
+        if (myLocator != null) {
+          newSuite.setLocator(myLocator);
+        }
 
-        //Progress started
-        newSuite.setSuiteStarted();
-
-        //fire event
-        fireOnSuiteStarted(newSuite);
+        parentSuite.addChild(newSuite);
       }
+
+      myGetChildren = true;
+      mySuitesStack.pushSuite(newSuite);
+
+      //Progress started
+      newSuite.setSuiteStarted();
+
+      //fire event
+      fireOnSuiteStarted(newSuite);
     });
   }
 
-  private SMTestProxy findChildByName(SMTestProxy parentSuite, String fullName) {
+  private SMTestProxy findChildByName(SMTestProxy parentSuite, String fullName, boolean preferSuite) {
+    return findChild(parentSuite, fullName, SMTestProxy::getName, preferSuite);
+  }
+
+  private SMTestProxy findChildByLocation(SMTestProxy parentSuite, String fullName, boolean preferSuite) {
+    return findChild(parentSuite, fullName, SMTestProxy::getLocationUrl, preferSuite);
+  }
+
+  private SMTestProxy findChild(SMTestProxy parentSuite,
+                                String fullName,
+                                final Function<SMTestProxy, String> nameFunction,
+                                boolean preferSuite) {
     if (myTreeBuildBeforeStart) {
+      Set<SMTestProxy> acceptedProxies = new LinkedHashSet<>();
       final Collection<? extends SMTestProxy> children = myGetChildren ? parentSuite.getChildren() : myCurrentChildren;
       for (SMTestProxy proxy : children) {
-        if (fullName.equals(proxy.getName()) && !proxy.isFinal()) {
-          return proxy;
+        if (fullName.equals(nameFunction.fun(proxy)) && !proxy.isFinal()) {
+          acceptedProxies.add(proxy);
         }
+      }
+      if (!acceptedProxies.isEmpty()) {
+        return acceptedProxies.stream()
+                .filter(proxy -> proxy.isSuite() == preferSuite)
+                .findFirst()
+                .orElse(acceptedProxies.iterator().next());
       }
     }
     return null;
@@ -308,66 +242,50 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
 
   @Override
   public void onTestFinished(@NotNull final TestFinishedEvent testFinishedEvent) {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final String testName = testFinishedEvent.getName();
-        final long duration = testFinishedEvent.getDuration();
-        final String fullTestName = getFullTestName(testName);
-        final SMTestProxy testProxy = getProxyByFullTestName(fullTestName);
+    addToInvokeLater(() -> {
+      final String testName = testFinishedEvent.getName();
+      final Long duration = testFinishedEvent.getDuration();
+      final String fullTestName = getFullTestName(testName);
+      final SMTestProxy testProxy = getProxyByFullTestName(fullTestName);
 
-        if (testProxy == null) {
-          logProblem("Test wasn't started! TestFinished event: name = {" + testName + "}. " +
-                     cannotFindFullTestNameMsg(fullTestName));
-          return;
-        }
-
-        testProxy.setDuration(duration);
-        testProxy.setFrameworkOutputFile(testFinishedEvent.getOutputFile());
-        testProxy.setFinished();
-        myRunningTestsFullNameToProxy.remove(fullTestName);
-        myCurrentChildren.remove(testProxy);
-
-        //fire events
-        fireOnTestFinished(testProxy);
+      if (testProxy == null) {
+        logProblem("Test wasn't started! TestFinished event: name = {" + testName + "}. " +
+                   cannotFindFullTestNameMsg(fullTestName));
+        return;
       }
+
+      testProxy.setDuration(duration != null ? duration : 0);
+      testProxy.setFrameworkOutputFile(testFinishedEvent.getOutputFile());
+      testProxy.setFinished();
+      myRunningTestsFullNameToProxy.remove(fullTestName);
+      myCurrentChildren.remove(testProxy);
+
+      //fire events
+      fireOnTestFinished(testProxy);
     });
   }
 
   @Override
   public void onSuiteFinished(@NotNull final TestSuiteFinishedEvent suiteFinishedEvent) {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final String suiteName = suiteFinishedEvent.getName();
-        final SMTestProxy mySuite = mySuitesStack.popSuite(suiteName);
-        if (mySuite != null) {
-          mySuite.setFinished();
-          myCurrentChildren.clear();
-          myGetChildren = true;
+    addToInvokeLater(() -> {
+      final String suiteName = suiteFinishedEvent.getName();
+      final SMTestProxy mySuite = mySuitesStack.popSuite(suiteName);
+      if (mySuite != null) {
+        mySuite.setFinished();
+        myCurrentChildren.clear();
+        myGetChildren = true;
 
-          //fire events
-          fireOnSuiteFinished(mySuite);
-        }
+        //fire events
+        fireOnSuiteFinished(mySuite);
       }
     });
   }
 
   @Override
   public void onUncapturedOutput(@NotNull final String text, final Key outputType) {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final SMTestProxy currentProxy = findCurrentTestOrSuite();
-
-        if (ProcessOutputTypes.STDERR.equals(outputType)) {
-          currentProxy.addStdErr(text);
-        } else if (ProcessOutputTypes.SYSTEM.equals(outputType)) {
-          currentProxy.addSystemOutput(text);
-        } else {
-          currentProxy.addStdOutput(text, outputType);
-        }
-      }
+    addToInvokeLater(() -> {
+      final SMTestProxy currentProxy = findCurrentTestOrSuite();
+      currentProxy.addOutput(text, outputType);
     });
   }
 
@@ -375,152 +293,137 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   public void onError(@NotNull final String localizedMessage,
                       @Nullable final String stackTrace,
                       final boolean isCritical) {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final SMTestProxy currentProxy = findCurrentTestOrSuite();
-        currentProxy.addError(localizedMessage, stackTrace, isCritical);
-      }
+    addToInvokeLater(() -> {
+      final SMTestProxy currentProxy = findCurrentTestOrSuite();
+      currentProxy.addError(localizedMessage, stackTrace, isCritical);
     });
   }
 
 
   @Override
   public void onTestFailure(@NotNull final TestFailedEvent testFailedEvent) {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final String testName = testFailedEvent.getName();
-        if (testName == null) {
-          logProblem("No test name specified in " + testFailedEvent);
+    addToInvokeLater(() -> {
+      final String testName = testFailedEvent.getName();
+      if (testName == null) {
+        logProblem("No test name specified in " + testFailedEvent);
+        return;
+      }
+      final String localizedMessage = testFailedEvent.getLocalizedFailureMessage();
+      final String stackTrace = testFailedEvent.getStacktrace();
+      final boolean isTestError = testFailedEvent.isTestError();
+      final String comparisionFailureActualText = testFailedEvent.getComparisonFailureActualText();
+      final String comparisionFailureExpectedText = testFailedEvent.getComparisonFailureExpectedText();
+      final boolean inDebugMode = SMTestRunnerConnectionUtil.isInDebugMode();
+
+      final String fullTestName = getFullTestName(testName);
+      SMTestProxy testProxy = getProxyByFullTestName(fullTestName);
+      if (testProxy == null) {
+        logProblem("Test wasn't started! TestFailure event: name = {" + testName + "}" +
+                   ", message = {" + localizedMessage + "}" +
+                   ", stackTrace = {" + stackTrace + "}. " +
+                   cannotFindFullTestNameMsg(fullTestName));
+        if (inDebugMode) {
           return;
-        }
-        final String localizedMessage = testFailedEvent.getLocalizedFailureMessage();
-        final String stackTrace = testFailedEvent.getStacktrace();
-        final boolean isTestError = testFailedEvent.isTestError();
-        final String comparisionFailureActualText = testFailedEvent.getComparisonFailureActualText();
-        final String comparisionFailureExpectedText = testFailedEvent.getComparisonFailureExpectedText();
-        final boolean inDebugMode = SMTestRunnerConnectionUtil.isInDebugMode();
-
-        final String fullTestName = getFullTestName(testName);
-        SMTestProxy testProxy = getProxyByFullTestName(fullTestName);
-        if (testProxy == null) {
-          logProblem("Test wasn't started! TestFailure event: name = {" + testName + "}" +
-                     ", message = {" + localizedMessage + "}" +
-                     ", stackTrace = {" + stackTrace + "}. " +
-                     cannotFindFullTestNameMsg(fullTestName));
-          if (inDebugMode) {
-            return;
-          }
-          else {
-            // if hasn't been already reported
-            // 1. report
-            onTestStarted(new TestStartedEvent(testName, null));
-            // 2. add failure
-            testProxy = getProxyByFullTestName(fullTestName);
-          }
-        }
-
-        if (testProxy == null) {
-          return;
-        }
-
-        if (comparisionFailureActualText != null && comparisionFailureExpectedText != null) {
-          testProxy.setTestComparisonFailed(localizedMessage, stackTrace,
-                                            comparisionFailureActualText, comparisionFailureExpectedText,
-                                            testFailedEvent.getFilePath(), testFailedEvent.getActualFilePath());
-        }
-        else if (comparisionFailureActualText == null && comparisionFailureExpectedText == null) {
-          testProxy.setTestFailed(localizedMessage, stackTrace, isTestError);
         }
         else {
-          logProblem("Comparison failure actual and expected texts should be both null or not null.\n"
-                     + "Expected:\n"
-                     + comparisionFailureExpectedText + "\n"
-                     + "Actual:\n"
-                     + comparisionFailureActualText);
+          // if hasn't been already reported
+          // 1. report
+          onTestStarted(new TestStartedEvent(testName, null));
+          // 2. add failure
+          testProxy = getProxyByFullTestName(fullTestName);
         }
-
-        // fire event
-        fireOnTestFailed(testProxy);
       }
+
+      if (testProxy == null) {
+        return;
+      }
+
+      if (comparisionFailureActualText != null && comparisionFailureExpectedText != null) {
+        testProxy.setTestComparisonFailed(localizedMessage, stackTrace, comparisionFailureActualText, comparisionFailureExpectedText, testFailedEvent);
+      }
+      else if (comparisionFailureActualText == null && comparisionFailureExpectedText == null) {
+        testProxy.setTestFailed(localizedMessage, stackTrace, isTestError);
+      }
+      else {
+        testProxy.setTestFailed(localizedMessage, stackTrace, isTestError);
+        logProblem("Comparison failure actual and expected texts should be both null or not null.\n"
+                   + "Expected:\n"
+                   + comparisionFailureExpectedText + "\n"
+                   + "Actual:\n"
+                   + comparisionFailureActualText);
+      }
+
+      // fire event
+      fireOnTestFailed(testProxy);
     });
   }
 
   @Override
   public void onTestIgnored(@NotNull final TestIgnoredEvent testIgnoredEvent) {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final String testName = ObjectUtils.assertNotNull(testIgnoredEvent.getName());
-        String ignoreComment = testIgnoredEvent.getIgnoreComment();
-        final String stackTrace = testIgnoredEvent.getStacktrace();
-        final String fullTestName = getFullTestName(testName);
-        SMTestProxy testProxy = getProxyByFullTestName(fullTestName);
-        if (testProxy == null) {
-          final boolean debugMode = SMTestRunnerConnectionUtil.isInDebugMode();
-          logProblem("Test wasn't started! " +
-                     "TestIgnored event: name = {" + testName + "}, " +
-                     "message = {" + ignoreComment + "}. " +
-                     cannotFindFullTestNameMsg(fullTestName));
-          if (debugMode) {
-            return;
-          } else {
-            // try to fix
-            // 1. report test opened
-            onTestStarted(new TestStartedEvent(testName, null));
-
-            // 2. report failure
-            testProxy = getProxyByFullTestName(fullTestName);
-          }
-
-        }
-        if (testProxy == null) {
-          return;
-        }
-        testProxy.setTestIgnored(ignoreComment, stackTrace);
-
-        // fire event
-        fireOnTestIgnored(testProxy);
+    addToInvokeLater(() -> {
+      final String testName = testIgnoredEvent.getName();
+      if (testName == null) {
+        logProblem("TestIgnored event: no name");
       }
+      String ignoreComment = testIgnoredEvent.getIgnoreComment();
+      final String stackTrace = testIgnoredEvent.getStacktrace();
+      final String fullTestName = getFullTestName(testName);
+      SMTestProxy testProxy = getProxyByFullTestName(fullTestName);
+      if (testProxy == null) {
+        final boolean debugMode = SMTestRunnerConnectionUtil.isInDebugMode();
+        logProblem("Test wasn't started! " +
+                   "TestIgnored event: name = {" + testName + "}, " +
+                   "message = {" + ignoreComment + "}. " +
+                   cannotFindFullTestNameMsg(fullTestName));
+        if (debugMode) {
+          return;
+        } else {
+          // try to fix
+          // 1. report test opened
+          onTestStarted(new TestStartedEvent(testName, null));
+
+          // 2. report failure
+          testProxy = getProxyByFullTestName(fullTestName);
+        }
+
+      }
+      if (testProxy == null) {
+        return;
+      }
+      testProxy.setTestIgnored(ignoreComment, stackTrace);
+
+      // fire event
+      fireOnTestIgnored(testProxy);
     });
   }
 
   @Override
   public void onTestOutput(@NotNull final TestOutputEvent testOutputEvent) {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final String testName = testOutputEvent.getName();
-        final String text = testOutputEvent.getText();
-        final boolean stdOut = testOutputEvent.isStdOut();
-        final String fullTestName = getFullTestName(testName);
-        final SMTestProxy testProxy = getProxyByFullTestName(fullTestName);
-        if (testProxy == null) {
-          logProblem("Test wasn't started! TestOutput event: name = {" + testName + "}, " +
-                     "isStdOut = " + stdOut + ", " +
-                     "text = {" + text + "}. " +
-                     cannotFindFullTestNameMsg(fullTestName));
-          return;
-        }
+    addToInvokeLater(() -> {
+      final String testName = testOutputEvent.getName();
+      final String text = testOutputEvent.getText();
+      final boolean stdOut = testOutputEvent.isStdOut();
+      final String fullTestName = getFullTestName(testName);
+      final SMTestProxy testProxy = getProxyByFullTestName(fullTestName);
+      if (testProxy == null) {
+        logProblem("Test wasn't started! TestOutput event: name = {" + testName + "}, " +
+                   "isStdOut = " + stdOut + ", " +
+                   "text = {" + text + "}. " +
+                   cannotFindFullTestNameMsg(fullTestName));
+        return;
+      }
 
-        if (stdOut) {
-          testProxy.addStdOutput(text, ProcessOutputTypes.STDOUT);
-        } else {
-          testProxy.addStdErr(text);
-        }
+      if (stdOut) {
+        testProxy.addStdOutput(text, ProcessOutputTypes.STDOUT);
+      } else {
+        testProxy.addStdErr(text);
       }
     });
   }
 
   @Override
   public void onTestsCountInSuite(final int count) {
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
-        fireOnTestsCountInSuite(count);
-      }
-    });
+    addToInvokeLater(() -> fireOnTestsCountInSuite(count));
   }
 
   @NotNull
@@ -535,7 +438,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
     // or may be we are in debug mode
     logProblem("Current suite is undefined. Root suite will be used.");
     myGetChildren = true;
-    return myTestsRootNode;
+    return myTestsRootProxy;
 
   }
 
@@ -581,20 +484,17 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   @Override
   public void dispose() {
     super.dispose();
-    addToInvokeLater(new Runnable() {
-      @Override
-      public void run() {
+    addToInvokeLater(() -> {
 
-        disconnectListeners();
-        if (!myRunningTestsFullNameToProxy.isEmpty()) {
-          final Application application = ApplicationManager.getApplication();
-          if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
-            logProblem("Not all events were processed! " + dumpRunningTestsNames());
-          }
+      disconnectListeners();
+      if (!myRunningTestsFullNameToProxy.isEmpty()) {
+        final Application application = ApplicationManager.getApplication();
+        if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
+          logProblem("Not all events were processed! " + dumpRunningTestsNames());
         }
-        myRunningTestsFullNameToProxy.clear();
-        mySuitesStack.clear();
       }
+      myRunningTestsFullNameToProxy.clear();
+      mySuitesStack.clear();
     });
   }
 
@@ -609,7 +509,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
       //current suite
       //
       // ProcessHandler can fire output available event before processStarted event
-      currentProxy = mySuitesStack.isEmpty() ? myTestsRootNode : getCurrentSuite();
+      currentProxy = mySuitesStack.isEmpty() ? myTestsRootProxy : getCurrentSuite();
     }
     return currentProxy;
   }

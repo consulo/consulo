@@ -34,6 +34,7 @@ import java.util.List;
  */
 public abstract class AbstractTestProxy extends CompositePrintable {
   public static final Key<AbstractTestProxy> DATA_KEY = Key.create("testProxy");
+  public static final Key<AbstractTestProxy[]> DATA_KEYS = Key.create("testProxies");
 
   protected Printer myPrinter = null;
 
@@ -119,6 +120,10 @@ public abstract class AbstractTestProxy extends CompositePrintable {
     }
   }
 
+  /**
+   * to be deleted in 2017.1
+   */
+  @Deprecated
   public static void flushOutput(AbstractTestProxy testProxy) {
     testProxy.flush();
 
@@ -146,7 +151,7 @@ public abstract class AbstractTestProxy extends CompositePrintable {
   @NotNull
   public List<DiffHyperlink> getDiffViewerProviders() {
     final DiffHyperlink provider = getDiffViewerProvider();
-    return provider == null ? Collections.<DiffHyperlink>emptyList() : Collections.singletonList(provider);
+    return provider == null ? Collections.emptyList() : Collections.singletonList(provider);
   }
 
   @Nullable
@@ -159,11 +164,8 @@ public abstract class AbstractTestProxy extends CompositePrintable {
     return null;
   }
 
-  @Deprecated
-  public interface AssertEqualsDiffChain {
-    DiffHyperlink getPrevious();
-    DiffHyperlink getCurrent();
-    DiffHyperlink getNext();
-    void setCurrent(DiffHyperlink provider);
+  @Nullable
+  public String getMetainfo() {
+    return null;
   }
 }
