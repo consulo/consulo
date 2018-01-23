@@ -284,7 +284,7 @@ public class TestsPresentationUtilTest extends BaseSMTRunnerTestCase {
 
   public void testFormatTestProxyTest_WithErrors_LegacyApi() {
     mySimpleTest.setStarted();
-    mySimpleTest.addError("msg", "stacktrace");
+    mySimpleTest.addError("msg", "stacktrace", false);
     mySimpleTest.setFinished();
     TestsPresentationUtil.formatTestProxy(mySimpleTest, myRenderer);
 

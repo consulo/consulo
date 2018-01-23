@@ -38,7 +38,7 @@ public class OutputToGeneralTestsEventsConverterTest extends BaseSMTRunnerTestCa
                                                                                  testFrameworkName,
                                                                                  DefaultRunExecutor.getRunExecutorInstance());
     myOutputConsumer = new OutputToGeneralTestEventsConverter(testFrameworkName, properties);
-    myEnventsProcessor = new MockGeneralTestEventsProcessorAdapter(getProject(), testFrameworkName);
+    myEnventsProcessor = new MockGeneralTestEventsProcessorAdapter(getProject(), testFrameworkName, new SMTestProxy.SMRootTestProxy());
     myOutputConsumer.setProcessor(myEnventsProcessor);
   }
 
