@@ -118,7 +118,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     List<Element> result = new SmartList<>();
     for (Element extensionsRoot : elements) {
       for (Element element : extensionsRoot.getChildren()) {
-        JDOMUtil.internElement(element, interner);
+        JDOMUtil.internStringsInElement(element, interner);
         result.add(element);
       }
     }
@@ -161,7 +161,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   public void readExternal(@NotNull Document document, @NotNull URL url, boolean ignoreMissingInclude) throws InvalidDataException, FileNotFoundException {
     document = JDOMXIncluder.resolve(document, url.toExternalForm(), ignoreMissingInclude);
     Element rootElement = document.getRootElement();
-    JDOMUtil.internElement(rootElement, new StringInterner());
+    JDOMUtil.internStringsInElement(rootElement, new StringInterner());
     readExternal(document.getRootElement());
   }
 

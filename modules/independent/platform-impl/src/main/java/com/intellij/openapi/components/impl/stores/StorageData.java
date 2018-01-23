@@ -74,7 +74,7 @@ public class StorageData extends StorageDataBase {
 
       iterator.remove();
       if (interner != null) {
-        JDOMUtil.internElement(element, interner);
+        JDOMUtil.internStringsInElement(element, interner);
       }
 
       myStates.put(name, element);

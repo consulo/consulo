@@ -16,10 +16,7 @@
 
 package com.intellij.rt.coverage.util;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,6 +26,7 @@ import java.util.Date;
 public class ErrorReporter {
   private final static String ERROR_FILE = "coverage-error.log";
   private final static SimpleDateFormat myDateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+  private static String basePath;
 
   public static synchronized void reportError(final String message) {
     PrintStream os = null;
@@ -83,7 +81,7 @@ public class ErrorReporter {
   }
 
   private static PrintStream getErrorLogStream() throws FileNotFoundException {
-    return new PrintStream(new FileOutputStream(ERROR_FILE, true));
+    return new PrintStream(new FileOutputStream(basePath != null ? new File(basePath, ERROR_FILE) : new File(ERROR_FILE), true));
   }
 
   private static StringBuffer prepareMessage(final String message) {
@@ -93,5 +91,9 @@ public class ErrorReporter {
     buf.append("] (Coverage): ");
     buf.append(message);
     return buf;
+  }
+
+  public static void setBasePath(String basePath) {
+    ErrorReporter.basePath = basePath;
   }
 }

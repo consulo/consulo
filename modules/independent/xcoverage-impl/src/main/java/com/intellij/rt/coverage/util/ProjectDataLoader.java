@@ -37,7 +37,7 @@ public class ProjectDataLoader {
       final TIntObjectHashMap dict = new TIntObjectHashMap(1000, 0.99f);
       final int classCount = CoverageIOUtil.readINT(in);
       for (int c = 0; c < classCount; c++) {
-        final ClassData classInfo = projectInfo.getOrCreateClassData(CoverageIOUtil.readUTFFast(in));
+        final ClassData classInfo = projectInfo.getOrCreateClassData(StringsPool.getFromPool(CoverageIOUtil.readUTFFast(in)));
         dict.put(c, classInfo);
       }
       for (int c = 0; c < classCount; c++) {
@@ -52,7 +52,7 @@ public class ProjectDataLoader {
             final int line = CoverageIOUtil.readINT(in);
             LineData lineInfo = (LineData) lines.get(line);
             if (lineInfo == null) {
-              lineInfo = new LineData(line, methodSig);
+              lineInfo = new LineData(line, StringsPool.getFromPool(methodSig));
               lines.put(line, lineInfo);
               if (line > maxLine) maxLine = line;
             }

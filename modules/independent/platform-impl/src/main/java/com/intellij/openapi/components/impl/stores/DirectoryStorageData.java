@@ -97,7 +97,7 @@ public class DirectoryStorageData extends StorageDataBase {
         }
 
         Element state = (Element)elementChildren.get(0).detach();
-        JDOMUtil.internElement(state, interner);
+        JDOMUtil.internStringsInElement(state, interner);
         if (pathMacroSubstitutor != null) {
           pathMacroSubstitutor.expandPaths(state);
           pathMacroSubstitutor.addUnknownMacros(name, PathMacrosService.getInstance().getMacroNames(state));

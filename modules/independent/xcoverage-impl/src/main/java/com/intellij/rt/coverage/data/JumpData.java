@@ -16,6 +16,11 @@
 
 package com.intellij.rt.coverage.data;
 
+import com.intellij.rt.coverage.util.CoverageIOUtil;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class JumpData implements CoverageData {
   private int myTrueHits;
   private int myFalseHits;
@@ -36,7 +41,11 @@ public class JumpData implements CoverageData {
     return myFalseHits;
   }
 
-  @Override
+  public void save(final DataOutputStream os) throws IOException {
+    CoverageIOUtil.writeINT(os, myTrueHits);
+    CoverageIOUtil.writeINT(os, myFalseHits);
+  }
+
   public void merge(final CoverageData data) {
     final JumpData jumpData = (JumpData)data;
     myTrueHits += jumpData.myTrueHits;

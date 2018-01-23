@@ -16,6 +16,10 @@
 
 package com.intellij.rt.coverage.data;
 
+import com.intellij.rt.coverage.util.CoverageIOUtil;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class SwitchData implements CoverageData {
@@ -48,6 +52,15 @@ public class SwitchData implements CoverageData {
 
   public int[] getHits() {
     return myHits;
+  }
+
+  public void save(final DataOutputStream os) throws IOException {
+    CoverageIOUtil.writeINT(os, myDefaultHits);
+    CoverageIOUtil.writeINT(os, myHits.length);
+    for (int i = 0; i < myHits.length; i++) {
+      CoverageIOUtil.writeINT(os, myKeys[i]);
+      CoverageIOUtil.writeINT(os, myHits[i]);
+    }
   }
 
   public void merge(final CoverageData data) {

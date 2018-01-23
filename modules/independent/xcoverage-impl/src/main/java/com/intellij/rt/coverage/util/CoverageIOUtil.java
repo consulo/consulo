@@ -166,6 +166,15 @@ public class CoverageIOUtil {
   }
 
 
+  public static String collapse(String methodSignature, final DictionaryLookup dictionaryLookup) {
+    return processWithDictionary(methodSignature, new Consumer() {
+      protected String consume(String type) {
+        final int dictionaryIndex = dictionaryLookup.getDictionaryIndex(type);
+        return dictionaryIndex >= 0 ? String.valueOf(dictionaryIndex) : type;
+      }
+    });
+  }
+
   private static final Pattern TYPE_PATTERN = Pattern.compile("(L.*;)*");
 
   public static abstract class Consumer {

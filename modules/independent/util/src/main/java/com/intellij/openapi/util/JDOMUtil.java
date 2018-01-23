@@ -185,7 +185,11 @@ public class JDOMUtil {
     }
   }
 
-  public static void internElement(@NotNull Element element, @NotNull StringInterner interner) {
+  /**
+   * Replace all strings in JDOM {@code element} with their interned variants with the help of {@code interner} to reduce memory.
+   * It's better to use {@link #internElement(Element)} though because the latter will intern the Element instances too.
+   */
+  public static void internStringsInElement(@NotNull Element element, @NotNull StringInterner interner) {
     element.setName(intern(interner, element.getName()));
 
     for (Attribute attr : element.getAttributes()) {
@@ -196,7 +200,7 @@ public class JDOMUtil {
     for (Content o : element.getContent()) {
       if (o instanceof Element) {
         Element e = (Element)o;
-        internElement(e, interner);
+        internStringsInElement(e, interner);
       }
       else if (o instanceof Text) {
         Text text = (Text)o;
@@ -802,5 +806,51 @@ public class JDOMUtil {
 
   public static boolean isEmpty(@Nullable Element element) {
     return element == null || (element.getAttributes().isEmpty() && element.getContent().isEmpty());
+  }
+
+  private static final JDOMInterner ourJDOMInterner = new JDOMInterner();
+  /**
+   * Interns {@code element} to reduce instance count of many identical Elements created after loading JDOM document to memory.
+   * For example, after interning <pre>{@code
+   * <app>
+   *   <component load="true" isDefault="true" name="comp1"/>
+   *   <component load="true" isDefault="true" name="comp2"/>
+   * </app>}</pre>
+   *
+   * there will be created just one XmlText("\n  ") instead of three for whitespaces between tags,
+   * one Attribute("load=true") instead of two equivalent for each component tag etc.
+   *
+   * <p><h3>Intended usage:</h3>
+   * - When you need to keep some part of JDOM tree in memory, use this method before save the element to some collection,
+   *   E.g.: <pre>{@code
+   *   public void readExternal(final Element element) {
+   *     myStoredElement = JDOMUtil.internElement(element);
+   *   }
+   *   }</pre>
+   * - When you need to save interned element back to JDOM and/or modify/add it, use {@link ImmutableElement#clone()}
+   *   to obtain mutable modifiable Element.
+   *   E.g.: <pre>{@code
+   *   void writeExternal(Element element) {
+   *     for (Attribute a : myStoredElement.getAttributes()) {
+   *       element.setAttribute(a.getName(), a.getValue()); // String getters work as before
+   *     }
+   *     for (Element child : myStoredElement.getChildren()) {
+   *       element.addContent(child.clone()); // need to call clone() before modifying/adding
+   *     }
+   *   }
+   *   }</pre>
+   *
+   * @return interned Element, i.e Element which<br/>
+   * - is the same for equivalent parameters. E.g. two calls of internElement() with {@code <xxx/>} and the other {@code <xxx/>}
+   * will return the same element {@code <xxx/>}<br/>
+   * - getParent() method is not implemented (and will throw exception; interning would not make sense otherwise)<br/>
+   * - is immutable (all modifications methods like setName(), setParent() etc will throw)<br/>
+   * - has {@code clone()} method which will return modifiable org.jdom.Element copy.<br/>
+   *
+   *
+   */
+  @NotNull
+  public static Element internElement(@NotNull Element element) {
+    return ourJDOMInterner.internElement(element);
   }
 }

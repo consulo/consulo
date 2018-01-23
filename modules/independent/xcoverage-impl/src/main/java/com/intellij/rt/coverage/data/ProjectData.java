@@ -17,6 +17,7 @@
 package com.intellij.rt.coverage.data;
 
 
+import com.intellij.rt.coverage.util.CoverageIOUtil;
 import com.intellij.rt.coverage.util.ErrorReporter;
 
 import java.io.*;
@@ -27,14 +28,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class ProjectData implements CoverageData, Serializable {
   public static final String PROJECT_DATA_OWNER = "com/intellij/rt/coverage/data/ProjectData";
 
-  private static final MethodCaller TOUCH_LINE_METHOD = new MethodCaller("touchLine", new Class[] {int.class});
-  private static final MethodCaller TOUCH_SWITCH_METHOD = new MethodCaller("touch", new Class[] {int.class, int.class, int.class});
-  private static final MethodCaller TOUCH_JUMP_METHOD = new MethodCaller("touch", new Class[] {int.class, int.class, boolean.class});
-  private static final MethodCaller TOUCH_METHOD = new MethodCaller("touch", new Class[] {int.class});
+  private static final MethodCaller TOUCH_LINE_METHOD = new MethodCaller("touchLine", new Class[]{int.class});
+  private static final MethodCaller TOUCH_LINES_METHOD = new MethodCaller("touchLines", new Class[]{int[].class});
+  private static final MethodCaller TOUCH_SWITCH_METHOD = new MethodCaller("touch", new Class[]{int.class, int.class, int.class});
+  private static final MethodCaller TOUCH_JUMP_METHOD = new MethodCaller("touch", new Class[]{int.class, int.class, boolean.class});
+  private static final MethodCaller TOUCH_METHOD = new MethodCaller("touch", new Class[]{int.class});
   private static final MethodCaller GET_CLASS_DATA_METHOD = new MethodCaller("getClassData", new Class[]{String.class});
   private static final MethodCaller TRACE_LINE_METHOD = new MethodCaller("traceLine", new Class[]{Object.class, int.class});
 
@@ -43,10 +46,13 @@ public class ProjectData implements CoverageData, Serializable {
   public static ProjectData ourProjectData;
   private File myDataFile;
 
-  /** @noinspection UnusedDeclaration*/
+  /**
+   * @noinspection UnusedDeclaration
+   */
   private String myCurrentTestName;
   private boolean myTraceLines;
   private boolean mySampling;
+  private boolean myDiscovery;
   private Map myTrace;
   private File myTracesDir;
 
@@ -84,9 +90,20 @@ public class ProjectData implements CoverageData, Serializable {
     return mySampling;
   }
 
+  public boolean isTestDiscovery() {
+    return myDiscovery;
+  }
+
+  public static ProjectData createProjectData() throws IOException {
+    final ProjectData projectData = createProjectData(null, null, false, true);
+    projectData.myDiscovery = true;
+    return projectData;
+  }
+
+
   public static ProjectData createProjectData(final File dataFile, final ProjectData initialData, boolean traceLines, boolean isSampling) throws IOException {
     ourProjectData = initialData == null ? new ProjectData() : initialData;
-    if (!dataFile.exists()) {
+    if (dataFile != null && !dataFile.exists()) {
       final File parentDir = dataFile.getParentFile();
       if (parentDir != null && !parentDir.exists()) parentDir.mkdirs();
       dataFile.createNewFile();
@@ -99,8 +116,8 @@ public class ProjectData implements CoverageData, Serializable {
 
   public void merge(final CoverageData data) {
     final ProjectData projectData = (ProjectData)data;
-    for (Iterator iter = projectData.myClasses.names().iterator(); iter.hasNext();) {
-      final String key = (String) iter.next();
+    for (Iterator iter = projectData.myClasses.names().iterator(); iter.hasNext(); ) {
+      final String key = (String)iter.next();
       final ClassData mergedData = projectData.myClasses.get(key);
       ClassData classData = myClasses.get(key);
       if (classData == null) {
@@ -114,9 +131,9 @@ public class ProjectData implements CoverageData, Serializable {
   public void checkLineMappings() {
     if (myLinesMap != null) {
       for (Iterator iterator = myLinesMap.keySet().iterator(); iterator.hasNext(); ) {
-        final String className = (String) iterator.next();
+        final String className = (String)iterator.next();
         final ClassData classData = getClassData(className);
-        final FileMapData[] fileData = (FileMapData[]) myLinesMap.get(className);
+        final FileMapData[] fileData = (FileMapData[])myLinesMap.get(className);
         //postpone process main file because its lines would be reset and next files won't be processed correctly
         FileMapData mainData = null;
         for (int i = 0; i < fileData.length; i++) {
@@ -131,7 +148,8 @@ public class ProjectData implements CoverageData, Serializable {
 
         if (mainData != null) {
           classData.checkLineMappings(mainData.getLines(), classData);
-        } else {
+        }
+        else {
           ErrorReporter.reportError("Class data was not extracted: " + className, new Throwable());
         }
       }
@@ -157,10 +175,10 @@ public class ProjectData implements CoverageData, Serializable {
       try {
         os = new DataOutputStream(new FileOutputStream(traceFile));
         os.writeInt(myTrace.size());
-        for (Iterator it = myTrace.keySet().iterator(); it.hasNext();) {
+        for (Iterator it = myTrace.keySet().iterator(); it.hasNext(); ) {
           final Object classData = it.next();
           os.writeUTF(classData.toString());
-          final boolean[] lines = (boolean[]) myTrace.get(classData);
+          final boolean[] lines = (boolean[])myTrace.get(classData);
           int numberOfTraces = 0;
           for (int idx = 0; idx < lines.length; idx++) {
             if (lines[idx]) numberOfTraces++;
@@ -211,18 +229,20 @@ public class ProjectData implements CoverageData, Serializable {
   public static String getCurrentTestName() {
     try {
       final Object projectDataObject = getProjectDataObject();
-      return (String) projectDataObject.getClass().getDeclaredField("myCurrentTestName").get(projectDataObject);
-    } catch (Exception e) {
+      return (String)projectDataObject.getClass().getDeclaredField("myCurrentTestName").get(projectDataObject);
+    }
+    catch (Exception e) {
       ErrorReporter.reportError("Current test name was not retrieved:", e);
       return null;
     }
   }
 
-  /** @noinspection UnusedDeclaration*/
+  /**
+   * @noinspection UnusedDeclaration
+   */
   public Map getClasses() {
     return myClasses.asMap();
   }
-
 
 
   // -----------------------  used from instrumentation  ------------------------------------------------//
@@ -235,57 +255,67 @@ public class ProjectData implements CoverageData, Serializable {
 
   public static void touchLine(Object classData, int line) {
     if (ourProjectData != null) {
-      ((ClassData) classData).touchLine(line);
+      ((ClassData)classData).touchLine(line);
       return;
     }
-    touch(TOUCH_LINE_METHOD,
-          classData,
-          new Object[]{new Integer(line)});
+    touch(TOUCH_LINE_METHOD, classData, new Object[]{new Integer(line)});
   }
 
   public static void touchSwitch(Object classData, int line, int switchNumber, int key) {
     if (ourProjectData != null) {
-      ((ClassData) classData).touch(line, switchNumber, key);
+      ((ClassData)classData).touch(line, switchNumber, key);
       return;
     }
-    touch(TOUCH_SWITCH_METHOD,
-          classData,
-          new Object[]{new Integer(line), new Integer(switchNumber), new Integer(key)});
+    touch(TOUCH_SWITCH_METHOD, classData, new Object[]{new Integer(line), new Integer(switchNumber), new Integer(key)});
   }
 
   public static void touchJump(Object classData, int line, int jump, boolean hit) {
     if (ourProjectData != null) {
-      ((ClassData) classData).touch(line, jump, hit);
+      ((ClassData)classData).touch(line, jump, hit);
       return;
     }
-    touch(TOUCH_JUMP_METHOD,
-          classData,
-          new Object[]{new Integer(line), new Integer(jump), new Boolean(hit)});
+    touch(TOUCH_JUMP_METHOD, classData, new Object[]{new Integer(line), new Integer(jump), new Boolean(hit)});
   }
 
   public static void trace(Object classData, int line) {
     if (ourProjectData != null) {
-      ((ClassData) classData).touch(line);
+      ((ClassData)classData).touch(line);
       ourProjectData.traceLine(classData, line);
       return;
     }
 
-    touch(TOUCH_METHOD,
-          classData,
-          new Object[]{new Integer(line)});
+    touch(TOUCH_METHOD, classData, new Object[]{new Integer(line)});
     try {
       final Object projectData = getProjectDataObject();
-      TRACE_LINE_METHOD.invoke(projectData, new Object[]{classData,  new Integer(line)});
-    } catch (Exception e) {
+      TRACE_LINE_METHOD.invoke(projectData, new Object[]{classData, new Integer(line)});
+    }
+    catch (Exception e) {
       ErrorReporter.reportError("Error tracing class " + classData.toString(), e);
     }
   }
 
-  private static void touch(final MethodCaller methodCaller, Object classData, final Object[] paramValues) {
+  private static Object touch(final MethodCaller methodCaller, Object classData, final Object[] paramValues) {
     try {
-      methodCaller.invoke(classData, paramValues);
-    } catch (Exception e) {
+      return methodCaller.invoke(classData, paramValues);
+    }
+    catch (Exception e) {
       ErrorReporter.reportError("Error in project data collection: " + methodCaller.myMethodName, e);
+      return null;
+    }
+  }
+
+  public static int[] touchClassLines(String className, int[] lines) {
+    if (ourProjectData != null) {
+      return ourProjectData.getClassData(className).touchLines(lines);
+    }
+    try {
+      final Object projectDataObject = getProjectDataObject();
+      Object classData = GET_CLASS_DATA_METHOD.invoke(projectDataObject, new Object[]{className});
+      return (int[])touch(TOUCH_LINES_METHOD, classData, new Object[]{lines});
+    }
+    catch (Exception e) {
+      ErrorReporter.reportError("Error in class data loading: " + className, e);
+      return lines;
     }
   }
 
@@ -296,7 +326,8 @@ public class ProjectData implements CoverageData, Serializable {
     try {
       final Object projectDataObject = getProjectDataObject();
       return GET_CLASS_DATA_METHOD.invoke(projectDataObject, new Object[]{className});
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       ErrorReporter.reportError("Error in class data loading: " + className, e);
       return null;
     }
@@ -313,7 +344,7 @@ public class ProjectData implements CoverageData, Serializable {
   public void traceLine(Object classData, int line) {
     if (myTrace != null) {
       synchronized (myTrace) {
-        boolean[] lines = (boolean[]) myTrace.get(classData);
+        boolean[] lines = (boolean[])myTrace.get(classData);
         if (lines == null) {
           lines = new boolean[line + 20];
           myTrace.put(classData, lines);
@@ -374,7 +405,7 @@ public class ProjectData implements CoverageData, Serializable {
         if (data != null) return data;
       }
 
-      final ClassData data = (ClassData) myClasses.get(name);
+      final ClassData data = (ClassData)myClasses.get(name);
       myIdentityArray[idx] = new IdentityClassData(name, data);
       return data;
     }
@@ -406,6 +437,114 @@ public class ProjectData implements CoverageData, Serializable {
         return myClassData;
       }
       return null;
+    }
+  }
+
+  //----------test discovery
+  public static final String TRACE_DIR = "org.jetbrains.instrumentation.trace.dir";
+
+
+  private String myTraceDir = System.getProperty(TRACE_DIR, "");
+
+  public void setTraceDir(String traceDir) {
+    myTraceDir = traceDir;
+  }
+
+  private final ConcurrentMap myTrace2 = new ConcurrentHashMap();
+  private final ConcurrentMap myTrace3 = new ConcurrentHashMap();
+
+  // called from instrumented code during class's static init
+  public static boolean[] trace(String className, boolean[] methodFlags, String[] methodNames) {
+    return ourProjectData.traceLines(className, methodFlags, methodNames);
+  }
+
+  private synchronized boolean[] traceLines(String className, boolean[] methodFlags, String[] methodNames) {
+    //System.out.println("Registering " + className);
+    //assert methodFlags.length == methodNames.length;
+    final boolean[] previousMethodFlags = (boolean[])myTrace2.putIfAbsent(className, methodFlags);
+
+    if (previousMethodFlags != null) {
+      //  assert previousMethodFlags.length == methodFlags.length;
+      final String[] previousMethodNames = (String[])myTrace3.get(className);
+      //assert previousMethodNames != null && previousMethodNames.length == methodNames.length;
+    }
+    else {
+      myTrace3.put(className, methodNames);
+    }
+    return previousMethodFlags != null ? previousMethodFlags : methodFlags;
+  }
+
+  public synchronized void testDiscoveryEnded(final String name) {
+    new File(myTraceDir).mkdirs();
+    final File traceFile = new File(myTraceDir, name + ".tr");
+    try {
+      if (!traceFile.exists()) {
+        traceFile.createNewFile();
+      }
+      DataOutputStream os = null;
+      try {
+        os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(traceFile), 64 * 1024));
+
+        //saveOldTrace(os);
+
+        Map classToUsedMethods = new HashMap();
+        for (Iterator iterator = myTrace2.entrySet().iterator(); iterator.hasNext(); ) {
+          Map.Entry e = (Map.Entry)iterator.next();
+          boolean[] used = (boolean[])e.getValue();
+          int usedMethodsCount = 0;
+
+          for (int i = 0; i < used.length; i++) {
+            boolean anUsed = used[i];
+            if (anUsed) ++usedMethodsCount;
+          }
+
+          if (usedMethodsCount > 0) {
+            classToUsedMethods.put(e.getKey(), new Integer(usedMethodsCount));
+          }
+        }
+
+        CoverageIOUtil.writeINT(os, classToUsedMethods.size());
+        for (Iterator iterator = myTrace2.entrySet().iterator(); iterator.hasNext(); ) {
+          Map.Entry e = (Map.Entry)iterator.next();
+          final boolean[] used = (boolean[])e.getValue();
+          final String className = (String)e.getKey();
+
+          Integer integer = (Integer)classToUsedMethods.get(className);
+          if (integer == null) continue;
+
+          int usedMethodsCount = integer.intValue();
+
+          CoverageIOUtil.writeUTF(os, className);
+          CoverageIOUtil.writeINT(os, usedMethodsCount);
+
+          String[] methodNames = (String[])myTrace3.get(className);
+          for (int i = 0, len = used.length; i < len; ++i) {
+            // we check usedMethodCount here since used can still be updated by other threads
+            if (used[i] && usedMethodsCount-- > 0) {
+              CoverageIOUtil.writeUTF(os, methodNames[i]);
+            }
+          }
+        }
+      }
+      finally {
+        if (os != null) {
+          os.close();
+        }
+      }
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public synchronized void testDiscoveryStarted(final String name) {
+    //clearOldTrace();
+    for (Iterator iterator = myTrace2.entrySet().iterator(); iterator.hasNext(); ) {
+      Object e = iterator.next();
+      boolean[] used = (boolean[])((Map.Entry)e).getValue();
+      for (int i = 0, len = used.length; i < len; ++i) {
+        if (used[i]) used[i] = false;
+      }
     }
   }
 

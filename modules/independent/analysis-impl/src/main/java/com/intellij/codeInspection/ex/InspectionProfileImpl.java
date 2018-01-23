@@ -271,7 +271,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     for (Element toolElement : element.getChildren(INSPECTION_TOOL_TAG)) {
       // make clone to avoid retaining memory via o.parent pointers
       toolElement = toolElement.clone();
-      JDOMUtil.internElement(toolElement, interner);
+      JDOMUtil.internStringsInElement(toolElement, interner);
       myUninstalledInspectionsSettings.put(toolElement.getAttributeValue(CLASS_TAG), toolElement);
     }
   }

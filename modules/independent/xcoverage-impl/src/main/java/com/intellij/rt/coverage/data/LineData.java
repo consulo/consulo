@@ -16,6 +16,11 @@
 
 package com.intellij.rt.coverage.data;
 
+import com.intellij.rt.coverage.util.CoverageIOUtil;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class LineData implements CoverageData {
   private final int myLineNumber;
   private String myMethodSignature;
@@ -91,7 +96,19 @@ public class LineData implements CoverageData {
     return myStatus;
   }
 
-  @Override
+  public void save(final DataOutputStream os) throws IOException {
+    CoverageIOUtil.writeINT(os, myLineNumber);
+    CoverageIOUtil.writeUTF(os, myUniqueTestName != null ? myUniqueTestName : "");
+    CoverageIOUtil.writeINT(os, myHits);
+    if (myHits > 0) {
+      if (myJumpsAndSwitches != null) {
+        getOrCreateJumpsAndSwitches().save(os);
+      } else {
+        new JumpsAndSwitches().save(os);
+      }
+    }
+  }
+
   public void merge(final CoverageData data) {
     LineData lineData = (LineData)data;
     myHits += lineData.myHits;

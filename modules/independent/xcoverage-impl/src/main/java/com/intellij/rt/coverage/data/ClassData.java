@@ -17,6 +17,12 @@
 package com.intellij.rt.coverage.data;
 
 
+import com.intellij.rt.coverage.util.CoverageIOUtil;
+import com.intellij.rt.coverage.util.DictionaryLookup;
+import com.intellij.rt.coverage.util.ErrorReporter;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 public class ClassData implements CoverageData {
@@ -32,6 +38,42 @@ public class ClassData implements CoverageData {
 
   public String getName() {
     return myClassName;
+  }
+
+  public void save(final DataOutputStream os, DictionaryLookup dictionaryLookup) throws IOException {
+    CoverageIOUtil.writeINT(os, dictionaryLookup.getDictionaryIndex(myClassName));
+    final Map sigLines = prepareSignaturesMap(dictionaryLookup);
+    final Set sigs = sigLines.keySet();
+    CoverageIOUtil.writeINT(os, sigs.size());
+    for (Iterator it = sigs.iterator(); it.hasNext();) {
+      final String sig = (String)it.next();
+      CoverageIOUtil.writeUTF(os, sig);
+      final List lines = (List)sigLines.get(sig);
+      CoverageIOUtil.writeINT(os, lines.size());
+      for (int i = 0; i < lines.size(); i++) {
+        ((LineData)lines.get(i)).save(os);
+      }
+    }
+  }
+
+  private Map prepareSignaturesMap(DictionaryLookup dictionaryLookup) {
+    final Map sigLines = new HashMap();
+    if (myLinesArray == null) return sigLines;
+    for (int i = 0; i < myLinesArray.length; i++) {
+      final LineData lineData = myLinesArray[i];
+      if (lineData == null) continue;
+      if (myLineMask != null) {
+        lineData.setHits(myLineMask[lineData.getLineNumber()]);
+      }
+      final String sig = CoverageIOUtil.collapse(lineData.getMethodSignature(), dictionaryLookup);
+      List lines = (List)sigLines.get(sig);
+      if (lines == null) {
+        lines = new ArrayList();
+        sigLines.put(sig, lines);
+      }
+      lines.add(lineData);
+    }
+    return sigLines;
   }
 
   public void merge(final CoverageData data) {
@@ -181,12 +223,19 @@ public class ClassData implements CoverageData {
 
   public void checkLineMappings(LineMapData[] linesMap, ClassData classData) {
     if (linesMap != null) {
-      LineData[] result = new LineData[linesMap.length];
-      for (int i = 0, linesMapLength = linesMap.length; i < linesMapLength; i++) {
-        final LineMapData mapData = linesMap[i];
-        if (mapData != null) {
-          result[mapData.getSourceLineNumber()] = classData.createSourceLineData(mapData);
+      LineData[] result;
+      try {
+        result = new LineData[linesMap.length];
+        for (int i = 0, linesMapLength = linesMap.length; i < linesMapLength; i++) {
+          final LineMapData mapData = linesMap[i];
+          if (mapData != null) {
+            result[mapData.getSourceLineNumber()] = classData.createSourceLineData(mapData);
+          }
         }
+      }
+      catch (Throwable e) {
+        ErrorReporter.reportError("Error creating line mappings for " + classData.getName(), e);
+        return;
       }
       myLinesArray = result;
       myLineMask = null;
@@ -194,7 +243,7 @@ public class ClassData implements CoverageData {
   }
 
   private LineData createSourceLineData(LineMapData lineMapData) {
-    for (int i = lineMapData.getTargetMinLine(); i <= lineMapData.getTargetMaxLine(); i++) {
+    for (int i = lineMapData.getTargetMinLine(); i <= lineMapData.getTargetMaxLine() && i < myLinesArray.length; i++) {
       final LineData targetLineData = getLineData(i);
       if (targetLineData != null) { //todo ??? show info according to one target line
 
@@ -218,5 +267,10 @@ public class ClassData implements CoverageData {
 
   public String getSource() {
     return mySource;
+  }
+
+  public int[] touchLines(int[] lines) { //todo
+    myLineMask = lines;
+    return lines;
   }
 }

@@ -16,6 +16,10 @@
 
 package com.intellij.rt.coverage.data;
 
+import com.intellij.rt.coverage.util.CoverageIOUtil;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +71,21 @@ public class JumpsAndSwitches implements CoverageData {
 
   public SwitchData getSwitchData(int switchNumber) {
     return mySwitchesArray == null ? null : mySwitchesArray[switchNumber];
+  }
+
+  public void save(final DataOutputStream os) throws IOException {
+    CoverageIOUtil.writeINT(os, myJumpsArray != null ? myJumpsArray.length : 0);
+    if (myJumpsArray != null) {
+      for (int j = 0; j < myJumpsArray.length; j++) {
+        myJumpsArray[j].save(os);
+      }
+    }
+    CoverageIOUtil.writeINT(os, mySwitchesArray != null ? mySwitchesArray.length : 0);
+    if (mySwitchesArray != null) {
+      for (int s = 0; s < mySwitchesArray.length; s++) {
+        mySwitchesArray[s].save(os);
+      }
+    }
   }
 
   public void removeJump(final int jump) {
