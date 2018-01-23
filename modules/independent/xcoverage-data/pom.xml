@@ -26,30 +26,20 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-xcoverage-impl</artifactId>
+  <artifactId>consulo-xcoverage-data</artifactId>
   <version>2-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.level>1.5</java.level>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-lang-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-xtest-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-xcoverage-data</artifactId>
-      <version>${project.version}</version>
+      <groupId>consulo.internal</groupId>
+      <artifactId>trove4j</artifactId>
     </dependency>
   </dependencies>
 </project>
