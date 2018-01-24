@@ -18,6 +18,7 @@ package com.intellij.openapi.project;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.application.PathManagerEx;
 import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
@@ -26,19 +27,51 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFilePathWrapper;
+import com.intellij.util.ObjectUtil;
+import com.intellij.util.PathUtilRt;
+import com.intellij.util.io.PathKt;
 import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.nio.file.Path;
+import java.util.Locale;
 
 /**
  * @author max
  */
 public class ProjectUtil {
-  private ProjectUtil() { }
+  private ProjectUtil() {
+  }
+
+  public static Path getProjectCachePath(Project project, String cacheName, boolean forceNameUse) {
+    return getProjectCachePath(project, PathManagerEx.getAppSystemDir().resolve(cacheName), forceNameUse);
+  }
+
+  public static Path getProjectCachePath(Project project, Path baseDir, boolean forceNameUse) {
+    return getProjectCachePath(project, baseDir, forceNameUse, ".");
+  }
+
+  public static Path getProjectCachePath(Project project, Path baseDir, boolean forceNameUse, String hashSeparator) {
+    return baseDir.resolve(getProjectCacheFileName(project, forceNameUse, hashSeparator));
+  }
+
+  private static String getProjectCacheFileName(Project project, boolean forceNameUse, String hashSeparator) {
+    String presentableUrl = project.getPresentableUrl();
+    String name = forceNameUse || presentableUrl == null ? project.getName() : PathUtilRt.getFileName(presentableUrl).toLowerCase(Locale.US);
+
+    name = PathKt.sanitizeFileName(name, false);
+
+    String locationHash = Integer.toHexString(ObjectUtil.notNull(presentableUrl, name).hashCode());
+
+    name = StringUtil.trimMiddle(name, Math.min(name.length(), 255 - hashSeparator.length() - locationHash.length()), false);
+
+    return name + hashSeparator + locationHash;
+  }
 
   @Nullable
   public static String getProjectLocationString(@NotNull final Project project) {
@@ -46,9 +79,7 @@ public class ProjectUtil {
   }
 
   @NotNull
-  public static String calcRelativeToProjectPath(@NotNull final VirtualFile file,
-                                                 @Nullable final Project project,
-                                                 final boolean includeFilePath) {
+  public static String calcRelativeToProjectPath(@NotNull final VirtualFile file, @Nullable final Project project, final boolean includeFilePath) {
     return calcRelativeToProjectPath(file, project, includeFilePath, false, false);
   }
 
@@ -60,7 +91,7 @@ public class ProjectUtil {
                                                  final boolean keepModuleAlwaysOnTheLeft) {
     if (file instanceof VirtualFilePathWrapper) {
       return includeFilePath ? ((VirtualFilePathWrapper)file).getPresentablePath() : file.getName();
-    }    
+    }
     String url;
     if (includeFilePath) {
       url = file.getPresentableUrl();
@@ -91,10 +122,12 @@ public class ProjectUtil {
           if (libraryEntry != null) {
             if (libraryEntry instanceof ModuleExtensionWithSdkOrderEntry) {
               url = url + " - [" + ((ModuleExtensionWithSdkOrderEntry)libraryEntry).getSdkName() + "]";
-            } else {
+            }
+            else {
               url = url + " - [" + libraryEntry.getPresentableName() + "]";
             }
-          } else {
+          }
+          else {
             url = url + " - [" + fileForJar.getName() + "]";
           }
         }
@@ -102,9 +135,7 @@ public class ProjectUtil {
 
       final Module module = ModuleUtil.findModuleForFile(file, project);
       if (module == null) return url;
-      return !keepModuleAlwaysOnTheLeft && SystemInfo.isMac ?
-             url + " - [" + module.getName() + "]" :
-             "[" + module.getName() + "] - " + url;
+      return !keepModuleAlwaysOnTheLeft && SystemInfo.isMac ? url + " - [" + module.getName() + "]" : "[" + module.getName() + "] - " + url;
     }
   }
 

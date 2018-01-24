@@ -2991,6 +2991,12 @@ public class StringUtil extends StringUtilRt {
 
   @NotNull
   @Contract(pure = true)
+  public static String trimMiddle(@NotNull String text, int maxLength, boolean useEllipsisSymbol) {
+    return shortenTextWithEllipsis(text, maxLength, maxLength >> 1, useEllipsisSymbol);
+  }
+
+  @NotNull
+  @Contract(pure = true)
   public static String trimMiddle(@NotNull String text, int maxLength) {
     return shortenTextWithEllipsis(text, maxLength, maxLength >> 1, true);
   }
