@@ -166,4 +166,10 @@ public abstract class ModuleManager {
   @Nullable
   @RequiredReadAction
   public abstract String[] getModuleGroupPath(@NotNull Module module);
+
+  @Nullable
+  public UnloadedModuleDescription getUnloadedModuleDescription(@NotNull String name) {
+    // we not support module unloading
+    return null;
+  }
 }

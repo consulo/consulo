@@ -53,7 +53,6 @@ public class ModulesCombobox extends ComboBox {
     setRenderer(new ModuleListCellRenderer());
   }
 
-
   public void fillModules(@NotNull Project project) {
     myModel.clear();
     for (Module module : ModuleManager.getInstance(project).getModules()) {
