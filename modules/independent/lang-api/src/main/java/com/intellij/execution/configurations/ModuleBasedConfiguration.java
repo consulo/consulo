@@ -37,8 +37,7 @@ import java.util.Set;
  * Base class for a configuration that is associated with a specific module. For example, Java run configurations use the selected module
  * to determine the run classpath.
  */
-public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunConfigurationModule> extends LocatableConfigurationBase
-        implements Cloneable, ModuleRunConfiguration {
+public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunConfigurationModule> extends LocatableConfigurationBase implements Cloneable, ModuleRunConfiguration {
   private static final Logger LOG = Logger.getInstance("#com.intellij.execution.configurations.ModuleBasedConfiguration");
   private final ConfigurationModule myModule;
   @NonNls
@@ -87,8 +86,7 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
   }
 
   protected ModuleBasedConfiguration createInstance() {
-    ModuleBasedConfiguration<ConfigurationModule> configuration =
-            (ModuleBasedConfiguration<ConfigurationModule>)getFactory().createTemplateConfiguration(getProject());
+    ModuleBasedConfiguration<ConfigurationModule> configuration = (ModuleBasedConfiguration<ConfigurationModule>)getFactory().createTemplateConfiguration(getProject());
     configuration.setName(getName());
     return configuration;
   }
@@ -117,13 +115,9 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
   @Override
   @NotNull
   public Module[] getModules() {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Module[]>() {
-      @Override
-      @SuppressWarnings({"ConstantConditions"})
-      public Module[] compute() {
-        final Module module = getConfigurationModule().getModule();
-        return module == null ? Module.EMPTY_ARRAY : new Module[]{module};
-      }
+    return ApplicationManager.getApplication().runReadAction((Computable<Module[]>)() -> {
+      final Module module = getConfigurationModule().getModule();
+      return module == null ? Module.EMPTY_ARRAY : new Module[]{module};
     });
   }
 

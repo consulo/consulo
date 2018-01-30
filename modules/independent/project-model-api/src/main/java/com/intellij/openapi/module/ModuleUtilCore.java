@@ -18,7 +18,6 @@ package com.intellij.openapi.module;
 import com.google.common.base.Predicates;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
@@ -30,13 +29,13 @@ import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.graph.Graph;
+import consulo.annotations.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.roots.ContentFolderTypeProvider;
 import consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.*;
 
@@ -310,14 +309,12 @@ public class ModuleUtilCore {
   @NotNull
   @RequiredReadAction
   public static NamedPointer<Module> createPointer(@NotNull Module module) {
-    ModulePointerManager manager = ServiceManager.getService(module.getProject(), ModulePointerManager.class);
-    return manager.create(module);
+    return ModulePointerManager.getInstance(module.getProject()).create(module);
   }
 
   @NotNull
   @RequiredReadAction
   public static NamedPointer<Module> createPointer(@NotNull Project project, @NotNull String name) {
-    ModulePointerManager manager = ServiceManager.getService(project, ModulePointerManager.class);
-    return manager.create(name);
+    return ModulePointerManager.getInstance(project).create(name);
   }
 }

@@ -15,12 +15,19 @@
  */
 package com.intellij.openapi.module;
 
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+import consulo.annotations.RequiredReadAction;
 import consulo.util.pointers.NamedPointer;
 import consulo.util.pointers.NamedPointerManager;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredReadAction;
 
 public interface ModulePointerManager extends NamedPointerManager<Module> {
+  @NotNull
+  static ModulePointerManager getInstance(@NotNull Project project) {
+    return ServiceManager.getService(project, ModulePointerManager.class);
+  }
+
   @NotNull
   @Override
   @RequiredReadAction
