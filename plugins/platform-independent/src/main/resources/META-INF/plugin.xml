@@ -124,6 +124,8 @@
       <with attribute="instance" implements="com.intellij.application.options.GeneralCodeStyleOptionsProvider"/>
     </extensionPoint>
 
+    <extensionPoint name="module.workingDirectoryProvider" interface="com.intellij.openapi.module.WorkingDirectoryProvider"/>
+
     <extensionPoint name="selectInTarget"
                     interface="com.intellij.ide.SelectInTarget"
                     area="PROJECT"/>

@@ -6,6 +6,7 @@
 .consulo/encodings.xml
 .consulo/modules.xml
 .consulo/uiDesigner.xml
+.consulo/artifacts/
 .consulo/.name
 /out
 
