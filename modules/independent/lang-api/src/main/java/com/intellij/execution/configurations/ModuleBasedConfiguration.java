@@ -27,6 +27,7 @@ import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -61,6 +62,10 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
 
   public void setModule(final Module module) {
     myModule.setModule(module);
+  }
+
+  public void setModuleName(@Nullable String moduleName) {
+    getConfigurationModule().setModuleName(moduleName);
   }
 
   @Override
