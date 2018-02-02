@@ -29,7 +29,7 @@ import java.util.List;
 public class LoadedModuleDescriptionImpl implements LoadedModuleDescription {
   private final Module myModule;
 
-  public LoadedModuleDescriptionImpl(Module module) {
+  public LoadedModuleDescriptionImpl(@NotNull Module module) {
     myModule = module;
   }
 
@@ -49,5 +49,30 @@ public class LoadedModuleDescriptionImpl implements LoadedModuleDescription {
   @Override
   public List<String> getDependencyModuleNames() {
     return Arrays.asList(ModuleRootManager.getInstance(myModule).getDependencyModuleNames());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    LoadedModuleDescriptionImpl that = (LoadedModuleDescriptionImpl)o;
+
+    if (!myModule.equals(that.myModule)) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return myModule.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("LoadedModuleDescriptionImpl{");
+    sb.append("myModule=").append(myModule);
+    sb.append('}');
+    return sb.toString();
   }
 }
