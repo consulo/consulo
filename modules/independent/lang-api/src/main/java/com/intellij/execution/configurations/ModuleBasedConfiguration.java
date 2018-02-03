@@ -16,12 +16,11 @@
 
 package com.intellij.execution.configurations;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
@@ -71,19 +70,23 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
   @Override
   public void readExternal(Element element) throws InvalidDataException {
     super.readExternal(element);
+
+    myModule.readExternal(element);
   }
 
   @Override
   public void writeExternal(Element element) throws WriteExternalException {
     super.writeExternal(element);
-  }
 
-  protected void readModule(final Element element) throws InvalidDataException {
-    myModule.readExternal(element);
-  }
-
-  protected void writeModule(final Element element) throws WriteExternalException {
     myModule.writeExternal(element);
+  }
+
+  @Deprecated
+  protected void readModule(final Element element) throws InvalidDataException {
+  }
+
+  @Deprecated
+  protected void writeModule(final Element element) throws WriteExternalException {
   }
 
   public Collection<Module> getAllModules() {
@@ -120,7 +123,7 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
   @Override
   @NotNull
   public Module[] getModules() {
-    return ApplicationManager.getApplication().runReadAction((Computable<Module[]>)() -> {
+    return ReadAction.compute(() -> {
       final Module module = getConfigurationModule().getModule();
       return module == null ? Module.EMPTY_ARRAY : new Module[]{module};
     });
