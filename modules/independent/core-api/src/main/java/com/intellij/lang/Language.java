@@ -148,6 +148,10 @@ public abstract class Language extends UserDataHolderBase implements Named {
   @NotNull
   @Exported
   public static Collection<Language> findInstancesByMimeType(@Nullable String mimeType) {
+    if(mimeType == null) {
+      return Collections.emptyList();
+    }
+
     Collection<LanguageVersion> versions = ourRegisteredMimeTypes.get(mimeType);
     Set<Language> languages = new HashSet<>();
     for (LanguageVersion version : versions) {
