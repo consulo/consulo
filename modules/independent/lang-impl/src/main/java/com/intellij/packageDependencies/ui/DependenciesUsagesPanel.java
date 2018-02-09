@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * User: anna
- * Date: 26-Mar-2008
- */
 package com.intellij.packageDependencies.ui;
 
 import com.intellij.openapi.application.ApplicationManager;
@@ -30,12 +26,9 @@ import com.intellij.packageDependencies.DependenciesBuilder;
 import com.intellij.packageDependencies.FindDependencyUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.usageView.UsageInfo;
-import com.intellij.usages.UsageInfoToUsageConverter;
-import com.intellij.util.Consumer;
 
-import javax.swing.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,7 +47,6 @@ public class DependenciesUsagesPanel extends UsagesPanel {
     return myBuilders.get(0).getInitialUsagesPosition();
   }
 
-
   @Override
   public String getCodeUsagesString() {
     return myBuilders.get(0).getRootNodeNameInUsageView();
@@ -64,65 +56,42 @@ public class DependenciesUsagesPanel extends UsagesPanel {
     cancelCurrentFindRequest();
 
     myAlarm.cancelAllRequests();
-    myAlarm.addRequest(new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-          @Override
-          public void run() {
-            final ProgressIndicator progress = new PanelProgressIndicator(new Consumer<JComponent>() {
-              @Override
-              public void consume(final JComponent component) {
-                setToComponent(component);
-              }
-            });
-            myCurrentProgress = progress;
-            ProgressManager.getInstance().runProcess(new Runnable() {
-              @Override
-              public void run() {
-                ApplicationManager.getApplication().runReadAction(new Runnable() {
-                  @Override
-                  public void run() {
-                    UsageInfo[] usages = new UsageInfo[0];
-                    Set<PsiFile> elementsToSearch = null;
+    myAlarm.addRequest(() -> ApplicationManager.getApplication().executeOnPooledThread(() -> {
+      final ProgressIndicator progress = new PanelProgressIndicator(this::setToComponent);
+      myCurrentProgress = progress;
+      ProgressManager.getInstance().runProcess(() -> {
+        ApplicationManager.getApplication().runReadAction(() -> {
+          UsageInfo[] usages = UsageInfo.EMPTY_ARRAY;
+          Set<PsiFile> elementsToSearch = null;
 
-                    try {
-                      if (myBuilders.get(0).isBackward()){
-                        elementsToSearch = searchIn;
-                        usages = FindDependencyUtil.findBackwardDependencies(myBuilders, searchFor, searchIn);
-                      }
-                      else {
-                        elementsToSearch = searchFor;
-                        usages = FindDependencyUtil.findDependencies(myBuilders, searchIn, searchFor);
-                      }
-                      assert !new HashSet<PsiFile>(elementsToSearch).contains(null);
-                    }
-                    catch (ProcessCanceledException e) {
-                    }
-                    catch (Exception e) {
-                      LOG.error(e);
-                    }
+          try {
+            if (myBuilders.get(0).isBackward()){
+              elementsToSearch = searchIn;
+              usages = FindDependencyUtil.findBackwardDependencies(myBuilders, searchFor, searchIn);
+            }
+            else {
+              elementsToSearch = searchFor;
+              usages = FindDependencyUtil.findDependencies(myBuilders, searchIn, searchFor);
+            }
+            assert !new HashSet<>(elementsToSearch).contains(null);
+          }
+          catch (ProcessCanceledException ignored) {
+          }
+          catch (Exception e) {
+            LOG.error(e);
+          }
 
-                    if (!progress.isCanceled()) {
-                      final UsageInfo[] finalUsages = usages;
-                      final PsiElement[] _elementsToSearch =
-                        elementsToSearch != null ? PsiUtilBase.toPsiElementArray(elementsToSearch) : PsiElement.EMPTY_ARRAY;
-                      ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                          showUsages(new UsageInfoToUsageConverter.TargetElementsDescriptor(_elementsToSearch), finalUsages);
-                        }
-                      }, ModalityState.stateForComponent(DependenciesUsagesPanel.this));
-                    }
-                  }
-                });
-                myCurrentProgress = null;
-              }
-            }, progress);
+          if (!progress.isCanceled()) {
+            final UsageInfo[] finalUsages = usages;
+            final PsiElement[] _elementsToSearch =
+                    elementsToSearch != null ? PsiUtilCore.toPsiElementArray(elementsToSearch) : PsiElement.EMPTY_ARRAY;
+            ApplicationManager.getApplication().invokeLater(() -> showUsages(_elementsToSearch, finalUsages), ModalityState.stateForComponent(
+                    this));
           }
         });
-      }
-    }, 300);
+        myCurrentProgress = null;
+      }, progress);
+    }), 300);
   }
 
   public void addBuilder(DependenciesBuilder builder) {
