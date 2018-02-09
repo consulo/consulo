@@ -16,6 +16,8 @@
 
 package org.jetbrains.annotations;
 
+import consulo.annotations.DeprecationInfo;
+
 import java.lang.annotation.*;
 
 /**
@@ -29,6 +31,8 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
+@Deprecated
+@DeprecationInfo("Use JSR305 annotations")
 public @interface NotNull {
   String value() default "";
 }

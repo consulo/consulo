@@ -16,6 +16,8 @@
 
 package org.jetbrains.annotations;
 
+import consulo.annotations.DeprecationInfo;
+
 import java.lang.annotation.*;
 
 /**
@@ -23,11 +25,14 @@ import java.lang.annotation.*;
  * to return (for methods), pass to (parameters) and hold (local variables and fields).
  * Apart from documentation purposes this annotation is intended to be used by static analysis tools
  * to validate against probable runtime errors and element contract violations.
+ *
  * @author max
  */
 @Documented
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
+@Deprecated
+@DeprecationInfo("Use JSR305 annotations")
 public @interface Nullable {
   String value() default "";
 }
